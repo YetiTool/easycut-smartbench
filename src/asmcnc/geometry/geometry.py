@@ -1,12 +1,13 @@
 import math
 
+
 def compute_polygon_points(sides, circumscribe_rad):
     polygon_vertices = []
     # https://stackoverflow.com/questions/21690008/how-to-generate-random-vertices-to-form-a-convex-polygon-in-c
     x0 = 350
     y0 = 200
     angle_delta_r = (math.pi / 180) * 360.0 / sides
-    print ("angle_delta_r ", angle_delta_r)
+    print("angle_delta_r ", angle_delta_r)
 
     angle_r = 0
     while angle_r < 2.0 * math.pi:

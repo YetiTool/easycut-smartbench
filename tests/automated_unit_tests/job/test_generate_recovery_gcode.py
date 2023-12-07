@@ -1,12 +1,13 @@
 import sys, os
-sys.path.append('./src')
 
-try: 
+sys.path.append("./src")
+
+try:
     import unittest
     import pytest
     from mock import Mock, MagicMock
 
-except: 
+except:
     print("Can't import mocking packages, are you on a dev machine?")
 
 from asmcnc.job import job_data
@@ -15,23 +16,25 @@ from datetime import datetime
 
 from kivy.clock import Clock
 
-'''
+"""
 ######################################
 RUN FROM easycut-smartbench FOLDER WITH: 
 python -m pytest --show-capture=no --disable-pytest-warnings tests/automated_unit_tests/job/test_generate_recovery_gcode.py
 ######################################
-'''
+"""
+
 
 # FIXTURES
 @pytest.fixture
 def jd():
     l = localization.Localization()
     settings_manager = Mock()
-    jd = job_data.JobData(localization = l, settings_manager = settings_manager)
+    jd = job_data.JobData(localization=l, settings_manager=settings_manager)
     return jd
 
 
 # GCODE GENERATION
+
 
 def test_coordinate_system_select(jd):
     jd.job_gcode = [
@@ -46,7 +49,7 @@ def test_coordinate_system_select(jd):
         "G1G57.2",
         "G58X6.776G1",
         "G59.3",
-        "M5"
+        "M5",
     ]
 
     jd.job_recovery_selected_line = 11
@@ -58,7 +61,7 @@ def test_coordinate_system_select(jd):
         "G0 X6.776 Y2.259",
         "G0 Z-0.240",
         "G1 F824.88",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == -6
 
@@ -72,7 +75,7 @@ def test_coordinate_system_select(jd):
         "G0 Z-0.240",
         "G1 F824.88",
         "G59.3",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == -5
 
@@ -87,7 +90,7 @@ def test_coordinate_system_select(jd):
         "G1 F824.88",
         "G58X6.776G1",
         "G59.3",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == -4
 
@@ -103,7 +106,7 @@ def test_coordinate_system_select(jd):
         "G1G57.2",
         "G58X6.776G1",
         "G59.3",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == -3
 
@@ -121,7 +124,7 @@ def test_coordinate_system_select(jd):
         "G1G57.2",
         "G58X6.776G1",
         "G59.3",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == -1
 
@@ -142,7 +145,7 @@ def test_coordinate_system_select(jd):
         "G1G57.2",
         "G58X6.776G1",
         "G59.3",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == 2
 
@@ -163,9 +166,10 @@ def test_coordinate_system_select(jd):
         "G1G57.2",
         "G58X6.776G1",
         "G59.3",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == 2
+
 
 def test_plane_selection(jd):
     jd.job_gcode = [
@@ -177,7 +181,7 @@ def test_plane_selection(jd):
         "X2G17Y20.2597",
         "G18X2.259",
         "G19",
-        "M5"
+        "M5",
     ]
 
     jd.job_recovery_selected_line = 8
@@ -189,7 +193,7 @@ def test_plane_selection(jd):
         "G0 X2.259 Y20.2597",
         "G0 Z-0.240",
         "G1 F824.88",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == -3
 
@@ -203,7 +207,7 @@ def test_plane_selection(jd):
         "G0 Z-0.240",
         "G1 F824.88",
         "G19",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == -2
 
@@ -218,7 +222,7 @@ def test_plane_selection(jd):
         "G1 F824.88",
         "G18X2.259",
         "G19",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == -1
 
@@ -233,9 +237,10 @@ def test_plane_selection(jd):
         "X2G17Y20.2597",
         "G18X2.259",
         "G19",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == -1
+
 
 def test_absolute_or_incremental_distance_mode(jd):
     jd.job_gcode = [
@@ -245,13 +250,16 @@ def test_absolute_or_incremental_distance_mode(jd):
         "X2.259Y2.259Z-0.240F796.74",
         "X2.259Y2.259Z-0.240F824.88",
         "G91",
-        "M5"
+        "M5",
     ]
 
     jd.job_recovery_selected_line = 6
     success, message = jd.generate_recovery_gcode()
     assert not success
-    assert message == 'The last positioning declaration was incremental (G91), and therefore this job cannot be recovered.'
+    assert (
+        message
+        == "The last positioning declaration was incremental (G91), and therefore this job cannot be recovered."
+    )
 
     jd.job_recovery_selected_line = 5
     success, message = jd.generate_recovery_gcode()
@@ -262,7 +270,7 @@ def test_absolute_or_incremental_distance_mode(jd):
         "G0 Z-0.240",
         "G1 F824.88",
         "G91",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == -1
 
@@ -278,9 +286,10 @@ def test_absolute_or_incremental_distance_mode(jd):
         "X2.259Y2.259Z-0.240F796.74",
         "X2.259Y2.259Z-0.240F824.88",
         "G91",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == 2
+
 
 def test_arc_ijk_distance_mode(jd):
     jd.job_gcode = [
@@ -291,18 +300,24 @@ def test_arc_ijk_distance_mode(jd):
         "X2.259Y2.259Z-0.240F824.88",
         "G90.1",
         "G91.1",
-        "M5"
+        "M5",
     ]
 
     jd.job_recovery_selected_line = 7
     success, message = jd.generate_recovery_gcode()
     assert not success
-    assert message == 'Job recovery does not currently support arc distance modes. This job contains G91.1, and therefore cannot be recovered.'
+    assert (
+        message
+        == "Job recovery does not currently support arc distance modes. This job contains G91.1, and therefore cannot be recovered."
+    )
 
     jd.job_recovery_selected_line = 6
     success, message = jd.generate_recovery_gcode()
     assert not success
-    assert message == 'Job recovery does not currently support arc distance modes. This job contains G90.1, and therefore cannot be recovered.'
+    assert (
+        message
+        == "Job recovery does not currently support arc distance modes. This job contains G90.1, and therefore cannot be recovered."
+    )
 
     jd.job_recovery_selected_line = 5
     success, message = jd.generate_recovery_gcode()
@@ -314,9 +329,10 @@ def test_arc_ijk_distance_mode(jd):
         "G1 F824.88",
         "G90.1",
         "G91.1",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == -1
+
 
 def test_feed_rate_mode(jd):
     jd.job_gcode = [
@@ -328,13 +344,16 @@ def test_feed_rate_mode(jd):
         "G93",
         "G94",
         "G95",
-        "M5"
+        "M5",
     ]
 
     jd.job_recovery_selected_line = 8
     success, message = jd.generate_recovery_gcode()
     assert not success
-    assert message == 'Job recovery only supports feed rate mode G94. This job contains G95, and therefore cannot be recovered.'
+    assert (
+        message
+        == "Job recovery only supports feed rate mode G94. This job contains G95, and therefore cannot be recovered."
+    )
 
     jd.job_recovery_selected_line = 7
     success, message = jd.generate_recovery_gcode()
@@ -346,14 +365,17 @@ def test_feed_rate_mode(jd):
         "G0 Z-0.240",
         "G1 F824.88",
         "G95",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == -2
 
     jd.job_recovery_selected_line = 6
     success, message = jd.generate_recovery_gcode()
     assert not success
-    assert message == 'Job recovery only supports feed rate mode G94. This job contains G93, and therefore cannot be recovered.'
+    assert (
+        message
+        == "Job recovery only supports feed rate mode G94. This job contains G93, and therefore cannot be recovered."
+    )
 
     jd.job_recovery_selected_line = 5
     success, message = jd.generate_recovery_gcode()
@@ -366,9 +388,10 @@ def test_feed_rate_mode(jd):
         "G93",
         "G94",
         "G95",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == -1
+
 
 def test_units(jd):
     jd.job_gcode = [
@@ -377,7 +400,7 @@ def test_units(jd):
         "X6.776Y6.776Z-0.720G20F769.25",
         "X2.259Y2.259Z-0.240F796.74",
         "X2.259G21Y2.259Z-0.240F824.88",
-        "M5"
+        "M5",
     ]
 
     jd.job_recovery_selected_line = 5
@@ -389,7 +412,7 @@ def test_units(jd):
         "G0 X2.259 Y2.259",
         "G0 Z-0.240",
         "G1 F824.88",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == 0
 
@@ -403,7 +426,7 @@ def test_units(jd):
         "G0 Z-0.240",
         "G1 F796.74",
         "X2.259G21Y2.259Z-0.240F824.88",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == 1
 
@@ -418,9 +441,10 @@ def test_units(jd):
         "X6.776Y6.776Z-0.720G20F769.25",
         "X2.259Y2.259Z-0.240F796.74",
         "X2.259G21Y2.259Z-0.240F824.88",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == 2
+
 
 def test_cutter_radius_compensation(jd):
     jd.job_gcode = [
@@ -429,7 +453,7 @@ def test_cutter_radius_compensation(jd):
         "X6.776Y6.776Z-0.720F769.25",
         "X2.259Y2.259Z-0.240G40F796.74",
         "X2.259Y2.259Z-0.240F824.88",
-        "M5"
+        "M5",
     ]
 
     jd.job_recovery_selected_line = 5
@@ -441,7 +465,7 @@ def test_cutter_radius_compensation(jd):
         "G0 X2.259 Y2.259",
         "G0 Z-0.240",
         "G1 F824.88",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == 0
 
@@ -456,9 +480,10 @@ def test_cutter_radius_compensation(jd):
         "X6.776Y6.776Z-0.720F769.25",
         "X2.259Y2.259Z-0.240G40F796.74",
         "X2.259Y2.259Z-0.240F824.88",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == 2
+
 
 def test_tool_length_offset(jd):
     jd.job_gcode = [
@@ -467,7 +492,7 @@ def test_tool_length_offset(jd):
         "X6.776Y6.776Z-0.720G49F769.25",
         "X2.259Y2.259Z-0.240F796.74",
         "X2.259Y2.259Z-0.240G43.1F824.88",
-        "M5"
+        "M5",
     ]
 
     jd.job_recovery_selected_line = 5
@@ -479,7 +504,7 @@ def test_tool_length_offset(jd):
         "G0 X2.259 Y2.259",
         "G0 Z-0.240",
         "G1 F824.88",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == 0
 
@@ -493,7 +518,7 @@ def test_tool_length_offset(jd):
         "G0 Z-0.240",
         "G1 F796.74",
         "X2.259Y2.259Z-0.240G43.1F824.88",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == 1
 
@@ -508,20 +533,13 @@ def test_tool_length_offset(jd):
         "X6.776Y6.776Z-0.720G49F769.25",
         "X2.259Y2.259Z-0.240F796.74",
         "X2.259Y2.259Z-0.240G43.1F824.88",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == 2
 
+
 def test_program_mode(jd):
-    jd.job_gcode = [
-        "G90",
-        "M30",
-        "M02G",
-        "M1G",
-        "M20",
-        "M00",
-        "M5"
-    ]
+    jd.job_gcode = ["G90", "M30", "M02G", "M1G", "M20", "M00", "M5"]
 
     jd.job_recovery_selected_line = 6
     success, message = jd.generate_recovery_gcode()
@@ -531,7 +549,7 @@ def test_program_mode(jd):
         "M00",
         "G0 X0.000 Y0.000",
         "G0 Z0.000",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == -2
 
@@ -544,7 +562,7 @@ def test_program_mode(jd):
         "G0 X0.000 Y0.000",
         "G0 Z0.000",
         "M00",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == -1
 
@@ -558,7 +576,7 @@ def test_program_mode(jd):
         "G0 Z0.000",
         "M20",
         "M00",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == 0
 
@@ -573,7 +591,7 @@ def test_program_mode(jd):
         "M1G",
         "M20",
         "M00",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == 1
 
@@ -589,7 +607,7 @@ def test_program_mode(jd):
         "M1G",
         "M20",
         "M00",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == 2
 
@@ -605,9 +623,10 @@ def test_program_mode(jd):
         "M1G",
         "M20",
         "M00",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == 2
+
 
 def test_coolant_state(jd):
     # Various orders and combinations as M7 and M8 can be used simultaneously
@@ -623,7 +642,7 @@ def test_coolant_state(jd):
         "M70",
         "M80",
         "M90",
-        "G1"
+        "G1",
     ]
 
     jd.job_recovery_selected_line = 11
@@ -635,7 +654,7 @@ def test_coolant_state(jd):
         "M8",
         "G0 X0.000 Y0.000",
         "G0 Z0.000",
-        "G1"
+        "G1",
     ]
     assert jd.job_recovery_offset == -6
 
@@ -652,7 +671,7 @@ def test_coolant_state(jd):
         "M70",
         "M80",
         "M90",
-        "G1"
+        "G1",
     ]
     assert jd.job_recovery_offset == -2
 
@@ -669,7 +688,7 @@ def test_coolant_state(jd):
         "M70",
         "M80",
         "M90",
-        "G1"
+        "G1",
     ]
     assert jd.job_recovery_offset == -2
 
@@ -687,7 +706,7 @@ def test_coolant_state(jd):
         "M70",
         "M80",
         "M90",
-        "G1"
+        "G1",
     ]
     assert jd.job_recovery_offset == -1
 
@@ -706,7 +725,7 @@ def test_coolant_state(jd):
         "M70",
         "M80",
         "M90",
-        "G1"
+        "G1",
     ]
     assert jd.job_recovery_offset == 0
 
@@ -726,7 +745,7 @@ def test_coolant_state(jd):
         "M70",
         "M80",
         "M90",
-        "G1"
+        "G1",
     ]
     assert jd.job_recovery_offset == 1
 
@@ -747,7 +766,7 @@ def test_coolant_state(jd):
         "M70",
         "M80",
         "M90",
-        "G1"
+        "G1",
     ]
     assert jd.job_recovery_offset == 2
 
@@ -768,7 +787,7 @@ def test_coolant_state(jd):
         "M70",
         "M80",
         "M90",
-        "G1"
+        "G1",
     ]
     assert jd.job_recovery_offset == 2
 
@@ -792,9 +811,10 @@ def test_coolant_state(jd):
         "M70",
         "M80",
         "M90",
-        "G1"
+        "G1",
     ]
     assert jd.job_recovery_offset == 2
+
 
 def test_spindle_speed(jd):
     jd.job_gcode = [
@@ -807,7 +827,7 @@ def test_spindle_speed(jd):
         "M03S20000",
         "G4 P4",
         "S15000 M03",
-        "S10000 M5"
+        "S10000 M5",
     ]
 
     jd.job_recovery_selected_line = 9
@@ -818,7 +838,7 @@ def test_spindle_speed(jd):
         "G0 X0.000 Y0.000",
         "G0 Z0.000",
         "M03",
-        "S10000 M5"
+        "S10000 M5",
     ]
     assert jd.job_recovery_offset == -5
 
@@ -831,7 +851,7 @@ def test_spindle_speed(jd):
         "G0 Z0.000",
         "M03",
         "S15000 M03",
-        "S10000 M5"
+        "S10000 M5",
     ]
     assert jd.job_recovery_offset == -4
 
@@ -846,7 +866,7 @@ def test_spindle_speed(jd):
         "M03S20000",
         "G4 P4",
         "S15000 M03",
-        "S10000 M5"
+        "S10000 M5",
     ]
     assert jd.job_recovery_offset == -2
 
@@ -863,7 +883,7 @@ def test_spindle_speed(jd):
         "M03S20000",
         "G4 P4",
         "S15000 M03",
-        "S10000 M5"
+        "S10000 M5",
     ]
     assert jd.job_recovery_offset == 0
 
@@ -882,7 +902,7 @@ def test_spindle_speed(jd):
         "M03S20000",
         "G4 P4",
         "S15000 M03",
-        "S10000 M5"
+        "S10000 M5",
     ]
     assert jd.job_recovery_offset == 2
 
@@ -901,7 +921,7 @@ def test_spindle_speed(jd):
         "M03S20000",
         "G4 P4",
         "S15000 M03",
-        "S10000 M5"
+        "S10000 M5",
     ]
     assert jd.job_recovery_offset == 2
 
@@ -920,9 +940,10 @@ def test_spindle_speed(jd):
         "M03S20000",
         "G4 P4",
         "S15000 M03",
-        "S10000 M5"
+        "S10000 M5",
     ]
     assert jd.job_recovery_offset == 2
+
 
 def test_feedrate(jd):
     jd.job_gcode = [
@@ -932,13 +953,13 @@ def test_feedrate(jd):
         "F796.74X2.259Y2.259Z-0.240",
         "G90F1000X0",
         "X2.259Y2.259Z-0.240F",
-        "M5"
+        "M5",
     ]
 
     jd.job_recovery_selected_line = 6
     success, message = jd.generate_recovery_gcode()
     assert not success
-    assert message == 'This job cannot be recovered! Please check your job for errors.'
+    assert message == "This job cannot be recovered! Please check your job for errors."
 
     jd.job_recovery_selected_line = 5
     success, message = jd.generate_recovery_gcode()
@@ -949,7 +970,7 @@ def test_feedrate(jd):
         "G0 Z-0.240",
         "G1 F1000",
         "X2.259Y2.259Z-0.240F",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == -1
 
@@ -962,7 +983,7 @@ def test_feedrate(jd):
         "G1 F796.74",
         "G90F1000X0",
         "X2.259Y2.259Z-0.240F",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == -1
 
@@ -976,7 +997,7 @@ def test_feedrate(jd):
         "F796.74X2.259Y2.259Z-0.240",
         "G90F1000X0",
         "X2.259Y2.259Z-0.240F",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == 0
 
@@ -991,7 +1012,7 @@ def test_feedrate(jd):
         "F796.74X2.259Y2.259Z-0.240",
         "G90F1000X0",
         "X2.259Y2.259Z-0.240F",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == 1
 
@@ -1007,29 +1028,18 @@ def test_feedrate(jd):
         "F796.74X2.259Y2.259Z-0.240",
         "G90F1000X0",
         "X2.259Y2.259Z-0.240F",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == 2
 
+
 def test_motion_mode(jd):
-    jd.job_gcode = [
-        "G1 X100",
-        "G00 F1000",
-        "G01 Y200",
-        "G0 Z100",
-        "G10",
-        "M5"
-    ]
+    jd.job_gcode = ["G1 X100", "G00 F1000", "G01 Y200", "G0 Z100", "G10", "M5"]
 
     jd.job_recovery_selected_line = 5
     success, message = jd.generate_recovery_gcode()
     assert success
-    assert jd.job_recovery_gcode == [
-        "G1 F1000",
-        "G0 X100 Y200",
-        "G0 Z100",
-        "M5"
-    ]
+    assert jd.job_recovery_gcode == ["G1 F1000", "G0 X100 Y200", "G0 Z100", "M5"]
     assert jd.job_recovery_offset == -2
 
     jd.job_recovery_selected_line = 3
@@ -1041,7 +1051,7 @@ def test_motion_mode(jd):
         "G1 F1000",
         "G0 Z100",
         "G10",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == 0
 
@@ -1055,7 +1065,7 @@ def test_motion_mode(jd):
         "G01 Y200",
         "G0 Z100",
         "G10",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == 1
 
@@ -1070,7 +1080,7 @@ def test_motion_mode(jd):
         "G01 Y200",
         "G0 Z100",
         "G10",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == 2
 
@@ -1085,19 +1095,13 @@ def test_motion_mode(jd):
         "G01 Y200",
         "G0 Z100",
         "G10",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == 2
 
+
 def test_spindle_state(jd):
-    jd.job_gcode = [
-        "G90",
-        "S20000M3",
-        "M04",
-        "M30",
-        "M5",
-        "G1"
-    ]
+    jd.job_gcode = ["G90", "S20000M3", "M04", "M30", "M5", "G1"]
 
     jd.job_recovery_selected_line = 5
     success, message = jd.generate_recovery_gcode()
@@ -1109,7 +1113,7 @@ def test_spindle_state(jd):
         "G0 X0.000 Y0.000",
         "G0 Z0.000",
         "M5",
-        "G1"
+        "G1",
     ]
     assert jd.job_recovery_offset == 1
 
@@ -1124,7 +1128,7 @@ def test_spindle_state(jd):
         "G0 Z0.000",
         "M04",
         "M5",
-        "G1"
+        "G1",
     ]
     assert jd.job_recovery_offset == 2
 
@@ -1140,7 +1144,7 @@ def test_spindle_state(jd):
         "M04",
         "M30",
         "M5",
-        "G1"
+        "G1",
     ]
     assert jd.job_recovery_offset == 3
 
@@ -1155,9 +1159,10 @@ def test_spindle_state(jd):
         "M04",
         "M30",
         "M5",
-        "G1"
+        "G1",
     ]
     assert jd.job_recovery_offset == 2
+
 
 def test_regular_case(jd):
     jd.job_gcode = [
@@ -1184,7 +1189,7 @@ def test_regular_case(jd):
         "G18 G3 X548.095 Z9 I-0.63 K0",
         "G1 X547.78",
         "G17 G3 X547.15 Y263 I0 J-0.63",
-        "M5"
+        "M5",
     ]
 
     jd.job_recovery_selected_line = 23
@@ -1202,7 +1207,7 @@ def test_regular_case(jd):
         "G0 Z9",
         "G1 F1000",
         "M3",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == -12
 
@@ -1231,7 +1236,7 @@ def test_regular_case(jd):
         "G18 G3 X548.095 Z9 I-0.63 K0",
         "G1 X547.78",
         "G17 G3 X547.15 Y263 I0 J-0.63",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == -2
 
@@ -1263,7 +1268,7 @@ def test_regular_case(jd):
         "G18 G3 X548.095 Z9 I-0.63 K0",
         "G1 X547.78",
         "G17 G3 X547.15 Y263 I0 J-0.63",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == 1
 
@@ -1296,19 +1301,20 @@ def test_regular_case(jd):
         "G18 G3 X548.095 Z9 I-0.63 K0",
         "G1 X547.78",
         "G17 G3 X547.15 Y263 I0 J-0.63",
-        "M5"
+        "M5",
     ]
     assert jd.job_recovery_offset == 2
+
 
 def test_random_gibberish(jd):
     jd.job_gcode = [
         "GDFASGFDATG324534RGE",
         "'#;#FASASD[FKDAOS]'",
         "543QHYTYJEAGFDA",
-        "W4A3ERTIUJUSUEXHTDG"
+        "W4A3ERTIUJUSUEXHTDG",
     ]
 
     jd.job_recovery_selected_line = 3
     success, message = jd.generate_recovery_gcode()
     assert not success
-    assert message == 'This job cannot be recovered! Please check your job for errors.'
+    assert message == "This job cannot be recovered! Please check your job for errors."

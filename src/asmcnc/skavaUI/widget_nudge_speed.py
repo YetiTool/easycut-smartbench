@@ -1,7 +1,8 @@
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <NudgeSpeed>
 
@@ -48,15 +49,15 @@ Builder.load_string("""
                     size: self.parent.width, self.parent.height
                     allow_stretch: True
 
-""")
-    
+"""
+)
+
 
 class NudgeSpeed(Widget):
-
     def __init__(self, **kwargs):
         super(NudgeSpeed, self).__init__(**kwargs)
-        self.m=kwargs['machine']
-        self.sm=kwargs['screen_manager']
+        self.m = kwargs["machine"]
+        self.sm = kwargs["screen_manager"]
 
         self.set_jog_speeds()
 
@@ -65,16 +66,16 @@ class NudgeSpeed(Widget):
     fast_z_speed = 750
 
     def set_jog_speeds(self):
-        if self.speed_toggle.state == 'normal': 
+        if self.speed_toggle.state == "normal":
             self.speed_image.source = "./asmcnc/skavaUI/img/slow.png"
             self.feedSpeedJogX = self.fast_x_speed / 5
             self.feedSpeedJogY = self.fast_y_speed / 5
             self.feedSpeedJogZ = self.fast_z_speed / 5
-        else: 
+        else:
             self.speed_image.source = "./asmcnc/skavaUI/img/fast.png"
             self.feedSpeedJogX = self.fast_x_speed
             self.feedSpeedJogY = self.fast_y_speed
             self.feedSpeedJogZ = self.fast_z_speed
 
     def set_datum(self):
-        self.sm.get_screen('nudge').set_datum_popup()
+        self.sm.get_screen("nudge").set_datum_popup()

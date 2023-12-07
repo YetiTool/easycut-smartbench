@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Created March 2019
 
 @author: Ed
 
 Squaring decision: manual or auto?
-'''
+"""
 
 import kivy
 from kivy.lang import Builder
@@ -14,7 +14,8 @@ import sys, os
 from asmcnc.skavaUI import popup_info
 from kivy.clock import Clock
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <SquaringScreenDecisionManualVsSquare>:
 
@@ -146,27 +147,24 @@ Builder.load_string("""
         Label:
             size_hint_y: .5                
 
-""")
+"""
+)
 
 
 class SquaringScreenDecisionManualVsSquare(Screen):
-    
-    
-    cancel_to_screen = 'lobby'   
-    return_to_screen = 'lobby'
-    
+    cancel_to_screen = "lobby"
+    return_to_screen = "lobby"
+
     default_font_size = 30
-    
+
     def __init__(self, **kwargs):
-        
         super(SquaringScreenDecisionManualVsSquare, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-        self.l=kwargs['localization']    
+        self.sm = kwargs["screen_manager"]
+        self.m = kwargs["machine"]
+        self.l = kwargs["localization"]
         self.update_strings()
 
     def on_pre_enter(self):
-
         if self.m.is_machine_completed_the_initial_squaring_decision:
             self.no_button.text = self.l.get_str("No, SmartBench is still square")
 
@@ -179,40 +177,65 @@ class SquaringScreenDecisionManualVsSquare(Screen):
         self.proceed_to_next_screen()
 
     def proceed_to_next_screen(self):
-        self.sm.get_screen('prepare_to_home').cancel_to_screen = self.cancel_to_screen
-        self.sm.get_screen('prepare_to_home').return_to_screen = self.return_to_screen
-        self.sm.current = 'prepare_to_home'
+        self.sm.get_screen("prepare_to_home").cancel_to_screen = self.cancel_to_screen
+        self.sm.get_screen("prepare_to_home").return_to_screen = self.return_to_screen
+        self.sm.current = "prepare_to_home"
 
     def popup_help(self):
-        
-        info =  self.l.get_bold("Manual squaring") + "\n"  + \
-                self.l.get_str("Before power up, the user manually pushes the X beam up against the bench legs at the home end.") + " " + \
-                self.l.get_str("The power is then switched on.") + " " + \
-                self.l.get_str("The motor coils lock the lower beam into position with a high degree of reliability.") + " " + \
-                self.l.get_str("Thus, mechanical adjustments to square the beam can be repeated.") + "\n\n" + \
-                self.l.get_bold("Auto squaring") + "\n" + \
-                self.l.get_str("No special preparation from the user is needed.") + " " + \
-                self.l.get_str("When homing, the lower beam automatically drives into the legs to square the X beam against the bench legs.") + " " + \
-                self.l.get_str("The stalling procedure can offer a general squareness.") + " " + \
-                self.l.get_str("But at the end of the movement, the motor coils can bounce into a different step position.") + " " + \
-                self.l.get_str("Thus, mechanical adjustments to square the beam can be repeated less reliably than manual squaring.")
+        info = (
+            self.l.get_bold("Manual squaring")
+            + "\n"
+            + self.l.get_str(
+                "Before power up, the user manually pushes the X beam up against the bench legs at the home end."
+            )
+            + " "
+            + self.l.get_str("The power is then switched on.")
+            + " "
+            + self.l.get_str(
+                "The motor coils lock the lower beam into position with a high degree of reliability."
+            )
+            + " "
+            + self.l.get_str(
+                "Thus, mechanical adjustments to square the beam can be repeated."
+            )
+            + "\n\n"
+            + self.l.get_bold("Auto squaring")
+            + "\n"
+            + self.l.get_str("No special preparation from the user is needed.")
+            + " "
+            + self.l.get_str(
+                "When homing, the lower beam automatically drives into the legs to square the X beam against the bench legs."
+            )
+            + " "
+            + self.l.get_str("The stalling procedure can offer a general squareness.")
+            + " "
+            + self.l.get_str(
+                "But at the end of the movement, the motor coils can bounce into a different step position."
+            )
+            + " "
+            + self.l.get_str(
+                "Thus, mechanical adjustments to square the beam can be repeated less reliably than manual squaring."
+            )
+        )
 
         popup_info.PopupInfo(self.sm, self.l, 760, info)
-
 
     def cancel(self):
         self.sm.current = self.cancel_to_screen
 
     def update_strings(self):
-        self.header_label.text = self.l.get_str("Does SmartBench need to auto-square the XY?").replace(self.l.get_str('auto-square'), self.l.get_bold('auto-square'))
-        self.subtitle_label.text = self.l.get_str("Click on the question mark to learn more about this.")
+        self.header_label.text = self.l.get_str(
+            "Does SmartBench need to auto-square the XY?"
+        ).replace(self.l.get_str("auto-square"), self.l.get_bold("auto-square"))
+        self.subtitle_label.text = self.l.get_str(
+            "Click on the question mark to learn more about this."
+        )
         self.yes_button.text = self.l.get_str("Yes, enable auto-square")
 
         if self.m.is_machine_completed_the_initial_squaring_decision:
             self.no_button.text = self.l.get_str("No, SmartBench is still square")
         else:
             self.no_button.text = self.l.get_str("No, I manually squared already")
-
 
         self.update_font_size(self.no_button)
         self.update_font_size(self.yes_button)
@@ -222,11 +245,11 @@ class SquaringScreenDecisionManualVsSquare(Screen):
 
         if text_length < 35:
             value.font_size = self.default_font_size
-        elif text_length > 38: 
+        elif text_length > 38:
             value.font_size = self.default_font_size - 2
-        if text_length > 42: 
+        if text_length > 42:
             value.font_size = self.default_font_size - 4
-        if text_length > 44: 
+        if text_length > 44:
             value.font_size = self.default_font_size - 5
         if text_length > 50:
             value.font_size = self.default_font_size - 7

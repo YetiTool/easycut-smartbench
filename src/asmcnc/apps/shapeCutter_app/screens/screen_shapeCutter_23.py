@@ -1,9 +1,9 @@
-'''
+"""
 Created on 4 March 202
 Screen 23 for the Shape Cutter App
 
 @author: Letty
-'''
+"""
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -14,7 +14,8 @@ from kivy.clock import Clock
 from asmcnc.apps.shapeCutter_app.screens import popup_info
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <ShapeCutter23ScreenClass>
 
@@ -497,23 +498,24 @@ Builder.load_string("""
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True               
 
-""")
+"""
+)
+
 
 class ShapeCutter23ScreenClass(Screen):
-    
     info_button = ObjectProperty()
-    
+
     screen_number = StringProperty("[b]23[/b]")
     title_label = StringProperty("[b]Enter feeds and speeds[/b]")
     user_instructions = StringProperty("")
-    
+
     def __init__(self, **kwargs):
         super(ShapeCutter23ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m=kwargs['machine']
-        self.j=kwargs['job_parameters']
-        self.l=kwargs['localization']
-        self.kb=kwargs['keyboard']
+        self.shapecutter_sm = kwargs["shapecutter"]
+        self.m = kwargs["machine"]
+        self.j = kwargs["job_parameters"]
+        self.l = kwargs["localization"]
+        self.kb = kwargs["keyboard"]
 
         # Add the IDs of ALL the TextInputs on this screen
         self.text_inputs = [self.xy_feed, self.z_feed, self.spindle_speed]
@@ -525,9 +527,15 @@ class ShapeCutter23ScreenClass(Screen):
     def on_pre_enter(self):
         self.info_button.opacity = 1
 
-        self.xy_feed.text = "{:.2f}".format(float(self.j.parameter_dict["feed rates"]["xy feed rate"]))
-        self.z_feed.text = "{:.2f}".format(float(self.j.parameter_dict["feed rates"]["z feed rate"]))
-        self.spindle_speed.text= "{:.0f}".format(float(self.j.parameter_dict["feed rates"]["spindle speed"]))
+        self.xy_feed.text = "{:.2f}".format(
+            float(self.j.parameter_dict["feed rates"]["xy feed rate"])
+        )
+        self.z_feed.text = "{:.2f}".format(
+            float(self.j.parameter_dict["feed rates"]["z feed rate"])
+        )
+        self.spindle_speed.text = "{:.0f}".format(
+            float(self.j.parameter_dict["feed rates"]["spindle speed"])
+        )
 
         if self.j.parameter_dict["feed rates"]["units"] == "inches":
             self.unit_toggle.active = True
@@ -542,7 +550,7 @@ class ShapeCutter23ScreenClass(Screen):
     def on_enter(self):
         self.kb.setup_text_inputs(self.text_inputs)
 
-# Action buttons       
+    # Action buttons
     def get_info(self):
         # info = "[b]XY Feed Rate:[/b] Feed used in cutting moves.\n\n" \
         # "[b]Z Feed Rate (Plunge Rate):[/b] Feed when vertically plunging into stock.\n\n" \
@@ -551,80 +559,97 @@ class ShapeCutter23ScreenClass(Screen):
         message = ", loading feeds and speeds look-up table..."
         popup_info.PopupWait(self.shapecutter_sm, message)
         # popup_info.PopupInfo(self.shapecutter_sm, info)
-        Clock.schedule_once(lambda dt: popup_info.PopupFeedsAndSpeedsLookupTable(self.shapecutter_sm), 1.5)
+        Clock.schedule_once(
+            lambda dt: popup_info.PopupFeedsAndSpeedsLookupTable(self.shapecutter_sm),
+            1.5,
+        )
 
     def go_back(self):
         self.shapecutter_sm.previous_screen()
-    
+
     def next_screen(self):
         self.check_dimensions()
-    
-# Tab functions
+
+    # Tab functions
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()
-    
+
     def load(self):
         self.shapecutter_sm.load_tab()
-    
+
     def define(self):
         self.shapecutter_sm.define_tab()
-    
+
     def position(self):
         self.shapecutter_sm.position_tab()
-    
+
     def check(self):
         self.shapecutter_sm.check_tab()
-    
+
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
-        
-# Screen specific
-    def toggle_units(self):
 
+    # Screen specific
+    def toggle_units(self):
         if self.unit_toggle.active == True:
             self.j.parameter_dict["feed rates"]["units"] = "inches"
             self.xy_feed_units.text = "inches/min"
             self.z_feed_units.text = "inches/min"
-            
-            if not (self.xy_feed.text == ""): self.xy_feed.text = "{:.2f}".format(float(self.xy_feed.text) / 25.4)
-            if not (self.z_feed.text == ""): self.z_feed.text = "{:.2f}".format(float(self.z_feed.text) / 25.4)
- 
+
+            if not (self.xy_feed.text == ""):
+                self.xy_feed.text = "{:.2f}".format(float(self.xy_feed.text) / 25.4)
+            if not (self.z_feed.text == ""):
+                self.z_feed.text = "{:.2f}".format(float(self.z_feed.text) / 25.4)
+
         elif self.unit_toggle.active == False:
             self.j.parameter_dict["feed rates"]["units"] = "mm"
             self.xy_feed_units.text = "mm/min"
             self.z_feed_units.text = "mm/min"
-            
-            if not (self.xy_feed.text == ""): self.xy_feed.text = "{:.2f}".format(float(self.xy_feed.text) * 25.4)
-            if not (self.z_feed.text == ""): self.z_feed.text = "{:.2f}".format(float(self.z_feed.text) * 25.4)
-          
 
-    def check_dimensions(self):        
+            if not (self.xy_feed.text == ""):
+                self.xy_feed.text = "{:.2f}".format(float(self.xy_feed.text) * 25.4)
+            if not (self.z_feed.text == ""):
+                self.z_feed.text = "{:.2f}".format(float(self.z_feed.text) * 25.4)
+
+    def check_dimensions(self):
         if not self.xy_feed.text == "" and not self.z_feed.text == "":
-            
             if self.unit_toggle.active == True:
                 self.j.parameter_dict["feed rates"]["units"] = "inches"
-            elif self.unit_toggle.active == False: 
+            elif self.unit_toggle.active == False:
                 self.j.parameter_dict["feed rates"]["units"] = "mm"
-            
+
                 # save the dimensions
-            input_dim_list = [("xy feed rate", float(self.xy_feed.text)),
-                              ("z feed rate", float(self.z_feed.text)),
-                              ("spindle speed", float(self.spindle_speed.text))]
-            
-            for (dim, input) in input_dim_list:
+            input_dim_list = [
+                ("xy feed rate", float(self.xy_feed.text)),
+                ("z feed rate", float(self.z_feed.text)),
+                ("spindle speed", float(self.spindle_speed.text)),
+            ]
+
+            for dim, input in input_dim_list:
                 setting = self.j.validate_feed_rates(dim, input)
                 if not setting == True:
-                    if dim == "spindle speed":               
-                        description = "The " + dim + " input isn't valid.\n\n" + \
-                                    "The " + dim + " should be greater than 6000" + \
-                                    " and less than 25000 RPM.\n\n" \
-                                    + "Please re-enter your parameters."
-                    else: 
-                        description = "The " + dim + " input isn't valid.\n\n" + \
-                                    dim + " value should be greater than 0.\n\n" \
-                                    + "Please re-enter your parameters."
-                                           
+                    if dim == "spindle speed":
+                        description = (
+                            "The "
+                            + dim
+                            + " input isn't valid.\n\n"
+                            + "The "
+                            + dim
+                            + " should be greater than 6000"
+                            + " and less than 25000 RPM.\n\n"
+                            + "Please re-enter your parameters."
+                        )
+                    else:
+                        description = (
+                            "The "
+                            + dim
+                            + " input isn't valid.\n\n"
+                            + dim
+                            + " value should be greater than 0.\n\n"
+                            + "Please re-enter your parameters."
+                        )
+
                     popup_input_error.PopupInputError(self.shapecutter_sm, description)
                     return False
 

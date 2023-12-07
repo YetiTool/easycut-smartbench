@@ -1,9 +1,9 @@
-'''
+"""
 Created on 18 November 2020
 Menu screen for system tools app
 
 @author: Letty
-'''
+"""
 
 from kivy.lang import Builder
 from kivy.factory import Factory
@@ -13,7 +13,8 @@ from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty
 from kivy.clock import Clock
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <ScrollableLabelLogsView>:
     scroll_y:1
@@ -282,20 +283,23 @@ Builder.load_string("""
                                     y: self.parent.y
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True
-""")
+"""
+)
+
 
 class ScrollableLabelLogsView(ScrollView):
-    text = StringProperty('')
+    text = StringProperty("")
+
 
 class ScrollableLabelCommandView(ScrollView):
-    text = StringProperty('')
+    text = StringProperty("")
+
 
 class DeveloperTempScreen(Screen):
-
     def __init__(self, **kwargs):
         super(DeveloperTempScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs['system_tools']
-        self.m = kwargs['machine']
+        self.systemtools_sm = kwargs["system_tools"]
+        self.m = kwargs["machine"]
 
     def go_back(self):
         self.systemtools_sm.open_system_tools()
@@ -303,7 +307,7 @@ class DeveloperTempScreen(Screen):
     def exit_app(self):
         self.systemtools_sm.exit_app()
 
-    def send_gcode_textinput(self): 
+    def send_gcode_textinput(self):
         self.m.send_any_gcode_command(str(self.gCodeInput.text))
 
     def open_update_testing(self):

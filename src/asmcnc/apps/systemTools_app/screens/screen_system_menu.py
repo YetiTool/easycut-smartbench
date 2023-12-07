@@ -1,10 +1,13 @@
-from kivy.core.window import Window
+# -*- coding: utf-8 -*-
+
 """
 Created on 18 November 2020
 Menu screen for system tools app
 
 @author: Letty
 """
+
+from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -12,6 +15,7 @@ import sys
 from kivy.clock import Clock
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.systemTools_app.screens import popup_system
+
 Builder.load_string(
     """
 
@@ -201,7 +205,8 @@ Builder.load_string(
             padding_y: 5
 
 """
-    )
+)
+
 
 
 class SystemMenuScreen(Screen):
@@ -209,14 +214,24 @@ class SystemMenuScreen(Screen):
 
     def __init__(self, **kwargs):
         super(SystemMenuScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs['system_tools']
-        self.l = kwargs['localization']
-        self.kb = kwargs['keyboard']
-        self.id_list = [self.button_system_info, self.button_support_menu,
-            self.button_reboot, self.button_exit_software, self.
-            button_usb_first_aid, self.button_beta_testing, self.
-            button_grbl_settings, self.button_factory, self.
-            button_developer, self.button_go_back]
+
+        self.systemtools_sm = kwargs["system_tools"]
+        self.l = kwargs["localization"]
+        self.kb = kwargs["keyboard"]
+
+        self.id_list = [
+            self.button_system_info,
+            self.button_support_menu,
+            self.button_reboot,
+            self.button_exit_software,
+            self.button_usb_first_aid,
+            self.button_beta_testing,
+            self.button_grbl_settings,
+            self.button_factory,
+            self.button_developer,
+            self.button_go_back,
+        ]
+
         self.update_strings()
 
     def go_back(self):
@@ -263,6 +278,7 @@ class SystemMenuScreen(Screen):
         self.button_factory.text = self.l.get_str('Factory')
         self.button_developer.text = self.l.get_str('Developer')
         self.button_go_back.text = self.l.get_str('Go Back')
+
         for id_object in self.id_list:
             self.update_font_size(id_object)
 
@@ -278,3 +294,4 @@ class SystemMenuScreen(Screen):
             value.font_size = self.default_font_size - 0.00625 * Window.width
         if text_length > 25:
             value.font_size = self.default_font_size - 0.0075 * Window.width
+
