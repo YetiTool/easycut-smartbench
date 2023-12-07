@@ -11,8 +11,10 @@ import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
+
 from asmcnc.skavaUI import popup_info
 from datetime import datetime
+from asmcnc.core_UI.popups import BasicPopup, PopupType
 
 
 Builder.load_string("""
@@ -166,8 +168,6 @@ class StopOrResumeDecisionScreen(Screen):
                 self.l.get_bold("Or visit <URL>").replace('<URL>', 'www.yetitool.com/support > Knowledge Base')
             )
 
-            # popup_info.PopupQRInfo(self.sm, self.l, 500, info, self.qr_source)
-            from asmcnc.core_UI.popups import BasicPopup, PopupType
             qr_popup = BasicPopup(
                 sm=self.sm, m=self.m, l=self.l,
                 title='',
