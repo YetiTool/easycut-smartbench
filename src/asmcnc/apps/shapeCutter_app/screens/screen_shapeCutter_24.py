@@ -10,6 +10,7 @@ from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from asmcnc.apps.shapeCutter_app.screens import popup_info
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
+
 Builder.load_string(
     """
 
@@ -534,23 +535,26 @@ Builder.load_string(
                                     allow_stretch: True               
 
 """
-    )
+)
 
 
 class ShapeCutter24ScreenClass(Screen):
     info_button = ObjectProperty()
-    screen_number = StringProperty('[b]24[/b]')
-    title_label = StringProperty('[b]Enter strategy parameters[/b]')
-    user_instructions = StringProperty('')
+    screen_number = StringProperty("[b]24[/b]")
+    title_label = StringProperty("[b]Enter strategy parameters[/b]")
+    user_instructions = StringProperty("")
 
     def __init__(self, **kwargs):
         super(ShapeCutter24ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
-        self.j = kwargs['job_parameters']
-        self.kb = kwargs['keyboard']
-        self.text_inputs = [self.stock_bottom_offset, self.step_down, self.
-            finishing_passes]
+        self.shapecutter_sm = kwargs["shapecutter"]
+        self.m = kwargs["machine"]
+        self.j = kwargs["job_parameters"]
+        self.kb = kwargs["keyboard"]
+        self.text_inputs = [
+            self.stock_bottom_offset,
+            self.step_down,
+            self.finishing_passes,
+        ]
 
     def on_touch(self):
         for text_input in self.text_inputs:
@@ -559,20 +563,23 @@ class ShapeCutter24ScreenClass(Screen):
     def on_pre_enter(self):
         self.counter = 0
         self.info_button.opacity = 1
-        self.stock_bottom_offset.text = '{:.2f}'.format(float(self.j.
-            parameter_dict['strategy parameters']['stock bottom offset']))
-        self.step_down.text = '{:.2f}'.format(float(self.j.parameter_dict[
-            'strategy parameters']['step down']))
-        self.finishing_passes.text = '{:.0f}'.format(float(self.j.
-            parameter_dict['strategy parameters']['finishing passes']))
-        if self.j.parameter_dict['strategy parameters']['units'] == 'inches':
+        self.stock_bottom_offset.text = "{:.2f}".format(
+            float(self.j.parameter_dict["strategy parameters"]["stock bottom offset"])
+        )
+        self.step_down.text = "{:.2f}".format(
+            float(self.j.parameter_dict["strategy parameters"]["step down"])
+        )
+        self.finishing_passes.text = "{:.0f}".format(
+            float(self.j.parameter_dict["strategy parameters"]["finishing passes"])
+        )
+        if self.j.parameter_dict["strategy parameters"]["units"] == "inches":
             self.unit_toggle.active = True
-            self.stock_bottom_offset_units.text = 'inches'
-            self.step_down_units.text = 'inches'
-        elif self.j.parameter_dict['strategy parameters']['units'] == 'mm':
+            self.stock_bottom_offset_units.text = "inches"
+            self.step_down_units.text = "inches"
+        elif self.j.parameter_dict["strategy parameters"]["units"] == "mm":
             self.unit_toggle.active = False
-            self.stock_bottom_offset_units.text = 'mm'
-            self.step_down_units.text = 'mm'
+            self.stock_bottom_offset_units.text = "mm"
+            self.step_down_units.text = "mm"
 
     def on_enter(self):
         self.kb.setup_text_inputs(self.text_inputs)
@@ -611,80 +618,99 @@ class ShapeCutter24ScreenClass(Screen):
 
     def toggle_units(self):
         if self.unit_toggle.active == True:
-            self.j.parameter_dict['strategy parameters']['units'] = 'inches'
-            self.stock_bottom_offset_units.text = 'inches'
-            self.step_down_units.text = 'inches'
-            if not self.stock_bottom_offset.text == '':
-                self.stock_bottom_offset.text = '{:.2f}'.format(float(self.
-                    stock_bottom_offset.text) / 25.4)
-            if not self.step_down.text == '':
-                self.step_down.text = '{:.2f}'.format(float(self.step_down.
-                    text) / 25.4)
+            self.j.parameter_dict["strategy parameters"]["units"] = "inches"
+            self.stock_bottom_offset_units.text = "inches"
+            self.step_down_units.text = "inches"
+            if not self.stock_bottom_offset.text == "":
+                self.stock_bottom_offset.text = "{:.2f}".format(
+                    float(self.stock_bottom_offset.text) / 25.4
+                )
+            if not self.step_down.text == "":
+                self.step_down.text = "{:.2f}".format(float(self.step_down.text) / 25.4)
         elif self.unit_toggle.active == False:
-            self.j.parameter_dict['strategy parameters']['units'] = 'mm'
-            self.stock_bottom_offset_units.text = 'mm'
-            self.step_down_units.text = 'mm'
-            if not self.stock_bottom_offset.text == '':
-                self.stock_bottom_offset.text = '{:.2f}'.format(float(self.
-                    stock_bottom_offset.text) * 25.4)
-            if not self.step_down.text == '':
-                self.step_down.text = '{:.2f}'.format(float(self.step_down.
-                    text) * 25.4)
+            self.j.parameter_dict["strategy parameters"]["units"] = "mm"
+            self.stock_bottom_offset_units.text = "mm"
+            self.step_down_units.text = "mm"
+            if not self.stock_bottom_offset.text == "":
+                self.stock_bottom_offset.text = "{:.2f}".format(
+                    float(self.stock_bottom_offset.text) * 25.4
+                )
+            if not self.step_down.text == "":
+                self.step_down.text = "{:.2f}".format(float(self.step_down.text) * 25.4)
 
     def check_dimensions(self):
-        if (not self.stock_bottom_offset.text == '' and not self.step_down.
-            text == '' and not self.finishing_passes.text == ''):
-            self.j.parameter_dict['strategy parameters']['stock bottom offset'
-                ] = float(self.stock_bottom_offset.text)
-            self.j.parameter_dict['strategy parameters']['step down'] = float(
-                self.step_down.text)
-            self.j.parameter_dict['strategy parameters']['finishing passes'
-                ] = float(self.finishing_passes.text)
+        if (
+            not self.stock_bottom_offset.text == ""
+            and not self.step_down.text == ""
+            and not self.finishing_passes.text == ""
+        ):
+            self.j.parameter_dict["strategy parameters"]["stock bottom offset"] = float(
+                self.stock_bottom_offset.text
+            )
+            self.j.parameter_dict["strategy parameters"]["step down"] = float(
+                self.step_down.text
+            )
+            self.j.parameter_dict["strategy parameters"]["finishing passes"] = float(
+                self.finishing_passes.text
+            )
             if self.unit_toggle.active == True:
-                self.j.parameter_dict['strategy parameters']['units'
-                    ] = 'inches'
+                self.j.parameter_dict["strategy parameters"]["units"] = "inches"
             elif self.unit_toggle.active == False:
-                self.j.parameter_dict['strategy parameters']['units'] = 'mm'
-            input_dim_list = [('stock bottom offset', float(self.
-                stock_bottom_offset.text)), ('step down', float(self.
-                step_down.text)), ('finishing passes', float(self.
-                finishing_passes.text))]
+                self.j.parameter_dict["strategy parameters"]["units"] = "mm"
+            input_dim_list = [
+                ("stock bottom offset", float(self.stock_bottom_offset.text)),
+                ("step down", float(self.step_down.text)),
+                ("finishing passes", float(self.finishing_passes.text)),
+            ]
             for dim, input in input_dim_list:
                 setting = self.j.validate_strategy_parameters(dim, input)
                 if not setting == True:
-                    if dim == 'step down' and setting == False:
-                        description = ('The ' + dim +
-                            ' is greater than half the cutter diameter - ' +
-                            """this might be too big for the size of cutter.
+                    if dim == "step down" and setting == False:
+                        description = (
+                            "The "
+                            + dim
+                            + " is greater than half the cutter diameter - "
+                            + """this might be too big for the size of cutter.
 
 """
-                             +
-                            ' A good guide is to not exceed half the cutter diameter.\n\n'
-                             +
-                            'Clicking next again will allow you to continue. ')
+                            + " A good guide is to not exceed half the cutter diameter.\n\n"
+                            + "Clicking next again will allow you to continue. "
+                        )
                         if self.counter == 0:
-                            popup_input_error.PopupInputError(self.
-                                shapecutter_sm, description)
+                            popup_input_error.PopupInputError(
+                                self.shapecutter_sm, description
+                            )
                             self.counter = 1
                             return False
-                    elif dim == 'step down' and setting != 0:
-                        description = ('The ' + dim +
-                            " input isn't valid.\n\n" + dim +
-                            ' value should be less than the shape depth, Z = '
-                             + str(setting) + ' mm.\n\n' +
-                            'Please re-enter your parameters.')
-                        popup_input_error.PopupInputError(self.
-                            shapecutter_sm, description)
+                    elif dim == "step down" and setting != 0:
+                        description = (
+                            "The "
+                            + dim
+                            + " input isn't valid.\n\n"
+                            + dim
+                            + " value should be less than the shape depth, Z = "
+                            + str(setting)
+                            + " mm.\n\n"
+                            + "Please re-enter your parameters."
+                        )
+                        popup_input_error.PopupInputError(
+                            self.shapecutter_sm, description
+                        )
                         return False
                     else:
-                        description = ('The ' + dim +
-                            " input isn't valid.\n\n" + dim +
-                            """ value should be greater than 0.
+                        description = (
+                            "The "
+                            + dim
+                            + " input isn't valid.\n\n"
+                            + dim
+                            + """ value should be greater than 0.
 
-""" +
-                            'Please re-enter your parameters.')
-                        popup_input_error.PopupInputError(self.
-                            shapecutter_sm, description)
+"""
+                            + "Please re-enter your parameters."
+                        )
+                        popup_input_error.PopupInputError(
+                            self.shapecutter_sm, description
+                        )
                         return False
             self.shapecutter_sm.next_screen()
         else:

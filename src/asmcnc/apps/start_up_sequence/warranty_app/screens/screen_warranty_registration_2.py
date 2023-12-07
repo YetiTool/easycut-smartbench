@@ -6,6 +6,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from asmcnc.skavaUI import widget_status_bar
+
 Builder.load_string(
     """
 
@@ -148,28 +149,27 @@ Builder.load_string(
 					width: dp(0.305625*app.width)
 					padding:[dp(0.241875)*app.width, 0, 0, 0]
 """
-    )
+)
 
 
 class WarrantyScreen2(Screen):
-
     def __init__(self, **kwargs):
         super(WarrantyScreen2, self).__init__(**kwargs)
-        self.start_seq = kwargs['start_sequence']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
+        self.start_seq = kwargs["start_sequence"]
+        self.m = kwargs["machine"]
+        self.l = kwargs["localization"]
         self.serial_number_label.text = self.get_serial_number()
         self.update_strings()
 
     def get_serial_number(self):
-        serial_number_filepath = '/home/pi/smartbench_serial_number.txt'
-        serial_number_from_file = ''
+        serial_number_filepath = "/home/pi/smartbench_serial_number.txt"
+        serial_number_from_file = ""
         try:
-            file = open(serial_number_filepath, 'r')
+            file = open(serial_number_filepath, "r")
             serial_number_from_file = str(file.read())
             file.close()
         except:
-            print('Could not get serial number! Please contact YetiTool support!')
+            print("Could not get serial number! Please contact YetiTool support!")
         return str(serial_number_from_file)
 
     def next_screen(self):
@@ -179,8 +179,6 @@ class WarrantyScreen2(Screen):
         self.start_seq.prev_in_sequence()
 
     def update_strings(self):
-        self.title_label.text = self.l.get_str(
-            'SmartBench Warranty Registration')
-        self.your_serial_number_label.text = self.l.get_bold(
-            'Your serial number is')
-        self.next_button.text = self.l.get_str('Next') + '...'
+        self.title_label.text = self.l.get_str("SmartBench Warranty Registration")
+        self.your_serial_number_label.text = self.l.get_bold("Your serial number is")
+        self.next_button.text = self.l.get_str("Next") + "..."

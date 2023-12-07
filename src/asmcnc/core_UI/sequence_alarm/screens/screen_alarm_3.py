@@ -1,4 +1,5 @@
 from kivy.core.window import Window
+
 """
 Created on 31 March 2021
 @author: Letty
@@ -7,6 +8,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
 from asmcnc.skavaUI import widget_status_bar
+
 Builder.load_string(
     """
 <AlarmScreen3>:
@@ -122,7 +124,7 @@ Builder.load_string(
  #            width: 100
  #            allow_stretch: True
 """
-    )
+)
 
 
 class AlarmScreen3(Screen):
@@ -131,38 +133,38 @@ class AlarmScreen3(Screen):
 
     def __init__(self, **kwargs):
         super(AlarmScreen3, self).__init__(**kwargs)
-        self.a = kwargs['alarm_manager']
-        self.status_bar_widget = widget_status_bar.StatusBar(screen_manager
-            =self.a.sm, machine=self.a.m)
+        self.a = kwargs["alarm_manager"]
+        self.status_bar_widget = widget_status_bar.StatusBar(
+            screen_manager=self.a.sm, machine=self.a.m
+        )
         self.status_container.add_widget(self.status_bar_widget)
-        self.status_bar_widget.cheeky_color = '#1976d2'
-        self.camera_img.source = (
-            './asmcnc/core_UI/sequence_alarm/img/camera_light.png')
-        self.next_button.text = self.a.l.get_str('Next') + '...'
+        self.status_bar_widget.cheeky_color = "#1976d2"
+        self.camera_img.source = "./asmcnc/core_UI/sequence_alarm/img/camera_light.png"
+        self.next_button.text = self.a.l.get_str("Next") + "..."
 
     def on_pre_enter(self):
         if self.for_support:
-            self.next_button.text = self.a.l.get_str('Next') + '...'
+            self.next_button.text = self.a.l.get_str("Next") + "..."
             self.update_font_size(self.next_button)
             self.camera_img.opacity = 1
             self.a.download_alarm_report()
         else:
-            self.next_button.text = self.a.l.get_str('Get support')
+            self.next_button.text = self.a.l.get_str("Get support")
             self.update_font_size(self.next_button)
             self.camera_img.opacity = 0
 
     def next_screen(self):
         if self.for_support:
-            self.a.sm.current = 'alarm_4'
+            self.a.sm.current = "alarm_4"
         else:
-            self.a.sm.current = 'alarm_2'
+            self.a.sm.current = "alarm_2"
 
     def prev_screen(self):
         if self.for_support:
-            self.a.sm.current = 'alarm_2'
+            self.a.sm.current = "alarm_2"
         else:
-            self.a.sm.get_screen('alarm_5').return_to_screen = 'alarm_1'
-            self.a.sm.current = 'alarm_5'
+            self.a.sm.get_screen("alarm_5").return_to_screen = "alarm_1"
+            self.a.sm.current = "alarm_5"
 
     def update_font_size(self, value):
         text_length = self.a.l.get_text_length(value.text)

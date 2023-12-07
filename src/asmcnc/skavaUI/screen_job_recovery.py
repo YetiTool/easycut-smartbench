@@ -6,6 +6,7 @@ from kivy.clock import Clock
 from asmcnc.skavaUI import widget_status_bar
 from asmcnc.skavaUI import widget_z_move_recovery
 from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 <JobRecoveryScreen>:
@@ -328,7 +329,7 @@ Builder.load_string(
                 pos: self.parent.pos
 
 """
-    )
+)
 
 
 class JobRecoveryScreen(Screen):
@@ -340,16 +341,18 @@ class JobRecoveryScreen(Screen):
 
     def __init__(self, **kwargs):
         super(JobRecoveryScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.jd = kwargs['job']
-        self.l = kwargs['localization']
-        self.kb = kwargs['keyboard']
+        self.sm = kwargs["screen_manager"]
+        self.m = kwargs["machine"]
+        self.jd = kwargs["job"]
+        self.l = kwargs["localization"]
+        self.kb = kwargs["keyboard"]
         self.line_input.bind(text=self.jump_to_line)
-        self.status_container.add_widget(widget_status_bar.StatusBar(
-            machine=self.m, screen_manager=self.sm))
-        self.z_move_container.add_widget(widget_z_move_recovery.
-            ZMoveRecovery(machine=self.m, screen_manager=self.sm))
+        self.status_container.add_widget(
+            widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
+        )
+        self.z_move_container.add_widget(
+            widget_z_move_recovery.ZMoveRecovery(machine=self.m, screen_manager=self.sm)
+        )
         self.update_strings()
         self.text_inputs = [self.line_input]
 
@@ -358,21 +361,28 @@ class JobRecoveryScreen(Screen):
             text_input.focus = False
 
     def on_pre_enter(self):
-        self.m.set_led_colour('WHITE')
-        self.gcode_label.font_name = 'Roboto'
+        self.m.set_led_colour("WHITE")
+        self.gcode_label.font_name = "Roboto"
         if self.jd.job_recovery_selected_line == -1:
-            self.line_input.text = ''
+            self.line_input.text = ""
             self.initial_line_index = self.jd.job_recovery_cancel_line - 1
             self.selected_line_index = self.initial_line_index
-            self.display_list = ['' for _ in range(6)] + [(str(i) + ': ' +
-                self.jd.job_gcode[i]) for i in range(self.
-                initial_line_index + 1)] + ['' for _ in range(6)]
+            self.display_list = (
+                ["" for _ in range(6)]
+                + [
+                    (str(i) + ": " + self.jd.job_gcode[i])
+                    for i in range(self.initial_line_index + 1)
+                ]
+                + ["" for _ in range(6)]
+            )
             self.stopped_on_label.text = self.l.get_str(
-                'Job failed during line N').replace('N', str(self.
-                initial_line_index))
-            self.display_list[self.selected_line_index + 6
-                ] = '[color=FF0000]' + self.display_list[self.
-                selected_line_index + 6] + '[/color]'
+                "Job failed during line N"
+            ).replace("N", str(self.initial_line_index))
+            self.display_list[self.selected_line_index + 6] = (
+                "[color=FF0000]"
+                + self.display_list[self.selected_line_index + 6]
+                + "[/color]"
+            )
             self.update_display()
         if self.initial_line_index == 0:
             self.arc_movement_error_label.opacity = 1
@@ -417,8 +427,7 @@ class JobRecoveryScreen(Screen):
     def scroll_down(self, dt=0):
         if self.scrolling_down:
             self.do_scroll_down()
-            self.scroll_down_event = Clock.schedule_once(self.scroll_down, 0.03
-                )
+            self.scroll_down_event = Clock.schedule_once(self.scroll_down, 0.03)
 
     def stop_scrolling_down(self):
         self.scrolling_down = False
@@ -427,137 +436,206 @@ class JobRecoveryScreen(Screen):
 
     def jump_to_line(self, instance, value):
         if value:
-            if value.startswith('-'):
-                instance.text = ''
+            if value.startswith("-"):
+                instance.text = ""
             else:
-                self.selected_line_index = min(int(value), self.
-                    initial_line_index)
+                self.selected_line_index = min(int(value), self.initial_line_index)
                 self.update_display()
         else:
             self.selected_line_index = self.initial_line_index
             self.update_display()
 
     def update_display(self):
-        self.gcode_label.text = '\n'.join(self.display_list[self.
-            selected_line_index:self.selected_line_index + 13])
-        spindle_speed_line = next((s for s in reversed(self.jd.job_gcode[:
-            self.selected_line_index + 1]) if 'S' in s), None)
+        self.gcode_label.text = "\n".join(
+            self.display_list[self.selected_line_index : self.selected_line_index + 13]
+        )
+        spindle_speed_line = next(
+            (
+                s
+                for s in reversed(self.jd.job_gcode[: self.selected_line_index + 1])
+                if "S" in s
+            ),
+            None,
+        )
         try:
             if spindle_speed_line:
-                self.speed = spindle_speed_line[spindle_speed_line.find('S'
-                    ) + 1:].split('M')[0]
+                self.speed = spindle_speed_line[
+                    spindle_speed_line.find("S") + 1 :
+                ].split("M")[0]
             else:
-                self.speed = self.l.get_str('Undefined')
+                self.speed = self.l.get_str("Undefined")
         except:
-            self.speed = self.l.get_str('Undefined')
-        feedrate_line = next((s for s in reversed(self.jd.job_gcode[:self.
-            selected_line_index + 1]) if 'F' in s), None)
+            self.speed = self.l.get_str("Undefined")
+        feedrate_line = next(
+            (
+                s
+                for s in reversed(self.jd.job_gcode[: self.selected_line_index + 1])
+                if "F" in s
+            ),
+            None,
+        )
         try:
             if feedrate_line:
-                self.feed = re.match('\\d+(\\.\\d+)?', feedrate_line[
-                    feedrate_line.find('F') + 1:]).group()
+                self.feed = re.match(
+                    "\\d+(\\.\\d+)?", feedrate_line[feedrate_line.find("F") + 1 :]
+                ).group()
             else:
-                self.feed = self.l.get_str('Undefined')
+                self.feed = self.l.get_str("Undefined")
         except:
-            self.feed = self.l.get_str('Undefined')
-        x_line = next((s for s in reversed(self.jd.job_gcode[:self.
-            selected_line_index + 1]) if 'X' in s), None)
+            self.feed = self.l.get_str("Undefined")
+        x_line = next(
+            (
+                s
+                for s in reversed(self.jd.job_gcode[: self.selected_line_index + 1])
+                if "X" in s
+            ),
+            None,
+        )
         if x_line:
-            self.pos_x = float(re.split('(X|Y|Z|F|S|I|J|K|G)', x_line)[re.
-                split('(X|Y|Z|F|S|I|J|K|G)', x_line).index('X') + 1])
+            self.pos_x = float(
+                re.split("(X|Y|Z|F|S|I|J|K|G)", x_line)[
+                    re.split("(X|Y|Z|F|S|I|J|K|G)", x_line).index("X") + 1
+                ]
+            )
         else:
             self.pos_x = 0.0
-        y_line = next((s for s in reversed(self.jd.job_gcode[:self.
-            selected_line_index + 1]) if 'Y' in s), None)
+        y_line = next(
+            (
+                s
+                for s in reversed(self.jd.job_gcode[: self.selected_line_index + 1])
+                if "Y" in s
+            ),
+            None,
+        )
         if y_line:
-            self.pos_y = float(re.split('(X|Y|Z|F|S|I|J|K|G)', y_line)[re.
-                split('(X|Y|Z|F|S|I|J|K|G)', y_line).index('Y') + 1])
+            self.pos_y = float(
+                re.split("(X|Y|Z|F|S|I|J|K|G)", y_line)[
+                    re.split("(X|Y|Z|F|S|I|J|K|G)", y_line).index("Y") + 1
+                ]
+            )
         else:
             self.pos_y = 0.0
-        z_line = next((s for s in reversed(self.jd.job_gcode[:self.
-            selected_line_index + 1]) if 'Z' in s), None)
+        z_line = next(
+            (
+                s
+                for s in reversed(self.jd.job_gcode[: self.selected_line_index + 1])
+                if "Z" in s
+            ),
+            None,
+        )
         if z_line:
-            self.pos_z = float(re.split('(X|Y|Z|F|S|I|J|K|G)', z_line)[re.
-                split('(X|Y|Z|F|S|I|J|K|G)', z_line).index('Z') + 1])
+            self.pos_z = float(
+                re.split("(X|Y|Z|F|S|I|J|K|G)", z_line)[
+                    re.split("(X|Y|Z|F|S|I|J|K|G)", z_line).index("Z") + 1
+                ]
+            )
         else:
             self.pos_z = 0.0
-        self.pos_label.text = 'wX: %s | wY: %s | wZ: %s' % (str(self.pos_x),
-            str(self.pos_y), str(self.pos_z))
-        self.speed_label.text = '%s: %s | %s: %s' % (self.l.get_str('F'),
-            str(self.feed), self.l.get_str('S'), str(self.speed))
+        self.pos_label.text = "wX: %s | wY: %s | wZ: %s" % (
+            str(self.pos_x),
+            str(self.pos_y),
+            str(self.pos_z),
+        )
+        self.speed_label.text = "%s: %s | %s: %s" % (
+            self.l.get_str("F"),
+            str(self.feed),
+            self.l.get_str("S"),
+            str(self.speed),
+        )
 
     def get_info(self):
-        info = self.l.get_str(
-            'This screen allows you to recover an incomplete job.'
-            ) + '\n\n' + self.l.get_bold(
-            "Ensure that you recover the job from a point where it was running normally, and SmartBench's position was accurate."
-            ) + '\n\n' + self.l.get_bold(
-            'Choose a visually obvious restart point, such as a corner.'
-            ) + '\n\n' + self.l.get_str(
-            'The red text indicates where the job failed.'
-            ) + ' ' + self.l.get_str(
-            'Use the arrows to navigate through the lines of the job file, and select a point to recover the job from.'
-            ) + '\n\n' + self.l.get_str(
-            'To confirm this start point, use the "GO XY" button.'
-            ) + ' ' + self.l.get_str(
-            'This will move the Z Head over the selected start point.'
-            ) + ' ' + self.l.get_str(
-            'You can lower the spindle to check the tool is approximately where you expect it to be in the XY plane.'
-            ) + ' ' + self.l.get_str(
-            'This XY position can be fine adjusted in the next screen.'
-            ) + '\n\n' + self.l.get_str(
-            'Arc movements (G2 and G3) may cause the software to think that the job failed earlier than it did.'
-            ) + '\n\n' + self.l.get_str(
-            'SmartBench does not yet support recovery of jobs that contain incremental or arc distance modes, or less commonly used G-Codes.'
+        info = (
+            self.l.get_str("This screen allows you to recover an incomplete job.")
+            + "\n\n"
+            + self.l.get_bold(
+                "Ensure that you recover the job from a point where it was running normally, and SmartBench's position was accurate."
             )
+            + "\n\n"
+            + self.l.get_bold(
+                "Choose a visually obvious restart point, such as a corner."
+            )
+            + "\n\n"
+            + self.l.get_str("The red text indicates where the job failed.")
+            + " "
+            + self.l.get_str(
+                "Use the arrows to navigate through the lines of the job file, and select a point to recover the job from."
+            )
+            + "\n\n"
+            + self.l.get_str('To confirm this start point, use the "GO XY" button.')
+            + " "
+            + self.l.get_str("This will move the Z Head over the selected start point.")
+            + " "
+            + self.l.get_str(
+                "You can lower the spindle to check the tool is approximately where you expect it to be in the XY plane."
+            )
+            + " "
+            + self.l.get_str(
+                "This XY position can be fine adjusted in the next screen."
+            )
+            + "\n\n"
+            + self.l.get_str(
+                "Arc movements (G2 and G3) may cause the software to think that the job failed earlier than it did."
+            )
+            + "\n\n"
+            + self.l.get_str(
+                "SmartBench does not yet support recovery of jobs that contain incremental or arc distance modes, or less commonly used G-Codes."
+            )
+        )
         popup_info.PopupScrollableInfo(self.sm, self.l, 760, info)
 
     def go_xy(self):
-        z_safe_height = min(self.m.z_wco() + self.sm.get_screen('home').
-            job_box.range_z[1], -self.m.limit_switch_safety_distance)
+        z_safe_height = min(
+            self.m.z_wco() + self.sm.get_screen("home").job_box.range_z[1],
+            -self.m.limit_switch_safety_distance,
+        )
         if self.m.mpos_z() < z_safe_height:
-            self.m.s.write_command('G53 G0 Z%s F750' % z_safe_height)
-        self.m.s.write_command('G90 G0 X%s Y%s' % (self.pos_x, self.pos_y))
+            self.m.s.write_command("G53 G0 Z%s F750" % z_safe_height)
+        self.m.s.write_command("G90 G0 X%s Y%s" % (self.pos_x, self.pos_y))
 
     def back_to_home(self):
         self.jd.reset_recovery()
         self.jd.job_recovery_from_beginning = True
-        self.sm.current = 'home'
+        self.sm.current = "home"
 
     def next_screen(self):
-        if self.m.state().startswith('Idle'):
+        if self.m.state().startswith("Idle"):
             self.wait_popup = popup_info.PopupWait(self.sm, self.l)
             self.jd.job_recovery_selected_line = self.selected_line_index + 1
             self.go_xy()
             Clock.schedule_once(self.wait_for_idle, 0.4)
         else:
             error_message = self.l.get_str(
-                'Please ensure machine is idle before continuing.')
+                "Please ensure machine is idle before continuing."
+            )
             popup_info.PopupError(self.sm, self.l, error_message)
 
     def wait_for_idle(self, dt):
-        if self.m.state().startswith('Idle'):
+        if self.m.state().startswith("Idle"):
             self.m.get_grbl_status()
             Clock.schedule_once(self.proceed_to_next_screen, 0.4)
-        elif self.m.state().startswith('Run'):
+        elif self.m.state().startswith("Run"):
             Clock.schedule_once(self.wait_for_idle, 0.4)
         else:
             self.wait_popup.popup.dismiss()
 
     def proceed_to_next_screen(self, dt):
         self.wait_popup.popup.dismiss()
-        self.sm.current = 'nudge'
+        self.sm.current = "nudge"
 
     def update_strings(self):
-        self.line_input_header.text = self.l.get_str('Go to line:')
-        self.line_input.hint_text = self.l.get_str('Enter #')
-        self.go_xy_button.text = self.l.get_str('GO XY')
-        self.pos_label_header.text = self.l.get_str('Job resumes at:')
-        self.arc_movement_error_label.text = self.l.get_str(
-            'It was not possible to recover the file any later than the beginning of the job.'
-            ) + '\n\n' + self.l.get_str(
-            'Arc movements (G2 and G3) may cause the software to think that the job failed earlier than it did.'
+        self.line_input_header.text = self.l.get_str("Go to line:")
+        self.line_input.hint_text = self.l.get_str("Enter #")
+        self.go_xy_button.text = self.l.get_str("GO XY")
+        self.pos_label_header.text = self.l.get_str("Job resumes at:")
+        self.arc_movement_error_label.text = (
+            self.l.get_str(
+                "It was not possible to recover the file any later than the beginning of the job."
             )
+            + "\n\n"
+            + self.l.get_str(
+                "Arc movements (G2 and G3) may cause the software to think that the job failed earlier than it did."
+            )
+        )
         self.update_font_size(self.go_xy_button)
 
     def update_font_size(self, value):

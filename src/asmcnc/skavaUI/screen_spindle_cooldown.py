@@ -11,6 +11,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from kivy.clock import Clock
 from datetime import datetime
+
 Builder.load_string(
     """
 
@@ -122,22 +123,21 @@ Builder.load_string(
 
 
 """
-    )
+)
 
 
 class SpindleCooldownScreen(Screen):
-    return_screen = 'job_feedback'
-    seconds = '10'
+    return_screen = "job_feedback"
+    seconds = "10"
     update_timer_event = None
 
     def __init__(self, **kwargs):
         super(SpindleCooldownScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
+        self.sm = kwargs["screen_manager"]
+        self.m = kwargs["machine"]
+        self.l = kwargs["localization"]
         self.seconds = self.m.spindle_cooldown_time_seconds
-        self.cool_down_label.text = self.l.get_str('Cooling down spindle'
-            ) + '...'
+        self.cool_down_label.text = self.l.get_str("Cooling down spindle") + "..."
 
     def on_pre_enter(self):
         self.m.cooldown_zUp_and_spindle_on()

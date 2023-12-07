@@ -1,4 +1,5 @@
 from kivy.core.window import Window
+
 """
 Created on 19 Feb 2019
 
@@ -12,9 +13,15 @@ import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty
+from kivy.properties import (
+    ObjectProperty,
+    ListProperty,
+    NumericProperty,
+    StringProperty,
+)
 from kivy.uix.widget import Widget
 import sys, os
+
 Builder.load_string(
     """
 
@@ -101,7 +108,7 @@ Builder.load_string(
                             text_size: self.size
                             font_size: str(0.0375*app.width) + 'sp'
 """
-    )
+)
 
 
 class SerialFailureClass(Screen):
@@ -111,36 +118,38 @@ class SerialFailureClass(Screen):
 
     def __init__(self, **kwargs):
         super(SerialFailureClass, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
+        self.sm = kwargs["screen_manager"]
+        self.m = kwargs["machine"]
+        self.l = kwargs["localization"]
         self.update_strings()
 
     def on_enter(self):
         self.update_strings()
 
     def reboot_button_press(self):
-        self.sm.current = 'rebooting'
+        self.sm.current = "rebooting"
 
     def return_to_go_screen(self):
-        self.sm.current = 'go'
+        self.sm.current = "go"
 
     def quit_to_home(self):
-        self.sm.current = 'home'
+        self.sm.current = "home"
 
     def update_strings(self):
-        self.title_string.text = self.l.get_bold('SERIAL CONNECTION ERROR'
-            ) + '\n' + self.l.get_str(
-            'There is a problem communicating with SmartBench.')
+        self.title_string.text = (
+            self.l.get_bold("SERIAL CONNECTION ERROR")
+            + "\n"
+            + self.l.get_str("There is a problem communicating with SmartBench.")
+        )
         self.user_instruction = self.l.get_str(
-            'Please check that Z head is connected, and then reboot the console.'
-            )
-        self.reboot_string.text = self.l.get_str('Reboot')
+            "Please check that Z head is connected, and then reboot the console."
+        )
+        self.reboot_string.text = self.l.get_str("Reboot")
         self.update_font_size(self.reboot_string)
 
     def update_font_size(self, value):
         text_length = self.l.get_text_length(value.text)
         if text_length >= 20:
-            value.font_size = str(0.03125 * Window.width) + 'sp'
+            value.font_size = str(0.03125 * Window.width) + "sp"
         else:
-            value.font_size = str(0.0375 * Window.width) + 'sp'
+            value.font_size = str(0.0375 * Window.width) + "sp"

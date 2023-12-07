@@ -8,6 +8,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, StringProperty
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
+
 Builder.load_string(
     """
 <TapeMeasureScreenClass>:
@@ -81,7 +82,7 @@ Builder.load_string(
                             markup: 'True'
                 
 """
-    )
+)
 
 
 class TapeMeasureScreenClass(Screen):
@@ -90,8 +91,8 @@ class TapeMeasureScreenClass(Screen):
 
     def __init__(self, **kwargs):
         super(TapeMeasureScreenClass, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
+        self.sm = kwargs["screen_manager"]
+        self.m = kwargs["machine"]
         self.alert_label.text = """[color=455A64]
 TAPE MEASURE WARNING!
 Please remove your tape measure from the machine now.[/color]"""

@@ -12,9 +12,21 @@ from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
 from kivy.clock import Clock, mainthread
 import os, sys
-from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar, widget_z_move, widget_xy_move, widget_common_move, widget_quick_commands, widget_virtual_bed_control, widget_gcode_monitor, widget_z_height, widget_feed_override
+from asmcnc.skavaUI import (
+    widget_virtual_bed,
+    widget_status_bar,
+    widget_z_move,
+    widget_xy_move,
+    widget_common_move,
+    widget_quick_commands,
+    widget_virtual_bed_control,
+    widget_gcode_monitor,
+    widget_z_height,
+    widget_feed_override,
+)
 from asmcnc.geometry import job_envelope
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty
+
 Builder.load_string(
     """
 
@@ -155,17 +167,17 @@ Builder.load_string(
             id: status_container
 
 """
-    )
+)
 
 
 class DiagnosticsScreen(Screen):
-
     def __init__(self, **kwargs):
         super(DiagnosticsScreen, self).__init__(**kwargs)
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
-        self.status_container.add_widget(widget_status_bar.StatusBar(
-            machine=self.m, screen_manager=self.sm))
+        self.m = kwargs["machine"]
+        self.sm = kwargs["screen_manager"]
+        self.status_container.add_widget(
+            widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
+        )
         Clock.schedule_interval(self.limit_switch_check, 0.2)
 
     def on_enter(self):
@@ -182,49 +194,49 @@ class DiagnosticsScreen(Screen):
         z_distance = 2
         xy_feed = 200
         z_feed = 100
-        if case == 'x-':
-            self.m.jog_relative('X-', str(xy_distance), xy_feed)
-        if case == 'x+':
-            self.m.jog_relative('X', str(xy_distance), xy_feed)
-        if case == 'y-':
-            self.m.jog_relative('Y-', str(xy_distance), xy_feed)
-        if case == 'y+':
-            self.m.jog_relative('Y', str(xy_distance), xy_feed)
-        if case == 'z-':
-            self.m.jog_relative('Z-', str(z_distance), z_feed)
-        if case == 'z+':
-            self.m.jog_relative('Z', str(z_distance), z_feed)
+        if case == "x-":
+            self.m.jog_relative("X-", str(xy_distance), xy_feed)
+        if case == "x+":
+            self.m.jog_relative("X", str(xy_distance), xy_feed)
+        if case == "y-":
+            self.m.jog_relative("Y-", str(xy_distance), xy_feed)
+        if case == "y+":
+            self.m.jog_relative("Y", str(xy_distance), xy_feed)
+        if case == "z-":
+            self.m.jog_relative("Z-", str(z_distance), z_feed)
+        if case == "z+":
+            self.m.jog_relative("Z", str(z_distance), z_feed)
 
     def limit_switch_check(self, dt):
         switch_states = self.m.get_switch_states()
-        if 'limit_x' in switch_states:
-            self.limit_x_label.text = 'X min - OK'
+        if "limit_x" in switch_states:
+            self.limit_x_label.text = "X min - OK"
         else:
-            self.limit_x_label.text = 'X min'
-        if 'limit_X' in switch_states:
-            self.limit_X_label.text = 'X max - OK'
+            self.limit_x_label.text = "X min"
+        if "limit_X" in switch_states:
+            self.limit_X_label.text = "X max - OK"
         else:
-            self.limit_X_label.text = 'X max'
-        if 'limit_y' in switch_states:
-            self.limit_y_label.text = 'Y min - OK'
+            self.limit_X_label.text = "X max"
+        if "limit_y" in switch_states:
+            self.limit_y_label.text = "Y min - OK"
         else:
-            self.limit_y_label.text = 'Y min'
-        if 'limit_Y' in switch_states:
-            self.limit_Y_label.text = 'Y max - OK'
+            self.limit_y_label.text = "Y min"
+        if "limit_Y" in switch_states:
+            self.limit_Y_label.text = "Y max - OK"
         else:
-            self.limit_Y_label.text = 'Y max'
-        if 'limit_z' in switch_states:
-            self.limit_z_label.text = 'Z min - OK'
+            self.limit_Y_label.text = "Y max"
+        if "limit_z" in switch_states:
+            self.limit_z_label.text = "Z min - OK"
         else:
-            self.limit_z_label.text = 'Z min'
-        if 'probe' in switch_states:
-            self.probe_label.text = 'Probe - OK'
+            self.limit_z_label.text = "Z min"
+        if "probe" in switch_states:
+            self.probe_label.text = "Probe - OK"
         else:
-            self.probe_label.text = 'Probe'
-        if 'dust_shoe_cover' in switch_states:
-            self.dust_shoe_cover_label.text = 'Dust cover - OK'
+            self.probe_label.text = "Probe"
+        if "dust_shoe_cover" in switch_states:
+            self.dust_shoe_cover_label.text = "Dust cover - OK"
         else:
-            self.dust_shoe_cover_label.text = 'Dust cover'
+            self.dust_shoe_cover_label.text = "Dust cover"
 
     def return_to_home(self):
-        self.sm.current = 'factory_settings'
+        self.sm.current = "factory_settings"

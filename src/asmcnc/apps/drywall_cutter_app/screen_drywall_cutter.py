@@ -7,6 +7,7 @@ from asmcnc.apps.drywall_cutter_app import widget_drywall_shape_display
 from asmcnc.apps.drywall_cutter_app.config import config_loader
 from asmcnc.apps.drywall_cutter_app import screen_config_filechooser
 from asmcnc.apps.drywall_cutter_app import screen_config_filesaver
+
 Builder.load_string(
     """
 <DrywallCutterScreen>:
@@ -122,84 +123,92 @@ Builder.load_string(
                         text: 'Run'
                         on_press: root.run()
 """
-    )
+)
 
 
 def log(message):
     timestamp = datetime.now()
-    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + message)
+    print(timestamp.strftime("%H:%M:%S.%f")[:12] + " " + message)
 
 
 class DrywallCutterScreen(Screen):
-    tool_options = ['6mm', '8mm', 'V groove']
-    shape_options = ['circle', 'square', 'rectangle', 'line', 'geberit']
-    line_cut_options = ['inside', 'on', 'outside']
-    rotation = 'horizontal'
+    tool_options = ["6mm", "8mm", "V groove"]
+    shape_options = ["circle", "square", "rectangle", "line", "geberit"]
+    line_cut_options = ["inside", "on", "outside"]
+    rotation = "horizontal"
     dwt_config = config_loader.DWTConfig()
     tool_options = dwt_config.get_available_cutter_names()
 
     def __init__(self, **kwargs):
         super(DrywallCutterScreen, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
-        self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=
-            self.m, screen_manager=self.sm)
+        self.sm = kwargs["screen_manager"]
+        self.m = kwargs["machine"]
+        self.l = kwargs["localization"]
+        self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(
+            machine=self.m, screen_manager=self.sm
+        )
         self.xy_move_container.add_widget(self.xy_move_widget)
-        self.drywall_shape_display_widget = (widget_drywall_shape_display.
-            DrywallShapeDisplay(machine=self.m, screen_manager=self.sm,
-            dwt_config=self.dwt_config))
-        self.shape_display_container.add_widget(self.
-            drywall_shape_display_widget)
-        self.shape_selection.text = 'circle'
+        self.drywall_shape_display_widget = (
+            widget_drywall_shape_display.DrywallShapeDisplay(
+                machine=self.m, screen_manager=self.sm, dwt_config=self.dwt_config
+            )
+        )
+        self.shape_display_container.add_widget(self.drywall_shape_display_widget)
+        self.shape_selection.text = "circle"
         self.select_tool()
 
     def home(self):
-        self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
+        self.m.request_homing_procedure("drywall_cutter", "drywall_cutter")
 
     def select_tool(self):
         selected_tool_name = self.tool_selection.text
         self.dwt_config.load_cutter(self.tool_options[selected_tool_name])
-        self.cut_offset_selection.values = [toolpath for toolpath, allowed in
-            self.dwt_config.active_cutter.allowable_toolpath_offsets.
-            __dict__.items() if allowed]
+        self.cut_offset_selection.values = [
+            toolpath
+            for toolpath, allowed in self.dwt_config.active_cutter.allowable_toolpath_offsets.__dict__.items()
+            if allowed
+        ]
         self.cut_offset_selection.text = self.cut_offset_selection.values[0]
 
     def select_shape(self):
-        if self.shape_selection.text in ['line', 'geberit']:
-            self.cut_offset_selection.text = 'on'
+        if self.shape_selection.text in ["line", "geberit"]:
+            self.cut_offset_selection.text = "on"
             self.cut_offset_selection.disabled = True
         else:
-            self.cut_offset_selection.text = ('inside' if 'inside' in self.
-                cut_offset_selection.values else self.cut_offset_selection.
-                values[0])
+            self.cut_offset_selection.text = (
+                "inside"
+                if "inside" in self.cut_offset_selection.values
+                else self.cut_offset_selection.values[0]
+            )
             self.cut_offset_selection.disabled = False
-        if self.shape_selection.text in ['rectangle', 'line']:
+        if self.shape_selection.text in ["rectangle", "line"]:
             self.rotate_button.disabled = False
         else:
             self.rotate_button.disabled = True
-        self.rotation = 'horizontal'
-        self.drywall_shape_display_widget.select_shape(self.shape_selection
-            .text, self.rotation)
+        self.rotation = "horizontal"
+        self.drywall_shape_display_widget.select_shape(
+            self.shape_selection.text, self.rotation
+        )
         self.select_toolpath()
-        self.dwt_config.on_parameter_change('shape_type', self.
-            shape_selection.text)
+        self.dwt_config.on_parameter_change("shape_type", self.shape_selection.text)
 
     def rotate_shape(self, swap_lengths=True):
-        if self.rotation == 'horizontal':
-            self.rotation = 'vertical'
+        if self.rotation == "horizontal":
+            self.rotation = "vertical"
         else:
-            self.rotation = 'horizontal'
-        self.drywall_shape_display_widget.select_shape(self.shape_selection
-            .text, self.rotation, swap_lengths=swap_lengths)
+            self.rotation = "horizontal"
+        self.drywall_shape_display_widget.select_shape(
+            self.shape_selection.text, self.rotation, swap_lengths=swap_lengths
+        )
         self.select_toolpath()
 
     def select_toolpath(self):
-        self.drywall_shape_display_widget.select_toolpath(self.
-            shape_selection.text, self.cut_offset_selection.text, self.rotation
-            )
-        self.dwt_config.on_parameter_change('toolpath_offset', self.
-            cut_offset_selection.text)
+        self.drywall_shape_display_widget.select_toolpath(
+            self.shape_selection.text, self.cut_offset_selection.text, self.rotation
+        )
+        self.dwt_config.on_parameter_change(
+            "toolpath_offset", self.cut_offset_selection.text
+        )
 
     def material_setup(self):
         pass
@@ -208,27 +217,37 @@ class DrywallCutterScreen(Screen):
         popup_info.PopupStop(self.m, self.sm, self.l)
 
     def quit_to_lobby(self):
-        self.sm.current = 'lobby'
+        self.sm.current = "lobby"
 
     def simulate(self):
         pass
 
     def save(self):
-        if not self.sm.has_screen('config_filesaver'):
-            self.sm.add_widget(screen_config_filesaver.ConfigFileSaver(name
-                ='config_filesaver', screen_manager=self.sm, localization=
-                self.l, callback=self.save_config))
-        self.sm.current = 'config_filesaver'
+        if not self.sm.has_screen("config_filesaver"):
+            self.sm.add_widget(
+                screen_config_filesaver.ConfigFileSaver(
+                    name="config_filesaver",
+                    screen_manager=self.sm,
+                    localization=self.l,
+                    callback=self.save_config,
+                )
+            )
+        self.sm.current = "config_filesaver"
 
     def run(self):
         pass
 
     def open_filechooser(self):
-        if not self.sm.has_screen('config_filechooser'):
-            self.sm.add_widget(screen_config_filechooser.ConfigFileChooser(
-                name='config_filechooser', screen_manager=self.sm,
-                localization=self.l, callback=self.load_config))
-        self.sm.current = 'config_filechooser'
+        if not self.sm.has_screen("config_filechooser"):
+            self.sm.add_widget(
+                screen_config_filechooser.ConfigFileChooser(
+                    name="config_filechooser",
+                    screen_manager=self.sm,
+                    localization=self.l,
+                    callback=self.load_config,
+                )
+            )
+        self.sm.current = "config_filechooser"
 
     def load_config(self, config):
         """
@@ -237,22 +256,27 @@ class DrywallCutterScreen(Screen):
         :param config: The path to the config file, including extension.
         """
         self.dwt_config.load_config(config)
-        file_name_no_ext = config.split('/')[-1].split('.')[0]
+        file_name_no_ext = config.split("/")[-1].split(".")[0]
         toolpath_offset = self.dwt_config.active_config.toolpath_offset
         self.shape_selection.text = self.dwt_config.active_config.shape_type
         self.select_shape()
         self.cut_offset_selection.text = toolpath_offset
         self.select_toolpath()
-        self.drywall_shape_display_widget.d_input.text = str(self.
-            dwt_config.active_config.canvas_shape_dims.d)
-        self.drywall_shape_display_widget.l_input.text = str(self.
-            dwt_config.active_config.canvas_shape_dims.l)
-        self.drywall_shape_display_widget.r_input.text = str(self.
-            dwt_config.active_config.canvas_shape_dims.r)
-        self.drywall_shape_display_widget.x_input.text = str(self.
-            dwt_config.active_config.canvas_shape_dims.x)
-        self.drywall_shape_display_widget.y_input.text = str(self.
-            dwt_config.active_config.canvas_shape_dims.y)
+        self.drywall_shape_display_widget.d_input.text = str(
+            self.dwt_config.active_config.canvas_shape_dims.d
+        )
+        self.drywall_shape_display_widget.l_input.text = str(
+            self.dwt_config.active_config.canvas_shape_dims.l
+        )
+        self.drywall_shape_display_widget.r_input.text = str(
+            self.dwt_config.active_config.canvas_shape_dims.r
+        )
+        self.drywall_shape_display_widget.x_input.text = str(
+            self.dwt_config.active_config.canvas_shape_dims.x
+        )
+        self.drywall_shape_display_widget.y_input.text = str(
+            self.dwt_config.active_config.canvas_shape_dims.y
+        )
 
     def save_config(self, name):
         """
@@ -260,7 +284,7 @@ class DrywallCutterScreen(Screen):
 
         :param name: The name of to save the configuration file as.
         """
-        file_name = name + ('.json' if not name.endswith('.json') else '')
+        file_name = name + (".json" if not name.endswith(".json") else "")
         self.dwt_config.save_config(file_name)
 
     def on_leave(self, *args):

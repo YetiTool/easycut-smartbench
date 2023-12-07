@@ -8,6 +8,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.tabbedpanel import TabbedPanel
 from kivy.metrics import MetricsBase
+
 Builder.load_string(
     """
 
@@ -124,12 +125,11 @@ Builder.load_string(
                     source: "./asmcnc/apps/shapeCutter_app/img/background.png"
 
 """
-    )
+)
 
 
 class ShapeCutterTemplateButtonsScreenClass(Screen):
-
     def __init__(self, **kwargs):
         super(ShapeCutterTemplateButtonsScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m = kwargs['machine']
+        self.shapecutter_sm = kwargs["shapecutter"]
+        self.m = kwargs["machine"]

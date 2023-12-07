@@ -12,6 +12,7 @@ from kivy.properties import ObjectProperty
 from asmcnc.skavaUI import widget_status_bar, widget_gcode_monitor
 from asmcnc.apps.systemTools_app.screens import widget_final_test_xy_move
 import os, sys
+
 Builder.load_string(
     """
 
@@ -176,7 +177,7 @@ Builder.load_string(
 
 
 """
-    )
+)
 
 
 class FinalTestScreen(Screen):
@@ -190,35 +191,44 @@ class FinalTestScreen(Screen):
     x_calibration_scale_factor = 0.0048
     y_board = 1234.5
     x_board = 1234.5
-    board_type = 'pink'
-    y_pos_command = ''
-    y_neg_command = ''
-    x_pos_command = ''
-    x_neg_command = ''
+    board_type = "pink"
+    y_pos_command = ""
+    y_neg_command = ""
+    x_pos_command = ""
+    x_neg_command = ""
 
     def __init__(self, **kwargs):
         super(FinalTestScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs['system_tools']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
-        self.kb = kwargs['keyboard']
-        self.status_container.add_widget(widget_status_bar.StatusBar(
-            machine=self.m, screen_manager=self.systemtools_sm.sm))
-        self.gcode_monitor_container.add_widget(widget_gcode_monitor.
-            GCodeMonitor(machine=self.m, screen_manager=self.systemtools_sm
-            .sm, localization=self.l))
-        self.move_container.add_widget(widget_final_test_xy_move.
-            FinalTestXYMove(machine=self.m, screen_manager=self.
-            systemtools_sm.sm))
+        self.systemtools_sm = kwargs["system_tools"]
+        self.m = kwargs["machine"]
+        self.l = kwargs["localization"]
+        self.kb = kwargs["keyboard"]
+        self.status_container.add_widget(
+            widget_status_bar.StatusBar(
+                machine=self.m, screen_manager=self.systemtools_sm.sm
+            )
+        )
+        self.gcode_monitor_container.add_widget(
+            widget_gcode_monitor.GCodeMonitor(
+                machine=self.m,
+                screen_manager=self.systemtools_sm.sm,
+                localization=self.l,
+            )
+        )
+        self.move_container.add_widget(
+            widget_final_test_xy_move.FinalTestXYMove(
+                machine=self.m, screen_manager=self.systemtools_sm.sm
+            )
+        )
         self.text_inputs = [self.y_over_count, self.x_over_count]
 
     def on_enter(self):
-        self.m.send_any_gcode_command('AZ')
-        self.m.set_led_colour('BLUE')
+        self.m.send_any_gcode_command("AZ")
+        self.m.set_led_colour("BLUE")
         self.kb.setup_text_inputs(self.text_inputs)
 
     def on_leave(self):
-        self.m.send_any_gcode_command('AX')
+        self.m.send_any_gcode_command("AX")
 
     def on_touch(self):
         for text_input in self.text_inputs:
@@ -232,22 +242,22 @@ class FinalTestScreen(Screen):
 
     def set_board_up(self, board):
         self.board_type = board
-        if self.board_type == 'pink':
+        if self.board_type == "pink":
             self.y_board = 1636.6
             self.x_board = 1150.3
-        elif self.board_type == 'blue':
+        elif self.board_type == "blue":
             self.y_board = 1636.9
             self.x_board = 1149.1
-        elif self.board_type == 'green':
+        elif self.board_type == "green":
             self.y_board = 1250
             self.x_board = 1150
-        elif self.board_type == 'red':
+        elif self.board_type == "red":
             self.y_board = 1250
             self.x_board = 1150
-        self.y_pos_command = 'G91 G0 Y' + str(self.y_board)
-        self.y_neg_command = 'G91 G0 Y-' + str(self.y_board)
-        self.x_pos_command = 'G91 G0 X' + str(self.x_board)
-        self.x_neg_command = 'G91 G0 X-' + str(self.x_board)
+        self.y_pos_command = "G91 G0 Y" + str(self.y_board)
+        self.y_neg_command = "G91 G0 Y-" + str(self.y_board)
+        self.x_pos_command = "G91 G0 X" + str(self.x_board)
+        self.x_neg_command = "G91 G0 X-" + str(self.x_board)
         self.y_pos_label.text = self.y_pos_command
         self.y_neg_label.text = self.y_neg_command
         self.x_pos_label.text = self.x_pos_command
@@ -255,52 +265,57 @@ class FinalTestScreen(Screen):
 
     def X_plus(self):
         self.m.send_any_gcode_command(self.x_pos_command)
-        self.m.set_led_colour('BLUE')
+        self.m.set_led_colour("BLUE")
 
     def X_minus(self):
         self.m.send_any_gcode_command(self.x_neg_command)
-        self.m.set_led_colour('BLUE')
+        self.m.set_led_colour("BLUE")
 
     def Y_plus(self):
         self.m.send_any_gcode_command(self.y_pos_command)
-        self.m.set_led_colour('BLUE')
+        self.m.set_led_colour("BLUE")
 
     def Y_minus(self):
         self.m.send_any_gcode_command(self.y_neg_command)
-        self.m.set_led_colour('BLUE')
+        self.m.set_led_colour("BLUE")
 
     def X_575(self):
-        self.m.send_any_gcode_command('G91 G0 X575.0')
-        self.m.set_led_colour('BLUE')
+        self.m.send_any_gcode_command("G91 G0 X575.0")
+        self.m.set_led_colour("BLUE")
 
     def y_home_x_mid(self):
-        self.m.jog_absolute_single_axis('Y', self.m.y_min_jog_abs_limit,
-            self.fast_y_speed)
-        self.m.jog_absolute_single_axis('X', -705, self.fast_x_speed)
-        self.m.set_led_colour('BLUE')
+        self.m.jog_absolute_single_axis(
+            "Y", self.m.y_min_jog_abs_limit, self.fast_y_speed
+        )
+        self.m.jog_absolute_single_axis("X", -705, self.fast_x_speed)
+        self.m.set_led_colour("BLUE")
 
     def home(self):
-        normal_homing_sequence = ['$H']
+        normal_homing_sequence = ["$H"]
         self.m.s.start_sequential_stream(normal_homing_sequence)
 
     def set_x_steps(self):
         try:
-            x_overstep = float(self.x_over_count.text
-                ) * self.x_calibration_scale_factor
+            x_overstep = float(self.x_over_count.text) * self.x_calibration_scale_factor
             print(x_overstep)
-            self.m.write_dollar_setting(100, float(self.m.s.setting_100) -
-                x_overstep, reset_grbl_after_stream=False)
-            self.x_over_count.text = ''
+            self.m.write_dollar_setting(
+                100,
+                float(self.m.s.setting_100) - x_overstep,
+                reset_grbl_after_stream=False,
+            )
+            self.x_over_count.text = ""
         except:
             pass
 
     def set_y_steps(self):
         try:
-            y_overstep = float(self.y_over_count.text
-                ) * self.y_calibration_scale_factor
+            y_overstep = float(self.y_over_count.text) * self.y_calibration_scale_factor
             print(y_overstep)
-            self.m.write_dollar_setting(101, float(self.m.s.setting_101) -
-                y_overstep, reset_grbl_after_stream=False)
-            self.y_over_count.text = ''
+            self.m.write_dollar_setting(
+                101,
+                float(self.m.s.setting_101) - y_overstep,
+                reset_grbl_after_stream=False,
+            )
+            self.y_over_count.text = ""
         except:
             pass

@@ -14,6 +14,7 @@ from kivy.properties import ObjectProperty, StringProperty
 from kivy.uix.screenmanager import Screen
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
+
 Builder.load_string(
     """
 
@@ -251,34 +252,41 @@ Builder.load_string(
 
 
 """
-    )
-configs_dir = './asmcnc/apps/drywall_cutter_app/config/configurations/'
+)
+configs_dir = "./asmcnc/apps/drywall_cutter_app/config/configurations/"
 
 
 def date_order_sort(files, filesystem):
-    return sorted(f for f in files if filesystem.is_dir(f)) + sorted((f for
-        f in files if not filesystem.is_dir(f)), key=lambda fi: os.stat(fi)
-        .st_mtime, reverse=False)
+    return sorted(f for f in files if filesystem.is_dir(f)) + sorted(
+        (f for f in files if not filesystem.is_dir(f)),
+        key=lambda fi: os.stat(fi).st_mtime,
+        reverse=False,
+    )
 
 
 def date_order_sort_reverse(files, filesystem):
-    return sorted(f for f in files if filesystem.is_dir(f)) + sorted((f for
-        f in files if not filesystem.is_dir(f)), key=lambda fi: os.stat(fi)
-        .st_mtime, reverse=True)
+    return sorted(f for f in files if filesystem.is_dir(f)) + sorted(
+        (f for f in files if not filesystem.is_dir(f)),
+        key=lambda fi: os.stat(fi).st_mtime,
+        reverse=True,
+    )
 
 
 def name_order_sort(files, filesystem):
-    return sorted(f for f in files if filesystem.is_dir(f)) + sorted(f for
-        f in files if not filesystem.is_dir(f))
+    return sorted(f for f in files if filesystem.is_dir(f)) + sorted(
+        f for f in files if not filesystem.is_dir(f)
+    )
 
 
 def name_order_sort_reverse(files, filesystem):
-    return sorted(f for f in files if filesystem.is_dir(f)) + sorted((f for
-        f in files if not filesystem.is_dir(f)), reverse=True)
+    return sorted(f for f in files if filesystem.is_dir(f)) + sorted(
+        (f for f in files if not filesystem.is_dir(f)), reverse=True
+    )
 
 
-decode_and_encode = lambda x: unicode(x, detect(x)['encoding'] or 'utf-8'
-    ).encode('utf-8')
+decode_and_encode = lambda x: unicode(x, detect(x)["encoding"] or "utf-8").encode(
+    "utf-8"
+)
 
 
 class ConfigFileChooser(Screen):
@@ -288,37 +296,41 @@ class ConfigFileChooser(Screen):
     sort_by_name = ObjectProperty(name_order_sort)
     sort_by_name_reverse = ObjectProperty(name_order_sort_reverse)
     is_filechooser_scrolling = False
-    json_config_order = {u'shape_type': 0, u'units': 1,
-        u'canvas_shape_dims': 2, u'cutter_type': 3, u'toolpath_offset': 4,
-        u'cutting_depths': 5, u'datum_position': 6}
+    json_config_order = {
+        "shape_type": 0,
+        "units": 1,
+        "canvas_shape_dims": 2,
+        "cutter_type": 3,
+        "toolpath_offset": 4,
+        "cutting_depths": 5,
+        "datum_position": 6,
+    }
 
     def __init__(self, **kwargs):
         super(ConfigFileChooser, self).__init__(**kwargs)
-        self.sm = kwargs['screen_manager']
-        self.l = kwargs['localization']
-        self.callback = kwargs['callback']
+        self.sm = kwargs["screen_manager"]
+        self.l = kwargs["localization"]
+        self.callback = kwargs["callback"]
         self.usb_stick = usb_storage.USB_storage(self.sm, self.l)
         self.check_for_job_cache_dir()
-        self.list_layout_fc.ids.scrollview.bind(on_scroll_stop=self.
-            scrolling_stop)
-        self.list_layout_fc.ids.scrollview.bind(on_scroll_start=self.
-            scrolling_start)
-        self.icon_layout_fc.ids.scrollview.bind(on_scroll_stop=self.
-            scrolling_stop)
-        self.icon_layout_fc.ids.scrollview.bind(on_scroll_start=self.
-            scrolling_start)
-        self.list_layout_fc.ids.scrollview.effect_cls = (kivy.effects.
-            scroll.ScrollEffect)
-        self.icon_layout_fc.ids.scrollview.effect_cls = (kivy.effects.
-            scroll.ScrollEffect)
-        self.icon_layout_fc.ids.scrollview.funbind('scroll_y', self.
-            icon_layout_fc.ids.scrollview._update_effect_bounds)
-        self.list_layout_fc.ids.scrollview.funbind('scroll_y', self.
-            list_layout_fc.ids.scrollview._update_effect_bounds)
-        self.icon_layout_fc.ids.scrollview.fbind('scroll_y', self.
-            alternate_update_effect_bounds_icon)
-        self.list_layout_fc.ids.scrollview.fbind('scroll_y', self.
-            alternate_update_effect_bounds_list)
+        self.list_layout_fc.ids.scrollview.bind(on_scroll_stop=self.scrolling_stop)
+        self.list_layout_fc.ids.scrollview.bind(on_scroll_start=self.scrolling_start)
+        self.icon_layout_fc.ids.scrollview.bind(on_scroll_stop=self.scrolling_stop)
+        self.icon_layout_fc.ids.scrollview.bind(on_scroll_start=self.scrolling_start)
+        self.list_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
+        self.icon_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
+        self.icon_layout_fc.ids.scrollview.funbind(
+            "scroll_y", self.icon_layout_fc.ids.scrollview._update_effect_bounds
+        )
+        self.list_layout_fc.ids.scrollview.funbind(
+            "scroll_y", self.list_layout_fc.ids.scrollview._update_effect_bounds
+        )
+        self.icon_layout_fc.ids.scrollview.fbind(
+            "scroll_y", self.alternate_update_effect_bounds_icon
+        )
+        self.list_layout_fc.ids.scrollview.fbind(
+            "scroll_y", self.alternate_update_effect_bounds_list
+        )
 
     def alternate_update_effect_bounds_icon(self, *args):
         self.update_y_bounds_try_except(self.icon_layout_fc.ids.scrollview)
@@ -328,16 +340,18 @@ class ConfigFileChooser(Screen):
 
     def update_y_bounds_try_except(sefl, scrollview_object):
         try:
-            if (not scrollview_object._viewport or not scrollview_object.
-                effect_y):
+            if not scrollview_object._viewport or not scrollview_object.effect_y:
                 return
-            scrollable_height = (scrollview_object.height -
-                scrollview_object.viewport_size[1])
-            scrollview_object.effect_y.min = (0 if scrollable_height < 0 else
-                scrollable_height)
+            scrollable_height = (
+                scrollview_object.height - scrollview_object.viewport_size[1]
+            )
+            scrollview_object.effect_y.min = (
+                0 if scrollable_height < 0 else scrollable_height
+            )
             scrollview_object.effect_y.max = scrollable_height
-            scrollview_object.effect_y.value = (scrollview_object.effect_y.
-                max * scrollview_object.scroll_y)
+            scrollview_object.effect_y.value = (
+                scrollview_object.effect_y.max * scrollview_object.scroll_y
+            )
         except:
             pass
 
@@ -350,9 +364,9 @@ class ConfigFileChooser(Screen):
     def check_for_job_cache_dir(self):
         if not os.path.exists(configs_dir):
             os.mkdir(configs_dir)
-            if not os.path.exists(configs_dir + '.gitignore'):
-                file = open(configs_dir + '.gitignore', 'w+')
-                file.write('*.json')
+            if not os.path.exists(configs_dir + ".gitignore"):
+                file = open(configs_dir + ".gitignore", "w+")
+                file.write("*.json")
                 file.close()
 
     def on_enter(self):
@@ -361,110 +375,126 @@ class ConfigFileChooser(Screen):
         self.switch_view()
 
     def switch_view(self):
-        if self.toggle_view_button.state == 'normal':
-            self.filechooser.view_mode = 'icon'
-            self.image_view.source = (
-                './asmcnc/skavaUI/img/file_select_list_view.png')
-        elif self.toggle_view_button.state == 'down':
-            self.filechooser.view_mode = 'list'
-            self.image_view.source = (
-                './asmcnc/skavaUI/img/file_select_list_icon.png')
+        if self.toggle_view_button.state == "normal":
+            self.filechooser.view_mode = "icon"
+            self.image_view.source = "./asmcnc/skavaUI/img/file_select_list_view.png"
+        elif self.toggle_view_button.state == "down":
+            self.filechooser.view_mode = "list"
+            self.image_view.source = "./asmcnc/skavaUI/img/file_select_list_icon.png"
 
     def switch_sort(self):
         if self.filechooser.sort_func == self.sort_by_date_reverse:
             self.filechooser.sort_func = self.sort_by_date
-            self.image_sort.source = (
-                './asmcnc/skavaUI/img/file_select_sort_up_name.png')
+            self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_up_name.png"
         elif self.filechooser.sort_func == self.sort_by_date:
             self.filechooser.sort_func = self.sort_by_name
             self.image_sort.source = (
-                './asmcnc/skavaUI/img/file_select_sort_down_name.png')
+                "./asmcnc/skavaUI/img/file_select_sort_down_name.png"
+            )
         elif self.filechooser.sort_func == self.sort_by_name:
             self.filechooser.sort_func = self.sort_by_name_reverse
-            self.image_sort.source = (
-                './asmcnc/skavaUI/img/file_select_sort_up_date.png')
+            self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_up_date.png"
         elif self.filechooser.sort_func == self.sort_by_name_reverse:
             self.filechooser.sort_func = self.sort_by_date_reverse
             self.image_sort.source = (
-                './asmcnc/skavaUI/img/file_select_sort_down_date.png')
+                "./asmcnc/skavaUI/img/file_select_sort_down_date.png"
+            )
         self.filechooser._update_files()
 
     def refresh_filechooser(self):
         self.filechooser._update_item_selection()
         try:
-            if self.filechooser.selection[0] != 'C':
+            if self.filechooser.selection[0] != "C":
                 self.display_selected_file()
             else:
                 self.load_button.disabled = True
                 self.image_select.source = (
-                    './asmcnc/skavaUI/img/file_select_select_disabled.png')
+                    "./asmcnc/skavaUI/img/file_select_select_disabled.png"
+                )
                 self.delete_selected_button.disabled = True
                 self.image_delete.source = (
-                    './asmcnc/skavaUI/img/file_select_delete_disabled.png')
+                    "./asmcnc/skavaUI/img/file_select_delete_disabled.png"
+                )
                 self.file_selected_label.text = self.l.get_str(
-                    'Press the icon to display the full filename here.')
+                    "Press the icon to display the full filename here."
+                )
                 self.metadata_preview.text = self.l.get_str(
-                    'Select a file to see metadata or gcode preview.')
+                    "Select a file to see metadata or gcode preview."
+                )
         except:
             self.load_button.disabled = True
             self.image_select.source = (
-                './asmcnc/skavaUI/img/file_select_select_disabled.png')
+                "./asmcnc/skavaUI/img/file_select_select_disabled.png"
+            )
             self.file_selected_label.text = self.l.get_str(
-                'Press the icon to display the full filename here.')
+                "Press the icon to display the full filename here."
+            )
             self.metadata_preview.text = self.l.get_str(
-                'Select a file to see metadata or gcode preview.')
+                "Select a file to see metadata or gcode preview."
+            )
             self.delete_selected_button.disabled = True
             self.image_delete.source = (
-                './asmcnc/skavaUI/img/file_select_delete_disabled.png')
+                "./asmcnc/skavaUI/img/file_select_delete_disabled.png"
+            )
             self.file_selected_label.text = self.l.get_str(
-                'Press the icon to display the full filename here.')
+                "Press the icon to display the full filename here."
+            )
             self.metadata_preview.text = self.l.get_str(
-                'Select a file to see metadata or gcode preview.')
+                "Select a file to see metadata or gcode preview."
+            )
         self.filechooser._update_files()
 
     def display_selected_file(self):
-        if sys.platform == 'win32':
-            self.file_selected_label.text = self.filechooser.selection[0
-                ].split('\\')[-1]
+        if sys.platform == "win32":
+            self.file_selected_label.text = self.filechooser.selection[0].split("\\")[
+                -1
+            ]
         else:
-            self.file_selected_label.text = self.filechooser.selection[0
-                ].split('/')[-1]
-        with open(self.filechooser.selection[0], 'r') as f:
+            self.file_selected_label.text = self.filechooser.selection[0].split("/")[-1]
+        with open(self.filechooser.selection[0], "r") as f:
             json_obj = json.load(f)
         self.metadata_preview.text = self.to_human_readable(json_obj)
         self.load_button.disabled = False
-        self.image_select.source = (
-            './asmcnc/skavaUI/img/file_select_select.png')
+        self.image_select.source = "./asmcnc/skavaUI/img/file_select_select.png"
         self.delete_selected_button.disabled = False
-        self.image_delete.source = (
-            './asmcnc/skavaUI/img/file_select_delete.png')
+        self.image_delete.source = "./asmcnc/skavaUI/img/file_select_delete.png"
 
     def to_human_readable(self, json_obj, indent=0):
-
         def format_key(json_key):
-            return json_key.replace('_', ' ').title()
-        result = ''
+            return json_key.replace("_", " ").title()
+
+        result = ""
         for key, value in json_obj.items():
             if isinstance(value, dict):
-                result += ' ' * indent + format_key(key
-                    ) + ':\n' + self.to_human_readable(value, indent + 4)
+                result += (
+                    " " * indent
+                    + format_key(key)
+                    + ":\n"
+                    + self.to_human_readable(value, indent + 4)
+                )
             else:
-                result += ' ' * indent + format_key(key) + ': ' + str(value
-                    ) + '\n'
+                result += " " * indent + format_key(key) + ": " + str(value) + "\n"
         return result
 
     def load_config_and_return_to_dwt(self):
         self.callback(self.filechooser.selection[0])
-        self.sm.current = 'drywall_cutter'
+        self.sm.current = "drywall_cutter"
 
     def delete_popup(self, **kwargs):
-        if kwargs['file_selection'] == 'all':
-            popup_info.PopupDeleteFile(screen_manager=self.sm, localization
-                =self.l, function=self.delete_all, file_selection='all')
+        if kwargs["file_selection"] == "all":
+            popup_info.PopupDeleteFile(
+                screen_manager=self.sm,
+                localization=self.l,
+                function=self.delete_all,
+                file_selection="all",
+            )
         else:
-            popup_info.PopupDeleteFile(screen_manager=self.sm, localization
-                =self.l, function=self.delete_selected, file_selection=
-                kwargs['file_selection'])
+            popup_info.PopupDeleteFile(
+                screen_manager=self.sm,
+                localization=self.l,
+                function=self.delete_selected,
+                file_selection=kwargs["file_selection"],
+            )
 
     def delete_selected(self, filename):
         self.refresh_filechooser()
@@ -473,7 +503,7 @@ class ConfigFileChooser(Screen):
                 os.remove(filename)
                 self.filechooser.selection = []
             except:
-                print('attempt to delete folder, or undeletable file')
+                print("attempt to delete folder, or undeletable file")
             self.refresh_filechooser()
 
     def delete_all(self):
@@ -486,10 +516,10 @@ class ConfigFileChooser(Screen):
                     if files_in_cache.index(file) + 2 >= len(files_in_cache):
                         self.refresh_filechooser()
                 except:
-                    print('attempt to delete folder, or undeletable file')
+                    print("attempt to delete folder, or undeletable file")
         self.filechooser.selection = []
         self.refresh_filechooser()
 
     def quit_to_home(self):
         if not self.is_filechooser_scrolling:
-            self.sm.current = 'drywall_cutter'
+            self.sm.current = "drywall_cutter"

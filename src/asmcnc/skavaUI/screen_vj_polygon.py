@@ -3,6 +3,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.properties import ObjectProperty
 from asmcnc.skavaUI import widget_vj_polygon
+
 Builder.load_string(
     """
 
@@ -16,7 +17,7 @@ Builder.load_string(
 			id: polygon_vj
 
 """
-    )
+)
 
 
 class ScreenVJPolygon(Screen):
@@ -24,4 +25,4 @@ class ScreenVJPolygon(Screen):
 
     def __init__(self, **kwargs):
         super(ScreenVJPolygon, self).__init__(**kwargs)
-        self.polygon_vj.sm = kwargs['screen_manager']
+        self.polygon_vj.sm = kwargs["screen_manager"]

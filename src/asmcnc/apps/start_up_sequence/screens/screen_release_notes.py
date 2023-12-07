@@ -9,6 +9,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty, DictProperty
 from datetime import datetime
+
 Builder.load_string(
     """
 
@@ -108,12 +109,12 @@ Builder.load_string(
                 color: hex('f9f9f9ff')
 
 """
-    )
+)
 
 
 def log(message):
     timestamp = datetime.now()
-    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
+    print(timestamp.strftime("%H:%M:%S.%f")[:12] + " " + str(message))
 
 
 def filter_version_to_filename(character):
@@ -125,9 +126,16 @@ def filter_version_to_filename(character):
 
 
 class ScrollReleaseNotes(ScrollView):
-    text = StringProperty('')
-    color_dict = DictProperty({'background': 'e5e5e5ff', 'link': '1976d2ff',
-        'paragraph': '333333ff', 'title': '333333ff', 'bullet': '333333ff'})
+    text = StringProperty("")
+    color_dict = DictProperty(
+        {
+            "background": "e5e5e5ff",
+            "link": "1976d2ff",
+            "paragraph": "333333ff",
+            "title": "333333ff",
+            "bullet": "333333ff",
+        }
+    )
 
 
 class ReleaseNotesScreen(Screen):
@@ -136,33 +144,35 @@ class ReleaseNotesScreen(Screen):
 
     def __init__(self, **kwargs):
         super(ReleaseNotesScreen, self).__init__(**kwargs)
-        self.start_seq = kwargs['start_sequence']
-        self.sm = kwargs['screen_manager']
-        self.version = kwargs['version']
-        self.l = kwargs['localization']
-        self.release_notes_filename = '../' + self.version.replace('.', ''
-            ) + '.txt'
-        self.scroll_release_notes.release_notes.source = (self.
-            release_notes_filename)
+        self.start_seq = kwargs["start_sequence"]
+        self.sm = kwargs["screen_manager"]
+        self.version = kwargs["version"]
+        self.l = kwargs["localization"]
+        self.release_notes_filename = "../" + self.version.replace(".", "") + ".txt"
+        self.scroll_release_notes.release_notes.source = self.release_notes_filename
         self.update_strings()
 
     def update_strings(self):
         self.version_number_label.text = self.l.get_str(
-            'Software updated successfully to version').replace(self.l.
-            get_str('version'), self.version)
+            "Software updated successfully to version"
+        ).replace(self.l.get_str("version"), self.version)
         self.please_read_label.text = self.l.get_str(
-            'These release notes contain critical information about how SmartBench has changed (in English).'
-            )
-        self.url_label.text = self.l.get_str('For full release notes, go to:') + '\n' + """https://www.yetitool.com
+            "These release notes contain critical information about how SmartBench has changed (in English)."
+        )
+        self.url_label.text = (
+            self.l.get_str("For full release notes, go to:")
+            + "\n"
+            + """https://www.yetitool.com
 /SUPPORT
 /KNOWLEDGE-BASE
 /smartbench1-console-
 operations-software-
 updates-release-notes"""
-        self.next_button.text = self.l.get_str('Next') + '...'
+        )
+        self.next_button.text = self.l.get_str("Next") + "..."
 
     def next_screen(self):
         os.system(
             'sudo sed -i "s/power_cycle_alert=True/power_cycle_alert=False/" /home/pi/easycut-smartbench/src/config.txt'
-            )
+        )
         self.start_seq.next_in_sequence()
