@@ -124,6 +124,16 @@ class PopupSystem(Popup):
         self.button_two_callback = button_two_callback
         self.button_one_background_color = button_one_background_color
         self.button_two_background_color = button_two_background_color
+        self.button_one_background_normal = (
+            self.button_one_background_normal
+            if button_one_background_color is None
+            else ""
+        )
+        self.button_two_background_normal = (
+            self.button_two_background_normal
+            if button_two_background_color is None
+            else ""
+        )
 
         self.build()
 
