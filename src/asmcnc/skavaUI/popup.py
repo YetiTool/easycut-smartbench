@@ -5,7 +5,7 @@ Popup system for easycut-smartbench
 """
 from enum import Enum
 from kivy.metrics import dp
-from kivy.properties import ObjectProperty, StringProperty
+from kivy.properties import ObjectProperty, StringProperty, ListProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.image import Image
@@ -29,7 +29,7 @@ class PopupSystem(Popup):
     l = ObjectProperty(None)
 
     # Default properties
-    separator_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
+    separator_color = ListProperty([230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0])
     separator_height = dp(4)
 
     # You can override these properties in the constructor, pass them as kwargs
