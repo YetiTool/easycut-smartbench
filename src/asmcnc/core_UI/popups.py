@@ -12,7 +12,7 @@ from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 
-from asmcnc.skavaUI import utils
+from asmcnc.core_UI import scaling_utils as utils
 
 """
 Popup type enum
@@ -40,38 +40,44 @@ class PopupType(Enum):
     OTHER = None
 
 
-class PopupSystem(Popup):
+class BasicPopup(Popup):
     # Fetched by kivy from the kwargs
     sm = ObjectProperty(None)
     m = ObjectProperty(None)
     l = ObjectProperty(None)
 
     # Default properties
-    separator_color = ListProperty([249 / 255.0, 206 / 255.0, 29 / 255.0, 1.0])
-    separator_height = dp(4)
-
     # You can override these properties in the constructor, pass them as kwargs
+    separator_color = ListProperty([249 / 255.0, 206 / 255.0, 29 / 255.0, 1.0])
+    separator_height = dp(utils.get_scaled_height(4))
     background = StringProperty(
         "./asmcnc/apps/shapeCutter_app/img/popup_background.png"
     )
     auto_dismiss = ObjectProperty(False)
     title_color = ObjectProperty([0, 0, 0, 1])
     title_size = ObjectProperty(str(utils.get_scaled_width(20)) + "sp")
-
-    button_one_background_normal = "atlas://data/images/defaulttheme/button"
-    button_two_background_normal = "atlas://data/images/defaulttheme/button"
+    button_one_background_normal = StringProperty("atlas://data/images/defaulttheme/button")
+    button_two_background_normal = StringProperty("atlas://data/images/defaulttheme/button")
 
     """
     title: string to be used as the title
     main_string: string to be used as main text
     popup_type: type of popup (enum) see PopupType class above
+    main_label_padding: padding of main label
+    main_layout_padding: padding of main layout
+    main_layout_spacing: spacing of main layout
+    main_label_size_delta: how much to reduce the width of the main label by compared to the popup width
+    button_layout_padding: padding of button layout
+    button_layout_spacing: spacing of button layout
     popup_width: width of popup, default 300
     popup_height: height of popup, default 350
     popup_image: image to be used in popup, default None (uses popup_type's image)
     button_one_text: text to be used in button one, default "Ok"
     button_one_callback: callback to be used when button one is pressed, default None
+    button_one_background_color: background color to be used for button one, default None
     button_two_text: text to be used in button two, default None
     button_two_callback: callback to be used when button two is pressed, default None
+    button_two_background_color: background color to be used for button two, default None
     
     Usage:
     popup = PopupSystem(title_string="Title", main_string="Main text", popup_type=PopupType.INFO,
@@ -87,6 +93,23 @@ class PopupSystem(Popup):
                         popup_width=300, popup_height=350, button_one_callback=self.callback)
         
     This will dismiss the popup and call the callback function when the button is pressed.
+    
+    Example of the Welcome popup:
+    welcome_popup = popup.BasicPopup(sm=self.sm, m=self.m, l=self.l,
+                                         title=self.l.get_str('Welcome to SmartBench'),
+                                         main_string=self.welcome_popup_description,
+                                         popup_type=popup.PopupType.INFO,
+                                         popup_width=500, popup_height=440, main_label_size_delta=80,
+                                         main_label_padding=(0, 0), main_layout_padding=(10, 10, 10, 10),
+                                         main_layout_spacing=10, button_layout_padding=(20, 10, 20, 0),
+                                         button_layout_spacing=15,
+                                         button_two_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
+                                         button_one_background_color=(230 / 255., 74 / 255., 25 / 255., 1.),
+                                         button_one_text="Remind me", button_two_text="Ok",
+                                         button_one_callback=self.set_trigger_to_true,
+                                         button_two_callback=self.set_trigger_to_false)
+
+        welcome_popup.open()
     """
 
     def __init__(
@@ -110,7 +133,7 @@ class PopupSystem(Popup):
         button_two_background_color=None,
         **kwargs
     ):
-        super(PopupSystem, self).__init__(**kwargs)
+        super(BasicPopup, self).__init__(**kwargs)
 
         if button_one_callback is None:
             button_one_callback = self.dismiss
