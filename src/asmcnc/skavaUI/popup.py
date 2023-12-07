@@ -15,11 +15,22 @@ from kivy.uix.popup import Popup
 from asmcnc.skavaUI import utils
 
 
+"""
+Popup type enum
+
+INFO: Info popup
+ERROR: Error popup
+QR: QR code popup (no image by default)
+OTHER: Other popup (no image by default)
+
+Each enum has a value which is the path to the image to be used in the popup, and a colour which is the colour of the
+separator line at the top of the popup
+"""
 class PopupType(Enum):
-    INFO = "./asmcnc/apps/shapeCutter_app/img/info_icon.png"
-    ERROR = "./asmcnc/apps/shapeCutter_app/img/error_icon.png"
-    QR = "./asmcnc/apps/shapeCutter_app/img/qr_icon.png"  # TODO: Implement QR CODE
-    OTHER = ""
+    INFO = "./asmcnc/apps/shapeCutter_app/img/info_icon.png", (249 / 255., 206 / 255., 29 / 255., 1.)
+    ERROR = "./asmcnc/apps/shapeCutter_app/img/error_icon.png", (230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0)
+    QR = "", ()  # TODO: Implement QR CODE
+    OTHER = "", ()
 
 
 class PopupSystem(Popup):
@@ -29,7 +40,7 @@ class PopupSystem(Popup):
     l = ObjectProperty(None)
 
     # Default properties
-    separator_color = ListProperty([230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0])
+    separator_color = ListProperty([249 / 255., 206 / 255., 29 / 255., 1.])
     separator_height = dp(4)
 
     # You can override these properties in the constructor, pass them as kwargs
@@ -134,6 +145,9 @@ class PopupSystem(Popup):
             if button_two_background_color is None
             else ""
         )
+        if self.popup_type is not None:
+            if self.popup_type.value[1] is not ():
+                self.separator_color = self.popup_type.value[1]
 
         self.build()
 
