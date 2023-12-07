@@ -4,9 +4,8 @@
 Popup system for easycut-smartbench
 """
 from enum import Enum
-from kivy.core.window import Window
 from kivy.metrics import dp
-from kivy.properties import ObjectProperty, StringProperty, partial
+from kivy.properties import ObjectProperty, StringProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.image import Image
@@ -19,6 +18,7 @@ from asmcnc.skavaUI import utils
 class PopupType(Enum):
     INFO = "./asmcnc/apps/shapeCutter_app/img/info_icon.png"
     ERROR = "./asmcnc/apps/shapeCutter_app/img/error_icon.png"
+    QR = "./asmcnc/apps/shapeCutter_app/img/qr_icon.png"  # TODO: Implement QR CODE
     OTHER = ""
 
 
@@ -69,7 +69,10 @@ class PopupSystem(Popup):
     This will dismiss the popup and call the callback function when the button is pressed.
     """
 
-    def __init__(self, main_string, popup_type,
+    ## custom spacing
+    def __init__(self, main_string, popup_type, main_label_padding=(None, None), main_layout_padding=(None, None),
+                 main_layout_spacing=(None, None),
+                 main_label_size_delta=0, button_layout_padding=(None, None), button_layout_spacing=(None, None),
                  popup_width=300, popup_height=350, popup_image=None,
                  button_one_text="Ok", button_one_callback=None, button_one_background_color=None,
                  button_two_text=None, button_two_callback=None, button_two_background_color=None,
@@ -90,6 +93,12 @@ class PopupSystem(Popup):
         self.popup_width = popup_width
         self.popup_height = popup_height
         self.main_string = self.l.get_str(main_string)
+        self.main_label_padding = main_label_padding
+        self.main_layout_padding = main_layout_padding
+        self.main_label_size_delta = main_label_size_delta
+        self.button_layout_padding = button_layout_padding
+        self.button_layout_spacing = button_layout_spacing
+        self.main_layout_spacing = main_layout_spacing
         self.popup_type = popup_type
         self.popup_image = popup_image
         self.button_one_text = self.l.get_str(button_one_text)
@@ -101,16 +110,21 @@ class PopupSystem(Popup):
 
     def build(self):
         image = Image(source=self.popup_type.value or self.popup_image)
-        main_label = Label(size_hint_y=1, text_size=(dp(utils.get_scaled_width(self.popup_width - 30)), None),
+        main_label = Label(size_hint_y=1,
+                           text_size=(dp(utils.get_scaled_width(
+                               self.popup_width - utils.get_scaled_width(self.main_label_size_delta))), None),
                            halign="center", valign="middle", text=self.main_string, color=(0, 0, 0, 1),
-                           padding=(utils.get_scaled_width(40), utils.get_scaled_height(20)),
+                           padding=(utils.get_scaled_width(self.main_label_padding[0]),
+                                    utils.get_scaled_height(self.main_label_padding[1])),
                            markup=True, font_size=str(utils.get_scaled_width(14)) + "sp")
 
         button_layout = self.build_button_layout()
 
         main_layout = BoxLayout(orientation="vertical",
-                                spacing=(utils.get_scaled_width(10), utils.get_scaled_height(10)),
-                                padding=(utils.get_scaled_width(40), utils.get_scaled_height(20)))
+                                spacing=(utils.get_scaled_width(self.main_layout_spacing[0]),
+                                         utils.get_scaled_height(self.main_layout_spacing[1])),
+                                padding=(utils.get_scaled_width(self.main_layout_padding[0]),
+                                         utils.get_scaled_height(self.main_layout_padding[1])))
 
         main_layout.add_widget(image)
         main_layout.add_widget(main_label)
@@ -120,8 +134,10 @@ class PopupSystem(Popup):
 
     def build_button_layout(self):
         button_layout = BoxLayout(orientation="horizontal",
-                                  spacing=(utils.get_scaled_width(10), utils.get_scaled_height(10)),
-                                  padding=0)
+                                  spacing=(utils.get_scaled_width(self.button_layout_spacing[0]),
+                                           utils.get_scaled_height(self.button_layout_spacing[1])),
+                                  padding=(utils.get_scaled_width(self.button_layout_padding[0]),
+                                           utils.get_scaled_height(self.button_layout_padding[1])))
 
         for button in self.build_buttons():
             button_layout.add_widget(button)
