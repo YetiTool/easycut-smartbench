@@ -46,6 +46,10 @@ class BasicPopup(Popup):
     m = ObjectProperty(None)
     l = ObjectProperty(None)
 
+    # Properties of BasicPopup class
+    main_layout = None
+    button_layout = None
+
     # Default properties
     # You can override these properties in the constructor, pass them as kwargs
     separator_color = ListProperty([249 / 255.0, 206 / 255.0, 29 / 255.0, 1.0])
@@ -193,16 +197,16 @@ class BasicPopup(Popup):
             text_size=(text_size_x, None),
             halign="center",
             valign="middle",
-            text=self.main_string,
+            text=self.l.get_str(self.main_string),
             color=(0, 0, 0, 1),
             padding=utils.get_scaled_tuple(self.main_label_padding),
             markup=True,
             font_size=str(utils.get_scaled_width(14)) + "sp",
         )
 
-        button_layout = self.build_button_layout()
+        self.button_layout = self.build_button_layout()
 
-        main_layout = BoxLayout(
+        self.main_layout = BoxLayout(
             orientation="vertical",
             spacing=utils.get_scaled_tuple(
                 self.main_layout_spacing, orientation="vertical"
@@ -213,12 +217,12 @@ class BasicPopup(Popup):
         if self.popup_type is not None:
             if self.popup_type.value is not None or self.popup_image is not None:
                 image = Image(source=self.popup_type.value["image"] or self.popup_image)
-                main_layout.add_widget(image)
+                self.main_layout.add_widget(image)
 
-        main_layout.add_widget(main_label)
-        main_layout.add_widget(button_layout)
+        self.main_layout.add_widget(main_label)
+        self.main_layout.add_widget(self.button_layout)
 
-        self.content = main_layout
+        self.content = self.main_layout
 
     def build_button_layout(self):
         button_layout = BoxLayout(
@@ -240,23 +244,25 @@ class BasicPopup(Popup):
     def build_buttons(self):
         buttons = [
             Button(
-                text=self.button_one_text,
+                text=self.l.get_bold(self.button_one_text),
                 on_release=lambda x: self.on_button_pressed(self.button_one_callback),
                 font_size=str(utils.get_scaled_width(14)) + "sp",
                 background_normal=self.button_one_background_normal,
                 background_color=self.button_one_background_color,
+                markup=True
             )
         ]
         if self.button_two_text is not None:
             buttons.append(
                 Button(
-                    text=self.button_two_text,
+                    text=self.l.get_bold(self.button_two_text),
                     on_release=lambda x: self.on_button_pressed(
                         self.button_two_callback
                     ),
                     font_size=str(utils.get_scaled_width(14)) + "sp",
                     background_normal=self.button_two_background_normal,
                     background_color=self.button_two_background_color,
+                    markup=True
                 )
             )
         return buttons
