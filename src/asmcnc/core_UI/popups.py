@@ -164,7 +164,7 @@ class BasicPopup(Popup):
         self.main_layout_spacing = main_layout_spacing
         self.popup_type = popup_type
         self.popup_image = popup_image
-        self.popup_size_hint = popup_size_hint
+        self.popup_image_size_hint = popup_image_size_hint
         self.button_one_text = self.l.get_str(button_one_text)
         self.button_one_callback = button_one_callback
         self.button_two_text = (
@@ -218,13 +218,9 @@ class BasicPopup(Popup):
             padding=utils.get_scaled_tuple(self.main_layout_padding),
         )
 
-        if self.popup_type is not None:
-            if self.popup_type.value is not None or self.popup_image is not None:
-                self.image = Image(source=self.popup_type.value["image"] or self.popup_image, allow_stretch=False)
-                if self.popup_image is not None:
-                    self.image.size_hint = self.popup_size_hint
-
-                self.main_layout.add_widget(self.image)
+        image = self.get_image()
+        if image is not None:
+            self.main_layout.add_widget(image)
 
         self.main_layout.add_widget(self.main_label)
         self.main_layout.add_widget(self.button_layout)
@@ -247,6 +243,13 @@ class BasicPopup(Popup):
     def on_button_pressed(self, callback):
         self.dismiss()
         callback()
+
+    def get_image(self):
+        if self.popup_type.value is None:
+            if self.popup_image is None:
+                return None
+            return Image(source=self.popup_image, allow_stretch=False, size_hint=self.popup_image_size_hint)
+        return Image(source=self.popup_type.value["image"], allow_stretch=False)
 
     def build_buttons(self):
         buttons = [
