@@ -46,9 +46,11 @@ class BasicPopup(Popup):
     m = ObjectProperty(None)
     l = ObjectProperty(None)
 
-    # Properties of BasicPopup class
+    # Widgets of BasicPopup class (if you need the others, navigate to them through these widgets)
     main_layout = None
     button_layout = None
+    image = None
+    main_label = None
 
     # Default properties
     # You can override these properties in the constructor, pass them as kwargs
@@ -192,7 +194,7 @@ class BasicPopup(Popup):
             )
         )
 
-        main_label = Label(
+        self.main_label = Label(
             size_hint_y=1,
             text_size=(text_size_x, None),
             halign="center",
@@ -216,10 +218,10 @@ class BasicPopup(Popup):
 
         if self.popup_type is not None:
             if self.popup_type.value is not None or self.popup_image is not None:
-                image = Image(source=self.popup_type.value["image"] or self.popup_image)
-                self.main_layout.add_widget(image)
+                self.image = Image(source=self.popup_type.value["image"] or self.popup_image)
+                self.main_layout.add_widget(self.image)
 
-        self.main_layout.add_widget(main_label)
+        self.main_layout.add_widget(self.main_label)
         self.main_layout.add_widget(self.button_layout)
 
         self.content = self.main_layout
@@ -266,3 +268,5 @@ class BasicPopup(Popup):
                 )
             )
         return buttons
+
+
