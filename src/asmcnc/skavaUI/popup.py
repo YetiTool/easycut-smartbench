@@ -126,7 +126,6 @@ class PopupSystem(Popup):
         self.build()
 
     def build(self):
-        image = Image(source=self.popup_type.value or self.popup_image)
         text_size_x = dp(
             utils.get_scaled_width(
                 self.popup_width - utils.get_scaled_width(self.main_label_size_delta)
@@ -155,7 +154,11 @@ class PopupSystem(Popup):
             padding=utils.get_scaled_tuple(self.main_layout_padding),
         )
 
-        main_layout.add_widget(image)
+        if self.popup_type is not None:
+            if self.popup_type.value != '' or self.popup_image is not None:
+                image = Image(source=self.popup_type.value or self.popup_image)
+                main_layout.add_widget(image)
+
         main_layout.add_widget(main_label)
         main_layout.add_widget(button_layout)
 
