@@ -4,7 +4,10 @@ Created on 19 Aug 2017
 @author: Ed
 """
 import kivy
+from kivy.core.image import Image
+from kivy.core.window import Window
 from kivy.lang import Builder
+from kivy.metrics import dp
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import (
@@ -293,11 +296,12 @@ class USBFileChooser(Screen):
         self.list_layout_fc.ids.scrollview.fbind(
             "scroll_y", self.alternate_update_effect_bounds_list
         )
+        self.filechooser_usb.bind(
+            on_entry_added=self.update_entry
+        )
 
-
-        for wid in self.icon_layout_fc.children[0].children:
-            print("wid: " + str(wid.size))
-            print("wid: " + str(type(wid)))
+    def update_entry(self, file_chooser, file_entry, *args):
+        file_entry.size = (dp(100.0/480.0)*Window.width, dp(100.0/480.0)*Window.width)
 
     def alternate_update_effect_bounds_icon(self, *args):
         self.update_y_bounds_try_except(self.icon_layout_fc.ids.scrollview)
