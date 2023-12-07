@@ -294,6 +294,10 @@ class USBFileChooser(Screen):
             "scroll_y", self.alternate_update_effect_bounds_list
         )
 
+        for wid in self.icon_layout_fc.children:
+            print(wid.size)
+            print(type(wid))
+
     def alternate_update_effect_bounds_icon(self, *args):
         self.update_y_bounds_try_except(self.icon_layout_fc.ids.scrollview)
 
