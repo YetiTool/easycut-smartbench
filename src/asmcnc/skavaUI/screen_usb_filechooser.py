@@ -300,8 +300,8 @@ class USBFileChooser(Screen):
             on_entry_added=self.update_entry
         )
 
-    def update_entry(self, file_chooser, file_entry, *args):
-        file_entry.size = (dp(100.0/480.0)*Window.width, dp(100.0/480.0)*Window.width)
+    def update_entry(self, entry, parent, *args):
+        entry.size = (dp(100.0/480.0)*Window.width, dp(100.0/480.0)*Window.width)
 
     def alternate_update_effect_bounds_icon(self, *args):
         self.update_y_bounds_try_except(self.icon_layout_fc.ids.scrollview)
