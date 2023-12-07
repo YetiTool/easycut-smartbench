@@ -122,6 +122,8 @@ class PopupSystem(Popup):
             self.l.get_str(button_two_text) if button_two_text is not None else None
         )
         self.button_two_callback = button_two_callback
+        self.button_one_background_color = button_one_background_color
+        self.button_two_background_color = button_two_background_color
 
         self.build()
 
