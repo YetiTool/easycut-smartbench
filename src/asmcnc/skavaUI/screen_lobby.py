@@ -531,6 +531,13 @@ class LobbyScreen(Screen):
         # Trigger welcome popup is machine is being used for the first time
         if self.m.trigger_setup: self.help_popup()
 
+    def set_trigger_to_false(self, *args):
+        self.m.write_set_up_options(False)
+        self.sm.get_screen('lobby').carousel.load_next(mode='next')
+
+    def set_trigger_to_true(self, *args):
+        self.m.write_set_up_options(True)
+
     def help_popup(self):
         # popup_info.PopupWelcome(self.sm, self.m, self.l, self.welcome_popup_description)
         welcome_popup = popup.PopupSystem(sm=self.sm, m=self.m, l=self.l,
@@ -540,7 +547,12 @@ class LobbyScreen(Screen):
                                           popup_width=500, popup_height=440, main_label_size_delta=80,
                                           main_label_padding=(0, 0), main_layout_padding=(10, 10),
                                           main_layout_spacing=10, button_layout_padding=(20, 10, 20, 0),
-                                          button_layout_spacing=15)
+                                          button_layout_spacing=15,
+                                          button_two_background_color=[76 / 255., 175 / 255., 80 / 255., 1.],
+                                          button_one_background_color=[230 / 255., 74 / 255., 25 / 255., 1.],
+                                          button_one_text="Remind me", button_two_text="Ok",
+                                          button_one_callback=self.set_trigger_to_true,
+                                          button_two_callback=self.set_trigger_to_false)
 
         welcome_popup.open()
 

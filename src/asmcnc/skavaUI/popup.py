@@ -41,7 +41,7 @@ class PopupSystem(Popup):
     title_size = ObjectProperty(str(utils.get_scaled_width(20)) + "sp")
 
     button_one_background_normal = "atlas://data/images/defaulttheme/button"
-    button_two_background_down = "atlas://data/images/defaulttheme/button"
+    button_two_background_normal = "atlas://data/images/defaulttheme/button"
 
     """
     title: string to be used as the title
@@ -187,6 +187,8 @@ class PopupSystem(Popup):
                 text=self.button_one_text,
                 on_release=lambda x: self.on_button_pressed(self.button_one_callback),
                 font_size=str(utils.get_scaled_width(14)) + "sp",
+                background_normal=self.button_one_background_normal,
+                background_color=self.button_one_background_color,
             )
         ]
         if self.button_two_text is not None:
@@ -197,6 +199,8 @@ class PopupSystem(Popup):
                         self.button_two_callback
                     ),
                     font_size=str(utils.get_scaled_width(14)) + "sp",
+                    background_normal=self.button_two_background_normal,
+                    background_color=self.button_two_background_color,
                 )
             )
         return buttons
