@@ -18,7 +18,8 @@ import sys, os, textwrap
 from os.path import expanduser
 from shutil import copy
 
-from asmcnc.skavaUI import popup_info, popup
+from asmcnc.skavaUI import popup_info
+from asmcnc.core_UI.popups import BasicPopup, PopupType
 
 Builder.load_string("""
 
@@ -540,19 +541,19 @@ class LobbyScreen(Screen):
 
     def help_popup(self):
         # popup_info.PopupWelcome(self.sm, self.m, self.l, self.welcome_popup_description)
-        welcome_popup = popup.BasicPopup(sm=self.sm, m=self.m, l=self.l,
-                                         title=self.l.get_str('Welcome to SmartBench'),
-                                         main_string=self.welcome_popup_description,
-                                         popup_type=popup.PopupType.INFO,
-                                         popup_width=500, popup_height=440, main_label_size_delta=80,
-                                         main_label_padding=(0, 0), main_layout_padding=(10, 10, 10, 10),
-                                         main_layout_spacing=10, button_layout_padding=(20, 10, 20, 0),
-                                         button_layout_spacing=15,
-                                         button_two_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
-                                         button_one_background_color=(230 / 255., 74 / 255., 25 / 255., 1.),
-                                         button_one_text="Remind me", button_two_text="Ok",
-                                         button_one_callback=self.set_trigger_to_true,
-                                         button_two_callback=self.set_trigger_to_false)
+        welcome_popup = BasicPopup(sm=self.sm, m=self.m, l=self.l,
+                                   title=self.l.get_str('Welcome to SmartBench'),
+                                   main_string=self.welcome_popup_description,
+                                   popup_type=PopupType.INFO,
+                                   popup_width=500, popup_height=440, main_label_size_delta=80,
+                                   main_label_padding=(0, 0), main_layout_padding=(10, 10, 10, 10),
+                                   main_layout_spacing=10, button_layout_padding=(20, 10, 20, 0),
+                                   button_layout_spacing=15,
+                                   button_two_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
+                                   button_one_background_color=(230 / 255., 74 / 255., 25 / 255., 1.),
+                                   button_one_text="Remind me", button_two_text="Ok",
+                                   button_one_callback=self.set_trigger_to_true,
+                                   button_two_callback=self.set_trigger_to_false)
 
         welcome_popup.open()
 
