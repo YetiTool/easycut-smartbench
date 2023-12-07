@@ -536,8 +536,12 @@ class LobbyScreen(Screen):
         welcome_popup = popup.PopupSystem(sm=self.sm, m=self.m, l=self.l,
                                           title=self.l.get_str('Welcome to SmartBench'),
                                           main_string=self.welcome_popup_description,
-                                          popup_type=popup.PopupType.ERROR,
-                                          popup_width=600)
+                                          popup_type=popup.PopupType.INFO,
+                                          popup_width=500, popup_height=440, main_label_size_delta=80,
+                                          main_label_padding=(0, 0), main_layout_padding=(10, 10),
+                                          main_layout_spacing=10, button_layout_padding=(20, 10, 20, 0),
+                                          button_layout_spacing=15)
+
         welcome_popup.open()
 
     def pro_app(self):
