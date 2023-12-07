@@ -197,7 +197,7 @@ class BasicPopup(Popup):
         )
 
         self.main_label = Label(
-            size_hint_y=1,
+            size_hint_y=2,
             text_size=(text_size_x, None),
             halign="center",
             valign="middle",
