@@ -131,6 +131,7 @@ class BasicPopup(Popup):
         popup_width,
         popup_height,
         popup_image=None,
+        popup_image_size_hint=None,
         button_one_text="Ok",
         button_one_callback=None,
         button_one_background_color=None,
@@ -163,6 +164,7 @@ class BasicPopup(Popup):
         self.main_layout_spacing = main_layout_spacing
         self.popup_type = popup_type
         self.popup_image = popup_image
+        self.popup_size_hint = popup_size_hint
         self.button_one_text = self.l.get_str(button_one_text)
         self.button_one_callback = button_one_callback
         self.button_two_text = (
@@ -218,7 +220,10 @@ class BasicPopup(Popup):
 
         if self.popup_type is not None:
             if self.popup_type.value is not None or self.popup_image is not None:
-                self.image = Image(source=self.popup_type.value["image"] or self.popup_image)
+                self.image = Image(source=self.popup_type.value["image"] or self.popup_image, allow_stretch=False)
+                if self.popup_image is not None:
+                    self.image.size_hint = self.popup_size_hint
+
                 self.main_layout.add_widget(self.image)
 
         self.main_layout.add_widget(self.main_label)
