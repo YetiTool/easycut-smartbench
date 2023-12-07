@@ -14,7 +14,6 @@ from kivy.uix.popup import Popup
 
 from asmcnc.skavaUI import utils
 
-
 """
 Popup type enum
 
@@ -26,11 +25,19 @@ OTHER: Other popup (no image by default)
 Each enum has a value which is the path to the image to be used in the popup, and a colour which is the colour of the
 separator line at the top of the popup
 """
+
+
 class PopupType(Enum):
-    INFO = "./asmcnc/apps/shapeCutter_app/img/info_icon.png", (249 / 255., 206 / 255., 29 / 255., 1.)
-    ERROR = "./asmcnc/apps/shapeCutter_app/img/error_icon.png", (230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0)
-    QR = "", ()  # TODO: Implement QR CODE
-    OTHER = "", ()
+    INFO = {
+        "image": "./asmcnc/apps/shapeCutter_app/img/info_icon.png",
+        "separator_color": (249 / 255.0, 206 / 255.0, 29 / 255.0, 1.0),
+    }
+    ERROR = {
+        "image": "./asmcnc/apps/shapeCutter_app/img/error_icon.png",
+        "separator_color": (230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0),
+    }
+    QR = None
+    OTHER = None
 
 
 class PopupSystem(Popup):
@@ -40,7 +47,7 @@ class PopupSystem(Popup):
     l = ObjectProperty(None)
 
     # Default properties
-    separator_color = ListProperty([249 / 255., 206 / 255., 29 / 255., 1.])
+    separator_color = ListProperty([249 / 255.0, 206 / 255.0, 29 / 255.0, 1.0])
     separator_height = dp(4)
 
     # You can override these properties in the constructor, pass them as kwargs
@@ -146,8 +153,8 @@ class PopupSystem(Popup):
             else ""
         )
         if self.popup_type is not None:
-            if self.popup_type.value[1] is not ():
-                self.separator_color = self.popup_type.value[1]
+            if self.popup_type.value is not None:
+                self.separator_color = self.popup_type.value["separator_color"]
 
         self.build()
 
@@ -181,8 +188,8 @@ class PopupSystem(Popup):
         )
 
         if self.popup_type is not None:
-            if self.popup_type.value != '' or self.popup_image is not None:
-                image = Image(source=self.popup_type.value or self.popup_image)
+            if self.popup_type.value is not None or self.popup_image is not None:
+                image = Image(source=self.popup_type.value["image"] or self.popup_image)
                 main_layout.add_widget(image)
 
         main_layout.add_widget(main_label)
