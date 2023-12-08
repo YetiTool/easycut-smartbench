@@ -8,6 +8,7 @@ import traceback
 from datetime import datetime
 
 from kivy.clock import Clock
+from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
 from kivy.uix.screenmanager import Screen
@@ -992,8 +993,8 @@ class GoScreen(Screen):
     def update_font_size(self, value):
         text_length = self.l.get_text_length(value.text)
         if text_length < 20:
-            value.font_size = "16px"
+            value.font_size = str(16.0/800.0*Window.width) + "px"
         if text_length >= 20:
-            value.font_size = "12px"
+            value.font_size = str(12.0/800.0*Window.width) + "px"
         if text_length >= 25:
-            value.font_size = "11px"
+            value.font_size = str(11.0/800.0*Window.width) + "px"
