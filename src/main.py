@@ -267,7 +267,7 @@ class SkavaUI(App):
 
         ## LOCALIZATION TESTING -----------------------------------------------------------
 
-        # test_languages = ["English (GB)", "Deutsch (DE)",  "Français (FR)", "Italiano (IT)", "Suomalainen (FI)", "Polski (PL)", "Dansk (DK)"]
+        test_languages = ["English (GB)", "Deutsch (DE)",  "Français (FR)", "Italiano (IT)", "Suomalainen (FI)", "Polski (PL)", "Dansk (DK)"]
 
         def test_cycle(dt):
             if self.test_no < len(test_languages):
