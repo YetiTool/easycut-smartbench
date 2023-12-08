@@ -6,17 +6,14 @@ Menu screen for system tools app
 """
 import os
 import sys
-
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
 from kivy.uix.spinner import Spinner
-
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.systemTools_app.screens import popup_factory_settings
 from asmcnc.apps.systemTools_app.screens import popup_system
-
 from asmcnc.apps.systemTools_app.screens.calibration.screen_calibration_test import (
     CalibrationTesting,
 )
@@ -32,7 +29,6 @@ from asmcnc.apps.systemTools_app.screens.calibration.screen_serial_numbers impor
 from asmcnc.apps.systemTools_app.screens.calibration import screen_stall_jig
 from asmcnc.apps.systemTools_app.screens.calibration import screen_set_thresholds
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
-
 from asmcnc.production.database.calibration_database import CalibrationDatabase
 
 Builder.load_string(
@@ -61,8 +57,8 @@ Builder.load_string(
     on_touch_down: root.on_touch()
 
     BoxLayout:
-        height: dp(800)
-        width: dp(480)
+        height: dp(1.66666666667*app.height)
+        width: dp(0.6*app.width)
         canvas.before:
             Color: 
                 rgba: hex('#f9f9f9ff')
@@ -72,7 +68,7 @@ Builder.load_string(
 
         BoxLayout:
             padding: 0
-            spacing: 10
+            spacing:0.0208333333333*app.height
             orientation: "vertical"
             BoxLayout:
                 padding: 0
@@ -85,31 +81,31 @@ Builder.load_string(
                         size: self.size
                 Label:
                     size_hint: (None,None)
-                    height: dp(60)
-                    width: dp(800)
+                    height: dp(0.125*app.height)
+                    width: dp(1.0*app.width)
                     text: "Factory settings"
                     color: hex('#f9f9f9ff')
-                    font_size: 30
+                    font_size: 0.0375*app.width
                     halign: "center"
                     valign: "bottom"
                     markup: True
                    
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(800)
-                height: dp(320)
+                width: dp(1.0*app.width)
+                height: dp(0.666666666667*app.height)
                 orientation: 'horizontal'
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(577.5)
-                    height: dp(320)
+                    width: dp(0.721875*app.width)
+                    height: dp(0.666666666667*app.height)
                     padding: 0
-                    spacing: 10
+                    spacing:0.0208333333333*app.height
                     orientation: 'vertical'
                     BoxLayout:
                         size_hint: (None,None)
-                        width: dp(577.5)
-                        height: dp(230)
+                        width: dp(0.721875*app.width)
+                        height: dp(0.479166666667*app.height)
                         padding: 0
                         spacing: 0
                         orientation: 'vertical'
@@ -119,23 +115,25 @@ Builder.load_string(
                             pos: self.parent.pos
                             cols: 0
                             rows: 4
-                            padding: 10
-                            spacing: 5
+                            padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                            spacing:0.0104166666667*app.height
                             BoxLayout: 
                                 orientation: 'vertical'
-                                spacing: 5
+                                spacing:0.0104166666667*app.height
                                 
                                 BoxLayout:
                                     orientation: 'horizontal'
-                                    spacing: 5
+                                    spacing:0.00625*app.width
                                     
                                     Spinner:
+                                        font_size: str(0.01875 * app.width) + 'sp'
                                         id: smartbench_model
                                         text: 'Choose model'
                                         values: root.latest_machine_model_values
                                         on_text: root.set_smartbench_model()
                                     
                                     ToggleButton:
+                                        font_size: str(0.01875 * app.width) + 'sp'
                                         id: smartbench_model_button
                                         text: 'Show all models'
                                         on_press: root.show_all_smartbench_models()
@@ -143,7 +141,7 @@ Builder.load_string(
                                     
                             BoxLayout: 
                                 orientation: 'vertical'
-                                spacing: 5
+                                spacing:0.0104166666667*app.height
 
 
                                 GridLayout: 
@@ -151,9 +149,10 @@ Builder.load_string(
                                     pos: self.parent.pos
                                     cols: 4
                                     rows: 0
-                                    padding: 5
-                                    spacing: 10
+                                    padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                                    spacing:0.0125*app.width
                                     Label:
+                                        font_size: str(0.01875 * app.width) + 'sp'
                                         text: '[b]Serial number[/b]'
                                         color: [0,0,0,1]
                                         markup: True
@@ -162,6 +161,7 @@ Builder.load_string(
 
                                         TextInput:
                                             id: serial_prefix
+                                            font_size: str(15.0/800.0 * app.width) + 'sp'
                                             text: 'YS6'
                                             color: [0,0,0,1]
                                             markup: True
@@ -169,6 +169,7 @@ Builder.load_string(
                                             size_hint_x: 0.3
                                             multiline: False
                                         Label:
+                                            font_size: str(0.01875 * app.width) + 'sp'
                                             text: ''
                                             color: [0,0,0,1]
                                             markup: True
@@ -176,6 +177,7 @@ Builder.load_string(
 
                                         TextInput:
                                             id: serial_number_input
+                                            font_size: str(15.0/800.0 * app.width) + 'sp'
                                             text: '0000'
                                             color: [0,0,0,1]
                                             markup: True
@@ -185,6 +187,7 @@ Builder.load_string(
                                             multiline: False
 
                                         Label:
+                                            font_size: str(0.01875 * app.width) + 'sp'
                                             text: '.'
                                             color: [0,0,0,1]
                                             markup: True
@@ -192,6 +195,7 @@ Builder.load_string(
 
                                         TextInput:
                                             id: product_number_input
+                                            font_size: str(15.0/800.0 * app.width) + 'sp'
                                             text: '00'
                                             color: [0,0,0,1]
                                             markup: True
@@ -201,10 +205,12 @@ Builder.load_string(
                                             multiline: False
 
                                     Button:
+                                        font_size: str(0.01875 * app.width) + 'sp'
                                         text: 'UPDATE'
                                         on_press: root.update_serial_number()
 
                                     Label:
+                                        font_size: str(0.01875 * app.width) + 'sp'
                                         id: machine_serial
                                         text: 'machine serial'
                                         color: [0,0,0,1]
@@ -212,22 +218,24 @@ Builder.load_string(
 
                             BoxLayout: 
                                 orientation: 'vertical'
-                                spacing: 5
+                                spacing:0.0104166666667*app.height
 
                                 GridLayout: 
                                     size: self.parent.size
                                     pos: self.parent.pos
                                     cols: 4
                                     rows: 0
-                                    padding: 5
-                                    spacing: 10
+                                    padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                                    spacing:0.0125*app.width
 
                                     Label:
+                                        font_size: str(0.01875 * app.width) + 'sp'
                                         text: '[b]Touchplate offset[/b]'
                                         color: [0,0,0,1]
                                         markup: True
                                     TextInput:
                                         id: z_touch_plate_entry
+                                        font_size: str(15.0/800.0 * app.width) + 'sp'
                                         text: ''
                                         color: [0,0,0,1]
                                         markup: True
@@ -235,10 +243,12 @@ Builder.load_string(
                                         input_filter: 'float'
                                         multiline: False
                                     Button:
+                                        font_size: str(0.01875 * app.width) + 'sp'
                                         text: 'UPDATE'
                                         on_press: root.update_z_touch_plate_thickness()
     
                                     Label:
+                                        font_size: str(0.01875 * app.width) + 'sp'
                                         id: machine_touchplate_thickness
                                         text: 'machine_tp'
                                         color: [0,0,0,1]
@@ -247,18 +257,21 @@ Builder.load_string(
                         BoxLayout:
                             size_hint_y: 0.3
                             orientation: 'horizontal'
-                            spacing: dp(10)
+                            spacing:dp(0.0125)*app.width
 
                             Button:
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: '$54 info'
                                 on_press: root.setting_54_info()
 
                             ToggleButton:
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 id: setting_54_toggle
                                 text: 'Set $54=1'
                                 on_press: root.toggle_setting_54()
 
                             Label:
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 id: setting_54_label
                                 size_hint_x: 0.7
                                 text: '$54 = N/A'
@@ -267,9 +280,9 @@ Builder.load_string(
 
                     BoxLayout:
                         size_hint: (None,None)
-                        width: dp(577.5)
-                        height: dp(80)
-                        padding: 5
+                        width: dp(0.721875*app.width)
+                        height: dp(0.166666666667*app.height)
+                        padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
                         spacing: 0
                         orientation: 'vertical'
 
@@ -279,9 +292,10 @@ Builder.load_string(
                             cols: 3
                             rows: 0
                             padding: 0
-                            spacing: 10
+                            spacing:0.0125*app.width
 
                             Button:
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 id: console_update_button
                                 text: 'Full Console Update (wifi)'
                                 on_press: root.full_console_update()
@@ -292,17 +306,20 @@ Builder.load_string(
                                 cols: 0
                                 rows: 3
                                 padding: 0
-                                spacing: 2
+                                spacing:0.0025*app.width
                                 Label:
+                                    font_size: str(0.01875 * app.width) + 'sp'
                                     text: 'Current'
                                     color: [0,0,0,1]
                                     markup: True
                                 Label:
+                                    font_size: str(0.01875 * app.width) + 'sp'
                                     id: software_version_label
                                     text: 'SW'
                                     color: [0,0,0,1]
                                     markup: True
                                 Label:
+                                    font_size: str(0.01875 * app.width) + 'sp'
                                     id: platform_version_label
                                     text: 'PL'
                                     color: [0,0,0,1]
@@ -313,17 +330,20 @@ Builder.load_string(
                                 cols: 0
                                 rows: 3
                                 padding: 0
-                                spacing: 2
+                                spacing:0.0025*app.width
                                 Label:
+                                    font_size: str(0.01875 * app.width) + 'sp'
                                     text: 'Available'
                                     color: [0,0,0,1]
                                     markup: True
                                 Label:
+                                    font_size: str(0.01875 * app.width) + 'sp'
                                     id: latest_software_version
                                     text: 'SW'
                                     color: [0,0,0,1]
                                     markup: True
                                 Label:
+                                    font_size: str(0.01875 * app.width) + 'sp'
                                     id: latest_platform_version
                                     text: 'PL'
                                     color: [0,0,0,1]
@@ -332,8 +352,9 @@ Builder.load_string(
                 GridLayout:
                     cols: 2
                     rows: 8
-                    spacing: 2
+                    spacing:0.0025*app.width
                     ToggleButton:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         id: maintenance_reminder_toggle
                         text: 'Turn reminders off'
                         on_press: root.toggle_reminders()
@@ -342,6 +363,7 @@ Builder.load_string(
                         valign: "middle"
 
                     ToggleButton:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         id: show_spindle_overload_toggle
                         text: 'Show spindle overload'
                         on_press: root.toggle_spindle_mode()
@@ -350,6 +372,7 @@ Builder.load_string(
                         valign: "middle"
 
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         text: 'Diagnostics'
                         on_press: root.diagnostics()
                         text_size: self.size
@@ -357,6 +380,7 @@ Builder.load_string(
                         valign: "middle"
 
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         text: 'Current'
                         on_press: root.enter_current_adjustment()
                         text_size: self.size
@@ -364,6 +388,7 @@ Builder.load_string(
                         valign: "middle"
 
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         text: 'FT B1'
                         background_normal: ''
                         background_color: [0.75,0.34,0.51,1]
@@ -373,6 +398,7 @@ Builder.load_string(
                         valign: "middle"
 
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         text: 'FT B2'
                         background_normal: ''
                         background_color: [0.28,0.44,0.97,1]
@@ -382,6 +408,7 @@ Builder.load_string(
                         valign: "middle"
 
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         text: 'FT B3'
                         background_normal: ''
                         background_color: [0.2,0.8,0.2,1]
@@ -391,6 +418,7 @@ Builder.load_string(
                         valign: "middle"
 
                     ToggleButton:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         id: sc2_compatability_toggle
                         text: 'Enable SC2 compatability'
                         on_press: root.show_sc2_decision_popup()
@@ -399,6 +427,7 @@ Builder.load_string(
                         valign: "middle"
 
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         text: 'Retrieve LB cal data'
                         on_press: root.enter_serial_number_screen()
                         text_size: self.size
@@ -406,6 +435,7 @@ Builder.load_string(
                         valign: "middle"
 
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         text: 'SG & Load test'
                         on_press: root.enter_calibration_test()
                         text_size: self.size
@@ -413,6 +443,7 @@ Builder.load_string(
                         valign: "middle"
 
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         text: 'Overnight test'
                         on_press: root.enter_overnight_test()
                         text_size: self.size
@@ -420,6 +451,7 @@ Builder.load_string(
                         valign: "middle"
 
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         text: 'Stall Jig'
                         on_press: root.enter_stall_jig()
                         text_size: self.size
@@ -427,6 +459,7 @@ Builder.load_string(
                         valign: "middle"
 
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         text: 'SG thresh'
                         on_press: root.enter_set_thresholds()
                         text_size: self.size
@@ -434,6 +467,7 @@ Builder.load_string(
                         valign: "middle"
 
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         text: 'Measure'
                         on_press: root.enter_general_measurement()
                         text_size: self.size
@@ -441,6 +475,7 @@ Builder.load_string(
                         valign: "middle"
                         
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         text: 'SC2 spindle test'
                         on_press: root.digital_spindle_test_pressed()
                         text_size: self.size
@@ -450,28 +485,29 @@ Builder.load_string(
 
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(800)
-                height: dp(80)
+                width: dp(1.0*app.width)
+                height: dp(0.166666666667*app.height)
                 padding: 0
-                spacing: 10
+                spacing:0.0125*app.width
                 orientation: 'horizontal'
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(80)
-                    height: dp(80)
+                    width: dp(0.1*app.width)
+                    height: dp(0.166666666667*app.height)
                     padding: 0
                     spacing: 0
 
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(80)
-                        width: dp(80)
-                        padding: [10, 10, 10, 10]
+                        height: dp(0.166666666667*app.height)
+                        width: dp(0.1*app.width)
+                        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                         Button:
+                            font_size: str(0.01875 * app.width) + 'sp'
                             size_hint: (None,None)
-                            height: dp(52)
-                            width: dp(60)
+                            height: dp(0.108333333333*app.height)
+                            width: dp(0.075*app.width)
                             background_color: hex('#F4433600')
                             center: self.parent.center
                             pos: self.parent.pos
@@ -489,32 +525,34 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(620)
-                    height: dp(80)
-                    padding: [160, 0]
+                    width: dp(0.775*app.width)
+                    height: dp(0.166666666667*app.height)
+                    padding:[dp(0.2)*app.width, 0]
                     spacing: 0
                     orientation: 'vertical'
                     BoxLayout:
                         Button:
+                            font_size: str(0.01875 * app.width) + 'sp'
                             text: 'FACTORY RESET'
                             on_press: root.factory_reset()
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(80)
-                    height: dp(80)
+                    width: dp(0.1*app.width)
+                    height: dp(0.166666666667*app.height)
                     padding: 0
                     spacing: 0
 
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(80)
-                        width: dp(80)
-                        padding: [19, 10, 10, 10]
+                        height: dp(0.166666666667*app.height)
+                        width: dp(0.1*app.width)
+                        padding:[dp(0.02375)*app.width, dp(0.0208333333333)*app.height, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                         Button:
+                            font_size: str(0.01875 * app.width) + 'sp'
                             size_hint: (None,None)
-                            height: dp(60)
-                            width: dp(51)
+                            height: dp(0.125*app.height)
+                            width: dp(0.06375*app.width)
                             background_color: hex('#F4433600')
                             center: self.parent.center
                             pos: self.parent.pos
@@ -540,7 +578,6 @@ class FactorySettingsScreen(Screen):
         "SmartBench V1.3 PrecisionPro CNC Router",
         "SmartBench Mini V1.3 PrecisionPro",
     ]
-
     old_machine_model_values = [
         "SmartBench V1.0 CNC Router",
         "SmartBench V1.1 CNC Router",
@@ -548,12 +585,9 @@ class FactorySettingsScreen(Screen):
         "SmartBench V1.2 Precision CNC Router",
         "SmartBench V1.2 PrecisionPro CNC Router",
     ]
-
     smartbench_model_path = "/home/pi/smartbench_model_name.txt"
     machine_serial_number_filepath = "/home/pi/smartbench_serial_number.txt"
-
     dev_mode = False
-
     poll_for_creds_file = None
 
     def __init__(self, **kwargs):
@@ -564,48 +598,36 @@ class FactorySettingsScreen(Screen):
         self.l = kwargs["localization"]
         self.kb = kwargs["keyboard"]
         self.usb_stick = kwargs["usb_stick"]
-
         self.software_version_label.text = self.set.sw_version
         self.platform_version_label.text = self.set.platform_version
         self.latest_software_version.text = self.set.latest_sw_version
         self.latest_platform_version.text = self.set.latest_platform_version
-
         self.machine_serial.text = "$50 = " + str(self.m.serial_number())
         self.machine_touchplate_thickness.text = str(self.m.z_touch_plate_thickness)
-
-        # create calibration database
         self.calibration_db = CalibrationDatabase()
-
         try:
             serial_number_string = self.get_serial_number()
             self.serial_prefix.text = serial_number_string[0:3]
             self.serial_number_input.text = serial_number_string[3:7]
             self.product_number_input.text = str(self.m.serial_number()).split(".")[1]
-
             if self.serial_prefix.text == "":
                 self.serial_prefix.text = "YS6"
             if self.serial_number_input.text == "":
                 self.serial_number_input.text = "0000"
             if self.product_number_input.text == "":
                 self.product_number_input.text = "00"
-
         except:
             self.serial_prefix.text = "YS6"
             self.serial_number_input.text = "0000"
             self.product_number_input.text = "00"
-
-        # load in credentials and start db connection
         self.usb_stick.usb_notifications = False
         self.usb_stick.enable()
         self.poll_for_creds_file = Clock.schedule_interval(
             self.connect_to_db_when_creds_loaded, 1
         )
-
-        # Set initial state of SC2 compatability toggle button
         if self.m.theateam():
             self.sc2_compatability_toggle.state = "down"
             self.sc2_compatability_toggle.text = "Disable SC2 compatability"
-
         self.text_inputs = [
             self.z_touch_plate_entry,
             self.serial_prefix,
@@ -618,18 +640,14 @@ class FactorySettingsScreen(Screen):
             if "credentials.py" in os.listdir("/media/usb/"):
                 if self.poll_for_creds_file != None:
                     Clock.unschedule(self.poll_for_creds_file)
-
                 os.system(
                     "cp /media/usb/credentials.py ./asmcnc/production/database/credentials.py"
                 )
-
                 print("Credentials file found on USB")
                 self.calibration_db.set_up_connection()
-
         except:
             print("No /media/usb/ folder found")
 
-    ## EXIT BUTTONS
     def go_back(self):
         self.systemtools_sm.back_to_menu()
         self.stop_usb_doing_stuff()
@@ -650,12 +668,9 @@ class FactorySettingsScreen(Screen):
         self.set_toggle_buttons()
         self.get_smartbench_model()
         self.kb.setup_text_inputs(self.text_inputs)
-
         csv_path = "./asmcnc/production/database/csvs"
-
         if not os.path.exists(csv_path):
             os.mkdir(csv_path)
-
         if self.m.is_machines_fw_version_equal_to_or_greater_than_version(
             "2.5.0", "Get $54 state"
         ):
@@ -678,15 +693,12 @@ class FactorySettingsScreen(Screen):
         if self.systemtools_sm.sm.get_screen("go").show_spindle_overload == False:
             self.show_spindle_overload_toggle.state = "normal"
             self.show_spindle_overload_toggle.text = "Show spindle overload"
-
         elif self.systemtools_sm.sm.get_screen("go").show_spindle_overload == True:
             self.show_spindle_overload_toggle.state = "down"
             self.show_spindle_overload_toggle.text = "Hide spindle overload"
-
         if self.m.reminders_enabled == True:
             self.maintenance_reminder_toggle.state = "normal"
             self.maintenance_reminder_toggle.text = "Turn reminders off"
-
         elif self.m.reminders_enabled == False:
             self.maintenance_reminder_toggle.state = "down"
             self.maintenance_reminder_toggle.text = "Turn reminders on"
@@ -694,19 +706,17 @@ class FactorySettingsScreen(Screen):
     def validate_touch_plate_thickness(self):
         try:
             float(self.z_touch_plate_entry.text)
-
         except:
             warning_message = "Touchplate offset should be between 1.00 and 2.00 mm"
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False
-
-        if (float(self.z_touch_plate_entry.text) < 1) or (
-            float(self.z_touch_plate_entry.text) > 2
+        if (
+            float(self.z_touch_plate_entry.text) < 1
+            or float(self.z_touch_plate_entry.text) > 2
         ):
             warning_message = "Touchplate offset should be between 1.00 and 2.00 mm"
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False
-
         else:
             return True
 
@@ -717,37 +727,33 @@ class FactorySettingsScreen(Screen):
 
     def validate_serial_number(self):
         if (
-            (str(self.serial_number_input.text) == "")
-            or (str(self.product_number_input.text) == "")
-            or (str(self.serial_prefix.text) == "")
+            str(self.serial_number_input.text) == ""
+            or str(self.product_number_input.text) == ""
+            or str(self.serial_prefix.text) == ""
         ):
             warning_message = "Serial number format should be: YS6-0000-.00"
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False
-
         elif len(str(self.serial_number_input.text)) != 4:
             warning_message = (
                 "Second part of the serial number should be 4 digits long."
             )
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False
-
         elif not (
-            (str(self.product_number_input.text) == "01")
-            or (str(self.product_number_input.text) == "02")
-            or (str(self.product_number_input.text) == "03")
+            str(self.product_number_input.text) == "01"
+            or str(self.product_number_input.text) == "02"
+            or str(self.product_number_input.text) == "03"
         ):
             warning_message = "Product code should 01, 02, or 03."
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False
-
         elif len(str(self.serial_prefix.text)) != 3:
             warning_message = (
                 "First part of the serial number should be 3 characters long."
             )
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False
-
         elif (
             len(
                 str(self.serial_prefix.text)
@@ -760,7 +766,6 @@ class FactorySettingsScreen(Screen):
             warning_message = "Serial number format should be: YS6-0000-.00"
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False
-
         else:
             return True
 
@@ -768,7 +773,6 @@ class FactorySettingsScreen(Screen):
         self.serial_prefix.focus = False
         self.serial_number_input.focus = False
         self.product_number_input.focus = False
-
         if self.validate_serial_number():
             full_serial_number = (
                 str(self.serial_number_input.text)
@@ -791,7 +795,6 @@ class FactorySettingsScreen(Screen):
             + str(self.product_number_input.text)
         ).endswith(str(self.m.serial_number())):
             return False
-
         elif (
             len(
                 str(self.serial_prefix.text)
@@ -802,7 +805,6 @@ class FactorySettingsScreen(Screen):
             != 10
         ):
             return False
-
         else:
             return True
 
@@ -810,7 +812,6 @@ class FactorySettingsScreen(Screen):
         try:
             os.system("rm ./asmcnc/production/database/credentials.py")
             os.system("rm ./asmcnc/production/database/credentials.pyc")
-
         except:
             pass
 
@@ -822,14 +823,12 @@ class FactorySettingsScreen(Screen):
 
     def factory_reset(self):
         def nested_factory_reset():
-            # Ensure git repo is good before anything else happens
             if not self.set.do_git_fsck():
                 message = "git FSCK errors found! repo corrupt."
                 popup_system.PopupFSCKErrors(
                     self.systemtools_sm.sm, self.l, message, self.set.details_of_fsck
                 )
                 return False
-
             if (
                 self.write_activation_code_to_file()
                 and self.write_serial_number_to_file()
@@ -857,7 +856,6 @@ class FactorySettingsScreen(Screen):
             if nested_factory_reset():
                 print("doing factory reset...")
                 Clock.schedule_once(self.close_sw, 5)
-
         else:
             try:
                 if self.m.s.setting_54:
@@ -870,44 +868,39 @@ class FactorySettingsScreen(Screen):
                     return
             except:
                 pass
-
             if self.smartbench_model.text == "SmartBench model detection failed":
                 warning_message = (
                     "Please ensure machine model is set before doing a factory reset."
                 )
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
-
             elif not self.check_serial_number_for_factory_reset():
                 warning_message = "Please ensure machine has a serial number before doing a factory reset."
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
-
             elif self.software_version_label.text != self.latest_software_version.text:
                 warning_message = "Please ensure machine is fully updated before doing a factory reset."
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
-
             elif self.platform_version_label.text != self.latest_platform_version.text:
                 warning_message = "Please ensure machine is fully updated before doing a factory reset."
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            elif nested_factory_reset():
+                reset_warning = (
+                    "FACTORY RESET TRIGGERED\n\n"
+                    + """Maintenance reminders set and enabled.
 
+"""
+                    + """[b]VERY VERY IMPORTANT[/b]:
+ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING OFF THE MACHINE.
+
+"""
+                    + "Not doing this may corrupt the warranty registration start up sequence."
+                )
+                popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 700, reset_warning)
+                Clock.schedule_once(self.shutdown_console, 5)
             else:
-                if nested_factory_reset():
-                    reset_warning = (
-                        "FACTORY RESET TRIGGERED\n\n"
-                        + "Maintenance reminders set and enabled.\n\n"
-                        + "[b]VERY VERY IMPORTANT[/b]:\nALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING OFF THE MACHINE.\n\n"
-                        + "Not doing this may corrupt the warranty registration start up sequence."
-                    )
-                    popup_info.PopupInfo(
-                        self.systemtools_sm.sm, self.l, 700, reset_warning
-                    )
-
-                    Clock.schedule_once(self.shutdown_console, 5)
-
-                else:
-                    warning_message = "There was an issue doing the factory reset! Get Letty for help."
-                    popup_info.PopupWarning(
-                        self.systemtools_sm.sm, self.l, warning_message
-                    )
+                warning_message = (
+                    "There was an issue doing the factory reset! Get Letty for help."
+                )
+                popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
 
     def close_sw(self, dt):
         sys.exit()
@@ -925,13 +918,11 @@ class FactorySettingsScreen(Screen):
                 return
         except:
             pass
-
         self.console_update_button.text = "Doing update,\nplease wait..."
         self.remove_csv_files()
         self.remove_creds_file()
 
         def nested_full_console_update(dt):
-            # Ensure git repo is good before anything else happens
             if not self.set.do_git_fsck():
                 message = "git FSCK errors found! repo corrupt."
                 popup_system.PopupFSCKErrors(
@@ -939,7 +930,6 @@ class FactorySettingsScreen(Screen):
                 )
                 self.console_update_button.text = "Full Console Update (wifi)"
                 return False
-
             if self.set.get_sw_update_via_wifi():
                 self.set.fetch_platform_tags()
                 self.set.update_platform()
@@ -954,7 +944,6 @@ class FactorySettingsScreen(Screen):
         if self.maintenance_reminder_toggle.state == "normal":
             self.m.reminders_enabled = True
             self.maintenance_reminder_toggle.text = "Turn reminders off"
-
         elif self.maintenance_reminder_toggle.state == "down":
             self.m.reminders_enabled = False
             self.maintenance_reminder_toggle.text = "Turn reminders on"
@@ -987,7 +976,9 @@ class FactorySettingsScreen(Screen):
     def setting_54_info(self):
         info = (
             "$54 available on FW 2.5 and up\n\n"
-            + "$54 should be set to 1 for all final test procedures\n\n"
+            + """$54 should be set to 1 for all final test procedures
+
+"""
             + "$54 should be set to 0 when SB is ready to be factory reset and packed"
         )
         popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 700, info)
@@ -996,14 +987,13 @@ class FactorySettingsScreen(Screen):
         self.systemtools_sm.open_diagnostics_screen()
 
     def update_product_code_with_model(self):
-        if (self.smartbench_model.text == "SmartBench V1.2 Standard CNC Router") or (
-            self.smartbench_model.text == "SmartBench V1.2 Precision CNC Router"
+        if (
+            self.smartbench_model.text == "SmartBench V1.2 Standard CNC Router"
+            or self.smartbench_model.text == "SmartBench V1.2 Precision CNC Router"
         ):
             self.product_number_input.text = "02"
-
         elif "PrecisionPro" in self.smartbench_model.text:
             self.product_number_input.text = "03"
-
         else:
             self.product_number_input.text = "01"
 
@@ -1061,10 +1051,13 @@ class FactorySettingsScreen(Screen):
     def show_sc2_decision_popup(self):
         if self.m.state().startswith("Idle"):
             if self.sc2_compatability_toggle.state == "normal":
-                message = "This will disable SC2 compatability, are you sure you want to continue?\n\n$51 is currently set to "
-            else:
-                message = "This will enable SC2 compatability, are you sure you want to continue?\n\n$51 is currently set to "
+                message = """This will disable SC2 compatability, are you sure you want to continue?
 
+$51 is currently set to """
+            else:
+                message = """This will enable SC2 compatability, are you sure you want to continue?
+
+$51 is currently set to """
             try:
                 message += str(int(self.m.s.setting_51))
             except:
@@ -1122,7 +1115,6 @@ class FactorySettingsScreen(Screen):
             file_act.write(str(self.generate_activation_code()))
             file_act.close()
             return True
-
         except:
             warning_message = "Problem saving activation code!!"
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
@@ -1130,15 +1122,12 @@ class FactorySettingsScreen(Screen):
 
     def get_serial_number(self):
         serial_number_from_file = ""
-
         try:
             file = open(self.machine_serial_number_filepath, "r")
             serial_number_from_file = str(file.read())
             file.close()
-
         except:
             print("Could not get serial number! Please contact YetiTool support!")
-
         return str(serial_number_from_file)
 
     def final_test(self, board):
@@ -1148,12 +1137,10 @@ class FactorySettingsScreen(Screen):
         user_has_seen_privacy_notice = os.popen(
             'grep "user_has_seen_privacy_notice" /home/pi/easycut-smartbench/src/config.txt'
         ).read()
-
         if not user_has_seen_privacy_notice:
             os.system(
                 "sudo sed -i -e '$auser_has_seen_privacy_notice=False' /home/pi/easycut-smartbench/src/config.txt"
             )
-
         elif "True" in user_has_seen_privacy_notice:
             os.system(
                 'sudo sed -i "s/user_has_seen_privacy_notice=True/user_has_seen_privacy_notice=False/" /home/pi/easycut-smartbench/src/config.txt'
@@ -1163,12 +1150,10 @@ class FactorySettingsScreen(Screen):
         show_user_welcome_app = os.popen(
             'grep "show_user_welcome_app" /home/pi/easycut-smartbench/src/config.txt'
         ).read()
-
         if not show_user_welcome_app:
             os.system(
                 "sudo sed -i -e '$ashow_user_welcome_app=True' /home/pi/easycut-smartbench/src/config.txt"
             )
-
         elif "False" in show_user_welcome_app:
             os.system(
                 'sudo sed -i "s/show_user_welcome_app=False/show_user_welcome_app=True/" /home/pi/easycut-smartbench/src/config.txt'
@@ -1181,7 +1166,6 @@ class FactorySettingsScreen(Screen):
         wifi_connected_before = os.popen(
             'grep "wifi_connected_before" /home/pi/easycut-smartbench/src/config.txt'
         ).read()
-
         if not wifi_connected_before:
             os.system(
                 "sudo sed -i -e '$awifi_connected_before=False' /home/pi/easycut-smartbench/src/config.txt"
@@ -1204,7 +1188,6 @@ class FactorySettingsScreen(Screen):
                     keyboard=self.kb,
                 )
                 self.systemtools_sm.sm.add_widget(serial_input_screen)
-
             self.systemtools_sm.sm.current = "serial_input_screen"
         else:
             popup_info.PopupError(
@@ -1224,7 +1207,6 @@ class FactorySettingsScreen(Screen):
                         l=self.l,
                     )
                     self.systemtools_sm.sm.add_widget(calibration_testing)
-
                 self.systemtools_sm.sm.current = "calibration_testing"
             else:
                 popup_info.PopupError(
@@ -1248,7 +1230,6 @@ class FactorySettingsScreen(Screen):
                         l=self.l,
                     )
                     self.systemtools_sm.sm.add_widget(overnight_testing)
-
                 self.systemtools_sm.sm.current = "overnight_testing"
             else:
                 popup_info.PopupError(
@@ -1269,7 +1250,6 @@ class FactorySettingsScreen(Screen):
                 keyboard=self.kb,
             )
             self.systemtools_sm.sm.add_widget(current_adjustment)
-
         self.systemtools_sm.sm.current = "current_adjustment"
 
     def enter_stall_jig(self):
@@ -1284,7 +1264,6 @@ class FactorySettingsScreen(Screen):
                         calibration_db=self.calibration_db,
                     )
                     self.systemtools_sm.sm.add_widget(stall_jig_screen)
-
                 self.systemtools_sm.sm.current = "stall_jig"
             else:
                 popup_info.PopupError(
@@ -1305,7 +1284,6 @@ class FactorySettingsScreen(Screen):
                 keyboard=self.kb,
             )
             self.systemtools_sm.sm.add_widget(set_thresholds_screen)
-
         self.systemtools_sm.sm.current = "set_thresholds"
 
     def enter_general_measurement(self):
@@ -1318,21 +1296,16 @@ class FactorySettingsScreen(Screen):
                 )
             )
             self.systemtools_sm.sm.add_widget(general_measurement_screen)
-
         self.systemtools_sm.sm.current = "general_measurement"
 
     def digital_spindle_test_pressed(self):
         from asmcnc.production.z_head_qc_jig.z_head_qc_2 import ZHeadQC2
 
         zhqc2 = ZHeadQC2(m=self.m, l=self.l, sm=self.systemtools_sm.sm)
-
         confirm_func = zhqc2.run_digital_spindle_test
-
         confirm_popup = popup_system.PopupConfirmSpindleTest(confirm_func=confirm_func)
-
         confirm_popup.open()
 
-    # Switches the contents of the Spinner to toggle showing all contents or not
     def show_all_smartbench_models(self):
         if self.ids.smartbench_model_button.state == "normal":
             self.ids.smartbench_model.values = self.latest_machine_model_values
