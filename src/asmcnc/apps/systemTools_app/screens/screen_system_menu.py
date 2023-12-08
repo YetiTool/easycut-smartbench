@@ -1,22 +1,22 @@
 # -*- coding: utf-8 -*-
+from kivy.core.window import Window
+
 """
 Created on 18 November 2020
 Menu screen for system tools app
 
 @author: Letty
 """
-
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys
 from kivy.clock import Clock
-
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.systemTools_app.screens import popup_system
 
 Builder.load_string(
-    """
+"""
 
 <SystemMenuScreen>
 
@@ -42,8 +42,8 @@ Builder.load_string(
     GridLayout:
         size: self.parent.size
         pos: self.parent.pos
-        padding: [dp(8.33), dp(60)]
-        spacing: [dp(8.33), dp(60)]
+        padding:[dp(0.0104125)*app.width, dp(0.125)*app.height]
+        spacing:[dp(0.0104125)*app.width, dp(0.125)*app.height]
         cols: 5
         rows: 2
 
@@ -215,7 +215,6 @@ class SystemMenuScreen(Screen):
         self.systemtools_sm = kwargs["system_tools"]
         self.l = kwargs["localization"]
         self.kb = kwargs["keyboard"]
-
         self.id_list = [
             self.button_system_info,
             self.button_support_menu,
@@ -225,11 +224,9 @@ class SystemMenuScreen(Screen):
             self.button_beta_testing,
             self.button_grbl_settings,
             self.button_factory,
-            # self.button_update_testing,
             self.button_developer,
             self.button_go_back,
         ]
-
         self.update_strings()
 
     def go_back(self):
@@ -259,9 +256,6 @@ class SystemMenuScreen(Screen):
     def factory_settings(self):
         popup_system.PopupFactorySettingsPassword(self.systemtools_sm, self.l, self.kb)
 
-    # def update_testing(self):
-    #     popup_system.PopupUpdateTestingPassword(self.systemtools_sm, self.l, self.kb)
-
     def developer(self):
         popup_system.PopupDeveloperPassword(self.systemtools_sm, self.l, self.kb)
 
@@ -274,23 +268,20 @@ class SystemMenuScreen(Screen):
         self.button_beta_testing.text = self.l.get_str("Beta Testing")
         self.button_grbl_settings.text = self.l.get_str("GRBL Settings")
         self.button_factory.text = self.l.get_str("Factory")
-        # self.button_update_testing.text = self.l.get_str('Update Testing')
         self.button_developer.text = self.l.get_str("Developer")
         self.button_go_back.text = self.l.get_str("Go Back")
-
         for id_object in self.id_list:
             self.update_font_size(id_object)
 
     def update_font_size(self, value):
         text_length = self.l.get_text_length(value.text)
-
         if text_length < 16:
             value.font_size = self.default_font_size
         elif text_length > 15:
-            value.font_size = self.default_font_size - 2
+            value.font_size = self.default_font_size - 0.0025 * Window.width
         if text_length > 19:
-            value.font_size = self.default_font_size - 4
+            value.font_size = self.default_font_size - 0.005 * Window.width
         if text_length > 22:
-            value.font_size = self.default_font_size - 5
+            value.font_size = self.default_font_size - 0.00625 * Window.width
         if text_length > 25:
-            value.font_size = self.default_font_size - 6
+            value.font_size = self.default_font_size - 0.0075 * Window.width

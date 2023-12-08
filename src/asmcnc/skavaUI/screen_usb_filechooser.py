@@ -4,28 +4,21 @@ Created on 19 Aug 2017
 
 @author: Ed
 """
+import os
+import sys
+from itertools import takewhile
+from os import path
+from shutil import copy
 
 import kivy
+from chardet import detect
+from kivy.graphics import Color, Rectangle
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import (
     ObjectProperty,
-    ListProperty,
-    NumericProperty,
     StringProperty,
-)  # @UnresolvedImport
-from kivy.uix.widget import Widget
-from kivy.clock import Clock
-from kivy.graphics import Color, Rectangle
-
-import sys, os
-from os.path import expanduser
-from shutil import copy
-from asmcnc.comms import usb_storage
-from os import path
-from itertools import takewhile
-from chardet import detect
+)
+from kivy.uix.screenmanager import Screen
 
 Builder.load_string(
     """
@@ -56,6 +49,7 @@ Builder.load_string(
         orientation: "vertical"
 
         Label:
+            font_size: str(0.01875 * app.width) + 'sp'
             canvas.before:
                 Color:
                     rgba: hex('#333333FF')
@@ -65,13 +59,14 @@ Builder.load_string(
             id: usb_status_label
             size_hint_y: 0.7
             markup: True
-            font_size: '18sp'   
+            font_size: str(0.0225*app.width) + 'sp'   
             valign: 'middle'
             halign: 'left'
             text_size: self.size
-            padding: [10, 0]
+            padding:[dp(0.0125)*app.width, 0]
 
         Label:
+            font_size: str(0.01875 * app.width) + 'sp'
             canvas.before:
                 Color:
                     rgba: hex('#333333FF')
@@ -82,7 +77,7 @@ Builder.load_string(
             size_hint_y: 1
             text: root.filename_selected_label_text
             markup: True
-            font_size: '20sp'   
+            font_size: str(0.025*app.width) + 'sp'   
             valign: 'middle'
             halign: 'center' 
             bold: True               
@@ -92,7 +87,7 @@ Builder.load_string(
             size_hint_y: 5
 
             FileChooser:
-                padding: [0,10]
+                padding:[0, dp(0.0208333333333)*app.height]
                 id: filechooser_usb
                 show_hidden: False
                 filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
@@ -110,24 +105,26 @@ Builder.load_string(
                 scroll_type: ['bars', 'content']
 
                 Label:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     id: metadata_preview
                     size_hint_y: None
                     height: self.texture_size[1]
                     text_size: self.width, None
-                    padding: 10, 10
+                    padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                     markup: True
                
         BoxLayout:
             size_hint_y: None
-            height: 100
+            height: dp(100.0/480.0)*app.height
 
             ToggleButton:
+                font_size: str(0.01875 * app.width) + 'sp'
                 id: toggle_view_button
                 size_hint_x: 1
                 on_press: root.switch_view()
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding: 25
+                    padding:[dp(0.03125)*app.width, dp(0.0520833333333)*app.height]
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -139,12 +136,13 @@ Builder.load_string(
                         allow_stretch: True 
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 id: sort_button
                 size_hint_x: 1
                 on_press: root.switch_sort()
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding: 25
+                    padding:[dp(0.03125)*app.width, dp(0.0520833333333)*app.height]
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -156,6 +154,7 @@ Builder.load_string(
                         allow_stretch: True
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 disabled: False
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
@@ -165,7 +164,7 @@ Builder.load_string(
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding: 25
+                    padding:[dp(0.03125)*app.width, dp(0.0520833333333)*app.height]
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -177,6 +176,7 @@ Builder.load_string(
                         allow_stretch: True 
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 disabled: False
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
@@ -186,7 +186,7 @@ Builder.load_string(
                     root.quit_to_local()
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding: 25
+                    padding:[dp(0.03125)*app.width, dp(0.0520833333333)*app.height]
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -197,6 +197,7 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 id: load_button
                 disabled: True
                 size_hint_x: 1
@@ -207,7 +208,7 @@ Builder.load_string(
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding: 25
+                    padding:[dp(0.03125)*app.width, dp(0.0520833333333)*app.height]
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -220,10 +221,8 @@ Builder.load_string(
                 
 """
 )
-
-
-job_cache_dir = "./jobCache/"  # where job files are cached for selection (for last used history/easy access)
-job_q_dir = "./jobQ/"  # where file is copied if to be used next in job
+job_cache_dir = "./jobCache/"
+job_q_dir = "./jobQ/"
 verbose = True
 
 
@@ -255,8 +254,8 @@ def name_order_sort_reverse(files, filesystem):
     )
 
 
-decode_and_encode = lambda x: (
-    unicode(x, detect(x)["encoding"] or "utf-8").encode("utf-8")
+decode_and_encode = lambda x: unicode(x, detect(x)["encoding"] or "utf-8").encode(
+    "utf-8"
 )
 
 
@@ -272,17 +271,12 @@ class USBFileChooser(Screen):
         self.sm = kwargs["screen_manager"]
         self.jd = kwargs["job"]
         self.l = kwargs["localization"]
-
-        # MANAGING KIVY SCROLL BUG
-
         self.list_layout_fc.ids.scrollview.bind(on_scroll_stop=self.scrolling_stop)
         self.list_layout_fc.ids.scrollview.bind(on_scroll_start=self.scrolling_start)
         self.icon_layout_fc.ids.scrollview.bind(on_scroll_stop=self.scrolling_stop)
         self.icon_layout_fc.ids.scrollview.bind(on_scroll_start=self.scrolling_start)
-
         self.list_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
         self.icon_layout_fc.ids.scrollview.effect_cls = kivy.effects.scroll.ScrollEffect
-
         self.icon_layout_fc.ids.scrollview.funbind(
             "scroll_y", self.icon_layout_fc.ids.scrollview._update_effect_bounds
         )
@@ -316,7 +310,6 @@ class USBFileChooser(Screen):
             scrollview_object.effect_y.value = (
                 scrollview_object.effect_y.max * scrollview_object.scroll_y
             )
-
         except:
             pass
 
@@ -326,11 +319,9 @@ class USBFileChooser(Screen):
     def scrolling_stop(self, *args):
         self.is_filechooser_scrolling = False
 
-    # SCREEN FUNCTIONS
-
     def set_USB_path(self, usb_path):
         self.usb_path = usb_path
-        self.filechooser_usb.rootpath = usb_path  # Filechooser path reset to root on each re-entry, so user doesn't start at bottom of previously selected folder
+        self.filechooser_usb.rootpath = usb_path
         if verbose:
             print("Filechooser_usb path: " + self.filechooser_usb.path)
 
@@ -356,7 +347,6 @@ class USBFileChooser(Screen):
     def check_for_job_cache_dir(self):
         if not path.exists(job_cache_dir):
             os.mkdir(job_cache_dir)
-
             if not path.exists(job_cache_dir + ".gitignore"):
                 file = open(job_cache_dir + ".gitignore", "w+")
                 file.write("*.nc")
@@ -375,7 +365,6 @@ class USBFileChooser(Screen):
                     Rectangle(
                         pos=self.usb_status_label.pos, size=self.usb_status_label.size
                     )
-
             else:
                 self.usb_status_label.text = self.l.get_str(
                     "USB removed! Files will not load properly."
@@ -387,7 +376,6 @@ class USBFileChooser(Screen):
                     Rectangle(
                         pos=self.usb_status_label.pos, size=self.usb_status_label.size
                     )
-
         except:
             pass
 
@@ -395,7 +383,6 @@ class USBFileChooser(Screen):
         if self.toggle_view_button.state == "normal":
             self.filechooser_usb.view_mode = "icon"
             self.image_view.source = "./asmcnc/skavaUI/img/file_select_list_view.png"
-
         elif self.toggle_view_button.state == "down":
             self.filechooser_usb.view_mode = "list"
             self.image_view.source = "./asmcnc/skavaUI/img/file_select_list_icon.png"
@@ -409,7 +396,6 @@ class USBFileChooser(Screen):
                 "local_filechooser"
             ).sort_by_date
             self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_up_name.png"
-
         elif (
             self.filechooser_usb.sort_func
             == self.sm.get_screen("local_filechooser").sort_by_date
@@ -420,7 +406,6 @@ class USBFileChooser(Screen):
             self.image_sort.source = (
                 "./asmcnc/skavaUI/img/file_select_sort_down_name.png"
             )
-
         elif (
             self.filechooser_usb.sort_func
             == self.sm.get_screen("local_filechooser").sort_by_name
@@ -429,7 +414,6 @@ class USBFileChooser(Screen):
                 "local_filechooser"
             ).sort_by_name_reverse
             self.image_sort.source = "./asmcnc/skavaUI/img/file_select_sort_up_date.png"
-
         elif (
             self.filechooser_usb.sort_func
             == self.sm.get_screen("local_filechooser").sort_by_name_reverse
@@ -440,7 +424,6 @@ class USBFileChooser(Screen):
             self.image_sort.source = (
                 "./asmcnc/skavaUI/img/file_select_sort_down_date.png"
             )
-
         self.filechooser_usb._update_files()
 
     def refresh_filechooser(self):
@@ -449,7 +432,6 @@ class USBFileChooser(Screen):
         try:
             if self.filechooser_usb.selection[0] != "C":
                 self.display_selected_file()
-
             else:
                 self.loadButton.disabled = True
                 self.image_select.source = (
@@ -461,7 +443,6 @@ class USBFileChooser(Screen):
                 self.metadata_preview.text = self.l.get_str(
                     "Select a file to see metadata or gcode preview."
                 )
-
         except:
             self.load_button.disabled = True
             self.image_select.source = (
@@ -473,11 +454,9 @@ class USBFileChooser(Screen):
             self.metadata_preview.text = self.l.get_str(
                 "Select a file to see metadata or gcode preview."
             )
-
         self.filechooser_usb._update_files()
 
     def display_selected_file(self):
-        # display file selected in the filename display label
         if sys.platform == "win32":
             self.file_selected_label.text = self.filechooser_usb.selection[0].split(
                 "\\"
@@ -486,9 +465,7 @@ class USBFileChooser(Screen):
             self.file_selected_label.text = self.filechooser_usb.selection[0].split(
                 "/"
             )[-1]
-
         self.get_metadata()
-
         self.load_button.disabled = False
         self.image_select.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
@@ -512,48 +489,36 @@ class USBFileChooser(Screen):
                             [
                                 decode_and_encode(i).strip("\n\r()")
                                 for i in takewhile(not_end_of_metadata, previewed_file)
-                                if (decode_and_encode(i).split(":", 1)[1]).strip(
-                                    "\n\r() "
-                                )
+                                if decode_and_encode(i)
+                                .split(":", 1)[1]
+                                .strip("\n\r() ")
                             ],
                         )
-
                     else:
-                        # just get GCode preview if no metadata
                         previewed_file.seek(0)
                         metadata_or_gcode_preview = [
                             self.l.get_bold("G-Code Preview (first 20 lines)"),
                             "",
                         ] + [
-                            (decode_and_encode(next(previewed_file, "")).strip("\n\r"))
+                            decode_and_encode(next(previewed_file, "")).strip("\n\r")
                             for x in xrange(20)
                         ]
-
                     self.metadata_preview.text = "\n".join(metadata_or_gcode_preview)
-
                 except:
                     self.metadata_preview.text = self.l.get_bold(
                         "Could not preview file."
                     )
-
         except:
             self.metadata_preview.text = self.l.get_bold("Could not open file.")
 
     def import_usb_file(self):
         file_selection = self.filechooser_usb.selection[0]
-
         self.check_for_job_cache_dir()
-
-        # Move over the nc file
         if os.path.isfile(file_selection):
-            # ... to cache
-            copy(
-                file_selection, job_cache_dir
-            )  # "copy" overwrites same-name file at destination
+            copy(file_selection, job_cache_dir)
             file_name = os.path.basename(file_selection)
             new_file_path = job_cache_dir + file_name
             print(new_file_path)
-
             self.go_to_loading_screen(new_file_path)
 
     def quit_to_local(self):
