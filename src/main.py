@@ -276,11 +276,11 @@ class SkavaUI(App):
         #         print("New lang: " + str(lang))
         #         try:
         #             sm.get_screen(str(sm.current)).update_strings()
-        #         except: 
+        #         except:
         #             print(str(sm.current) + " has no update strings function")
 
         #         self.test_no = self.test_no + 1
-        #     else: 
+        #     else:
         #         self.test_no = 0
 
         # Clock.schedule_interval(test_cycle, 5)
