@@ -168,6 +168,7 @@ class UpgradeScreen(Screen):
         self.m = kwargs["machine"]
         self.l = kwargs["localization"]
         self.kb = kwargs["keyboard"]
+        # Add the IDs of ALL the TextInputs on this screen
         self.text_inputs = [self.upgrade_code_input]
 
     def on_touch(self):
@@ -175,6 +176,7 @@ class UpgradeScreen(Screen):
             text_input.focus = False
 
     def on_pre_enter(self):
+        # Reset app
         self.update_strings()
         self.hide_error_message()
         self.m.write_dollar_setting(51, 1)
@@ -207,19 +209,22 @@ class UpgradeScreen(Screen):
 
     def check_restore_info(self, dt):
         self.check_info_count += 1
+        # Value of -999 represents disconnected spindle - if detected then stop waiting
         if (
             self.m.s.digital_spindle_ld_qdA != -999
             and self.m.s.spindle_serial_number not in [None, -999, 999]
             or self.check_info_count > 10
         ):
             self.read_restore_info()
-        else:
+        else: # Keep trying for a few seconds
             Clock.schedule_once(self.check_restore_info, 0.3)
 
     def read_restore_info(self):
         self.m.s.write_command("M5")
         self.hide_verifying()
+        # Value of -999 for ld_qdA represents disconnected spindle
         if (
+            # Get info was successful, show serial and check code
             self.m.s.digital_spindle_ld_qdA != -999
             and self.m.s.spindle_serial_number not in [None, -999, 999]
         ):
@@ -232,6 +237,7 @@ class UpgradeScreen(Screen):
             )
             self.check_unlock_code()
         else:
+            # Otherwise, spindle is probably disconnected
             self.show_error_message(
                 self.l.get_str("No SC2 Spindle motor detected.")
                 + " "
@@ -263,6 +269,7 @@ class UpgradeScreen(Screen):
             log("Failed to create SC2 compatibility file!")
 
     def update_spindle_cooldown_settings(self):
+        # Write default SC2 settings, and set voltage to whatever is already selected
         if not (
             self.m.write_spindle_cooldown_rpm_override_settings(False)
             and self.m.write_spindle_cooldown_settings(
@@ -290,6 +297,7 @@ class UpgradeScreen(Screen):
         self.support_label.parent.padding = [0, 0, 0, 0]
 
     def show_verifying(self):
+        # Spindle label text is updated separately
         self.support_label.text = self.l.get_str("Verifying upgrade code...")
         self.support_label.font_size = 0.04 * Window.width
         self.spindle_label.text = ""
