@@ -21,7 +21,7 @@ Builder.load_string(
         padding:[0, dp(0.03125)*app.height, 0, 0]
         RstDocument:
             id: release_notes
-            base_font_size: 30
+            base_font_size: dp(0.0375)*app.width
             underline_color: 'e5e5e5'
             colors: root.color_dict
 
