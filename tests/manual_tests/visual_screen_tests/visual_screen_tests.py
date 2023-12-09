@@ -791,7 +791,7 @@ class ScreenTest(App):
 
         # App manager object
         config_flag = False
-        initial_version = 'v2.6.5'
+        initial_version = 'v2.7.0'
         am = app_manager.AppManagerClass(sm, m, sett, l, kb, jd, db, config_flag, initial_version)
 
         # Server connection object
