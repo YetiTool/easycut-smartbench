@@ -10,12 +10,20 @@ if len(sys.argv) != 2:
 
 from kivy.config import Config
 from kivy.clock import Clock
+Config.set('kivy', 'keyboard_mode', 'systemanddock')
 
-Config.set("kivy", "keyboard_mode", "systemanddock")
-Config.set("graphics", "width", "800")
-Config.set("graphics", "height", "480")
-Config.set("graphics", "maxfps", "60")
-Config.set("kivy", "KIVY_CLOCK", "interrupt")
+if sys.platform.startswith("linux"):
+    # get screen resolution as "1280x800" or "800x480"
+    resolution = os.popen(""" fbset | grep -oP 'mode "\K[^"]+' """).read().strip()
+    width, height = resolution.split("x")
+    Config.set('graphics', 'width', width)
+    Config.set('graphics', 'height', height)
+else:
+    Config.set('graphics', 'width', '800')
+    Config.set('graphics', 'height', '480')
+
+Config.set('graphics', 'maxfps', '60')
+Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
 
 """
 ########################################################
@@ -36,6 +44,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 from kivy.uix.label import Label
+from kivy.uix.boxlayout import BoxLayout
 from asmcnc.comms import localization
 from asmcnc.keyboard import custom_keyboard
 from asmcnc.comms import router_machine
@@ -122,6 +131,9 @@ Cmport = "COM3"
 
 
 class ScreenTest(App):
+    width = Window.width
+    height = Window.height if Window.height == 480 else Window.height - 32
+
     lang_idx = 7
     cycle_languages = False
 
@@ -986,6 +998,13 @@ class ScreenTest(App):
 
         if self.cycle_languages:
             cycle_through_languages(self.test_languages)
+
+        if self.height == 768:
+            root = BoxLayout(orientation='vertical', size_hint=(None, None), size=(self.width, self.height + 32))
+            sm.size_hint = (None, None)
+            sm.size = (self.width, self.height)
+            root.add_widget(sm)
+            return root
 
         return sm
 
