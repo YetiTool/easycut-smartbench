@@ -1,3 +1,4 @@
+from kivy.core.window import Window
 from datetime import datetime
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
@@ -290,7 +291,7 @@ class UpgradeScreen(Screen):
 
     def show_verifying(self):
         self.support_label.text = self.l.get_str("Verifying upgrade code...")
-        self.support_label.font_size = 32
+        self.support_label.font_size = 0.04 * Window.width
         self.spindle_label.text = ""
         self.qr_image.opacity = 0
         self.upgrade_code_input.disabled = True
@@ -301,7 +302,7 @@ class UpgradeScreen(Screen):
         self.support_label.text = self.l.get_str(
             "For more information about upgrades, please contact your place of purchase or visit www.yetitool.com"
         )
-        self.support_label.font_size = 24
+        self.support_label.font_size = 0.03 * Window.width
         self.qr_image.opacity = 1
         self.upgrade_code_input.disabled = False
         self.exit_button.disabled = False
