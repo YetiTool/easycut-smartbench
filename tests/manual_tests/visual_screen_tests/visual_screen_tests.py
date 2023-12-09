@@ -81,6 +81,8 @@ class BasicScreen(Screen):
 Cmport = 'COM3'
 
 class ScreenTest(App):
+    width = Window.width
+    height = Window.height if Window.height == 480 else Window.height - 32
 
     lang_idx = 7
     cycle_languages = False
