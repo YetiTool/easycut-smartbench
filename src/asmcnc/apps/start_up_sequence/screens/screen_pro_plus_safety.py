@@ -1,6 +1,5 @@
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
-
 import os
 
 Builder.load_string(
@@ -31,13 +30,13 @@ Builder.load_string(
                 text: 'Safety Information: PrecisionPro +'
                 halign: 'center'
                 valign: 'middle'
-                font_size: dp(30)
+                font_size: dp(0.0375*app.width)
                 text_size: self.size
 
         BoxLayout:
             orientation: 'vertical'
             size_hint_y: 7
-            padding: [20,10,20,0]
+            padding:[dp(0.025)*app.width, dp(0.0208333333333)*app.height, dp(0.025)*app.width, 0]
 
             canvas: 
                 Color:
@@ -49,7 +48,7 @@ Builder.load_string(
             Label:
                 id: context
                 size_hint_y: 0.41
-                font_size: dp(18)
+                font_size: dp(0.0225*app.width)
                 color: 0,0,0,1
                 halign: 'center'
                 valign: 'middle'
@@ -64,7 +63,7 @@ Builder.load_string(
                 cols: 2
 
                 BoxLayout:
-                    padding: [10,0]
+                    padding:[dp(0.0125)*app.width, 0]
                     Image:                         
                         source: "./asmcnc/skavaUI/img/popup_error_visual.png"
                         center_x: self.parent.center_x
@@ -74,7 +73,7 @@ Builder.load_string(
 
                 Label:
                     id: clamp_warning_label
-                    font_size: dp(18)
+                    font_size: dp(0.0225*app.width)
                     color: 0,0,0,1
                     halign: 'left'
                     valign: 'middle'
@@ -83,7 +82,7 @@ Builder.load_string(
                     text: "The Spindle motor MUST be clamped securely BEFORE plugging in the Spindle motor cables."
 
                 BoxLayout:
-                    padding: [10,0]
+                    padding:[dp(0.0125)*app.width, 0]
                     Image:                         
                         source: "./asmcnc/skavaUI/img/popup_error_visual.png"
                         center_x: self.parent.center_x
@@ -93,7 +92,7 @@ Builder.load_string(
 
                 Label:
                     id: rpm_warning_label
-                    font_size: dp(18)
+                    font_size: dp(0.0225*app.width)
                     color: 0,0,0,1
                     halign: 'left'
                     valign: 'middle'
@@ -104,20 +103,21 @@ Builder.load_string(
 
             BoxLayout:
                 size_hint_y: 0.29
-                padding: [-10,0,-10,10]
+                padding:[dp(0.0125)*app.width, 0, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                 size_hint: (None, None)
-                height: dp(122)
-                width: dp(800)
+                height: dp(0.254166666667*app.height)
+                width: dp(1.0*app.width)
                 orientation: 'horizontal'
                 BoxLayout: 
                     size_hint: (None, None)
-                    height: dp(122)
-                    width: dp(244.5)
-                    padding: [0, 0, 184.5, 0]
+                    height: dp(0.254166666667*app.height)
+                    width: dp(0.305625*app.width)
+                    padding:[0, 0, dp(0.230625)*app.width, 0]
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         size_hint: (None,None)
-                        height: dp(52)
-                        width: dp(60)
+                        height: dp(0.108333333333*app.height)
+                        width: dp(0.075*app.width)
                         background_color: hex('#F4433600')
                         center: self.parent.center
                         pos: self.parent.pos
@@ -134,29 +134,29 @@ Builder.load_string(
                                 allow_stretch: True
                 BoxLayout: 
                     size_hint: (None, None)
-                    height: dp(122)
-                    width: dp(291)
-                    padding: [0,0,0,32]
+                    height: dp(0.254166666667*app.height)
+                    width: dp(0.36375*app.width)
+                    padding:[0, 0, 0, dp(0.0666666666667)*app.height]
                     Button:
                         id: continue_button
                         background_normal: "./asmcnc/skavaUI/img/next.png"
                         background_down: "./asmcnc/skavaUI/img/next.png"
                         border: [dp(14.5)]*4
                         size_hint: (None,None)
-                        width: dp(291)
-                        height: dp(79)
+                        width: dp(0.36375*app.width)
+                        height: dp(0.164583333333*app.height)
                         on_press: root.next_screen()
                         text: 'Next...'
-                        font_size: '30sp'
+                        font_size: str(0.0375*app.width) + 'sp'
                         color: hex('#f9f9f9ff')
                         markup: True
                         center: self.parent.center
                         pos: self.parent.pos
                 BoxLayout: 
                     size_hint: (None, None)
-                    height: dp(122)
-                    width: dp(244.5)
-                    padding: [193.5, 0, 0, 0]
+                    height: dp(0.254166666667*app.height)
+                    width: dp(0.305625*app.width)
+                    padding:[dp(0.241875)*app.width, 0, 0, 0]
 
 """
 )
@@ -165,11 +165,9 @@ Builder.load_string(
 class ProPlusSafetyScreen(Screen):
     def __init__(self, **kwargs):
         super(ProPlusSafetyScreen, self).__init__(**kwargs)
-
         self.sm = kwargs["screen_manager"]
         self.l = kwargs["localization"]
         self.start_seq = kwargs["start_sequence"]
-
         self.update_strings()
 
     def next_screen(self):
@@ -192,12 +190,10 @@ class ProPlusSafetyScreen(Screen):
         user_has_seen_pro_plus_safety = os.popen(
             'grep "user_has_seen_pro_plus_safety" /home/pi/easycut-smartbench/src/config.txt'
         ).read()
-
         if not user_has_seen_pro_plus_safety:
             os.system(
                 "sudo sed -i -e '$auser_has_seen_pro_plus_safety=True' /home/pi/easycut-smartbench/src/config.txt"
             )
-
         elif "False" in user_has_seen_pro_plus_safety:
             os.system(
                 'sudo sed -i "s/user_has_seen_pro_plus_safety=False/user_has_seen_pro_plus_safety=True/" /home/pi/easycut-smartbench/src/config.txt'
@@ -226,7 +222,6 @@ class ProPlusSafetyScreen(Screen):
             )
         )
         self.continue_button.text = self.l.get_str("I understand")
-
         self.clamp_warning_label.text = self.l.get_str(
             "The Spindle motor MUST be clamped securely BEFORE plugging in the Spindle motor cables."
         )
