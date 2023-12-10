@@ -3,6 +3,8 @@
   hosts: localhost
   become: yes
   roles:
+  - role: charleskorn.raspi-expanded-rootfs
+    become: yes
   - geerlingguy.exim
   tasks:
   - name: Distribution major version
