@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Created on 12 December 2019
 Landing Screen for the Calibration App
@@ -12,6 +13,7 @@ from kivy.uix.widget import Widget
 from kivy.clock import Clock
 from datetime import datetime
 from asmcnc.skavaUI import popup_info
+# from asmcnc.calibration_app import screen_prep_calibration
 
 Builder.load_string(
     """
@@ -74,13 +76,20 @@ class StartingSmartBenchScreen(Screen):
             except:
                 pass
             self.set.refresh_all()
+            # RasPi boot timings
             if sys.platform != "win32":
+                # Allow kivy to have fully loaded before doing any calls which require scheduling
                 Clock.schedule_once(self.m.s.start_services, 4)
+                # Allow time for machine reset sequence
                 self.db.start_connection_to_database_thread()
                 Clock.schedule_once(self.next_screen, 6)
+                # Set settings that are relevant to the GUI, but which depend on getting machine settings first
                 Clock.schedule_once(self.set_machine_value_driven_user_settings, 6.2)
+            # PC boot timings
             else:
+                # Allow kivy to have fully loaded before doing any calls which require scheduling
                 Clock.schedule_once(self.m.s.start_services, 1)
+                # Allow time for machine reset sequence
                 self.db.start_connection_to_database_thread()
                 Clock.schedule_once(self.next_screen, 2)
         elif sys.platform == "win32" or sys.platform == "darwin":
@@ -91,10 +100,12 @@ class StartingSmartBenchScreen(Screen):
         self.start_seq.next_in_sequence()
 
     def set_machine_value_driven_user_settings(self, dt):
+        # Laser settings
         if self.m.is_laser_enabled == True:
             self.sm.get_screen("home").default_datum_choice = "laser"
         else:
             self.sm.get_screen("home").default_datum_choice = "spindle"
+        # SW Update available?
         if (
             self.set.sw_version != self.set.latest_sw_version
             and not self.set.latest_sw_version.endswith("beta")
