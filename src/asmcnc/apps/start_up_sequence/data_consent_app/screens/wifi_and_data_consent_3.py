@@ -234,7 +234,6 @@ class WiFiAndDataConsentScreen3(Screen):
             self.c.sm.current = "consent_2"
 
     def update_strings(self):
-        self.scroll_privacy_notice.privacy_notice.font_name = self.l.font_regular
         self.header_label.text = self.l.get_str("Wi-Fi and Data Consent")
         self.scroll_privacy_notice.privacy_notice.source = (
             self.privacy_notice_path + self.l.lang + ".rst"
