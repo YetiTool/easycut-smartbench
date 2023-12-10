@@ -284,7 +284,8 @@ class ScreenTest(App):
             set_up_screens([[screen_rebooting.RebootingScreen, 'rebooting']])
 
         def starting_smartbench_test():
-            set_up_screens([[screen_starting_smartbench.StartingSmartBenchScreen, 'starting_smartbench']])
+            set_up_screens([[screen_home.HomeScreen, 'home'],
+                            [screen_starting_smartbench.StartingSmartBenchScreen, 'starting_smartbench']])
             sm.get_screen('starting_smartbench').next_screen = Mock()
             sm.current = 'starting_smartbench'
 
