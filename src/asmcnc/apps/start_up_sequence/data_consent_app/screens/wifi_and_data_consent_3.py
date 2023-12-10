@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.scrollview import ScrollView
