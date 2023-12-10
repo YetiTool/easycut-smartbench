@@ -4,6 +4,7 @@
   become: yes
   roles:
   - charleskorn.raspi-expanded-rootfs
+    become: yes
   - geerlingguy.exim
   tasks:
   - name: Distribution major version
