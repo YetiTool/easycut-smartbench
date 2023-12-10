@@ -15,7 +15,7 @@ Builder.load_string(
 
 	RstDocument:
 		id: privacy_notice
-		base_font_size: 30
+		base_font_size: dp(0.0375)*app.width
 		underline_color: 'e5e5e5'
 		colors: root.color_dict
 
