@@ -275,7 +275,7 @@ class WarrantyScreen1(Screen):
         self.next_button.text = self.l.get_str("Next") + "..."
         self.update_contact_us_font_sizes()
 
-    def update_contact_us_font_sizes(self):
+    def update_contact_us_font_sizes(self): # Update both labels together to make it look nicer
         if self.l.get_text_length(self.contact_us_at_support.text) > 70:
             self.cant_use_web_label.font_size = 0.02125 * Window.width
             self.contact_us_at_support.font_size = 0.02125 * Window.width
