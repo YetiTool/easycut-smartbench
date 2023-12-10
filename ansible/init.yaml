@@ -5,11 +5,11 @@
   roles:
   - geerlingguy.exim
   tasks:
+  - name: Distribution major version
+    debug: msg="{{ ansible_distribution_major_version }}"
   - name: Expand the filesystem
     ansible.builtin.shell: raspi-config --expand-rootfs
     when: ansible_distribution_major_version == '11'
-  - name: Distribution major version
-    debug: msg="{{ ansible_distribution_major_version }}"
   - name: Copying the setting hostname script
     template:
       src: set-hostname.sh
