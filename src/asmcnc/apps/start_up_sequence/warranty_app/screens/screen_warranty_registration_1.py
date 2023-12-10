@@ -1,3 +1,4 @@
+from kivy.core.window import Window
 """
 Created on nov 2020
 @author: Ollie
@@ -275,12 +276,12 @@ class WarrantyScreen1(Screen):
         self.update_contact_us_font_sizes()
 
     def update_contact_us_font_sizes(self):
-        if len(self.contact_us_at_support.text) > 70:
-            self.cant_use_web_label.font_size = 17
-            self.contact_us_at_support.font_size = 17
+        if self.l.get_text_length(self.contact_us_at_support.text) > 70:
+            self.cant_use_web_label.font_size = 0.02125 * Window.width
+            self.contact_us_at_support.font_size = 0.02125 * Window.width
         else:
-            self.cant_use_web_label.font_size = 20
-            self.contact_us_at_support.font_size = 20
+            self.cant_use_web_label.font_size = 0.025 * Window.width
+            self.contact_us_at_support.font_size = 0.025 * Window.width
 
     def go_to_factory_settings(self):
         popup_warranty.PopupFactorySettingsPassword(self.start_seq.am)
