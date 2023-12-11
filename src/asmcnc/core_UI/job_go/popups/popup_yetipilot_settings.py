@@ -456,6 +456,7 @@ class PopupYetiPilotSettings(Widget):
                     text=version_text,
                     color=dark_grey,
                     markup=True,
+                    font_size=str(15.0/800*Window.width) + "sp",
                     halign="left",
                     text_size=(text_width, None),
                 )
