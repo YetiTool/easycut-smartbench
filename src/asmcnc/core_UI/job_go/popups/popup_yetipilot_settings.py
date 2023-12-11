@@ -481,10 +481,11 @@ class PopupYetiPilotSettings(Widget):
             floating_warning = FloatLayout()
             image_source_base = "./asmcnc/core_UI/job_go/img/micro_warning"
             image_source = image_source_base + ".png" if Window.width < 1280 else image_source_base + "_big.png"
+            pos_y = -15.0/480.0*Window.height if Window.width < 1280 else -18.0/480.0*Window.height
             floating_warning.add_widget(
                 Image(
                     source=image_source,
-                    pos=(dropdowns_container_width - 76.0/800*Window.width, -15.0/480.0*Window.height),
+                    pos=(dropdowns_container_width - 76.0/800*Window.width, pos_y),
                 )
             )
             AL.add_widget(floating_warning)
