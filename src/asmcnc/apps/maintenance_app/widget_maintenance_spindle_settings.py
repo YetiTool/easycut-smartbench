@@ -24,6 +24,7 @@ Builder.load_string(
     height: dp(0.0833333333333*app.height)
     color: 0,0,0,1
     halign: 'left'
+    font_size: str(15.0/800.0*app.width) + 'sp'
     markup: 'True'
 
 <SpindleSettingsWidget>
