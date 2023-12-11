@@ -9,8 +9,17 @@ if len(sys.argv) != 2:
 from kivy.config import Config
 from kivy.clock import Clock
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
-Config.set('graphics', 'width', '800')
-Config.set('graphics', 'height', '480')
+
+if sys.platform.startswith("linux"):
+    # get screen resolution as "1280x800" or "800x480"
+    resolution = os.popen(""" fbset | grep -oP 'mode "\K[^"]+' """).read().strip()
+    width, height = resolution.split("x")
+    Config.set('graphics', 'width', width)
+    Config.set('graphics', 'height', height)
+else:
+    Config.set('graphics', 'width', '800')
+    Config.set('graphics', 'height', '480')
+
 Config.set('graphics', 'maxfps', '60')
 Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
 
@@ -33,6 +42,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 from kivy.uix.label import Label
+from kivy.uix.boxlayout import BoxLayout
 from asmcnc.comms import localization
 from asmcnc.keyboard import custom_keyboard
 from asmcnc.comms import router_machine
@@ -48,7 +58,7 @@ from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_s
 from asmcnc.skavaUI import screen_door, screen_mstate_warning, screen_serial_failure, screen_squaring_active, screen_jobstart_warning
 from asmcnc.skavaUI import screen_check_job, popup_info
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
-from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety
+from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety, screen_starting_smartbench
 from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1
 from asmcnc.apps.systemTools_app.screens.calibration import screen_stall_jig
 from asmcnc.apps.upgrade_app import screen_upgrade, screen_upgrade_successful, screen_already_upgraded
@@ -81,6 +91,8 @@ class BasicScreen(Screen):
 Cmport = 'COM3'
 
 class ScreenTest(App):
+    width = Window.width
+    height = Window.height if Window.height == 480 else Window.height - 32
 
     lang_idx = 7
     cycle_languages = False
@@ -270,6 +282,12 @@ class ScreenTest(App):
             sm.get_screen('warranty_3').activation_code.text = str(activation_code)
 
             set_up_screens([[screen_rebooting.RebootingScreen, 'rebooting']])
+
+        def starting_smartbench_test():
+            set_up_screens([[screen_home.HomeScreen, 'home'],
+                            [screen_lobby.LobbyScreen, 'lobby']])
+            sm.get_screen('starting_smartbench').next_screen = Mock()
+            sm.current = 'starting_smartbench'
 
         def release_notes_test():
 
@@ -779,7 +797,7 @@ class ScreenTest(App):
 
         # App manager object
         config_flag = False
-        initial_version = 'v2.6.5'
+        initial_version = 'v2.7.0'
         am = app_manager.AppManagerClass(sm, m, sett, l, kb, jd, db, config_flag, initial_version)
 
         # Server connection object
@@ -794,6 +812,13 @@ class ScreenTest(App):
 
         if self.cycle_languages:
             cycle_through_languages(self.test_languages)
+
+        if self.height == 768:
+            root = BoxLayout(orientation='vertical', size_hint=(None, None), size=(self.width, self.height + 32))
+            sm.size_hint = (None, None)
+            sm.size = (self.width, self.height)
+            root.add_widget(sm)
+            return root
 
         return sm
 
