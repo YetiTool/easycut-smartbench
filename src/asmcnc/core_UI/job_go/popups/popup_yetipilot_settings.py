@@ -264,7 +264,7 @@ class PopupYetiPilotSettings(Widget):
             material_choice.bind(text=select_material)
             diameter_BL = BoxLayout(orientation="vertical", padding=[5.0/800*Window.width, 2.5/480*Window.height])
             tool_BL = BoxLayout(orientation="vertical", padding=[5.0/800*Window.width, 2.5/480.0*Window.height])
-            material_BL = BoxLayout(orientation="vertical", ppadding=[5.0/800*Window.width, 2.5/480.0*Window.height])
+            material_BL = BoxLayout(orientation="vertical", padding=[5.0/800*Window.width, 2.5/480.0*Window.height])
             diameter_label = Label(
                 text=self.l.get_str("Tool diameter"),
                 color=dark_grey,
