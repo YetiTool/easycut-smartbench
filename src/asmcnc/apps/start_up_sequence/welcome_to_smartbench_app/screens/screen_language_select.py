@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Created on nov 2020
 @author: Letty
@@ -349,6 +350,7 @@ class LanguageSelectScreen(Screen):
         self.row_2_col_3.text = self.l.approved_languages[5]
         self.row_3_col_1.text = self.l.approved_languages[6]
         self.row_3_col_2.text = self.l.approved_languages[7]
+        # self.row_3_col_3.text = self.l.approved_languages[8]
         self.row_1_col_1_image.source = self.get_image_filename(self.row_1_col_1)
         self.row_1_col_2_image.source = self.get_image_filename(self.row_1_col_2)
         self.row_1_col_3_image.source = self.get_image_filename(self.row_1_col_3)
@@ -357,6 +359,8 @@ class LanguageSelectScreen(Screen):
         self.row_2_col_3_image.source = self.get_image_filename(self.row_2_col_3)
         self.row_3_col_1_image.source = self.get_image_filename(self.row_3_col_1)
         self.row_3_col_2_image.source = self.get_image_filename(self.row_3_col_2)
+        # self.row_3_col_3_image.source = self.get_image_filename(self.row_3_col_3)
+		# Need specific font to show korean characters
         self.row_3_col_2.font_name = self.l.korean_font
 
     def get_image_filename(self, value):
@@ -387,7 +391,9 @@ class LanguageSelectScreen(Screen):
                 self.sm.get_screen(screen).update_strings()
                 for screen in self.start_seq.screen_sequence
             ]
+            # If korean is selected, the startup sequence needs font updated to display it correctly
             if current_font != self.l.font_regular:
+                # I know this is a nested for loop, but it executes very quickly
                 for screen in self.start_seq.screen_sequence[1:] + ["rebooting"]:
                     for widget in self.sm.get_screen(screen).walk():
                         if isinstance(widget, Label):

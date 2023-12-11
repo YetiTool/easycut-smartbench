@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Created on 6 Aug 2021
 @author: Dennis
@@ -20,7 +21,7 @@ Builder.load_string(
         padding:[0, dp(0.03125)*app.height, 0, 0]
         RstDocument:
             id: release_notes
-            base_font_size: 30
+            base_font_size: dp(0.0375)*app.width
             underline_color: 'e5e5e5'
             colors: root.color_dict
 
@@ -148,6 +149,8 @@ class ReleaseNotesScreen(Screen):
         self.sm = kwargs["screen_manager"]
         self.version = kwargs["version"]
         self.l = kwargs["localization"]
+        # Filename consists of just the version digits followed by .txt, so can be found by filtering out non integers from version name
+        # Two dots before filename mean parent directory, as file is at the top of the filetree, not in src
         self.release_notes_filename = "../" + self.version.replace(".", "") + ".txt"
         self.scroll_release_notes.release_notes.source = self.release_notes_filename
         self.update_strings()

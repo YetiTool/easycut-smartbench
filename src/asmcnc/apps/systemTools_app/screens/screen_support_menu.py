@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from kivy.core.window import Window
 
 """
@@ -15,7 +16,7 @@ import traceback
 from asmcnc.apps.systemTools_app.screens import popup_system
 
 Builder.load_string(
-    """
+"""
 
 <SupportMenuScreen>
 
@@ -116,7 +117,7 @@ Builder.load_string(
 
 
 class SupportMenuScreen(Screen):
-    default_font_size = 16
+    default_font_size = 16.0 / 800.0 * Window.width
 
     def __init__(self, **kwargs):
         super(SupportMenuScreen, self).__init__(**kwargs)

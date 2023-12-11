@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Created on 19 Aug 2017
 
@@ -5,26 +6,23 @@ Created on 19 Aug 2017
 
 Screen allows user to select their job for loading into easycut, either from JobCache or from a memory stick.
 """
+import os
+import sys
+from itertools import takewhile
+from shutil import copy
+
 import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import (
-    ObjectProperty,
-    ListProperty,
-    NumericProperty,
-    StringProperty,
-)
-from kivy.uix.widget import Widget
+from chardet import detect
 from kivy.clock import Clock
 from kivy.graphics import Color, Rectangle
-import sys, os
-from os.path import expanduser
-from shutil import copy
-from itertools import takewhile
-from chardet import detect
+from kivy.lang import Builder
+from kivy.properties import (
+    ObjectProperty,
+    StringProperty,
+)
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.comms import usb_storage
-from asmcnc.skavaUI import screen_file_loading
 from asmcnc.skavaUI import popup_info
 
 Builder.load_string(

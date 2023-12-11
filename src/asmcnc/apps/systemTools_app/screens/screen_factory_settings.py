@@ -161,6 +161,7 @@ Builder.load_string(
 
                                         TextInput:
                                             id: serial_prefix
+                                            font_size: str(15.0/800.0 * app.width) + 'sp'
                                             text: 'YS6'
                                             color: [0,0,0,1]
                                             markup: True
@@ -176,6 +177,7 @@ Builder.load_string(
 
                                         TextInput:
                                             id: serial_number_input
+                                            font_size: str(15.0/800.0 * app.width) + 'sp'
                                             text: '0000'
                                             color: [0,0,0,1]
                                             markup: True
@@ -193,6 +195,7 @@ Builder.load_string(
 
                                         TextInput:
                                             id: product_number_input
+                                            font_size: str(15.0/800.0 * app.width) + 'sp'
                                             text: '00'
                                             color: [0,0,0,1]
                                             markup: True
@@ -232,6 +235,7 @@ Builder.load_string(
                                         markup: True
                                     TextInput:
                                         id: z_touch_plate_entry
+                                        font_size: str(15.0/800.0 * app.width) + 'sp'
                                         text: ''
                                         color: [0,0,0,1]
                                         markup: True

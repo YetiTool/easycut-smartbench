@@ -13,7 +13,7 @@ from kivy.properties import StringProperty
 from kivy.clock import Clock
 
 Builder.load_string(
-    """
+"""
 
 <ScrollableLabelLogsView>:
     scroll_y:1

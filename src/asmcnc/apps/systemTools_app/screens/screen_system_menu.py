@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from kivy.core.window import Window
 
 """
@@ -15,7 +16,7 @@ from asmcnc.skavaUI import popup_info
 from asmcnc.apps.systemTools_app.screens import popup_system
 
 Builder.load_string(
-    """
+"""
 
 <SystemMenuScreen>
 

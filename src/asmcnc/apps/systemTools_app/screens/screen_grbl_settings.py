@@ -204,6 +204,8 @@ class GRBLSettingsScreen(Screen):
     def exit_app(self):
         self.systemtools_sm.exit_app()
 
+# ADD A BUNCH OF WARNING POPUPS 
+
     def download_grbl_settings(self):
         self.systemtools_sm.download_grbl_settings_to_usb()
 
