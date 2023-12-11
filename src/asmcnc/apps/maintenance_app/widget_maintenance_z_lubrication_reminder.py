@@ -1,8 +1,8 @@
-'''
+"""
 Created on 17 August 2020
 @author: Letty
 widget to allow user to change touchplate offset
-'''
+"""
 
 import kivy
 from kivy.lang import Builder
@@ -12,7 +12,8 @@ from kivy.uix.widget import Widget
 from asmcnc.apps.maintenance_app import popup_maintenance
 from asmcnc.skavaUI import popup_info
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <ZLubricationReminderWidget>
     
@@ -100,65 +101,96 @@ Builder.load_string("""
                             allow_stretch: True 
 
 
-""")
+"""
+)
 
 
 class ZLubricationReminderWidget(Widget):
-
     time_in_hours = 0
     hours_label = "hours"
     default_time_label_font_size = 100
 
     def __init__(self, **kwargs):
-    
         super(ZLubricationReminderWidget, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-        self.l=kwargs['localization']
+        self.sm = kwargs["screen_manager"]
+        self.m = kwargs["machine"]
+        self.l = kwargs["localization"]
 
         self.update_strings()
 
     def update_time_left(self):
         self.update_strings()
-        self.time_in_hours = int((self.m.time_since_z_head_lubricated_seconds)/3600)
+        self.time_in_hours = int((self.m.time_since_z_head_lubricated_seconds) / 3600)
 
-        if self.time_in_hours < 30: 
-            self.hours_since_lubrication.text = '[color=4caf50ff]' + str(self.time_in_hours) + ' ' + self.hours_label + '[/color]'
+        if self.time_in_hours < 30:
+            self.hours_since_lubrication.text = (
+                "[color=4caf50ff]"
+                + str(self.time_in_hours)
+                + " "
+                + self.hours_label
+                + "[/color]"
+            )
 
         elif self.time_in_hours < 40:
-            self.hours_since_lubrication.text = '[color=f9ce1dff]' + str(self.time_in_hours) + ' ' + self.hours_label + '[/color]'
+            self.hours_since_lubrication.text = (
+                "[color=f9ce1dff]"
+                + str(self.time_in_hours)
+                + " "
+                + self.hours_label
+                + "[/color]"
+            )
 
         elif self.time_in_hours < 45:
-            self.hours_since_lubrication.text = '[color=ff9903ff]' + str(self.time_in_hours) + ' ' + self.hours_label + '[/color]'
+            self.hours_since_lubrication.text = (
+                "[color=ff9903ff]"
+                + str(self.time_in_hours)
+                + " "
+                + self.hours_label
+                + "[/color]"
+            )
 
         else:
-            self.hours_since_lubrication.text = '[color=e64a19ff]' + str(self.time_in_hours) + ' ' + self.hours_label + '[/color]'
+            self.hours_since_lubrication.text = (
+                "[color=e64a19ff]"
+                + str(self.time_in_hours)
+                + " "
+                + self.hours_label
+                + "[/color]"
+            )
 
         self.update_font_size(self.hours_since_lubrication)
 
     def reset_to_0(self):
         self.time_in_hours = 0
-        self.hours_since_lubrication.text = '[color=4caf50ff]' + str(self.time_in_hours) + ' ' + self.hours_label + '[/color]'
+        self.hours_since_lubrication.text = (
+            "[color=4caf50ff]"
+            + str(self.time_in_hours)
+            + " "
+            + self.hours_label
+            + "[/color]"
+        )
         self.update_font_size(self.hours_since_lubrication)
 
     def update_strings(self):
-        self.time_since_screw_lubricated_label.text = self.l.get_bold("TIME SINCE LEAD SCREW LUBRICATED")
+        self.time_since_screw_lubricated_label.text = self.l.get_bold(
+            "TIME SINCE LEAD SCREW LUBRICATED"
+        )
         self.hours_label = self.l.get_str("hours")
 
         self.update_label_font_size(self.time_since_screw_lubricated_label)
 
     def update_font_size(self, value):
-        if len(value.text) < (8 + len('[color=4caf50ff]') + len('[/color]')):
+        if len(value.text) < (8 + len("[color=4caf50ff]") + len("[/color]")):
             value.font_size = 90
-        if len(value.text) > (7 + len('[color=4caf50ff]') + len('[/color]')):
+        if len(value.text) > (7 + len("[color=4caf50ff]") + len("[/color]")):
             value.font_size = 80
-        if len(value.text) > (8 + len('[color=4caf50ff]') + len('[/color]')): 
+        if len(value.text) > (8 + len("[color=4caf50ff]") + len("[/color]")):
             value.font_size = 75
-        if len(value.text) > (9 + len('[color=4caf50ff]') + len('[/color]')):
+        if len(value.text) > (9 + len("[color=4caf50ff]") + len("[/color]")):
             value.font_size = 70
-        if len(value.text) > (10 + len('[color=4caf50ff]') + len('[/color]')):
+        if len(value.text) > (10 + len("[color=4caf50ff]") + len("[/color]")):
             value.font_size = 60
-        if len(value.text) > (11 + len('[color=4caf50ff]') + len('[/color]')):
+        if len(value.text) > (11 + len("[color=4caf50ff]") + len("[/color]")):
             value.font_size = 50
 
     def update_label_font_size(self, value):

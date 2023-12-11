@@ -4,7 +4,8 @@ from kivy.clock import Clock
 
 import datetime
 
-Builder.load_string("""
+Builder.load_string(
+    """
 <ZHeadQC5>:
     canvas:
         Color:
@@ -32,14 +33,16 @@ Builder.load_string("""
                 size_hint_y: 0.2
                 size_hint_x: 0.3
 
-""")
+"""
+)
+
 
 class ZHeadQC5(Screen):
     def __init__(self, **kwargs):
         super(ZHeadQC5, self).__init__(**kwargs)
 
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
+        self.sm = kwargs["sm"]
+        self.m = kwargs["m"]
 
     def enter_next_screen(self):
-        self.sm.current = 'qcDB1'
+        self.sm.current = "qcDB1"

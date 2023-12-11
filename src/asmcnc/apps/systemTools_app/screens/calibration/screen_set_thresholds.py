@@ -1,12 +1,15 @@
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 
-from asmcnc.apps.systemTools_app.screens.popup_system import PopupConfirmStoreCurrentValues
+from asmcnc.apps.systemTools_app.screens.popup_system import (
+    PopupConfirmStoreCurrentValues,
+)
 from asmcnc.skavaUI.popup_info import PopupWait
 from kivy.clock import Clock
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
-Builder.load_string("""
+Builder.load_string(
+    """
 <SetThresholdsScreen>:
 
     x_threshold_input:x_threshold_input
@@ -127,23 +130,24 @@ Builder.load_string("""
             text: 'Factory settings'
             on_press: root.back_to_fac_settings()
 
-""")
+"""
+)
+
 
 class SetThresholdsScreen(Screen):
-
     def __init__(self, **kwargs):
         super(SetThresholdsScreen, self).__init__(**kwargs)
 
-        self.systemtools_sm = kwargs['systemtools']
-        self.m = kwargs['m']
-        self.l = kwargs['l']
-        self.kb = kwargs['keyboard']
+        self.systemtools_sm = kwargs["systemtools"]
+        self.m = kwargs["m"]
+        self.l = kwargs["l"]
+        self.kb = kwargs["keyboard"]
 
         self.text_inputs = [
-                            self.x_threshold_input,
-                            self.y_threshold_input,
-                            self.z_threshold_input
-                            ]
+            self.x_threshold_input,
+            self.y_threshold_input,
+            self.z_threshold_input,
+        ]
 
     def on_enter(self):
         self.kb.setup_text_inputs(self.text_inputs)
@@ -155,19 +159,37 @@ class SetThresholdsScreen(Screen):
             text_input.focus = False
 
     def show_thresholds(self):
-        self.x_threshold_input.text = str(self.m.TMC_motor[TMC_X1].stallGuardAlarmThreshold)
-        self.y_threshold_input.text = str(self.m.TMC_motor[TMC_Y1].stallGuardAlarmThreshold)
-        self.z_threshold_input.text = str(self.m.TMC_motor[TMC_Z].stallGuardAlarmThreshold)
+        self.x_threshold_input.text = str(
+            self.m.TMC_motor[TMC_X1].stallGuardAlarmThreshold
+        )
+        self.y_threshold_input.text = str(
+            self.m.TMC_motor[TMC_Y1].stallGuardAlarmThreshold
+        )
+        self.z_threshold_input.text = str(
+            self.m.TMC_motor[TMC_Z].stallGuardAlarmThreshold
+        )
 
     def update_stored_thresholds(self):
-        self.x_stored_threshold.text = str(self.m.TMC_motor[TMC_X1].stallGuardAlarmThreshold)
-        self.y_stored_threshold.text = str(self.m.TMC_motor[TMC_Y1].stallGuardAlarmThreshold)
-        self.z_stored_threshold.text = str(self.m.TMC_motor[TMC_Z].stallGuardAlarmThreshold)
+        self.x_stored_threshold.text = str(
+            self.m.TMC_motor[TMC_X1].stallGuardAlarmThreshold
+        )
+        self.y_stored_threshold.text = str(
+            self.m.TMC_motor[TMC_Y1].stallGuardAlarmThreshold
+        )
+        self.z_stored_threshold.text = str(
+            self.m.TMC_motor[TMC_Z].stallGuardAlarmThreshold
+        )
 
     def update_set_thresholds(self):
-        self.x_set_threshold.text = str(self.m.TMC_motor[TMC_X1].stallGuardAlarmThreshold)
-        self.y_set_threshold.text = str(self.m.TMC_motor[TMC_Y1].stallGuardAlarmThreshold)
-        self.z_set_threshold.text = str(self.m.TMC_motor[TMC_Z].stallGuardAlarmThreshold)
+        self.x_set_threshold.text = str(
+            self.m.TMC_motor[TMC_X1].stallGuardAlarmThreshold
+        )
+        self.y_set_threshold.text = str(
+            self.m.TMC_motor[TMC_Y1].stallGuardAlarmThreshold
+        )
+        self.z_set_threshold.text = str(
+            self.m.TMC_motor[TMC_Z].stallGuardAlarmThreshold
+        )
 
     def set_threshold(self, axis, value):
         self.m.set_threshold_for_axis(axis, int(value))
@@ -180,7 +202,7 @@ class SetThresholdsScreen(Screen):
         self.systemtools_sm.open_factory_settings_screen()
 
     def store_values_and_wait_for_handshake(self):
-        self.wait_popup_for_tmc_read_in = PopupWait(self.systemtools_sm.sm,  self.l)
+        self.wait_popup_for_tmc_read_in = PopupWait(self.systemtools_sm.sm, self.l)
         Clock.schedule_once(self.do_tmc_value_store, 0.2)
 
     def do_tmc_value_store(self, dt=0):
@@ -188,10 +210,10 @@ class SetThresholdsScreen(Screen):
         self.wait_while_values_stored_and_read_back_in()
 
     def wait_while_values_stored_and_read_back_in(self, dt=0):
-        if self.m.TMC_registers_have_been_read_in(): 
+        if self.m.TMC_registers_have_been_read_in():
             self.wait_popup_for_tmc_read_in.popup.dismiss()
             self.wait_popup_for_tmc_read_in = None
             self.show_thresholds()
             self.update_stored_thresholds()
-        else: 
+        else:
             Clock.schedule_once(self.wait_while_values_stored_and_read_back_in, 0.2)

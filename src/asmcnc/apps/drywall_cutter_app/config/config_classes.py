@@ -6,9 +6,23 @@ Data types are not confirmed.
 
 
 class Cutter:
-    def __init__(self, cutter_description, units, diameter, material, cutting_spindle_speed,
-                 cutting_feedrate, plunge_rate, cutting_direction, allowable_toolpath_offsets,
-                 max_depth_per_pass, max_depth_total, stepover, yeti_pilot_target_powers, image_path):
+    def __init__(
+        self,
+        cutter_description,
+        units,
+        diameter,
+        material,
+        cutting_spindle_speed,
+        cutting_feedrate,
+        plunge_rate,
+        cutting_direction,
+        allowable_toolpath_offsets,
+        max_depth_per_pass,
+        max_depth_total,
+        stepover,
+        yeti_pilot_target_powers,
+        image_path,
+    ):
         self.cutter_description = cutter_description  # type: str
         self.units = units  # type: str
         self.diameter = diameter  # type: float
@@ -17,7 +31,9 @@ class Cutter:
         self.cutting_feedrate = cutting_feedrate  # type: float
         self.plunge_rate = plunge_rate  # type: float
         self.cutting_direction = cutting_direction  # type: str
-        self.allowable_toolpath_offsets = AllowableToolpathOffsets(**allowable_toolpath_offsets)  # type: AllowableToolpathOffsets
+        self.allowable_toolpath_offsets = AllowableToolpathOffsets(
+            **allowable_toolpath_offsets
+        )  # type: AllowableToolpathOffsets
         self.max_depth_per_pass = max_depth_per_pass  # type: float
         self.max_depth_total = max_depth_total  # type: float
         self.stepover = stepover  # type: float
@@ -58,7 +74,12 @@ class CuttingDepths:
 
     @staticmethod
     def default():
-        return CuttingDepths(material_thickness=0.0, bottom_offset=0.0, auto_pass=False, depth_per_pass=0.0)
+        return CuttingDepths(
+            material_thickness=0.0,
+            bottom_offset=0.0,
+            auto_pass=False,
+            depth_per_pass=0.0,
+        )
 
 
 class DatumPosition:
@@ -72,12 +93,23 @@ class DatumPosition:
 
 
 class Configuration:
-    def __init__(self, shape_type, units, rotation, canvas_shape_dims, cutter_type, toolpath_offset, cutting_depths,
-                 datum_position):
+    def __init__(
+        self,
+        shape_type,
+        units,
+        rotation,
+        canvas_shape_dims,
+        cutter_type,
+        toolpath_offset,
+        cutting_depths,
+        datum_position,
+    ):
         self.shape_type = shape_type  # type: str
         self.units = units  # type: str
         self.rotation = rotation
-        self.canvas_shape_dims = CanvasShapeDims(**canvas_shape_dims)  # type: CanvasShapeDims
+        self.canvas_shape_dims = CanvasShapeDims(
+            **canvas_shape_dims
+        )  # type: CanvasShapeDims
         self.cutter_type = cutter_type  # type: str
         self.toolpath_offset = toolpath_offset  # type: str
         self.cutting_depths = CuttingDepths(**cutting_depths)  # type: CuttingDepths
@@ -85,10 +117,24 @@ class Configuration:
 
     @staticmethod
     def default():
-        return Configuration(shape_type='Square', units='mm', rotation='horizontal',
-                             canvas_shape_dims={'x': 100.0, 'y': 100.0, 'r': 0.0, 'd': 100.0, 'l': 100.0},
-                             cutter_type='test_cutter.json',
-                             toolpath_offset='inside',
-                             cutting_depths={'material_thickness': 12.0, 'bottom_offset': 0.5, 'auto_pass': True,
-                                             'depth_per_pass': 6.0},
-                             datum_position={'x': 0.0, 'y': 0.0})
+        return Configuration(
+            shape_type="Square",
+            units="mm",
+            rotation="horizontal",
+            canvas_shape_dims={
+                "x": 100.0,
+                "y": 100.0,
+                "r": 0.0,
+                "d": 100.0,
+                "l": 100.0,
+            },
+            cutter_type="test_cutter.json",
+            toolpath_offset="inside",
+            cutting_depths={
+                "material_thickness": 12.0,
+                "bottom_offset": 0.5,
+                "auto_pass": True,
+                "depth_per_pass": 6.0,
+            },
+            datum_position={"x": 0.0, "y": 0.0},
+        )

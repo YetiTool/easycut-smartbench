@@ -5,7 +5,8 @@ from asmcnc.skavaUI import widget_status_bar
 
 import datetime
 
-Builder.load_string("""
+Builder.load_string(
+    """
 <ZHeadQC8>:
     status_container:status_container
     connect_button:connect_button
@@ -53,17 +54,21 @@ Builder.load_string("""
             id: status_container
             pos: self.pos
 
-""")
+"""
+)
+
 
 class ZHeadQC8(Screen):
     def __init__(self, **kwargs):
         super(ZHeadQC8, self).__init__(**kwargs)
 
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
+        self.sm = kwargs["sm"]
+        self.m = kwargs["m"]
 
         # Green status bar
-        self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
+        self.status_bar_widget = widget_status_bar.StatusBar(
+            machine=self.m, screen_manager=self.sm
+        )
         self.status_container.add_widget(self.status_bar_widget)
 
     def disconnect(self):
@@ -78,12 +83,14 @@ class ZHeadQC8(Screen):
             self.m.starting_serial_connection = True
             self.m.s.grbl_scanner_running = False
             Clock.schedule_once(self.do_connection, 0.1)
-            self.connect_button.text = 'Connecting...'
+            self.connect_button.text = "Connecting..."
             self.connect_button.disabled = True
 
     def do_connection(self, dt):
         self.m.reconnect_serial_connection()
-        self.poll_for_reconnection = Clock.schedule_interval(self.try_start_services, 0.4)
+        self.poll_for_reconnection = Clock.schedule_interval(
+            self.try_start_services, 0.4
+        )
 
     def try_start_services(self, dt):
         if self.m.s.is_connected():
@@ -93,13 +100,13 @@ class ZHeadQC8(Screen):
             Clock.schedule_once(self.back_to_start, 2)
 
     def back_to_start(self, dt):
-        self.sm.get_screen('qc1').reset_checkboxes()
-        self.sm.get_screen('qc2').reset_checkboxes()
-        self.sm.get_screen('qcW136').reset_checkboxes()
-        self.sm.get_screen('qcW112').reset_checkboxes()
-        self.sm.get_screen('qc3').reset_timer()
-        self.sm.current = 'qcconnecting'
-        self.connect_button.text = 'Connect and Restart'
+        self.sm.get_screen("qc1").reset_checkboxes()
+        self.sm.get_screen("qc2").reset_checkboxes()
+        self.sm.get_screen("qcW136").reset_checkboxes()
+        self.sm.get_screen("qcW112").reset_checkboxes()
+        self.sm.get_screen("qc3").reset_timer()
+        self.sm.current = "qcconnecting"
+        self.connect_button.text = "Connect and Restart"
 
     def enter_prev_screen(self):
-        self.sm.current = 'qc7'
+        self.sm.current = "qc7"

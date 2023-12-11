@@ -1,16 +1,17 @@
-'''
+"""
 Created on 18 November 2020
 GRBL settings screen for system tools app
 
 @author: Letty
-'''
+"""
 
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
 from asmcnc.skavaUI import popup_info
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <GRBLSettingsScreen>
     BoxLayout:
@@ -176,15 +177,16 @@ Builder.load_string("""
                                     allow_stretch: True
 
 
-""")
+"""
+)
+
 
 class GRBLSettingsScreen(Screen):
-
     def __init__(self, **kwargs):
         super(GRBLSettingsScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs['system_tools']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
+        self.systemtools_sm = kwargs["system_tools"]
+        self.m = kwargs["machine"]
+        self.l = kwargs["localization"]
 
     def go_back(self):
         self.systemtools_sm.open_system_tools()
@@ -192,8 +194,7 @@ class GRBLSettingsScreen(Screen):
     def exit_app(self):
         self.systemtools_sm.exit_app()
 
-# ADD A BUNCH OF WARNING POPUPS 
-
+    # ADD A BUNCH OF WARNING POPUPS
 
     def download_grbl_settings(self):
         self.systemtools_sm.download_grbl_settings_to_usb()
@@ -205,11 +206,15 @@ class GRBLSettingsScreen(Screen):
         self.systemtools_sm.restore_grbl_settings_from_usb()
 
     def restore_grbl_settings_from_file(self):
-        self.systemtools_sm.restore_grbl_settings_from_file()    
+        self.systemtools_sm.restore_grbl_settings_from_file()
 
     def bake_default_settings(self):
         if not self.m.bake_default_grbl_settings():
-            popup_info.PopupError(self.systemtools_sm.sm, self.l, "X current read in as 0! Can't set correct Z travel.")
+            popup_info.PopupError(
+                self.systemtools_sm.sm,
+                self.l,
+                "X current read in as 0! Can't set correct Z travel.",
+            )
 
     def send_rst_dollar(self):
         self.m.send_any_gcode_command("$RST=$")
@@ -219,34 +224,3 @@ class GRBLSettingsScreen(Screen):
 
     def send_rst_hash(self):
         self.m.send_any_gcode_command("$RST=#")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

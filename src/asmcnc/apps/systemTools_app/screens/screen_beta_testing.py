@@ -4,6 +4,7 @@ Beta testers screen for system tools app
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -307,7 +308,9 @@ class BetaTestingScreen(Screen):
         self.set = kwargs["settings"]
         self.l = kwargs["localization"]
         self.kb = kwargs["keyboard"]
+
         self.user_branch.text = self.set.sw_branch.strip("* ")
+
         self.beta_version.text = self.set.latest_sw_beta
         self.usb_stick = usb_storage.USB_storage(self.systemtools_sm.sm, self.l)
         self.language_button.values = self.l.supported_languages
@@ -343,11 +346,14 @@ class BetaTestingScreen(Screen):
             def nested_branch_update(dt):
                 self.set.update_config()
                 branch_name_formatted = str(self.user_branch.text).translate(None, " ")
+
                 checkout_exit_code = os.system(
                     "cd /home/pi/easycut-smartbench/ && git fetch origin && git checkout "
                     + branch_name_formatted
                 )
                 pull_exit_code = os.system("git pull")
+
+                # exit code 0 means success, anything else is error
                 if checkout_exit_code == 0 and pull_exit_code == 0:
                     self.set.ansible_service_run_without_reboot()
                     wait_popup.popup.dismiss()
