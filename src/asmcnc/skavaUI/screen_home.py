@@ -12,7 +12,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, FadeTran
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
-from __builtin__ import file
+
 from kivy.clock import Clock
 
 import os, sys, threading
