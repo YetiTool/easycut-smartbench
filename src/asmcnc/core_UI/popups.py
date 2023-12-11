@@ -86,7 +86,8 @@ class BasicPopup(Popup):
     button_two_background_color: background color to be used for button two, default None
     
     Usage:
-    popup = PopupSystem(title_string="Title", main_string="Main text", popup_type=PopupType.INFO,
+    popup = PopupSystem(sm=self.sm, m=self.m, l=self.l,
+                        title_string="Title", main_string="Main text", popup_type=PopupType.INFO,
                         popup_width=300, popup_height=350)
                         
     popup.open()
@@ -95,7 +96,8 @@ class BasicPopup(Popup):
     The popup will have a singular button with text "Ok" and will close when pressed.
     
     You can also pass a callback to the button:
-    popup = PopupSystem(title_string="Title", main_string="Main text", popup_type=PopupType.INFO,
+    popup = PopupSystem(sm=self.sm, m=self.m, l=self.l,
+                        title_string="Title", main_string="Main text", popup_type=PopupType.INFO,
                         popup_width=300, popup_height=350, button_one_callback=self.callback)
         
     This will dismiss the popup and call the callback function when the button is pressed.
@@ -147,7 +149,7 @@ class BasicPopup(Popup):
         if button_one_background_color is not None:
             self.button_one_background_normal = ""
         if button_two_background_color is not None:
-            self.button_two_background_down = ""
+            self.button_two_background_normal = ""
 
         self.title = self.l.get_str(kwargs["title"])
         self.size_hint = (None, None)
@@ -192,7 +194,7 @@ class BasicPopup(Popup):
     def build(self):
         text_size_x = dp(
             utils.get_scaled_width(
-                self.popup_width - utils.get_scaled_width(self.main_label_size_delta)
+                self.popup_width - self.main_label_size_delta
             )
         )
 
@@ -241,14 +243,14 @@ class BasicPopup(Popup):
         return button_layout
 
     def on_button_pressed(self, callback):
-        self.dismiss()
         callback()
+        self.dismiss()
 
     def get_image(self):
         if self.popup_type.value is None:
             if self.popup_image is None:
                 return None
-            return Image(source=self.popup_image, allow_stretch=False, size_hint=self.popup_image_size_hint)
+            return Image(source=self.popup_image, allow_stretch=False)
         return Image(source=self.popup_type.value["image"], allow_stretch=False)
 
     def build_buttons(self):

@@ -609,19 +609,18 @@ class LobbyScreen(Screen):
         self.welcome_popup_description = (
                 self.format_command(
                     self.l.get_str('Use the arrows to go through the menu, and select an app to get started.')
-                ) + '\n\n' + \
- \
+                ) + '\n\n' +
                 self.format_command(
-                    ((self.l.get_str('If this is your first time, make sure you use the Wifi, Maintenance, ' + \
+                    ((self.l.get_str('If this is your first time, make sure you use the Wifi, Maintenance, ' +
                                      'and Calibrate apps to set up SmartBench.'
                                      ).replace(self.l.get_str('Wifi'), self.l.get_bold('Wifi'))
                       ).replace(self.l.get_str('Maintenance'), self.l.get_bold('Maintenance'))
                      ).replace(self.l.get_str('Calibrate'), self.l.get_bold('Calibrate')
                                )
-                ) + '\n\n' + \
+                ) + '\n\n' +
                 self.format_command(
                     self.l.get_str('For more help, please visit:')
-                ) + '\n' + \
+                ) + '\n' +
                 '[b]https://www.yetitool.com/support[/b]' + '\n'
         )
 
