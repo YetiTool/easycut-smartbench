@@ -6,7 +6,6 @@ Created on 1 February 2021
 
 Screen to provide user with important safety information prior to every job start.
 """
-import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivy.uix.button import Button
@@ -37,8 +36,8 @@ Builder.load_string(
     confirm_button : confirm_button
 
     BoxLayout:
-        height: dp(1.66666666667*app.height)
-        width: dp(0.6*app.width)
+        height: dp(1.0*app.height)
+        width: dp(1.0*app.width)
         canvas.before:
             Color: 
                 rgba: hex('#E5E5E5FF')
