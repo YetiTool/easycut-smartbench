@@ -62,8 +62,12 @@ class BasicPopup(Popup):
     auto_dismiss = ObjectProperty(False)
     title_color = ObjectProperty([0, 0, 0, 1])
     title_size = ObjectProperty(str(utils.get_scaled_width(20)) + "sp")
-    button_one_background_normal = StringProperty("atlas://data/images/defaulttheme/button")
-    button_two_background_normal = StringProperty("atlas://data/images/defaulttheme/button")
+    button_one_background_normal = StringProperty(
+        "atlas://data/images/defaulttheme/button"
+    )
+    button_two_background_normal = StringProperty(
+        "atlas://data/images/defaulttheme/button"
+    )
 
     """
     title: string to be used as the title
@@ -117,7 +121,7 @@ class BasicPopup(Popup):
                                          button_one_callback=self.set_trigger_to_true,
                                          button_two_callback=self.set_trigger_to_false)
 
-        welcome_popup.open()
+    welcome_popup.open()
     """
 
     def __init__(
@@ -193,9 +197,7 @@ class BasicPopup(Popup):
 
     def build(self):
         text_size_x = dp(
-            utils.get_scaled_width(
-                self.popup_width - self.main_label_size_delta
-            )
+            utils.get_scaled_width(self.popup_width - self.main_label_size_delta)
         )
 
         self.main_label = Label(
@@ -261,7 +263,7 @@ class BasicPopup(Popup):
                 font_size=str(utils.get_scaled_width(14)) + "sp",
                 background_normal=self.button_one_background_normal,
                 background_color=self.button_one_background_color,
-                markup=True
+                markup=True,
             )
         ]
         if self.button_two_text is not None:
@@ -274,9 +276,7 @@ class BasicPopup(Popup):
                     font_size=str(utils.get_scaled_width(14)) + "sp",
                     background_normal=self.button_two_background_normal,
                     background_color=self.button_two_background_color,
-                    markup=True
+                    markup=True,
                 )
             )
         return buttons
-
-
