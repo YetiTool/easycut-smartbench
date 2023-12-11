@@ -1,3 +1,4 @@
+from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 
@@ -89,8 +90,8 @@ class DisabledYetiPilotWidget(Widget):
     health_check_enabled_img = "./asmcnc/core_UI/job_go/img/spindle_check_silver.png"
     health_check_disabled_img = "./asmcnc/core_UI/job_go/img/spindle_check_disabled.png"
     font_str = "[size=%dsp]"
-    bigger_font_str = font_str % 17
-    smaller_font_str = font_str % 15
+    bigger_font_str = font_str % float(17.0/800.0*Window.width)
+    smaller_font_str = font_str % float(15.0/800.0*Window.width)
 
     def __init__(self, **kwargs):
         super(DisabledYetiPilotWidget, self).__init__(**kwargs)
