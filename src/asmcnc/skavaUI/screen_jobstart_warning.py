@@ -36,8 +36,8 @@ Builder.load_string(
     confirm_button : confirm_button
 
     BoxLayout:
-        height: dp(1.66666666667*app.height)
-        width: dp(0.6*app.width)
+        height: dp(1.0*app.height)
+        width: dp(1.0*app.width)
         canvas.before:
             Color: 
                 rgba: hex('#E5E5E5FF')
