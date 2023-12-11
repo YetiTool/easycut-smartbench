@@ -1,5 +1,6 @@
 from functools import partial
 
+from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.uix.button import Button
 from kivy.uix.widget import Widget
@@ -115,7 +116,8 @@ class LoadSliderWidget(Widget):
         button_adjust_func = partial(self.button_adjust_slider, val)
         container.add_widget(
             PowerAdjustButtons(
-                text=btn_str, on_press=button_adjust_func, color=dark_grey
+                text=btn_str, on_press=button_adjust_func, color=dark_grey,
+                font_size=str(15.0/800.0*Window.width) + 'sp'
             )
         )
 
