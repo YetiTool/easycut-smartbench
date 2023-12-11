@@ -5,18 +5,11 @@ Screen to tell user that machine is not Idle (before running a job).
 
 @author: Letty
 """
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
-from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import (
-    ObjectProperty,
-    ListProperty,
-    NumericProperty,
     StringProperty,
 )
-from kivy.uix.widget import Widget
-import sys, os
+from kivy.uix.screenmanager import Screen
 from kivy.utils import get_color_from_hex
 
 Builder.load_string(
