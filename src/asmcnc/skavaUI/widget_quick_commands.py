@@ -165,7 +165,7 @@ class QuickCommands(Widget):
 
             popup_info.PopupInfo(self.sm, self.l, 450, info)
 
-        elif self.m.state().startswith('Idle'):
+        elif not self.m.state().startswith('Idle'):
             self.sm.current = 'mstate'
                 
         elif self.is_job_within_bounds() == False and sys.platform != "win32":
