@@ -24,6 +24,8 @@ Builder.load_string("""
     a_dimension: a_dimension
     b_dimension: b_dimension
     c_dimension: c_dimension
+    
+    on_touch_down: root.on_touch()
 
     BoxLayout:
         size_hint: (None,None)
@@ -488,6 +490,14 @@ class ShapeCutter20ScreenClass(Screen):
         self.shapecutter_sm = kwargs['shapecutter']
         self.m=kwargs['machine']
         self.j=kwargs['job_parameters']
+        self.kb=kwargs['keyboard']
+
+        # Add the IDs of ALL the TextInputs on this screen
+        self.text_inputs = [self.a_dimension, self.b_dimension, self.c_dimension]
+
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
 
     def on_pre_enter(self):
         self.info_button.opacity = 1
@@ -500,6 +510,8 @@ class ShapeCutter20ScreenClass(Screen):
         elif self.j.parameter_dict["cutter dimensions"]["units"] == "inches":
             self.unit_toggle.active = True
 
+    def on_enter(self):
+        self.kb.setup_text_inputs(self.text_inputs)
 
 # Action buttons       
     def get_info(self):

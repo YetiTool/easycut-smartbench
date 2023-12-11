@@ -193,7 +193,7 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(310)
                         width: dp(675)
-                        padding: 80,0,0,80
+                        padding: 80,0,10,80
                         orientation: "vertical"
                         
                         Label:
@@ -293,7 +293,7 @@ class ShapeCutter26ScreenClass(Screen):
     screen_number = StringProperty("[b]26[/b]")
     title_label = StringProperty("[b]Home SmartBench[/b]")
     user_instructions = StringProperty("When you are ready, press the button to Home SmartBench.\n\n")
-    warning_message = StringProperty("[b]WARNING: Homing will cause the machine to move, so\n" \
+    warning_message = StringProperty("[b]WARNING: Homing will cause the machine to move, so " \
                                      "make sure the machine is clear before pressing the button![/b]")
     
     def __init__(self, **kwargs):

@@ -12,7 +12,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, FadeTran
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
-from __builtin__ import file
+
 from kivy.clock import Clock
 
 import os, sys, threading
@@ -24,7 +24,6 @@ from asmcnc.skavaUI import widget_virtual_bed_control, widget_gcode_monitor, wid
 from asmcnc.skavaUI import popup_info
 from asmcnc.geometry import job_envelope # @UnresolvedImport
 from time import sleep
-
 
 
 Builder.load_string("""
@@ -51,6 +50,8 @@ Builder.load_string("""
 
     job_recovery_button:job_recovery_button
     job_recovery_button_image:job_recovery_button_image
+    
+    on_touch_down:root.on_touch()
 
     BoxLayout:
         padding: 0
@@ -289,6 +290,7 @@ class HomeScreen(Screen):
         self.jd = kwargs['job']
         self.set = kwargs['settings']
         self.l = kwargs['localization']
+        self.kb = kwargs['keyboard']
 
         # Job tab
         self.gcode_summary_widget = widget_gcode_summary.GCodeSummary(job = self.jd)
@@ -320,8 +322,11 @@ class HomeScreen(Screen):
         # Quick commands
         self.quick_commands_container.add_widget(widget_quick_commands.QuickCommands(machine=self.m, screen_manager=self.sm, job=self.jd, localization=self.l))
 
-    def on_enter(self):
+        # Add the IDs of ALL the TextInputs on this screen
+        self.text_inputs = [self.gcode_monitor_widget.gCodeInput]
 
+    def on_enter(self):
+        self.kb.setup_text_inputs(self.text_inputs)
         self.m.stylus_router_choice = 'router'
 
         if (self.tab_panel.current_tab == self.move_tab or self.tab_panel.current_tab == self.pos_tab):
@@ -387,6 +392,10 @@ class HomeScreen(Screen):
                 self.file_data_label.text += "\n[color=FF0000]" + self.l.get_str("From line N").replace("N", str(self.jd.job_recovery_selected_line)) + "[/color]"
         else:
             self.job_recovery_button_image.source = "./asmcnc/skavaUI/img/recover_job_disabled.png"
+
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
 
     def preview_job_file(self, dt):
 

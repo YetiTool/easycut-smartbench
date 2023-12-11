@@ -82,24 +82,25 @@ class VirtualZ(Widget):
     
     def setZones(self):
  
-        z_max = self.sm.get_screen('home').job_box.range_z[1]
-        z_min = self.sm.get_screen('home').job_box.range_z[0]
-        z0_machine_coords = self.m.z_wco()
-                  
-        self.z_clear.y = self.z_clear.parent.y + self.z_clear.parent.size[1] - ((-z0_machine_coords/(self.m.grbl_z_max_travel))  * self.z_clear.parent.size[1])
+        if self.sm.has_screen('home'):
+            z_max = self.sm.get_screen('home').job_box.range_z[1]
+            z_min = self.sm.get_screen('home').job_box.range_z[0]
+            z0_machine_coords = self.m.z_wco()
+                    
+            self.z_clear.y = self.z_clear.parent.y + self.z_clear.parent.size[1] - ((-z0_machine_coords/(self.m.grbl_z_max_travel))  * self.z_clear.parent.size[1])
 
-        if self.jd.filename == '':
-            if self.z_clear.size[1] == 0: 
-                self.z_clear.size[1] = 4
+            if self.jd.filename == '':
+                if self.z_clear.size[1] == 0: 
+                    self.z_clear.size[1] = 4
 
-            if self.z_cut.size[1] == 0:
-                self.z_cut.size[1] = 4
+                if self.z_cut.size[1] == 0:
+                    self.z_cut.size[1] = 4
 
-        else:
-            self.z_clear.size[1] = ( z_max/(self.m.grbl_z_max_travel) * self.z_clear.parent.size[1]) 
-            self.z_cut.size[1] = ( (-z_min)/(self.m.grbl_z_max_travel) * self.z_clear.parent.size[1])
+            else:
+                self.z_clear.size[1] = ( z_max/(self.m.grbl_z_max_travel) * self.z_clear.parent.size[1]) 
+                self.z_cut.size[1] = ( (-z_min)/(self.m.grbl_z_max_travel) * self.z_clear.parent.size[1])
 
-        self.z_cut.y = self.z_clear.y - self.z_cut.height
+            self.z_cut.y = self.z_clear.y - self.z_cut.height
 
 
 

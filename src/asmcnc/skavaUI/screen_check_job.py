@@ -17,7 +17,7 @@ from kivy.properties import ObjectProperty, ListProperty, NumericProperty, Strin
 from kivy.uix.widget import Widget
 from kivy.uix.progressbar import ProgressBar
 from kivy.uix.scrollview import ScrollView
-from __builtin__ import file
+
 from kivy.clock import Clock
 
 from asmcnc.geometry import job_envelope
@@ -512,7 +512,7 @@ class CheckingScreen(Screen):
                     self.jd.checked = True
 
                 elif self.entry_screen == 'home':
-                    self.check_outcome = self.l.get_str('Errors found in G-code.') + '\n\n' + self.l.get_str('Please review and reload your job before attempting to run it.')
+                    self.check_outcome = self.l.get_str('Errors found in G-code.') + '\n\n' + self.l.get_str('Please review and re-load your job before attempting to run it.')
                     self.jd.check_warning = self.l.get_str('Errors found in G-code.')
                     self.jd.checked = True
 

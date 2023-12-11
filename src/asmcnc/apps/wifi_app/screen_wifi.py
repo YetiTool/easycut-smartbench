@@ -44,8 +44,15 @@ Builder.load_string("""
     password_label : password_label
     country_label : country_label
     connect_button : connect_button
+    custom_ssid_button:custom_ssid_button
+    network_name_input:network_name_input
+    custom_network_name:custom_network_name
+    custom_network_name_box:custom_network_name_box
+    network_name_box:network_name_box
 
     connection_instructions_rst : connection_instructions_rst
+    
+    on_touch_down: root.on_touch()
     
     BoxLayout:
         size_hint: (None, None)
@@ -125,7 +132,7 @@ Builder.load_string("""
                 size_hint: (None, None)
                 height: dp(140)
                 width: dp(560)
-                padding: [10,20,10,20]
+                padding: [10,20,10,30]
                 spacing: 10
                 canvas:
                     Color:
@@ -139,7 +146,7 @@ Builder.load_string("""
                     height: dp(100)
                     width: dp(220)
                     orientation: "vertical"
-                    padding: [10,0,20,20]   
+                    padding: [10,0,20,-20]   
                     
                     BoxLayout: 
                         size_hint: (None, None) 
@@ -192,30 +199,76 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(40)
                         width: dp(210)
-                        padding: (5,8,5,8)
+                        padding: [0,0,0,0]
                         orientation: 'horizontal'
-                        canvas:
-                            Rectangle:
-                                pos: self.pos
-                                size: self.size
-                                source: "./asmcnc/apps/wifi_app/img/network_spinner_bg.png"
-
-                        Spinner:
-                            id: network_name
-                            halign: 'left'
-                            valign: 'top'
+                        id: network_name_input
+                        
+                        # The Spinner with the background image, grouped together in this BoxLayout
+                        BoxLayout:
+                            size_hint: (None,None)
+                            height: dp(40)
+                            width: dp(210)
+                            padding: (5,5,5,8)
+                            id: network_name_box
+                            
+                            canvas:
+                                Rectangle:
+                                    pos: self.pos
+                                    size: self.size
+                                    source: "./asmcnc/apps/wifi_app/img/network_spinner_bg.png"
+    
+                            Spinner:
+                                id: network_name
+                                halign: 'left'
+                                valign: 'top'
+                                markup: True
+                                size_hint: (None, None)
+                                size: 200, 24
+                                text: ''
+                                font_size: '20sp'
+                                text_size: self.size
+                                multiline: False
+                                color: 0,0,0,1
+                                values: root.SSID_list
+                                option_cls: Factory.get("NetworkSpinner")
+                                background_normal: ''
+                                background_color: [1,1,1,0]
+                        
+                        # The TextInput for the custom network name, very similar to the Password BoxLayout
+                        BoxLayout:
+                            size_hint: (None,None)
+                            height: dp(40)
+                            width: dp(210)
+                            padding: (0,0,0,0)
+                            id: custom_network_name_box
+                            
+                            TextInput: 
+                                id: custom_network_name
+                                # valign: 'middle'
+                                padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
+                                halign: 'center'
+                                text_size: self.size
+                                font_size: '20sp'
+                                markup: True
+                                multiline: False
+                                text: ''
+                                background_normal: "./asmcnc/apps/wifi_app/img/password_bg.png"
+                    
+                    # The button to toggle between the normal network name and the custom network name
+                    BoxLayout: 
+                        size_hint: (None, None) 
+                        orientation: "horizontal"
+                        width: dp(210)
+                        height: dp(40)
+                        padding: [0,5,0,5]
+                        ToggleButton:
+                            id: custom_ssid_button
+                            on_release: root.custom_ssid_input()
+                            font_size: 20
+                            color: hex('#f9f9f9ff')
                             markup: True
-                            size_hint: (None, None)
-                            size: 200, 24
-                            text: ''
-                            font_size: '20sp'
-                            text_size: self.size
-                            multiline: False
-                            color: 0,0,0,1
-                            values: root.SSID_list
-                            option_cls: Factory.get("NetworkSpinner")
-                            background_normal: ''
-                            background_color: [1,1,1,0]
+                            background_normal: "./asmcnc/apps/wifi_app/img/CustomSSID_blank.png"
+                            background_down: "./asmcnc/apps/wifi_app/img/CustomSSID_blank.png"
 
                 #Password
                 BoxLayout: 
@@ -369,6 +422,7 @@ Builder.load_string("""
                         markup: True
                         center: self.parent.center
                         pos: self.parent.pos
+                        opacity: 1 if self.state == 'normal' else .5
 
                 BoxLayout: 
                     size_hint: (None, None)
@@ -422,6 +476,7 @@ class WifiScreen(Screen):
         self.sm = kwargs['screen_manager']
         self.set = kwargs['settings_manager']
         self.l = kwargs['localization']
+        self.kb = kwargs['keyboard']
 
         if sys.platform != 'win32' and sys.platform != 'darwin':
             self.network_name.values = self.get_available_networks()
@@ -429,21 +484,67 @@ class WifiScreen(Screen):
         self.update_strings()
         self.get_rst_source()
 
+        # I was getting an error for "weakly referenced objects". This line of code prevents the objects from getting
+        # garbage collected
+        self.refs = [self.network_name.__self__, self.custom_network_name_box.__self__]
+
+        # Remove the custom SSID input field on startup
+        self.network_name_input.remove_widget(self.custom_network_name_box)
+
+        # Add the IDs of ALL the TextInputs on this screen
+        self.text_inputs = [self._password, self.custom_network_name]
+
+    # Toggles between normal network selection and custom network name input for hidden networks
+    def custom_ssid_input(self):
+        if self.custom_ssid_button.state == 'normal':
+            try:
+                self.network_name_input.remove_widget(self.custom_network_name_box)
+                self.network_name_input.add_widget(self.network_name_box)
+            except:
+                pass
+            self.custom_ssid_button.text = self.l.get_str("Other network")
+        else:
+            try:
+                self.network_name_input.remove_widget(self.network_name_box)
+                self.network_name_input.add_widget(self.custom_network_name_box)
+                self.custom_network_name.focus = True
+            except:
+                pass
+            self.custom_ssid_button.text = self.l.get_str("Select network")
     def on_enter(self):
+        self.kb.setup_text_inputs(self.text_inputs)
         self.refresh_ip_label_value_event = Clock.schedule_interval(self.refresh_ip_label_value,
                                                                     self.IP_REPORT_INTERVAL)
         self.refresh_ip_label_value(1)
         if sys.platform != 'win32' and sys.platform != 'darwin':
-            try: self.network_name.text = ((str((os.popen('grep "ssid" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
-            except: self.network_name.text = ''
+            if self.is_wlan0_connected():
+                try: self.network_name.text = ((str((os.popen('grep "ssid" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
+                except: self.network_name.text = ''
+            else:
+                self.network_name.text = ''
+                wifi_connected_before = (os.popen('grep "wifi_connected_before" /home/pi/easycut-smartbench/src/config.txt').read())
+                if 'True' in wifi_connected_before:
+                    message = self.l.get_str("No network connection.") + "\n" + self.l.get_str("Please refresh the list and try again.")
+                    popup_info.PopupWarning(self.sm, self.l, message)
+
             try: self.country.text = ((str((os.popen('grep "country" /etc/wpa_supplicant/wpa_supplicant.conf').read())).split("=")[1]).strip('\n')).strip('"')
             except: self.country.text = 'GB'
         self._password.text = ''
 
+        self.update_strings()
+
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
+
     def check_credentials(self):
 
         # get network name and password from text entered (widget)
-        self.netname = self.network_name.text
+        if self.custom_ssid_button.state == 'normal':
+            self.netname = self.network_name.text
+        else:
+            self.netname = self.custom_network_name.text
+
         self.password = self._password.text
 
         if len(self.netname) < 1: 
@@ -459,6 +560,12 @@ class WifiScreen(Screen):
         else: 
             self.connect_wifi()
 
+    def is_wlan0_connected(self):
+        #returns "state UP" or "state DOWN" depending on whether wlan0 is connected or not
+        state_raw = os.popen('ip addr show | grep "wlan0" | grep -oP "state\s\w+"').read()
+        state = state_raw.split(" ")[1].strip("\n")
+
+        return state == "UP"
     def connect_wifi(self):
         self._password.text = ''
         wait_popup = popup_info.PopupWait(self.sm, self.l)
@@ -506,6 +613,8 @@ class WifiScreen(Screen):
                 os.system('echo "ctrl_interface=run/wpa_supplicant" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
                 os.system('echo "update_config=1" | sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
                 os.system('echo "country="' + self.country.text + '| sudo tee --append /etc/wpa_supplicant/wpa_supplicant-wlan0.conf')
+
+        os.system('sudo sed -i "s/wifi_connected_before=False/wifi_connected_before=True/" config.txt')
 
         # Flush all the IP addresses from cache
         os.system('sudo ip addr flush dev wlan0')
@@ -592,31 +701,28 @@ class WifiScreen(Screen):
         self.password_label.text = self.l.get_bold("Password")
         self.country_label.text = self.l.get_bold("Country")
         self.connect_button.text = self.l.get_str("Connect")
+        self.custom_ssid_input()
+        self.custom_network_name.hint_text = self.l.get_str("Enter network name")
 
-        self.update_font_size(self.country_label)
-        self.update_button_font_size(self.connect_button)
+        self.update_hint_font_size(self.custom_network_name)
+        self.update_button_font_size(self.connect_button, 28, 10)
+        self.update_button_font_size(self.custom_ssid_button, 20, 20)
 
-    def update_font_size(self, value):
-        if len(value.text) < 8:
-            value.font_size = self.default_font_size
-        elif len(value.text) > 7: 
-            value.font_size = self.default_font_size - 2
+    def update_hint_font_size(self, value):
+        if value.hint_text:
+            if len(value.hint_text) > 22:
+                value.font_size = self.default_font_size - 3
 
-    def update_button_font_size(self, value):
-        value.font_size = 28
-        if len(value.text) > 10:
+    def update_button_font_size(self, value, default_size, max_length):
+        value.font_size = default_size
+        if len(value.text) > max_length:
             value.font_size = 19
 
     def get_rst_source(self):
         try:
             self.connection_instructions_rst.source = self.wifi_documentation_path + self.l.lang + '.rst'
-        except: 
-            # Can't seem to use non english letters for file source so filename is different
-            try:
-                if self.l.lang == 'Français (FR)':
-                    self.connection_instructions_rst.source = self.wifi_documentation_path + 'Francais (FR).rst'
-            except:
-                self.connection_instructions_rst.source = self.wifi_documentation_path + self.l.default_lang + '.rst'
+        except:
+            self.connection_instructions_rst.source = self.wifi_documentation_path + self.l.default_lang + '.rst'
 
     def on_leave(self):
         if self.wifi_error_timeout_event:

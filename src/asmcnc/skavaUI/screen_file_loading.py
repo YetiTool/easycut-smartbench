@@ -17,7 +17,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
 from kivy.uix.progressbar import ProgressBar
-from __builtin__ import file, False
+
 from kivy.clock import Clock
 from functools import partial
 from kivy.graphics import Color, Rectangle
@@ -363,7 +363,7 @@ class LoadingScreen(Screen):
                                     if float(feed_rate) > self.sm.get_screen('check_job').as_high_as:
                                         self.sm.get_screen('check_job').as_high_as = float(feed_rate)
 
-                            except: print 'Failed to extract feed rate. Probable G-code error!'
+                            except: print('Failed to extract feed rate. Probable G-code error!')
 
                         # strip line numbers
                         if "N" in l_block:

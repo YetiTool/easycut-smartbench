@@ -26,6 +26,8 @@ Builder.load_string("""
 	error_message_bottom : error_message_bottom
 	next_button : next_button
 
+	on_touch_down: root.on_touch()
+
 	BoxLayout: 
 		size_hint: (None,None)
 		width: dp(800)
@@ -83,7 +85,6 @@ Builder.load_string("""
 					valign: 'bottom'
 					halign: 'center'
 					markup: 'true'
-					bold: True
 					color: hex('#333333ff')
 
 				BoxLayout:
@@ -207,14 +208,22 @@ class WarrantyScreen3(Screen):
 		self.start_seq=kwargs['start_sequence']
 		self.m=kwargs['machine']
 		self.l=kwargs['localization']
+		self.kb = kwargs['keyboard']
 
 		self.update_strings()
+
+		self.text_inputs = [self.activation_code]
 
 	def on_pre_enter(self):
 		self.read_in_activation_code()
 
 	def on_enter(self):
 		self.check_activation_event = Clock.schedule_interval(lambda dt: self.next_screen(), 2)
+		self.kb.setup_text_inputs(self.text_inputs)
+
+	def on_touch(self):
+		for text_input in self.text_inputs:
+			text_input.focus = False
 
 	def read_in_activation_code(self):
 		try: 
@@ -295,7 +304,7 @@ class WarrantyScreen3(Screen):
 
 	def update_strings(self):
 		self.title_label.text = self.l.get_str("SmartBench Warranty Registration")
-		self.enter_your_activation_code_label.text = self.l.get_str("Enter your activation code:")
+		self.enter_your_activation_code_label.text = self.l.get_bold("Enter your activation code:")
 		self.error_message_top.text = self.l.get_str("Please check your activation code.")
 		self.error_message_bottom.text = self.l.get_str("Stuck on this screen? Contact us at https://www.yetitool.com/support")
 		self.next_button.text = self.l.get_str("Next") + "..."
@@ -303,9 +312,11 @@ class WarrantyScreen3(Screen):
 		self.update_font_size(self.error_message_bottom)
 
 	def update_font_size(self, value):
-		if len(value.text) < 85:
+		text_length = self.l.get_text_length(value.text)
+
+		if text_length < 85:
 			value.font_size = self.default_font_size
-		elif len(value.text) < 100:
+		elif text_length < 100:
 			value.font_size = '18sp'
 		else:
 			value.font_size = '16sp'

@@ -144,7 +144,6 @@ Builder.load_string("""
                     id: spindle_raise_label
                     size_hint: (None, None)
                     font_size: '24sp'
-                    text: 'Preparing to resume, please wait...'
                     color: [0,0,0,1]
                     markup: True
                     halign: 'center'
@@ -155,7 +154,7 @@ Builder.load_string("""
                     size: self.parent.size
                     x: self.parent.x + 80
                     y: self.parent.y
-                    opacity: 0
+                    opacity: 1
 
                 Image:
                     id: countdown_image
@@ -227,6 +226,7 @@ class DoorScreen(Screen):
         self.l=kwargs['localization']
 
         self.header_label.text = self.l.get_bold('Interrupt bar pushed!')
+        self.spindle_raise_label.text = self.l.get_str('Preparing to resume, please wait') + '...'
 
         self.anim_spindle_label = Animation(opacity = 1, duration = 1.5) + Animation(opacity = 0, duration = 0.5) + Animation(opacity = 0, duration = 1.5) + Animation(opacity = 1, duration = 0.5)
         self.anim_countdown_img = Animation(opacity = 0, duration = 1.5) + Animation(opacity = 1, duration = 0.5) + Animation(opacity = 1, duration = 1.5) + Animation(opacity = 0, duration = 0.5)
