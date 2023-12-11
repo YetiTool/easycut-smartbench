@@ -4,7 +4,6 @@ Screen to help production move through final test more quickly
 
 @author: Letty
 """
-
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -12,7 +11,6 @@ from kivy.clock import Clock
 from kivy.properties import ObjectProperty
 from asmcnc.skavaUI import widget_status_bar, widget_gcode_monitor
 from asmcnc.apps.systemTools_app.screens import widget_final_test_xy_move
-
 import os, sys
 
 Builder.load_string(
@@ -59,10 +57,12 @@ Builder.load_string(
                 size_hint_x: 0.165
 
                 Button: 
+                    font_size: str(0.01875 * app.width) + 'sp'
                     text: 'Home'
                     on_press: root.home()
 
                 Button: 
+                    font_size: str(0.01875 * app.width) + 'sp'
                     text: 'Y-Home, X-mid'
                     on_press: root.y_home_x_mid()
 
@@ -74,27 +74,31 @@ Builder.load_string(
                         hint_text: "Y"
                         valign: 'middle'
                         halign: 'center'
-                        font_size: '24sp'
+                        font_size: str(0.03*app.width) + 'sp'
                         text_size: self.size
                         markup: True
                         multiline: False
                         input_filter: 'int'
 
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         text: "Set"
                         on_press: root.set_y_steps()
 
                 Button:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     id: y_pos_label
                     text: "G91 G0 Y1636.6"
                     on_press: root.Y_plus()
 
                 Button:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     id: y_neg_label
                     text: "G91 G0 Y-1636.6"
                     on_press: root.Y_minus()
 
                 Button:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     text: "Factory Settings"
                     on_press: root.go_back()
 
@@ -115,16 +119,19 @@ Builder.load_string(
 
 
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         id: x_pos_label
                         text: "G91 G0 X1150.3"
                         on_press: root.X_plus()
 
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         id: x_neg_label
                         text: "G91 G0 X-1150.3"
                         on_press: root.X_minus()
 
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         text: "G91 G0 X575.0"
                         on_press: root.X_575()
 
@@ -136,13 +143,14 @@ Builder.load_string(
                             hint_text: "X"
                             valign: 'middle'
                             halign: 'center'
-                            font_size: '24sp'
+                            font_size: str(0.03*app.width) + 'sp'
                             text_size: self.size
                             markup: True
                             multiline: False
                             input_filter: 'int'
 
                         Button:
+                            font_size: str(0.01875 * app.width) + 'sp'
                             text: "Set"
                             on_press: root.set_x_steps()
 
@@ -176,22 +184,16 @@ class FinalTestScreen(Screen):
     fast_x_speed = 6000
     fast_y_speed = 6000
     fast_z_speed = 750
-
     feedSpeedJogX = fast_x_speed / 5
     feedSpeedJogY = fast_y_speed / 5
     feedSpeedJogZ = fast_z_speed / 5
-
     y_calibration_scale_factor = 0.0036
     x_calibration_scale_factor = 0.0048
-
     y_board = 1234.5
     x_board = 1234.5
-
     board_type = "pink"
-
     y_pos_command = ""
     y_neg_command = ""
-
     x_pos_command = ""
     x_neg_command = ""
 
@@ -201,8 +203,6 @@ class FinalTestScreen(Screen):
         self.m = kwargs["machine"]
         self.l = kwargs["localization"]
         self.kb = kwargs["keyboard"]
-
-        # WIDGET SETUP
         self.status_container.add_widget(
             widget_status_bar.StatusBar(
                 machine=self.m, screen_manager=self.systemtools_sm.sm
@@ -220,7 +220,6 @@ class FinalTestScreen(Screen):
                 machine=self.m, screen_manager=self.systemtools_sm.sm
             )
         )
-
         self.text_inputs = [self.y_over_count, self.x_over_count]
 
     def on_enter(self):
@@ -243,28 +242,22 @@ class FinalTestScreen(Screen):
 
     def set_board_up(self, board):
         self.board_type = board
-
         if self.board_type == "pink":
             self.y_board = 1636.6
             self.x_board = 1150.3
-
         elif self.board_type == "blue":
             self.y_board = 1636.9
             self.x_board = 1149.1
-
         elif self.board_type == "green":
             self.y_board = 1250
             self.x_board = 1150
-
         elif self.board_type == "red":
             self.y_board = 1250
             self.x_board = 1150
-
         self.y_pos_command = "G91 G0 Y" + str(self.y_board)
         self.y_neg_command = "G91 G0 Y-" + str(self.y_board)
         self.x_pos_command = "G91 G0 X" + str(self.x_board)
         self.x_neg_command = "G91 G0 X-" + str(self.x_board)
-
         self.y_pos_label.text = self.y_pos_command
         self.y_neg_label.text = self.y_neg_command
         self.x_pos_label.text = self.x_pos_command
