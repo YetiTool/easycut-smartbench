@@ -50,7 +50,7 @@ Builder.load_string(
         size_hint: (None, None)
         height: dp(0.114583333333*app.height)
         width: dp(0.06875*app.width)
-        pos: (dp(270), dp(240))
+        pos: (dp(270.0/800.0)*app.width, dp(240.0/480.0)*app.height)
         Image:
             id: stop_img
             source: "./asmcnc/skavaUI/img/stop.png"
@@ -125,7 +125,7 @@ Builder.load_string(
                 height: dp(0.104166666667*app.height)
                 width: dp(1.0*app.width)
                 orientation: 'vertical'
-                pos: (dp(0),dp(130))
+                pos: (dp(0),dp(130.0/480.0)*app.height)
 
                 canvas:
                     Color: 
