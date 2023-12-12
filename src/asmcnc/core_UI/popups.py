@@ -252,7 +252,7 @@ class BasicPopup(Popup):
         if self.popup_type.value is None:
             if self.popup_image is None:
                 return None
-            return Image(source=self.popup_image, allow_stretch=False)
+            return Image(source=self.popup_image, allow_stretch=False, size_hint=self.popup_image_size_hint)
         return Image(source=self.popup_type.value["image"], allow_stretch=False)
 
     def build_buttons(self):

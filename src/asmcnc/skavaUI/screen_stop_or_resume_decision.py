@@ -174,7 +174,7 @@ class StopOrResumeDecisionScreen(Screen):
                 main_string=info,
                 popup_type=PopupType.QR,
                 popup_image=self.qr_source,
-                popup_image_size_hint=(1.5, 1),
+                popup_image_size_hint=(1, 1),
                 popup_width=500,
                 popup_height=440,
                 main_label_size_delta=40,
