@@ -146,12 +146,12 @@ class LiftZOnPauseDecisionScreen(Screen):
         popup_info.PopupInfo(self.sm, self.l, 760, info)
 
     def decision_no(self):
-        if self.m.fw_can_operate_zUp_on_pause():
+        if self.m.fw_can_operate_zUp_on_pause():  # precaution (this screen shouldn't appear if fw not capable)
             self.sm.get_screen("go").lift_z_on_job_pause = False
         self.sm.current = "jobstart_warning"
 
     def decision_yes(self):
-        if self.m.fw_can_operate_zUp_on_pause():
+        if self.m.fw_can_operate_zUp_on_pause():  # precaution (this screen shouldn't appear if fw not capable)
             self.sm.get_screen("go").lift_z_on_job_pause = True
         self.sm.current = "jobstart_warning"
 
