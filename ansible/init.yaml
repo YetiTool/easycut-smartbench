@@ -7,6 +7,10 @@
   tasks:
   - name: Distribution major version
     debug: msg="{{ ansible_distribution_major_version }}"
+  - name: Expand the filesystem
+    shell: 
+      cmd: raspi-config --expand-rootfs
+    ignore_errors: yes
   - name: Copying the setting hostname script
     template:
       src: set-hostname.sh
