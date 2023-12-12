@@ -177,7 +177,7 @@ Builder.load_string(
                                     Color:
                                         rgba: hex('#A7D5FAFF')
                                     Rectangle:
-                                        size: self.parent.parent.size[0], dp(20)
+                                        size: self.parent.parent.size[0], dp(20.0/480.0)*app.height
                                         pos: self.parent.parent.pos[0], self.center_y - dp(3.0/480.0)*app.height
 
                         Label:
