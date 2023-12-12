@@ -268,7 +268,7 @@ class SkavaUI(App):
         ## LOCALIZATION TESTING -----------------------------------------------------------
 
         # test_languages = ["English (GB)", "Deutsch (DE)",  "Français (FR)", "Italiano (IT)", "Suomalainen (FI)", "Polski (PL)", "Dansk (DK)"]
-        #
+
         # def test_cycle(dt):
         #     if self.test_no < len(test_languages):
         #         lang = test_languages[self.test_no]
@@ -283,6 +283,9 @@ class SkavaUI(App):
         #     else:
         #         self.test_no = 0
         #
+        #         self.test_no = self.test_no + 1
+        #     else:
+        #         self.test_no = 0
         # Clock.schedule_interval(test_cycle, 5)
 
 
