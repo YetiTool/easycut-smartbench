@@ -525,6 +525,8 @@ class LobbyScreen(Screen):
         if not sys.platform == "win32":
             self.m.set_led_colour('GREEN')
 
+        self.qr_source = "./asmcnc/skavaUI/img/qr_spindle_overload.png"
+
         info = (
                 self.l.get_bold('Cancel') + '[b]' + " (X)" + '[/b]' + \
                 "\n" + \
