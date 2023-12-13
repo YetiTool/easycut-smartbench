@@ -120,8 +120,29 @@ class BasicPopup(Popup):
                                          button_one_text="Remind me", button_two_text="Ok",
                                          button_one_callback=self.set_trigger_to_true,
                                          button_two_callback=self.set_trigger_to_false)
-
     welcome_popup.open()
+    
+    Example of a QR popup:
+    qr_popup = BasicPopup(
+            sm=self.sm, m=self.m, l=self.l,
+            title='Information',
+            main_string=info,
+            popup_type=PopupType.QR,
+            popup_image=self.qr_source,
+            popup_image_size_hint=(1, 1),
+            popup_width=500,
+            popup_height=440,
+            main_label_size_delta=40,
+            main_label_h_align='left',
+            main_label_padding=(10, 10),
+            main_layout_spacing=10,
+            main_layout_padding=10,
+            button_layout_padding=(150, 20, 150, 0),
+            button_layout_spacing=15,
+            button_one_text='Ok',
+            button_one_background_color=(76 / 255., 175 / 255., 80 / 255., 1.)
+        )
+    qr_popup.open()
     """
 
     def __init__(
