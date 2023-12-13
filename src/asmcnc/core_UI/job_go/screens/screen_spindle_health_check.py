@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Created July 2020
 
@@ -137,19 +138,20 @@ class SpindleHealthCheckActiveScreen(Screen):
         self.l = kwargs["localization"]
         self.seconds = self.max_seconds
         self.cool_down_label.text = (
-            self.l.get_str("Running Spindle motor health check\xe2\x80\xa6")
+            self.l.get_str("Running Spindle motor health check…")
             + "\n"
             + self.l.get_str("SmartBench is raising the Z axis.")
         )
 
     def on_pre_enter(self):
+        # health check if not called from elsewhere
         self.seconds = self.max_seconds
         self.countdown.text = str(self.seconds)
 
     def on_enter(self):
         self.run_spindle_health_check()
         self.cool_down_label.text = (
-            self.l.get_str("Running Spindle motor health check\xe2\x80\xa6")
+            self.l.get_str("Running Spindle motor health check…")
             + "\n"
             + self.l.get_str("SmartBench is raising the Z axis.")
         )
@@ -157,7 +159,7 @@ class SpindleHealthCheckActiveScreen(Screen):
     def start_timer(self):
         self.update_timer_event = Clock.schedule_interval(self.update_timer, 1)
         self.cool_down_label.text = self.l.get_str(
-            "Running Spindle motor health check\xe2\x80\xa6"
+            "Running Spindle motor health check…"
         )
 
     def exit_screen(self, dt=0):

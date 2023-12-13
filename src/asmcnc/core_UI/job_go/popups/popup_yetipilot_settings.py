@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 @author Letty
 Popup for user to choose YetiPilot profiles
@@ -127,13 +128,11 @@ class PopupYetiPilotSettings(Widget):
         clock_speed_1 = None
         clock_speed_2 = None
         img_path = "./asmcnc/core_UI/job_go/img/"
-        sep_top_img_src = img_path + "yp_settings_sep_top.png"  # unused
         img_1_src = img_path + "yp_setting_1.png"
         img_2_src = img_path + "yp_setting_2.png"
         img_3_src = img_path + "yp_setting_3.png"
         pop_width = 530.0/800*Window.width
         pop_height = 430.0/480*Window.height
-        box_width = 500  # unused
         title_height = 70.0/480*Window.height
         subtitle_height = 50.0/480*Window.height
         vertical_BL_height = pop_height - title_height
@@ -151,22 +150,29 @@ class PopupYetiPilotSettings(Widget):
         subtle_white = [249 / 255.0, 249 / 255.0, 249 / 255.0, 1.0]
         blue = [33 / 255.0, 150 / 255.0, 243 / 255.0, 1.0]
         dark_grey = [51 / 255.0, 51 / 255.0, 51 / 255.0, 1.0]
+        # Title
         title_string = self.l.get_str("YetiPilot Settings")
+        # Body boxlayout
         body_BL = BoxLayout(
             orientation="horizontal", size_hint_y=None, height=body_BL_height
         )
-        left_BL = BoxLayout(orientation="vertical", padding=[10, 10])
+        left_BL = BoxLayout(orientation="vertical", padding=[10.0/800*Window.width, 10.0/480.0*Window.height])
         right_BL = BoxLayout(
             orientation="vertical", size_hint_x=None, width=advice_container_width
         )
+
+        # Close button
         close_string = self.l.get_bold("Ok")
         close_button = CloseButton(
-            text=close_string, markup=True, color=subtle_white, font_size="15sp"
+            text=close_string, markup=True, color=subtle_white, font_size=str(15.0/800.0*Window.width) + "sp"
         )
         close_button_BL = BoxLayout(orientation="horizontal", padding=[160.0/800*Window.width, 0])
         close_button_BL.add_widget(close_button)
 
+        # BODY PRE CUT PROFILES ---------------------------
+
         def build_pre_cut_profiles():
+            # Drop down menus (i.e. actual profile selection)
             left_BL_grid = GridLayout(cols=2, rows=3, cols_minimum=dropdowns_cols_dict)
             optn_img_1 = Image(source=img_1_src)
             optn_img_2 = Image(source=img_2_src)
@@ -182,7 +188,7 @@ class PopupYetiPilotSettings(Widget):
                         + str(step_down_range)
                         + "[/size][/b]"
                     )
-                except:
+                except:  # label doesn't exist yet
                     pass
 
             def get_profile():
@@ -191,6 +197,9 @@ class PopupYetiPilotSettings(Widget):
                 )
                 self.yp.use_profile(chosen_profile)
                 update_step_down(self.yp.get_active_step_down())
+
+            # User chooses material first
+            # If next cutter diameter/type is not available, these selections then clear
 
             def select_material(spinner, val):
                 profiles_filtered_by_material = self.yp.filter_available_profiles(
@@ -302,6 +311,9 @@ class PopupYetiPilotSettings(Widget):
             left_BL_grid.add_widget(optn_img_2)
             left_BL_grid.add_widget(tool_BL)
             left_BL.add_widget(left_BL_grid)
+
+            # Step down advice labels
+
             step_downs_msg_label = Label(
                 text_size=(advice_container_width, body_BL_height * 0.6),
                 markup=True,
@@ -313,6 +325,9 @@ class PopupYetiPilotSettings(Widget):
                 size_hint_y=0.6,
             )
             update_step_down(self.yp.get_active_step_down())
+
+            # Specifically roboto is required here, to line up the text with the image consistently
+
             unexpected_results_string = "[font=Roboto]   (!)  [/font]" + self.l.get_str(
                 "Exceeding this range may produce unexpected results."
             )
@@ -329,6 +344,10 @@ class PopupYetiPilotSettings(Widget):
             )
             right_BL.add_widget(step_downs_msg_label)
             right_BL.add_widget(unexpected_results_label)
+
+            # END OF BODY PRE-CUT PROFILES --------------------------------
+
+        # BODY CUSTOM PROFILES
 
         def start_spindle_health_check():
             self.yp.set_using_advanced_profile(True)
@@ -393,6 +412,9 @@ class PopupYetiPilotSettings(Widget):
             )
         body_BL.add_widget(left_BL)
         body_BL.add_widget(right_BL)
+
+        # Subtitle
+
         subtitle_label = Label(
             size_hint_y=None,
             height=subtitle_height,
@@ -405,6 +427,8 @@ class PopupYetiPilotSettings(Widget):
             color=dark_grey,
             padding=[10.0/800*Window.width, 0],
         )
+
+        # Profile radio buttons
 
         def switch_version(state, instance=None):
             if state:
@@ -489,6 +513,9 @@ class PopupYetiPilotSettings(Widget):
                 )
             )
             AL.add_widget(floating_warning)
+
+        # Create popup & format
+
         self.popup = Popup(
             title=title_string,
             title_color=subtle_white,
