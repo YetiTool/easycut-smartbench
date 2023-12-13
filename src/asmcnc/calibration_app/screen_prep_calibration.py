@@ -124,7 +124,7 @@ Builder.load_string(
                     RstDocument:
                         text: root.preparation_list
                         background_color: hex('#FFFFFF')
-                        base_font_size: str(15.0/800.0*app.width) + 'sp'
+                        base_font_size: str(31.0/800.0*app.width) + 'sp'
 
             BoxLayout:
                 orientation: 'vertical'
