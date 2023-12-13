@@ -46,6 +46,7 @@ Builder.load_string(
 
                 TextInput:
                     id: x_threshold_input
+                    font_size: str(32.0 / 1280 * app.width) + 'sp'
                     input_filter: 'int'
                     multiline: False
 
@@ -78,6 +79,7 @@ Builder.load_string(
 
                 TextInput:
                     id: y_threshold_input
+                    font_size: str(32.0 / 1280 * app.width) + 'sp'
                     input_filter: 'int'
                     multiline: False
 
@@ -110,6 +112,7 @@ Builder.load_string(
 
                 TextInput:
                     id: z_threshold_input
+                    font_size: str(32.0 / 1280 * app.width) + 'sp'
                     input_filter: 'int'
                     multiline: False
 
