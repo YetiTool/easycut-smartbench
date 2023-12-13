@@ -107,8 +107,8 @@ Builder.load_string(
     FloatLayout:
         Image:
             id: camera_img
-            x: 660
-            y: 321.60
+            x: 660.0 / 800 * app.width 
+            y: 321.60 / 480 * app.height
             size_hint: None, None
             height: dp(100.0/480.0)*app.height
             width: 0.15*app.width
@@ -129,7 +129,7 @@ Builder.load_string(
 
 class AlarmScreen3(Screen):
     for_support = True
-    default_font_size = 30
+    default_font_size = 30.0 / 800.0 * Window.width
 
     def __init__(self, **kwargs):
         super(AlarmScreen3, self).__init__(**kwargs)
