@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from kivy.core.window import Window
 
 """
@@ -367,7 +368,7 @@ class SWUpdateScreen(Screen):
     wifi_warning = "./asmcnc/apps/SWupdater_app/img/wifi_warning.png"
     usb_on = "./asmcnc/apps/SWupdater_app/img/USB_on.png"
     usb_off = "./asmcnc/apps/SWupdater_app/img/USB_off.png"
-    default_font_size = 30
+    default_font_size = 30.0 / 800.0 * Window.width
     poll_USB = None
     poll_wifi = None
 
