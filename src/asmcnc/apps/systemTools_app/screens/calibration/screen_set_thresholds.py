@@ -1,6 +1,5 @@
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
-
 from asmcnc.apps.systemTools_app.screens.popup_system import (
     PopupConfirmStoreCurrentValues,
 )
@@ -32,101 +31,124 @@ Builder.load_string(
         BoxLayout:
             size_hint_y: 5
             orientation: 'vertical'
-            padding: dp(30)
-            spacing: dp(30)
+            padding:[dp(0.0375)*app.width, dp(0.0625)*app.height]
+            spacing:dp(0.0625)*app.height
 
             GridLayout:
                 size_hint_y: 1.5
                 cols: 7
                 rows: 3
-                spacing: dp(10)
+                spacing:dp(0.0125)*app.width
 
                 Label:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     text: 'X:'
 
                 TextInput:
                     id: x_threshold_input
+                    font_size: str(32.0 / 1280 * app.width) + 'sp'
                     input_filter: 'int'
                     multiline: False
 
                 Button:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     text: 'Set'
                     on_press: root.set_threshold('X', x_threshold_input.text)
 
                 Label:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     text: 'Stored:'
 
                 Label:
                     id: x_stored_threshold
+                    font_size: str(0.01875 * app.width) + 'sp'                    
                     text: '?'
 
                 Label:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     text: 'Set:'
 
                 Label:
                     id: x_set_threshold
+                    font_size: str(0.01875 * app.width) + 'sp'
                     text: ''
 
                 Label:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     text: 'Y:'
 
                 TextInput:
                     id: y_threshold_input
+                    font_size: str(32.0 / 1280 * app.width) + 'sp'
                     input_filter: 'int'
                     multiline: False
 
                 Button:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     text: 'Set'
                     on_press: root.set_threshold('Y', y_threshold_input.text)
 
                 Label:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     text: 'Stored:'
 
                 Label:
                     id: y_stored_threshold
+                    font_size: str(0.01875 * app.width) + 'sp'
                     text: '?'
 
                 Label:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     text: 'Set:'
 
                 Label:
                     id: y_set_threshold
+                    font_size: str(0.01875 * app.width) + 'sp'
                     text: ''
 
                 Label:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     text: 'Z:'
 
                 TextInput:
                     id: z_threshold_input
+                    font_size: str(32.0 / 1280 * app.width) + 'sp'
                     input_filter: 'int'
                     multiline: False
 
                 Button:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     text: 'Set'
                     on_press: root.set_threshold('Z', z_threshold_input.text)
 
                 Label:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     text: 'Stored:'
 
                 Label:
                     id: z_stored_threshold
+                    font_size: str(0.01875 * app.width) + 'sp'
                     text: '?'
 
                 Label:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     text: 'Set:'
 
                 Label:
                     id: z_set_threshold
+                    font_size: str(0.01875 * app.width) + 'sp'
                     text: ''
 
             BoxLayout:
                 orientation: 'vertical'
 
                 Button:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     text: 'Store params'
                     on_press: root.store_parameters()
 
         Button:
+            font_size: str(0.01875 * app.width) + 'sp'
             text: 'Factory settings'
             on_press: root.back_to_fac_settings()
 
@@ -137,12 +159,10 @@ Builder.load_string(
 class SetThresholdsScreen(Screen):
     def __init__(self, **kwargs):
         super(SetThresholdsScreen, self).__init__(**kwargs)
-
         self.systemtools_sm = kwargs["systemtools"]
         self.m = kwargs["m"]
         self.l = kwargs["l"]
         self.kb = kwargs["keyboard"]
-
         self.text_inputs = [
             self.x_threshold_input,
             self.y_threshold_input,
