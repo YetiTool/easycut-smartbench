@@ -77,11 +77,13 @@ class BasicPopup(Popup):
     main_layout_padding: padding of main layout
     main_layout_spacing: spacing of main layout
     main_label_size_delta: how much to reduce the width of the main label by compared to the popup width
+    main_label_h_align: horizontal alignment of main label
     button_layout_padding: padding of button layout
     button_layout_spacing: spacing of button layout
     popup_width: width of popup, default 300
     popup_height: height of popup, default 350
     popup_image: image to be used in popup, default None (uses popup_type's image)
+    popup_image_size_hint: size hint of popup image, default None
     button_one_text: text to be used in button one, default "Ok"
     button_one_callback: callback to be used when button one is pressed, default None
     button_one_background_color: background color to be used for button one, default None
