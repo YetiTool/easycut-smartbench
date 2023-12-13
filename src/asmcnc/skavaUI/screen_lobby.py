@@ -525,6 +525,43 @@ class LobbyScreen(Screen):
         if not sys.platform == "win32":
             self.m.set_led_colour('GREEN')
 
+        info = (
+                self.l.get_bold('Cancel') + '[b]' + " (X)" + '[/b]' + \
+                "\n" + \
+                self.l.get_str("Pressing cancel will cancel the job.") + \
+                "\n\n" + \
+                self.l.get_bold('Resume') + '[b]' + " (>)" + '[/b]' + \
+                "\n" + \
+                self.l.get_str("Pressing resume will continue the job from the point at which it was paused.")
+        )
+
+        info += (
+                "\n\n" + \
+                self.l.get_bold('Scan the QR code to learn more about this error.') + \
+                "\n" + \
+                self.l.get_bold("Or visit <URL>").replace('<URL>', 'www.yetitool.com/support > Knowledge Base')
+        )
+
+        qr_popup = BasicPopup(
+            sm=self.sm, m=self.m, l=self.l,
+            title='',
+            main_string=info,
+            popup_type=PopupType.QR,
+            popup_image=self.qr_source,
+            popup_image_size_hint=(1, 1),
+            popup_width=500,
+            popup_height=440,
+            main_label_size_delta=40,
+            main_label_padding=(10, 10),
+            main_layout_spacing=10,
+            main_layout_padding=10,
+            button_layout_padding=(150, 20, 150, 0),
+            button_layout_spacing=15,
+            button_one_text='Ok',
+            button_one_background_color=(76 / 255., 175 / 255., 80 / 255., 1.)
+        )
+        qr_popup.open()
+
         # Tell user to update if update is available
         if self.trigger_update_popup:
             popup_info.PopupInfo(self.sm, self.l, 450, self.update_message)

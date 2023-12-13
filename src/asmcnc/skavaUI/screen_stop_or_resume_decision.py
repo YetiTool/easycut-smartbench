@@ -157,7 +157,7 @@ class StopOrResumeDecisionScreen(Screen):
             self.l.get_str("Pressing resume will continue the job from the point at which it was paused.")
         )
 
-        if self.reason_for_pause != 'job_pause':
+        if self.reason_for_pause == 'job_pause':
             popup_info.PopupInfo(self.sm, self.l, 500, info)
 
         else:
