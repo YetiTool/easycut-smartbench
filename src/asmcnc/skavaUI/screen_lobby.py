@@ -546,7 +546,7 @@ class LobbyScreen(Screen):
 
         qr_popup = BasicPopup(
             sm=self.sm, m=self.m, l=self.l,
-            title='',
+            title='Information',
             main_string=info,
             popup_type=PopupType.QR,
             popup_image=self.qr_source,
@@ -554,6 +554,7 @@ class LobbyScreen(Screen):
             popup_width=500,
             popup_height=440,
             main_label_size_delta=40,
+            main_label_h_align='left',
             main_label_padding=(10, 10),
             main_layout_spacing=10,
             main_layout_padding=10,

@@ -144,6 +144,7 @@ class BasicPopup(Popup):
         button_two_text=None,
         button_two_callback=None,
         button_two_background_color=None,
+        main_label_h_align="center",
         **kwargs
     ):
         super(BasicPopup, self).__init__(**kwargs)
@@ -165,6 +166,7 @@ class BasicPopup(Popup):
         self.main_label_padding = main_label_padding
         self.main_layout_padding = main_layout_padding
         self.main_label_size_delta = main_label_size_delta
+        self.main_label_h_align = main_label_h_align
         self.button_layout_padding = button_layout_padding
         self.button_layout_spacing = button_layout_spacing
         self.main_layout_spacing = main_layout_spacing
@@ -203,7 +205,7 @@ class BasicPopup(Popup):
         self.main_label = Label(
             size_hint_y=2,
             text_size=(text_size_x, None),
-            halign="center",
+            halign=self.main_label_h_align,
             valign="middle",
             text=self.l.get_str(self.main_string),
             color=(0, 0, 0, 1),
