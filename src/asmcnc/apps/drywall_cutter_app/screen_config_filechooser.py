@@ -14,7 +14,7 @@ import json
 import kivy
 from chardet import detect
 from kivy.lang import Builder
-from kivy.properties import ObjectProperty, StringProperty  # @UnresolvedImport
+from kivy.properties import ObjectProperty, StringProperty
 from kivy.uix.screenmanager import Screen
 
 from asmcnc.comms import usb_storage
