@@ -2,20 +2,10 @@
 Created on 1 Feb 2018
 @author: Ed
 """
-
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import (
-    ObjectProperty,
-    ListProperty,
-    NumericProperty,
-)  # @UnresolvedImport
-from kivy.uix.widget import Widget
-from kivy.base import runTouchApp
 from kivy.clock import Clock
-
+from kivy.lang import Builder
+from kivy.properties import ObjectProperty, NumericProperty
+from kivy.uix.widget import Widget
 
 Builder.load_string(
     """
@@ -33,16 +23,17 @@ Builder.load_string(
         size: self.parent.size
         pos: self.parent.pos      
 
-        spacing: 00
+        spacing:0.0*app.height
         
         orientation: "vertical"
         
         Button:
+            font_size: str(0.01875 * app.width) + 'sp'
             id: up_5
             on_press: root.speed_up()
             background_color: 1, 1, 1, 0 
             BoxLayout:
-                padding: 2
+                padding:[dp(0.0025)*app.width, dp(0.00416666666667)*app.height]
                 size: self.parent.size
                 pos: self.parent.pos      
                 Image:
@@ -57,6 +48,7 @@ Builder.load_string(
             size: self.parent.size
             pos: self.parent.pos  
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 id: norm_button
                 on_press: root.speed_norm()
                 background_color: 1, 1, 1, 0 
@@ -68,17 +60,19 @@ Builder.load_string(
                 size: self.parent.size
                 allow_stretch: True  
             Label:
+                font_size: str(0.01875 * app.width) + 'sp'
                 id: speed_rate_label
                 pos_hint: {'center_x':0.5, 'center_y': .5}
                 size: self.parent.size
                 text: "100%"           
         
         Button:
+            font_size: str(0.01875 * app.width) + 'sp'
             id: down_5
             on_press: root.speed_down()
             background_color: 1, 1, 1, 0 
             BoxLayout:
-                padding: 2
+                padding:[dp(0.0025)*app.width, dp(0.00416666666667)*app.height]
                 size: self.parent.size
                 pos: self.parent.pos      
                 Image:
@@ -92,7 +86,7 @@ Builder.load_string(
             id: spindle_rpm
             size_hint_y: 0.22
             text: '0'
-            font_size: '16px' 
+            font_size: str(0.02*app.width) + 'px' 
             valign: 'middle'
             halign: 'center'
             size:self.texture_size
@@ -101,7 +95,7 @@ Builder.load_string(
         Label:
             size_hint_y: 0.15
             text: 'RPM'
-            font_size: '12px' 
+            font_size: str(0.015*app.width) + 'px' 
             valign: 'middle'
             halign: 'center'
             size:self.texture_size
@@ -114,7 +108,6 @@ Builder.load_string(
 class SpeedOverride(Widget):
     speed_override_percentage = NumericProperty()
     speed_rate_label = ObjectProperty()
-
     enable_button_time = 0.36
 
     def __init__(self, **kwargs):
@@ -133,12 +126,9 @@ class SpeedOverride(Widget):
     def speed_up(self):
         if self.m.s.speed_override_percentage >= 200:
             return
-
         self.disable_buttons()
-
         for i in range(5):
             Clock.schedule_once(lambda dt: self.m.speed_override_up_1(), 0.06 * i)
-
         Clock.schedule_once(lambda dt: self.db.send_spindle_speed_info(), 1)
         Clock.schedule_once(self.enable_buttons, self.enable_button_time)
 
@@ -150,19 +140,15 @@ class SpeedOverride(Widget):
     def speed_down(self):
         if self.m.s.speed_override_percentage <= 10:
             return
-
         self.disable_buttons()
-
         for i in range(5):
             Clock.schedule_once(lambda dt: self.m.speed_override_down_1(), 0.06 * i)
-
         Clock.schedule_once(lambda dt: self.db.send_spindle_speed_info(), 1)
         Clock.schedule_once(self.enable_buttons, self.enable_button_time)
 
     def disable_buttons(self):
         self.down_5.disabled = True
         self.up_5.disabled = True
-
         try:
             self.sm.get_screen("go").feedOverride.down_5.disabled = True
             self.sm.get_screen("go").feedOverride.up_5.disabled = True
@@ -173,7 +159,6 @@ class SpeedOverride(Widget):
     def enable_buttons(self, dt):
         self.down_5.disabled = False
         self.up_5.disabled = False
-
         try:
             if self.m.s.yp.use_yp:
                 self.sm.get_screen("go").feedOverride.down_5.disabled = True
@@ -188,7 +173,6 @@ class SpeedOverride(Widget):
         self.up_5.disabled = not visible
         self.down_5.disabled = not visible
         self.norm_button.disabled = not visible
-
         if visible:
             self.up_5.opacity = 1
             self.down_5.opacity = 1

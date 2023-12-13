@@ -6,15 +6,11 @@ Created July 2020
 
 Spindle cooldown screen
 """
-
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-import sys, os
-from kivy.clock import Clock
-from datetime import datetime
-
 from math import sqrt, ceil
+
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
 
 Builder.load_string(
     """
@@ -26,11 +22,11 @@ Builder.load_string(
 
     BoxLayout: 
         spacing: 0
-        padding: 20
+        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
         orientation: 'vertical'
         size_hint: (None, None)
-        height: 480
-        width: 800
+        height: 1.0*app.height
+        width: 1.0*app.width
         canvas:
             Color: 
                 rgba: hex('#E5E5E5FF')
@@ -54,7 +50,7 @@ Builder.load_string(
                 size_hint_y: 1
                 color: [0,0,0,1]
                 markup: True
-                font_size: '30px' 
+                font_size: str(0.0375*app.width) + 'px' 
                 valign: 'middle'
                 halign: 'center'
                 size:self.texture_size
@@ -62,21 +58,21 @@ Builder.load_string(
 
             BoxLayout: 
                 spacing: 0
-                padding: [100, 0, 100, 130]
+                padding:[dp(0.125)*app.width, 0, dp(0.125)*app.width, dp(0.270833333333)*app.height]
                 orientation: 'horizontal'          
                 size_hint: (None, None)
-                height: 251
-                width: 800
+                height: dp(251.0/480.0)*app.height
+                width: 1.0*app.width
                 pos: self.parent.pos
 
 
                 BoxLayout: 
                     spacing: 0
-                    padding: [8, 0, 57, 0]
+                    padding:[dp(0.01)*app.width, 0, dp(0.07125)*app.width, 0]
                     orientation: 'horizontal'          
                     size_hint: (None, None)
-                    height: 121
-                    width: 180
+                    height: dp(121.0/480.0)*app.height
+                    width: 0.225*app.width
                     Image:
                         id: spindle_icon
                         source: "./asmcnc/core_UI/job_go/img/spindle_check.png"
@@ -85,20 +81,20 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
                         size_hint: (None, None)
-                        height: dp(121)
-                        width: dp(115) 
+                        height: dp(0.252083333333*app.height)
+                        width: dp(0.14375*app.width) 
 
                 BoxLayout: 
                     spacing: 0
-                    padding: [0, 0, 0, 0]
+                    padding:[0, 0, 0, 0]
                     orientation: 'horizontal'          
                     size_hint: (None, None)
-                    height: 121
-                    width: 200
+                    height: dp(121.0/480.0)*app.height
+                    width: 0.25*app.width
                     Label:
                         id: countdown
                         markup: True
-                        font_size: '100px' 
+                        font_size: str(0.125*app.width) + 'px' 
                         valign: 'middle'
                         halign: 'center'
                         size:self.texture_size
@@ -108,11 +104,11 @@ Builder.load_string(
 
                 BoxLayout: 
                     spacing: 0
-                    padding: [70, 0, 10, 3]
+                    padding:[dp(0.0875)*app.width, 0, dp(0.0125)*app.width, dp(0.00625)*app.height]
                     orientation: 'horizontal'          
                     size_hint: (None, None)
-                    height: 121
-                    width: 180
+                    height: dp(121.0/480.0)*app.height
+                    width: 0.225*app.width
                     Image:
                         id: countdown_icon
                         source: "./asmcnc/skavaUI/img/countdown_big.png"
@@ -121,8 +117,8 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
                         size_hint: (None, None)
-                        height: dp(118)
-                        width: dp(100) 
+                        height: dp(0.245833333333*app.height)
+                        width: dp(0.125*app.width) 
 
 
 """
@@ -141,7 +137,6 @@ class SpindleHealthCheckActiveScreen(Screen):
         self.m = kwargs["machine"]
         self.l = kwargs["localization"]
         self.seconds = self.max_seconds
-
         self.cool_down_label.text = (
             self.l.get_str("Running Spindle motor health check…")
             + "\n"
@@ -176,15 +171,13 @@ class SpindleHealthCheckActiveScreen(Screen):
             self.countdown.text = str(self.seconds)
 
     def on_leave(self):
-        # self.m.spindle_off()
-        # self.m.vac_off()
         if self.update_timer_event != None:
             Clock.unschedule(self.update_timer_event)
         self.seconds = self.max_seconds
         self.countdown.text = str(self.seconds)
 
     passed_spindle_health_check = False
-    spindle_health_check_max_w = 550  # 550
+    spindle_health_check_max_w = 550
     start_after_pass = False
     return_to_advanced_tab = False
 
@@ -196,17 +189,12 @@ class SpindleHealthCheckActiveScreen(Screen):
 
         def pass_test(free_load):
             print("Spindle health check passed - free load: " + str(free_load))
-
             self.m.spindle_health_check_failed = False
             self.m.spindle_health_check_passed = True
-
             self.m.s.yp.set_free_load(free_load)
-
             if self.return_to_advanced_tab and self.sm.has_screen("go"):
                 self.sm.get_screen("go").yp_widget.open_yp_settings()
-
             self.exit_screen()
-
             if (
                 self.sm.has_screen("go")
                 and self.start_after_pass
@@ -217,7 +205,6 @@ class SpindleHealthCheckActiveScreen(Screen):
 
         def show_fail_screen(reason):
             self.m.stop_for_a_stream_pause(reason)
-
             if self.sm.has_screen("go"):
                 self.sm.get_screen("go").raise_pause_screens_if_paused(override=True)
 
@@ -236,14 +223,12 @@ class SpindleHealthCheckActiveScreen(Screen):
                 if average_load != 0
                 else 0
             )
-
             if average_load_w > self.spindle_health_check_max_w:
                 fail_test("spindle_health_check_failed")
                 return
             elif average_load_w == 0:
                 fail_test("yetipilot_spindle_data_loss")
                 return
-
             pass_test(round_up_to_ten(average_load_w))
 
         def stop_test():
@@ -254,7 +239,6 @@ class SpindleHealthCheckActiveScreen(Screen):
             if self.m.smartbench_is_busy():
                 Clock.schedule_once(lambda dt: start_test(), 0.5)
                 return
-
             self.start_timer()
             self.m.s.spindle_health_check = True
             self.m.s.write_command("M3 S24000")
@@ -263,6 +247,5 @@ class SpindleHealthCheckActiveScreen(Screen):
 
         self.m._grbl_soft_reset()
         self.m.resume_from_a_soft_door()
-
         Clock.schedule_once(lambda dt: self.m.zUp(), 1)
         Clock.schedule_once(lambda dt: start_test(), 1)
