@@ -490,7 +490,6 @@ job_cache_dir = './jobCache/'  # where job files are cached for selection (for l
 job_q_dir = './jobQ/'  # where file is copied if to be used next in job
 ftp_file_dir = '/home/sysop/router_ftp'  # Linux location where incoming files are FTP'd to
 
-
 class LobbyScreen(Screen):
     no_preview_found_img_path = './asmcnc/skavaUI/img/image_preview_inverted_large.png'
     trigger_update_popup = False
