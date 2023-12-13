@@ -58,7 +58,7 @@ from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_s
 from asmcnc.skavaUI import screen_door, screen_mstate_warning, screen_serial_failure, screen_squaring_active, screen_jobstart_warning
 from asmcnc.skavaUI import screen_check_job, popup_info
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
-from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety
+from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety, screen_starting_smartbench
 from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1
 from asmcnc.apps.systemTools_app.screens.calibration import screen_stall_jig
 from asmcnc.apps.upgrade_app import screen_upgrade, screen_upgrade_successful, screen_already_upgraded
@@ -282,6 +282,12 @@ class ScreenTest(App):
             sm.get_screen('warranty_3').activation_code.text = str(activation_code)
 
             set_up_screens([[screen_rebooting.RebootingScreen, 'rebooting']])
+
+        def starting_smartbench_test():
+            set_up_screens([[screen_home.HomeScreen, 'home'],
+                            [screen_lobby.LobbyScreen, 'lobby']])
+            sm.get_screen('starting_smartbench').next_screen = Mock()
+            sm.current = 'starting_smartbench'
 
         def release_notes_test():
 
@@ -791,7 +797,7 @@ class ScreenTest(App):
 
         # App manager object
         config_flag = False
-        initial_version = 'v2.6.5'
+        initial_version = 'v2.7.0'
         am = app_manager.AppManagerClass(sm, m, sett, l, kb, jd, db, config_flag, initial_version)
 
         # Server connection object
