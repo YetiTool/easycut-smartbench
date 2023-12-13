@@ -126,8 +126,8 @@ Builder.load_string(
                             width: dp(0.06125*app.width)
                             padding:[dp(0.00625)*app.width, dp(0.0729166666667)*app.height, dp(0.01875)*app.width, dp(0.0729166666667)*app.height]
                             Button:
-                                font_size: str(0.01875 * app.width) + 'sp'
                                 id: refresh_button
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 size_hint: (None,None)
                                 height: dp(0.0625*app.height)
                                 width: dp(0.03625*app.width)
@@ -383,10 +383,12 @@ class SWUpdateScreen(Screen):
         self.update_screen_with_latest_version()
 
     def on_enter(self):
+        # Keep tabs on wifi connection
         self.check_wifi_connection(1)
         self.poll_wifi = Clock.schedule_interval(
             self.check_wifi_connection, self.WIFI_CHECK_INTERVAL
         )
+        # Set up and keep tabs on usb connection
         self.usb_stick.enable()
         self.check_USB_status(1)
         self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25)
@@ -483,7 +485,10 @@ class SWUpdateScreen(Screen):
                 )
         else:
             self.latest_software_version_label.text = self.l.get_bold("No WiFi or USB!")
-
+            
+    # Creates a popup message warning the user that the update may take a while and sets the update method as "WiFi"
+    # or "USB" depending on which button was pressed. This function is called from the Builder.load_string when the
+    # buttons are defined
     def prep_for_sw_update(self, update_method):
         self.set.usb_or_wifi = update_method
         message = self.l.get_str(
