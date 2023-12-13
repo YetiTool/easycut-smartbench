@@ -6,15 +6,22 @@ Created July 2020
 
 Spindle cooldown screen
 """
+<<<<<<< HEAD
 
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
+=======
+>>>>>>> master
 from kivy.clock import Clock
-from datetime import datetime
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
 Builder.load_string(
     """
 
@@ -25,11 +32,11 @@ Builder.load_string(
 
     BoxLayout: 
         spacing: 0
-        padding: 20
+        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
         orientation: 'vertical'
         size_hint: (None, None)
-        height: 480
-        width: 800
+        height: dp(1.0)*app.height
+        width: 1.0*app.width
         canvas:
             Color: 
                 rgba: hex('#E5E5E5FF')
@@ -54,7 +61,7 @@ Builder.load_string(
                 # text: 'Cooling down spindle...'
                 color: [0,0,0,1]
                 markup: True
-                font_size: '30px' 
+                font_size: str(0.0375*app.width) + 'px' 
                 valign: 'middle'
                 halign: 'center'
                 size:self.texture_size
@@ -62,21 +69,21 @@ Builder.load_string(
 
             BoxLayout: 
                 spacing: 0
-                padding: [100, 0, 100, 130]
+                padding:[dp(0.125)*app.width, 0, dp(0.125)*app.width, dp(0.270833333333)*app.height]
                 orientation: 'horizontal'          
                 size_hint: (None, None)
-                height: 251
-                width: 800
+                height: dp(251.0/480.0)*app.height
+                width: 1.0*app.width
                 pos: self.parent.pos
 
 
                 BoxLayout: 
                     spacing: 0
-                    padding: [8, 0, 57, 0]
+                    padding:[dp(0.01)*app.width, 0, dp(0.07125)*app.width, 0]
                     orientation: 'horizontal'          
                     size_hint: (None, None)
-                    height: 121
-                    width: 180
+                    height: dp(121.0/480.0)*app.height
+                    width: 0.225*app.width
                     Image:
                         id: spindle_icon
                         source: "./asmcnc/skavaUI/img/spindle_cooldown_on.png"
@@ -85,20 +92,20 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
                         size_hint: (None, None)
-                        height: dp(121)
-                        width: dp(115) 
+                        height: dp(0.252083333333*app.height)
+                        width: dp(0.14375*app.width) 
 
                 BoxLayout: 
                     spacing: 0
-                    padding: [0, 0, 0, 0]
+                    padding:[0, 0, 0, 0]
                     orientation: 'horizontal'          
                     size_hint: (None, None)
-                    height: 121
-                    width: 200
+                    height: dp(121.0/480.0)*app.height
+                    width: 0.25*app.width
                     Label:
                         id: countdown
                         markup: True
-                        font_size: '100px' 
+                        font_size: str(0.125*app.width) + 'px' 
                         valign: 'middle'
                         halign: 'center'
                         size:self.texture_size
@@ -108,11 +115,11 @@ Builder.load_string(
 
                 BoxLayout: 
                     spacing: 0
-                    padding: [70, 0, 10, 3]
+                    padding:[dp(0.0875)*app.width, 0, dp(0.0125)*app.width, dp(0.00625)*app.height]
                     orientation: 'horizontal'          
                     size_hint: (None, None)
-                    height: 121
-                    width: 180
+                    height: dp(121.0/480.0)*app.height
+                    width: 0.225*app.width
                     Image:
                         id: countdown_icon
                         source: "./asmcnc/skavaUI/img/countdown_big.png"
@@ -121,8 +128,8 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
                         size_hint: (None, None)
-                        height: dp(118)
-                        width: dp(100) 
+                        height: dp(0.245833333333*app.height)
+                        width: dp(0.125*app.width) 
 
 
 """
@@ -140,7 +147,10 @@ class SpindleCooldownScreen(Screen):
         self.m = kwargs["machine"]
         self.l = kwargs["localization"]
         self.seconds = self.m.spindle_cooldown_time_seconds
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
         self.cool_down_label.text = self.l.get_str("Cooling down spindle") + "..."
 
     def on_pre_enter(self):

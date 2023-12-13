@@ -4,10 +4,13 @@ Created on 30 June 2021
 
 Screen to select router or CNC stylus tool
 """
+<<<<<<< HEAD
 
 import kivy
+=======
+>>>>>>> master
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import Screen
 
 Builder.load_string(
     """
@@ -27,19 +30,19 @@ Builder.load_string(
 
     BoxLayout:
         orientation: 'vertical'
-        padding: dp(50)
+        padding:[dp(0.0625)*app.width, dp(0.104166666667)*app.height]
 
         # Top text
 
         BoxLayout:
             orientation: 'vertical'
-            padding: [dp(0),dp(36),dp(0),dp(0)]
+            padding:[0, dp(0.075)*app.height, 0, 0]
             
 
             Label:
                 id: question_label
                 markup: True
-                font_size: '28px' 
+                font_size: str(0.035*app.width) + 'px' 
                 valign: 'top'
                 halign: 'center'
                 size:self.texture_size
@@ -50,9 +53,9 @@ Builder.load_string(
 
         BoxLayout:
             orientation: 'horizontal'
-            spacing: dp(44)
+            spacing:dp(0.055)*app.width
             size_hint_y: dp(2.5)
-            padding: [dp(0),dp(0),dp(0),dp(20)]
+            padding:[0, 0, 0, dp(0.0416666666667)*app.height]
 
             # Stylus button
 
@@ -63,7 +66,7 @@ Builder.load_string(
                 valign: 'bottom'
                 halign: 'center'
                 markup: True
-                font_size: '23px'
+                font_size: str(0.02875*app.width) + 'px'
                 text_size: self.size
                 background_normal: "./asmcnc/skavaUI/img/stylus_option.png"
                 padding_y: 30
@@ -78,7 +81,7 @@ Builder.load_string(
                 valign: 'bottom'
                 halign: 'center'
                 markup: True
-                font_size: '23px'
+                font_size: str(0.02875*app.width) + 'px'
                 text_size: self.size
                 background_normal: "./asmcnc/skavaUI/img/router_option.png"
                 padding_y: 30
@@ -96,7 +99,10 @@ class ToolSelectionScreen(Screen):
         self.sm = kwargs["screen_manager"]
         self.m = kwargs["machine"]
         self.l = kwargs["localization"]
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
         self.update_strings()
 
     def router_button_pressed(self):
@@ -108,7 +114,10 @@ class ToolSelectionScreen(Screen):
         self.exit_stylus_router_selection()
 
     def exit_stylus_router_selection(self):
+<<<<<<< HEAD
         # is fw capable of auto Z lift?
+=======
+>>>>>>> master
         if self.m.fw_can_operate_zUp_on_pause():
             if self.m.stylus_router_choice == "stylus":
                 self.sm.get_screen("go").lift_z_on_job_pause = True

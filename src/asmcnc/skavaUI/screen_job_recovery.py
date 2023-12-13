@@ -1,3 +1,4 @@
+from kivy.core.window import Window
 import re
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
@@ -34,7 +35,7 @@ Builder.load_string(
         BoxLayout:
             orientation: 'horizontal'
             size_hint_y: 0.9
-            spacing: dp(15)
+            spacing:dp(0.01875)*app.width
             canvas:
                 Color:
                     rgba: hex('#E2E2E2FF')
@@ -43,16 +44,16 @@ Builder.load_string(
                     pos: self.pos
 
             BoxLayout:
-                padding: [dp(15), dp(15), dp(0), dp(15)]
+                padding:[dp(0.01875)*app.width, dp(0.03125)*app.height, 0, dp(0.03125)*app.height]
 
                 BoxLayout:
                     orientation: 'vertical'
-                    spacing: dp(15)
+                    spacing:dp(0.03125)*app.height
 
                     BoxLayout:
                         orientation: 'vertical'
                         size_hint_y: 3.5
-                        spacing: dp(15)
+                        spacing:dp(0.03125)*app.height
 
                         BoxLayout:
                             orientation: 'vertical'
@@ -62,10 +63,10 @@ Builder.load_string(
                                 text: "Go to line:"
                                 color: hex('#333333FF')
                                 bold: True
-                                font_size: dp(25)
+                                font_size: dp(0.03125*app.width)
 
                             BoxLayout:
-                                padding: [dp(0), dp(4), dp(0), dp(0)]
+                                padding:[0, dp(0.00833333333333)*app.height, 0, 0]
                                 canvas:
                                     Color:
                                         rgba: 1,1,1,1
@@ -75,7 +76,7 @@ Builder.load_string(
 
                                 TextInput:
                                     id: line_input
-                                    font_size: dp(25)
+                                    font_size: dp(0.03125*app.width)
                                     halign: 'center'
                                     input_filter: 'int'
                                     multiline: False
@@ -85,10 +86,11 @@ Builder.load_string(
                         BoxLayout:
                             orientation: 'vertical'
                             size_hint_y: 2
-                            padding: [dp(50), dp(0)]
-                            spacing: dp(10)
+                            padding:[dp(0.0625)*app.width, 0]
+                            spacing:dp(0.0208333333333)*app.height
 
                             Button:
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 background_color: [0,0,0,0]
                                 on_press:
                                     root.start_scrolling_up()
@@ -108,6 +110,7 @@ Builder.load_string(
                                         allow_stretch: True
 
                             Button:
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 background_color: [0,0,0,0]
                                 on_press:
                                     root.start_scrolling_down()
@@ -131,7 +134,7 @@ Builder.load_string(
                         valign: "middle"
                         halign: "center"
                         markup: True
-                        font_size: dp(30)
+                        font_size: dp(0.0375*app.width)
                         text_size: self.size[0] - dp(20), self.size[1]
                         text: "GO XY"
                         background_normal: "./asmcnc/skavaUI/img/blank_small_button.png"
@@ -140,17 +143,17 @@ Builder.load_string(
 
             BoxLayout:
                 size_hint_x: 2
-                padding: [dp(0), dp(15)]
+                padding:[0, dp(0.03125)*app.height]
 
                 BoxLayout:
                     orientation: 'vertical'
-                    spacing: dp(15)
+                    spacing:dp(0.03125)*app.height
 
                     BoxLayout:
                         id: gcode_container
                         orientation: 'vertical'
                         size_hint_y: 3.5
-                        padding: [dp(12), dp(12), dp(12), dp(0)]
+                        padding:[dp(0.015)*app.width, dp(0.025)*app.height, dp(0.015)*app.width, 0]
                         canvas:
                             Color:
                                 rgba: 1,1,1,1
@@ -162,7 +165,7 @@ Builder.load_string(
                             Label:
                                 id: gcode_label
                                 color: 0,0,0,1
-                                font_size: dp(16)
+                                font_size: dp(0.02*app.width)
                                 halign: "left"
                                 valign: "top"
                                 text_size: self.size[0] * 2, self.size[1]
@@ -174,14 +177,14 @@ Builder.load_string(
                                     Color:
                                         rgba: hex('#A7D5FAFF')
                                     Rectangle:
-                                        size: self.parent.parent.size[0], dp(20)
-                                        pos: self.parent.parent.pos[0], self.center_y - dp(3)
+                                        size: self.parent.parent.size[0], dp(20.0/480.0)*app.height
+                                        pos: self.parent.parent.pos[0], self.center_y - dp(3.0/480.0)*app.height
 
                         Label:
                             id: stopped_on_label
                             size_hint_y: 0.13
                             color: 1,0,0,1
-                            font_size: dp(16)
+                            font_size: dp(0.02*app.width)
                             halign: "left"
                             valign: "top"
                             text_size: self.size
@@ -190,8 +193,8 @@ Builder.load_string(
 
                     BoxLayout:
                         orientation: 'vertical'
-                        padding: dp(12)
-                        spacing: dp(7)
+                        padding:[dp(0.015)*app.width, dp(0.025)*app.height]
+                        spacing:dp(0.0145833333333)*app.height
                         canvas:
                             Color:
                                 rgba: 1,1,1,1
@@ -204,7 +207,7 @@ Builder.load_string(
                             text: "Job resumes at:"
                             color: hex('#333333FF')
                             bold: True
-                            font_size: dp(15)
+                            font_size: dp(0.01875*app.width)
                             halign: 'left'
                             valign: 'middle'
                             text_size: self.size
@@ -213,7 +216,7 @@ Builder.load_string(
                             id: pos_label
                             text: "wX: | wY: | wZ:"
                             color: 0,0,0,1
-                            font_size: dp(16)
+                            font_size: dp(0.02*app.width)
                             halign: 'left'
                             valign: 'middle'
                             text_size: self.size
@@ -222,22 +225,23 @@ Builder.load_string(
                             id: speed_label
                             text: "F: | S:"
                             color: 0,0,0,1
-                            font_size: dp(16)
+                            font_size: dp(0.02*app.width)
                             halign: 'left'
                             valign: 'middle'
                             text_size: self.size
 
             BoxLayout:
                 orientation: 'vertical'
-                spacing: dp(15)
+                spacing:dp(0.03125)*app.height
 
                 BoxLayout:
                     orientation: 'horizontal'
-                    spacing: dp(25)
+                    spacing:dp(0.03125)*app.width
 
                     BoxLayout:
-                        padding: [dp(15), dp(15), dp(0), dp(15)]
+                        padding:[dp(0.01875)*app.width, dp(0.03125)*app.height, 0, dp(0.03125)*app.height]
                         Button:
+                            font_size: str(0.01875 * app.width) + 'sp'
                             background_color: [0,0,0,0]
                             on_press: root.get_info()
                             BoxLayout:
@@ -251,11 +255,12 @@ Builder.load_string(
                                     allow_stretch: True   
 
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         background_color: [0,0,0,0]
                         on_press: root.back_to_home()
                         BoxLayout:
                             size: self.parent.size
-                            pos: self.parent.pos[0], self.parent.pos[1] + dp(1)
+                            pos: self.parent.pos[0], self.parent.pos[1] + dp(1.0/480.0)*app.height
                             Image:
                                 source: "./asmcnc/apps/shapeCutter_app/img/exit_cross.png"
                                 center_x: self.parent.center_x
@@ -266,8 +271,8 @@ Builder.load_string(
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_y: 4
-                    padding: [dp(0), dp(0), dp(15), dp(15)]
-                    spacing: dp(15)
+                    padding:[0, 0, dp(0.01875)*app.width, dp(0.03125)*app.height]
+                    spacing:dp(0.03125)*app.height
 
                     BoxLayout:
                         id: z_move_container
@@ -281,14 +286,15 @@ Builder.load_string(
 
                     BoxLayout:
 
-                        padding: [(self.size[0] - dp(88)) / 2, (self.size[1] - dp(67)) / 2]
+                        padding:[0, dp(0.00208333333333)*app.height]
 
                         Button:
+                            font_size: str(0.01875 * app.width) + 'sp'
                             background_color: [0,0,0,0]
                             on_press: root.next_screen()
                             size_hint: (None, None)
-                            height: dp(67)
-                            width: dp(88)
+                            height: dp(0.139583333333*app.height)
+                            width: dp(0.11*app.width)
                             BoxLayout:
                                 size: self.parent.size
                                 pos: self.parent.pos
@@ -315,7 +321,7 @@ Builder.load_string(
             Label:
                 id: arc_movement_error_label
                 color: 1,0,0,1
-                font_size: dp(14)
+                font_size: dp(0.0175*app.width)
                 halign: "left"
                 valign: "top"
                 text_size: self.size
@@ -330,18 +336,21 @@ class JobRecoveryScreen(Screen):
     initial_line_index = 0
     selected_line_index = 0
     display_list = []
-
     scroll_up_event = None
     scroll_down_event = None
 
     def __init__(self, **kwargs):
         super(JobRecoveryScreen, self).__init__(**kwargs)
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
         self.sm = kwargs["screen_manager"]
         self.m = kwargs["machine"]
         self.jd = kwargs["job"]
         self.l = kwargs["localization"]
         self.kb = kwargs["keyboard"]
+<<<<<<< HEAD
 
         self.line_input.bind(text=self.jump_to_line)
 
@@ -355,8 +364,16 @@ class JobRecoveryScreen(Screen):
             widget_z_move_recovery.ZMoveRecovery(machine=self.m, screen_manager=self.sm)
         )
 
+=======
+        self.line_input.bind(text=self.jump_to_line)
+        self.status_container.add_widget(
+            widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
+        )
+        self.z_move_container.add_widget(
+            widget_z_move_recovery.ZMoveRecovery(machine=self.m, screen_manager=self.sm)
+        )
+>>>>>>> master
         self.update_strings()
-        # Add the IDs of ALL the TextInputs on this screen
         self.text_inputs = [self.line_input]
 
     def on_touch(self):
@@ -365,23 +382,33 @@ class JobRecoveryScreen(Screen):
 
     def on_pre_enter(self):
         self.m.set_led_colour("WHITE")
+<<<<<<< HEAD
         # Force gcode label font to show roboto because korean font has different spacing
         self.gcode_label.font_name = "Roboto"
 
+=======
+        self.gcode_label.font_name = "Roboto"
+>>>>>>> master
         if self.jd.job_recovery_selected_line == -1:
             self.line_input.text = ""
-            # Take away 1 so that user can't move to the position that was the target during cancellation
             self.initial_line_index = self.jd.job_recovery_cancel_line - 1
             self.selected_line_index = self.initial_line_index
             self.display_list = (
                 ["" for _ in range(6)]
                 + [
+<<<<<<< HEAD
                     str(i) + ": " + self.jd.job_gcode[i]
+=======
+                    (str(i) + ": " + self.jd.job_gcode[i])
+>>>>>>> master
                     for i in range(self.initial_line_index + 1)
                 ]
                 + ["" for _ in range(6)]
             )
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
             self.stopped_on_label.text = self.l.get_str(
                 "Job failed during line N"
             ).replace("N", str(self.initial_line_index))
@@ -391,8 +418,6 @@ class JobRecoveryScreen(Screen):
                 + "[/color]"
             )
             self.update_display()
-
-        # If recovery is showing line 0, show the error message explaining why this may have happened
         if self.initial_line_index == 0:
             self.arc_movement_error_label.opacity = 1
         else:
@@ -403,11 +428,7 @@ class JobRecoveryScreen(Screen):
 
     def start_scrolling_up(self):
         self.scrolling_up = True
-
-        # Do one scroll immediately
         self.do_scroll_up()
-
-        # Start scrolling after a delay
         self.scroll_up_event = Clock.schedule_once(self.scroll_up, 0.5)
 
     def do_scroll_up(self):
@@ -419,8 +440,6 @@ class JobRecoveryScreen(Screen):
     def scroll_up(self, dt=0):
         if self.scrolling_up:
             self.do_scroll_up()
-
-            # Keep scrolling until button released
             self.scroll_up_event = Clock.schedule_once(self.scroll_up, 0.03)
 
     def stop_scrolling_up(self):
@@ -430,11 +449,7 @@ class JobRecoveryScreen(Screen):
 
     def start_scrolling_down(self):
         self.scrolling_down = True
-
-        # Do one scroll immediately
         self.do_scroll_down()
-
-        # Start scrolling after a delay
         self.scroll_down_event = Clock.schedule_once(self.scroll_down, 0.5)
 
     def do_scroll_down(self):
@@ -446,8 +461,6 @@ class JobRecoveryScreen(Screen):
     def scroll_down(self, dt=0):
         if self.scrolling_down:
             self.do_scroll_down()
-
-            # Keep scrolling until button released
             self.scroll_down_event = Clock.schedule_once(self.scroll_down, 0.03)
 
     def stop_scrolling_down(self):
@@ -458,14 +471,11 @@ class JobRecoveryScreen(Screen):
     def jump_to_line(self, instance, value):
         if value:
             if value.startswith("-"):
-                # Stop user inputting negative values
                 instance.text = ""
             else:
-                # If user inputs values outside of range, just show max line
                 self.selected_line_index = min(int(value), self.initial_line_index)
                 self.update_display()
         else:
-            # If user clears input, return to initial line
             self.selected_line_index = self.initial_line_index
             self.update_display()
 
@@ -473,8 +483,11 @@ class JobRecoveryScreen(Screen):
         self.gcode_label.text = "\n".join(
             self.display_list[self.selected_line_index : self.selected_line_index + 13]
         )
+<<<<<<< HEAD
 
         # Recover most recent spindle speed
+=======
+>>>>>>> master
         spindle_speed_line = next(
             (
                 s
@@ -492,8 +505,11 @@ class JobRecoveryScreen(Screen):
                 self.speed = self.l.get_str("Undefined")
         except:
             self.speed = self.l.get_str("Undefined")
+<<<<<<< HEAD
 
         # Recover most recent feedrate
+=======
+>>>>>>> master
         feedrate_line = next(
             (
                 s
@@ -505,14 +521,21 @@ class JobRecoveryScreen(Screen):
         try:
             if feedrate_line:
                 self.feed = re.match(
+<<<<<<< HEAD
                     "\d+(\.\d+)?", feedrate_line[feedrate_line.find("F") + 1 :]
+=======
+                    "\\d+(\\.\\d+)?", feedrate_line[feedrate_line.find("F") + 1 :]
+>>>>>>> master
                 ).group()
             else:
                 self.feed = self.l.get_str("Undefined")
         except:
             self.feed = self.l.get_str("Undefined")
+<<<<<<< HEAD
 
         # Recover most recent position
+=======
+>>>>>>> master
         x_line = next(
             (
                 s
@@ -561,7 +584,10 @@ class JobRecoveryScreen(Screen):
             )
         else:
             self.pos_z = 0.0
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
         self.pos_label.text = "wX: %s | wY: %s | wZ: %s" % (
             str(self.pos_x),
             str(self.pos_y),
@@ -612,20 +638,31 @@ class JobRecoveryScreen(Screen):
                 "SmartBench does not yet support recovery of jobs that contain incremental or arc distance modes, or less commonly used G-Codes."
             )
         )
+<<<<<<< HEAD
 
         popup_info.PopupScrollableInfo(self.sm, self.l, 760, info)
 
     def go_xy(self):
         # Pick min out of safe z height and limit_switch_safety_distance, in case positive value is calculated, which causes errors
+=======
+        popup_info.PopupScrollableInfo(self.sm, self.l, 760, info)
+
+    def go_xy(self):
+>>>>>>> master
         z_safe_height = min(
             self.m.z_wco() + self.sm.get_screen("home").job_box.range_z[1],
             -self.m.limit_switch_safety_distance,
         )
+<<<<<<< HEAD
 
         # If Z is below safe height, then raise it up
         if self.m.mpos_z() < z_safe_height:
             self.m.s.write_command("G53 G0 Z%s F750" % z_safe_height)
 
+=======
+        if self.m.mpos_z() < z_safe_height:
+            self.m.s.write_command("G53 G0 Z%s F750" % z_safe_height)
+>>>>>>> master
         self.m.s.write_command("G90 G0 X%s Y%s" % (self.pos_x, self.pos_y))
 
     def back_to_home(self):
@@ -647,14 +684,18 @@ class JobRecoveryScreen(Screen):
 
     def wait_for_idle(self, dt):
         if self.m.state().startswith("Idle"):
+<<<<<<< HEAD
             self.m.get_grbl_status()  # In preparation for nudge screen
             Clock.schedule_once(
                 self.proceed_to_next_screen, 0.4
             )  # Give command above time
+=======
+            self.m.get_grbl_status()
+            Clock.schedule_once(self.proceed_to_next_screen, 0.4)
+>>>>>>> master
         elif self.m.state().startswith("Run"):
             Clock.schedule_once(self.wait_for_idle, 0.4)
         else:
-            # If alarm or door state is entered, hide wait popup and don't proceed
             self.wait_popup.popup.dismiss()
 
     def proceed_to_next_screen(self, dt):
@@ -666,7 +707,10 @@ class JobRecoveryScreen(Screen):
         self.line_input.hint_text = self.l.get_str("Enter #")
         self.go_xy_button.text = self.l.get_str("GO XY")
         self.pos_label_header.text = self.l.get_str("Job resumes at:")
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
         self.arc_movement_error_label.text = (
             self.l.get_str(
                 "It was not possible to recover the file any later than the beginning of the job."
@@ -676,13 +720,17 @@ class JobRecoveryScreen(Screen):
                 "Arc movements (G2 and G3) may cause the software to think that the job failed earlier than it did."
             )
         )
-
         self.update_font_size(self.go_xy_button)
 
     def update_font_size(self, value):
         text_length = self.l.get_text_length(value.text)
-
         if text_length > 10:
+<<<<<<< HEAD
             value.font_size = 25
         else:
             value.font_size = 30
+=======
+            value.font_size = 0.03125 * Window.width
+        else:
+            value.font_size = 0.0375 * Window.width
+>>>>>>> master

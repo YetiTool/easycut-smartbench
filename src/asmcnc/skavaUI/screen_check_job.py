@@ -6,6 +6,7 @@ Created on 25 Feb 2019
 
 This screen checks the users job, and allows them to review any errors 
 """
+<<<<<<< HEAD
 
 import kivy
 import docutils
@@ -22,19 +23,21 @@ from kivy.properties import (
 from kivy.uix.widget import Widget
 from kivy.uix.progressbar import ProgressBar
 from kivy.uix.scrollview import ScrollView
+=======
+from datetime import datetime
+from functools import partial
+>>>>>>> master
 
 from kivy.clock import Clock
+from kivy.core.window import Window
+from kivy.lang import Builder
+from kivy.properties import (
+    StringProperty,
+)
+from kivy.uix.screenmanager import Screen
 
 from asmcnc.geometry import job_envelope
 from asmcnc.skavaUI import widget_gcode_view
-
-
-import sys, os
-from os.path import expanduser
-from shutil import copy
-from datetime import datetime
-from functools import partial
-import re
 
 ERROR_CODES = {
     "error:1": "G-code words consist of a letter and a value. Letter was not found.",
@@ -73,8 +76,11 @@ ERROR_CODES = {
     "error:36": "There are unused, leftover G-code words that aren't used by any command in the block.",
     "error:37": "The G43.1 dynamic tool length offset command cannot apply an offset to an axis other than its configured axis. The Grbl default axis is the Z-axis.",
 }
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> master
 Builder.load_string(
     """
 
@@ -111,7 +117,7 @@ Builder.load_string(
             size: self.texture_size
             text_size: self.size
             color: hex('#333333ff')
-            font_size: '40sp'
+            font_size: str(0.05*app.width) + 'sp'
             text: root.job_checking_checked
 
         Label:
@@ -120,28 +126,28 @@ Builder.load_string(
             size: self.texture_size
             text_size: self.size
             color: hex('#333333ff')
-            font_size: '20sp'
+            font_size: str(0.025*app.width) + 'sp'
             halign: 'center'
             valign: 'top'
 
         BoxLayout:
             orientation: 'horizontal'
             padding: 0
-            spacing: 40
+            spacing:0.0833333333333*app.height
             size_hint_y: 6.12
 
             BoxLayout:
                 orientation: 'vertical'
                 size_hint_x: 1
                 spacing: 0
-                padding: 20
+                padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
                     
                 Label:
                     size_hint_y: 3
                     size: self.texture_size
                     text_size: self.size
                     color: hex('#333333ff')
-                    font_size: '20sp'
+                    font_size: str(0.025*app.width) + 'sp'
                     halign: 'center'
                     valign: 'middle'
                     text: root.check_outcome
@@ -150,7 +156,7 @@ Builder.load_string(
                 BoxLayout:
                     orientation: 'horizontal'
                     size_hint_y: 1
-                    padding: [24.5, 0]
+                    padding:[dp(0.030625)*app.width, 0]
 
                     Button:
                         id: quit_button
@@ -160,9 +166,9 @@ Builder.load_string(
                         background_down: "./asmcnc/skavaUI/img/next.png"
                         border: [dp(14.5)]*4
                         size_hint: (None,None)
-                        width: dp(291)
-                        height: dp(79)
-                        font_size: '28sp'
+                        width: dp(0.36375*app.width)
+                        height: dp(0.164583333333*app.height)
+                        font_size: str(0.035*app.width) + 'sp'
                         color: hex('#f9f9f9ff')
                         markup: True
                         center: self.parent.center
@@ -171,8 +177,8 @@ Builder.load_string(
             BoxLayout:
                 size_hint_x: 1
                 orientation: 'vertical'
-                spacing: 5
-                padding: [0,0,20,20]
+                spacing:0.0104166666667*app.height
+                padding:[0, 0, dp(0.025)*app.width, dp(0.0416666666667)*app.height]
                                 
                 ScrollView:
                     size_hint: 1, 1
@@ -188,9 +194,10 @@ Builder.load_string(
                 BoxLayout:
                     orientation: 'horizontal'
                     size_hint_y: 0.15
-                    spacing: 10
+                    spacing:0.0125*app.width
                     
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         id: load_file_now_button
                         color: hex('#f9f9f9ff')
                         markup: True
@@ -203,6 +210,7 @@ Builder.load_string(
                         border: [dp(7.5)]*4
                         
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         id: check_gcode_button
                         color: hex('#f9f9f9ff')
                         markup: True
@@ -229,6 +237,7 @@ class CheckingScreen(Screen):
     display_output = StringProperty()
     exit_label = StringProperty()
     entry_screen = StringProperty()
+<<<<<<< HEAD
 
     job_ok = False
     error_log = []
@@ -236,13 +245,17 @@ class CheckingScreen(Screen):
 
     job_box = job_envelope.BoundingBox()
 
+=======
+    job_ok = False
+    error_log = []
+    error_out_event = None
+    job_box = job_envelope.BoundingBox()
+>>>>>>> master
     flag_min_feed_rate = False
     as_low_as = 100
     flag_max_feed_rate = False
     as_high_as = 5000
-
     flag_spindle_off = True
-
     serial_function_called = False
 
     def __init__(self, **kwargs):
@@ -251,20 +264,31 @@ class CheckingScreen(Screen):
         self.m = kwargs["machine"]
         self.l = kwargs["localization"]
         self.jd = kwargs["job"]
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
         self.gcode_preview_widget = widget_gcode_view.GCodeView(job=self.jd)
 
     def on_pre_enter(self):
         self.toggle_boundary_buttons(True)
+<<<<<<< HEAD
 
     def on_enter(self):
         self.job_checking_checked = self.l.get_str("Getting ready") + "..."
         self.m.set_pause(False)
+=======
+>>>>>>> master
 
-        # display file selected in the filename display label
+    def on_enter(self):
+        self.job_checking_checked = self.l.get_str("Getting ready") + "..."
+        self.m.set_pause(False)
         self.filename_label.text = self.jd.job_name
         self.exit_label = self.l.get_str("Unload job")
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
         if self.entry_screen == "file_loading":
             try:
                 self.boundary_check()
@@ -279,7 +303,10 @@ class CheckingScreen(Screen):
                     + self.l.get_str("Please make sure file is in recognisable format.")
                 )
                 self.jd.reset_values()
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
         else:
             self.try_gcode_check()
 
@@ -297,6 +324,7 @@ class CheckingScreen(Screen):
                 + self.l.get_str("Please make sure file is in recognisable format.")
             )
             self.jd.reset_values()
+<<<<<<< HEAD
 
     def boundary_check(self):
         # check limits
@@ -307,7 +335,15 @@ class CheckingScreen(Screen):
             # update screen
             self.check_outcome = self.l.get_str("Job is within bounds.")
             Clock.schedule_once(lambda dt: self.try_gcode_check(), 0.4)
+=======
+>>>>>>> master
 
+    def boundary_check(self):
+        bounds_output = self.is_job_within_bounds()
+        if bounds_output == "job is within bounds":
+            log("In bounds...")
+            self.check_outcome = self.l.get_str("Job is within bounds.")
+            Clock.schedule_once(lambda dt: self.try_gcode_check(), 0.4)
         else:
             log("Out of bounds...")
             self.job_checking_checked = self.l.get_str("Boundary issue!")
@@ -325,12 +361,16 @@ class CheckingScreen(Screen):
             self.jd.checked = True
             self.write_boundary_output(bounds_output)
 
+<<<<<<< HEAD
     ## BOUNDARY CHECK:
 
+=======
+>>>>>>> master
     def is_job_within_bounds(self):
         errorfound = 0
         error_message = ""
         job_box = self.sm.get_screen("home").job_box
+<<<<<<< HEAD
 
         # Mins
 
@@ -338,6 +378,12 @@ class CheckingScreen(Screen):
             self.m.grbl_x_max_travel - self.m.limit_switch_safety_distance
         ):
             # error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the X axis at the home end. Try positioning the machine's [b]X datum further away from home[/b].[/color]"
+=======
+        if (
+            -(self.m.x_wco() + job_box.range_x[0])
+            >= self.m.grbl_x_max_travel - self.m.limit_switch_safety_distance
+        ):
+>>>>>>> master
             error_message = error_message + (
                 "\n\n\t"
                 + self.l.get_str(
@@ -347,6 +393,7 @@ class CheckingScreen(Screen):
                 + self.l.get_bold(
                     "Try positioning the machine's N datum further away from home."
                 ).replace("N", "X")
+<<<<<<< HEAD
             )
             errorfound += 1
 
@@ -397,6 +444,51 @@ class CheckingScreen(Screen):
             errorfound += 1
         if self.m.y_wco() + job_box.range_y[1] >= -self.m.limit_switch_safety_distance:
             # error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Y axis at the far end. Try positioning the machine's [b]Y datum closer to home[/b].[/color]"
+=======
+            )
+            errorfound += 1
+        if (
+            -(self.m.y_wco() + job_box.range_y[0])
+            >= self.m.grbl_y_max_travel - self.m.limit_switch_safety_distance
+        ):
+            error_message = error_message + (
+                "\n\n\t"
+                + self.l.get_str(
+                    "The job extent over-reaches the N axis at the home end."
+                ).replace("N", "Y")
+                + "\n\n\t"
+                + self.l.get_bold(
+                    "Try positioning the machine's N datum further away from home."
+                ).replace("N", "Y")
+            )
+            errorfound += 1
+        if (
+            -(self.m.z_wco() + job_box.range_z[0])
+            >= self.m.grbl_z_max_travel - self.m.limit_switch_safety_distance
+        ):
+            error_message = error_message + (
+                "\n\n\t"
+                + self.l.get_str(
+                    "The job extent over-reaches the Z axis at the lower end."
+                )
+                + "\n\n\t"
+                + self.l.get_bold("Try positioning the machine's Z datum higher up.")
+            )
+            errorfound += 1
+        if self.m.x_wco() + job_box.range_x[1] >= -self.m.limit_switch_safety_distance:
+            error_message = error_message + (
+                "\n\n\t"
+                + self.l.get_str(
+                    "The job extent over-reaches the N axis at the far end."
+                ).replace("N", "X")
+                + "\n\n\t"
+                + self.l.get_bold(
+                    "Try positioning the machine's N datum closer to home."
+                ).replace("N", "X")
+            )
+            errorfound += 1
+        if self.m.y_wco() + job_box.range_y[1] >= -self.m.limit_switch_safety_distance:
+>>>>>>> master
             error_message = error_message + (
                 "\n\n\t"
                 + self.l.get_str(
@@ -409,7 +501,10 @@ class CheckingScreen(Screen):
             )
             errorfound += 1
         if self.m.z_wco() + job_box.range_z[1] >= -self.m.limit_switch_safety_distance:
+<<<<<<< HEAD
             # error_message = error_message + "\n\n\t[color=#FFCC00]The job extent over-reaches the Z axis at the upper end. Try positioning the machine's [b]Z datum lower down[/b].[/color]"
+=======
+>>>>>>> master
             error_message = error_message + (
                 "\n\n\t"
                 + self.l.get_str(
@@ -419,7 +514,10 @@ class CheckingScreen(Screen):
                 + self.l.get_bold("Try positioning the machine's Z datum lower down.")
             )
             errorfound += 1
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
         if errorfound > 0:
             return error_message
         else:
@@ -482,7 +580,10 @@ class CheckingScreen(Screen):
             self.check_gcode_button.size_hint_x = None
             self.check_gcode_button.height = "0dp"
             self.check_gcode_button.width = "0dp"
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
             self.load_file_now_button.text = ""
             self.load_file_now_button.disabled = True
             self.load_file_now_button.opacity = 0
@@ -490,7 +591,10 @@ class CheckingScreen(Screen):
             self.load_file_now_button.size_hint_x = None
             self.load_file_now_button.height = "0dp"
             self.load_file_now_button.width = "0dp"
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
         else:
             self.check_gcode_button.text = self.l.get_str("Check G-code")
             self.check_gcode_button.disabled = False
@@ -499,6 +603,7 @@ class CheckingScreen(Screen):
             self.check_gcode_button.size_hint_x = 1
             self.check_gcode_button.height = "0dp"
             self.check_gcode_button.width = "0dp"
+<<<<<<< HEAD
 
             self.load_file_now_button.text = self.l.get_str("Adjust datums")
 
@@ -510,12 +615,22 @@ class CheckingScreen(Screen):
             else:
                 self.load_file_now_button.font_size = "15sp"
 
+=======
+            self.load_file_now_button.text = self.l.get_str("Adjust datums")
+            if len(self.load_file_now_button.text) > 30:
+                self.load_file_now_button.font_size = str(11.0/800.0*Window.width) + "sp"
+            elif len(self.load_file_now_button.text) > 25:
+                self.load_file_now_button.font_size = str(14.0/800.0*Window.width) + "sp"
+            else:
+                self.load_file_now_button.font_size = str(15.0/800.0*Window.width) + "sp"
+>>>>>>> master
             self.load_file_now_button.disabled = False
             self.load_file_now_button.opacity = 1
             self.load_file_now_button.size_hint_y = 1
             self.load_file_now_button.size_hint_x = 1
             self.load_file_now_button.height = "0dp"
             self.load_file_now_button.width = "0dp"
+<<<<<<< HEAD
 
     ## GRBL CHECK:
 
@@ -534,6 +649,19 @@ class CheckingScreen(Screen):
                     partial(self.check_grbl_stream, self.jd.job_gcode), 0.1
                 )
 
+=======
+
+    def check_gcode(self):
+        self.toggle_boundary_buttons(True)
+        if self.m.is_connected():
+            self.display_output = ""
+            if self.m.state() == "Idle":
+                self.job_checking_checked = self.l.get_str("Starting Check") + "..."
+                self.check_outcome = self.l.get_str("Looking for gcode errors") + "..."
+                Clock.schedule_once(
+                    partial(self.check_grbl_stream, self.jd.job_gcode), 0.1
+                )
+>>>>>>> master
             else:
                 self.job_checking_checked = self.l.get_str("Cannot check job")
                 self.check_outcome = (
@@ -546,7 +674,10 @@ class CheckingScreen(Screen):
                     )
                 )
                 self.jd.reset_values()
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
         else:
             self.job_checking_checked = self.l.get_str("Cannot check job")
             self.check_outcome = (
@@ -563,13 +694,15 @@ class CheckingScreen(Screen):
     loop_for_job_progress = None
 
     def check_grbl_stream(self, objectifile, dt):
+<<<<<<< HEAD
         # because this is called by a clock function,
         # so put this check in just in case the user exits the screen prior to this
+=======
+>>>>>>> master
         if self.sm.current == "check_job":
             self.serial_function_called = True
-
-            # utilise check_job from serial_conn
             self.m.s.check_job(objectifile)
+<<<<<<< HEAD
 
             # self.poll_for_gcode_check_progress(0)
             self.loop_for_job_progress = Clock.schedule_interval(
@@ -577,13 +710,22 @@ class CheckingScreen(Screen):
             )
 
             # display the error log when it's filled - setting up the event makes it easy to unschedule
+=======
+            self.loop_for_job_progress = Clock.schedule_interval(
+                self.poll_for_gcode_check_progress, 0.6
+            )
+>>>>>>> master
             self.error_out_event = Clock.schedule_interval(
                 partial(self.get_error_log), 0.1
             )
 
     def poll_for_gcode_check_progress(self, dt):
         percent_thru_job = int(
+<<<<<<< HEAD
             round((self.m.s.g_count * 1.0 / (len(self.jd.job_gcode) + 4) * 1.0) * 100.0)
+=======
+            round(self.m.s.g_count * 1.0 / (len(self.jd.job_gcode) + 4) * 1.0 * 100.0)
+>>>>>>> master
         )
         if percent_thru_job > 100:
             percent_thru_job = 100
@@ -596,8 +738,11 @@ class CheckingScreen(Screen):
             Clock.unschedule(self.error_out_event)
             if self.loop_for_job_progress != None:
                 self.loop_for_job_progress.cancel()
+<<<<<<< HEAD
 
             # If 'error' is found in the error log, tell the user
+=======
+>>>>>>> master
             if any("error" in listitem for listitem in self.error_log):
                 self.job_checking_checked = self.l.get_str("Errors found!")
                 if self.entry_screen == "file_loading":
@@ -610,7 +755,10 @@ class CheckingScreen(Screen):
                     )
                     self.jd.check_warning = self.l.get_str("Errors found in G-code.")
                     self.jd.checked = True
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
                 elif self.entry_screen == "home":
                     self.check_outcome = (
                         self.l.get_str("Errors found in G-code.")
@@ -621,9 +769,11 @@ class CheckingScreen(Screen):
                     )
                     self.jd.check_warning = self.l.get_str("Errors found in G-code.")
                     self.jd.checked = True
-
                 self.job_ok = False
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
             elif (
                 self.flag_min_feed_rate
                 or self.flag_max_feed_rate
@@ -642,10 +792,14 @@ class CheckingScreen(Screen):
                 )
                 self.jd.checked = True
                 self.job_ok = True
+<<<<<<< HEAD
 
                 # add job checked already flag here
                 self.sm.get_screen("home").gcode_has_been_checked_and_its_ok = True
 
+=======
+                self.sm.get_screen("home").gcode_has_been_checked_and_its_ok = True
+>>>>>>> master
             else:
                 self.job_checking_checked = self.l.get_str("File is OK!")
                 self.check_outcome = self.l.get_str(
@@ -654,6 +808,7 @@ class CheckingScreen(Screen):
                 self.jd.check_warning = self.l.get_str("File is OK!")
                 self.jd.checked = True
                 self.job_ok = True
+<<<<<<< HEAD
 
                 # add job checked already flag here
                 self.sm.get_screen("home").gcode_has_been_checked_and_its_ok = True
@@ -663,14 +818,23 @@ class CheckingScreen(Screen):
             if self.job_ok == False:
                 self.jd.reset_values()
 
+=======
+                self.sm.get_screen("home").gcode_has_been_checked_and_its_ok = True
+            self.write_error_output(self.error_log)
+            if self.job_ok == False:
+                self.jd.reset_values()
+>>>>>>> master
             log("File has been checked!")
             self.exit_label = self.l.get_str("Finish")
 
     def write_error_output(self, error_log):
         self.display_output = ""
+<<<<<<< HEAD
 
         ## SPINDLE WARNING:
 
+=======
+>>>>>>> master
         if self.flag_spindle_off:
             self.display_output = (
                 self.display_output + self.l.get_bold("SPINDLE WARNING") + "\n\n"
@@ -684,14 +848,20 @@ class CheckingScreen(Screen):
                 )
                 + "\n\n"
             )
+<<<<<<< HEAD
 
         ## FEED/SPEED MIN/MAXES HERE:
 
+=======
+>>>>>>> master
         if self.flag_max_feed_rate or self.flag_min_feed_rate:
             self.display_output = (
                 self.display_output + self.l.get_bold("FEED RATE WARNING") + "\n\n"
             )
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
             if self.flag_min_feed_rate:
                 self.display_output = self.display_output + (
                     self.l.get_str(
@@ -701,7 +871,6 @@ class CheckingScreen(Screen):
                     + self.l.get_str("The recommended minimum feed rate is 100 mm/min.")
                     + "\n\n"
                 )
-
             if self.flag_max_feed_rate:
                 self.display_output = self.display_output + (
                     self.l.get_str(
@@ -713,6 +882,7 @@ class CheckingScreen(Screen):
                     )
                     + "\n\n"
                 )
+<<<<<<< HEAD
 
         error_summary = []
 
@@ -722,6 +892,12 @@ class CheckingScreen(Screen):
         )
 
         # Read out which error codes flagged up, and put into an "error summary" with descriptions
+=======
+        error_summary = []
+        no_empties = list(
+            filter(lambda x: x != ("ok", ""), zip(error_log, self.jd.job_gcode))
+        )
+>>>>>>> master
         for idx, f in enumerate(no_empties):
             if f[0].find("error") != -1:
                 error_description = self.l.get_str(ERROR_CODES.get(f[0], ""))
@@ -729,27 +905,41 @@ class CheckingScreen(Screen):
                     self.l.get_bold("Line") + "[b] " + str(idx) + ":[/b]"
                 )
                 error_summary.append(
+<<<<<<< HEAD
                     (
                         (f[0].replace(":", " ")).replace(
                             "error", self.l.get_str("error")
                         )
                     ).capitalize()
+=======
+                    f[0]
+                    .replace(":", " ")
+                    .replace("error", self.l.get_str("error"))
+                    .capitalize()
+>>>>>>> master
                     + ": "
                     + error_description
                     + "\n\n"
                 )
                 error_summary.append('G-code: "' + f[1] + '"\n\n')
+<<<<<<< HEAD
 
         if error_summary == []:
             self.display_output = self.display_output + ""
         else:
             # Put everything into a giant string for the ReStructed Text object
+=======
+        if error_summary == []:
+            self.display_output = self.display_output + ""
+        else:
+>>>>>>> master
             self.display_output = (
                 self.display_output
                 + self.l.get_bold("ERROR SUMMARY")
                 + "\n\n"
                 + "\n\n".join(map(str, error_summary))
             )
+<<<<<<< HEAD
 
     #        # If want to print all the lines of the file and oks:
     #         + \
@@ -759,28 +949,38 @@ class CheckingScreen(Screen):
     #         '\t\t [b]%s[/b]..........%s[/color]' % t for idx, t in enumerate(no_empties)))
 
     ## EXITING SCREEN
+=======
+>>>>>>> master
 
     def stop_check_in_serial(self, pass_no):
         check_again = False
         pass_no += 1
-
         if self.m.s.check_streaming_started:
             if self.m.s.is_job_streaming:
                 self.m.s.cancel_stream()
             else:
                 check_again = True
+<<<<<<< HEAD
 
         elif (pass_no > 2) and (self.m.state() == "Check") and (not check_again):
             self.m.disable_check_mode()
 
         if check_again or (pass_no < 3):
+=======
+        elif pass_no > 2 and self.m.state() == "Check" and not check_again:
+            self.m.disable_check_mode()
+        if check_again or pass_no < 3:
+>>>>>>> master
             Clock.schedule_once(lambda dt: self.stop_check_in_serial(pass_no), 1)
 
     def quit_to_home(self):
         if self.job_ok:
             self.sm.get_screen("home").z_datum_reminder_flag = True
             self.sm.current = "home"
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
         else:
             self.jd.reset_values()
             self.sm.current = "home"
@@ -807,7 +1007,10 @@ class CheckingScreen(Screen):
         self.error_log = []
         if self.loop_for_job_progress != None:
             self.loop_for_job_progress.cancel()
+<<<<<<< HEAD
 
         # Update summary to show check info
+=======
+>>>>>>> master
         self.jd.update_changeables_in_gcode_summary_string()
         self.toggle_boundary_buttons(True)

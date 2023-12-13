@@ -174,11 +174,19 @@ class QuickCommands(Widget):
 
             popup_info.PopupInfo(self.sm, self.l, 450, info)
 
+<<<<<<< HEAD
         elif not self.m.state().startswith("Idle"):
             self.sm.current = "mstate"
 
         elif self.is_job_within_bounds() == False and sys.platform != "win32":
             self.sm.current = "boundary"
+=======
+        elif not self.m.state().startswith('Idle'):
+            self.sm.current = 'mstate'
+                
+        elif not self.is_job_within_bounds() and sys.platform != "win32":
+            self.sm.current = 'boundary'
+>>>>>>> master
 
         elif self.m.is_machine_homed == False and sys.platform != "win32":
             self.m.request_homing_procedure("home", "home")

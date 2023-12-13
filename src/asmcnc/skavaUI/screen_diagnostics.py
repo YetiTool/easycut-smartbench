@@ -3,6 +3,7 @@ Created on 19 Aug 2017
 
 @author: Ed
 """
+<<<<<<< HEAD
 # config
 
 import kivy
@@ -16,9 +17,17 @@ from kivy.properties import (
 )  # @UnresolvedImport
 from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
+=======
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+>>>>>>> master
 
-from kivy.clock import Clock, mainthread
+from asmcnc.skavaUI import (
+    widget_status_bar,
+)
 
+<<<<<<< HEAD
 import os, sys
 
 from asmcnc.skavaUI import (
@@ -43,6 +52,8 @@ from kivy.properties import (
 # from asmcnc.skavaUI import widget_tabbed_panel
 
 
+=======
+>>>>>>> master
 Builder.load_string(
     """
 
@@ -71,25 +82,32 @@ Builder.load_string(
             orientation: "horizontal"
 
             Label:
+                font_size: str(0.01875 * app.width) + 'sp'
                 text: 'LED ring:'
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 text: 'Red'
                 on_press: root.led('RED')
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 text: 'Green'
                 on_press: root.led('GREEN')
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 text: 'Blue'
                 on_press: root.led('BLUE')
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 text: 'OFF'
                 on_press: root.led('off')
 
             Label:
+                font_size: str(0.01875 * app.width) + 'sp'
                 id: probe_label
                 text: 'Probe'
             Label:
+                font_size: str(0.01875 * app.width) + 'sp'
                 id: dust_shoe_cover_label
                 text: 'Dust cover'
                 
@@ -99,17 +117,22 @@ Builder.load_string(
             orientation: "horizontal"
 
             Label:
+                font_size: str(0.01875 * app.width) + 'sp'
                 text: 'X axis:'
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 text: '-'
                 on_press: root.move('x-')
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 text: '+'
                 on_press: root.move('x+')
             Label:
+                font_size: str(0.01875 * app.width) + 'sp'
                 id: limit_x_label
                 text: 'X Min'
             Label:
+                font_size: str(0.01875 * app.width) + 'sp'
                 id: limit_X_label
                 text: 'X Max'
 
@@ -119,17 +142,22 @@ Builder.load_string(
             orientation: "horizontal"
 
             Label:
+                font_size: str(0.01875 * app.width) + 'sp'
                 text: 'Y axis:'
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 text: '-'
                 on_press: root.move('y-')
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 text: '+'
                 on_press: root.move('y+')
             Label:
+                font_size: str(0.01875 * app.width) + 'sp'
                 id: limit_y_label
                 text: 'Y Min'
             Label:
+                font_size: str(0.01875 * app.width) + 'sp'
                 id: limit_Y_label
                 text: 'Y Max'
 
@@ -139,20 +167,26 @@ Builder.load_string(
             orientation: "horizontal"
 
             Label:
+                font_size: str(0.01875 * app.width) + 'sp'
                 text: 'Z axis:'
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 text: '-'
                 on_press: root.move('z-')
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 text: '+'
                 on_press: root.move('z+')
             Label:
+                font_size: str(0.01875 * app.width) + 'sp'
                 id: limit_z_label
                 text: 'Z Min'
             Label:
+                font_size: str(0.01875 * app.width) + 'sp'
                 text: ''
 
         Button:
+            font_size: str(0.01875 * app.width) + 'sp'
             text: 'Return to factory settings'
             on_press: root.return_to_home()
             
@@ -166,11 +200,16 @@ Builder.load_string(
 class DiagnosticsScreen(Screen):
     def __init__(self, **kwargs):
         super(DiagnosticsScreen, self).__init__(**kwargs)
+<<<<<<< HEAD
 
         self.m = kwargs["machine"]
         self.sm = kwargs["screen_manager"]
 
         # Status bar
+=======
+        self.m = kwargs["machine"]
+        self.sm = kwargs["screen_manager"]
+>>>>>>> master
         self.status_container.add_widget(
             widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
         )
@@ -188,10 +227,15 @@ class DiagnosticsScreen(Screen):
     def move(self, case):
         xy_distance = 4
         z_distance = 2
+<<<<<<< HEAD
 
         xy_feed = 200
         z_feed = 100
 
+=======
+        xy_feed = 200
+        z_feed = 100
+>>>>>>> master
         if case == "x-":
             self.m.jog_relative("X-", str(xy_distance), xy_feed)
         if case == "x+":
@@ -207,37 +251,58 @@ class DiagnosticsScreen(Screen):
 
     def limit_switch_check(self, dt):
         switch_states = self.m.get_switch_states()
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
         if "limit_x" in switch_states:
             self.limit_x_label.text = "X min - OK"
         else:
             self.limit_x_label.text = "X min"
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
         if "limit_X" in switch_states:
             self.limit_X_label.text = "X max - OK"
         else:
             self.limit_X_label.text = "X max"
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
         if "limit_y" in switch_states:
             self.limit_y_label.text = "Y min - OK"
         else:
             self.limit_y_label.text = "Y min"
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
         if "limit_Y" in switch_states:
             self.limit_Y_label.text = "Y max - OK"
         else:
             self.limit_Y_label.text = "Y max"
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
         if "limit_z" in switch_states:
             self.limit_z_label.text = "Z min - OK"
         else:
             self.limit_z_label.text = "Z min"
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
         if "probe" in switch_states:
             self.probe_label.text = "Probe - OK"
         else:
             self.probe_label.text = "Probe"
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
         if "dust_shoe_cover" in switch_states:
             self.dust_shoe_cover_label.text = "Dust cover - OK"
         else:

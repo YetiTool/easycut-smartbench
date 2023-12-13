@@ -8,6 +8,7 @@ Pauses streaming until user returns (and if they are in Go stream until they res
 
 @author: Letty
 """
+<<<<<<< HEAD
 
 import kivy
 from kivy.lang import Builder
@@ -20,9 +21,15 @@ from kivy.properties import (
     StringProperty,
 )  # @UnresolvedImport
 from kivy.uix.widget import Widget
+=======
+>>>>>>> master
 from kivy.clock import Clock
-
-import sys, os
+from kivy.lang import Builder
+from kivy.properties import (
+    ObjectProperty,
+    StringProperty,
+)
+from kivy.uix.screenmanager import Screen
 
 ERROR_CODES = {
     "error:1": "G-code words consist of a letter and a value. Letter was not found.",
@@ -72,8 +79,11 @@ ERROR_CODES = {
     "error:47": "Sequence number does not match the expected one.",
     "error:48": "Realtime command buffer overflow: slow down sending RTL commands or increase buffer size.",
 }
+<<<<<<< HEAD
 
 # Kivy UI builder:
+=======
+>>>>>>> master
 Builder.load_string(
     """
 
@@ -93,20 +103,20 @@ Builder.load_string(
              
     BoxLayout:
         orientation: 'horizontal'
-        padding: 40
-        spacing: 30
+        padding:[dp(0.05)*app.width, dp(0.0833333333333)*app.height]
+        spacing:0.0625*app.height
         size_hint_x: 1
 
         BoxLayout:
             orientation: 'vertical'
             size_hint_x: 1
-            spacing: 20
+            spacing:0.0416666666667*app.height
              
             Label:
                 id: error_header
                 size_hint_y: 0.6
                 text_size: self.size
-                font_size: '24sp'
+                font_size: str(0.03*app.width) + 'sp'
                 markup: True
                 halign: 'left'
                 vallign: 'top'
@@ -114,7 +124,7 @@ Builder.load_string(
             Label:
                 size_hint_y: 1.2
                 text_size: self.size
-                font_size: '22sp'
+                font_size: str(0.0275*app.width) + 'sp'
                 halign: 'left'
                 valign: 'middle'
                 text: root.error_description 
@@ -122,17 +132,18 @@ Builder.load_string(
             Label:
                 id: user_instruction
                 size_hint_y: 0.6
-                font_size: '22sp'
+                font_size: str(0.0275*app.width) + 'sp'
                 text_size: self.size
                 halign: 'left'
                 valign: 'middle'
                 
             BoxLayout:
                 orientation: 'horizontal'
-                padding: 130, 0
+                padding:[dp(0.1625)*app.width, 0]
                 size_hint_y: 0.8
             
                 Button:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     size_hint_y:0.9
                     id: getout_button
                     size: self.texture_size
@@ -144,13 +155,13 @@ Builder.load_string(
                         root.button_press()
                         
                     BoxLayout:
-                        padding: 5
+                        padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
                         size: self.parent.size
                         pos: self.parent.pos
                         
                         Label:
                             id: return_label
-                            font_size: '20sp'
+                            font_size: str(0.025*app.width) + 'sp'
                             text: 'Return'
                         
   
@@ -160,12 +171,18 @@ Builder.load_string(
 
 
 class ErrorScreenClass(Screen):
+<<<<<<< HEAD
     # define error description to make kivy happy
+=======
+>>>>>>> master
     error_description = StringProperty()
     message = StringProperty()
     button_text = StringProperty()
     getout_button = ObjectProperty()
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
     return_to_screen = "home"
 
     def __init__(self, **kwargs):
@@ -175,35 +192,54 @@ class ErrorScreenClass(Screen):
         self.jd = kwargs["job"]
         self.db = kwargs["database"]
         self.l = kwargs["localization"]
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
         self.update_strings()
 
     def on_enter(self):
         self.getout_button.disabled = True
         if self.m.s.is_job_streaming:
             self.return_to_screen = "job_incomplete"
+<<<<<<< HEAD
 
         # use the message to get the error description
+=======
+>>>>>>> master
         self.error_description = self.l.get_str(ERROR_CODES.get(self.message, ""))
-
         self.m.stop_from_gcode_error()
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
         if self.return_to_screen == "job_incomplete":
             self.sm.get_screen("job_incomplete").prep_this_screen(
                 "Error", event_number=self.message
             )
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
         Clock.schedule_once(lambda dt: self.enable_getout_button(), 1.6)
 
     def enable_getout_button(self):
         self.getout_button.disabled = False
+<<<<<<< HEAD
 
     def button_press(self):
         self.m.resume_from_gcode_error()
+=======
+>>>>>>> master
 
+    def button_press(self):
+        self.m.resume_from_gcode_error()
         if self.sm.has_screen(self.return_to_screen):
             self.sm.current = self.return_to_screen
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
         else:
             self.sm.current = "lobby"
 

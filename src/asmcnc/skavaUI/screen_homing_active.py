@@ -6,6 +6,7 @@ Created March 2019
 
 Squaring decision: manual or auto?
 """
+<<<<<<< HEAD
 
 import kivy
 from kivy.lang import Builder
@@ -14,6 +15,15 @@ import sys, os
 from kivy.clock import Clock
 from datetime import datetime
 
+=======
+import sys
+from datetime import datetime
+
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
+>>>>>>> master
 Builder.load_string(
     """
 
@@ -30,18 +40,20 @@ Builder.load_string(
 
     BoxLayout: 
         spacing: 0
-        padding: 40
+        padding:[dp(0.05)*app.width, dp(0.0833333333333)*app.height]
         orientation: 'vertical'
 
         Label:
+            font_size: str(0.01875 * app.width) + 'sp'
             size_hint_y: 1
 
         BoxLayout:
             orientation: 'horizontal'
-            spacing: 20
+            spacing:0.025*app.width
             size_hint_y: 1.5
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_press: root.windows_cheat_to_procede()
@@ -57,7 +69,7 @@ Builder.load_string(
                 id: homing_label
                 size_hint_x: 1.1
                 markup: True
-                font_size: '30px' 
+                font_size: str(0.0375*app.width) + 'px' 
                 valign: 'middle'
                 halign: 'center'
                 size:self.texture_size
@@ -65,6 +77,7 @@ Builder.load_string(
                 color: hex('#333333ff')
                         
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_press: root.stop_button_press()
@@ -77,6 +90,7 @@ Builder.load_string(
                         allow_stretch: True 
                         
         Label:
+            font_size: str(0.01875 * app.width) + 'sp'
             size_hint_y: 1                
 
 """
@@ -130,10 +144,10 @@ class HomingScreenActive(Screen):
         if not self.m.homing_in_progress:
             self.return_to_ec_if_homing_not_in_progress()
             return
-
         if self.m.homing_interrupted:
             self.cancel_homing()
             return
+<<<<<<< HEAD
 
         if self.m.i_am_auto_squaring():
             self.go_to_auto_squaring_screen()
@@ -143,12 +157,20 @@ class HomingScreenActive(Screen):
         # if self.m.run_calibration:
         #     self.homing_label.text = self.l.get_str('Finding motor baselines') + '...'
 
+=======
+        if self.m.i_am_auto_squaring():
+            self.go_to_auto_squaring_screen()
+            return
+>>>>>>> master
         self.poll_for_completion_loop = Clock.schedule_once(
             self.poll_for_homing_status_func, 0.2
         )
 
     def go_to_auto_squaring_screen(self, dt=0):
+<<<<<<< HEAD
         # in case the sequence quickly skips over auto-squaring, delay screen change
+=======
+>>>>>>> master
         if self.m.homing_task_idx > self.m.auto_squaring_idx:
             return
         self.sm.get_screen("squaring_active").cancel_to_screen = self.cancel_to_screen
