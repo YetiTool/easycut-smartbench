@@ -8,6 +8,7 @@ import traceback
 from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
 
 from asmcnc.comms.logging import log_exporter
+from asmcnc.production.database.factory_payload_sender import get_csv, send_csv_to_ftp
 
 Builder.load_string("""
 <CalibrationTesting>:
@@ -1090,7 +1091,7 @@ class CalibrationTesting(Screen):
         self.z0_jog_button.disabled = True
         self.data_send_button.disabled = True
 
-    
+
     def measure(self):
 
         if not (self.x_running and self.m.feed_rate() < MAX_XY_SPEED*1.1) and not (self.y_running and self.m.feed_rate() < MAX_XY_SPEED*1.1) and not (self.z_running and self.m.feed_rate() < MAX_Z_SPEED*1.1):
@@ -1105,69 +1106,61 @@ class CalibrationTesting(Screen):
         # NOTE Z LIFTS WEIGHT WHEN IT IS 
 
         if len(self.status_data_dict[self.stage]) > 0:
-
-            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][1] < self.m.mpos_x(): x_dir = -1
-            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][1] > self.m.mpos_x(): x_dir = 1
-            else: x_dir = 0
-
-            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][2] < self.m.mpos_y(): y_dir = -1
-            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][2] > self.m.mpos_y(): y_dir = 1
-            else: y_dir = 0
-
-            if self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][3] < self.m.mpos_z(): z_dir = 1
-            elif self.status_data_dict[self.stage][len(self.status_data_dict[self.stage])-1][3] > self.m.mpos_z(): z_dir = -1
-            else: z_dir = 0
-
+            last_status = self.status_data_dict[self.stage][-1]
+            x_dir = -1 if self.m.mpos_x() > last_status["XCoordinate"] else 1 if self.m.mpos_x() < last_status["XCoordinate"] else 0
+            y_dir = -1 if self.m.mpos_y() > last_status["YCoordinate"] else 1 if self.m.mpos_y() < last_status["YCoordinate"] else 0
+            z_dir = 1 if self.m.mpos_z() > last_status["ZCoordinate"] else -1 if self.m.mpos_z() < last_status["ZCoordinate"] else 0
         else:
             x_dir = 0
             y_dir = 0
             z_dir = 0
-        
+
         # XCoordinate, YCoordinate, ZCoordinate, XDirection, YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, MOTTemperature, Timestamp, Feedrate
 
-        status = (
-                    int(self.sn_for_db[2:] + str(self.stage_id)),
-                    self.m.mpos_x(),
-                    self.m.mpos_y(),
-                    self.m.mpos_z(),
-                    x_dir,
-                    y_dir,
-                    z_dir,
-                    int(self.m.s.sg_x_motor_axis),
-                    int(self.m.s.sg_y_axis),
-                    int(self.m.s.sg_y1_motor),
-                    int(self.m.s.sg_y2_motor),
-                    int(self.m.s.sg_z_motor_axis),
-                    int(self.m.s.motor_driver_temp),
-                    int(self.m.s.pcb_temp),
-                    int(self.m.s.transistor_heatsink_temp),
-                    datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                    self.m.feed_rate(),
-                    self.x_weight,
-                    self.y_weight,
-                    self.z_weight
-        )
+        status = {
+            "Id": "",
+            "FTID": int(self.sn_for_db[2:] + str(self.stage_id)),
+            "XCoordinate": self.m.mpos_x(),
+            "YCoordinate": self.m.mpos_y(),
+            "ZCoordinate": self.m.mpos_z(),
+            "XDirection": x_dir,
+            "YDirection": y_dir,
+            "ZDirection": z_dir,
+            "XSG": int(self.m.s.sg_x_motor_axis),
+            "YSG": int(self.m.s.sg_y_axis),
+            "Y1SG": int(self.m.s.sg_y1_motor),
+            "Y2SG": int(self.m.s.sg_y2_motor),
+            "ZSG": int(self.m.s.sg_z_motor_axis),
+            "TMCTemperature": int(self.m.s.motor_driver_temp),
+            "PCBTemperature": int(self.m.s.pcb_temp),
+            "MOTTemperature": int(self.m.s.transistor_heatsink_temp),
+            "Timestamp": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            "Feedrate": self.m.feed_rate(),
+            "XWeight": self.x_weight,
+            "YWeight": self.y_weight,
+            "ZWeight": self.z_weight
+        }
 
         self.status_data_dict[self.stage].append(status)
 
         # Record raw values for statistics calculations
 
-        if -999 < self.m.s.sg_x_motor_axis < 1023: 
+        if -999 < self.m.s.sg_x_motor_axis < 1023:
             if x_dir > 0: self.raw_x_pos_vals[self.stage].append(self.m.s.sg_x_motor_axis)
             if x_dir < 0: self.raw_x_neg_vals[self.stage].append(self.m.s.sg_x_motor_axis)
-        
+
         if -999 < self.m.s.sg_y_axis < 1023:
             if y_dir > 0: self.raw_y_pos_vals[self.stage].append(self.m.s.sg_y_axis)
             if y_dir < 0: self.raw_y_neg_vals[self.stage].append(self.m.s.sg_y_axis)
-        
+
         if -999 < self.m.s.sg_y1_motor < 1023:
             if y_dir > 0: self.raw_y1_pos_vals[self.stage].append(self.m.s.sg_y1_motor)
             if y_dir < 0: self.raw_y1_neg_vals[self.stage].append(self.m.s.sg_y1_motor)
-        
+
         if -999 < self.m.s.sg_y2_motor < 1023:
             if y_dir > 0: self.raw_y2_pos_vals[self.stage].append(self.m.s.sg_y2_motor)
             if y_dir < 0: self.raw_y2_neg_vals[self.stage].append(self.m.s.sg_y2_motor)
-        
+
         if -999 < self.m.s.sg_z_motor_axis < 1023:
             if z_dir < 0: self.raw_z_pos_vals[self.stage].append(self.m.s.sg_z_motor_axis)
             if z_dir > 0: self.raw_z_neg_vals[self.stage].append(self.m.s.sg_z_motor_axis)
@@ -1252,7 +1245,7 @@ class CalibrationTesting(Screen):
 
     def get_statistics(self, stage):
 
-            # x_forw_peak, x_backw_peak, y_forw_peak, y_backw_peak, y1_forw_peak, y1_backw_peak, y2_forw_peak, y2_backw_peak, z_forw_peak, z_backw_peak 
+            # x_forw_peak, x_backw_peak, y_forw_peak, y_backw_peak, y1_forw_peak, y1_backw_peak, y2_forw_peak, y2_backw_peak, z_forw_peak, z_backw_peak
             peak_list = self.read_out_peaks(stage)
 
             if stage == "UnweightedFT":
@@ -1328,7 +1321,7 @@ class CalibrationTesting(Screen):
 
     #     if self.stage != "WeightedFT":
     #         self.set_stage("WeightedFT")
-        
+
     #     self.x_weight = 0
     #     self.y_weight = 0
 
@@ -1374,7 +1367,7 @@ class CalibrationTesting(Screen):
 
         self.y_running = True
 
-        self.m.send_any_gcode_command("G53 G1 Y" + str(self.m.y_max_jog_abs_limit) + " F" + str(MAX_XY_SPEED))            
+        self.m.send_any_gcode_command("G53 G1 Y" + str(self.m.y_max_jog_abs_limit) + " F" + str(MAX_XY_SPEED))
         self.m.send_any_gcode_command("G53 G1 Y" + str(self.m.y_min_jog_abs_limit) + " F" + str(MAX_XY_SPEED))
 
         # poll to see when run is done
@@ -1427,7 +1420,7 @@ class CalibrationTesting(Screen):
 
 
     def run_unweighted_test(self):
-        
+
         if self.m.state().startswith('Idle'):
 
             self.disable_run_buttons()
@@ -1468,7 +1461,7 @@ class CalibrationTesting(Screen):
             self.set_unweighted_y_range()
             self.x_running = False
             self.y_running = True
-            self.m.send_any_gcode_command("G53 G1 Y" + str(self.m.y_max_jog_abs_limit) + " F" + str(MAX_XY_SPEED))            
+            self.m.send_any_gcode_command("G53 G1 Y" + str(self.m.y_max_jog_abs_limit) + " F" + str(MAX_XY_SPEED))
             self.m.send_any_gcode_command("G53 G1 Y" + str(self.m.y_min_jog_abs_limit) + " F" + str(MAX_XY_SPEED))
             self.next_run_event = Clock.schedule_once(self.part_3_unweighted_z, 20)
 
@@ -1483,7 +1476,7 @@ class CalibrationTesting(Screen):
             self.set_unweighted_z_range()
             self.y_running = False
             self.z_running = True
-            self.m.send_any_gcode_command("G53 G1 Z" + str(self.m.z_min_jog_abs_limit) + " F" + str(MAX_Z_SPEED))            
+            self.m.send_any_gcode_command("G53 G1 Z" + str(self.m.z_min_jog_abs_limit) + " F" + str(MAX_Z_SPEED))
             self.m.send_any_gcode_command("G53 G1 Z" + str(self.m.z_max_jog_abs_limit) + " F" + str(MAX_Z_SPEED))
             self.confirm_event = Clock.schedule_once(self.confirm_unweighted, 20)
 
@@ -1503,17 +1496,17 @@ class CalibrationTesting(Screen):
             self.pass_or_fail_unweighted_peak_loads()
 
 
-        else: 
+        else:
             self.confirm_event = Clock.schedule_once(self.confirm_unweighted, 3)
 
 
     ## SET TICKS
     def tick_checkbox(self, checkbox_id, tick):
 
-        if tick: 
+        if tick:
             checkbox_id.source = self.green_tick
 
-        else: 
+        else:
             checkbox_id.source = self.red_cross
 
     def is_step_ticked(self, checkbox_id):
@@ -1521,7 +1514,7 @@ class CalibrationTesting(Screen):
         if checkbox_id.source == self.green_tick:
             return True
 
-        else: 
+        else:
             return False
 
 
@@ -1529,7 +1522,7 @@ class CalibrationTesting(Screen):
 
         within_plus_minus = 400
 
-        try: 
+        try:
             if (-1*within_plus_minus) < int(peak_id.text) < within_plus_minus: return True
             else: return False
 
@@ -1648,10 +1641,10 @@ class CalibrationTesting(Screen):
 
         try:
 
-            if self.is_step_ticked(self.unweighted_test_check): 
+            if self.is_step_ticked(self.unweighted_test_check):
                 self.get_statistics("UnweightedFT")
                 success = success*self.send_data_for_each_stage("UnweightedFT")
-            
+
             if all([self.is_step_ticked(self.x_test_check),
                     self.is_step_ticked(self.y_test_check)]):
 
@@ -1671,33 +1664,34 @@ class CalibrationTesting(Screen):
         log_exporter.create_and_send_logs(self.sn_for_db)
 
 
-    def send_data_for_each_stage(self, stage):
-
+    def send_data_for_each_stage(self, stage, csv_path=None):
         try:
             stage_id = self.calibration_db.get_stage_id_by_description(stage)
             self.insert_stage_into_database(stage_id)
-            self.calibration_db.insert_final_test_statuses(self.status_data_dict[stage])
+
+            final_test_statuses = self.status_data_dict[stage]
+            final_test_statuses_csv = get_csv(final_test_statuses, self.sn_for_db, 'finalteststatuses', stage, csv_path=csv_path)
+            final_test_statuses_sent = send_csv_to_ftp(final_test_statuses_csv)
+
             statistics = [self.sn_for_db, stage_id]
             statistics.extend(self.statistics_data_dict[stage])
             self.calibration_db.insert_final_test_statistics(*statistics)
-            return True
 
+            return final_test_statuses_sent
         except:
             print(traceback.format_exc())
-            return False
-        finally:
             log_exporter.create_and_send_logs(self.sn_for_db)
+            return False
 
 
 
     def insert_stage_into_database(self, stage_id):
 
-        try: 
+        try:
             self.calibration_db.insert_final_test_stage(self.sn_for_db, stage_id)
 
-        except: 
+        except:
             log("Could not insert final test stage into DB!!")
             print(traceback.format_exc())
             message = "Issue contacting database - if you continue data send may fail!"
             popup_info.PopupError(self.sm, self.l, message)
-            

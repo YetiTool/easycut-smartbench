@@ -33,7 +33,7 @@ def try_import_creds():
     except Exception:
         log("Log exporter not available - no creds file")
         try:
-            from ...production.database import credentials as creds
+            from asmcnc.production.database import credentials as creds
             log('Imported creds from dev path')
         except Exception:
             log('Creds not available from dev path')
@@ -43,8 +43,11 @@ def create_log_folder():
     # remove all logs when creating new one
     os.system("rm -r " + export_logs_folder)
 
-    if not os.path.exists(export_logs_folder) or not os.path.isdir(export_logs_folder):
-        os.mkdir(export_logs_folder)
+    try:
+        if not os.path.exists(export_logs_folder) or not os.path.isdir(export_logs_folder):
+            os.mkdir(export_logs_folder)
+    except OSError:
+        log("Unable to create log folder, probably not a pi")
 
 
 def create_and_send_logs(serial_number):
@@ -108,8 +111,12 @@ def send_logs(log_file_path):
 
     file_name = log_file_path.split('/')[-1]
     log('Transferring file: ' + file_name)
-    sftp.put(export_logs_folder + "/" + log_file_path, WORKING_DIR + file_name)
-    log("Done sending logs to server")
+
+    try:
+        sftp.put(export_logs_folder + "/" + log_file_path, WORKING_DIR + file_name)
+        log("Done sending logs to server")
+    except OSError:
+        log("Unable to send logs to server, probably not a pi")
 
 
 if __name__ == '__main__':

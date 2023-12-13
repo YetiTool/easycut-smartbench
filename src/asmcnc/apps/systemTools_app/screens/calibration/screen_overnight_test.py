@@ -9,7 +9,6 @@ from time import sleep
 import threading
 from datetime import datetime
 import json
-from asmcnc.production.database.payload_publisher import DataPublisher
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupCSVOnUSB
 import os
 import glob
@@ -24,6 +23,7 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 
 from asmcnc.comms.logging import log_exporter
+from asmcnc.production.database.factory_payload_sender import send_csv_to_ftp, get_csv
 
 Builder.load_string("""
 <OvernightTesting>:
@@ -1556,7 +1556,7 @@ class OvernightTesting(Screen):
         if not sent_data:
             self.show_failed_send_popup(self.get_most_recent_csv())
 
-    def send_data(self, stage):
+    def send_data(self, stage, csv_path=None):
         try:
             log("Doing data send...")
             stage_id = self.calibration_db.get_stage_id_by_description(stage)
@@ -1566,13 +1566,23 @@ class OvernightTesting(Screen):
             #     stage_id
             # )
 
-            publisher = DataPublisher(self.sn_for_db)
+            # publisher = DataPublisher(self.sn_for_db)
 
             j_obj = self.status_data_dict[stage]
             statuses = j_obj["Statuses"]
             table = j_obj["Table"]
 
-            done_send = publisher.run_data_send(statuses, table, stage)
+            csv_path = get_csv(
+                json=statuses,
+                machine_serial=self.sn_for_db,
+                table=table,
+                stage=stage,
+                csv_path=csv_path
+            )
+
+            done_send = send_csv_to_ftp(csv_path)
+
+            # done_send = publisher.run_data_send(statuses, table, stage)
             log("Data send status: " + str(done_send))
 
             # self.calibration_db.insert_final_test_statuses(self.status_data_dict[stage])
@@ -1582,7 +1592,6 @@ class OvernightTesting(Screen):
             log("Finished statistics data send")
             log_exporter.create_and_send_logs(self.sn_for_db)
             return done_send
-
         except:
             log("Failed to send data to DB!!")
             print(traceback.format_exc())

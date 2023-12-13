@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 import traceback, threading
-import json
 import sys
-from asmcnc.production.database.payload_publisher import DataPublisher
+
+from asmcnc.production.database.factory_payload_sender import send_csv_to_ftp, get_csv
 
 def log(message):
     timestamp = datetime.now()
@@ -70,11 +70,11 @@ class CalibrationDatabase(object):
         except ImportError:
             if sys.platform != 'win32' and sys.platform != 'darwin':
                 log("Can't import credentials (trying to get local folder creds)")
-                import credentials
+                from asmcnc.production.database import credentials
 
         try:
             self.conn = my_sql_client.connect(host=credentials.server, db=credentials.database, user=credentials.username,
-                                        passwd=credentials.password)
+                                              passwd=credentials.password)
             log("Connected to database")
 
         except:
@@ -560,16 +560,20 @@ class CalibrationDatabase(object):
 
 
     def send_data_through_publisher(self, sn_for_db, stage_id):
-        
-        publisher = DataPublisher(sn_for_db)
-
         if not self.processed_running_data[str(stage_id)][0]:
             log("No status data to send for stage id: " + str(stage_id))
             return False
 
-        response = publisher.run_data_send(*self.processed_running_data[str(stage_id)])
-        log("Received %s from consumer" % response)
-        return response
+        csv = get_csv(
+            json=self.processing_running_data[str(stage_id)][0],
+            machine_serial=sn_for_db,
+            table=self.processing_running_data[str(stage_id)][1],
+            stage=self.processing_running_data[str(stage_id)][2]
+        )
+
+        sent = send_csv_to_ftp(csv)
+
+        return sent
 
     def send_ssh_keys(self, serial, key):
         with self.ssh_conn.cursor() as cursor:
