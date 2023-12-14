@@ -8,16 +8,12 @@ Step 2: Inform user of measurement after machine has moved, and ask user if they
 
 @author: Letty
 """
-
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.properties import ObjectProperty, StringProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.uix.textinput import TextInput
-
-# from asmcnc.calibration_app import screen_measurement
 from asmcnc.calibration_app import screen_distance_3_x
-
 
 Builder.load_string(
     """
@@ -38,16 +34,17 @@ Builder.load_string(
              
     BoxLayout:
         orientation: 'vertical'
-        padding: 20
+        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
         spacing: 0
 
         BoxLayout:
             orientation: 'horizontal'
-            padding: 0, 0
-            spacing: 20
+            padding:[0, 0]
+            spacing:0.025*app.width
             size_hint_y: 0.2
         
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y:0.9
                 id: getout_button
                 size: self.texture_size
@@ -60,16 +57,17 @@ Builder.load_string(
                     root.repeat_section()
                     
                 BoxLayout:
-                    padding: 5
+                    padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
                     size: self.parent.size
                     pos: self.parent.pos
                     
                     Label:
-                        font_size: '20sp'
+                        font_size: str(0.025*app.width) + 'sp'
                         text: '[color=455A64]Go Back[/color]'
                         markup: True
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y:0.9
                 id: getout_button
                 size: self.texture_size
@@ -82,16 +80,17 @@ Builder.load_string(
                     root.skip_section()
                     
                 BoxLayout:
-                    padding: 5
+                    padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
                     size: self.parent.size
                     pos: self.parent.pos
                     
                     Label:
-                        font_size: '20sp'
+                        font_size: str(0.025*app.width) + 'sp'
                         text: '[color=455A64]Skip section[/color]'
                         markup: True
                         
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y:0.9
                 id: getout_button
                 size: self.texture_size
@@ -104,19 +103,19 @@ Builder.load_string(
                     root.quit_calibration()
                     
                 BoxLayout:
-                    padding: 5
+                    padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
                     size: self.parent.size
                     pos: self.parent.pos
                     
                     Label:
-                        font_size: '20sp'
+                        font_size: str(0.025*app.width) + 'sp'
                         text: '[color=455A64]Quit calibration[/color]'
                         markup: True
 
         BoxLayout:
             orientation: 'horizontal'
-            spacing: 20
-            padding: 10
+            spacing:0.0416666666667*app.height
+            padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
 
             BoxLayout:
                 orientation: 'vertical'
@@ -126,7 +125,7 @@ Builder.load_string(
                 Label:
                     id: title_label
                     size_hint_y: 0.3
-                    font_size: '35sp'
+                    font_size: str(0.04375*app.width) + 'sp'
                     text_size: self.size
                     halign: 'left'
                     valign: 'middle'
@@ -142,13 +141,15 @@ Builder.load_string(
                     RstDocument:
                         id: user_instructions_text
                         background_color: hex('#FFFFFF')
+                        base_font_size: str(31.0/800.0*app.width) + 'sp'
                         
                 BoxLayout: 
                     orientation: 'horizontal' 
-                    padding: 30
-                    spacing: 10
+                    padding:[dp(0.0375)*app.width, dp(0.0625)*app.height]
+                    spacing:0.0125*app.width
                     
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y:0.9
                         size: self.texture_size
                         valign: 'top'
@@ -160,18 +161,19 @@ Builder.load_string(
                             root.left_button()
                             
                         BoxLayout:
-                            padding: 5
+                            padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
                             size: self.parent.size
                             pos: self.parent.pos
                             
                             Label:
                                 id: improve_button_label
                                 #size_hint_y: 1
-                                font_size: '20sp'
+                                font_size: str(0.025*app.width) + 'sp'
                                 text: '[color=455A64]I want to try to improve the result[/color]'
                                 markup: True
 
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y:0.9
 
                         valign: 'top'
@@ -183,14 +185,14 @@ Builder.load_string(
                             root.right_button()
                             
                         BoxLayout:
-                            padding: 5
+                            padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
                             size: self.parent.size
                             pos: self.parent.pos
                             
                             Label:
                                 id: continue_button_label
                                 text_size: self.size
-                                font_size: '20sp'
+                                font_size: str(0.025*app.width) + 'sp'
                                 valign: 'middle'
                                 halign: 'center'
                                 markup: True
@@ -207,8 +209,6 @@ class DistanceScreen2xClass(Screen):
     improve_button_label = ObjectProperty()
     continue_button_label = ObjectProperty()
     user_instructions_text = ObjectProperty()
-
-    # step 2
     initial_x_cal_move = NumericProperty()
     x_cal_measure_1 = NumericProperty()
 
@@ -219,13 +219,16 @@ class DistanceScreen2xClass(Screen):
 
     def on_pre_enter(self):
         measure_string = str(self.initial_x_cal_move + self.x_cal_measure_1)
-
         self.title_label.text = "[color=000000]X Distance:[/color]"
         self.user_instructions_text.text = (
-            "Re-measure distance between guard post and end plate. \n\n"
-            "[b]The distance should measure " + measure_string + "[/b]"
+            """Re-measure distance between guard post and end plate. 
+
+[b]The distance should measure """
+            + measure_string
+            + "[/b]"
         )
-        self.continue_button_label.text = "[color=455A64]Ok, it measures as expected.\n Finish and move on to the next section.[/color]"
+        self.continue_button_label.text = """[color=455A64]Ok, it measures as expected.
+ Finish and move on to the next section.[/color]"""
 
     def left_button(self):
         self.next_screen()
@@ -234,7 +237,7 @@ class DistanceScreen2xClass(Screen):
         self.skip_section()
 
     def repeat_section(self):
-        from asmcnc.calibration_app import screen_distance_1_x  # this has to be here
+        from asmcnc.calibration_app import screen_distance_1_x # this has to be here
 
         distance_screen1x = screen_distance_1_x.DistanceScreen1xClass(
             name="distance1x", screen_manager=self.sm, machine=self.m
@@ -255,9 +258,7 @@ class DistanceScreen2xClass(Screen):
         self.sm.current = "tape_measure_alert"
 
     def next_screen(self):
-        if not self.sm.has_screen(
-            "distance3x"
-        ):  # only create the new screen if it doesn't exist already
+        if not self.sm.has_screen("distance3x"): # only create the new screen if it doesn't exist already
             distance3x_screen = screen_distance_3_x.DistanceScreen3xClass(
                 name="distance3x", screen_manager=self.sm, machine=self.m
             )
