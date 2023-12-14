@@ -50,7 +50,7 @@ Builder.load_string(
                 cols: 2
 
                 Button:
-                    
+                    font_size: str(0.01875 * app.width) + 'sp'
                     text: "BACK"
                     on_press: root.back_to_fac_settings()
 
