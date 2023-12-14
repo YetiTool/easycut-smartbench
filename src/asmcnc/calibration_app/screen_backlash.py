@@ -11,7 +11,6 @@ Step 3: Inform
 
 @author: Letty
 """
-
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, StringProperty
@@ -42,16 +41,17 @@ Builder.load_string(
              
     BoxLayout:
         orientation: 'vertical'
-        padding: 20
+        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
         spacing: 0
 
         BoxLayout:
             orientation: 'horizontal'
-            padding: 0, 0
-            spacing: 20
+            padding:[0, 0]
+            spacing:0.025*app.width
             size_hint_y: 0.2
         
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y:0.9
                 id: getout_button
                 size: self.texture_size
@@ -64,17 +64,18 @@ Builder.load_string(
                     root.repeat_section()
                     
                 BoxLayout:
-                    padding: 5
+                    padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
                     size: self.parent.size
                     pos: self.parent.pos
                     
                     Label:
                         #size_hint_y: 1
-                        font_size: '20sp'
+                        font_size: str(0.025*app.width) + 'sp'
                         text: '[color=455A64]Go Back[/color]'
                         markup: True
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y:0.9
                 id: getout_button
                 size: self.texture_size
@@ -87,16 +88,17 @@ Builder.load_string(
                     root.skip_section()
                     
                 BoxLayout:
-                    padding: 5
+                    padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
                     size: self.parent.size
                     pos: self.parent.pos
                     
                     Label:
-                        font_size: '20sp'
+                        font_size: str(0.025*app.width) + 'sp'
                         text: '[color=455A64]Skip section[/color]'
                         markup: True
                         
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y:0.9
                 id: getout_button
                 size: self.texture_size
@@ -109,20 +111,20 @@ Builder.load_string(
                     root.quit_calibration()
                     
                 BoxLayout:
-                    padding: 5
+                    padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
                     size: self.parent.size
                     pos: self.parent.pos
                     
                     Label:
                         #size_hint_y: 1
-                        font_size: '20sp'
+                        font_size: str(0.025*app.width) + 'sp'
                         text: '[color=455A64]Quit calibration[/color]'
                         markup: True
 
         BoxLayout:
             orientation: 'horizontal'
-            spacing: 20
-            padding: 10
+            spacing:0.0416666666667*app.height
+            padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
 
             BoxLayout:
                 orientation: 'vertical'
@@ -132,7 +134,7 @@ Builder.load_string(
                 Label:
                     id: title_label
                     size_hint_y: 0.2
-                    font_size: '35sp'
+                    font_size: str(0.04375*app.width) + 'sp'
                     text_size: self.size
                     halign: 'left'
                     valign: 'middle'
@@ -148,13 +150,15 @@ Builder.load_string(
                     RstDocument:
                         id: user_instructions_text
                         background_color: hex('#FFFFFF')
+                        base_font_size: str(31.0/800.0*app.width) + 'sp'
                         
                 BoxLayout: 
                     orientation: 'horizontal' 
-                    padding: 30
-                    spacing: 10
+                    padding:[dp(0.0375)*app.width, dp(0.0625)*app.height]
+                    spacing:0.0125*app.width
                     
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y:0.9
                         id: nudge01_button
                         size: self.texture_size
@@ -167,16 +171,17 @@ Builder.load_string(
                             root.nudge_01()
                             
                         BoxLayout:
-                            padding: 5
+                            padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
                             size: self.parent.size
                             pos: self.parent.pos
                             
                             Label:
-                                font_size: '20sp'
+                                font_size: str(0.025*app.width) + 'sp'
                                 text: '[color=455A64]Nudge 0.1 mm[/color]'
                                 markup: True
 
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y:0.9
                         id: nudge002_button
                         size: self.texture_size
@@ -189,13 +194,13 @@ Builder.load_string(
                             root.nudge_002()
                             
                         BoxLayout:
-                            padding: 5
+                            padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
                             size: self.parent.size
                             pos: self.parent.pos
                             
                             Label:
                                 #size_hint_y: 1
-                                font_size: '20sp'
+                                font_size: str(0.025*app.width) + 'sp'
                                 text: '[color=455A64]Nudge 0.02 mm[/color]'
                                 markup: True
 
@@ -207,17 +212,18 @@ Builder.load_string(
                 Label:
                     id: test_instructions_label
                     text_size: self.size
-                    font_size: '18sp'
+                    font_size: str(0.0225*app.width) + 'sp'
                     halign: 'center'
                     valign: 'middle'
                     markup: True
                     
                 BoxLayout:
                     orientation: 'horizontal'
-                    padding: 20
+                    padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
                     size_hint_y: 0.6
                     
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         id: action_button
                         size: self.texture_size
                         valign: 'top'
@@ -229,13 +235,13 @@ Builder.load_string(
                             root.next_instruction()
                             
                         BoxLayout:
-                            padding: 5
+                            padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
                             size: self.parent.size
                             pos: self.parent.pos
                             
                             Label:
                                 id: test_ok_label
-                                font_size: '20sp'
+                                font_size: str(0.025*app.width) + 'sp'
                                 text:'[color=455A64]Test[/color]'
                                 markup: True         
 """
@@ -250,12 +256,9 @@ class BacklashScreenClass(Screen):
     nudge01_button = ObjectProperty()
     nudge002_button = ObjectProperty()
     action_button = ObjectProperty()
-
     backlash_move_distance = 50
     nudge_counter = 0
-
     sub_screen_count = 0
-
     axis = StringProperty()
 
     def __init__(self, **kwargs):
@@ -266,35 +269,29 @@ class BacklashScreenClass(Screen):
     def on_pre_enter(self):
         self.title_label.text = "[color=000000] " + self.axis + " backlash:[/color]"
 
-    #         if self.axis == 'X':
-    #             self.screen_x_1() # these don't work if returning from wait screen
-    #         elif self.axis == 'Y':
-    #             self.screen_y_1()
-
     def update_instruction(self, dt):
         if not self.m.state() == "Jog":
             if self.axis == "X":
-                self.user_instructions_text.text = (
-                    "Push the tape measure up against the guard post,"
-                    " and take a measurement against the end plate. \n\n"
-                    "Do not allow the tape measure to bend. \n\n\n"
-                    "Use the nudge buttons so that the measurement is precisely up to a millimeter line.\n\n"
-                    "Nudging will move the Z head away from X-home."
-                )
-            if self.axis == "Y":
-                self.user_instructions_text.text = (
-                    "Use a scraper blade or block, pushed against the inside"
-                    " surface of the beam to take a measurement of the beam's position against"
-                    " the tape measure. \n\n"
-                    "Do not allow the tape measure to bend. \n\n\n"
-                    "Use the nudge buttons so that the measurement is precisely up to a millimeter line.\n\n"
-                    "Nudging will move the Z head away from Y-home."
-                )
+                self.user_instructions_text.text = """Push the tape measure up against the guard post, and take a measurement against the end plate. 
 
-            self.test_instructions_label.text = (
-                "[color=000000]When the the measurement is precisely up to a millimeter line press [b]Test[/b].\n"
-                "\n The axis will be moved backwards and then forwards, attempting to return to the same point.[/color]"
-            )
+Do not allow the tape measure to bend. 
+
+
+Use the nudge buttons so that the measurement is precisely up to a millimeter line.
+
+Nudging will move the Z head away from X-home."""
+            if self.axis == "Y":
+                self.user_instructions_text.text = """Use a scraper blade or block, pushed against the inside surface of the beam to take a measurement of the beam's position against the tape measure. 
+
+Do not allow the tape measure to bend. 
+
+
+Use the nudge buttons so that the measurement is precisely up to a millimeter line.
+
+Nudging will move the Z head away from Y-home."""
+            self.test_instructions_label.text = """[color=000000]When the the measurement is precisely up to a millimeter line press [b]Test[/b].
+
+ The axis will be moved backwards and then forwards, attempting to return to the same point.[/color]"""
             self.enable_buttons()
             Clock.unschedule(self.poll_for_jog_finish)
 
@@ -317,22 +314,20 @@ class BacklashScreenClass(Screen):
 
     def screen_x_2(self):
         self.test_ok_label.text = "[color=455A64]Ok[/color]"
-        self.user_instructions_text.text = (
-            "Repeat the measurement.\n\n"
-            "If required, use the nudge buttons to return to the exact position.\n\n"
-            "The amount nudged will be added to give the backlash value. If you overshoot,"
-            " repeat the section (using the button in the top left).\n\n"
-            "Nudging will move the Z head towards X-home."
-        )
+        self.user_instructions_text.text = """Repeat the measurement.
+
+If required, use the nudge buttons to return to the exact position.
+
+The amount nudged will be added to give the backlash value. If you overshoot, repeat the section (using the button in the top left).
+
+Nudging will move the Z head towards X-home."""
         self.test_instructions_label.text = " "
         self.nudge_counter = 0
 
     def screen_x_3(self):
         self.user_instructions_text.text = (
             "The backlash value is " + str(self.nudge_counter) + " mm.\n\n"
-        )  # \
-        #                 'If this value is higher than 0.3 mm, it is worth inspecting the axis wheels ' \
-        #                 'and motor pinions to ensure a better engagement.\n\n'
+        )
         self.nudge_counter = 0
         self.test_ok_label.text = "[color=455A64]Next section[/color]"
         self.nudge002_button.opacity = 0
@@ -360,23 +355,20 @@ class BacklashScreenClass(Screen):
 
     def screen_y_2(self):
         self.test_ok_label.text = "[color=455A64]Ok[/color]"
-        self.user_instructions_text.text = (
-            "Repeat the measurement.\n\n"
-            "If required, use the nudge buttons to return to the exact position.\n\n"
-            "The amount nudged will be added to give the backlash value. If you overshoot,"
-            " repeat the section (using the button in the top left).\n\n"
-            "Nudging will move the Z head towards Y-home."
-        )
+        self.user_instructions_text.text = """Repeat the measurement.
 
+If required, use the nudge buttons to return to the exact position.
+
+The amount nudged will be added to give the backlash value. If you overshoot, repeat the section (using the button in the top left).
+
+Nudging will move the Z head towards Y-home."""
         self.test_instructions_label.text = " "
         self.nudge_counter = 0
 
     def screen_y_3(self):
         self.user_instructions_text.text = (
             "The backlash value is " + str(self.nudge_counter) + " mm.\n\n"
-        )  # \
-        #                 'If this value is higher than 0.3 mm, it is worth inspecting the axis wheels ' \
-        #                 'and motor pinions to ensure a better engagement.\n\n'
+        )
         self.nudge_counter = 0
         self.test_ok_label.text = "[color=455A64]Next section[/color]"
         self.nudge002_button.opacity = 0
@@ -397,8 +389,6 @@ class BacklashScreenClass(Screen):
             "G91 " + self.axis + str(-1 * self.backlash_move_distance) + " F6000",
         ]
         self.m.s.start_sequential_stream(jog_relative_to_stream)
-
-        # want the wait screen called here
         self.sm.get_screen("wait").return_to_screen = "backlash"
         self.sm.current = "wait"
 
@@ -432,11 +422,9 @@ class BacklashScreenClass(Screen):
                 self.sub_screen_count = 1
                 self.screen_x_2()
                 self.test()
-
             elif self.sub_screen_count == 1:
                 self.sub_screen_count = 2
                 self.screen_x_3()
-
             elif self.sub_screen_count == 2:
                 self.sub_screen_count = 0
                 self.next_screen()
@@ -445,11 +433,9 @@ class BacklashScreenClass(Screen):
                 self.test()
                 self.sub_screen_count = 1
                 self.screen_y_2()
-
             elif self.sub_screen_count == 1:
                 self.sub_screen_count = 2
                 self.screen_y_3()
-
             elif self.sub_screen_count == 2:
                 self.sub_screen_count = 0
                 self.next_screen()
@@ -458,11 +444,10 @@ class BacklashScreenClass(Screen):
         if self.sub_screen_count == 0:
             self.sm.get_screen("measurement").axis = self.axis
             self.sm.current = "measurement"
-        else:
-            if self.axis == "X":
-                self.screen_x_1()
-            elif self.axis == "Y":
-                self.screen_y_1()
+        elif self.axis == "X":
+            self.screen_x_1()
+        elif self.axis == "Y":
+            self.screen_y_1()
 
     def skip_section(self):
         self.next_screen()
