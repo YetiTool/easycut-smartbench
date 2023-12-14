@@ -58,14 +58,15 @@ Builder.load_string(
                         id: xy_move_container
                         pos_hint: {'center_x': .5, 'center_y': .5}
                         size_hint: (None,None)
-                        height: dp(360)
-                        width: dp(270)
+                        height: dp(0.75*app.height)
+                        width: dp(0.3375*app.width)
         
                     BoxLayout:
                         size_hint_y: 0.1
-                        padding: [0, dp(30), dp(150), 0]
+                        padding:[0, dp(0.0625)*app.height, dp(0.1875)*app.width, 0]
         
                         Button:
+                            font_size: str(0.01875 * app.width) + 'sp'
                             text: 'Factory Settings'
                             on_press: root.back_to_fac_settings()
         
@@ -79,6 +80,7 @@ Builder.load_string(
                             rows:2
         
                             Label:
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 size_hint_y: 0.2
                                 text: 'Active Current Adjustment'
         
@@ -91,18 +93,22 @@ Builder.load_string(
                             orientation: 'vertical'
         
                             Button:
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: 'Home'
                                 on_press: root.home()
         
                             Button:
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: 'Reset Currents'
                                 on_press: root.reset_currents()
 
                             Button:
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: 'GRBL Reset'
                                 on_press: root.grbl_reset()
 
                             Label: 
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 id: protocol_status
                                 text: ""
 
@@ -118,98 +124,121 @@ Builder.load_string(
                             Label
         
                             Label:
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: 'SG X'
         
                             Label:
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: 'SG X1'
         
                             Label:
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: 'SG X2'
         
                             Label:
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: 'SG Y1'
         
                             Label:
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: 'SG Y2'
         
                             Label:
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: 'SG Z'
         
                             Label:
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: 'Realtime'
         
                             Label:
                                 id: rt_x_sg
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: '-'
         
                             Label:
                                 id: rt_x1_sg
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: '-'
         
                             Label:
                                 id: rt_x2_sg
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: '-'
         
                             Label:
                                 id: rt_y1_sg
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: '-'
         
                             Label:
                                 id: rt_y2_sg
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: '-'
         
                             Label:
                                 id: rt_z_sg
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: '-'
         
                             Label:
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: 'Peak'
         
                             Label:
                                 id: peak_x_sg
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: '-'
         
                             Label:
                                 id: peak_x1_sg
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: '-'
         
                             Label:
                                 id: peak_x2_sg
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: '-'
         
                             Label:
                                 id: peak_y1_sg
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: '-'
         
                             Label:
                                 id: peak_y2_sg
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: '-'
         
                             Label:
                                 id: peak_z_sg
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: '-'
         
                         BoxLayout:
                             orientation: 'vertical'
                             size_hint_x: 0.3
-                            padding: [0, dp(25), 0, dp(25)]
+                            padding:[0, dp(0.0520833333333)*app.height, 0, dp(0.0520833333333)*app.height]
         
                             Button:
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: 'Clear'
                                 on_press: root.clear_sg_vals()
         
                             ToggleButton:
                                 id: raw_sg_toggle_button
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: 'Show raw'
                                 on_press: root.toggle_raw_sg_values()
         
                             Button:
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: 'STORE PARAMS'
                                 on_press: root.confirm_store_values()
 
         BoxLayout:
-            size_hint_y: 0.08
             id: status_container    
+            size_hint_y: 0.08
 
 
 """
@@ -222,7 +251,6 @@ class CurrentAdjustment(Screen):
 
     def __init__(self, **kwargs):
         super(CurrentAdjustment, self).__init__(**kwargs)
-
         self.m = kwargs["m"]
         self.systemtools_sm = kwargs["systemtools"]
         self.l = kwargs["l"]
@@ -240,35 +268,28 @@ class CurrentAdjustment(Screen):
             m=self.m, motor=TMC_X1, localization=self.l, systemtools=self.systemtools_sm
         )
         self.current_adjustment_container.add_widget(self.x1_current_adjustment_widget)
-
         self.x2_current_adjustment_widget = CurrentAdjustmentWidget(
             m=self.m, motor=TMC_X2, localization=self.l, systemtools=self.systemtools_sm
         )
         self.current_adjustment_container.add_widget(self.x2_current_adjustment_widget)
-
         self.y1_current_adjustment_widget = CurrentAdjustmentWidget(
             m=self.m, motor=TMC_Y1, localization=self.l, systemtools=self.systemtools_sm
         )
         self.current_adjustment_container.add_widget(self.y1_current_adjustment_widget)
-
         self.y2_current_adjustment_widget = CurrentAdjustmentWidget(
             m=self.m, motor=TMC_Y2, localization=self.l, systemtools=self.systemtools_sm
         )
         self.current_adjustment_container.add_widget(self.y2_current_adjustment_widget)
-
         self.z_current_adjustment_widget = CurrentAdjustmentWidget(
             m=self.m, motor=TMC_Z, localization=self.l, systemtools=self.systemtools_sm
         )
         self.current_adjustment_container.add_widget(self.z_current_adjustment_widget)
-
         self.clear_sg_vals()
-
         self.status_container.add_widget(
             widget_sg_status_bar.SGStatusBar(
                 machine=self.m, screen_manager=self.systemtools_sm.sm
             )
         )
-
         self.text_inputs = [
             self.x1_current_adjustment_widget.current_current_label,
             self.x2_current_adjustment_widget.current_current_label,
@@ -299,7 +320,6 @@ class CurrentAdjustment(Screen):
                 self.systemtools_sm.sm, self.l, "SB not Idle!! Can't reset currents!"
             )
             return
-
         self.raw_sg_toggle_button.state = "normal"
         self.toggle_raw_sg_values()
         self.reset_currents()
@@ -315,27 +335,22 @@ class CurrentAdjustment(Screen):
             self.x_vals.append(self.m.s.sg_x_motor_axis)
             self.rt_x_sg.text = str(self.m.s.sg_x_motor_axis)
             self.peak_x_sg.text = str(max(self.x_vals))
-
         if self.m.s.sg_x1_motor not in [-999, None]:
             self.x1_vals.append(self.m.s.sg_x1_motor)
             self.rt_x1_sg.text = str(self.m.s.sg_x1_motor)
             self.peak_x1_sg.text = str(max(self.x1_vals))
-
         if self.m.s.sg_x2_motor not in [-999, None]:
             self.x2_vals.append(self.m.s.sg_x2_motor)
             self.rt_x2_sg.text = str(self.m.s.sg_x2_motor)
             self.peak_x2_sg.text = str(max(self.x2_vals))
-
         if self.m.s.sg_y1_motor != -999:
             self.y1_vals.append(self.m.s.sg_y1_motor)
             self.rt_y1_sg.text = str(self.m.s.sg_y1_motor)
             self.peak_y1_sg.text = str(max(self.y1_vals))
-
         if self.m.s.sg_y2_motor != -999:
             self.y2_vals.append(self.m.s.sg_y2_motor)
             self.rt_y2_sg.text = str(self.m.s.sg_y2_motor)
             self.peak_y2_sg.text = str(max(self.y2_vals))
-
         if self.m.s.sg_z_motor_axis != -999:
             self.z_vals.append(self.m.s.sg_z_motor_axis)
             self.rt_z_sg.text = str(self.m.s.sg_z_motor_axis)
@@ -348,7 +363,6 @@ class CurrentAdjustment(Screen):
         self.y1_vals = []
         self.y2_vals = []
         self.z_vals = []
-
         self.rt_x_sg.text = "-"
         self.rt_x1_sg.text = "-"
         self.rt_x2_sg.text = "-"
@@ -368,9 +382,7 @@ class CurrentAdjustment(Screen):
                 self.systemtools_sm.sm, self.l, "SB not Idle!! Can't reset currents!"
             )
             return False
-
         self.wait_popup_for_reset_currents = PopupWait(self.systemtools_sm.sm, self.l)
-
         if (
             not self.x1_current_adjustment_widget.reset_current()
             or not self.x2_current_adjustment_widget.reset_current()
@@ -379,7 +391,6 @@ class CurrentAdjustment(Screen):
             or not self.z_current_adjustment_widget.reset_current()
         ):
             PopupWarning(self.systemtools_sm.sm, self.l, "Issue resetting currents!")
-
         self.wait_while_currents_reset()
 
     def wait_while_currents_reset(self, dt=0):
@@ -395,7 +406,6 @@ class CurrentAdjustment(Screen):
             self.m.send_command_to_motor(
                 "REPORT RAW SG UNSET", command=REPORT_RAW_SG, value=0
             )
-
         else:
             self.m.send_command_to_motor(
                 "REPORT RAW SG SET", command=REPORT_RAW_SG, value=1
@@ -404,7 +414,6 @@ class CurrentAdjustment(Screen):
     def confirm_store_values(self):
         if self.m.state().startswith("Idle"):
             PopupConfirmStoreCurrentValues(self.m, self.systemtools_sm.sm, self.l, self)
-
         else:
             PopupWarning(self.systemtools_sm.sm, self.l, "SB not Idle!! Can't store")
 
