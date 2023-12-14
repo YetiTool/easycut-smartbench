@@ -340,7 +340,7 @@ Nudging will move the Z head away from X-home."""
             self.warning_label.opacity = 1
             return
         if self.x_cal_measure_1 == float(self.value_input.text):
-            self.test_instructions_label.text = "[color=ff0000]INVALID MEASUREMENT: Please nudge to the next mm incrementand record the new value[/color]"
+            self.test_instructions_label.text = "[color=ff0000]INVALID MEASUREMENT: Please nudge to the next mm increment and record the new value[/color]"
             return
         self.save_measured_value()              # get text input
         self.nudge_total = self.nudge_counter   # keep the nudges this time, we need them!
