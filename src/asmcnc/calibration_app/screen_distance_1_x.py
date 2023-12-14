@@ -153,7 +153,7 @@ Builder.load_string(
                     RstDocument:
                         id: user_instructions_text
                         background_color: hex('#FFFFFF')
-                        base_font_size: str(31.0/800.0*app.width) + 'sp'
+                        base_font_size: str(31.0/800.0*app.width) + 'sp's
                         
                 BoxLayout: 
                     orientation: 'horizontal' 
@@ -327,7 +327,7 @@ Please wait while the machine moves to the next measurement point..."""
         self.poll_for_jog_finish = Clock.schedule_interval(self.update_instruction, 0.5)
 
     def initial_move_x(self):
-        self.m.jog_absolute_single_axis("X", -1184, 9999)
+        self.m.jog_absolute_single_axis("X", -1184, 9999)    # machine moves on screen enter
         self.m.jog_relative("X", -10, 9999)
         self.m.jog_relative("X", 10, 9999)
 
@@ -383,8 +383,9 @@ Nudging will move the Z head away from X-home."""
             self.warning_label.text = "[color=ff0000]VALUE IS TOO HIGH![/color]"
             self.warning_label.opacity = 1
             return
-        self.save_measured_value()
-        self.nudge_counter = 0
+        self.save_measured_value()  # get text input
+        self.nudge_counter = 0      # clear nudge counter
+        # Do the actual button command, this will also take us to relevant next screens
         self.set_and_move()
 
     def quit_calibration(self):
@@ -404,7 +405,7 @@ Nudging will move the Z head away from X-home."""
         self.sm.current = "measurement"
 
     def next_screen(self):
-        if not self.sm.has_screen("distance2x"):
+        if not self.sm.has_screen("distance2x"): # only create the new screen if it doesn't exist already
             distance2x_screen = screen_distance_2_x.DistanceScreen2xClass(
                 name="distance2x", screen_manager=self.sm, machine=self.m
             )
