@@ -139,6 +139,7 @@ Builder.load_string(
                     RstDocument:
                         id: user_instructions_text
                         background_color: hex('#FFFFFF')
+                        base_font_size: str(31.0/800.0*app.width) + 'sp'
                         
                 BoxLayout: 
                     orientation: 'horizontal' 
@@ -231,7 +232,7 @@ class DistanceScreen2yClass(Screen):
         self.skip_section()
 
     def repeat_section(self):
-        from asmcnc.calibration_app import screen_distance_1_y
+        from asmcnc.calibration_app import screen_distance_1_y # this has to be here
 
         distance_screen1y = screen_distance_1_y.DistanceScreen1yClass(
             name="distance1y", screen_manager=self.sm, machine=self.m
@@ -254,7 +255,7 @@ class DistanceScreen2yClass(Screen):
         self.sm.current = "tape_measure_alert"
 
     def next_screen(self):
-        if not self.sm.has_screen("distance3y"):
+        if not self.sm.has_screen("distance3y"): # only create the new screen if it doesn't exist already
             distance3y_screen = screen_distance_3_y.DistanceScreen3yClass(
                 name="distance3y", screen_manager=self.sm, machine=self.m
             )
