@@ -10,12 +10,10 @@ Y measurement:
 
 @author: Letty
 """
-
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.properties import ObjectProperty, StringProperty
 from kivy.uix.widget import Widget
-
 from asmcnc.calibration_app import screen_backlash
 from asmcnc.calibration_app import screen_distance_1_x
 
@@ -37,16 +35,17 @@ Builder.load_string(
              
     BoxLayout:
         orientation: 'vertical'
-        padding: 20
+        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
         spacing: 0
 
         BoxLayout:
             orientation: 'horizontal'
-            padding: 0, 0
-            spacing: 20
+            padding:[0, 0]
+            spacing:0.025*app.width
             size_hint_y: 0.2
         
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y:0.9
                 id: getout_button
                 size: self.texture_size
@@ -59,16 +58,17 @@ Builder.load_string(
                     root.repeat_section()
                     
                 BoxLayout:
-                    padding: 5
+                    padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
                     size: self.parent.size
                     pos: self.parent.pos
                     
                     Label:
-                        font_size: '20sp'
+                        font_size: str(0.025*app.width) + 'sp'
                         text: '[color=455A64]Go Back[/color]'
                         markup: True
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y:0.9
                 id: getout_button
                 size: self.texture_size
@@ -81,16 +81,17 @@ Builder.load_string(
                     root.skip_section()
                     
                 BoxLayout:
-                    padding: 5
+                    padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
                     size: self.parent.size
                     pos: self.parent.pos
                     
                     Label:
-                        font_size: '20sp'
+                        font_size: str(0.025*app.width) + 'sp'
                         text: '[color=455A64]Skip section[/color]'
                         markup: True
                         
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y:0.9
                 id: getout_button
                 size: self.texture_size
@@ -103,20 +104,21 @@ Builder.load_string(
                     root.quit_calibration()
                     
                 BoxLayout:
-                    padding: 5
+                    padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
                     size: self.parent.size
                     pos: self.parent.pos
                     
                     Label:
-                        font_size: '20sp'
+                        font_size: str(0.025*app.width) + 'sp'
                         text: '[color=455A64]Quit calibration[/color]'
                         markup: True
 
         BoxLayout:
             orientation: 'horizontal'
-            spacing: 20
+            spacing:0.025*app.width
 
             Label:
+                font_size: str(0.01875 * app.width) + 'sp'
                 id: instruction_left
                 size_hint_x: 0.4
                 size: self.texture_size
@@ -130,6 +132,7 @@ Builder.load_string(
                 size_hint_x: 1.3
                  
                 Label:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     id: instruction_top
                     size_hint_y: 0.3
                     size: self.texture_size
@@ -146,10 +149,11 @@ Builder.load_string(
 
             BoxLayout:
                 orientation: 'vertical'
-                padding: 10
+                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                 size_hint_x: 0.3
                   
                 Button:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     id: action_button
                     size_hint_y: 0.9
                     size: self.texture_size
@@ -162,12 +166,12 @@ Builder.load_string(
                         root.next_instruction()
                         
                     BoxLayout:
-                        padding: 5
+                        padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
                         size: self.parent.size
                         pos: self.parent.pos
                         
                         Label:
-                            font_size: '20sp'
+                            font_size: str(0.025*app.width) + 'sp'
                             text: '[color=455A64]Next[/color]'
                             markup: True
                         
@@ -182,7 +186,6 @@ class MeasurementScreenClass(Screen):
     image_select = ObjectProperty()
     action_button = ObjectProperty()
     go_to_next_screen = False
-
     sub_screen_count = 0
     axis = StringProperty()
 
@@ -207,10 +210,15 @@ class MeasurementScreenClass(Screen):
     def screen_x_1(self):
         self.m.jog_absolute_single_axis("X", -1184, 9999)
         self.instruction_left.text = (
-            "[color=000000][b]" + self.axis + " measurement technique: [/b]"
-            "\n\nDisconnect the vacuum hose from the Z-head."
-            "\n\nUse a tape measure to find the position of the Z head.\n\n"
-            "Lay the measure in the rail. Push the end up to the carriage [b](1)[/b], and measure off the end plate [b](2)[/b].[/color]"
+            "[color=000000][b]"
+            + self.axis
+            + """ measurement technique: [/b]
+
+Disconnect the vacuum hose from the Z-head.
+
+Use a tape measure to find the position of the Z head.
+
+Lay the measure in the rail. Push the end up to the carriage [b](1)[/b], and measure off the end plate [b](2)[/b].[/color]"""
         )
         self.instruction_top.text = ""
         self.instruction_top.size_hint_y = 0
@@ -249,10 +257,7 @@ class MeasurementScreenClass(Screen):
     def screen_y_1(self):
         self.m.jog_absolute_single_axis("X", -660, 9999)
         self.m.jog_absolute_single_axis("Y", -self.m.grbl_y_max_travel + 182, 9999)
-        self.instruction_top.text = (
-            "[color=000000][b]Y measurement:[/b] Lift the X beam and position the tape body at the maximum end of the bench [b](1)[/b], threading underneath the X beam [b](2)[/b]. "
-            "Tape end should be hooked at the home end [b](3)[/b], so that the lowest measurement number is at the home end [b](3)[/b].[/color]"
-        )
+        self.instruction_top.text = "[color=000000][b]Y measurement:[/b] Lift the X beam and position the tape body at the maximum end of the bench [b](1)[/b], threading underneath the X beam [b](2)[/b]. Tape end should be hooked at the home end [b](3)[/b], so that the lowest measurement number is at the home end [b](3)[/b].[/color]"
         self.instruction_left.text = ""
         self.instruction_top.size_hint_y = 0.3
         self.instruction_left.size_hint_x = 0
@@ -261,11 +266,9 @@ class MeasurementScreenClass(Screen):
         )
 
     def screen_y_2(self):
-        self.instruction_left.text = (
-            "[color=000000]Use a scraper blade [b](1)[/b], or block, pushed against the inside surface of the beam [b](2)[/b] "
-            "to take a measurement of the beam's position against the tape measure."
-            "\n\nNote which face [b](1)[/b] you take your initial measurement from, and make sure you use that same face each time you measure.[/color]"
-        )
+        self.instruction_left.text = """[color=000000]Use a scraper blade [b](1)[/b], or block, pushed against the inside surface of the beam [b](2)[/b] to take a measurement of the beam's position against the tape measure.
+
+Note which face [b](1)[/b] you take your initial measurement from, and make sure you use that same face each time you measure.[/color]"""
         self.instruction_top.text = ""
         self.instruction_top.size_hint_y = 0.1
         self.instruction_left.size_hint_x = 0.4
@@ -286,7 +289,6 @@ class MeasurementScreenClass(Screen):
                 self.sub_screen_count = 3
             elif self.sub_screen_count == 3:
                 self.next_screen()
-
         if self.axis == "Y":
             if self.sub_screen_count == 0:
                 self.screen_y_2()
@@ -328,14 +330,9 @@ class MeasurementScreenClass(Screen):
                 name="backlash", screen_manager=self.sm, machine=self.m
             )
             self.sm.add_widget(backlash_screen)
-
-        self.sm.get_screen("backlash").axis = self.axis  # pass across axis variable
-
+        self.sm.get_screen("backlash").axis = self.axis
         if self.axis == "X":
-            self.sm.get_screen(
-                "backlash"
-            ).screen_x_1()  # these don't work if returning from wait screen
+            self.sm.get_screen("backlash").screen_x_1()
         elif self.axis == "Y":
             self.sm.get_screen("backlash").screen_y_1()
-
         self.sm.current = "backlash"
