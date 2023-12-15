@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-"""
+'''
 Created on 19 Aug 2017
 
 @author: Ed
-"""
+'''
 # config
 
 import kivy
@@ -22,8 +22,7 @@ from asmcnc.skavaUI import popup_info
 from asmcnc.core_UI.popups import BasicPopup, PopupType
 from kivy.core.window import Window
 
-Builder.load_string(
-    """
+Builder.load_string("""
 
 <LobbyScreen>:
 
@@ -501,11 +500,11 @@ Builder.load_string(
                             size: self.parent.width, self.parent.height
                             allow_stretch: True
                 
-"""
-)
-job_cache_dir = "./jobCache/"  # where job files are cached for selection (for last used history/easy access)
-job_q_dir = "./jobQ/"  # where file is copied if to be used next in job
-ftp_file_dir = "/home/sysop/router_ftp"  # Linux location where incoming files are FTP'd to
+""")
+
+job_cache_dir = './jobCache/'  # where job files are cached for selection (for last used history/easy access)
+job_q_dir = './jobQ/'  # where file is copied if to be used next in job
+ftp_file_dir = '/home/sysop/router_ftp'  # Linux location where incoming files are FTP'd to
 
 
 class LobbyScreen(Screen):
@@ -532,9 +531,10 @@ class LobbyScreen(Screen):
 
     def on_pre_enter(self):
         # Hide upgrade app if older than V1.3, and only if it has not been hidden already
-        if not "V1.3" in self.m.smartbench_model() and not self.upgrade_app_hidden:
+        if not ("V1.3" in self.m.smartbench_model()) and not self.upgrade_app_hidden:
             self.upgrade_app_container.parent.remove_widget(self.upgrade_app_container)
             self.upgrade_app_hidden = True
+
         elif self.upgrade_app_hidden and "V1.3" in self.m.smartbench_model():
             pass  # reinstate upgrade_app_container, tbc - this is placeholder for now
 
@@ -544,7 +544,7 @@ class LobbyScreen(Screen):
 
         # Tell user to update if update is available
         if self.trigger_update_popup:
-            popup_info.PopupInfo(self.sm, self.l, 400, self.update_message)
+            popup_info.PopupInfo(self.sm, self.l, 450, self.update_message)
 
         # Trigger welcome popup is machine is being used for the first time
         if self.m.trigger_setup: self.help_popup()
@@ -600,7 +600,7 @@ class LobbyScreen(Screen):
 
     def upgrade_app(self):
         # Need to set $51 on entry, requires idle
-        if self.m.state().startswith("Idle"):
+        if self.m.state().startswith('Idle'):
             self.am.start_upgrade_app()
         else:
             popup_info.PopupError(self.sm, self.l, self.l.get_str("Please ensure machine is idle before continuing."))
@@ -640,6 +640,7 @@ class LobbyScreen(Screen):
                 ) + '\n' +
                 '[b]https://www.yetitool.com/support[/b]' + '\n'
         )
+
         self.update_message = (
                 self.l.get_str('New software update available for download!') + '\n\n' +
                 self.l.get_str(
