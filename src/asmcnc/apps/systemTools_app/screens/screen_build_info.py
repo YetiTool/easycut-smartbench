@@ -628,15 +628,20 @@ class BuildInfoScreen(Screen):
         self.get_smartbench_model()
         self.get_smartbench_name()
         self.get_smartbench_location()
+
+        # Add the IDs of ALL the TextInputs on this screen
         self.text_inputs = [self.smartbench_name_input, self.smartbench_location_input]
 
+    ## EXIT BUTTONS
     def go_back(self):
         self.systemtools_sm.back_to_menu()
 
     def exit_app(self):
         self.systemtools_sm.exit_app()
 
+    ## GET BUILD INFO
     def on_pre_enter(self, *args):
+        # check if language is up to date, if it isn't update all screen strings
         if self.serial_number_header.text != self.l.get_str("Serial number"):
             self.update_strings()
         self.m.send_any_gcode_command("$I")
@@ -754,6 +759,7 @@ class BuildInfoScreen(Screen):
         if self.reset_language == True:
             popup_system.RebootAfterLanguageChange(self.systemtools_sm, self.l)
 
+    ## SMARTBENCH NAMING
     def on_focus(self, instance, value):
         if not value:
             self.save_new_name()
@@ -785,9 +791,11 @@ class BuildInfoScreen(Screen):
 
     def get_smartbench_name(self):
         self.smartbench_name_unformatted = self.m.device_label
+        # Remove newlines
         self.smartbench_name_formatted = self.smartbench_name_unformatted.replace(
             "\n", " "
         )
+        # Remove trailing and leading whitespaces
         self.smartbench_name_formatted = self.smartbench_name_formatted.strip()
         self.smartbench_name_label.text = (
             "[b]" + self.smartbench_name_formatted + "[/b]"
@@ -802,6 +810,7 @@ class BuildInfoScreen(Screen):
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False
 
+    ## SMARTBENCH LOCATION NAMING
     def on_focus_location(self, instance, value):
         if not value:
             self.save_new_location()
@@ -833,9 +842,11 @@ class BuildInfoScreen(Screen):
 
     def get_smartbench_location(self):
         self.smartbench_location_unformatted = self.m.device_location
+        # Remove newlines
         self.smartbench_location_formatted = (
             self.smartbench_location_unformatted.replace("\n", " ")
         )
+        # Remove trailing and leading whitespaces
         self.smartbench_location_formatted = self.smartbench_location_formatted.strip()
         if self.smartbench_location_formatted == "SmartBench location":
             self.smartbench_location_formatted = self.l.get_str("SmartBench location")
