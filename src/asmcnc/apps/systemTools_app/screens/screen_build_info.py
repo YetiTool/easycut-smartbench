@@ -5,6 +5,7 @@ Build info screen for system tools app
 @author: Letty
 """
 import os, sys
+from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -15,6 +16,7 @@ from asmcnc.skavaUI import popup_info
 from asmcnc.apps.systemTools_app.screens import popup_system
 from asmcnc.apps.start_up_sequence.data_consent_app import screen_manager_data_consent
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupSSHToggleFailed
+from asmcnc.core_UI import scaling_utils as utils
 
 Builder.load_string(
     """
@@ -730,23 +732,23 @@ class BuildInfoScreen(Screen):
 
     def update_font_sizes(self):
         if self.l.get_text_length(self.firmware_header.text) < 20:
-            self.smartbench_model_header.font_size = 20
-            self.serial_number_header.font_size = 20
-            self.console_serial_number_header.font_size = 20
-            self.software_header.font_size = 20
-            self.platform_header.font_size = 20
-            self.firmware_header.font_size = 20
-            self.zhead_header.font_size = 20
-            self.hardware_header.font_size = 20
+            self.smartbench_model_header.font_size = utils.get_scaled_width(20)
+            self.serial_number_header.font_size = utils.get_scaled_width(20)
+            self.console_serial_number_header.font_size = utils.get_scaled_width(20)
+            self.software_header.font_size = utils.get_scaled_width(20)
+            self.platform_header.font_size = utils.get_scaled_width(20)
+            self.firmware_header.font_size = utils.get_scaled_width(20)
+            self.zhead_header.font_size = utils.get_scaled_width(20)
+            self.hardware_header.font_size = utils.get_scaled_width(20)
         else:
-            self.smartbench_model_header.font_size = 18
-            self.serial_number_header.font_size = 18
-            self.console_serial_number_header.font_size = 18
-            self.software_header.font_size = 18
-            self.platform_header.font_size = 18
-            self.firmware_header.font_size = 18
-            self.zhead_header.font_size = 18
-            self.hardware_header.font_size = 18
+            self.smartbench_model_header.font_size = utils.get_scaled_width(18)
+            self.serial_number_header.font_size = utils.get_scaled_width(18)
+            self.console_serial_number_header.font_size = utils.get_scaled_width(18)
+            self.software_header.font_size = utils.get_scaled_width(18)
+            self.platform_header.font_size = utils.get_scaled_width(18)
+            self.firmware_header.font_size = utils.get_scaled_width(18)
+            self.zhead_header.font_size = utils.get_scaled_width(18)
+            self.hardware_header.font_size = utils.get_scaled_width(18)
 
     def restart_app(self):
         if self.reset_language == True:
@@ -764,7 +766,7 @@ class BuildInfoScreen(Screen):
         self.smartbench_name_input.disabled = False
         self.smartbench_name.height = 0
         self.smartbench_name.opacity = 0
-        self.smartbench_name_input.height = 40
+        self.smartbench_name_input.height = dp(utils.get_scaled_height(40))
         self.smartbench_name_input.opacity = 1
         self.smartbench_name.focus = False
         Clock.schedule_once(self.set_focus_on_text_input, 0.3)
@@ -777,7 +779,7 @@ class BuildInfoScreen(Screen):
         self.smartbench_name.disabled = False
         self.smartbench_name_input.height = 0
         self.smartbench_name_input.opacity = 0
-        self.smartbench_name.height = 40
+        self.smartbench_name.height = dp(utils.get_scaled_height(40))
         self.smartbench_name.opacity = 1
         self.get_smartbench_name()
 
@@ -812,7 +814,7 @@ class BuildInfoScreen(Screen):
         self.smartbench_location_input.disabled = False
         self.smartbench_location.height = 0
         self.smartbench_location.opacity = 0
-        self.smartbench_location_input.height = 30
+        self.smartbench_location_input.height = dp(utils.get_scaled_height(30))
         self.smartbench_location_input.opacity = 1
         self.smartbench_location.focus = False
         Clock.schedule_once(self.set_focus_on_location_input, 0.3)
@@ -825,7 +827,7 @@ class BuildInfoScreen(Screen):
         self.smartbench_location.disabled = False
         self.smartbench_location_input.height = 0
         self.smartbench_location_input.opacity = 0
-        self.smartbench_location.height = 30
+        self.smartbench_location.height = dp(utils.get_scaled_height(30))
         self.smartbench_location.opacity = 1
         self.get_smartbench_location()
 
