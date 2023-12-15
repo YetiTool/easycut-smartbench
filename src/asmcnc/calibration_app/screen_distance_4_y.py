@@ -303,7 +303,7 @@ You will need to home the machine, and then repeat steps 1 and 2 to verify your 
         self.sm.current = "tape_measure_alert"
 
     def next_screen(self):
-        # set up distance screen 1-x to return to after homing
+        # set up distance screen 1-y to return to after homing
         from asmcnc.calibration_app import screen_distance_1_y
 
         distance_screen1y = screen_distance_1_y.DistanceScreen1yClass(
