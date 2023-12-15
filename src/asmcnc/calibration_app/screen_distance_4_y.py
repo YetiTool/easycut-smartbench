@@ -131,6 +131,7 @@ Builder.load_string(
                     RstDocument:
                         id: user_instructions_text
                         background_color: hex('#FFFFFF')
+                        base_font_size: str(31.0/800.0*app.width) + 'sp'
                         
                 BoxLayout: 
                     orientation: 'horizontal' 
@@ -238,6 +239,7 @@ If you get this result again, please contact customer support for help."""
             )
             self.right_button_id.disabled = True
         else:
+            # Step 4:
             self.user_instructions_text.text = (
                 "The old number of steps per mm was : [b]"
                 + old_steps
@@ -262,20 +264,23 @@ You will need to home the machine, and then repeat steps 1 and 2 to verify your 
         self.repeat_section()
 
     def right_button(self):
+        # set new steps per mm
         set_new_steps_sequence = ["$101 =" + str(self.new_y_steps), "$$"]
         self.m.s.start_sequential_stream(set_new_steps_sequence)
+        # this makes sure we stay on this screen until steps have been set before triggering homing sequence
         self.poll_for_success = Clock.schedule_interval(
             self.check_for_successful_completion, 1
         )
 
     def check_for_successful_completion(self, dt):
+        # if sequential_stream completes successfully
         if self.m.s.is_sequential_streaming == False:
             print("New steps have been set: $101 = " + str(self.new_y_steps))
             Clock.unschedule(self.poll_for_success)
             self.next_screen()
 
     def repeat_section(self):
-        from asmcnc.calibration_app import screen_distance_1_y
+        from asmcnc.calibration_app import screen_distance_1_y # this has to be here
 
         distance_screen1y = screen_distance_1_y.DistanceScreen1yClass(
             name="distance1y", screen_manager=self.sm, machine=self.m
@@ -298,6 +303,7 @@ You will need to home the machine, and then repeat steps 1 and 2 to verify your 
         self.sm.current = "tape_measure_alert"
 
     def next_screen(self):
+        # set up distance screen 1-x to return to after homing
         from asmcnc.calibration_app import screen_distance_1_y
 
         distance_screen1y = screen_distance_1_y.DistanceScreen1yClass(
