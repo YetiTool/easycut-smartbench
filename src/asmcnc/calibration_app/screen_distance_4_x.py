@@ -142,6 +142,7 @@ Builder.load_string(
                     RstDocument:
                         id: user_instructions_text
                         background_color: hex('#FFFFFF')
+                        base_font_size: str(31.0/800.0*app.width) + 'sp'
                         
                 BoxLayout: 
                     orientation: 'horizontal' 
@@ -276,20 +277,23 @@ You will need to home the machine, and then repeat steps 1 and 2 to verify your 
         self.repeat_section()
 
     def right_button(self):
+        # set new steps per mm
         set_new_steps_sequence = ["$100 =" + str(self.new_x_steps), "$$"]
         self.m.s.start_sequential_stream(set_new_steps_sequence)
+        # this makes sure we stay on this screen until steps have been set before triggering homing sequence   
         self.poll_for_success = Clock.schedule_interval(
             self.check_for_successful_completion, 1
         )
 
     def check_for_successful_completion(self, dt):
+        # if sequential_stream completes successfully
         if self.m.s.is_sequential_streaming == False:
             print("New steps have been set: $100 = " + str(self.new_x_steps))
             Clock.unschedule(self.poll_for_success)
             self.next_screen()
 
     def repeat_section(self):
-        from asmcnc.calibration_app import screen_distance_1_x
+        from asmcnc.calibration_app import screen_distance_1_x # this has to be here
 
         distance_screen1x = screen_distance_1_x.DistanceScreen1xClass(
             name="distance1x", screen_manager=self.sm, machine=self.m
@@ -298,11 +302,13 @@ You will need to home the machine, and then repeat steps 1 and 2 to verify your 
         self.sm.current = "distance1x"
 
     def skip_section(self):
+        # Y STUFF
         self.sm.get_screen("measurement").axis = "Y"
         self.sm.current = "measurement"
 
     def next_screen(self):
-        from asmcnc.calibration_app import screen_distance_1_x
+        # set up distance screen 1-x to return to after homing
+        from asmcnc.calibration_app import screen_distance_1_x # this has to be here
 
         distance_screen1x = screen_distance_1_x.DistanceScreen1xClass(
             name="distance1x", screen_manager=self.sm, machine=self.m
