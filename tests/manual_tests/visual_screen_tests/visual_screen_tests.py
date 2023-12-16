@@ -96,7 +96,7 @@ class ScreenTest(App):
     height = Window.height if Window.height == 480 else Window.height - 32
 
     lang_idx = 7
-    cycle_languages = False
+    cycle_languages = True
 
     gb = "English (GB)"
     it = "Italiano (IT)"
@@ -398,7 +398,7 @@ class ScreenTest(App):
             set_up_screens([[screen_spindle_shutdown.SpindleShutdownScreen, 'spindle_shutdown'],
                             [screen_stop_or_resume_decision.StopOrResumeDecisionScreen, 'stop_or_resume_job_decision']],
                 )
-            sm.get_screen('spindle_shutdown').time_to_allow_spindle_to_rest = 100
+            sm.get_screen('spindle_shutdown').time_to_allow_spindle_to_rest = 1000
             sm.current = 'spindle_shutdown'
 
         def go_screen_reminder_popup_test():

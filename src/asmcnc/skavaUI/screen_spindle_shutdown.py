@@ -106,14 +106,7 @@ class SpindleShutdownScreen(Screen):
         self.label_wait.text = self.l.get_str("Please wait") + "."
 
     def on_pre_enter(self):
-        if self.m.stylus_router_choice == "router":
-            self.pausing_label.text = self.l.get_str(
-                "SmartBench is pausing the spindle motor."
-            )
-        elif self.m.stylus_router_choice == "stylus":
-            self.pausing_label.text = self.l.get_str(
-                "SmartBench is raising the Z axis."
-            )
+        self.update_strings()
 
     def on_enter(self):
         log("Pausing job...")
@@ -154,3 +147,15 @@ class SpindleShutdownScreen(Screen):
         if self.z_rest_poll != None:
             self.z_rest_poll.cancel()
         self.return_screen = "lobby"
+
+    def update_strings(self):
+        self.label_wait.text = self.l.get_str("Please wait") + "."
+
+        if self.m.stylus_router_choice == "router":
+            self.pausing_label.text = self.l.get_str(
+                "SmartBench is pausing the spindle motor."
+            )
+        elif self.m.stylus_router_choice == "stylus":
+            self.pausing_label.text = self.l.get_str(
+                "SmartBench is raising the Z axis."
+            )
