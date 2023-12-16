@@ -395,6 +395,10 @@ class ScreenTest(App):
             sm.current = 'squaring_active'
 
         def spindle_shutdown_screen_test():
+
+            # m.stylus_router_choice = "router"
+            m.stylus_router_choice = "stylus"
+
             set_up_screens([[screen_spindle_shutdown.SpindleShutdownScreen, 'spindle_shutdown'],
                             [screen_stop_or_resume_decision.StopOrResumeDecisionScreen, 'stop_or_resume_job_decision']],
                 )
