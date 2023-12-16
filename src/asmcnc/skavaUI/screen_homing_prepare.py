@@ -115,7 +115,7 @@ Builder.load_string(
 class HomingScreenPrepare(Screen):
     cancel_to_screen = "lobby"
     return_to_screen = "lobby"
-    default_font_size = 30
+    default_font_size = utils.get_scaled_width(30)
 
     def __init__(self, **kwargs):
         super(HomingScreenPrepare, self).__init__(**kwargs)
@@ -153,8 +153,8 @@ class HomingScreenPrepare(Screen):
 
     def update_font_size(self, value1, value2):
         if self.l.get_text_length(value1.text) > 100:
-            value1.font_size = utils.get_scaled_width(self.default_font_size)
-            value2.font_size = utils.get_scaled_width(self.default_font_size)
+            value1.font_size = self.default_font_size
+            value2.font_size = self.default_font_size
         else:
             value1.font_size = self.default_font_size - 0.0025 * Window.width
             value2.font_size = self.default_font_size - 0.0025 * Window.width
