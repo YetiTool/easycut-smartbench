@@ -109,10 +109,10 @@ class ScreenTest(App):
 
     test_languages = [
                         gb,
-                        it, 
-                        fi, 
                         de,
                         fr,
+                        it, 
+                        fi, 
                         pl,
                         dk,
                         ko
