@@ -319,7 +319,7 @@ class InfoPopup(BasicPopup):
         popup_height,
         button_one_text="Ok",
         button_one_callback=None,
-        button_one_background_color=None,
+        button_one_background_color=[76 / 255., 175 / 255., 80 / 255., 1.],
         button_two_text=None,
         button_two_callback=None,
         button_two_background_color=None,
