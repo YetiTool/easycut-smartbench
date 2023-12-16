@@ -6,7 +6,6 @@ Created March 2019
 
 Squaring decision: manual or auto?
 """
-
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -30,19 +29,21 @@ Builder.load_string(
 
     BoxLayout: 
         spacing: 0
-        padding: [20, 20]
+        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
         orientation: 'vertical'
 
         Label:
+            font_size: str(0.01875 * app.width) + 'sp'
             size_hint_y: 1
 
         BoxLayout:
-            padding: [20, 0]
+            padding:[dp(0.025)*app.width, 0]
             orientation: 'horizontal'
-            spacing: 30
+            spacing:0.0375*app.width
             size_hint_y: 1.5
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_press: root.windows_cheat_to_procede()
@@ -58,7 +59,7 @@ Builder.load_string(
                 id: squaring_label
                 size_hint_x: 1.1
                 markup: True
-                font_size: '30px' 
+                font_size: str(0.0375*app.width) + 'px' 
                 valign: 'middle'
                 halign: 'center'
                 size:self.texture_size
@@ -66,6 +67,7 @@ Builder.load_string(
                 color: hex('#333333ff')
                         
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_press: root.stop_button_press()
@@ -81,7 +83,7 @@ Builder.load_string(
             id: overdrive_label
             size_hint_y: 2
             markup: True
-            font_size: '28px' 
+            font_size: str(0.035*app.width) + 'px' 
             valign: 'middle'
             halign: 'center'
             size:self.texture_size
@@ -110,7 +112,6 @@ class SquaringScreenActive(Screen):
         if self.m.homing_interrupted:
             self.go_to_cancel_to_screen()
             return
-
         if not self.m.homing_in_progress:
             self.return_to_ec_if_homing_not_in_progress()
 
@@ -128,15 +129,12 @@ class SquaringScreenActive(Screen):
         if self.m.homing_interrupted:
             self.cancel_squaring()
             return
-
         if not self.m.homing_in_progress:
             self.return_to_ec_if_homing_not_in_progress()
             return
-
         if not self.m.i_am_auto_squaring():
             self.return_to_homing_active_screen()
             return
-
         self.poll_for_completion_loop = Clock.schedule_once(
             self.poll_for_squaring_status_func, 0.2
         )
