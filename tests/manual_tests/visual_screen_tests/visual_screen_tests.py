@@ -57,6 +57,7 @@ from asmcnc.skavaUI import screen_job_recovery, screen_nudge, screen_recovery_de
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_spindle_shutdown, screen_stop_or_resume_decision
 from asmcnc.skavaUI import screen_door, screen_mstate_warning, screen_serial_failure, screen_squaring_active, screen_jobstart_warning
 from asmcnc.skavaUI import screen_check_job, popup_info
+from asmcnc.skavaUI import screen_spindle_shutdown
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety, screen_starting_smartbench
 from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1
@@ -392,6 +393,13 @@ class ScreenTest(App):
             m.homing_interrupted = False
             m.homing_in_progress = True
             sm.current = 'squaring_active'
+
+        def spindle_shutdown_screen_test():
+            set_up_screens([[screen_spindle_shutdown.SpindleShutdownScreen, 'spindle_shutdown'],
+                            [screen_stop_or_resume_decision.StopOrResumeDecisionScreen, 'stop_or_resume_job_decision']],
+                )
+            sm.get_screen('spindle_shutdown').time_to_allow_spindle_to_rest = 100
+            sm.current = 'spindle_shutdown'
 
         def go_screen_reminder_popup_test():
             set_up_dummy_serial_stateless()
