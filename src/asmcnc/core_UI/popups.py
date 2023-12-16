@@ -342,6 +342,7 @@ class InfoPopup(BasicPopup):
             button_two_text=button_two_text,
             button_two_callback=button_two_callback,
             button_two_background_color=button_two_background_color,
+            main_label_h_align="left",
             **kwargs
         )
 
