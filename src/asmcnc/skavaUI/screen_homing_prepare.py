@@ -6,13 +6,13 @@ Created March 2019
 
 Prepare to home
 """
-
+from kivy.core.window import Window
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from kivy.clock import Clock
-
+from asmcnc.core_UI import scaling_utils as utils
 
 Builder.load_string(
     """
@@ -31,25 +31,27 @@ Builder.load_string(
 
     BoxLayout: 
         spacing: 0
-        padding: [20, 40]
+        padding:[dp(0.025)*app.width, dp(0.0833333333333)*app.height]
         orientation: 'vertical'
 
         # Cancel button
         BoxLayout:
             size_hint: (None,None)
-            height: dp(20)
-            padding: (20,0,20,0)
-            spacing: 680
+            height: dp(0.0416666666667*app.height)
+            padding:[dp(0.025)*app.width, 0, dp(0.025)*app.width, 0]
+            spacing:0.85*app.width
             orientation: 'horizontal'
             pos: self.parent.pos
 
             Label:
+                font_size: str(0.01875 * app.width) + 'sp'
                 text: ""
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint: (None,None)
-                height: dp(50)
-                width: dp(50)
+                height: dp(0.104166666667*app.height)
+                width: dp(0.0625*app.width)
                 background_color: hex('#FFFFFF00')
                 opacity: 1
                 on_press: root.cancel()
@@ -90,6 +92,7 @@ Builder.load_string(
         #     size_hint_y: 0.1                
 
         Button:
+            font_size: str(0.01875 * app.width) + 'sp'
             size_hint_y: 4.9
             background_color: hex('#FFFFFF00')
             on_press: root.begin_homing()
@@ -102,6 +105,7 @@ Builder.load_string(
                     allow_stretch: True 
                         
         Label:
+            font_size: str(0.01875 * app.width) + 'sp'
             size_hint_y: 1                
 
 """
@@ -111,8 +115,7 @@ Builder.load_string(
 class HomingScreenPrepare(Screen):
     cancel_to_screen = "lobby"
     return_to_screen = "lobby"
-
-    default_font_size = 30
+    default_font_size = utils.get_scaled_width(30)
 
     def __init__(self, **kwargs):
         super(HomingScreenPrepare, self).__init__(**kwargs)
@@ -146,7 +149,6 @@ class HomingScreenPrepare(Screen):
             )
         else:
             self.instruction_label.text = self.l.get_str("Ensure SmartBench is clear.")
-
         self.update_font_size(self.press_to_home_label, self.instruction_label)
 
     # Update both labels together because they should have the same font size
@@ -155,5 +157,5 @@ class HomingScreenPrepare(Screen):
             value1.font_size = self.default_font_size
             value2.font_size = self.default_font_size
         else:
-            value1.font_size = self.default_font_size - 2
-            value2.font_size = self.default_font_size - 2
+            value1.font_size = self.default_font_size - 0.0025 * Window.width
+            value2.font_size = self.default_font_size - 0.0025 * Window.width

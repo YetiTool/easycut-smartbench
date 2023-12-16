@@ -408,23 +408,21 @@ class SkavaUI(App):
         log("Screen manager activated: " + str(sm.current))
 
         ## LOCALIZATION TESTING -----------------------------------------------------------
-
-        # test_languages = ["English (GB)", "Deutsch (DE)",  "Français (FR)", "Italiano (IT)", "Suomalainen (FI)", "Polski (PL)", "Dansk (DK)"]
-        #
+        
         # def test_cycle(dt):
-        #     if self.test_no < len(test_languages):
-        #         lang = test_languages[self.test_no]
+        #     if self.test_no < len(l.approved_languages):
+        #         lang = l.approved_languages[self.test_no]
         #         l.load_in_new_language(lang)
         #         print("New lang: " + str(lang))
         #         try:
         #             sm.get_screen(str(sm.current)).update_strings()
         #         except:
         #             print(str(sm.current) + " has no update strings function")
-        #
+        
         #         self.test_no = self.test_no + 1
         #     else:
         #         self.test_no = 0
-        #
+        
         # Clock.schedule_interval(test_cycle, 5)
 
         # def test_run_through_sequence(dt):
