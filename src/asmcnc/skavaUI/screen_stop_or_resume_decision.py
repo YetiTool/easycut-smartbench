@@ -170,7 +170,7 @@ class StopOrResumeDecisionScreen(Screen):
 
             qr_popup = BasicPopup(
                 sm=self.sm, m=self.m, l=self.l,
-                title='',
+                title='Information',
                 main_string=info,
                 popup_type=PopupType.QR,
                 popup_image=self.qr_source,
