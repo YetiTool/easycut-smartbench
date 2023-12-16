@@ -12,6 +12,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from kivy.clock import Clock
+from asmcnc.core_UI import scaling_utils as utils
 
 Builder.load_string(
     """
@@ -152,8 +153,8 @@ class HomingScreenPrepare(Screen):
 
     def update_font_size(self, value1, value2):
         if self.l.get_text_length(value1.text) > 100:
-            value1.font_size = self.default_font_size
-            value2.font_size = self.default_font_size
+            value1.font_size = utils.get_scaled_width(self.default_font_size)
+            value2.font_size = utils.get_scaled_width(self.default_font_size)
         else:
             value1.font_size = self.default_font_size - 0.0025 * Window.width
             value2.font_size = self.default_font_size - 0.0025 * Window.width
