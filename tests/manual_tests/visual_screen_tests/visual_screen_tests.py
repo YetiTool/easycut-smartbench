@@ -188,9 +188,9 @@ class ScreenTest(App):
 
                 index += 1
                 if index >= len(test_languages):
-                    Clock.schedule_once(lambda dt: show_next_language(test_languages, 0), 5)
+                    Clock.schedule_once(lambda dt: show_next_language(test_languages, 0), 10)
                 else:
-                    Clock.schedule_once(lambda dt: show_next_language(test_languages, index), 5)
+                    Clock.schedule_once(lambda dt: show_next_language(test_languages, index), 10)
 
             show_next_language(test_languages, 0)
 
