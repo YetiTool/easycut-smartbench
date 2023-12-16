@@ -14,7 +14,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from asmcnc.skavaUI import popup_info
 from datetime import datetime
-from asmcnc.core_UI.popups import BasicPopup, PopupType
+from asmcnc.core_UI.popups import BasicPopup, PopupType, InfoPopup
 
 Builder.load_string(
     """
@@ -161,7 +161,15 @@ class StopOrResumeDecisionScreen(Screen):
             )
         )
         if self.reason_for_pause == "job_pause":
-            popup_info.PopupInfo(self.sm, self.l, 500, info)
+            info_popup = InfoPopup(
+                sm=self.sm, m=self.m, l=self.l,
+                title='Information',
+                main_string=info,
+                popup_width=500,
+                popup_height=440,
+                )
+            info_popup.open()
+
         else:
             info += (
                 "\n\n"
