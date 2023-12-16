@@ -98,10 +98,10 @@ class ScreenTest(App):
     cycle_languages = True
 
     gb = "English (GB)"
-    it = "Italiano (IT)"
-    fi = "Suomalainen (FI)"
     de = "Deutsch (DE)"
     fr = "Français (FR)"
+    it = "Italiano (IT)"
+    fi = "Suomalainen (FI)"
     pl = "Polski (PL)"
     dk = "Dansk (DK)"
     ko = "한국어 (KO)"
