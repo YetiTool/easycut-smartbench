@@ -393,6 +393,17 @@ class ScreenTest(App):
             m.homing_in_progress = True
             sm.current = 'squaring_active'
 
+        def spindle_shutdown_screen_test():
+
+            # m.stylus_router_choice = "router"
+            m.stylus_router_choice = "stylus"
+
+            set_up_screens([[screen_spindle_shutdown.SpindleShutdownScreen, 'spindle_shutdown'],
+                            [screen_stop_or_resume_decision.StopOrResumeDecisionScreen, 'stop_or_resume_job_decision']],
+                )
+            sm.get_screen('spindle_shutdown').time_to_allow_spindle_to_rest = 1000
+            sm.current = 'spindle_shutdown'
+
         def go_screen_reminder_popup_test():
             set_up_dummy_serial_stateless()
 
