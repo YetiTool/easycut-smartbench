@@ -1,5 +1,4 @@
-from kivy.core.window import Window
-
+# -*- coding: utf-8 -*-
 """
 Created March 2019
 
@@ -7,6 +6,7 @@ Created March 2019
 
 Prepare to home
 """
+from kivy.core.window import Window
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -151,6 +151,7 @@ class HomingScreenPrepare(Screen):
             self.instruction_label.text = self.l.get_str("Ensure SmartBench is clear.")
         self.update_font_size(self.press_to_home_label, self.instruction_label)
 
+    # Update both labels together because they should have the same font size
     def update_font_size(self, value1, value2):
         if self.l.get_text_length(value1.text) > 100:
             value1.font_size = self.default_font_size
