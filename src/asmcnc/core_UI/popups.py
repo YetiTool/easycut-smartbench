@@ -277,7 +277,11 @@ class BasicPopup(Popup):
         if self.popup_type.value is None:
             if self.popup_image is None:
                 return None
-            return Image(source=self.popup_image, allow_stretch=False, size_hint=self.popup_image_size_hint)
+            return Image(
+                source=self.popup_image,
+                allow_stretch=False,
+                size_hint=self.popup_image_size_hint,
+            )
         return Image(source=self.popup_type.value["image"], allow_stretch=False)
 
     def build_buttons(self):
@@ -305,3 +309,112 @@ class BasicPopup(Popup):
                 )
             )
         return buttons
+
+
+class InfoPopup(BasicPopup):
+    def __init__(
+        self,
+        main_string,
+        popup_width,
+        popup_height,
+        button_one_text="Ok",
+        button_one_callback=None,
+        button_one_background_color=None,
+        button_two_text=None,
+        button_two_callback=None,
+        button_two_background_color=None,
+        **kwargs
+    ):
+        super(InfoPopup, self).__init__(
+            main_string=main_string,
+            popup_type=PopupType.INFO,
+            main_label_padding=(0, 0),
+            main_layout_padding=(10, 10, 10, 10),
+            main_layout_spacing=10,
+            main_label_size_delta=80,
+            button_layout_padding=(20, 10, 20, 0),
+            button_layout_spacing=15,
+            popup_width=popup_width,
+            popup_height=popup_height,
+            button_one_text=button_one_text,
+            button_one_callback=button_one_callback,
+            button_one_background_color=button_one_background_color,
+            button_two_text=button_two_text,
+            button_two_callback=button_two_callback,
+            button_two_background_color=button_two_background_color,
+            **kwargs
+        )
+
+
+class ErrorPopup(BasicPopup):
+    def __init__(
+        self,
+        main_string,
+        popup_width,
+        popup_height,
+        button_one_text="Ok",
+        button_one_callback=None,
+        button_one_background_color=None,
+        button_two_text=None,
+        button_two_callback=None,
+        button_two_background_color=None,
+        **kwargs
+    ):
+        super(ErrorPopup, self).__init__(
+            main_string=main_string,
+            popup_type=PopupType.ERROR,
+            main_label_padding=(0, 0),
+            main_layout_padding=(10, 10, 10, 10),
+            main_layout_spacing=10,
+            main_label_size_delta=80,
+            button_layout_padding=(20, 10, 20, 0),
+            button_layout_spacing=15,
+            popup_width=popup_width,
+            popup_height=popup_height,
+            button_one_text=button_one_text,
+            button_one_callback=button_one_callback,
+            button_one_background_color=button_one_background_color,
+            button_two_text=button_two_text,
+            button_two_callback=button_two_callback,
+            button_two_background_color=button_two_background_color,
+            **kwargs
+        )
+
+
+class QRPopup(BasicPopup):
+    def __init__(
+        self,
+        main_string,
+        popup_width,
+        popup_height,
+        popup_image,
+        popup_image_size_hint,
+        button_one_text="Ok",
+        button_one_callback=None,
+        button_one_background_color=None,
+        button_two_text=None,
+        button_two_callback=None,
+        button_two_background_color=None,
+        **kwargs
+    ):
+        super(QRPopup, self).__init__(
+            main_string=main_string,
+            popup_type=PopupType.QR,
+            main_label_padding=(10, 10),
+            main_layout_padding=10,
+            main_layout_spacing=10,
+            main_label_size_delta=40,
+            button_layout_padding=(150, 20, 150, 0),
+            button_layout_spacing=15,
+            popup_width=popup_width,
+            popup_height=popup_height,
+            popup_image=popup_image,
+            popup_image_size_hint=popup_image_size_hint,
+            button_one_text=button_one_text,
+            button_one_callback=button_one_callback,
+            button_one_background_color=button_one_background_color,
+            button_two_text=button_two_text,
+            button_two_callback=button_two_callback,
+            button_two_background_color=button_two_background_color,
+            **kwargs
+        )
