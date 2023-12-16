@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Created March 2019
 
@@ -88,6 +89,7 @@ def log(message):
 
 
 class SpindleShutdownScreen(Screen):
+    # Vars to preset before calling this screen
     reason_for_pause = None
     return_screen = "lobby"
     time_to_allow_spindle_to_rest = 2
@@ -111,14 +113,18 @@ class SpindleShutdownScreen(Screen):
     def on_enter(self):
         log("Pausing job...")
         if self.reason_for_pause == "spindle_overload":
+            # Job paused due to overload, send event
             self.db.send_event(
                 1, "Job paused", "Paused job (Spindle overload): " + self.jd.job_name, 3
             )
         elif self.reason_for_pause == "job_pause":
+            # Job paused by user, send event
             self.db.send_event(
                 0, "Job paused", "Paused job (User): " + self.jd.job_name, 3
             )
+        # Ensure next timer is reset (problem in some failure modes)
         self.z_rest_poll = None
+        # Allow spindle to rest before checking that the machine has stopped any auto-Z-up move
         self.spindle_decel_poll = Clock.schedule_once(
             self.start_polling_for_z_rest, self.time_to_allow_spindle_to_rest
         )
@@ -129,8 +135,10 @@ class SpindleShutdownScreen(Screen):
         )
 
     def poll_for_z_rest(self, dt):
+        # see if z_pos has changed since last check
         current_z_pos = self.m.z_pos_str()
         if current_z_pos == self.last_z_pos:
+            # machine has stopped
             self.sm.get_screen(
                 "stop_or_resume_job_decision"
             ).reason_for_pause = self.reason_for_pause
@@ -145,8 +153,8 @@ class SpindleShutdownScreen(Screen):
         if self.spindle_decel_poll != None:
             self.spindle_decel_poll.cancel()
         if self.z_rest_poll != None:
-            self.z_rest_poll.cancel()
-        self.return_screen = "lobby"
+            self.z_rest_poll.cancel() # stop polling
+        self.return_screen = "lobby"  # in case it's not set properly in the next call, default quit to lobby
 
     def update_strings(self):
         self.label_wait.text = self.l.get_str("Please wait") + "."
