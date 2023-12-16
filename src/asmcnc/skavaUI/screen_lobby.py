@@ -525,6 +525,38 @@ class LobbyScreen(Screen):
         if not sys.platform == "win32":
             self.m.set_led_colour('GREEN')
 
+        from asmcnc.core_UI.popups import QRPopup
+
+        self.qr_source = "./asmcnc/skavaUI/img/qr_health_check_failed.png"
+
+        info = (
+                self.l.get_bold('Cancel') + '[b]' + " (X)" + '[/b]' + \
+                "\n" + \
+                self.l.get_str("Pressing cancel will cancel the job.") + \
+                "\n\n" + \
+                self.l.get_bold('Resume') + '[b]' + " (>)" + '[/b]' + \
+                "\n" + \
+                self.l.get_str("Pressing resume will continue the job from the point at which it was paused.")
+        )
+
+        info += (
+                "\n\n" + \
+                self.l.get_bold('Scan the QR code to learn more about this error.') + \
+                "\n" + \
+                self.l.get_bold("Or visit <URL>").replace('<URL>', 'www.yetitool.com/support > Knowledge Base')
+        )
+
+        qr_popup = QRPopup(sm=self.sm, m=self.m, l=self.l,
+                           title="Information",
+                           popup_image=self.qr_source,
+                           popup_image_size_hint=(1, 1.5),
+                           popup_width=500,
+                           popup_height=440,
+                           main_string=info,
+                           button_one_background_color=(76 / 255., 175 / 255., 80 / 255., 1.))
+
+        qr_popup.open()
+
         # Tell user to update if update is available
         if self.trigger_update_popup:
             popup_info.PopupInfo(self.sm, self.l, 450, self.update_message)
