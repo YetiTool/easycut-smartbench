@@ -94,8 +94,8 @@ class ScreenTest(App):
     width = Window.width
     height = Window.height if Window.height == 480 else Window.height - 32
 
-    lang_idx = 5
-    cycle_languages = False
+    lang_idx = 0
+    cycle_languages = True
 
     gb = "English (GB)"
     de = "Deutsch (DE)"
@@ -249,9 +249,9 @@ class ScreenTest(App):
 
             sm.get_screen('stop_or_resume_job_decision').return_screen = 'go'
 
-            sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'spindle_overload'
+            # sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'spindle_overload'
             # sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'job_pause'
-            # sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'yetipilot_low_feed'
+            sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'yetipilot_low_feed'
             # sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'yetipilot_spindle_data_loss'
             # sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'spindle_health_check_failed'
 
