@@ -14,6 +14,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from asmcnc.skavaUI import popup_info
 from datetime import datetime
+from asmcnc.core_UI.popups import BasicPopup, PopupType
 
 Builder.load_string(
     """
