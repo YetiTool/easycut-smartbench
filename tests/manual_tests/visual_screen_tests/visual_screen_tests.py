@@ -94,8 +94,8 @@ class ScreenTest(App):
     width = Window.width
     height = Window.height if Window.height == 480 else Window.height - 32
 
-    lang_idx = 0
-    cycle_languages = True
+    lang_idx = 5
+    cycle_languages = False
 
     gb = "English (GB)"
     de = "Deutsch (DE)"
