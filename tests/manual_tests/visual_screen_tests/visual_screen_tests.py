@@ -57,7 +57,6 @@ from asmcnc.skavaUI import screen_job_recovery, screen_nudge, screen_recovery_de
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_spindle_shutdown, screen_stop_or_resume_decision
 from asmcnc.skavaUI import screen_door, screen_mstate_warning, screen_serial_failure, screen_squaring_active, screen_jobstart_warning
 from asmcnc.skavaUI import screen_check_job, popup_info
-from asmcnc.skavaUI import screen_spindle_shutdown
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety, screen_starting_smartbench
 from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1
@@ -96,7 +95,7 @@ class ScreenTest(App):
     height = Window.height if Window.height == 480 else Window.height - 32
 
     lang_idx = 7
-    cycle_languages = True
+    cycle_languages = False
 
     gb = "English (GB)"
     it = "Italiano (IT)"
