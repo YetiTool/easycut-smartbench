@@ -6,7 +6,7 @@ widget to hold z lead & probe maintenance save and info
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 
-from asmcnc.skavaUI import popup_info
+from asmcnc.core_UI.popups import ErrorPopup, InfoPopup
 
 Builder.load_string(
     """
@@ -89,13 +89,23 @@ class ZMiscSaveWidget(Widget):
                 "Make sure you press the save button to save your settings."
             )
         )
-        popup_info.PopupInfo(self.sm, self.l, 750, z_misc_settings_info)
+        popup = InfoPopup(sm=self.sm, m=self.m, l=self.l, main_string=z_misc_settings_info,
+                          popup_width=750, popup_height=440)
+        popup.open()
 
     def save(self):
         self.show_popup = True
         if self.save_touchplate_offset() and self.save_z_head_maintenance():
             saved_success = self.l.get_str("Settings saved!")
-            popup_info.PopupMiniInfo(self.sm, self.l, saved_success)
+            popup = InfoPopup(
+                sm=self.sm,
+                m=self.m,
+                l=self.m,
+                main_string=saved_success,
+                popup_width=300,
+                popup_height=300,
+            )
+            popup.open()
         elif self.show_popup:
             warning_message = (
                 self.l.get_str("There was a problem saving your settings.")
@@ -104,7 +114,10 @@ class ZMiscSaveWidget(Widget):
                     "Please check your settings and try again, or if the problem persists please contact the YetiTool support team."
                 )
             )
-            popup_info.PopupError(self.sm, self.l, warning_message)
+            popup = ErrorPopup(
+                sm=self.sm, m=self.m, l=self.l, main_string=warning_message
+            )
+            popup.open()
 
     def save_touchplate_offset(self):
         try:
@@ -123,7 +136,10 @@ class ZMiscSaveWidget(Widget):
                         "Please check your settings and try again, or if the problem persists please contact the YetiTool support team."
                     )
                 )
-                popup_info.PopupError(self.sm, self.l, warning_message)
+                popup = ErrorPopup(
+                    sm=self.sm, m=self.m, l=self.l, main_string=warning_message
+                )
+                popup.open()
                 self.show_popup = False
                 return False
             elif self.m.write_z_touch_plate_thickness(touchplate_offset):

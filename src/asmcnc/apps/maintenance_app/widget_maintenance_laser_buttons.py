@@ -3,11 +3,10 @@ Created on 10 June 2020
 @author: Letty
 widget to hold laser datum setting buttons
 """
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
-from asmcnc.apps.maintenance_app import popup_maintenance
+
+from asmcnc.core_UI.popups import InfoPopup, ErrorPopup
 from asmcnc.skavaUI import popup_info
 
 Builder.load_string(
@@ -113,7 +112,7 @@ Builder.load_string(
                             allow_stretch: True
 
             BoxLayout: 
-				size: self.parent.size
+                size: self.parent.size
                 pos: self.parent.pos 
                 Button:
                     font_size: str(0.01875 * app.width) + 'sp'
@@ -151,13 +150,71 @@ class LaserDatumButtons(Widget):
         self.l = kwargs["localization"]
 
     def reset_button_press(self):
-        popup_maintenance.PopupResetOffset(self.sm, self.l)
+        def save_laser_datum_offset(*args):
+            self.sm.get_screen(
+                "maintenance"
+            ).laser_datum_buttons_widget.save_laser_offset()
+
+        main_string = (
+            self.l.get_str(
+                "You are RESETTING the laser crosshair offset by setting a new REFERENCE MARK with your tool."
+            )
+            + "\n\n"
+            + self.l.get_str(
+                "Confirm that you have not moved the position of the tool in the X or Y axis since making your mark."
+            )
+        )
+        button_one_text = "No, go back"
+        button_two_text = "Yes, set reference here"
+        title = "RESET laser crosshair offset"
+
+        popup = InfoPopup(
+            sm=self.sm,
+            m=self.m,
+            l=self.l,
+            popup_width=500,
+            popup_height=380,
+            title=title,
+            button_one_text=button_one_text,
+            button_two_text=button_two_text,
+            main_string=main_string,
+            button_two_callback=save_laser_datum_offset,
+            button_one_background_color=[230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0],
+            button_two_background_color=[76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0],
+        )
+        popup.open()
 
     def save_button_press(self):
-        if self.m.is_laser_enabled == True:
-            popup_maintenance.PopupSaveOffset(self.sm, self.l)
+        if self.m.is_laser_enabled:
+            main_string = (
+                self.l.get_str("You are SAVING the new laser crosshair offset.")
+                + "\n\n"
+                + self.l.get_str(
+                    "Please confirm that the laser crosshair lines up with the centre of your reference mark."
+                )
+            )
+
+            title = self.l.get_str("SAVE laser crosshair offset")
+            button_two_text = self.l.get_bold("Yes, set offset")
+            no_string = self.l.get_bold("No, go back")
+            popup = InfoPopup(
+                sm=self.sm,
+                m=self.m,
+                l=self.l,
+                popup_width=500,
+                popup_height=360,
+                title=title,
+                button_one_text=no_string,
+                button_two_text=button_two_text,
+                main_string=main_string,
+                button_two_callback=self.save_laser_offset,
+                button_one_background_color=[230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0],
+                button_two_background_color=[76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0],
+            )
+            popup.open()
+
         else:
-            warning_message = (
+            main_string = (
                 self.l.get_str("Could not save laser crosshair offset!")
                 + "\n\n"
                 + self.l.get_str(
@@ -166,7 +223,13 @@ class LaserDatumButtons(Widget):
                 + "\n\n"
                 + self.l.get_str("Please enable laser to set offset.")
             )
-            popup_info.PopupError(self.sm, self.l, warning_message)
+            popup = ErrorPopup(
+                sm=self.sm,
+                m=self.m,
+                l=self.l,
+                main_string=main_string,
+            )
+            popup.open()
 
     def reset_laser_offset(self):
         self.sm.get_screen(
@@ -199,14 +262,20 @@ class LaserDatumButtons(Widget):
             )
             self.save_button.disabled = True
         else:
-            warning_message = (
+            main_string = (
                 self.l.get_str("There was a problem saving your settings.")
                 + "\n\n"
                 + self.l.get_str(
                     "Please check your settings and try again, or if the problem persists please contact the YetiTool support team."
                 )
             )
-            popup_info.PopupError(self.sm, self.l, warning_message)
+            popup = ErrorPopup(
+                sm=self.sm,
+                m=self.m,
+                l=self.l,
+                main_string=main_string,
+            )
+            popup.open()
 
     def set_vacuum(self):
         if self.vacuum_toggle.state == "normal":

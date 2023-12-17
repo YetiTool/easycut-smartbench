@@ -8,6 +8,8 @@ from kivy.uix.widget import Widget
 from asmcnc.skavaUI import popup_info
 from asmcnc.skavaUI import widget_z_height
 
+from asmcnc.core_UI.popups import InfoPopup
+
 Builder.load_string(
     """
 
@@ -183,5 +185,7 @@ class MaintenanceZMove(Widget):
                 self.l.get_str("save"), self.l.get_bold("save")
             )
         )
-        popup_info.PopupInfo(self.sm, self.l, 700, info)
+
+        popup = InfoPopup(sm=self.sm, m=self.m, l=self.l, main_string=info, popup_width=700, popup_height=440)
+        popup.open()
 

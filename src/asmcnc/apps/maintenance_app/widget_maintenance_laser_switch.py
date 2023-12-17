@@ -68,7 +68,7 @@ class LaserOnOffWidget(Widget):
         self.sm = kwargs["screen_manager"]
 
     def toggle_laser(self):
-        if self.laser_switch.active == True:
+        if self.laser_switch.active:
             self.laser_image.source = "./asmcnc/apps/maintenance_app/img/laser_on.png"
             self.m.is_laser_enabled = True
             self.m.laser_on()
