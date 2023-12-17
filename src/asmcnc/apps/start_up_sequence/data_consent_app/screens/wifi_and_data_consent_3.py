@@ -3,7 +3,6 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty, DictProperty
-
 from asmcnc.skavaUI import popup_info
 
 Builder.load_string(
@@ -16,7 +15,7 @@ Builder.load_string(
 
 	RstDocument:
 		id: privacy_notice
-		base_font_size: 30
+		base_font_size: dp(0.0375)*app.width
 		underline_color: 'e5e5e5'
 		colors: root.color_dict
 
@@ -30,8 +29,8 @@ Builder.load_string(
 	accept_button : accept_button
 
 	BoxLayout:
-		height: dp(800)
-		width: dp(480)
+		height: dp(1.66666666667*app.height)
+		width: dp(0.6*app.width)
 		canvas.before:
 			Color: 
 				rgba: hex('#e5e5e5ff')
@@ -57,12 +56,12 @@ Builder.load_string(
 				Label:
 					id: header_label
 					size_hint: (None,None)
-					height: dp(60)
-					width: dp(800)
+					height: dp(0.125*app.height)
+					width: dp(1.0*app.width)
 					text: "Wi-Fi and Data Consent"
 					color: hex('#f9f9f9ff')
 					# color: hex('#333333ff') #grey
-					font_size: dp(30)
+					font_size: dp(0.0375*app.width)
 					halign: "center"
 					valign: "bottom"
 					markup: True
@@ -70,10 +69,10 @@ Builder.load_string(
 			# BODY
 			BoxLayout:
 				size_hint: (None,None)
-				width: dp(800)
-				height: dp(288)
-				padding: [dp(15), dp(5), dp(15), dp(5)]
-				spacing: 5
+				width: dp(1.0*app.width)
+				height: dp(0.6*app.height)
+				padding:[dp(0.01875)*app.width, dp(0.0104166666667)*app.height, dp(0.01875)*app.width, dp(0.0104166666667)*app.height]
+				spacing:0.0104166666667*app.height
 				orientation: 'vertical'
 
 				BoxLayout: 
@@ -84,14 +83,14 @@ Builder.load_string(
 						Rectangle:
 							pos: self.pos
 							size: self.size
-					padding: dp(1)
+					padding:[dp(0.00125)*app.width, dp(0.00208333333333)*app.height]
 					ScrollPrivacyNotice:
 						id: scroll_privacy_notice
 
 				BoxLayout: 
 					size_hint: (1,1)
 					orientation: 'horizontal'
-					padding: [dp(20), dp(0)]
+					padding:[dp(0.025)*app.width, 0]
 					# canvas:
 					#	# Test to see box
 					#     Color:
@@ -105,7 +104,7 @@ Builder.load_string(
 						size_hint: (0.7,1)
 						# color: hex('#f9f9f9ff') # white
 						color: hex('#333333ff') #grey
-						font_size: dp(18)
+						font_size: dp(0.0225*app.width)
 						halign: "center"
 						valign: "middle"
 						markup: True
@@ -121,20 +120,21 @@ Builder.load_string(
 
 			# FOOTER
 			BoxLayout: 
-				padding: [10,0,10,10]
+				padding:[dp(0.0125)*app.width, 0, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
 				size_hint: (None, None)
-				height: dp(132)
-				width: dp(800)
+				height: dp(0.275*app.height)
+				width: dp(1.0*app.width)
 				orientation: 'horizontal'
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(122)
-					width: dp(60)
+					height: dp(0.254166666667*app.height)
+					width: dp(0.075*app.width)
 					# padding: [0, 0, 184.5, 0]
 					Button:
+					    font_size: str(0.01875 * app.width) + 'sp'
 						size_hint: (None,None)
-						height: dp(52)
-						width: dp(60)
+						height: dp(0.108333333333*app.height)
+						width: dp(0.075*app.width)
 						background_color: hex('#F4433600')
 						center: self.parent.center
 						pos: self.parent.pos
@@ -151,10 +151,10 @@ Builder.load_string(
 								allow_stretch: True
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(122)
-					width: dp(660)
-					padding: [dp(6),0,dp(6),dp(42)]
-					spacing: dp(66)
+					height: dp(0.254166666667*app.height)
+					width: dp(0.825*app.width)
+					padding:[dp(0.0075)*app.width, 0, dp(0.0075)*app.width, dp(0.0875)*app.height]
+					spacing:dp(0.0825)*app.width
 					Button:
 						id: decline_button
 						background_normal: "./asmcnc/skavaUI/img/next.png"
@@ -162,10 +162,10 @@ Builder.load_string(
 						background_disabled_normal: "./asmcnc/apps/start_up_sequence/data_consent_app/img/standard_button_disabled.png"
 						border: [dp(14.5)]*4
 						size_hint: (None,None)
-						width: dp(291)
-						height: dp(79)
+						width: dp(0.36375*app.width)
+						height: dp(0.164583333333*app.height)
 						on_press: root.decline_terms()
-						font_size: '30sp'
+						font_size: str(0.0375*app.width) + 'sp'
 						color: hex('#f9f9f9ff')
 						markup: True
 						center: self.parent.center
@@ -178,10 +178,10 @@ Builder.load_string(
 						background_disabled_normal: "./asmcnc/apps/start_up_sequence/data_consent_app/img/standard_button_disabled.png"
 						border: [dp(14.5)]*4
 						size_hint: (None,None)
-						width: dp(291)
-						height: dp(79)
+						width: dp(0.36375*app.width)
+						height: dp(0.164583333333*app.height)
 						on_press: root.accept_terms()
-						font_size: '30sp'
+						font_size: str(0.0375*app.width) + 'sp'
 						color: hex('#f9f9f9ff')
 						markup: True
 						center: self.parent.center
@@ -189,8 +189,8 @@ Builder.load_string(
 
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(122)
-					width: dp(60)
+					height: dp(0.254166666667*app.height)
+					width: dp(0.075*app.width)
 					# padding: [193.5, 0, 0, 0]
 
 """
@@ -199,7 +199,6 @@ Builder.load_string(
 
 class ScrollPrivacyNotice(ScrollView):
     text = StringProperty("")
-
     color_dict = DictProperty(
         {
             "background": "e5e5e5ff",
@@ -231,7 +230,6 @@ class WiFiAndDataConsentScreen3(Screen):
     def prev_screen(self):
         try:
             self.start_seq.prev_in_sequence()
-
         except:
             self.c.sm.current = "consent_2"
 

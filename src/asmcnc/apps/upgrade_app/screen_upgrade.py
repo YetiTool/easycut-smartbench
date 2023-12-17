@@ -1,9 +1,8 @@
+from kivy.core.window import Window
 from datetime import datetime
-
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
-
 from asmcnc.skavaUI import popup_info
 
 Builder.load_string(
@@ -38,25 +37,26 @@ Builder.load_string(
                     pos: self.pos
 
             BoxLayout:
-                padding: [dp(60),0,0,0]
+                padding:[dp(0.075)*app.width, 0, 0, 0]
 
                 Label:
                     id: title_label
                     text: 'Upgrade SB V1.3 to PrecisionPro +'
                     halign: 'center'
                     valign: 'middle'
-                    font_size: dp(30)
+                    font_size: dp(0.0375*app.width)
                     text_size: self.size
 
             BoxLayout:
                 size_hint_x: 0.08
-                padding: dp(5)
+                padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
 
                 Button:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     id: exit_button
                     size_hint: (None,None)
-                    height: dp(50)
-                    width: dp(50)
+                    height: dp(0.104166666667*app.height)
+                    width: dp(0.0625*app.width)
                     background_color: [0,0,0,0]
                     opacity: 1
                     on_press: root.quit_to_lobby()
@@ -74,7 +74,7 @@ Builder.load_string(
         BoxLayout:
             orientation: 'vertical'
             size_hint_y: 7
-            padding: dp(10)
+            padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
 
             canvas: 
                 Color:
@@ -89,18 +89,18 @@ Builder.load_string(
                 Label:
                     id: instruction_label
                     size_hint_y: 2
-                    font_size: dp(24)
+                    font_size: dp(0.03*app.width)
                     color: 0,0,0,1
                     halign: 'center'
                     valign: 'middle'
                     text_size: self.size
 
                 BoxLayout:
-                    padding: [dp(200),0,dp(200),dp(20)]
+                    padding:[dp(0.25)*app.width, 0, dp(0.25)*app.width, dp(0.0416666666667)*app.height]
 
                     TextInput:
                         id: upgrade_code_input
-                        font_size: dp(30)
+                        font_size: dp(0.0375*app.width)
                         multiline: False
                         valign: 'middle'
                         halign: 'center'
@@ -117,7 +117,7 @@ Builder.load_string(
                         id: error_label
                         size_hint_y: 0
                         height: 0
-                        font_size: dp(23)
+                        font_size: dp(0.02875*app.width)
                         color: 1,0,0,1
                         halign: 'center'
                         valign: 'middle'
@@ -129,7 +129,7 @@ Builder.load_string(
                         Label:
                             id: support_label
                             size_hint_y: 1.5
-                            font_size: dp(24)
+                            font_size: dp(0.03*app.width)
                             color: 0,0,0,1
                             halign: 'center'
                             valign: 'middle'
@@ -142,7 +142,7 @@ Builder.load_string(
 
                         Label:
                             id: spindle_label
-                            font_size: dp(20)
+                            font_size: dp(0.025*app.width)
                             color: 0,0,0,1
                             halign: 'center'
                             valign: 'middle'
@@ -164,12 +164,10 @@ def log(message):
 class UpgradeScreen(Screen):
     def __init__(self, **kwargs):
         super(UpgradeScreen, self).__init__(**kwargs)
-
         self.sm = kwargs["screen_manager"]
         self.m = kwargs["machine"]
         self.l = kwargs["localization"]
         self.kb = kwargs["keyboard"]
-
         # Add the IDs of ALL the TextInputs on this screen
         self.text_inputs = [self.upgrade_code_input]
 
@@ -215,7 +213,8 @@ class UpgradeScreen(Screen):
         if (
             self.m.s.digital_spindle_ld_qdA != -999
             and self.m.s.spindle_serial_number not in [None, -999, 999]
-        ) or (self.check_info_count > 10):
+            or self.check_info_count > 10
+        ):
             self.read_restore_info()
         else:  # Keep trying for a few seconds
             Clock.schedule_once(self.check_restore_info, 0.3)
@@ -225,10 +224,10 @@ class UpgradeScreen(Screen):
         self.hide_verifying()
         # Value of -999 for ld_qdA represents disconnected spindle
         if (
+            # Get info was successful, show serial and check code
             self.m.s.digital_spindle_ld_qdA != -999
             and self.m.s.spindle_serial_number not in [None, -999, 999]
         ):
-            # Get info was successful, show serial and check code
             self.spindle_label.text = (
                 self.l.get_str("Need support?")
                 + " "
@@ -253,7 +252,6 @@ class UpgradeScreen(Screen):
             self.m.s.spindle_serial_number
         )
         entered_unlock_code = self.upgrade_code_input.text.lower().replace("o", "0")
-
         if correct_unlock_code == entered_unlock_code:
             self.upgrade_and_proceed()
         else:
@@ -299,8 +297,9 @@ class UpgradeScreen(Screen):
         self.support_label.parent.padding = [0, 0, 0, 0]
 
     def show_verifying(self):
+        # Spindle label text is updated separately
         self.support_label.text = self.l.get_str("Verifying upgrade code...")
-        self.support_label.font_size = 32
+        self.support_label.font_size = 0.04 * Window.width
         self.spindle_label.text = ""
         self.qr_image.opacity = 0
         self.upgrade_code_input.disabled = True
@@ -308,11 +307,10 @@ class UpgradeScreen(Screen):
         self.exit_button.opacity = 0
 
     def hide_verifying(self):
-        # Spindle label text is updated separately
         self.support_label.text = self.l.get_str(
             "For more information about upgrades, please contact your place of purchase or visit www.yetitool.com"
         )
-        self.support_label.font_size = 24
+        self.support_label.font_size = 0.03 * Window.width
         self.qr_image.opacity = 1
         self.upgrade_code_input.disabled = False
         self.exit_button.disabled = False
@@ -320,7 +318,6 @@ class UpgradeScreen(Screen):
 
     def update_strings(self):
         self.title_label.text = self.l.get_str("Upgrade SB V1.3 to PrecisionPro +")
-
         self.instruction_label.text = (
             "1. "
             + self.l.get_str(
@@ -333,9 +330,7 @@ class UpgradeScreen(Screen):
             + "3. "
             + self.l.get_str('Press "Enter" on the keyboard')
         )
-
         self.support_label.text = self.l.get_str(
             "For more information about upgrades, please contact your place of purchase or visit www.yetitool.com"
         )
-
         self.spindle_label.text = self.l.get_str("Looking for Spindle motor...")
