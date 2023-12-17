@@ -96,7 +96,7 @@ class ScreenTest(App):
 
     lang_idx = 0
     cycle_languages = True
-    cycle_time = 10
+    cycle_time = 30
 
     gb = "English (GB)"
     de = "Deutsch (DE)"
