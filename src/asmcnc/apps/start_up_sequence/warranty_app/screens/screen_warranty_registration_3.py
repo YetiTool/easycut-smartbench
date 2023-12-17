@@ -15,6 +15,7 @@ from kivy.properties import StringProperty, ObjectProperty
 from kivy.uix.gridlayout import GridLayout
 from kivy.clock import Clock
 import os
+from asmcnc.core_UI import scaling_utils as utils
 
 Builder.load_string(
     """
@@ -204,7 +205,7 @@ class WarrantyScreen3(Screen):
     activation_code_filepath = "/home/pi/smartbench_activation_code.txt"
     activation_code_from_file = 0
     check_activation_event = None
-    default_font_size = "20sp"
+    default_font_size = str(utils.get_scaled_width(20)) + 'sp'
 
     def __init__(self, **kwargs):
         super(WarrantyScreen3, self).__init__(**kwargs)
