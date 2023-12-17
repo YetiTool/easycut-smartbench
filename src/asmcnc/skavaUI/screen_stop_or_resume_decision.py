@@ -6,16 +6,14 @@ Created March 2019
 
 Squaring decision: manual or auto?
 """
-
 import kivy
+from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
-
 from asmcnc.skavaUI import popup_info
 from datetime import datetime
-from asmcnc.core_UI.popups import BasicPopup, PopupType
-
+from asmcnc.core_UI.popups import BasicPopup, PopupType, InfoPopup
 
 Builder.load_string(
     """
@@ -34,14 +32,14 @@ Builder.load_string(
 
     BoxLayout: 
         spacing: 0
-        padding: 20
+        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
         orientation: 'vertical'
 
 
         BoxLayout:
             orientation: 'vertical'
-            spacing: 00
-            padding: (0,0,0,10)
+            spacing:0.0*app.height
+            padding:[0, 0, 0, dp(0.0208333333333)*app.height]
             size_hint_y: 5
             
 
@@ -49,7 +47,7 @@ Builder.load_string(
                 id: pause_reason_label
                 size_hint_y: 0.6
                 markup: True
-                font_size: '30px' 
+                font_size: str(0.0375*app.width) + 'px' 
                 valign: 'center'
                 halign: 'center'
                 size:self.texture_size
@@ -60,7 +58,7 @@ Builder.load_string(
                 id: pause_description_label
                 size_hint_y: 2.4
                 markup: True
-                font_size: '18px' 
+                font_size: str(0.0225*app.width) + 'px' 
                 valign: 'center'
                 halign: 'center'
                 size:self.texture_size
@@ -73,6 +71,7 @@ Builder.load_string(
             size_hint_y: 3
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_press: root.cancel_job()
@@ -85,6 +84,7 @@ Builder.load_string(
                         allow_stretch: True 
                         
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_x: 0.3
                 background_color: hex('#FFFFFF00')
                 on_press: root.popup_help()
@@ -97,6 +97,7 @@ Builder.load_string(
                         allow_stretch: True 
                         
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_press: root.resume_job()
@@ -121,19 +122,14 @@ def log(message):
 class StopOrResumeDecisionScreen(Screen):
     reason_for_pause = None
     return_screen = "lobby"
-
     # GOS TO: https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/routing-tools-sc0-sc1-troubleshooting-overload-during-operation
     qr_spindle_overload = "./asmcnc/skavaUI/img/qr_spindle_overload.png"
-
     # GOS TO: https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/smartbench-extra-features-precision-pro-yetipilot-error-screens
     qr_yetipilot_low_feed = "./asmcnc/skavaUI/img/qr_low_feed_rate.png"
-
     # GOS TO: https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/smartbench-extra-features-precision-pro-yetipilot-error-screen-spindle-data-error
     qr_yetipilot_no_data = "./asmcnc/skavaUI/img/qr_no_spindle_data.png"
-
     # GOS TO: https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/smartbench-extra-features-precision-pro-yetipilot-error-screen-spindle-motor-health-check
     qr_health_check = "./asmcnc/skavaUI/img/qr_health_check_failed.png"
-
     # default
     qr_source = qr_spindle_overload
 
@@ -163,9 +159,15 @@ class StopOrResumeDecisionScreen(Screen):
                 "Pressing resume will continue the job from the point at which it was paused."
             )
         )
-
         if self.reason_for_pause == "job_pause":
-            popup_info.PopupInfo(self.sm, self.l, 500, info)
+            info_popup = InfoPopup(
+                sm=self.sm, m=self.m, l=self.l,
+                title='Information',
+                main_string=info,
+                popup_width=500,
+                popup_height=440,
+                )
+            info_popup.open()
 
         else:
             info += (
@@ -183,7 +185,7 @@ class StopOrResumeDecisionScreen(Screen):
                 main_string=info,
                 popup_type=PopupType.QR,
                 popup_image=self.qr_source,
-                popup_image_size_hint=(1, 1),
+                popup_image_size_hint=(1, 1.5),
                 popup_width=500,
                 popup_height=440,
                 main_label_size_delta=40,
@@ -209,13 +211,11 @@ class StopOrResumeDecisionScreen(Screen):
             ).start_or_pause_button_image.source = "./asmcnc/skavaUI/img/resume.png"
         except:
             pass
-
         if self.reason_for_pause == "job_pause":
             self.pause_reason_label.text = self.l.get_str("SmartBench is paused.")
             self.pause_description_label.text = self.l.get_str(
                 "You may resume, or cancel the job at any time."
             )
-
         if self.reason_for_pause == "spindle_overload":
             self.pause_reason_label.text = self.l.get_str(
                 "Spindle motor was overloaded!"
@@ -239,9 +239,7 @@ class StopOrResumeDecisionScreen(Screen):
                     "Check extraction, air intake, exhaust, worn brushes, work-holding, blunt cutters or anything else which may strain the spindle."
                 )
             )
-
             self.qr_source = self.qr_spindle_overload
-
         if self.reason_for_pause == "yetipilot_low_feed":
             self.pause_reason_label.text = self.l.get_str("Feed rate too slow!")
             self.pause_description_label.text = (
@@ -268,9 +266,7 @@ class StopOrResumeDecisionScreen(Screen):
                 + " "
                 + self.l.get_str("If you choose to resume, SmartBench may struggle.")
             )
-
             self.qr_source = self.qr_yetipilot_low_feed
-
         if self.reason_for_pause == "yetipilot_spindle_data_loss":
             self.pause_reason_label.text = self.l.get_str("Can't read spindle data!")
             self.pause_description_label.text = (
@@ -290,9 +286,7 @@ class StopOrResumeDecisionScreen(Screen):
                     self.l.get_str("You may resume"), self.l.get_bold("You may resume")
                 )
             )
-
             self.qr_source = self.qr_yetipilot_no_data
-
         if self.reason_for_pause == "spindle_health_check_failed":
             self.pause_reason_label.text = self.l.get_str(
                 "Spindle motor health check failed!"
@@ -314,9 +308,7 @@ class StopOrResumeDecisionScreen(Screen):
                     self.l.get_str("You may resume"), self.l.get_bold("You may resume")
                 )
             )
-
             self.qr_source = self.qr_health_check
-
         self.update_font_size(self.pause_description_label)
 
     def cancel_job(self):
@@ -324,10 +316,7 @@ class StopOrResumeDecisionScreen(Screen):
 
     def confirm_job_cancel(self):
         self.m.stop_from_soft_stop_cancel()
-        self.m.s.is_ready_to_assess_spindle_for_shutdown = (
-            True  # allow spindle overload assessment to resume
-        )
-
+        self.m.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
         self.sm.get_screen("job_incomplete").prep_this_screen(
             "cancelled", event_number=False
         )
@@ -336,15 +325,13 @@ class StopOrResumeDecisionScreen(Screen):
     def resume_job(self):
         if self.reason_for_pause == "yetipilot_low_feed":
             self.sm.get_screen("go").yp_widget.disable_yeti_pilot()
-
         self.sm.current = self.return_screen
 
     def update_font_size(self, value):
         text_length = self.l.get_text_length(value.text)
-
         if text_length > 700:
-            value.font_size = 16
+            value.font_size = 0.02 * Window.width
         elif text_length > 500:
-            value.font_size = 17
+            value.font_size = 0.02125 * Window.width
         else:
-            value.font_size = 18
+            value.font_size = 0.0225 * Window.width

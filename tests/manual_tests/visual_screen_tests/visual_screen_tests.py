@@ -134,26 +134,36 @@ class ScreenTest(App):
     width = Window.width
     height = Window.height if Window.height == 480 else Window.height - 32
 
-    lang_idx = 7
-    cycle_languages = False
+    lang_idx = 0
+    cycle_languages = True
+    cycle_time = 30
 
     gb = "English (GB)"
-    it = "Italiano (IT)"
-    fi = "Suomalainen (FI)"
     de = "Deutsch (DE)"
     fr = "Français (FR)"
+    it = "Italiano (IT)"
+    fi = "Suomalainen (FI)"
     pl = "Polski (PL)"
     dk = "Dansk (DK)"
     ko = "한국어 (KO)"
     nl = "Nederlands (NL)"
 
-    test_languages = [gb, it, fi, de, fr, pl, dk, ko]
+    test_languages = [
+                        gb,
+                        de,
+                        fr,
+                        it, 
+                        fi, 
+                        pl,
+                        dk,
+                        ko
+                    ]
 
     # 0 - English (y)
-    # 1 - Italian (y)
-    # 2 - Finnish (y)
-    # 3 - German (y)
-    # 4 - French (y)
+    # 1 - German (y)
+    # 2 - French (y)
+    # 3 - Italian (y)
+    # 4 - Finnish (y)
     # 5 - Polish (y)
     # 6 - Danish (y)
     # 7 - Korean (y)
@@ -218,13 +228,9 @@ class ScreenTest(App):
 
                 index += 1
                 if index >= len(test_languages):
-                    Clock.schedule_once(
-                        lambda dt: show_next_language(test_languages, 0), 5
-                    )
+                    Clock.schedule_once(lambda dt: show_next_language(test_languages, 0), self.cycle_time)
                 else:
-                    Clock.schedule_once(
-                        lambda dt: show_next_language(test_languages, index), 5
-                    )
+                    Clock.schedule_once(lambda dt: show_next_language(test_languages, index), self.cycle_time)
 
             show_next_language(test_languages, 0)
 
@@ -295,10 +301,8 @@ class ScreenTest(App):
 
             sm.get_screen("stop_or_resume_job_decision").return_screen = "go"
 
-            sm.get_screen(
-                "stop_or_resume_job_decision"
-            ).reason_for_pause = "spindle_overload"
-            # sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'job_pause'
+            # sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'spindle_overload'
+            sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'job_pause'
             # sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'yetipilot_low_feed'
             # sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'yetipilot_spindle_data_loss'
             # sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'spindle_health_check_failed'
@@ -545,7 +549,21 @@ class ScreenTest(App):
 
             popup_info.PopupUSBInfo(sm, l, popup_mode)
 
-            sm.current = "basic"
+            sm.current = 'basic'
+
+        def job_feedback_screen_test():
+            jd.metadata_dict = {}
+            jd.pause_duration = "0"
+            jd.actual_runtime = "0"
+            jd.post_production_notes  = ""
+            jd.metadata_dict["Internal Order Code"] = "Project_name"
+            jd.metadata_dict["Process Step"] = "Step 1 of 3"
+            jd.job_name = "Job name :).gcode"
+            set_up_screens([
+                            [screen_job_feedback.JobFeedbackScreen, 'job_feedback'],
+                            [screen_go.GoScreen, 'go']
+                            ])
+            sm.current = 'job_feedback'
 
         # ALARM/ERROR/DOOR
 

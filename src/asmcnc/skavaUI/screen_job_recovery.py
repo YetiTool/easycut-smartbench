@@ -341,30 +341,11 @@ class JobRecoveryScreen(Screen):
 
     def __init__(self, **kwargs):
         super(JobRecoveryScreen, self).__init__(**kwargs)
-<<<<<<< HEAD
-
-=======
->>>>>>> master
         self.sm = kwargs["screen_manager"]
         self.m = kwargs["machine"]
         self.jd = kwargs["job"]
         self.l = kwargs["localization"]
         self.kb = kwargs["keyboard"]
-<<<<<<< HEAD
-
-        self.line_input.bind(text=self.jump_to_line)
-
-        # Green status bar
-        self.status_container.add_widget(
-            widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
-        )
-
-        # Z move widget
-        self.z_move_container.add_widget(
-            widget_z_move_recovery.ZMoveRecovery(machine=self.m, screen_manager=self.sm)
-        )
-
-=======
         self.line_input.bind(text=self.jump_to_line)
         self.status_container.add_widget(
             widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
@@ -372,7 +353,6 @@ class JobRecoveryScreen(Screen):
         self.z_move_container.add_widget(
             widget_z_move_recovery.ZMoveRecovery(machine=self.m, screen_manager=self.sm)
         )
->>>>>>> master
         self.update_strings()
         self.text_inputs = [self.line_input]
 
@@ -382,13 +362,7 @@ class JobRecoveryScreen(Screen):
 
     def on_pre_enter(self):
         self.m.set_led_colour("WHITE")
-<<<<<<< HEAD
-        # Force gcode label font to show roboto because korean font has different spacing
         self.gcode_label.font_name = "Roboto"
-
-=======
-        self.gcode_label.font_name = "Roboto"
->>>>>>> master
         if self.jd.job_recovery_selected_line == -1:
             self.line_input.text = ""
             self.initial_line_index = self.jd.job_recovery_cancel_line - 1
@@ -396,19 +370,11 @@ class JobRecoveryScreen(Screen):
             self.display_list = (
                 ["" for _ in range(6)]
                 + [
-<<<<<<< HEAD
-                    str(i) + ": " + self.jd.job_gcode[i]
-=======
                     (str(i) + ": " + self.jd.job_gcode[i])
->>>>>>> master
                     for i in range(self.initial_line_index + 1)
                 ]
                 + ["" for _ in range(6)]
             )
-<<<<<<< HEAD
-
-=======
->>>>>>> master
             self.stopped_on_label.text = self.l.get_str(
                 "Job failed during line N"
             ).replace("N", str(self.initial_line_index))
@@ -483,11 +449,6 @@ class JobRecoveryScreen(Screen):
         self.gcode_label.text = "\n".join(
             self.display_list[self.selected_line_index : self.selected_line_index + 13]
         )
-<<<<<<< HEAD
-
-        # Recover most recent spindle speed
-=======
->>>>>>> master
         spindle_speed_line = next(
             (
                 s
@@ -505,11 +466,6 @@ class JobRecoveryScreen(Screen):
                 self.speed = self.l.get_str("Undefined")
         except:
             self.speed = self.l.get_str("Undefined")
-<<<<<<< HEAD
-
-        # Recover most recent feedrate
-=======
->>>>>>> master
         feedrate_line = next(
             (
                 s
@@ -521,21 +477,12 @@ class JobRecoveryScreen(Screen):
         try:
             if feedrate_line:
                 self.feed = re.match(
-<<<<<<< HEAD
-                    "\d+(\.\d+)?", feedrate_line[feedrate_line.find("F") + 1 :]
-=======
                     "\\d+(\\.\\d+)?", feedrate_line[feedrate_line.find("F") + 1 :]
->>>>>>> master
                 ).group()
             else:
                 self.feed = self.l.get_str("Undefined")
         except:
             self.feed = self.l.get_str("Undefined")
-<<<<<<< HEAD
-
-        # Recover most recent position
-=======
->>>>>>> master
         x_line = next(
             (
                 s
@@ -584,10 +531,6 @@ class JobRecoveryScreen(Screen):
             )
         else:
             self.pos_z = 0.0
-<<<<<<< HEAD
-
-=======
->>>>>>> master
         self.pos_label.text = "wX: %s | wY: %s | wZ: %s" % (
             str(self.pos_x),
             str(self.pos_y),
@@ -638,31 +581,15 @@ class JobRecoveryScreen(Screen):
                 "SmartBench does not yet support recovery of jobs that contain incremental or arc distance modes, or less commonly used G-Codes."
             )
         )
-<<<<<<< HEAD
-
         popup_info.PopupScrollableInfo(self.sm, self.l, 760, info)
 
     def go_xy(self):
-        # Pick min out of safe z height and limit_switch_safety_distance, in case positive value is calculated, which causes errors
-=======
-        popup_info.PopupScrollableInfo(self.sm, self.l, 760, info)
-
-    def go_xy(self):
->>>>>>> master
         z_safe_height = min(
             self.m.z_wco() + self.sm.get_screen("home").job_box.range_z[1],
             -self.m.limit_switch_safety_distance,
         )
-<<<<<<< HEAD
-
-        # If Z is below safe height, then raise it up
         if self.m.mpos_z() < z_safe_height:
             self.m.s.write_command("G53 G0 Z%s F750" % z_safe_height)
-
-=======
-        if self.m.mpos_z() < z_safe_height:
-            self.m.s.write_command("G53 G0 Z%s F750" % z_safe_height)
->>>>>>> master
         self.m.s.write_command("G90 G0 X%s Y%s" % (self.pos_x, self.pos_y))
 
     def back_to_home(self):
@@ -684,15 +611,8 @@ class JobRecoveryScreen(Screen):
 
     def wait_for_idle(self, dt):
         if self.m.state().startswith("Idle"):
-<<<<<<< HEAD
-            self.m.get_grbl_status()  # In preparation for nudge screen
-            Clock.schedule_once(
-                self.proceed_to_next_screen, 0.4
-            )  # Give command above time
-=======
             self.m.get_grbl_status()
             Clock.schedule_once(self.proceed_to_next_screen, 0.4)
->>>>>>> master
         elif self.m.state().startswith("Run"):
             Clock.schedule_once(self.wait_for_idle, 0.4)
         else:
@@ -707,10 +627,6 @@ class JobRecoveryScreen(Screen):
         self.line_input.hint_text = self.l.get_str("Enter #")
         self.go_xy_button.text = self.l.get_str("GO XY")
         self.pos_label_header.text = self.l.get_str("Job resumes at:")
-<<<<<<< HEAD
-
-=======
->>>>>>> master
         self.arc_movement_error_label.text = (
             self.l.get_str(
                 "It was not possible to recover the file any later than the beginning of the job."
@@ -725,12 +641,6 @@ class JobRecoveryScreen(Screen):
     def update_font_size(self, value):
         text_length = self.l.get_text_length(value.text)
         if text_length > 10:
-<<<<<<< HEAD
-            value.font_size = 25
-        else:
-            value.font_size = 30
-=======
             value.font_size = 0.03125 * Window.width
         else:
             value.font_size = 0.0375 * Window.width
->>>>>>> master
