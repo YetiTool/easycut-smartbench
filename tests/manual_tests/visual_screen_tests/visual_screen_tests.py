@@ -414,6 +414,19 @@ class ScreenTest(App):
 
             sm.current = "recovery_decision"
 
+        def homing_decision_test():
+            set_up_screens([
+                            # [screen_home.HomeScreen, 'home'],
+                            # [screen_job_recovery.JobRecoveryScreen, 'job_recovery'],
+                            # [screen_nudge.NudgeScreen, 'nudge'],
+                            # [screen_recovery_decision.RecoveryDecisionScreen, 'recovery_decision'],
+                            [screen_homing_decision.HomingDecisionScreen, 'homing_decision'],
+                            # [screen_file_loading.LoadingScreen, 'loading']
+                            ])
+
+            sm.current = 'homing_decision'
+
+
         def job_recovery_nudge_warning_popup_test():
             set_up_screens([[BasicScreen, "basic"]])
             popup_nudge.PopupNudgeWarning(sm, m, l, "5.05")

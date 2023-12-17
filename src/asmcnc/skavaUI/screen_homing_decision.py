@@ -6,10 +6,10 @@ Created July 2022
 
 Ask if user wants to rehome, for job recovery
 """
-
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
-from asmcnc.skavaUI import popup_info
+from asmcnc.core_UI import scaling_utils as utils
+from asmcnc.core_UI.popups import InfoPopup
 
 Builder.load_string(
     """
@@ -30,25 +30,27 @@ Builder.load_string(
 
     BoxLayout:
         spacing: 0
-        padding: 40
+        padding:[dp(0.05)*app.width, dp(0.0833333333333)*app.height]
         orientation: 'vertical'
 
         # Cancel button
         BoxLayout:
             size_hint: (None,None)
-            height: dp(20)
-            padding: (20,0,20,0)
-            spacing: 680
+            height: dp(0.0416666666667*app.height)
+            padding:[dp(0.025)*app.width, 0, dp(0.025)*app.width, 0]
+            spacing:0.85*app.width
             orientation: 'horizontal'
             pos: self.parent.pos
 
             Label:
+                font_size: str(0.01875 * app.width) + 'sp'
                 text: ""
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint: (None,None)
-                height: dp(50)
-                width: dp(50)
+                height: dp(0.104166666667*app.height)
+                width: dp(0.0625*app.width)
                 background_color: hex('#FFFFFF00')
                 opacity: 1
                 on_press: root.cancel()
@@ -64,12 +66,13 @@ Builder.load_string(
                         allow_stretch: True
 
         Label:
+            font_size: str(0.01875 * app.width) + 'sp'
             size_hint_y: 0.1
 
         BoxLayout:
             orientation: 'vertical'
-            spacing: 10
-            padding: (0,20,0,20)
+            spacing:0.0208333333333*app.height
+            padding:[0, dp(0.0416666666667)*app.height, 0, dp(0.0416666666667)*app.height]
             size_hint_y: 3
 
 
@@ -77,7 +80,7 @@ Builder.load_string(
                 id: header_label
                 size_hint_y: 2
                 markup: True
-                font_size: '30px'
+                font_size: str(0.0375*app.width) + 'px'
                 valign: 'bottom'
                 halign: 'center'
                 size:self.texture_size
@@ -88,7 +91,7 @@ Builder.load_string(
                 id: subtitle_label
                 size_hint_y: 1
                 markup: True
-                font_size: '18px'
+                font_size: str(0.0225*app.width) + 'px'
                 valign: 'top'
                 halign: 'center'
                 size:self.texture_size
@@ -97,7 +100,7 @@ Builder.load_string(
 
         BoxLayout:
             orientation: 'horizontal'
-            spacing: 30
+            spacing:0.0375*app.width
             size_hint_y: 3
 
             Button:
@@ -112,9 +115,10 @@ Builder.load_string(
                 background_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                 background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                 border: [dp(30)]*4
-                padding: [20, 20]
+                padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_x: 0.3
                 background_color: hex('#FFFFFF00')
                 on_press: root.popup_help()
@@ -138,9 +142,10 @@ Builder.load_string(
                 background_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                 background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                 border: [dp(30)]*4
-                padding: [20, 20]
+                padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
 
         Label:
+            font_size: str(0.01875 * app.width) + 'sp'
             size_hint_y: .5
 
 """
@@ -150,15 +155,13 @@ Builder.load_string(
 class HomingDecisionScreen(Screen):
     cancel_to_screen = "lobby"
     return_to_screen = "lobby"
-
-    default_font_size = 30
+    default_font_size = utils.get_scaled_width(30)
 
     def __init__(self, **kwargs):
         super(HomingDecisionScreen, self).__init__(**kwargs)
         self.sm = kwargs["screen_manager"]
         self.m = kwargs["machine"]
         self.l = kwargs["localization"]
-
         self.update_strings()
 
     def already_homed(self):
@@ -200,7 +203,14 @@ class HomingDecisionScreen(Screen):
             )
         )
 
-        popup_info.PopupInfo(self.sm, self.l, 760, info)
+        info_popup = InfoPopup(
+            sm=self.sm, m=self.m, l=self.l,
+            title='Information',
+            main_string=info,
+            popup_width=760,
+            popup_height=440,
+            )
+        info_popup.open()
 
     def update_strings(self):
         self.header_label.text = self.l.get_str("Would you like to rehome?")
