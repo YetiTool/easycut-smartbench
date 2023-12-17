@@ -6,7 +6,7 @@ widget to hold brush maintenance save and info
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 
-from asmcnc.apps.maintenance_app import popup_maintenance
+from asmcnc.core_UI.custom_popups import PopupBrushInfo
 from asmcnc.core_UI.popups import ErrorPopup, InfoPopup
 
 Builder.load_string(
@@ -65,7 +65,7 @@ class BrushSaveWidget(Widget):
         self.l = kwargs["localization"]
 
     def get_info(self):
-        popup_maintenance.PopupBrushInfo(self.sm, self.l)
+        PopupBrushInfo(self.sm, self.l)
 
     def save(self):
         use_str = self.sm.get_screen("maintenance").brush_use_widget.brush_use.text

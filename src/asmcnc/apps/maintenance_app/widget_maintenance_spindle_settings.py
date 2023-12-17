@@ -1,5 +1,6 @@
 from kivy.core.window import Window
 
+from asmcnc.core_UI.custom_popups import PopupDisplaySpindleData
 from asmcnc.core_UI.popups import ErrorPopup, InfoPopup
 
 """
@@ -12,7 +13,6 @@ from kivy.uix.widget import Widget
 from kivy.clock import Clock
 from asmcnc.apps.maintenance_app import (
     widget_maintenance_spindle_save,
-    popup_maintenance,
 )
 
 Builder.load_string(
@@ -466,12 +466,12 @@ class SpindleSettingsWidget(Widget):
 
     def read_restore_info(self):
         self.m.s.write_command("M5")
-        self.wait_popup.popup.dismiss()
+        self.wait_popup.dismiss()
         if (
                 self.m.s.digital_spindle_ld_qdA != -999
                 and self.m.s.spindle_serial_number not in [None, -999, 999]
         ):
-            popup_maintenance.PopupDisplaySpindleData(self.sm, self.l, self.m.s)
+            PopupDisplaySpindleData(self.sm, self.l, self.m.s)
         else:
             error_message = (
                 self.l.get_str("No SC2 Spindle motor detected.")
