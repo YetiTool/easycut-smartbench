@@ -1,5 +1,8 @@
 from kivy.core.window import Window
 
+def is_screen_big():
+    return Window.height == 800
+
 
 def get_scaled_width(width):
     if width is None:

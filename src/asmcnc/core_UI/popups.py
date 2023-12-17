@@ -29,11 +29,13 @@ separator line at the top of the popup
 
 class PopupType(Enum):
     INFO = {
-        "image": "./asmcnc/apps/shapeCutter_app/img/info_icon.png",
+        "small_image": "./asmcnc/apps/shapeCutter_app/img/info_icon.png",
+        "big_image": "./asmcnc/apps/shapeCutter_app/img/info_icon_scaled_up.png",
         "separator_color": (249 / 255.0, 206 / 255.0, 29 / 255.0, 1.0),
     }
     ERROR = {
-        "image": "./asmcnc/apps/shapeCutter_app/img/error_icon.png",
+        "small_image": "./asmcnc/apps/shapeCutter_app/img/error_icon.png",
+        "big_image": "./asmcnc/apps/shapeCutter_app/img/error_icon_scaled_up.png",
         "separator_color": (230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0),
     }
     QR = None
@@ -220,6 +222,8 @@ class BasicPopup(Popup):
             if self.popup_type.value is not None:
                 self.separator_color = self.popup_type.value["separator_color"]
 
+        self.popup_img_string = "big_image" if utils.is_screen_big() else "small_image"
+
         self.build()
 
     def build(self):
@@ -284,7 +288,7 @@ class BasicPopup(Popup):
                 allow_stretch=False,
                 size_hint=self.popup_image_size_hint,
             )
-        return Image(source=self.popup_type.value["image"], allow_stretch=False)
+        return Image(source=self.popup_type.value[self.popup_img_string], allow_stretch=False)
 
     def build_buttons(self):
         buttons = [
