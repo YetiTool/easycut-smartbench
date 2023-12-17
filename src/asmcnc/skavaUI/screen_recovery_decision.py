@@ -111,6 +111,9 @@ class RecoveryDecisionScreen(Screen):
         self.update_strings()
 
     def on_pre_enter(self):
+        self.update_completion_label_and_button_colours()
+
+    def update_completion_label_and_button_colours(self):
         # Check if job recovery (or job redo) is available
         if self.jd.job_recovery_cancel_line == None:
             self.job_name_label.text = ""
@@ -205,6 +208,7 @@ class RecoveryDecisionScreen(Screen):
         self.job_name_header.text = self.l.get_bold("Last job:")
         self.repeat_job_button.text = self.l.get_str("Repeat job from the beginning")
         self.recover_job_button.text = self.l.get_str("Recover job")
+        self.update_completion_label_and_button_colours()
 
     def update_font_size(self, value):
         text_length = self.l.get_text_length(value.text)
