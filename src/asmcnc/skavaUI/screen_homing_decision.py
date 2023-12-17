@@ -8,7 +8,8 @@ Ask if user wants to rehome, for job recovery
 """
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
-from asmcnc.skavaUI import popup_info
+from asmcnc.core_UI import scaling_utils as utils
+from asmcnc.core_UI.popups import InfoPopup
 
 Builder.load_string(
     """
@@ -154,7 +155,7 @@ Builder.load_string(
 class HomingDecisionScreen(Screen):
     cancel_to_screen = "lobby"
     return_to_screen = "lobby"
-    default_font_size = 30
+    default_font_size = utils.get_scaled_width(30)
 
     def __init__(self, **kwargs):
         super(HomingDecisionScreen, self).__init__(**kwargs)
@@ -201,7 +202,15 @@ class HomingDecisionScreen(Screen):
                 "This accounts for inconsistencies in the homing process and will move your datum accordingly."
             )
         )
-        popup_info.PopupInfo(self.sm, self.l, 760, info)
+
+        info_popup = InfoPopup(
+            sm=self.sm, m=self.m, l=self.l,
+            title='Information',
+            main_string=info,
+            popup_width=760,
+            popup_height=440,
+            )
+        info_popup.open()
 
     def update_strings(self):
         self.header_label.text = self.l.get_str("Would you like to rehome?")
