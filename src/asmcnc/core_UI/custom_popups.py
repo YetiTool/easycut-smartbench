@@ -26,6 +26,7 @@ class PopupBrushInfo(Widget):
         self.l = localization
 
         _12_sp = get_scaled_sp("12sp")
+        default_font_size = get_scaled_sp("15sp")
 
         # do this as a grid layout instead
         description_top = (
@@ -91,6 +92,7 @@ class PopupBrushInfo(Widget):
             color=[0, 0, 0, 1],
             padding=[0, 0],
             width=get_scaled_width(476),
+            font_size=default_font_size,
         )
         label_blank = Label(
             size_hint_y=0.1,
@@ -102,6 +104,7 @@ class PopupBrushInfo(Widget):
             color=[0, 0, 0, 1],
             padding=[0, 0],
             width=get_scaled_width(476),
+            font_size=default_font_size,
         )
         label_bottom = Label(
             text_size=(get_scaled_width(760), None),
@@ -112,6 +115,7 @@ class PopupBrushInfo(Widget):
             color=[0, 0, 0, 1],
             padding=[0, 0],
             width=get_scaled_width(760),
+            font_size=default_font_size,
         )
 
         img_full_brush = Image(
@@ -365,6 +369,7 @@ class PopupDisplaySpindleData(Widget):
         self.sm = screen_manager
         self.l = localization
         self.s = serial
+        default_font_size = get_scaled_sp("15sp")
 
         category_string = (
             self.l.get_str("Spindle serial number")
@@ -420,6 +425,7 @@ class PopupDisplaySpindleData(Widget):
             padding=(0, 0),
             markup=True,
             bold=True,
+            font_size=default_font_size
         )
         value_label = Label(
             text_size=get_scaled_tuple((250, None)),
@@ -429,6 +435,7 @@ class PopupDisplaySpindleData(Widget):
             color=(0, 0, 0, 1),
             padding=(0, 0),
             markup=True,
+            font_size=default_font_size
         )
 
         label_layout = BoxLayout(
