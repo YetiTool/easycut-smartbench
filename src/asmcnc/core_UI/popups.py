@@ -168,6 +168,7 @@ class BasicPopup(Popup):
         button_two_callback=None,
         button_two_background_color=None,
         main_label_h_align="center",
+        main_label_size_hint_y=2,
         **kwargs
     ):
         super(BasicPopup, self).__init__(**kwargs)
@@ -190,6 +191,7 @@ class BasicPopup(Popup):
         self.main_layout_padding = main_layout_padding
         self.main_label_size_delta = main_label_size_delta
         self.main_label_h_align = main_label_h_align
+        self.main_label_size_hint_y = main_label_size_hint_y
         self.button_layout_padding = button_layout_padding
         self.button_layout_spacing = button_layout_spacing
         self.main_layout_spacing = main_layout_spacing
@@ -226,7 +228,7 @@ class BasicPopup(Popup):
         )
 
         self.main_label = Label(
-            size_hint_y=2,
+            size_hint_y=self.main_label_size_hint_y,
             text_size=(text_size_x, None),
             halign=self.main_label_h_align,
             valign="middle",
@@ -234,7 +236,7 @@ class BasicPopup(Popup):
             color=(0, 0, 0, 1),
             padding=utils.get_scaled_tuple(self.main_label_padding),
             markup=True,
-            font_size=str(utils.get_scaled_width(14)) + "sp",
+            font_size=str(utils.get_scaled_width(15)) + "sp",
         )
 
         self.button_layout = self.build_button_layout()
@@ -289,7 +291,7 @@ class BasicPopup(Popup):
             Button(
                 text=self.l.get_bold(self.button_one_text),
                 on_release=lambda x: self.on_button_pressed(self.button_one_callback),
-                font_size=str(utils.get_scaled_width(14)) + "sp",
+                font_size=str(utils.get_scaled_width(15)) + "sp",
                 background_normal=self.button_one_background_normal,
                 background_color=self.button_one_background_color,
                 markup=True,
@@ -302,7 +304,7 @@ class BasicPopup(Popup):
                     on_release=lambda x: self.on_button_pressed(
                         self.button_two_callback
                     ),
-                    font_size=str(utils.get_scaled_width(14)) + "sp",
+                    font_size=str(utils.get_scaled_width(15)) + "sp",
                     background_normal=self.button_two_background_normal,
                     background_color=self.button_two_background_color,
                     markup=True,
@@ -351,11 +353,11 @@ class ErrorPopup(BasicPopup):
     def __init__(
         self,
         main_string,
-        popup_width,
-        popup_height,
+        popup_width=500,
+        popup_height=400,
         button_one_text="Ok",
         button_one_callback=None,
-        button_one_background_color=None,
+        button_one_background_color=[230 / 255., 74 / 255., 25 / 255., 1.],
         button_two_text=None,
         button_two_callback=None,
         button_two_background_color=None,
@@ -364,12 +366,12 @@ class ErrorPopup(BasicPopup):
         super(ErrorPopup, self).__init__(
             main_string=main_string,
             popup_type=PopupType.ERROR,
-            main_label_padding=(0, 0),
-            main_layout_padding=(10, 10, 10, 10),
+            main_label_padding=(0, 10),
+            main_layout_padding=(40, 20, 40, 20),
             main_layout_spacing=10,
             main_label_size_delta=80,
-            button_layout_padding=(20, 10, 20, 0),
-            button_layout_spacing=15,
+            button_layout_padding=(0, 20, 0, 0),
+            button_layout_spacing=10,
             popup_width=popup_width,
             popup_height=popup_height,
             button_one_text=button_one_text,
@@ -378,6 +380,8 @@ class ErrorPopup(BasicPopup):
             button_two_text=button_two_text,
             button_two_callback=button_two_callback,
             button_two_background_color=button_two_background_color,
+            title="Error!",
+            main_label_size_hint_y=1,
             **kwargs
         )
 
