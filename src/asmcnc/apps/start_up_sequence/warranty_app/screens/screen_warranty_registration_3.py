@@ -1,9 +1,10 @@
+from kivy.core.window import Window
+
 """
 Created on nov 2020
 @author: Ollie
 Text input # on_enter: root.sucessful_activation
 """
-
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -14,6 +15,7 @@ from kivy.properties import StringProperty, ObjectProperty
 from kivy.uix.gridlayout import GridLayout
 from kivy.clock import Clock
 import os
+from asmcnc.core_UI import scaling_utils as utils
 
 Builder.load_string(
     """
@@ -31,8 +33,8 @@ Builder.load_string(
 
 	BoxLayout: 
 		size_hint: (None,None)
-		width: dp(800)
-		height: dp(480)
+		width: dp(1.0*app.width)
+		height: dp(1.0*app.height)
 		orientation: 'vertical'
 
 		canvas:
@@ -61,12 +63,12 @@ Builder.load_string(
 				Label:
 					id: title_label
 					size_hint: (None,None)
-					height: dp(60)
-					width: dp(800)
+					height: dp(0.125*app.height)
+					width: dp(1.0*app.width)
 					text: "SmartBench Warranty Registration"
 					color: hex('#f9f9f9ff')
 					# color: hex('#333333ff') #grey
-					font_size: dp(30)
+					font_size: dp(0.0375*app.width)
 					halign: "center"
 					valign: "bottom"
 					markup: True
@@ -74,13 +76,13 @@ Builder.load_string(
 			# BODY
 			BoxLayout:
 				size_hint: (None,None)
-				width: dp(800)
-				height: dp(298)
+				width: dp(1.0*app.width)
+				height: dp(0.620833333333*app.height)
 				orientation: 'vertical'
 				
 				Label:
 					id: enter_your_activation_code_label
-					font_size: '30sp'
+					font_size: str(0.0375*app.width) + 'sp'
 					# text: "[color=333333ff]Enter your activation code:[/color]"
 					text_size: self.size
 					valign: 'bottom'
@@ -90,19 +92,19 @@ Builder.load_string(
 
 				BoxLayout:
 					orientation: 'vertical'
-					width: dp(800)
-					height: dp(75)
-					padding: [dp(200), 0]
+					width: dp(1.0*app.width)
+					height: dp(0.15625*app.height)
+					padding:[dp(0.25)*app.width, 0]
 					size_hint: (None,None)
 					TextInput: 
 						id: activation_code
 						valign: 'middle'
 						halign: 'center'
-						height: dp(50)
-						width: dp(400) 
+						height: dp(0.104166666667*app.height)
+						width: dp(0.5*app.width) 
 						size_hint: (None,None)
 						text_size: self.size
-						font_size: '30sp'
+						font_size: str(0.0375*app.width) + 'sp'
 						markup: True
 						multiline: False
 						text: ''
@@ -110,13 +112,13 @@ Builder.load_string(
 						color: hex('#333333ff')
 				BoxLayout:
 					orientation: 'vertical'
-					width: dp(800)
-					height: dp(125)
-					padding: [dp(20)]
+					width: dp(1.0*app.width)
+					height: dp(0.260416666667*app.height)
+					padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
 					size_hint: (None,None)
 					Label:
 						id: error_message_top
-						font_size: '20sp'
+						font_size: str(0.025*app.width) + 'sp'
 						text: "Please check your activation code."
 						text_size: self.size
 						valign: 'bottom'
@@ -126,7 +128,7 @@ Builder.load_string(
 						opacity: 0
 					Label:
 						id: error_message_bottom
-						font_size: '20sp'
+						font_size: str(0.025*app.width) + 'sp'
 						text: "Stuck on this screen? Contact us at https://www.yetitool.com/support"
 						text_size: self.size
 						valign: 'bottom'
@@ -137,20 +139,21 @@ Builder.load_string(
 
 			# FOOTER
 			BoxLayout: 
-				padding: [10,0,10,10]
+				padding:[dp(0.0125)*app.width, 0, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
 				size_hint: (None, None)
-				height: dp(122)
-				width: dp(800)
+				height: dp(0.254166666667*app.height)
+				width: dp(1.0*app.width)
 				orientation: 'horizontal'
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(122)
-					width: dp(244.5)
-					padding: [0, 0, 184.5, 0]
+					height: dp(0.254166666667*app.height)
+					width: dp(0.305625*app.width)
+					padding:[0, 0, dp(0.230625)*app.width, 0]
 					Button:
+					    font_size: str(0.01875 * app.width) + 'sp'
 						size_hint: (None,None)
-						height: dp(52)
-						width: dp(60)
+						height: dp(0.108333333333*app.height)
+						width: dp(0.075*app.width)
 						background_color: hex('#F4433600')
 						center: self.parent.center
 						pos: self.parent.pos
@@ -168,29 +171,29 @@ Builder.load_string(
 
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(122)
-					width: dp(291)
-					padding: [0,0,0,32]
+					height: dp(0.254166666667*app.height)
+					width: dp(0.36375*app.width)
+					padding:[0, 0, 0, dp(0.0666666666667)*app.height]
 					Button:
 						id: next_button
 						background_normal: "./asmcnc/skavaUI/img/next.png"
 						background_down: "./asmcnc/skavaUI/img/next.png"
 						border: [dp(14.5)]*4
 						size_hint: (None,None)
-						width: dp(291)
-						height: dp(79)
+						width: dp(0.36375*app.width)
+						height: dp(0.164583333333*app.height)
 						on_press: root.next_screen(False)
 						text: 'Next...'
-						font_size: '30sp'
+						font_size: str(0.0375*app.width) + 'sp'
 						color: hex('#f9f9f9ff')
 						markup: True
 						center: self.parent.center
 						pos: self.parent.pos
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(122)
-					width: dp(244.5)
-					padding: [193.5, 0, 0, 0]
+					height: dp(0.254166666667*app.height)
+					width: dp(0.305625*app.width)
+					padding:[dp(0.241875)*app.width, 0, 0, 0]
 
 
 """
@@ -202,8 +205,7 @@ class WarrantyScreen3(Screen):
     activation_code_filepath = "/home/pi/smartbench_activation_code.txt"
     activation_code_from_file = 0
     check_activation_event = None
-
-    default_font_size = "20sp"
+    default_font_size = str(utils.get_scaled_width(20)) + 'sp'
 
     def __init__(self, **kwargs):
         super(WarrantyScreen3, self).__init__(**kwargs)
@@ -211,9 +213,7 @@ class WarrantyScreen3(Screen):
         self.m = kwargs["machine"]
         self.l = kwargs["localization"]
         self.kb = kwargs["keyboard"]
-
         self.update_strings()
-
         self.text_inputs = [self.activation_code]
 
     def on_pre_enter(self):
@@ -234,13 +234,11 @@ class WarrantyScreen3(Screen):
             file = open(self.activation_code_filepath, "r")
             self.activation_code_from_file = int(str(file.read()))
             file.close()
-
             if self.activation_code_from_file == "":
                 self.backup_generate_activation_code()
-
         except:
-            # self.error_message_top.opacity = 1
-            # self.error_message_top.text = 'Checking activation code...'
+			# self.error_message_top.opacity = 1
+			# self.error_message_top.text = 'Checking activation code...'
             self.backup_generate_activation_code()
 
     def backup_generate_activation_code(self):
@@ -270,10 +268,8 @@ class WarrantyScreen3(Screen):
             except:
                 if self.check_activation_event != None:
                     Clock.unschedule(self.check_activation_event)
-
         elif auto == True:
             pass
-
         else:
             self.error_message_top.opacity = 1
             self.error_message_bottom.opacity = 1
@@ -337,15 +333,13 @@ class WarrantyScreen3(Screen):
             "Stuck on this screen? Contact us at https://www.yetitool.com/support"
         )
         self.next_button.text = self.l.get_str("Next") + "..."
-
         self.update_font_size(self.error_message_bottom)
 
     def update_font_size(self, value):
         text_length = self.l.get_text_length(value.text)
-
         if text_length < 85:
             value.font_size = self.default_font_size
         elif text_length < 100:
-            value.font_size = "18sp"
+            value.font_size = str(0.0225 * Window.width) + "sp"
         else:
-            value.font_size = "16sp"
+            value.font_size = str(0.02 * Window.width) + "sp"
