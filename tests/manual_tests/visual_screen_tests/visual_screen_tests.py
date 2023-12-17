@@ -94,8 +94,9 @@ class ScreenTest(App):
     width = Window.width
     height = Window.height if Window.height == 480 else Window.height - 32
 
-    lang_idx = 5
-    cycle_languages = False
+    lang_idx = 0
+    cycle_languages = True
+    cycle_time = 5
 
     gb = "English (GB)"
     de = "Deutsch (DE)"
@@ -188,9 +189,9 @@ class ScreenTest(App):
 
                 index += 1
                 if index >= len(test_languages):
-                    Clock.schedule_once(lambda dt: show_next_language(test_languages, 0), 30)
+                    Clock.schedule_once(lambda dt: show_next_language(test_languages, 0), self.cycle_time)
                 else:
-                    Clock.schedule_once(lambda dt: show_next_language(test_languages, index), 30)
+                    Clock.schedule_once(lambda dt: show_next_language(test_languages, index), self.cycle_time)
 
             show_next_language(test_languages, 0)
 
