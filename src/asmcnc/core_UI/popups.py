@@ -200,7 +200,9 @@ class BasicPopup(Popup):
         self.popup_type = popup_type
         self.popup_image = popup_image
         self.popup_image_size_hint = popup_image_size_hint
-        self.button_one_text = self.l.get_str(button_one_text)
+        self.button_one_text = (
+            self.l.get_str(button_one_text) if button_one_text is not None else None
+        )
         self.button_one_callback = button_one_callback
         self.button_two_text = (
             self.l.get_str(button_two_text) if button_two_text is not None else None
@@ -288,7 +290,9 @@ class BasicPopup(Popup):
                 allow_stretch=False,
                 size_hint=self.popup_image_size_hint,
             )
-        return Image(source=self.popup_type.value[self.popup_img_string], allow_stretch=False)
+        return Image(
+            source=self.popup_type.value[self.popup_img_string], allow_stretch=False
+        )
 
     def build_buttons(self):
         if self.button_one_text is None:
@@ -328,7 +332,7 @@ class InfoPopup(BasicPopup):
         popup_height,
         button_one_text="Ok",
         button_one_callback=None,
-        button_one_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
+        button_one_background_color=(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0),
         button_two_text=None,
         button_two_callback=None,
         button_two_background_color=None,
@@ -366,7 +370,7 @@ class ErrorPopup(BasicPopup):
         popup_height=400,
         button_one_text="Ok",
         button_one_callback=None,
-        button_one_background_color=(230 / 255., 74 / 255., 25 / 255., 1.),
+        button_one_background_color=(230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0),
         button_two_text=None,
         button_two_callback=None,
         button_two_background_color=None,
