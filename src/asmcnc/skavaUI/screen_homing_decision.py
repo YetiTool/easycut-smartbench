@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Created July 2022
 
