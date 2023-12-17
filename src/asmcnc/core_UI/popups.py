@@ -336,6 +336,7 @@ class InfoPopup(BasicPopup):
         button_two_text=None,
         button_two_callback=None,
         button_two_background_color=None,
+        button_layout_padding=(150, 20, 150, 0),
         title="Information",
         **kwargs
     ):
@@ -346,7 +347,7 @@ class InfoPopup(BasicPopup):
             main_layout_padding=(10, 10, 10, 10),
             main_layout_spacing=10,
             main_label_size_delta=40,
-            button_layout_padding=(150, 20, 150, 0),
+            button_layout_padding=button_layout_padding,
             button_layout_spacing=15,
             popup_width=popup_width,
             popup_height=popup_height,

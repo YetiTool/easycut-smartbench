@@ -104,6 +104,7 @@ class ZMiscSaveWidget(Widget):
                 main_string=saved_success,
                 popup_width=300,
                 popup_height=300,
+                button_layout_padding=(0, 0, 0, 0),
             )
             popup.open()
         elif self.show_popup:
