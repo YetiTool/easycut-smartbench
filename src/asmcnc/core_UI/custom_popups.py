@@ -359,7 +359,7 @@ class PopupBrushInfo(Widget):
         popup.open()
 
 
-class PopupDisplaySpindleData(Widget):  # TODO: SCALE AND MOVE TO A UNIQUE POPUPS FILE
+class PopupDisplaySpindleData(Widget):
     def __init__(self, screen_manager, localization, serial, **kwargs):
         super(PopupDisplaySpindleData, self).__init__(**kwargs)
         self.sm = screen_manager
