@@ -319,7 +319,7 @@ class InfoPopup(BasicPopup):
         popup_height,
         button_one_text="Ok",
         button_one_callback=None,
-        button_one_background_color=None,
+        button_one_background_color=[76 / 255., 175 / 255., 80 / 255., 1.],
         button_two_text=None,
         button_two_callback=None,
         button_two_background_color=None,
@@ -328,11 +328,11 @@ class InfoPopup(BasicPopup):
         super(InfoPopup, self).__init__(
             main_string=main_string,
             popup_type=PopupType.INFO,
-            main_label_padding=(0, 0),
+            main_label_padding=(10, 10),
             main_layout_padding=(10, 10, 10, 10),
             main_layout_spacing=10,
-            main_label_size_delta=80,
-            button_layout_padding=(20, 10, 20, 0),
+            main_label_size_delta=40,
+            button_layout_padding=(150, 20, 150, 0),
             button_layout_spacing=15,
             popup_width=popup_width,
             popup_height=popup_height,
@@ -342,6 +342,7 @@ class InfoPopup(BasicPopup):
             button_two_text=button_two_text,
             button_two_callback=button_two_callback,
             button_two_background_color=button_two_background_color,
+            main_label_h_align="left",
             **kwargs
         )
 
