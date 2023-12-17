@@ -3,7 +3,7 @@ from datetime import datetime
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
-from asmcnc.skavaUI import popup_info
+from asmcnc.core_UI.popups import ErrorPopup
 
 Builder.load_string(
     """
@@ -265,7 +265,7 @@ class UpgradeScreen(Screen):
             self.m.enable_theateam()
             self.sm.current = "upgrade_successful"
         except:
-            popup_info.PopupError(self.sm, self.l, self.l.get_str("Error!"))
+            ErrorPopup(sm=self.sm, l=self.l, main_string=self.l.get_str("Error!")).open()
             log("Failed to create SC2 compatibility file!")
 
     def update_spindle_cooldown_settings(self):
@@ -280,11 +280,11 @@ class UpgradeScreen(Screen):
                 rpm=self.m.yeti_cooldown_rpm_default,
             )
         ):
-            popup_info.PopupError(
-                self.sm,
-                self.l,
-                self.l.get_str("There was a problem saving your settings."),
-            )
+            ErrorPopup(
+                sm=self.sm,
+                l=self.l,
+                main_string=self.l.get_str("There was a problem saving your settings."),
+            ).open()
 
     def show_error_message(self, error_message):
         self.error_label.text = error_message
