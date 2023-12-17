@@ -478,7 +478,8 @@ class PopupDisplaySpindleData(Widget):  # TODO: SCALE AND MOVE TO A UNIQUE POPUP
 
 
 class PopupSpindleSettingsInfo(Widget):
-    def __init__(self, screen_manager, localization):
+    def __init__(self, screen_manager, localization, **kwargs):
+        super(PopupSpindleSettingsInfo, self).__init__(**kwargs)
         self.sm = screen_manager
         self.l = localization
 
