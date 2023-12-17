@@ -110,8 +110,8 @@ Builder.load_string(
 								source: "./asmcnc/apps/start_up_sequence/warranty_app/img/cnc_academy_logo.png"
 								center_x: self.parent.center_x
 								y: self.parent.y
-								# size: self.parent.width, self.parent.height
-								allow_stretch: False
+								size: self.parent.width, self.parent.height
+								allow_stretch: True
 						Label:
 							id: url_label
 							size_hint_y: 0.25
