@@ -136,7 +136,7 @@ class ScreenTest(App):
 
     lang_idx = 0
     cycle_languages = True
-    cycle_time = 30
+    cycle_time = 10
 
     gb = "English (GB)"
     de = "Deutsch (DE)"
@@ -364,7 +364,9 @@ class ScreenTest(App):
         def job_recovery_tests():
             # Set this to None, -1, or 6 for the three cases on the decision screen
             # Set this to 1 to show arc movement message on line selection screen
-            jd.job_recovery_cancel_line = 1
+            # jd.job_recovery_cancel_line = 1
+            # jd.job_recovery_cancel_line = None
+            jd.job_recovery_cancel_line = -1
 
             # Choose between following cases to show different error messages on completion
             success, message = True, ""
