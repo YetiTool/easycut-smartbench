@@ -280,7 +280,7 @@ class PopupBrushInfo(Widget):
         example_short_length.add_widget(label_short_brush_length)
         example_short_length.add_widget(label_short_brush_tolerance)
 
-        ok_button = Button(text="[b]Ok[/b]", markup=True)
+        ok_button = Button(text="[b]Ok[/b]", markup=True, font_size=default_font_size)
         ok_button.background_normal = ""
         ok_button.background_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
 
@@ -444,7 +444,7 @@ class PopupDisplaySpindleData(Widget):
         label_layout.add_widget(category_label)
         label_layout.add_widget(value_label)
 
-        ok_button = Button(text=ok_string, markup=True)
+        ok_button = Button(text=ok_string, markup=True, font_size=default_font_size)
         ok_button.background_normal = ""
         ok_button.background_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
 
@@ -663,7 +663,7 @@ class PopupSpindleSettingsInfo(Widget):
         carousel_layout.add_widget(carousel)
         carousel_layout.add_widget(right_button_container)
 
-        ok_button = Button(text=ok_string, markup=True)
+        ok_button = Button(text=ok_string, markup=True, font_size=default_font_size)
         ok_button.background_normal = ""
         ok_button.background_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
 
