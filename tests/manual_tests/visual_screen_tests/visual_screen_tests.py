@@ -461,6 +461,16 @@ class ScreenTest(App):
 
             sm.current = 'basic'
 
+        def job_feedback_screen_test():
+            jd.metadata_dict = {}
+            jd.pause_duration = "0"
+            jd.actual_runtime = "0"
+            jd.post_production_notes  = ""
+            set_up_screens([
+                            [screen_job_feedback.JobFeedbackScreen, 'job_feedback'],
+                            [screen_go.GoScreen, 'go']
+                            ])
+            sm.current = 'job_feedback'
 
         # ALARM/ERROR/DOOR
 
