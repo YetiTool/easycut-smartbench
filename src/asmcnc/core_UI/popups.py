@@ -332,6 +332,7 @@ class InfoPopup(BasicPopup):
         button_two_text=None,
         button_two_callback=None,
         button_two_background_color=None,
+        title="Information",
         **kwargs
     ):
         super(InfoPopup, self).__init__(
@@ -352,7 +353,7 @@ class InfoPopup(BasicPopup):
             button_two_callback=button_two_callback,
             button_two_background_color=button_two_background_color,
             main_label_h_align="left",
-            title="Information",
+            title=title,
             **kwargs
         )
 
@@ -369,6 +370,7 @@ class ErrorPopup(BasicPopup):
         button_two_text=None,
         button_two_callback=None,
         button_two_background_color=None,
+        title="Error!",
         **kwargs
     ):
         super(ErrorPopup, self).__init__(
@@ -388,7 +390,7 @@ class ErrorPopup(BasicPopup):
             button_two_text=button_two_text,
             button_two_callback=button_two_callback,
             button_two_background_color=button_two_background_color,
-            title="Error!",
+            title=title,
             main_label_size_hint_y=1,
             **kwargs
         )
