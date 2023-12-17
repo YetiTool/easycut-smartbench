@@ -62,7 +62,7 @@ class ScreenManagerDataConsent(object):
 		BasicPopup(
 			sm=self.sm,
 			l=self.l,
-            popup_type=PopupType.ERROR,
+			popup_type=PopupType.ERROR,
 			popup_width=500,
 			popup_height=400,
 			title=self.l.get_str('Warning!') + " " + self.l.get_str("Are you sure?"),
@@ -78,12 +78,12 @@ class ScreenManagerDataConsent(object):
 			button_two_callback=self.decline_terms_and_disable_wifi,
 			button_two_background_color=[230 / 255., 74 / 255., 25 / 255., 1.],
 			main_label_size_hint_y=1.3,
-            main_label_padding=(0,0),
-            main_layout_padding=(10,20,10,20),
-            main_layout_spacing=10,
-            main_label_size_delta=120,
-            button_layout_padding=(20,0,20,0),
-            button_layout_spacing=10,
+			main_label_padding=(0,0),
+			main_layout_padding=(10,20,10,20),
+			main_layout_spacing=10,
+			main_label_size_delta=120,
+			button_layout_padding=(20,0,20,0),
+			button_layout_spacing=10,
 		).open()
 
 	def decline_terms_and_disable_wifi(self):
