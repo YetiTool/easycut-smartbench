@@ -237,6 +237,8 @@ class WarrantyScreen3(Screen):
             if self.activation_code_from_file == "":
                 self.backup_generate_activation_code()
         except:
+			# self.error_message_top.opacity = 1
+			# self.error_message_top.text = 'Checking activation code...'
             self.backup_generate_activation_code()
 
     def backup_generate_activation_code(self):
