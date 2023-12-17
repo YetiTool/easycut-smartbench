@@ -262,7 +262,7 @@ Builder.load_string(
                     halign: "center"
                     background_normal: "./asmcnc/skavaUI/img/blank_long_button.png"
                     background_down: "./asmcnc/skavaUI/img/blank_long_button.png"
-                    border: [dp(30)]*4
+                    border: [dp(30.0/800)*app.width, dp(30.0/480)*app.height, dp(30.0/800)*app.width, dp(30.0/480)*app.height]
               
 
 """
