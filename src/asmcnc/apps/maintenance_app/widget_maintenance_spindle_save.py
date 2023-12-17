@@ -6,7 +6,7 @@ widget to hold brush maintenance save and info
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 
-from asmcnc.apps.maintenance_app import popup_maintenance
+from asmcnc.core_UI.custom_popups import PopupSpindleSettingsInfo
 from asmcnc.skavaUI import popup_info
 
 Builder.load_string(
@@ -65,7 +65,7 @@ class SpindleSaveWidget(Widget):
         self.l = kwargs["localization"]
 
     def get_info(self):
-        popup_maintenance.PopupSpindleSettingsInfo(self.sm, self.l)
+        PopupSpindleSettingsInfo(self.sm, self.l)
 
     def save(self):
         try:
