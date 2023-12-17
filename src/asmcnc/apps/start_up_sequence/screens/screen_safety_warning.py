@@ -5,21 +5,11 @@ Screen to give a safety warning to the user when they switch on SmartBench.
 
 @author: Letty
 """
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import (
-    ObjectProperty,
-    ListProperty,
-    NumericProperty,
-    StringProperty,
-)
-from kivy.uix.widget import Widget
-from kivy.clock import Clock
-from kivy.uix.button import Button
-import sys, os
 from datetime import datetime
+
+from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
+
 from asmcnc.skavaUI import widget_status_bar
 
 Builder.load_string(
