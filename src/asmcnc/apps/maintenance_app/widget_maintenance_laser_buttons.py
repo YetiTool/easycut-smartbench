@@ -181,6 +181,7 @@ class LaserDatumButtons(Widget):
             button_two_callback=save_laser_datum_offset,
             button_one_background_color=[230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0],
             button_two_background_color=[76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0],
+            button_layout_padding=(0, 0, 0, 0),
         )
         popup.open()
 
