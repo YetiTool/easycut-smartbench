@@ -22,18 +22,18 @@ Builder.load_string(
         BoxLayout:
             padding:[dp(0.0625)*app.width, dp(0.0625)*app.height]
             Button:
-            font_size: str(0.01875 * app.width) + 'sp'
-            on_press: root.get_info()
-            background_color: [0,0,0,0]
-            BoxLayout:
-                size: self.parent.size
-                pos: self.parent.pos
-                Image:
-                    source: "./asmcnc/apps/shapeCutter_app/img/info_icon.png"
-                    center_x: self.parent.center_x
-                    y: self.parent.y
-                    size: self.parent.width, self.parent.height
-                    allow_stretch: True
+                font_size: str(0.01875 * app.width) + 'sp'
+                on_press: root.get_info()
+                background_color: [0,0,0,0]
+                BoxLayout:
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    Image:
+                        source: "./asmcnc/apps/shapeCutter_app/img/info_icon.png"
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
 
         BoxLayout:
             size_hint_y: 1.2
