@@ -417,7 +417,7 @@ class PopupDisplaySpindleData(Widget):
             valign="middle",
             text=category_string,
             color=(0, 0, 0, 1),
-            padding=0,
+            padding=(0, 0),
             markup=True,
             bold=True,
         )
@@ -427,7 +427,7 @@ class PopupDisplaySpindleData(Widget):
             valign="middle",
             text=value_string,
             color=(0, 0, 0, 1),
-            padding=0,
+            padding=(0, 0),
             markup=True,
         )
 

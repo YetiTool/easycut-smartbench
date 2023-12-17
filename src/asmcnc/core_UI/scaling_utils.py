@@ -30,7 +30,7 @@ def get_scaled_tuple(tup, orientation="horizontal"):
             return get_scaled_width(tup) if orientation == "horizontal" else get_scaled_height(tup)
 
     if len(tup) == 2:
-        return (get_scaled_width(tup[0]), get_scaled_height(tup[1]))
+        return get_scaled_width(tup[0]), get_scaled_height(tup[1])
 
     if len(tup) == 4:
         return (get_scaled_width(tup[0]), get_scaled_height(tup[1]),
