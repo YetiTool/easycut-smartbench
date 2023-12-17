@@ -94,8 +94,8 @@ class ScreenTest(App):
     width = Window.width
     height = Window.height if Window.height == 480 else Window.height - 32
 
-    lang_idx = 7
-    cycle_languages = False
+    lang_idx = 0
+    cycle_languages = True
 
     gb = "English (GB)"
     it = "Italiano (IT)"
@@ -466,6 +466,9 @@ class ScreenTest(App):
             jd.pause_duration = "0"
             jd.actual_runtime = "0"
             jd.post_production_notes  = ""
+            jd.metadata_dict["Internal Order Code"] = "Project_name"
+            jd.metadata_dict["Process Step"] = "Step 1 of 3"
+            jd.job_name = "Job name :).gcode"
             set_up_screens([
                             [screen_job_feedback.JobFeedbackScreen, 'job_feedback'],
                             [screen_go.GoScreen, 'go']

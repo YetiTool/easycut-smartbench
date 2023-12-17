@@ -255,6 +255,7 @@ Builder.load_string(
 
 class JobFeedbackScreen(Screen):
     return_to_screen = StringProperty()
+    # Example metadata
     metadata_string = (
         "Project_name | Step 1 of 3"
         + "\n"
