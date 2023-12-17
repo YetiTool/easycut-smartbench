@@ -111,6 +111,7 @@ class RecoveryDecisionScreen(Screen):
         self.update_strings()
 
     def on_pre_enter(self):
+        # Check if job recovery (or job redo) is available
         if self.jd.job_recovery_cancel_line == None:
             self.job_name_label.text = ""
             self.completion_label.text = self.l.get_str("No file available!")
@@ -138,6 +139,7 @@ class RecoveryDecisionScreen(Screen):
             self.repeat_job_button.background_down = (
                 "./asmcnc/skavaUI/img/blank_green_button.png"
             )
+            # Cancel on line -1 represents last job completing successfully
             if self.jd.job_recovery_cancel_line == -1:
                 self.completion_label.text = self.l.get_str(
                     "SmartBench completed the last job 100%"
@@ -161,12 +163,14 @@ class RecoveryDecisionScreen(Screen):
         self.update_font_size(self.completion_label)
 
     def go_to_recovery(self):
+        # Doing it this way because disabling the button causes visuals errors
         if self.jd.job_recovery_cancel_line != -1:
             self.repeat_job(recovering=True)
 
     def repeat_job(self, recovering=False):
         if self.jd.job_recovery_cancel_line != None:
             if os.path.isfile(self.jd.job_recovery_filepath):
+                # Only load file if it's not already loaded
                 if self.jd.job_recovery_filepath != self.jd.filename:
                     self.jd.reset_values()
                     self.jd.job_recovery_from_beginning = True
