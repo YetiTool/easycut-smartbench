@@ -261,6 +261,11 @@ class BasicPopup(Popup):
         self.main_layout.add_widget(self.button_layout)
 
         self.content = self.main_layout
+        self.update_font_sizes()
+
+    def update_font_sizes(self):
+        if len(self.main_label.text) > 200 and utils.is_screen_big():
+            self.main_label.font_size = str(utils.get_scaled_width(13)) + "sp"
 
     def build_button_layout(self):
         button_layout = BoxLayout(
