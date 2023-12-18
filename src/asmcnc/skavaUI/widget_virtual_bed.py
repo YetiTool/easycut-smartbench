@@ -110,6 +110,8 @@ class StencilBox2(StencilView, BoxLayout):
 
 
 class VirtualBed(Widget):
+    # G54: workpiece co-ordinates
+    # G28: set reference point
     width_modifier = NumericProperty()
     x_pos_modifier = NumericProperty()
 

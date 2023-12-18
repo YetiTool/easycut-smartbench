@@ -12,6 +12,7 @@ from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.clock import Clock
 from asmcnc.skavaUI import popup_info
+from kivy.core.window import Window
 
 Builder.load_string(
     """
@@ -432,5 +433,5 @@ class XYMove(Widget):
         popup_info.PopupDatum(self.sm, self.m, self.l, "Y", warning)
 
     def format_command(self, cmd):
-        wrapped_cmd = textwrap.fill(cmd, width=35, break_long_words=False)
+        wrapped_cmd = textwrap.fill(cmd, width=0.04375*Window.width, break_long_words=False)
         return wrapped_cmd
