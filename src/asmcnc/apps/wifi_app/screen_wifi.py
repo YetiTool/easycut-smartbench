@@ -383,7 +383,7 @@ Builder.load_string(
                     RstDocument:
                         id: connection_instructions_rst
                         background_color: hex('#FFFFFF')
-                        base_font_size: 26
+                        base_font_size: 26.0 / 800 * app.width
                         underline_color: '000000'
                                                                                    
             BoxLayout: 
