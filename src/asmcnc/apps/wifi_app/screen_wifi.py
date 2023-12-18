@@ -345,7 +345,7 @@ Builder.load_string(
                             halign: 'left'
                             valign: 'middle'
                             markup: True
-                            size: 55, 40
+                            size: 55.0/800*app.width, 40.0/480*app.height
                             text: 'GB'
                             font_size: str(0.025*app.width) + 'sp'
                             text_size: self.size
