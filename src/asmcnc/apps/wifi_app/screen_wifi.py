@@ -14,6 +14,7 @@ from kivy.clock import Clock
 import socket, sys, os
 from kivy.properties import StringProperty, ObjectProperty
 from asmcnc.skavaUI import popup_info
+from kivy.core.window import Window
 
 Builder.load_string(
     """
