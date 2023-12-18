@@ -27,6 +27,8 @@ from kivy.config import Config
 from kivy.clock import Clock
 from kivy.uix.boxlayout import BoxLayout
 
+from asmcnc.core_UI.popup_manager import PopupManager
+
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
 
 if sys.platform.startswith("linux"):
@@ -163,6 +165,7 @@ class SkavaUI(App):
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
 
+
         # Localization/language object
         l = localization.Localization()
 
@@ -195,7 +198,11 @@ class SkavaUI(App):
 
         # Server connection object
         sc = server_connection.ServerConnection(sett)
-        
+
+        # Popup manager
+        pm = PopupManager(sm, m, l)
+        sm.pm = pm  # store in screen manager for access by screens
+
         # initialise the screens (legacy)
         lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m, app_manager = am, localization = l)
         home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l, keyboard = kb)
