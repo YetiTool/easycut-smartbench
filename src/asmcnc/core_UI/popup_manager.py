@@ -1,3 +1,4 @@
+from asmcnc.core_UI import scaling_utils
 from asmcnc.core_UI.popups import ErrorPopup, InfoPopup, MiniInfoPopup
 
 
@@ -39,7 +40,8 @@ class PopupManager:
 
     def show_info_popup(self, main_string, width):
         self.info_popup.main_label.text = main_string
-        self.info_popup.width = width
+        self.info_popup.width = scaling_utils.get_scaled_width(width)
+        self.info_popup.build()
         self.info_popup.open()
 
     def show_mini_info_popup(self, main_string):
