@@ -12,6 +12,8 @@ from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @Unr
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.clock import Clock
+
+from asmcnc.core_UI.custom_popups import PopupDatum
 from asmcnc.skavaUI import popup_info
 
 
@@ -372,7 +374,7 @@ class XYMove(Widget):
                 ).replace('X-Y', '[b]X-Y[/b]')).replace(self.l.get_str('datum'), self.l.get_bold('datum'))
             )
 
-        popup_info.PopupDatum(self.sm, self.m, self.l, 'XY', warning)
+        PopupDatum(self.sm, self.m, self.l, 'XY', warning)
     
     def set_standby_to_pos(self):
         warning = self.format_command(
@@ -398,8 +400,7 @@ class XYMove(Widget):
                 ).replace('X-Y', '[b]X[/b]')).replace(self.l.get_str('datum'), self.l.get_bold('datum'))
             )
 
-        
-        popup_info.PopupDatum(self.sm, self.m, self.l, 'X', warning)
+        PopupDatum(self.sm, self.m, self.l, 'X', warning)
 
     def set_y_datum(self):
         warning = self.format_command(
@@ -407,7 +408,7 @@ class XYMove(Widget):
                 ).replace('X-Y', '[b]Y[/b]')).replace(self.l.get_str('datum'), self.l.get_bold('datum'))
             )
 
-        popup_info.PopupDatum(self.sm, self.m, self.l, 'Y', warning)
+        PopupDatum(self.sm, self.m, self.l, 'Y', warning)
 
     def format_command(self, cmd):
         wrapped_cmd = textwrap.fill(cmd, width=35, break_long_words=False)

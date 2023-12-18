@@ -88,7 +88,7 @@ class PopupWelcome(Widget):  # done
         popup.open()
 
 
-class PopupDatum(Widget):  # done
+class PopupDatum(Widget):  # done (moved to custom_popups and scaled)
 
     def __init__(self, screen_manager, machine, localization, xy, warning_message):
 
