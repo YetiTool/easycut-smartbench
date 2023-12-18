@@ -373,7 +373,7 @@ class ErrorPopup(BasicPopup):
             main_label_padding=(0, 10),
             main_layout_padding=(40, 20, 40, 20),
             main_layout_spacing=10,
-            main_label_size_delta=80,
+            main_label_size_delta=40,
             button_layout_padding=(0, 20, 0, 0),
             button_layout_spacing=10,
             popup_width=popup_width,
