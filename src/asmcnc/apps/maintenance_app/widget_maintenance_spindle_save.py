@@ -7,7 +7,6 @@ from kivy.lang import Builder
 from kivy.uix.widget import Widget
 
 from asmcnc.core_UI.custom_popups import PopupSpindleSettingsInfo
-from asmcnc.skavaUI import popup_info
 
 Builder.load_string(
     """
@@ -88,7 +87,7 @@ class SpindleSaveWidget(Widget):
                         "If you can't find what you're looking for, please enter the version with a voltage and digital/manual option that matches what you have."
                     )
                 )
-                popup_info.PopupError(self.sm, self.l, brand_validation_error)
+                self.sm.pm.show_error_popup(brand_validation_error)
                 return
         except:
             brand_validation_error = (
@@ -100,7 +99,7 @@ class SpindleSaveWidget(Widget):
                     "If you can't find what you're looking for, please enter the version with a voltage and digital/manual option that matches what you have."
                 )
             )
-            popup_info.PopupError(self.sm, self.l, brand_validation_error)
+            self.sm.pm.show_error_popup(brand_validation_error)
             return
         try:
             time = int(
@@ -108,7 +107,7 @@ class SpindleSaveWidget(Widget):
                     "maintenance"
                 ).spindle_settings_widget.cooldown_time_slider.value
             )
-            if time >= 1 and time <= 60:
+            if 1 <= time <= 60:
                 pass
             else:
                 time_validation_error = (
@@ -118,7 +117,7 @@ class SpindleSaveWidget(Widget):
                     + "\n\n"
                     + self.l.get_str("Please enter a new value.")
                 )
-                popup_info.PopupError(self.sm, self.l, time_validation_error)
+                self.sm.pm.show_error_popup(time_validation_error)
                 return
         except:
             time_validation_error = (
@@ -128,7 +127,7 @@ class SpindleSaveWidget(Widget):
                 + "\n\n"
                 + self.l.get_str("Please enter a new value.")
             )
-            popup_info.PopupError(self.sm, self.l, time_validation_error)
+            self.sm.pm.show_error_popup(time_validation_error)
             return
         try:
             speed = int(
@@ -136,7 +135,7 @@ class SpindleSaveWidget(Widget):
                     "maintenance"
                 ).spindle_settings_widget.cooldown_speed_slider.value
             )
-            if speed >= 10000 and speed <= 20000:
+            if 10000 <= speed <= 20000:
                 pass
             else:
                 speed_validation_error = (
@@ -146,7 +145,7 @@ class SpindleSaveWidget(Widget):
                     + "\n\n"
                     + self.l.get_str("Please enter a new value.")
                 )
-                popup_info.PopupError(self.sm, self.l, speed_validation_error)
+                self.sm.pm.show_error_popup(speed_validation_error)
                 return
         except:
             speed_validation_error = (
@@ -156,7 +155,7 @@ class SpindleSaveWidget(Widget):
                 + "\n\n"
                 + self.l.get_str("Please enter a new value.")
             )
-            popup_info.PopupError(self.sm, self.l, speed_validation_error)
+            self.sm.pm.show_error_popup(speed_validation_error)
             return
         if (
             self.m.write_spindle_cooldown_rpm_override_settings(
@@ -179,7 +178,7 @@ class SpindleSaveWidget(Widget):
                     self.m.write_dollar_setting(51, 0)
                     self.sm.current_screen.spindle_settings_widget.hide_spindle_data_container()
             saved_success = self.l.get_str("Settings saved!")
-            popup_info.PopupMiniInfo(self.sm, self.l, saved_success)
+            self.sm.pm.show_mini_info_popup(saved_success)
         else:
             warning_message = (
                 self.l.get_str("There was a problem saving your settings.")
@@ -188,7 +187,7 @@ class SpindleSaveWidget(Widget):
                     "Please check your settings and try again, or if the problem persists please contact the YetiTool support team."
                 )
             )
-            popup_info.PopupError(self.sm, self.l, warning_message)
+            self.sm.pm.show_error_popup(warning_message)
         if voltage == "110":
             spindle_voltage_info = (
                 self.l.get_str(
@@ -209,4 +208,4 @@ class SpindleSaveWidget(Widget):
                     "You will still be able to use the real time spindle speed feedback feature to assist your adjustment."
                 )
             )
-            popup_info.PopupInfo(self.sm, self.l, 780, spindle_voltage_info)
+            self.sm.pm.show_info_popup(spindle_voltage_info)

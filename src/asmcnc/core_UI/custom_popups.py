@@ -125,7 +125,7 @@ class PopupBrushInfo(Widget):
         )
         label_full_brush_top = Label(
             text=self.l.get_bold("NEW"),
-            text_size=(get_scaled_width(760), get_scaled_height(self.height)),
+            text_size=(get_scaled_width(68), get_scaled_height(self.height)),
             size_hint_y=0.1,
             font_size=_12_sp,
             markup=True,

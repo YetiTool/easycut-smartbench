@@ -7,7 +7,6 @@ from kivy.lang import Builder
 from kivy.uix.widget import Widget
 
 from asmcnc.core_UI.custom_popups import PopupBrushInfo
-from asmcnc.core_UI.popups import ErrorPopup, InfoPopup
 
 Builder.load_string(
     """
@@ -85,13 +84,7 @@ class BrushSaveWidget(Widget):
                     + "\n\n"
                     + self.l.get_str("Please enter a new value.")
                 )
-                popup = ErrorPopup(
-                    sm=self.sm,
-                    m=self.m,
-                    l=self.l,
-                    main_string=main_string,
-                )
-                popup.open()
+                self.sm.pm.show_error_popup(main_string)
                 return
             if 100 * 3600 <= lifetime <= 999 * 3600:
                 pass
@@ -103,13 +96,7 @@ class BrushSaveWidget(Widget):
                     + "\n\n"
                     + self.l.get_str("Please enter a new value.")
                 )
-                popup = ErrorPopup(
-                    sm=self.sm,
-                    m=self.m,
-                    l=self.l,
-                    main_string=main_string,
-                )
-                popup.open()
+                self.sm.pm.show_error_popup(main_string)
                 return
             if use <= lifetime:
                 pass
@@ -121,20 +108,11 @@ class BrushSaveWidget(Widget):
                     + "\n\n"
                     + self.l.get_str("Please check your values.")
                 )
-                popup = ErrorPopup(
-                    sm=self.sm,
-                    m=self.m,
-                    l=self.l,
-                    main_string=main_string,
-                )
-                popup.open()
+                self.sm.pm.show_error_popup(main_string)
                 return
             if self.m.write_spindle_brush_values(use, lifetime):
                 saved_success = self.l.get_str("Settings saved!")
-                popup = InfoPopup(sm=self.sm, m=self.m, l=self.m,
-                                  main_string=saved_success,
-                                  popup_width=300, popup_height=300)
-                popup.open()
+                self.sm.pm.show_mini_info_popup(saved_success)
             else:
                 main_string = (
                     self.l.get_str("There was a problem saving your settings.")
@@ -143,13 +121,7 @@ class BrushSaveWidget(Widget):
                         "Please check your settings and try again, or if the problem persists please contact the YetiTool support team."
                     )
                 )
-                popup = ErrorPopup(
-                    sm=self.sm,
-                    m=self.m,
-                    l=self.l,
-                    main_string=main_string,
-                )
-                popup.open()
+                self.sm.pm.show_error_popup(main_string)
             value = 1 - float(
                 self.m.spindle_brush_use_seconds / self.m.spindle_brush_lifetime_seconds
             )
@@ -162,11 +134,5 @@ class BrushSaveWidget(Widget):
                     "Please check your settings and try again, or if the problem persists please contact the YetiTool support team."
                 )
             )
-            popup = ErrorPopup(
-                sm=self.sm,
-                m=self.m,
-                l=self.l,
-                main_string=main_string,
-            )
-            popup.open()
+            self.sm.pm.show_error_popup(main_string)
             return

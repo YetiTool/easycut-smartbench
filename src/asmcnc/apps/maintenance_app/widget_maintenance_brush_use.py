@@ -1,5 +1,7 @@
 from kivy.core.window import Window
 
+from asmcnc.core_UI import scaling_utils
+
 """
 Created on 17 August 2020
 @author: Letty
@@ -136,7 +138,7 @@ Builder.load_string(
 
 
 class BrushUseWidget(Widget):
-    default_font_size = 24
+    default_font_size = scaling_utils.get_scaled_width(24)
 
     def __init__(self, **kwargs):
         super(BrushUseWidget, self).__init__(**kwargs)

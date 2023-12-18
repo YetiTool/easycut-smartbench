@@ -366,6 +366,8 @@ class SpindleSettingsWidget(Widget):
         self.wait_popup = InfoPopup(sm=self.sm, m=self.m, l=self.l,
                                     main_string="SmartBench is raising the Z axis.",
                                     title=self.l.get_str("Please wait") + "...",
+                                    main_layout_padding=(40, 20, 40, 20), main_layout_spacing=10,
+                                    main_label_size_delta=140,
                                     popup_width=500, popup_height=200, button_one_text=None, auto_dismiss=True)
 
     def cooldown_speed_updated(self, instance, value):
@@ -416,16 +418,15 @@ class SpindleSettingsWidget(Widget):
         )
         button_one_text = "No"
         button_two_text = "Yes"
-        popup = ErrorPopup(sm=self.sm, m=self.m, l=self.l,
-                           main_string=main_string,
-                           title="Warning!",
-                           button_one_text=button_one_text,
-                           button_two_text=button_two_text,
-                           button_two_callback=self.raise_z_then_get_data,
-                           button_one_background_color=[230 / 255., 74 / 255., 25 / 255., 1.],
-                           button_two_background_color=[76 / 255., 175 / 255., 80 / 255., 1.],
-                           popup_width=700, popup_height=460)
-        popup.open()
+        ErrorPopup(sm=self.sm, m=self.m, l=self.l,
+                   main_string=main_string,
+                   title="Warning!",
+                   button_one_text=button_one_text,
+                   button_two_text=button_two_text,
+                   button_two_callback=self.raise_z_then_get_data,
+                   button_one_background_color=[230 / 255., 74 / 255., 25 / 255., 1.],
+                   button_two_background_color=[76 / 255., 175 / 255., 80 / 255., 1.],
+                   popup_width=700, popup_height=460).open()
 
     def raise_z_then_get_data(self):
         if self.m.state().startswith("Idle"):
@@ -433,9 +434,7 @@ class SpindleSettingsWidget(Widget):
             self.m.zUp()
             Clock.schedule_once(self.get_spindle_data, 0.4)
         else:
-            popup = ErrorPopup(sm=self.sm, m=self.m, l=self.l,
-                               main_string="Please ensure machine is idle before continuing.")
-            popup.open()
+            self.sm.pm.show_error_popup("Please ensure machine is idle before continuing.")
 
     def get_spindle_data(self, dt):
         if not self.m.smartbench_is_busy():
@@ -474,12 +473,11 @@ class SpindleSettingsWidget(Widget):
             PopupDisplaySpindleData(self.sm, self.l, self.m.s)
         else:
             error_message = (
-                self.l.get_str("No SC2 Spindle motor detected.")
-                + " "
-                + self.l.get_str("Please check your connections.")
+                    self.l.get_str("No SC2 Spindle motor detected.")
+                    + " "
+                    + self.l.get_str("Please check your connections.")
             )
-            popup = ErrorPopup(sm=self.sm, m=self.m, l=self.l, main_string=error_message)
-            popup.open()
+            self.sm.pm.show_error_popup(error_message)
 
     def update_strings(self):
         self.rpm_label.text = self.l.get_str("RPM")

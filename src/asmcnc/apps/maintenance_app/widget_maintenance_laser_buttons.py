@@ -6,8 +6,7 @@ widget to hold laser datum setting buttons
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 
-from asmcnc.core_UI.popups import InfoPopup, ErrorPopup
-from asmcnc.skavaUI import popup_info
+from asmcnc.core_UI.popups import InfoPopup
 
 Builder.load_string(
     """
@@ -168,7 +167,7 @@ class LaserDatumButtons(Widget):
         button_two_text = "Yes, set reference here"
         title = "RESET laser crosshair offset"
 
-        popup = InfoPopup(
+        InfoPopup(
             sm=self.sm,
             m=self.m,
             l=self.l,
@@ -182,8 +181,7 @@ class LaserDatumButtons(Widget):
             button_one_background_color=[230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0],
             button_two_background_color=[76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0],
             button_layout_padding=(0, 0, 0, 0),
-        )
-        popup.open()
+        ).open()
 
     def save_button_press(self):
         if self.m.is_laser_enabled:
@@ -224,13 +222,7 @@ class LaserDatumButtons(Widget):
                 + "\n\n"
                 + self.l.get_str("Please enable laser to set offset.")
             )
-            popup = ErrorPopup(
-                sm=self.sm,
-                m=self.m,
-                l=self.l,
-                main_string=main_string,
-            )
-            popup.open()
+            self.sm.pm.show_error_popup(main_string)
 
     def reset_laser_offset(self):
         self.sm.get_screen(
@@ -257,7 +249,7 @@ class LaserDatumButtons(Widget):
             "True", self.m.laser_offset_x_value, self.m.laser_offset_y_value
         ):
             saved_success = self.l.get_str("Settings saved!")
-            popup_info.PopupMiniInfo(self.sm, self.l, saved_success)
+            self.sm.pm.show_mini_info_popup(saved_success)
             self.save_button_image.source = (
                 "./asmcnc/apps/maintenance_app/img/save_button_132_greyscale.png"
             )
@@ -270,13 +262,7 @@ class LaserDatumButtons(Widget):
                     "Please check your settings and try again, or if the problem persists please contact the YetiTool support team."
                 )
             )
-            popup = ErrorPopup(
-                sm=self.sm,
-                m=self.m,
-                l=self.l,
-                main_string=main_string,
-            )
-            popup.open()
+            self.sm.pm.show_error_popup(main_string)
 
     def set_vacuum(self):
         if self.vacuum_toggle.state == "normal":
