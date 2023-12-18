@@ -384,7 +384,7 @@ class ErrorPopup(BasicPopup):
             main_label_padding=(0, 10),
             main_layout_padding=(40, 20, 40, 20),
             main_layout_spacing=10,
-            main_label_size_delta=80,
+            main_label_size_delta=40,
             button_layout_padding=(0, 20, 0, 0),
             button_layout_spacing=10,
             popup_width=popup_width,
@@ -436,5 +436,44 @@ class QRPopup(BasicPopup):
             button_two_text=button_two_text,
             button_two_callback=button_two_callback,
             button_two_background_color=button_two_background_color,
+            **kwargs
+        )
+
+
+class MiniInfoPopup(BasicPopup):
+    def __init__(
+        self,
+        main_string,
+        popup_width=300,
+        popup_height=300,
+        button_one_text="Ok",
+        button_one_callback=None,
+        button_one_background_color=(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0),
+        button_two_text=None,
+        button_two_callback=None,
+        button_two_background_color=None,
+        title="Information",
+        **kwargs
+    ):
+        super(MiniInfoPopup, self).__init__(
+            main_string=main_string,
+            popup_type=PopupType.INFO,
+            main_label_padding=(40, 20),
+            title=title,
+            main_layout_padding=(40, 20),
+            main_layout_spacing=10,
+            main_label_size_delta=-60,
+            button_layout_padding=(0, 0),
+            button_layout_spacing=10,
+            popup_width=popup_width,
+            popup_height=popup_height,
+            button_one_text=button_one_text,
+            button_one_callback=button_one_callback,
+            button_one_background_color=button_one_background_color,
+            button_two_text=button_two_text,
+            button_two_callback=button_two_callback,
+            button_two_background_color=button_two_background_color,
+            main_label_h_align="center",
+            main_label_size_hint_y=1,
             **kwargs
         )
