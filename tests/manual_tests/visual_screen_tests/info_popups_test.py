@@ -4,6 +4,7 @@ From the easycut folder: python -m tests.manual_tests.visual_screen_tests.info_p
 import os
 import sys
 import textwrap
+from functools import partial
 
 from kivy.clock import Clock
 from mock.mock import MagicMock
@@ -71,6 +72,7 @@ class MenuScreen(Screen):
         self.sm = kwargs['sm']
         self.l = kwargs['l']
 
+        self.update_strings()
         self.info_popups = [
             (self.sm, self.l, 500, self.l.get_str("File names must be between 1 and 40 characters long.")),
             (self.sm, self.l, 780, self.popup_1_text),
@@ -88,10 +90,13 @@ class MenuScreen(Screen):
         self.update_strings()
 
         for i in range(len(self.info_popups)):
-            Clock.schedule_once(lambda dt: self.cycle(i), 5.0 * i)
+            Clock.schedule_once(lambda dt, i=i: self.cycle(i), i * 3)
 
     def cycle(self, i):
-        self.sm.pm.show_info_popup(self.info_popups[3], self.info_popups[2])
+        Clock.schedule_once(lambda dt: self.open_popup(i), 0.5)
+
+    def open_popup(self, i):
+        self.sm.pm.show_info_popup(self.info_popups[i][3], self.info_popups[i][2])
 
     def format_command(self, cmd):
         wrapped_cmd = textwrap.fill(cmd, width=50, break_long_words=False)
