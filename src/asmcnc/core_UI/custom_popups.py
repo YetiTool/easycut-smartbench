@@ -31,51 +31,51 @@ class PopupBrushInfo(Widget):
 
         # do this as a grid layout instead
         description_top = (
-                self.l.get_bold("Brush use:")
-                + "\n"
-                + "  "
-                + self.l.get_bold("Value:")
-                + " "
-                + self.l.get_str("The running hours of the brushes.")
-                + "\n"
-                + "  "
-                + self.l.get_bold("Restore:")
-                + " "
-                + self.l.get_str("Return to the hours previously logged.")
-                + "\n"
-                + "  "
-                + self.l.get_bold("Reset:")
-                + " "
-                + self.l.get_str("Set the running hours to zero.")
+            self.l.get_bold("Brush use:")
+            + "\n"
+            + "  "
+            + self.l.get_bold("Value:")
+            + " "
+            + self.l.get_str("The running hours of the brushes.")
+            + "\n"
+            + "  "
+            + self.l.get_bold("Restore:")
+            + " "
+            + self.l.get_str("Return to the hours previously logged.")
+            + "\n"
+            + "  "
+            + self.l.get_bold("Reset:")
+            + " "
+            + self.l.get_str("Set the running hours to zero.")
         )
 
         description_bottom = (
-                self.l.get_bold("Brush reminder:")
-                + "\n"
-                + "  "
-                + self.l.get_bold("Value:")
-                + " "
-                + self.l.get_str("Set to the hours the brushes are expected to last.")
-                + "\n"
-                + "  "
-                + self.l.get_str(
-            "This will vary depending on heavy use (~120 hours) or light use (~500 hours)."
-        )
-                + "\n"
-                + "  "
-                + self.l.get_str(
-            "It is best to set to worst case, inspect the brushes, and update as necessary."
-        )
-                + "\n"
-                + "  "
-                + self.l.get_bold("Restore:")
-                + " "
-                + self.l.get_str("Return the brush reminder to the hours previously set.")
-                + "\n"
-                + "  "
-                + self.l.get_bold("Reset:")
-                + " "
-                + self.l.get_str("Sets the brush reminder to 120 hours.")
+            self.l.get_bold("Brush reminder:")
+            + "\n"
+            + "  "
+            + self.l.get_bold("Value:")
+            + " "
+            + self.l.get_str("Set to the hours the brushes are expected to last.")
+            + "\n"
+            + "  "
+            + self.l.get_str(
+                "This will vary depending on heavy use (~120 hours) or light use (~500 hours)."
+            )
+            + "\n"
+            + "  "
+            + self.l.get_str(
+                "It is best to set to worst case, inspect the brushes, and update as necessary."
+            )
+            + "\n"
+            + "  "
+            + self.l.get_bold("Restore:")
+            + " "
+            + self.l.get_str("Return the brush reminder to the hours previously set.")
+            + "\n"
+            + "  "
+            + self.l.get_bold("Reset:")
+            + " "
+            + self.l.get_str("Sets the brush reminder to 120 hours.")
         )
 
         title_string = self.l.get_str("Information")
@@ -373,39 +373,39 @@ class PopupDisplaySpindleData(Widget):
         default_font_size = get_scaled_sp("15sp")
 
         category_string = (
-                self.l.get_str("Spindle serial number")
-                + "\n\n"
-                + self.l.get_str("Production year")
-                + "\n\n"
-                + self.l.get_str("Production week")
-                + "\n\n"
-                + self.l.get_str("Firmware version")
-                + "\n\n"
-                + self.l.get_str("Total runtime")
-                + "\n\n"
-                + self.l.get_str("Brush runtime since last reset")
-                + "\n\n"
-                + self.l.get_str("Mains frequency")
+            self.l.get_str("Spindle serial number")
+            + "\n\n"
+            + self.l.get_str("Production year")
+            + "\n\n"
+            + self.l.get_str("Production week")
+            + "\n\n"
+            + self.l.get_str("Firmware version")
+            + "\n\n"
+            + self.l.get_str("Total runtime")
+            + "\n\n"
+            + self.l.get_str("Brush runtime since last reset")
+            + "\n\n"
+            + self.l.get_str("Mains frequency")
         )
 
         value_string = (
-                str(self.s.spindle_serial_number)
-                + "\n\n"
-                + str(self.s.spindle_production_year)
-                + "\n\n"
-                + str(self.s.spindle_production_week)
-                + "\n\n"
-                + str(self.s.spindle_firmware_version)
-                + "\n\n"
-                + str(self.s.spindle_total_run_time_seconds / 3600)
-                + " "
-                + self.l.get_str("hours")
-                + "\n\n"
-                + str(self.s.spindle_brush_run_time_seconds / 3600)
-                + " "
-                + self.l.get_str("hours")
-                + "\n\n"
-                + str(self.s.spindle_mains_frequency_hertz)
+            str(self.s.spindle_serial_number)
+            + "\n\n"
+            + str(self.s.spindle_production_year)
+            + "\n\n"
+            + str(self.s.spindle_production_week)
+            + "\n\n"
+            + str(self.s.spindle_firmware_version)
+            + "\n\n"
+            + str(self.s.spindle_total_run_time_seconds / 3600)
+            + " "
+            + self.l.get_str("hours")
+            + "\n\n"
+            + str(self.s.spindle_brush_run_time_seconds / 3600)
+            + " "
+            + self.l.get_str("hours")
+            + "\n\n"
+            + str(self.s.spindle_mains_frequency_hertz)
         )
 
         title_string = self.l.get_str("SC2 Spindle data")
@@ -426,7 +426,7 @@ class PopupDisplaySpindleData(Widget):
             padding=(0, 0),
             markup=True,
             bold=True,
-            font_size=default_font_size
+            font_size=default_font_size,
         )
         value_label = Label(
             text_size=get_scaled_tuple((250, None)),
@@ -436,7 +436,7 @@ class PopupDisplaySpindleData(Widget):
             color=(0, 0, 0, 1),
             padding=(0, 0),
             markup=True,
-            font_size=default_font_size
+            font_size=default_font_size,
         )
 
         label_layout = BoxLayout(
@@ -496,47 +496,47 @@ class PopupSpindleSettingsInfo(Widget):
         default_font_size = get_scaled_sp("15sp")
 
         model_info = (
-                self.l.get_bold("Spindle motor model:")
-                + "\n"
-                + self.l.get_str(
-            "SmartBench will operate slightly differently depending on the type of spindle motor you are using."
-        )
-                + " "
-                + self.l.get_str(
-            "It is important that you choose the option that matches the voltage and digital/manual specifications of your spindle motor."
-        )
+            self.l.get_bold("Spindle motor model:")
+            + "\n"
+            + self.l.get_str(
+                "SmartBench will operate slightly differently depending on the type of spindle motor you are using."
+            )
+            + " "
+            + self.l.get_str(
+                "It is important that you choose the option that matches the voltage and digital/manual specifications of your spindle motor."
+            )
         )
 
         cooldown_info = (
-                self.l.get_bold("Spindle motor cooldown:")
-                + "\n"
-                + self.l.get_str(
-            "The spindle motor needs to cool down after a job to prevent it from overheating, and to extend its lifetime."
-        )
-                + " "
-                + self.l.get_str("We recommend the following cooldown settings:")
-                + "\n"
-                + "       "
-                + self.l.get_str("Yeti SC1/2: 12,000 RPM; 10 seconds")
-                + "\n"
-                + "       "
-                + self.l.get_str("AMB: 10,000 RPM; 30 seconds")
+            self.l.get_bold("Spindle motor cooldown:")
+            + "\n"
+            + self.l.get_str(
+                "The spindle motor needs to cool down after a job to prevent it from overheating, and to extend its lifetime."
+            )
+            + " "
+            + self.l.get_str("We recommend the following cooldown settings:")
+            + "\n"
+            + "       "
+            + self.l.get_str("Yeti SC1/2: 12,000 RPM; 10 seconds")
+            + "\n"
+            + "       "
+            + self.l.get_str("AMB: 10,000 RPM; 30 seconds")
         )
 
         stylus_info = (
-                self.l.get_bold("CNC Stylus switch")
-                + "[b]:[/b]\n"
-                + self.l.get_str(
-            "When enabled, you will always be asked if you are using CNC Stylus or a Router at the start of every job."
-        )
+            self.l.get_bold("CNC Stylus switch")
+            + "[b]:[/b]\n"
+            + self.l.get_str(
+                "When enabled, you will always be asked if you are using CNC Stylus or a Router at the start of every job."
+            )
         )
 
         get_data_info = (
-                self.l.get_bold("SC2 Spindle motor data:")
-                + "\n"
-                + self.l.get_str("This button gets data from your spindle motor.")
-                + " "
-                + self.l.get_str("This is only available when an SC2 model is selected.")
+            self.l.get_bold("SC2 Spindle motor data:")
+            + "\n"
+            + self.l.get_str("This button gets data from your spindle motor.")
+            + " "
+            + self.l.get_str("This is only available when an SC2 model is selected.")
         )
 
         title_string = self.l.get_str("Information")
@@ -647,7 +647,9 @@ class PopupSpindleSettingsInfo(Widget):
             background_down="./asmcnc/skavaUI/img/lobby_scrollleft.png",
             font_size=default_font_size,
         )
-        left_button_container = BoxLayout(size_hint_x=0.06, padding=get_scaled_tuple((0, 90)))
+        left_button_container = BoxLayout(
+            size_hint_x=0.06, padding=get_scaled_tuple((0, 90))
+        )
         left_button_container.add_widget(left_button)
         right_button = Button(
             background_color=[0, 0, 0, 0.2],
@@ -656,10 +658,14 @@ class PopupSpindleSettingsInfo(Widget):
             background_down="./asmcnc/skavaUI/img/lobby_scrollright.png",
             font_size=default_font_size,
         )
-        right_button_container = BoxLayout(size_hint_x=0.06, padding=get_scaled_tuple((0, 90)))
+        right_button_container = BoxLayout(
+            size_hint_x=0.06, padding=get_scaled_tuple((0, 90))
+        )
         right_button_container.add_widget(right_button)
 
-        carousel_layout = BoxLayout(orientation="horizontal", spacing=get_scaled_tuple((15, 15)), size_hint_y=4)
+        carousel_layout = BoxLayout(
+            orientation="horizontal", spacing=get_scaled_tuple((15, 15)), size_hint_y=4
+        )
         carousel_layout.add_widget(left_button_container)
         carousel_layout.add_widget(carousel)
         carousel_layout.add_widget(right_button_container)
@@ -669,7 +675,9 @@ class PopupSpindleSettingsInfo(Widget):
         ok_button.background_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
 
         btn_layout = BoxLayout(
-            orientation="horizontal", spacing=15, padding=get_scaled_tuple((300, 10, 300, 0))
+            orientation="horizontal",
+            spacing=15,
+            padding=get_scaled_tuple((300, 10, 300, 0)),
         )
         btn_layout.add_widget(ok_button)
 
@@ -707,86 +715,133 @@ class PopupSpindleSettingsInfo(Widget):
 
 
 class PopupDatum(Widget):
-    def __init__(self, screen_manager, machine, localization, xy, warning_message, **kwargs):
+    def __init__(
+        self, screen_manager, machine, localization, xy, warning_message, **kwargs
+    ):
         super(PopupDatum, self).__init__(**kwargs)
         self.sm = screen_manager
         self.m = machine
         self.l = localization
 
         description = warning_message
-        title_string = self.l.get_str('Warning!')
-        yes_string = self.l.get_bold('Yes')
-        no_string = self.l.get_bold('No')
-        chk_message = self.l.get_str('Use laser crosshair?')
+        title_string = self.l.get_str("Warning!")
+        yes_string = self.l.get_bold("Yes")
+        no_string = self.l.get_bold("No")
+        chk_message = self.l.get_str("Use laser crosshair?")
 
         def on_checkbox_active(checkbox, value):
-            self.sm.get_screen('home').default_datum_choice = 'laser' if value else 'spindle'
+            self.sm.get_screen("home").default_datum_choice = (
+                "laser" if value else "spindle"
+            )
 
         def set_datum(*args):
-            if self.sm.get_screen('home').default_datum_choice == 'laser' and self.m.is_laser_enabled:
-                if xy == 'X':
+            if (
+                self.sm.get_screen("home").default_datum_choice == "laser"
+                and self.m.is_laser_enabled
+            ):
+                if xy == "X":
                     self.m.set_x_datum_with_laser()  # testing!!
-                elif xy == 'Y':
+                elif xy == "Y":
                     self.m.set_y_datum_with_laser()
-                elif xy == 'XY':
+                elif xy == "XY":
                     self.m.set_workzone_to_pos_xy_with_laser()
             else:
-                if xy == 'X':
+                if xy == "X":
                     self.m.set_x_datum()
-                elif xy == 'Y':
+                elif xy == "Y":
                     self.m.set_y_datum()
-                elif xy == 'XY':
+                elif xy == "XY":
                     self.m.set_workzone_to_pos_xy()
 
         def set_checkbox_default():
-            return self.sm.get_screen('home').default_datum_choice == 'laser'
+            return self.sm.get_screen("home").default_datum_choice == "laser"
 
-        img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1, text_size=get_scaled_tuple((360, None)), halign='center', valign='middle',
-                      text=description, color=[0, 0, 0, 1], padding=get_scaled_tuple((40, 20)), markup=True)
+        img = Image(
+            source="./asmcnc/apps/shapeCutter_app/img/error_icon.png",
+            allow_stretch=False,
+        )
+        label = Label(
+            size_hint_y=1,
+            text_size=get_scaled_tuple((360, None)),
+            halign="center",
+            valign="middle",
+            text=description,
+            color=[0, 0, 0, 1],
+            padding=get_scaled_tuple((40, 20)),
+            markup=True,
+            font_size=get_scaled_sp("15sp"),
+        )
 
-        ok_button = Button(text=yes_string, markup=True, font_size=get_scaled_sp('15sp'))
-        ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
-        back_button = Button(text=no_string, markup=True, font_size=get_scaled_sp('15sp'))
-        back_button.background_normal = ''
-        back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        ok_button = Button(
+            text=yes_string, markup=True, font_size=get_scaled_sp("15sp")
+        )
+        ok_button.background_normal = ""
+        ok_button.background_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
+        back_button = Button(
+            text=no_string, markup=True, font_size=get_scaled_sp("15sp")
+        )
+        back_button.background_normal = ""
+        back_button.background_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
 
-        btn_layout = BoxLayout(orientation='horizontal', spacing=get_scaled_tuple((10, 10)), padding=[0, 0, 0, 0])
+        btn_layout = BoxLayout(
+            orientation="horizontal",
+            spacing=get_scaled_width(10),
+            padding=[0, 0, 0, 0],
+        )
         btn_layout.add_widget(back_button)
         btn_layout.add_widget(ok_button)
 
-        layout_plan = BoxLayout(orientation='vertical', spacing=get_scaled_tuple((10, 10)),
-                                padding=get_scaled_tuple((20, 20, 20, 20)))
+        layout_plan = BoxLayout(
+            orientation="vertical",
+            spacing=get_scaled_tuple((10, 10)),
+            padding=get_scaled_tuple((20, 20, 20, 20)),
+        )
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
 
         if self.m.is_laser_enabled:
-            chk_label = Label(size_hint_y=1, size_hint_x=0.8, halign='center', valign='middle', text=chk_message,
-                              text_size=get_scaled_tuple((200, 100)), color=[0, 0, 0, 1], font_size=get_scaled_sp('15sp'),
-                              padding=get_scaled_tuple((0, 20)), markup=True)
-            checkbox = CheckBox(size_hint_x=0.2,
-                                background_checkbox_normal="./asmcnc/skavaUI/img/checkbox_inactive.png",
-                                active=set_checkbox_default())
+            chk_label = Label(
+                size_hint_y=1,
+                size_hint_x=0.8,
+                halign="center",
+                valign="middle",
+                text=chk_message,
+                text_size=get_scaled_tuple((200, 100)),
+                color=[0, 0, 0, 1],
+                font_size=get_scaled_sp("15sp"),
+                padding=get_scaled_tuple((0, 20)),
+                markup=True,
+            )
+            checkbox = CheckBox(
+                size_hint_x=0.2,
+                background_checkbox_normal="./asmcnc/skavaUI/img/checkbox_inactive.png",
+                active=set_checkbox_default(),
+            )
             checkbox.bind(active=on_checkbox_active)
 
-            chk_layout = BoxLayout(orientation='horizontal', spacing=0, padding=get_scaled_tuple((5, 0, 5, 0)))
+            chk_layout = BoxLayout(
+                orientation="horizontal",
+                spacing=0,
+                padding=get_scaled_tuple((5, 0, 5, 0)),
+            )
             chk_layout.add_widget(chk_label)
             chk_layout.add_widget(checkbox)
             layout_plan.add_widget(chk_layout)
 
         layout_plan.add_widget(btn_layout)
 
-        popup = Popup(title=title_string,
-                      title_color=[0, 0, 0, 1],
-                      title_size=get_scaled_sp('20sp'),
-                      content=layout_plan,
-                      size_hint=(None, None),
-                      size=get_scaled_tuple((300, 350)),
-                      auto_dismiss=False,
-                      separator_color=[230 / 255., 74 / 255., 25 / 255., 1.],
-                      separator_height='4dp',
-                      background="./asmcnc/apps/shapeCutter_app/img/popup_background.png")
+        popup = Popup(
+            title=title_string,
+            title_color=[0, 0, 0, 1],
+            title_size=get_scaled_sp("20sp"),
+            content=layout_plan,
+            size_hint=(None, None),
+            size=get_scaled_tuple((300, 350)),
+            auto_dismiss=False,
+            separator_color=[230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0],
+            separator_height="4dp",
+            background="./asmcnc/apps/shapeCutter_app/img/popup_background.png",
+        )
 
         ok_button.bind(on_press=popup.dismiss)
         ok_button.bind(on_press=set_datum)
