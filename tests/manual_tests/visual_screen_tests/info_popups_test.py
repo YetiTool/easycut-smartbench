@@ -71,23 +71,25 @@ class MenuScreen(Screen):
         print(kwargs)
         self.sm = kwargs['sm']
         self.l = kwargs['l']
+        self.set_strings()
 
+    def set_strings(self):
         self.update_strings()
         self.info_popups = [
-            (self.sm, self.l, 500, self.l.get_str("File names must be between 1 and 40 characters long.")),
-            (self.sm, self.l, 780, self.popup_1_text),
-            (self.sm, self.l, 750, self.popup_2_text),
-            (self.sm, self.l, 700, self.popup_3_text),
-            (self.sm, self.l, 500, self.popup_4_text),
-            (self.sm, self.l, 500, 'Calibration complete!'),
-            (self.sm, self.l, 760, self.popup_6_text),
+            # (self.sm, self.l, 500, self.l.get_str("File names must be between 1 and 40 characters long.")),
+            # (self.sm, self.l, 780, self.popup_1_text),
+            # (self.sm, self.l, 750, self.popup_2_text),
+            # (self.sm, self.l, 700, self.popup_3_text),
+            # (self.sm, self.l, 500, self.popup_4_text),
+            # (self.sm, self.l, 500, 'Calibration complete!'),
+            # (self.sm, self.l, 760, self.popup_6_text),
             (self.sm, self.l, 450, self.popup_7_text),
             (self.sm, self.l, 760, self.popup_8_text),
             (self.sm, self.l, 450, self.popup_9_text)]
 
     def test(self):
         self.next_lang()
-        self.update_strings()
+        self.set_strings()
 
         for i in range(len(self.info_popups)):
             Clock.schedule_once(lambda dt, i=i: self.cycle(i), i * 3)
