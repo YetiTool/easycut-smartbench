@@ -542,6 +542,8 @@ class LobbyScreen(Screen):
         if not sys.platform == "win32":
             self.m.set_led_colour('GREEN')
 
+        self.sm.pm.show_info_popup("Test", 500)
+
         # Tell user to update if update is available
         if self.trigger_update_popup:
             popup_info.PopupInfo(self.sm, self.l, 450, self.update_message)
