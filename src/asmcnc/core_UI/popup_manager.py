@@ -25,7 +25,7 @@ class PopupManager:
             m=self.m,
             l=self.l,
             main_string="",
-            popup_width=400,
+            popup_width=500,
             popup_height=440,
         )
 
