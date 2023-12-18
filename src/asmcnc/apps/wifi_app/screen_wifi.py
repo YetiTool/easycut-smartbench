@@ -455,7 +455,7 @@ Builder.load_string(
 
 
 class WifiScreen(Screen):
-    default_font_size = 20
+    default_font_size = 20.0 / 800.0 * Window.width
     IP_REPORT_INTERVAL = 2
     status_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
     network_name = ObjectProperty()
@@ -1041,18 +1041,18 @@ class WifiScreen(Screen):
         self.custom_ssid_input()
         self.custom_network_name.hint_text = self.l.get_str("Enter network name")
         self.update_hint_font_size(self.custom_network_name)
-        self.update_button_font_size(self.connect_button, 28, 10)
-        self.update_button_font_size(self.custom_ssid_button, 20, 20)
+        self.update_button_font_size(self.connect_button, 28.0 / 800.0 * Window.width, 10)
+        self.update_button_font_size(self.custom_ssid_button, 20.0 / 800.0 * Window.width, 20)
 
     def update_hint_font_size(self, value):
         if value.hint_text:
             if len(value.hint_text) > 22:
-                value.font_size = self.default_font_size - 3
+                value.font_size = (self.default_font_size - 3)/ 800.0 * Window.width
 
     def update_button_font_size(self, value, default_size, max_length):
         value.font_size = default_size
         if len(value.text) > max_length:
-            value.font_size = 19
+            value.font_size = 19.0 / 800.0 * Window.width
 
     def get_rst_source(self):
         try:
