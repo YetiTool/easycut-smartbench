@@ -508,6 +508,8 @@ class StopPopup(BasicPopup):
         main_label_size_hint_y=2,
         **kwargs
     ):
+        self.m = kwargs['m']
+
         button_one_callback = self.m.resume_from_a_soft_door
         button_two_callback = self.m.stop_from_soft_stop_cancel
 
@@ -556,6 +558,7 @@ class ParkPopup(BasicPopup):
         main_label_size_hint_y=2,
         **kwargs
     ):
+        self.m = kwargs['m']
         def set_park(*args):
             self.m.set_standby_to_pos()
             self.m.get_grbl_status()
