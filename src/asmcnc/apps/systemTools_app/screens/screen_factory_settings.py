@@ -894,7 +894,7 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
 """
                     + "Not doing this may corrupt the warranty registration start up sequence."
                 )
-                popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 700, reset_warning)
+                self.sm.pm.show_info_popup(reset_warning, 700)
                 Clock.schedule_once(self.shutdown_console, 5)
             else:
                 warning_message = (
@@ -971,7 +971,7 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
         else:
             self.setting_54_label.text = "$54 = N/A"
             self.setting_54_toggle.state = "normal"
-            popup_info.PopupError(self.systemtools_sm, self.l, "FW not compatible!")
+            self.sm.pm.show_error_popup("FW not compatible!")
 
     def setting_54_info(self):
         info = (
@@ -981,7 +981,7 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
 """
             + "$54 should be set to 0 when SB is ready to be factory reset and packed"
         )
-        popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 700, info)
+        self.sm.pm.show_info_popup(info, 700)
 
     def diagnostics(self):
         self.systemtools_sm.open_diagnostics_screen()

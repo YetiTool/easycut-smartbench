@@ -337,4 +337,4 @@ class LowerBeamQC(Screen):
 		self.sm.current = 'qcWarranty'
 
 	def stop(self):
-		popup_info.PopupStop(self.m, self.sm, self.l)
+		self.sm.pm.show_stop_popup()

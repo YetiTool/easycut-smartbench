@@ -575,7 +575,7 @@ class SWUpdateScreen(Screen):
                     + self.l.get_str("Console will reboot to finish update.")
                 )
                 Clock.schedule_once(
-                    lambda dt: popup_info.PopupMiniInfo(self.sm, self.l, message), 3
+                    lambda dt: self.sm.pm.show_mini_info_popup(message), 3
                 )
             Clock.schedule_once(lambda dt: updating_wait_popup.popup.dismiss(), 0.1)
 
@@ -686,7 +686,7 @@ class SWUpdateScreen(Screen):
                     + self.l.get_str("Console will reboot to finish update.")
                 )
                 Clock.schedule_once(
-                    lambda dt: popup_info.PopupMiniInfo(self.sm, self.l, message), 3
+                    lambda dt: self.sm.pm.show_mini_info_popup(message), 3
                 )
                 wait_popup.dismiss()
 

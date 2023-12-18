@@ -892,7 +892,7 @@ class OvernightTesting(Screen):
                 + "\n"
                 + "Check connection and serial number entry, and don't continue unless absolutely necessary."
             )
-            popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 500, message)
+            self.sm.pm.show_info_popup(message, 500)
             # self.back_to_fac_settings() # uncommented bc if database down, may block final test.
 
     # Stage is used to detect which part of the operation overnight test is in, both in screen functions & data

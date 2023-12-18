@@ -374,17 +374,27 @@ class ErrorPopup(BasicPopup):
         button_two_text=None,
         button_two_callback=None,
         button_two_background_color=None,
+        main_label_padding=(0, 10),
+        main_layout_padding=(40, 20, 40, 20),
+        main_layout_spacing=10,
+        main_label_size_delta=40,
+        main_label_h_align="center",
+        title="Error!",
+        button_layout_padding=(0, 20, 0, 0),
+        button_layout_spacing=10,
+        main_label_size_hint_y=1,
         **kwargs
     ):
         super(ErrorPopup, self).__init__(
             main_string=main_string,
             popup_type=PopupType.ERROR,
-            main_label_padding=(0, 10),
-            main_layout_padding=(40, 20, 40, 20),
-            main_layout_spacing=10,
-            main_label_size_delta=40,
-            button_layout_padding=(0, 20, 0, 0),
-            button_layout_spacing=10,
+            main_label_padding=main_label_padding,
+            main_layout_padding=main_layout_padding,
+            main_layout_spacing=main_layout_spacing,
+            main_label_size_delta=main_label_size_delta,
+            button_layout_padding=button_layout_padding,
+            button_layout_spacing=button_layout_spacing,
+            main_label_h_align=main_label_h_align,
             popup_width=popup_width,
             popup_height=popup_height,
             button_one_text=button_one_text,
@@ -393,8 +403,8 @@ class ErrorPopup(BasicPopup):
             button_two_text=button_two_text,
             button_two_callback=button_two_callback,
             button_two_background_color=button_two_background_color,
-            title="Error!",
-            main_label_size_hint_y=1,
+            title=title,
+            main_label_size_hint_y=main_label_size_hint_y,
             **kwargs
         )
 
@@ -473,5 +483,104 @@ class MiniInfoPopup(BasicPopup):
             button_two_background_color=button_two_background_color,
             main_label_h_align="center",
             main_label_size_hint_y=1,
+            **kwargs
+        )
+
+
+class StopPopup(BasicPopup):
+    def __init__(
+        self,
+        main_string="Is everything OK? You can resume the job, or cancel it completely.",
+        popup_width=400,
+        popup_height=300,
+        button_one_text="Cancel",
+        button_one_background_color=(230 / 255., 74 / 255., 25 / 255., 1.),
+        button_two_text="Resume",
+        button_two_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
+        main_label_padding=(0, 10),
+        main_layout_padding=(40, 20, 40, 20),
+        main_layout_spacing=10,
+        main_label_size_delta=40,
+        main_label_h_align="center",
+        title="Warning!",
+        button_layout_padding=(0, 5, 0, 0),
+        button_layout_spacing=15,
+        main_label_size_hint_y=2,
+        **kwargs
+    ):
+        button_one_callback = self.m.resume_from_a_soft_door
+        button_two_callback = self.m.stop_from_soft_stop_cancel
+
+        super(StopPopup, self).__init__(
+            main_string=main_string,
+            popup_type=PopupType.ERROR,
+            main_label_padding=main_label_padding,
+            main_layout_padding=main_layout_padding,
+            main_layout_spacing=main_layout_spacing,
+            main_label_size_delta=main_label_size_delta,
+            button_layout_padding=button_layout_padding,
+            button_layout_spacing=button_layout_spacing,
+            main_label_h_align=main_label_h_align,
+            popup_width=popup_width,
+            popup_height=popup_height,
+            button_one_text=button_one_text,
+            button_one_callback=button_one_callback,
+            button_one_background_color=button_one_background_color,
+            button_two_text=button_two_text,
+            button_two_callback=button_two_callback,
+            button_two_background_color=button_two_background_color,
+            title=title,
+            main_label_size_hint_y=main_label_size_hint_y,
+            **kwargs
+        )
+
+
+class ParkPopup(BasicPopup):
+    def __init__(
+        self,
+        main_string,
+        popup_width=400,
+        popup_height=300,
+        button_one_text="No",
+        button_one_background_color=(230 / 255., 74 / 255., 25 / 255., 1.),
+        button_two_text="Yes",
+        button_two_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
+        main_label_padding=(0, 10),
+        main_layout_padding=(40, 20, 40, 20),
+        main_layout_spacing=10,
+        main_label_size_delta=40,
+        main_label_h_align="center",
+        title="Warning!",
+        button_layout_padding=(0, 0, 0, 0),
+        button_layout_spacing=10,
+        main_label_size_hint_y=2,
+        **kwargs
+    ):
+        def set_park(*args):
+            self.m.set_standby_to_pos()
+            self.m.get_grbl_status()
+
+        button_two_callback = set_park
+
+        super(ParkPopup, self).__init__(
+            main_string=main_string,
+            popup_type=PopupType.ERROR,
+            main_label_padding=main_label_padding,
+            main_layout_padding=main_layout_padding,
+            main_layout_spacing=main_layout_spacing,
+            main_label_size_delta=main_label_size_delta,
+            button_layout_padding=button_layout_padding,
+            button_layout_spacing=button_layout_spacing,
+            main_label_h_align=main_label_h_align,
+            popup_width=popup_width,
+            popup_height=popup_height,
+            button_one_text=button_one_text,
+            button_one_callback=None,
+            button_one_background_color=button_one_background_color,
+            button_two_text=button_two_text,
+            button_two_callback=button_two_callback,
+            button_two_background_color=button_two_background_color,
+            title=title,
+            main_label_size_hint_y=main_label_size_hint_y,
             **kwargs
         )

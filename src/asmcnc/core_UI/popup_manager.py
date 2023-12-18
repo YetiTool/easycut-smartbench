@@ -1,5 +1,5 @@
 from asmcnc.core_UI import scaling_utils
-from asmcnc.core_UI.popups import ErrorPopup, InfoPopup, MiniInfoPopup
+from asmcnc.core_UI.popups import ErrorPopup, InfoPopup, MiniInfoPopup, StopPopup, ParkPopup
 
 
 class PopupManager:
@@ -10,6 +10,8 @@ class PopupManager:
     error_popup = None
     info_popup = None
     mini_info_popup = None
+    stop_popup = None
+    park_popup = None
 
     def __init__(self, sm, m, l):
         self.sm = sm
@@ -34,8 +36,18 @@ class PopupManager:
             sm=self.sm, m=self.m, l=self.l, main_string=""
         )
 
-    def show_error_popup(self, main_string):
-        self.error_popup.main_label.text = main_string
+        self.stop_popup = StopPopup(
+            sm=self.sm, m=self.m, l=self.l
+        )
+
+        self.park_popup = ParkPopup(
+            sm=self.sm, m=self.m, l=self.l, main_string=""
+        )
+
+    def show_error_popup(self, main_string, button_one_callback=None):
+        self.error_popup.main_string = main_string
+        self.error_popup.button_one_callback = button_one_callback
+        self.error_popup.build()
         self.error_popup.open()
 
     def show_info_popup(self, main_string, width):
@@ -47,3 +59,22 @@ class PopupManager:
     def show_mini_info_popup(self, main_string):
         self.mini_info_popup.main_label.text = main_string
         self.mini_info_popup.open()
+
+    def show_stop_popup(self):
+        self.stop_popup.open()
+
+    def show_park_popup(self, main_string):
+        self.park_popup.main_string = main_string
+        self.park_popup.open()
+
+    def close_mini_info_popup(self):
+        self.mini_info_popup.dismiss()
+
+    def close_info_popup(self):
+        self.info_popup.dismiss()
+
+    def close_error_popup(self):
+        self.error_popup.dismiss()
+
+    def close_stop_popup(self):
+        self.stop_popup.dismiss()

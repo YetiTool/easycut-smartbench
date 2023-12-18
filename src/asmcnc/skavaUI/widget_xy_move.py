@@ -378,7 +378,7 @@ class XYMove(Widget):
         warning = self.format_command(
             self.l.get_str('Is this where you want to set your standby position?')
             )
-        popup_info.PopupPark(self.sm, self.m, self.l, warning)
+        self.sm.pm.show_park_popup(warning)
 
     def go_x_datum(self):
         if self.m.is_machine_homed == False:

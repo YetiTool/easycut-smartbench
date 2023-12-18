@@ -1012,7 +1012,7 @@ class CalibrationTesting(Screen):
             Clock.unschedule(self.next_run_event)
         if self.confirm_event != None:
             Clock.unschedule(self.confirm_event)
-        popup_info.PopupStop(self.m, self.sm, self.l)
+        self.sm.pm.show_stop_popup()
         self.enable_run_buttons()
 
     def on_enter(self):

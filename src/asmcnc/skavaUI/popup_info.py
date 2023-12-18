@@ -27,7 +27,7 @@ def log(message):
     timestamp = datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
-class PopupWelcome(Widget):
+class PopupWelcome(Widget):  # done
 
     def __init__(self, screen_manager, machine, localization, description):
         self.sm = screen_manager
@@ -88,7 +88,7 @@ class PopupWelcome(Widget):
         popup.open()
 
 
-class PopupDatum(Widget):
+class PopupDatum(Widget):  # done
 
     def __init__(self, screen_manager, machine, localization, xy, warning_message):
 
@@ -189,7 +189,7 @@ class PopupDatum(Widget):
         popup.open()
 
 
-class PopupPark(Widget):
+class PopupPark(Widget):  # done
 
     def __init__(self, screen_manager, machine, localization, warning_message):
         self.sm = screen_manager
@@ -245,7 +245,7 @@ class PopupPark(Widget):
         popup.open()
 
 
-class PopupStop(Widget):
+class PopupStop(Widget):  # done
 
     def __init__(self, machine, screen_manager, localization):
         self.m = machine
@@ -306,7 +306,7 @@ class PopupStop(Widget):
         popup.open()
 
 
-class PopupUSBInfo(Widget):
+class PopupUSBInfo(Widget):  # done
 
     def __init__(self, screen_manager, localization, safe_to_remove):
 
@@ -371,7 +371,7 @@ class PopupUSBInfo(Widget):
         self.popup.open()
 
 
-class PopupUSBError(Widget):
+class PopupUSBError(Widget):  # last usage in tests
 
     def __init__(self, screen_manager, localization, usb):
         self.sm = screen_manager
@@ -469,7 +469,7 @@ class PopupInfo(Widget):
         popup.open()
 
 
-class PopupMiniInfo(Widget):
+class PopupMiniInfo(Widget):  # done (maintenance pr has the others)
 
     def __init__(self, screen_manager, localization, description):
         self.sm = screen_manager

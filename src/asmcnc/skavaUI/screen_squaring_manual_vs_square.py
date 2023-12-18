@@ -222,7 +222,7 @@ class SquaringScreenDecisionManualVsSquare(Screen):
                 "Thus, mechanical adjustments to square the beam can be repeated less reliably than manual squaring."
             )
         )
-        popup_info.PopupInfo(self.sm, self.l, 760, info)
+        self.sm.pm.show_info_popup(info, 760)
 
     def cancel(self):
         self.sm.current = self.cancel_to_screen

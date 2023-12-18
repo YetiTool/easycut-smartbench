@@ -336,7 +336,7 @@ class SC31XYMove(Widget):
     
     def set_standby_to_pos(self):
         warning = 'Is this where you want to set your\nstandby position?'
-        popup_info.PopupPark(self.sm, self.m, self.l, warning)
+        self.sm.pm.show_park_popup(warning)
         
     def go_x_datum(self):
         if self.m.is_machine_homed == False:

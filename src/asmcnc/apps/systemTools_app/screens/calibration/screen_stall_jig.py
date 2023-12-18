@@ -7,24 +7,21 @@ Created June 2022
 Stall detection experiment
 """
 import traceback
-
-import kivy
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.label import Label
-from kivy.uix.button import Button
-from kivy.uix.togglebutton import ToggleButton
-from kivy.clock import Clock
-import sys, os
-from functools import partial
-from time import sleep, time
 from datetime import datetime
-from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
+from functools import partial
+from time import time
+
+from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
+from kivy.uix.label import Label
+from kivy.uix.screenmanager import Screen
+from kivy.uix.togglebutton import ToggleButton
+
 from asmcnc.apps.systemTools_app.screens import widget_final_test_xy_move
+from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupStopStallJig
-from asmcnc.production.database.calibration_database import CalibrationDatabase
-from asmcnc.skavaUI.popup_info import PopupMiniInfo
 
 Builder.load_string(
     """

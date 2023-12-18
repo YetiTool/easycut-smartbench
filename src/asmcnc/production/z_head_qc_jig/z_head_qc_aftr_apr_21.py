@@ -793,7 +793,7 @@ class ZHeadQCWarrantyAfterApr21(Screen):
         self.sm.current = 'qcWC'
 
     def stop(self):
-        popup_info.PopupStop(self.m, self.sm, self.l)
+        self.sm.pm.show_stop_popup()
 
     def reset_checkboxes(self):
         self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
