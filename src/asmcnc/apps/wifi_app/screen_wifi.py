@@ -221,9 +221,10 @@ Builder.load_string(
                                 id: network_name
                                 halign: 'left'
                                 valign: 'top'
+                                pos_hint: {'top': 0.8}
                                 markup: True
                                 size_hint: (None, None)
-                                size: 200, 24
+                                size: 200.0/800*app.width, 24.0/480*app.height
                                 text: ''
                                 font_size: str(0.025*app.width) + 'sp'
                                 text_size: self.size
