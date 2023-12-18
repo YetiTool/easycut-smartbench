@@ -39,7 +39,7 @@ class PopupManager:
         self.error_popup.open()
 
     def show_info_popup(self, main_string, width):
-        self.info_popup.main_label.text = main_string
+        self.info_popup.main_string = main_string
         self.info_popup.width = scaling_utils.get_scaled_width(width)
         self.info_popup.build()
         self.info_popup.open()
