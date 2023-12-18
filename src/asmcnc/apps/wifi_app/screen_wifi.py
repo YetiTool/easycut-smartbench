@@ -144,7 +144,7 @@ Builder.load_string(
                     size_hint: (None, None)
                     height: dp(0.208333333333*app.height)
                     width: dp(0.275*app.width)
-                    pos_hint: {'top': 0.67}
+                    pos_hint: {'top': 0.66}
                     orientation: "vertical"
                     padding:[dp(0.0125)*app.width, 0, dp(0.025)*app.width, dp(0.0416666666667)*app.height]
                     
