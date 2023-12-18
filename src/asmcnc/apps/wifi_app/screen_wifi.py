@@ -1048,7 +1048,7 @@ class WifiScreen(Screen):
     def update_hint_font_size(self, value):
         if value.hint_text:
             if len(value.hint_text) > 22:
-                value.font_size = (self.default_font_size - 3)/ 800.0 * Window.width
+                value.font_size = (self.default_font_size - (3 / 800*Window.width))/ 800.0 * Window.width
 
     def update_button_font_size(self, value, default_size, max_length):
         value.font_size = default_size
