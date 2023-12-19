@@ -567,7 +567,8 @@ class SWUpdateScreen(Screen):
                 )
                 popup_info.PopupError(self.sm, self.l, description)
             else:
-                popup_info.PopupSoftwareUpdateSuccess(self.sm, self.l, outcome)
+                # popup_info.PopupSoftwareUpdateSuccess(self.sm, self.l, outcome)
+                self.sm.pm.show_software_update_successful_popup(outcome)
                 self.set.ansible_service_run()
                 message = (
                     self.l.get_str("Please wait")
@@ -678,7 +679,8 @@ class SWUpdateScreen(Screen):
             else:
                 self.usb_stick.disable()
                 update_success = outcome
-                popup_info.PopupSoftwareUpdateSuccess(self.sm, self.l, update_success)
+                # popup_info.PopupSoftwareUpdateSuccess(self.sm, self.l, update_success)
+                self.sm.pm.show_software_update_successful_popup(update_success)
                 self.set.ansible_service_run()
                 message = (
                     self.l.get_str("Please wait")

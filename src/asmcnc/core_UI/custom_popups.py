@@ -676,7 +676,7 @@ class PopupSpindleSettingsInfo(Widget):
 
         btn_layout = BoxLayout(
             orientation="horizontal",
-            spacing=15,
+            spacing=get_scaled_width(15),
             padding=get_scaled_tuple((300, 10, 300, 0)),
         )
         btn_layout.add_widget(ok_button)
@@ -839,12 +839,75 @@ class PopupDatum(Widget):
             size=get_scaled_tuple((300, 350)),
             auto_dismiss=False,
             separator_color=[230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0],
-            separator_height="4dp",
+            separator_height=str(get_scaled_height(4)) + "dp",
             background="./asmcnc/apps/shapeCutter_app/img/popup_background.png",
         )
 
         ok_button.bind(on_press=popup.dismiss)
         ok_button.bind(on_press=set_datum)
+        back_button.bind(on_press=popup.dismiss)
+
+        popup.open()
+
+
+class PopupSoftwareUpdateWarning(Widget):
+    def __init__(self, screen_manager, localization, settings_manager, warning_message, update_method, prep_for_sw_update_over_wifi, prep_for_sw_update_over_usb):
+        self.sm = screen_manager
+        self.set = settings_manager
+        self.l = localization
+
+        title_string = self.l.get_str('Are you sure you want to update?')
+        update_string = self.l.get_bold('Update')
+        back_string = self.l.get_bold('Cancel')
+
+        description = warning_message
+
+        # Decide which update function should be run depending on which button was pressed
+        def update(*args):
+            if update_method == "WiFi":
+                prep_for_sw_update_over_wifi()
+            elif update_method == "USB":
+                prep_for_sw_update_over_usb()
+            else:  # Fail-safe message to make debugging easier in case usb_or_wifi strings are broken
+                print("Error getting update method. Please check screen_update_SW.py" + \
+                         "\nShould be: 'WiFi' or 'USB'" + \
+                         "\nBut was: " + update_method)
+
+        img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
+        label = Label(size_hint_y=1.4, text_size=get_scaled_tuple((560, None)), halign='center', valign='middle', text=description,
+                      color=[0, 0, 0, 1], padding=get_scaled_tuple((20, 20)), markup=True)
+
+        ok_button = Button(text=update_string, markup=True, font_size=get_scaled_sp("15sp"))
+        ok_button.background_normal = ''
+        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        back_button = Button(text=back_string, markup=True, font_size=get_scaled_sp("15sp"))
+        back_button.background_normal = ''
+        back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+
+        btn_layout = BoxLayout(orientation='horizontal', spacing=get_scaled_width(10), padding=[0, 0, 0, 0])
+        btn_layout.add_widget(back_button)
+        btn_layout.add_widget(ok_button)
+
+        layout_plan = BoxLayout(orientation='vertical', spacing=get_scaled_height(10), padding=get_scaled_tuple((10, 20, 10, 20)))
+        layout_plan.add_widget(img)
+        layout_plan.add_widget(label)
+        layout_plan.add_widget(btn_layout)
+
+        popup = Popup(title=title_string,
+                      title_color=[0, 0, 0, 1],
+                      title_size=get_scaled_sp("20sp"),
+                      content=layout_plan,
+                      size_hint=(None, None),
+                      size=get_scaled_tuple((600, 420)),
+                      auto_dismiss=False
+                      )
+
+        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        popup.separator_height = str(get_scaled_height(4)) + "dp"
+        popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
+
+        ok_button.bind(on_press=popup.dismiss)
+        ok_button.bind(on_press=update)
         back_button.bind(on_press=popup.dismiss)
 
         popup.open()

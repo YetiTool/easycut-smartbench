@@ -1,5 +1,5 @@
 from asmcnc.core_UI import scaling_utils
-from asmcnc.core_UI.popups import ErrorPopup, InfoPopup, MiniInfoPopup, StopPopup, ParkPopup
+from asmcnc.core_UI.popups import ErrorPopup, InfoPopup, MiniInfoPopup, StopPopup, ParkPopup, SoftwareUpdateSuccessPopup
 
 
 class PopupManager:
@@ -12,6 +12,7 @@ class PopupManager:
     mini_info_popup = None
     stop_popup = None
     park_popup = None
+    software_update_successful_popup = None
 
     def __init__(self, sm, m, l):
         self.sm = sm
@@ -44,6 +45,10 @@ class PopupManager:
             sm=self.sm, m=self.m, l=self.l, main_string=""
         )
 
+        self.software_update_successful_popup = SoftwareUpdateSuccessPopup(
+            sm=self.sm, m=self.m, l=self.l, main_string=""
+        )
+
     def show_error_popup(self, main_string, button_one_callback=None):
         self.error_popup.main_string = main_string
         self.error_popup.button_one_callback = button_one_callback
@@ -64,8 +69,18 @@ class PopupManager:
         self.stop_popup.open()
 
     def show_park_popup(self, main_string):
-        self.park_popup.main_string = main_string
+        self.park_popup.main_label.text = main_string
         self.park_popup.open()
+
+    def show_software_update_successful_popup(self, main_string):
+        description = self.l.get_str("Software update was successful.") + \
+                      "\n\n" + \
+                      self.l.get_str("Update message") + ": " + \
+                      main_string + \
+                      "\n" + \
+                      self.l.get_str("Please do not restart your machine until you are prompted to do so.")
+        self.software_update_successful_popup.main_label.text = description
+        self.software_update_successful_popup.open()
 
     def close_mini_info_popup(self):
         self.mini_info_popup.dismiss()
@@ -78,3 +93,6 @@ class PopupManager:
 
     def close_stop_popup(self):
         self.stop_popup.dismiss()
+
+    def close_software_update_successful_popup(self):
+        self.software_update_successful_popup.dismiss()
