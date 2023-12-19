@@ -276,11 +276,12 @@ class NudgeScreen(Screen):
         self.sm.current = "job_recovery"
 
     def next_screen(self):
-        wait_popup = popup_info.PopupWait(self.sm, self.l)
+        # wait_popup = popup_info.PopupWait(self.sm, self.l)
+        self.sm.pm.show_wait_popup()
 
         def generate_gcode():
             success, message = self.jd.generate_recovery_gcode()
-            wait_popup.popup.dismiss()
+            self.sm.pm.close_wait_popup()
             if not success:
                 popup_info.PopupError(self.sm, self.l, message)
                 self.jd.reset_recovery()

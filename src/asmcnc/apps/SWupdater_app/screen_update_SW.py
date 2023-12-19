@@ -507,44 +507,46 @@ class SWUpdateScreen(Screen):
 
     def prep_for_sw_update_over_wifi(self):
         self.set.usb_or_wifi = "WiFi"
-        wait_popup = popup_info.PopupWait(self.sm, self.l)
+        self.sm.pm.show_wait_popup()
 
         def check_connection_and_version():
             if self.wifi_image.source != self.wifi_on:
                 description = self.l.get_str("No WiFi connection!")
                 popup_info.PopupError(self.sm, self.l, description)
-                wait_popup.popup.dismiss()
+                self.sm.pm.close_wait_popup()
                 return
             if self.set.latest_sw_version.endswith("beta"):
-                wait_popup.popup.dismiss()
+                self.sm.pm.close_wait_popup()
                 popup_update_SW.PopupBetaUpdate(self.sm, "wifi")
                 return
-            Clock.schedule_once(lambda dt: wait_popup.popup.dismiss(), 0.2)
+            Clock.schedule_once(lambda dt: self.sm.pm.close_wait_popup(), 0.2)
             self.get_sw_update_over_wifi()
 
         Clock.schedule_once(lambda dt: check_connection_and_version(), 3)
 
     def prep_for_sw_update_over_usb(self):
         self.set.usb_or_wifi = "USB"
-        wait_popup = popup_info.PopupWait(self.sm, self.l)
+        # wait_popup = popup_info.PopupWait(self.sm, self.l)
+        self.sm.pm.show_wait_popup()
 
         def check_connection_and_version():
             if self.usb_image.source != self.usb_on:
                 description = self.l.get_str("No USB drive found!")
                 popup_info.PopupError(self.sm, self.l, description)
-                wait_popup.popup.dismiss()
+                self.sm.pm.close_wait_popup()
                 return
             if self.set.latest_sw_version.endswith("beta"):
-                wait_popup.popup.dismiss()
+                self.sm.pm.close_wait_popup()
                 popup_update_SW.PopupBetaUpdate(self.sm, "usb")
                 return
-            Clock.schedule_once(lambda dt: wait_popup.popup.dismiss(), 0.2)
+            Clock.schedule_once(lambda dt: self.sm.pm.close_wait_popup(), 0.2)
             self.get_sw_update_over_usb()
 
         Clock.schedule_once(lambda dt: check_connection_and_version(), 3)
 
     def get_sw_update_over_wifi(self):
-        updating_wait_popup = popup_info.PopupWait(self.sm, self.l)
+        # updating_wait_popup = popup_info.PopupWait(self.sm, self.l)
+        self.sm.pm.show_wait_popup()
 
         def do_sw_update():
             outcome = self.set.get_sw_update_via_wifi()
@@ -579,7 +581,7 @@ class SWUpdateScreen(Screen):
                 Clock.schedule_once(
                     lambda dt: self.sm.pm.show_mini_info_popup(message), 3
                 )
-            Clock.schedule_once(lambda dt: updating_wait_popup.popup.dismiss(), 0.1)
+            Clock.schedule_once(lambda dt: self.sm.pm.close_wait_popup(), 0.1)
 
         Clock.schedule_once(lambda dt: do_sw_update(), 2)
 
@@ -619,7 +621,8 @@ class SWUpdateScreen(Screen):
         Clock.schedule_once(lambda dt: delay_clone_to_update_screen(), 3)
 
     def get_sw_update_over_usb(self):
-        wait_popup = popup_info.PopupWait(self.sm, self.l)
+        # wait_popup = popup_info.PopupWait(self.sm, self.l)
+        self.sm.pm.show_wait_popup()
 
         def do_sw_update():
             outcome = self.set.get_sw_update_via_usb()
@@ -640,7 +643,8 @@ class SWUpdateScreen(Screen):
                     )
                 )
                 popup_info.PopupError(self.sm, self.l, description)
-                wait_popup.popup.dismiss()
+                # wait_popup.popup.dismiss()
+                self.sm.pm.close_wait_popup()
             elif outcome == 0:
                 description = (
                     self.l.get_str(
@@ -658,7 +662,8 @@ class SWUpdateScreen(Screen):
                     )
                 )
                 popup_info.PopupError(self.sm, self.l, description)
-                wait_popup.popup.dismiss()
+                # wait_popup.popup.dismiss()
+                self.sm.pm.close_wait_popup()
             elif outcome == "update failed":
                 description = (
                     self.l.get_str(
@@ -677,7 +682,8 @@ class SWUpdateScreen(Screen):
                     )
                 )
                 popup_info.PopupError(self.sm, self.l, description)
-                wait_popup.popup.dismiss()
+                # wait_popup.popup.dismiss()
+                self.sm.pm.close_wait_popup()
             else:
                 self.usb_stick.disable()
                 update_success = outcome
@@ -692,7 +698,8 @@ class SWUpdateScreen(Screen):
                 Clock.schedule_once(
                     lambda dt: self.sm.pm.show_mini_info_popup(message), 3
                 )
-                wait_popup.dismiss()
+                # wait_popup.dismiss()
+                self.sm.pm.close_wait_popup()
 
         Clock.schedule_once(lambda dt: do_sw_update(), 2)
 

@@ -336,9 +336,10 @@ class BetaTestingScreen(Screen):
                 + "...\n"
                 + self.l.get_str("Console will reboot to finish update.")
             )
-            wait_popup = popup_info.PopupWait(
-                self.systemtools_sm.sm, self.l, description=message
-            )
+            # wait_popup = popup_info.PopupWait(
+            #     self.systemtools_sm.sm, self.l, description=message
+            # )
+            self.sm.pm.show_wait_popup(message)
 
             def nested_branch_update(dt):
                 self.set.update_config()
@@ -350,10 +351,10 @@ class BetaTestingScreen(Screen):
                 pull_exit_code = os.system("git pull")
                 if checkout_exit_code == 0 and pull_exit_code == 0:
                     self.set.ansible_service_run_without_reboot()
-                    wait_popup.popup.dismiss()
+                    self.sm.pm.close_wait_popup()
                     self.systemtools_sm.sm.current = "rebooting"
                 else:
-                    wait_popup.popup.dismiss()
+                    self.sm.pm.close_wait_popup()
                     message = (
                         self.l.get_str("Failed to checkout and pull branch.")
                         + "\n"

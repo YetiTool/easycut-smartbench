@@ -393,7 +393,8 @@ class SpindleSettingsWidget(Widget):
 
     def raise_z_then_get_data(self):
         if self.m.state().startswith('Idle'):
-            self.wait_popup = popup_info.PopupWait(self.sm, self.l, self.l.get_str('SmartBench is raising the Z axis.'))
+            # self.wait_popup = popup_info.PopupWait(self.sm, self.l, self.l.get_str('SmartBench is raising the Z axis.'))
+            self.sm.pm.show_wait_popup(self.l.get_str('SmartBench is raising the Z axis.'))
             self.m.zUp()
             Clock.schedule_once(self.get_spindle_data, 0.4)
         else:
@@ -402,8 +403,9 @@ class SpindleSettingsWidget(Widget):
     def get_spindle_data(self, dt):
         # Wait until Z axis is raised
         if not self.m.smartbench_is_busy():
-            self.wait_popup.popup.dismiss()
-            self.wait_popup = popup_info.PopupWait(self.sm, self.l)
+            self.sm.pm.close_wait_popup()
+            # self.wait_popup = popup_info.PopupWait(self.sm, self.l)
+            self.sm.pm.show_wait_popup()
             self.m.s.write_command('M3 S0')
             Clock.schedule_once(self.get_spindle_info, 0.3)
         else:
@@ -424,7 +426,8 @@ class SpindleSettingsWidget(Widget):
 
     def read_restore_info(self):
         self.m.s.write_command('M5')
-        self.wait_popup.popup.dismiss()
+        # self.wait_popup.popup.dismiss()
+        self.sm.pm.close_wait_popup()
         # Value of -999 for ld_qdA represents disconnected spindle
         if self.m.s.digital_spindle_ld_qdA != -999 and self.m.s.spindle_serial_number not in [None, -999, 999]:
             # Get info was successful, show info

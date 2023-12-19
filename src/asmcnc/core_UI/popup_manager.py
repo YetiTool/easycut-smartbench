@@ -1,5 +1,5 @@
 from asmcnc.core_UI import scaling_utils
-from asmcnc.core_UI.popups import ErrorPopup, InfoPopup, MiniInfoPopup, StopPopup, ParkPopup, SoftwareUpdateSuccessPopup, WarningPopup
+from asmcnc.core_UI.popups import ErrorPopup, InfoPopup, MiniInfoPopup, StopPopup, ParkPopup, SoftwareUpdateSuccessPopup, WarningPopup, WaitPopup
 
 
 class PopupManager:
@@ -14,6 +14,7 @@ class PopupManager:
     stop_popup = None
     park_popup = None
     software_update_successful_popup = None
+    wait_popup = None
 
     def __init__(self, sm, m, l):
         self.sm = sm
@@ -54,6 +55,11 @@ class PopupManager:
             sm=self.sm, m=self.m, l=self.l, main_string=""
         )
 
+        self.wait_popup = WaitPopup(
+            sm=self.sm, m=self.m, l=self.l, main_string=self.l.get_str("Please wait") + "...",
+            title=self.l.get_str("Please Wait") + "..."
+        )
+
     def show_error_popup(self, main_string, button_one_callback=None):
         self.error_popup.main_string = main_string
         self.error_popup.button_one_callback = button_one_callback
@@ -91,6 +97,13 @@ class PopupManager:
         self.software_update_successful_popup.main_label.text = description
         self.software_update_successful_popup.open()
 
+    def show_wait_popup(self, main_string=None):
+        if main_string:
+            self.wait_popup.main_label.text = main_string
+        else:
+            self.wait_popup.main_label.text = self.l.get_str("Please wait") + "..."
+        self.wait_popup.open()
+
     def close_mini_info_popup(self):
         self.mini_info_popup.dismiss()
 
@@ -108,3 +121,6 @@ class PopupManager:
 
     def close_software_update_successful_popup(self):
         self.software_update_successful_popup.dismiss()
+
+    def close_wait_popup(self):
+        self.wait_popup.dismiss()

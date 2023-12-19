@@ -242,8 +242,8 @@ class BasicPopup(Popup):
             markup=True,
             font_size=str(utils.get_scaled_width(15)) + "sp",
         )
-
-        self.button_layout = self.build_button_layout()
+        if self.button_layout_padding:
+            self.button_layout = self.build_button_layout()
 
         self.main_layout = BoxLayout(
             orientation="vertical",
@@ -258,7 +258,8 @@ class BasicPopup(Popup):
             self.main_layout.add_widget(image)
 
         self.main_layout.add_widget(self.main_label)
-        self.main_layout.add_widget(self.button_layout)
+        if self.button_layout:
+            self.main_layout.add_widget(self.button_layout)
 
         self.content = self.main_layout
         self.update_font_sizes()
@@ -661,6 +662,53 @@ class WarningPopup(BasicPopup):
         super(WarningPopup, self).__init__(
             main_string=main_string,
             popup_type=PopupType.ERROR,
+            main_label_padding=main_label_padding,
+            main_layout_padding=main_layout_padding,
+            main_layout_spacing=main_layout_spacing,
+            main_label_size_delta=main_label_size_delta,
+            button_layout_padding=button_layout_padding,
+            button_layout_spacing=button_layout_spacing,
+            main_label_h_align=main_label_h_align,
+            popup_width=popup_width,
+            popup_height=popup_height,
+            button_one_text=button_one_text,
+            button_one_callback=button_one_callback,
+            button_one_background_color=button_one_background_color,
+            button_two_text=button_two_text,
+            button_two_callback=button_two_callback,
+            button_two_background_color=button_two_background_color,
+            title=title,
+            main_label_size_hint_y=main_label_size_hint_y,
+            **kwargs
+        )
+
+
+class WaitPopup(BasicPopup):
+    def __init__(
+        self,
+        main_string,
+        popup_width=500,
+        popup_height=200,
+        button_one_text=None,
+        button_one_callback=None,
+        button_one_background_color=None,
+        button_two_text=None,
+        button_two_callback=None,
+        button_two_background_color=None,
+        main_label_padding=(40, 20),
+        main_layout_padding=(40, 20, 40, 20),
+        main_layout_spacing=10,
+        main_label_size_delta=140,
+        main_label_h_align="center",
+        title="Please Wait",
+        button_layout_padding=None,
+        button_layout_spacing=None,
+        main_label_size_hint_y=1,
+        **kwargs
+    ):
+        super(WaitPopup, self).__init__(
+            main_string=main_string,
+            popup_type=PopupType.INFO,
             main_label_padding=main_label_padding,
             main_layout_padding=main_layout_padding,
             main_layout_spacing=main_layout_spacing,

@@ -579,7 +579,8 @@ class GoScreen(Screen):
     def get_sc2_brush_data(self):
         self.m.s.write_command("M3 S0")
         Clock.schedule_once(self.get_spindle_info, 0.1)
-        self.wait_popup = popup_info.PopupWait(self.sm, self.l)
+        # self.wait_popup = popup_info.PopupWait(self.sm, self.l)
+        self.sm.pm.show_wait_popup()
 
     def get_spindle_info(self, dt):
         self.m.s.write_protocol(
@@ -589,7 +590,7 @@ class GoScreen(Screen):
 
     def read_spindle_info(self, dt):
         self.m.s.write_command("M5")
-        self.wait_popup.popup.dismiss()
+        self.sm.pm.close_wait_popup()
 
         # If info was not obtained successfully, spindle production year will equal 99
         if self.m.s.spindle_production_year != 99:
