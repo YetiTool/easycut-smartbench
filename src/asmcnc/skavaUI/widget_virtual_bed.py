@@ -66,7 +66,7 @@ Builder.load_string(
                     allow_stretch: True
                     keep_ratio: True
                     pos: self.parent.pos
-                    width: 0.15*app.width
+                    width: (self.parent.width - (0.1*app.width))/6
                 Image:
                     id: g54_zone
                     source: './asmcnc/skavaUI/img/virtual_g54_zone.png'
