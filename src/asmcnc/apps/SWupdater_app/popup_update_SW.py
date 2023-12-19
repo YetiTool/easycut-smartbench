@@ -48,7 +48,7 @@ class PopupBetaUpdate(Widget):
             allow_stretch=False
         )
         label = Label(
-            size_hint_y = 2.0
+            size_hint_y = 2.0,
             font_size = str(15.0 / 800.0 * Window.width) + "sp",
             text_size = (620.0 / 800.0 * Window.width, None),
             halign="center",
