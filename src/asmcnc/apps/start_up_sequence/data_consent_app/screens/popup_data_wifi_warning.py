@@ -51,8 +51,8 @@ class PopupDataAndWiFiDisableWarning(Widget):
             allow_stretch=False,
         )
         label = Label(
-            size_hint_y=1.3 / 800 * Window.width,
-            text_size=(380 / 800 * Window.width, None),
+            size_hint_y=1.3 / 800.0 * Window.width,
+            text_size=(380.0 / 800.0 * Window.width, None),
             halign="center",
             valign="middle",
             text=description,
@@ -69,22 +69,22 @@ class PopupDataAndWiFiDisableWarning(Widget):
         back_button.background_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
 
         btn_layout = BoxLayout(
-            orientation="horizontal", spacing=10 / 800 * Window.width, padding=[
-                															20 / 800 * Window.width,
-                                                                            0 / 480 * Window.height,
-																			20 / 800 * Window.width,
-																			0 / 480 * Window.height,
+            orientation="horizontal", spacing=10.0 / 800.0 * Window.width, padding=[
+                															20.0 / 800.0 * Window.width,
+                                                                            0,
+																			20 / 800.0 * Window.width,
+																			0,
 																			]
         )
         btn_layout.add_widget(back_button)
         btn_layout.add_widget(ok_button)
 
         layout_plan = BoxLayout(
-            orientation="vertical", spacing=10 / 800 * Window.width, padding=[
-                															10 / 800 * Window.width,
-                                                                            20 / 480 * Window.height,
-																			10 / 800 * Window.width,
-																			20 / 480 * Window.height,
+            orientation="vertical", spacing=10.0 / 800.0 * Window.width, padding=[
+                															10.0 / 800.0 * Window.width,
+                                                                            20.0 / 480.0 * Window.height,
+																			10.0 / 800.0 * Window.width,
+																			20.0 / 480.0 * Window.height,
 																			]
         )
         layout_plan.add_widget(img)
@@ -94,15 +94,15 @@ class PopupDataAndWiFiDisableWarning(Widget):
         popup = Popup(
             title=title_string,
             title_color=[0, 0, 0, 1],
-            title_size= str(20/800 * Window.width) + "sp",
+            title_size= str(20.0/800.0 * Window.width) + "sp",
             content=layout_plan,
             size_hint=(None, None),
-            size=(500 / 800 * Window.width, 400 / 480 * window.height),
+            size=(500.0 / 800.0 * Window.width, 400.0 / 480.0 * window.height),
             auto_dismiss=False,
         )
 
         popup.separator_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
-        popup.separator_height = str(4 / 800 * Window.width) + "dp"
+        popup.separator_height = str(4.0 / 800.0 * Window.width) + "dp"
         popup.background = "./asmcnc/apps/shapeCutter_app/img/popup_background.png"
 
         ok_button.bind(on_press=popup.dismiss)
