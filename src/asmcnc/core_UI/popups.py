@@ -200,7 +200,9 @@ class BasicPopup(Popup):
         self.popup_type = popup_type
         self.popup_image = popup_image
         self.popup_image_size_hint = popup_image_size_hint
-        self.button_one_text = self.l.get_str(button_one_text)
+        self.button_one_text = (
+            self.l.get_str(button_one_text) if button_one_text is not None else None
+        )
         self.button_one_callback = button_one_callback
         self.button_two_text = (
             self.l.get_str(button_two_text) if button_two_text is not None else None
