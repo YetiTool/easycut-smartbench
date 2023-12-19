@@ -49,40 +49,47 @@ Builder.load_string("""
 # Declare both screens
 class MenuScreen(Screen):
     test_no = 0
+    popup_no = 0
 
     def __init__(self, **kwargs):
         super(MenuScreen, self).__init__(**kwargs)
+
+        self.sm = kwargs['sm']
+        self.l = kwargs['l']
+
         self.info_popups = None
         self.popup_9_text = 'None'
         self.popup_8_text = 'None'
         self.popup_7_text = 'None'
         self.popup_6_text = 'None'
+        self.popup_5_text = 'None'
         self.popup_4_text = 'None'
         self.popup_3_text = 'None'
         self.popup_2_text = 'None'
         self.popup_1_text = 'None'
-        
-        print(kwargs)
-        self.sm = kwargs['sm']
-        self.l = kwargs['l']
+        self.popup_0_text = 'None'
 
-    def test(self):
-        self.next_lang()
-        self.update_strings()
         self.info_popups = [
-            (self.sm, self.l, 500, self.l.get_str("File names must be between 1 and 40 characters long.")),
+            (self.sm, self.l, 500, self.popup_0_text),
             (self.sm, self.l, 780, self.popup_1_text),
             (self.sm, self.l, 750, self.popup_2_text),
             (self.sm, self.l, 700, self.popup_3_text),
             (self.sm, self.l, 500, self.popup_4_text),
-            (self.sm, self.l, 500, 'Calibration complete!'),
+            (self.sm, self.l, 500, self.popup_5_text),
             (self.sm, self.l, 760, self.popup_6_text),
             (self.sm, self.l, 450, self.popup_7_text),
             (self.sm, self.l, 760, self.popup_8_text),
             (self.sm, self.l, 450, self.popup_9_text)]
-        for i in range(0, len(self.info_popups)):
-            args = self.info_popups[i]
-            popup = popup_info.PopupInfo(args[0], args[1], args[2], args[3])
+
+    def test(self):
+        for j in range(0, len(self.l.approved_languages)):
+            self.next_lang()
+            self.update_strings()
+            args = self.info_popups[self.popup_no]
+            popup_info.PopupInfo(args[0], args[1], args[2], args[3])
+        self.popup_no += 1
+        if self.popup_no > len(self.info_popups):
+            self.popup_no = 0
 
     def format_command(self, cmd):
         wrapped_cmd = textwrap.fill(cmd, width=50, break_long_words=False)
@@ -99,6 +106,7 @@ class MenuScreen(Screen):
             self.test_no = 0
 
     def update_strings(self):
+        self.popup_0_text = self.l.get_str("File names must be between 1 and 40 characters long.")
         self.popup_1_text = (
                 self.l.get_str(
                     "When using a 110V spindle as part of your SmartBench, please be aware of the following:") + \
@@ -144,6 +152,7 @@ class MenuScreen(Screen):
         self.popup_4_text = (
             "This serial number is already in the database! You cannot overwrite."
         )
+        self.popup_5_text = self.l.get_str('Calibration complete!')
         self.popup_6_text = (
                 self.l.get_bold(
                     "Automatic lifting during a pause (recommended for most tools)"
@@ -215,6 +224,17 @@ class MenuScreen(Screen):
                 self.format_command(self.l.get_str('Before running, a file needs to be loaded.')) + '\n\n' + \
                 self.format_command(self.l.get_str('Tap the file chooser in the first tab (top left) to load a file.'))
         )
+        self.info_popups = [
+            (self.sm, self.l, 500, self.popup_0_text),
+            (self.sm, self.l, 780, self.popup_1_text),
+            (self.sm, self.l, 750, self.popup_2_text),
+            (self.sm, self.l, 700, self.popup_3_text),
+            (self.sm, self.l, 500, self.popup_4_text),
+            (self.sm, self.l, 500, self.popup_5_text),
+            (self.sm, self.l, 760, self.popup_6_text),
+            (self.sm, self.l, 450, self.popup_7_text),
+            (self.sm, self.l, 760, self.popup_8_text),
+            (self.sm, self.l, 450, self.popup_9_text)]
 
 class TestApp(App):
 
