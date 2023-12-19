@@ -13,7 +13,6 @@ from kivy.base import runTouchApp
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty
 from asmcnc.skavaUI import popup_info
-from asmcnc.core_UI import scaling_utils
 
 Builder.load_string(
     """
