@@ -85,18 +85,18 @@ class PopupBetaUpdate(Widget):
         popup = Popup(
             title="Warning!",
             title_color=[0, 0, 0, 1],
-            title_size=str (20.0 / 800.0 * Window.width) + "sp",
+            title_size=str(20.0 / 800.0 * Window.width) + "sp",
             content=layout_plan,
             size_hint=(None, None),
             size=(
-                700 / 800 * Window.width, 
-                450 / 480 * Window.height
+                700.0 / 800.0 * Window.width, 
+                450.0 / 480.0 * Window.height
                 ),
             auto_dismiss=False,
         )
 
         popup.separator_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
-        popup.separator_height = str(4 / 480 * Window.height) + "dp"
+        popup.separator_height = str(4.0 / 480 * Window.height) + "dp"
         popup.background = "./asmcnc/apps/shapeCutter_app/img/popup_background.png"
 
         ok_button.bind(on_press=popup.dismiss)
