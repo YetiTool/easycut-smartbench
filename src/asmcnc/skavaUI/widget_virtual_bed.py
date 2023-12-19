@@ -12,6 +12,7 @@ from kivy.base import runTouchApp
 from kivy.clock import Clock
 from kivy.uix.stencilview import StencilView
 from kivy.uix.boxlayout import BoxLayout
+from kivy.core.window import Window
 
 Builder.load_string(
     """
@@ -65,7 +66,7 @@ Builder.load_string(
                     allow_stretch: True
                     keep_ratio: True
                     pos: self.parent.pos
-                    width: 0.1*app.width
+                    width: 0.15*app.width
                 Image:
                     id: g54_zone
                     source: './asmcnc/skavaUI/img/virtual_g54_zone.png'
@@ -127,12 +128,12 @@ class VirtualBed(Widget):
             return
         if self.m.bench_is_standard():
             self.virtual_bed_image.source = "./asmcnc/skavaUI/img/virtual_bed.png"
-            self.width_modifier = 80
-            self.x_pos_modifier = 40
+            self.width_modifier = 0.1 * Window.width
+            self.x_pos_modifier = 0.05 * Window.width
         if self.m.bench_is_short():
             self.virtual_bed_image.source = "./asmcnc/skavaUI/img/virtual_bed_mini.png"
-            self.width_modifier = 326
-            self.x_pos_modifier = 163
+            self.width_modifier = 0.4075 * Window.width
+            self.x_pos_modifier = 0.20375 * Window.width
         Clock.schedule_interval(self.refresh_widget, self.m.s.STATUS_INTERVAL)
 
     def refresh_widget(self, dt):
