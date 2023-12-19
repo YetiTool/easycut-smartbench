@@ -28,7 +28,7 @@ def on_touch(popup, touch):
             child.focus = False
 
 ### DownloadLogs
-class PopupDownloadLogs(Widget):
+class PopupDownloadLogs(Widget):  # done
     def __init__(self, screen_manager, localization):
         self.systemtools_sm = screen_manager
         self.l = localization

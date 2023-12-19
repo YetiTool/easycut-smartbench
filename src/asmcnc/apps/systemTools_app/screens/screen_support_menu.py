@@ -135,7 +135,19 @@ class SupportMenuScreen(Screen):
         self.systemtools_sm.exit_app()
 
     def download_logs(self):
-        popup_system.PopupDownloadLogs(self.systemtools_sm, self.l)
+        def button_two_callback(*args):
+            self.systemtools_sm.download_logs_to_usb()
+
+        self.sm.pm.show_error_popup(
+            main_string="Would you like to download the system logs onto a USB stick?",
+            button_two_callback=button_two_callback,
+            button_one_text="No",
+            button_two_text="Yes",
+            width=360,
+            height=360,
+            title="Warning!",
+
+        )
 
     def get_pika(self):
         self.systemtools_sm.reinstall_pika()

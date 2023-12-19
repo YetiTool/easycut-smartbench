@@ -47,17 +47,17 @@ class PopupManager:
         self.park_popup = ParkPopup(sm=self.sm, m=self.m, l=self.l, main_string="")
 
     def show_error_popup(
-            self,
-            main_string,
-            button_one_callback=None,
-            button_two_callback=None,
-            button_one_text="Ok",
-            button_two_text=None,
-            width=500,
-            height=400,
-            main_label_size_delta=40,
-            main_label_h_align="center",
-            title="Error!"
+        self,
+        main_string,
+        button_one_callback=None,
+        button_two_callback=None,
+        button_one_text="Ok",
+        button_two_text=None,
+        width=500,
+        height=400,
+        main_label_size_delta=40,
+        main_label_h_align="center",
+        title="Error!"
     ):
         self.error_popup.main_string = main_string
         self.error_popup.button_one_text = button_one_text

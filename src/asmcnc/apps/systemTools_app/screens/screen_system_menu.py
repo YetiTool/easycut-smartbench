@@ -239,6 +239,19 @@ class SystemMenuScreen(Screen):
         self.systemtools_sm.open_support_menu_screen()
 
     def reboot(self):
+        def button_two_callback(*args):
+            self.systemtools_sm.sm.current = 'rebooting'
+
+        self.sm.pm.show_error_popup(
+            main_string="Would you like to reboot the console now?",
+            title="Warning!",
+            button_one_text="No",
+            button_two_text="Yes",
+            button_two_callback=button_two_callback,
+            width=360,
+            height=360,
+            main_label_size_delta=0
+        )
         popup_system.RebootConsole(self.systemtools_sm, self.l)
 
     def quit_to_console(self):
