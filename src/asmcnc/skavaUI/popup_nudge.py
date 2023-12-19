@@ -38,6 +38,7 @@ class PopupNudgeDatum(Widget):
         label = Label(
             size_hint_y=1,
             text_size=get_scaled_tuple([360, None]),
+            font_size=get_scaled_sp("15sp")
             halign="center",
             valign="middle",
             text=description,
@@ -46,10 +47,10 @@ class PopupNudgeDatum(Widget):
             markup=True,
         )
 
-        ok_button = Button(text=yes_string, markup=True)
+        ok_button = Button(text=yes_string, font_size=get_scaled_sp("15sp"), markup=True)
         ok_button.background_normal = ""
         ok_button.background_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
-        back_button = Button(text=no_string, markup=True)
+        back_button = Button(text=no_string, font_size=get_scaled_sp("15sp"), markup=True)
         back_button.background_normal = ""
         back_button.background_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
 
@@ -122,6 +123,7 @@ class PopupNudgeWarning(Widget):
         label = Label(
             size_hint_y=2,
             text_size=get_scaled_tuple([400, None]),
+            font_size=get_scaled_sp("15sp")
             halign="center",
             valign="middle",
             text=description,
@@ -130,10 +132,10 @@ class PopupNudgeWarning(Widget):
             markup=True,
         )
 
-        ok_button = Button(text=yes_string, markup=True)
+        ok_button = Button(text=yes_string, font_size=get_scaled_sp("15sp"), markup=True)
         ok_button.background_normal = ""
         ok_button.background_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
-        back_button = Button(text=no_string, markup=True)
+        back_button = Button(text=no_string, font_size=get_scaled_sp("15sp"), markup=True)
         back_button.background_normal = ""
         back_button.background_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
 
