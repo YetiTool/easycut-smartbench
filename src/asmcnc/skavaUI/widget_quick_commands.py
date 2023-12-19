@@ -182,7 +182,8 @@ class QuickCommands(Widget):
                     self.format_command(self.l.get_str('Press Ok to clear this reminder.').replace(self.l.get_str('Ok'), self.l.get_bold('Ok')))
                 )
 
-                popup_info.PopupWarning(self.sm, self.l, z_datum_reminder_message)
+                # popup_info.PopupWarning(self.sm, self.l, z_datum_reminder_message)
+                self.sm.pm.show_warning_popup(z_datum_reminder_message)
                 self.sm.get_screen('home').z_datum_reminder_flag = False
 
         else:

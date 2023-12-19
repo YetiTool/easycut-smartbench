@@ -15,6 +15,7 @@ import sys, os, socket
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.SWupdater_app import popup_update_SW
+from asmcnc.core_UI.custom_popups import PopupSoftwareUpdateWarning, PopupSoftwareRepair
 
 Builder.load_string(
     """
@@ -494,7 +495,7 @@ class SWUpdateScreen(Screen):
         message = self.l.get_str(
             "This update may take anywhere between 2 minutes and 2 hours."
         )
-        popup_info.PopupSoftwareUpdateWarning(
+        PopupSoftwareUpdateWarning(
             self.sm,
             self.l,
             self,
@@ -557,7 +558,7 @@ class SWUpdateScreen(Screen):
                     + "\n\n"
                     + self.l.get_str("Would you like to repair your software now?")
                 )
-                popup_info.PopupSoftwareRepair(self.sm, self.l, self, description)
+                PopupSoftwareRepair(self.sm, self.l, self, description)
             elif outcome == "Software already up to date!":
                 description = self.l.get_str("Software already up to date!")
                 popup_info.PopupError(self.sm, self.l, description)
@@ -567,7 +568,8 @@ class SWUpdateScreen(Screen):
                 )
                 popup_info.PopupError(self.sm, self.l, description)
             else:
-                popup_info.PopupSoftwareUpdateSuccess(self.sm, self.l, outcome)
+                # popup_info.PopupSoftwareUpdateSuccess(self.sm, self.l, outcome)
+                self.sm.pm.show_software_update_successful_popup(outcome)
                 self.set.ansible_service_run()
                 message = (
                     self.l.get_str("Please wait")
@@ -585,7 +587,8 @@ class SWUpdateScreen(Screen):
         description = self.l.get_str(
             "DO NOT restart your machine until you see instructions to do so on the screen."
         )
-        popup_info.PopupWarning(self.sm, self.l, description)
+        # popup_info.PopupWarning(self.sm, self.l, description)
+        self.sm.pm.show_warning_popup(description)
 
         def delay_clone_to_update_screen():
             if self.wifi_image.source == self.wifi_on:
@@ -678,7 +681,8 @@ class SWUpdateScreen(Screen):
             else:
                 self.usb_stick.disable()
                 update_success = outcome
-                popup_info.PopupSoftwareUpdateSuccess(self.sm, self.l, update_success)
+                # popup_info.PopupSoftwareUpdateSuccess(self.sm, self.l, update_success)
+                self.sm.pm.show_software_update_successful_popup(update_success)
                 self.set.ansible_service_run()
                 message = (
                     self.l.get_str("Please wait")

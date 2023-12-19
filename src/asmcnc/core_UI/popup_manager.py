@@ -1,13 +1,7 @@
 import sys
 
 from asmcnc.core_UI import scaling_utils
-from asmcnc.core_UI.popups import (
-    ErrorPopup,
-    InfoPopup,
-    MiniInfoPopup,
-    StopPopup,
-    ParkPopup,
-)
+from asmcnc.core_UI.popups import ErrorPopup, InfoPopup, MiniInfoPopup, StopPopup, ParkPopup, SoftwareUpdateSuccessPopup
 
 
 class PopupManager:
@@ -17,9 +11,11 @@ class PopupManager:
 
     error_popup = None
     info_popup = None
+    warning_popup = None
     mini_info_popup = None
     stop_popup = None
     park_popup = None
+    software_update_successful_popup = None
 
     def __init__(self, sm, m, l):
         self.sm = sm
@@ -40,6 +36,10 @@ class PopupManager:
             popup_height=440,
         )
 
+        self.warning_popup = WarningPopup(
+            sm=self.sm, m=self.m, l=self.l, main_string=""
+        )
+
         self.mini_info_popup = MiniInfoPopup(
             sm=self.sm, m=self.m, l=self.l, main_string=""
         )
@@ -47,6 +47,10 @@ class PopupManager:
         self.stop_popup = StopPopup(sm=self.sm, m=self.m, l=self.l)
 
         self.park_popup = ParkPopup(sm=self.sm, m=self.m, l=self.l, main_string="")
+
+        self.software_update_successful_popup = SoftwareUpdateSuccessPopup(
+            sm=self.sm, m=self.m, l=self.l, main_string=""
+        )
 
     def show_error_popup(
         self,
@@ -114,6 +118,10 @@ class PopupManager:
         self.info_popup.build()
         self.info_popup.open()
 
+    def show_warning_popup(self, main_string):
+        self.warning_popup.main_label.text = main_string
+        self.warning_popup.open()
+
     def show_mini_info_popup(self, main_string):
         self.mini_info_popup.main_label.text = main_string
         self.mini_info_popup.open()
@@ -122,8 +130,18 @@ class PopupManager:
         self.stop_popup.open()
 
     def show_park_popup(self, main_string):
-        self.park_popup.main_string = main_string
+        self.park_popup.main_label.text = main_string
         self.park_popup.open()
+
+    def show_software_update_successful_popup(self, main_string):
+        description = self.l.get_str("Software update was successful.") + \
+                      "\n\n" + \
+                      self.l.get_str("Update message") + ": " + \
+                      main_string + \
+                      "\n" + \
+                      self.l.get_str("Please do not restart your machine until you are prompted to do so.")
+        self.software_update_successful_popup.main_label.text = description
+        self.software_update_successful_popup.open()
 
     def close_mini_info_popup(self):
         self.mini_info_popup.dismiss()
@@ -131,11 +149,17 @@ class PopupManager:
     def close_info_popup(self):
         self.info_popup.dismiss()
 
+    def close_warning_popup(self,):
+        self.warning_popup.dismiss()
+
     def close_error_popup(self):
         self.error_popup.dismiss()
 
     def close_stop_popup(self):
         self.stop_popup.dismiss()
+
+    def close_software_update_successful_popup(self):
+        self.software_update_successful_popup.dismiss()
 
     # SPECIALIZED POPUPS
     def show_quit_to_console_popup(self):
