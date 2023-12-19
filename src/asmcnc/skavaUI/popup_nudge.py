@@ -38,7 +38,7 @@ class PopupNudgeDatum(Widget):
         label = Label(
             size_hint_y=1,
             text_size=get_scaled_tuple([360, None]),
-            font_size=get_scaled_sp("15sp")
+            font_size=get_scaled_sp("15sp"),
             halign="center",
             valign="middle",
             text=description,
@@ -123,7 +123,7 @@ class PopupNudgeWarning(Widget):
         label = Label(
             size_hint_y=2,
             text_size=get_scaled_tuple([400, None]),
-            font_size=get_scaled_sp("15sp")
+            font_size=get_scaled_sp("15sp"),
             halign="center",
             valign="middle",
             text=description,
