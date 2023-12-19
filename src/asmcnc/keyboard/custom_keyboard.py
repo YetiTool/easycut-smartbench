@@ -4,6 +4,7 @@ from kivy.core.window import Window
 from kivy.uix.vkeyboard import VKeyboard
 import traceback
 from kivy.clock import Clock
+from asmcnc.core_UI import scaling_utils
 
 try:
     import hgtk
@@ -45,6 +46,7 @@ class Keyboard(VKeyboard):
         self.height = int(Window.height / 2.1)
         self.pos = (Window.width - self.width, 0)
         self.on_key_up = self.key_up
+        self.set_font_size_of_characters()
         self.set_keyboard_background()
 
 
@@ -151,6 +153,10 @@ class Keyboard(VKeyboard):
         else:
             self.margin_hint = [.05, .06, .05, .06]  # Default margin
             self.background = "atlas://data/images/defaulttheme/vkeyboard_background"
+
+    def set_font_size_of_characters(self):
+        for key in self.children:
+            key.font_size = scaling_utils.get_scaled_width(20)
 
     # On focus behaviour is bound to all text inputs
     def on_focus_raise_keyboard(self,instance,value):
