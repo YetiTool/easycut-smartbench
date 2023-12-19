@@ -27,7 +27,9 @@ from kivy.config import Config
 from kivy.clock import Clock
 from kivy.uix.boxlayout import BoxLayout
 
-Config.set("kivy", "keyboard_mode", "systemanddock")
+from asmcnc.core_UI.popup_manager import PopupManager
+
+Config.set('kivy', 'keyboard_mode', 'systemanddock')
 
 if sys.platform.startswith("linux"):
     # get screen resolution as "1280x800" or "800x480"
@@ -179,6 +181,7 @@ class SkavaUI(App):
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
 
+
         # Localization/language object
         l = localization.Localization()
 
@@ -213,6 +216,10 @@ class SkavaUI(App):
 
         # Server connection object
         sc = server_connection.ServerConnection(sett)
+
+        # Popup manager
+        pm = PopupManager(sm, m, l)
+        sm.pm = pm  # store in screen manager for access by screens
 
         # initialise the screens (legacy)
         lobby_screen = screen_lobby.LobbyScreen(
