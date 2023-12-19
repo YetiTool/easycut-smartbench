@@ -146,7 +146,13 @@ class SupportMenuScreen(Screen):
             width=360,
             height=360,
             title="Warning!",
-
+            main_label_padding=(0, 0),
+            main_layout_padding=(30, 20, 30, 0),
+            main_layout_spacing=10,
+            button_layout_padding=(0, 5, 0, 0),
+            button_layout_spacing=15,
+            button_two_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
+            button_one_background_color=(230 / 255., 74 / 255., 25 / 255., 1.),
         )
 
     def get_pika(self):
@@ -156,7 +162,26 @@ class SupportMenuScreen(Screen):
         self.systemtools_sm.check_git_repository()
 
     def quit_to_console(self):
-        popup_system.QuitToConsole(self.systemtools_sm, self.l)
+        def button_two_callback(*args):
+            sys.exit()
+
+        self.sm.pm.show_error_popup(
+            main_string="Would you like to exit the software now?",
+            title="Warning!",
+            button_one_text="No",
+            button_two_text="Yes",
+            button_two_callback=button_two_callback,
+            width=360,
+            height=360,
+            main_label_size_delta=0,
+            main_label_padding=(0, 0),
+            main_layout_padding=(30, 20, 30, 0),
+            main_layout_spacing=10,
+            button_layout_padding=(0, 5, 0, 0),
+            button_layout_spacing=15,
+            button_two_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
+            button_one_background_color=(230 / 255., 74 / 255., 25 / 255., 1.),
+        )
 
     def usb_first_aid(self):
         self.systemtools_sm.do_usb_first_aid()

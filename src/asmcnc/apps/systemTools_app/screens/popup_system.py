@@ -50,7 +50,7 @@ class PopupDownloadLogs(Widget):  # done
         ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
         back_button = Button(text=back_string, markup=True)
         back_button.background_normal = ''
-        back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        back_button.background_color = (230 / 255., 74 / 255., 25 / 255., 1.)
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0, 5, 0, 0])
         btn_layout.add_widget(back_button)
@@ -82,7 +82,7 @@ class PopupDownloadLogs(Widget):  # done
 
 
 ### Reboot Console
-class RebootConsole(Widget):
+class RebootConsole(Widget):  # done
     def __init__(self, screen_manager, localization):
         self.systemtools_sm = screen_manager
         self.l = localization
@@ -136,7 +136,7 @@ class RebootConsole(Widget):
 
 
 ### Quit To Console
-class QuitToConsole(Widget):
+class QuitToConsole(Widget):  # done
     def __init__(self, screen_manager, localization):
         self.systemtools_sm = screen_manager
         self.l = localization
