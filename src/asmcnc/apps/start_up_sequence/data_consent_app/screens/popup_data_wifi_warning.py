@@ -69,7 +69,12 @@ class PopupDataAndWiFiDisableWarning(Widget):
         back_button.background_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
 
         btn_layout = BoxLayout(
-            orientation="horizontal", spacing=10, padding=[20, 0, 20, 0]
+            orientation="horizontal", spacing=10 / 800 * Window.width, padding=[
+                															20 / 800 * Window.width,
+                                                                            0 / 480 * Window.height,
+																			20 / 800 * Window.width,
+																			0 / 480 * Window.height,
+																			]
         )
         btn_layout.add_widget(back_button)
         btn_layout.add_widget(ok_button)
