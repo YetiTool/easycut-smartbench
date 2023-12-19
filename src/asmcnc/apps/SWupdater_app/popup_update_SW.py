@@ -17,6 +17,7 @@ from kivy.uix.button import Button
 from kivy.uix.image import Image
 from kivy.clock import Clock
 from kivy.graphics import Color, Rectangle
+from kivy.core.window import Window
 
 
 class PopupBetaUpdate(Widget):
@@ -44,7 +45,7 @@ class PopupBetaUpdate(Widget):
         )
         label = Label(
             size_hint_y=2,
-            text_size=(620, None),
+            text_size=(620 / 800 * Window.width, None),
             halign="center",
             valign="middle",
             text=description,
@@ -61,13 +62,21 @@ class PopupBetaUpdate(Widget):
         back_button.background_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
 
         btn_layout = BoxLayout(
-            orientation="horizontal", spacing=15, padding=[0, 5, 0, 0]
+            orientation="horizontal", spacing= 15.0 / 800.0 * Window.width, padding=[
+                                                                                0,
+                                                                                5.0 / 480.0 * Window.height, 
+                                                                                0, 
+                                                                                0]
         )
         btn_layout.add_widget(back_button)
         btn_layout.add_widget(ok_button)
 
         layout_plan = BoxLayout(
-            orientation="vertical", spacing=10, padding=[30, 20, 30, 0]
+            orientation="vertical", spacing= 10.0 / 800.0 * Window.width, padding=[
+                                                                                30.0 / 800.0 * Window.width, 
+                                                                                20.0 / 480.0 * Window.height, 
+                                                                                30.0 / 800.0 * Window.width, 
+                                                                                0]
         )
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
@@ -76,15 +85,18 @@ class PopupBetaUpdate(Widget):
         popup = Popup(
             title="Warning!",
             title_color=[0, 0, 0, 1],
-            title_size="20sp",
+            title_size=str (20.0 / 800.0 * Window.width) + "sp",
             content=layout_plan,
             size_hint=(None, None),
-            size=(700, 450),
+            size=(
+                700 / 800 * Window.width, 
+                450 / 480 * Window.height
+                ),
             auto_dismiss=False,
         )
 
         popup.separator_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
-        popup.separator_height = "4dp"
+        popup.separator_height = str(4 / 480 * Window.height) + "dp"
         popup.background = "./asmcnc/apps/shapeCutter_app/img/popup_background.png"
 
         ok_button.bind(on_press=popup.dismiss)
