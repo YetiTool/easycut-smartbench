@@ -121,7 +121,7 @@ class PopupNudgeWarning(Widget):
         )
         label = Label(
             size_hint_y=2,
-            text_size=get_scaled_tuple(400, None),
+            text_size=get_scaled_tuple([400, None]),
             halign="center",
             valign="middle",
             text=description,
