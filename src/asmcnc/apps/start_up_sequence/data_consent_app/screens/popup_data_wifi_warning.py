@@ -19,6 +19,7 @@ from kivy.uix.image import Image
 from kivy.clock import Clock
 from kivy.uix.checkbox import CheckBox
 from kivy.graphics import Color, Rectangle
+from kivy.core.window import Window
 
 
 class PopupDataAndWiFiDisableWarning(Widget):
@@ -50,8 +51,8 @@ class PopupDataAndWiFiDisableWarning(Widget):
             allow_stretch=False,
         )
         label = Label(
-            size_hint_y=1.3,
-            text_size=(380, None),
+            size_hint_y=1.3 / 800 * Window.width,
+            text_size=(380 / 800 * Window.width, None),
             halign="center",
             valign="middle",
             text=description,
@@ -74,7 +75,12 @@ class PopupDataAndWiFiDisableWarning(Widget):
         btn_layout.add_widget(ok_button)
 
         layout_plan = BoxLayout(
-            orientation="vertical", spacing=10, padding=[10, 20, 10, 20]
+            orientation="vertical", spacing=10 / 800 * Window.width, padding=[
+                															10 / 800 * Window.width,
+                                                                            20 / 480 * Window.height,
+																			10 / 800 * Window.width,
+																			20 / 480 * Window.height,
+																			]
         )
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
@@ -83,15 +89,15 @@ class PopupDataAndWiFiDisableWarning(Widget):
         popup = Popup(
             title=title_string,
             title_color=[0, 0, 0, 1],
-            title_size="20sp",
+            title_size= str(20/800 * Window.width) + "sp",
             content=layout_plan,
             size_hint=(None, None),
-            size=(500, 400),
+            size=(500 / 800 * Window.width, 400 / 480 * window.height),
             auto_dismiss=False,
         )
 
         popup.separator_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
-        popup.separator_height = "4dp"
+        popup.separator_height = str(4 / 800 * Window.width) + "dp"
         popup.background = "./asmcnc/apps/shapeCutter_app/img/popup_background.png"
 
         ok_button.bind(on_press=popup.dismiss)
