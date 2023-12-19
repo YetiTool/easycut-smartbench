@@ -514,7 +514,7 @@ class SWUpdateScreen(Screen):
                 popup_info.PopupError(self.sm, self.l, description)
                 wait_popup.popup.dismiss()
                 return
-            if self.set.latest_sw_version.endswith("beta") or True:
+            if self.set.latest_sw_version.endswith("beta"):
                 wait_popup.popup.dismiss()
                 popup_update_SW.PopupBetaUpdate(self.sm, "wifi")
                 return
@@ -533,7 +533,7 @@ class SWUpdateScreen(Screen):
                 popup_info.PopupError(self.sm, self.l, description)
                 wait_popup.popup.dismiss()
                 return
-            if self.set.latest_sw_version.endswith("beta") or True:
+            if self.set.latest_sw_version.endswith("beta"):
                 wait_popup.popup.dismiss()
                 popup_update_SW.PopupBetaUpdate(self.sm, "usb")
                 return
