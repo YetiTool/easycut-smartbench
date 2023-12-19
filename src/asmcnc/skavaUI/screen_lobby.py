@@ -550,7 +550,7 @@ class LobbyScreen(Screen):
 
         self.update_strings()
 
-        print("WINDOW HEIGHT: " + str(Window.height))
+        # print("WINDOW HEIGHT: " + str(Window.height))
 
         # If it's a SmartCNC machine, then show the drywalltec app instead of shapecutter
         if "DRYWALLTEC" in self.m.smartbench_model():
