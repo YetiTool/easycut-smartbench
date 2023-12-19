@@ -37,12 +37,12 @@ class PopupNudgeDatum(Widget):
         )
         label = Label(
             size_hint_y=1,
-            text_size=get_scaled_tuple(360, None),
+            text_size=get_scaled_tuple([360, None]),
             halign="center",
             valign="middle",
             text=description,
             color=[0, 0, 0, 1],
-            padding=get_scaled_tuple(40, 20),
+            padding=get_scaled_tuple([40, 20]),
             markup=True,
         )
 
@@ -72,7 +72,7 @@ class PopupNudgeDatum(Widget):
             title_size=get_scaled_sp("20sp"),
             content=layout_plan,
             size_hint=(None, None),
-            size=get_scaled_tuple(300, 350),
+            size=get_scaled_tuple([300, 350]),
             auto_dismiss=False,
         )
 
@@ -126,7 +126,7 @@ class PopupNudgeWarning(Widget):
             valign="middle",
             text=description,
             color=[0, 0, 0, 1],
-            padding=get_scaled_tuple(20, 20),
+            padding=get_scaled_tuple([20, 20]),
             markup=True,
         )
 
@@ -144,7 +144,7 @@ class PopupNudgeWarning(Widget):
         btn_layout.add_widget(ok_button)
 
         layout_plan = BoxLayout(
-            orientation="vertical", spacing=get_scaled_tuple(10, orientation="vertical"), padding=get_scaled_tuple(20, 20, 20, 10)
+            orientation="vertical", spacing=get_scaled_tuple(10, orientation="vertical"), padding=get_scaled_tuple([20, 20, 20, 10])
         )
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
@@ -156,7 +156,7 @@ class PopupNudgeWarning(Widget):
             title_size=get_scaled_sp("20sp"),
             content=layout_plan,
             size_hint=(None, None),
-            size=get_scaled_tuple(400, 350),
+            size=get_scaled_tuple([400, 350]),
             auto_dismiss=False,
         )
 
