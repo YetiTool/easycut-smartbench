@@ -85,7 +85,9 @@ class Localization(object):
         self.load_from_dictionary()
 
     # Getters/formatters
-    def get_str(self, string):
+    def get_str(self, string, ignore_punctuation=False):
+        if ignore_punctuation:
+            return str(self.dictionary.get(str(string), str(string))).replace(".", "").replace(",", "")
         return str(self.dictionary.get(str(string), str(string)))
 
     def get_bold(self, string):
