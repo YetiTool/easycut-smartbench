@@ -57,7 +57,14 @@ class PopupManager:
         height=400,
         main_label_size_delta=40,
         main_label_h_align="center",
-        title="Error!"
+        title="Error!",
+        main_label_padding=(0, 10),
+        main_layout_padding=(40, 20, 40, 20),
+        main_layout_spacing=10,
+        button_layout_padding=(0, 20, 0, 0),
+        button_layout_spacing=10,
+        button_one_background_color=(230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0),
+        button_two_background_color=None,
     ):
         self.error_popup.main_string = main_string
         self.error_popup.button_one_text = button_one_text
@@ -69,6 +76,13 @@ class PopupManager:
         self.error_popup.main_label_size_delta = main_label_size_delta
         self.error_popup.main_label_h_align = main_label_h_align
         self.error_popup.title = title
+        self.error_popup.main_label_padding = main_label_padding
+        self.error_popup.main_layout_padding = main_layout_padding
+        self.error_popup.main_layout_spacing = main_layout_spacing
+        self.error_popup.button_layout_padding = button_layout_padding
+        self.error_popup.button_layout_spacing = button_layout_spacing
+        self.error_popup.button_one_background_color = button_one_background_color
+        self.error_popup.button_two_background_color = button_two_background_color
         self.error_popup.build()
         self.error_popup.open()
 
