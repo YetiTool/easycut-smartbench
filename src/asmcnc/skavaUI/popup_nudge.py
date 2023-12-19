@@ -5,6 +5,7 @@ from kivy.uix.widget import Widget
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.image import Image
+from asmcnc.core_UI.scaling_utils import is_screen_big, get_scaled_tuple, get_scaled_height, get_scaled_width, get_scaled_sp
 
 
 class PopupNudgeDatum(Widget):
@@ -26,18 +27,22 @@ class PopupNudgeDatum(Widget):
         def set_datum(*args):
             self.sm.get_screen("nudge").set_datum()
 
+        img_source = "./asmcnc/apps/shapeCutter_app/img/error_icon.png"
+        if is_screen_big():
+            img_source = "./asmcnc/apps/shapeCutter_app/img/error_icon_scaled_up.png"
+
         img = Image(
-            source="./asmcnc/apps/shapeCutter_app/img/error_icon.png",
+            source=img_source,
             allow_stretch=False,
         )
         label = Label(
             size_hint_y=1,
-            text_size=(360, None),
+            text_size=get_scaled_tuple(360, None),
             halign="center",
             valign="middle",
             text=description,
             color=[0, 0, 0, 1],
-            padding=[40, 20],
+            padding=get_scaled_tuple([40, 20]),
             markup=True,
         )
 
@@ -49,13 +54,13 @@ class PopupNudgeDatum(Widget):
         back_button.background_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
 
         btn_layout = BoxLayout(
-            orientation="horizontal", spacing=10, padding=[0, 0, 0, 0]
+            orientation="horizontal", spacing=get_scaled_tuple(10), padding=[0, 0, 0, 0]
         )
         btn_layout.add_widget(back_button)
         btn_layout.add_widget(ok_button)
 
         layout_plan = BoxLayout(
-            orientation="vertical", spacing=10, padding=[20, 20, 20, 20]
+            orientation="vertical", spacing=get_scaled_tuple(10, orientation="vertical"), padding=get_scaled_tuple([20, 20, 20, 20], orientation="vertical")
         )
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
@@ -64,15 +69,15 @@ class PopupNudgeDatum(Widget):
         popup = Popup(
             title=title_string,
             title_color=[0, 0, 0, 1],
-            title_size="20sp",
+            title_size=get_scaled_sp("20sp"),
             content=layout_plan,
             size_hint=(None, None),
-            size=(300, 350),
+            size=get_scaled_tuple(300, 350),
             auto_dismiss=False,
         )
 
         popup.separator_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
-        popup.separator_height = "4dp"
+        popup.separator_height = str(get_scaled_height(4)) +"dp"
         popup.background = "./asmcnc/apps/shapeCutter_app/img/popup_background.png"
 
         ok_button.bind(on_press=popup.dismiss)
@@ -106,18 +111,22 @@ class PopupNudgeWarning(Widget):
         def show_set_datum_popup(*args):
             PopupNudgeDatum(screen_manager=self.sm, machine=self.m, localization=self.l)
 
+        img_source = "./asmcnc/apps/shapeCutter_app/img/error_icon.png"
+        if is_screen_big():
+            img_source = "./asmcnc/apps/shapeCutter_app/img/error_icon_scaled_up.png"
+
         img = Image(
-            source="./asmcnc/apps/shapeCutter_app/img/error_icon.png",
+            source=img_source,
             allow_stretch=False,
         )
         label = Label(
             size_hint_y=2,
-            text_size=(400, None),
+            text_size=get_scaled_tuple(400, None),
             halign="center",
             valign="middle",
             text=description,
             color=[0, 0, 0, 1],
-            padding=[20, 20],
+            padding=get_scaled_tuple([20, 20]),
             markup=True,
         )
 
@@ -129,13 +138,13 @@ class PopupNudgeWarning(Widget):
         back_button.background_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
 
         btn_layout = BoxLayout(
-            orientation="horizontal", spacing=10, padding=[0, 0, 0, 0]
+            orientation="horizontal", spacing=get_scaled_tuple(10), padding=[0, 0, 0, 0]
         )
         btn_layout.add_widget(back_button)
         btn_layout.add_widget(ok_button)
 
         layout_plan = BoxLayout(
-            orientation="vertical", spacing=10, padding=[20, 20, 20, 10]
+            orientation="vertical", spacing=get_scaled_tuple(10, orientation="vertical"), padding=get_scaled_tuple([20, 20, 20, 10])
         )
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
@@ -144,15 +153,15 @@ class PopupNudgeWarning(Widget):
         popup = Popup(
             title=title_string,
             title_color=[0, 0, 0, 1],
-            title_size="20sp",
+            title_size=get_scaled_sp("20sp"),
             content=layout_plan,
             size_hint=(None, None),
-            size=(400, 350),
+            size=get_scaled_tuple(400, 350),
             auto_dismiss=False,
         )
 
         popup.separator_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
-        popup.separator_height = "4dp"
+        popup.separator_height = str(get_scaled_height(4)) + "dp"
         popup.background = "./asmcnc/apps/shapeCutter_app/img/popup_background.png"
 
         ok_button.bind(on_press=popup.dismiss)
