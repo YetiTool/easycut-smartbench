@@ -540,6 +540,7 @@ class LobbyScreen(Screen):
     welcome_popup_description = ''
     update_message = ''
     upgrade_app_hidden = False
+    check_apps_on_pre_enter = False
 
     def __init__(self, **kwargs):
         super(LobbyScreen, self).__init__(**kwargs)
@@ -548,15 +549,20 @@ class LobbyScreen(Screen):
         self.am = kwargs['app_manager']
         self.l = kwargs['localization']
 
+        self.show_desired_apps()
         self.update_strings()
 
-        # print("WINDOW HEIGHT: " + str(Window.height))
-
+    def show_desired_apps(self):
         # If it's a SmartCNC machine, then show the drywalltec app instead of shapecutter
         if "DRYWALLTEC" in self.m.smartbench_model():
             self.remove_everything_but(self.drywall_app_container)
+        # Check that window.height is valid & being read in - otherwise will default to SC
+        elif type(Window.height) is not int and type(Window.height) is not float:
+            self.check_apps_on_pre_enter = True
+        # If using Console 10, show YetiCut coming soon
         elif Window.height > 480:
             self.remove_everything_but(self.yeti_cut_apps_container)
+        # If OG console, show shapecutter
         else:
             self.remove_everything_but(self.shapecutter_container)
 
@@ -577,6 +583,7 @@ class LobbyScreen(Screen):
         container.parent.remove_widget(container)
 
     def on_pre_enter(self):
+        if self.check_apps_on_pre_enter: self.show_desired_apps()
         # Hide upgrade app if older than V1.3, and only if it has not been hidden already
         if not ("V1.3" in self.m.smartbench_model()) and not self.upgrade_app_hidden:
             self.upgrade_app_container.parent.remove_widget(self.upgrade_app_container)
