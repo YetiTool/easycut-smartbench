@@ -39,10 +39,13 @@ class PopupBetaUpdate(Widget):
             elif wifi_or_usb == "usb":
                 self.sm.get_screen("update").get_sw_update_over_usb()
 
+        if Window.width >= 800: #Console 10"
+            image_source = "./asmcnc/apps/shapeCutter_app/img/error_icon_scaled_up.png"
+        else:
+            image_source = "./asmcnc/apps/shapeCutter_app/img/error_icon.png"
         img = Image(
-            source="./asmcnc/apps/shapeCutter_app/img/error_icon.png",
-            allow_stretch=True,
-            size = [self.width / 800.0 * Window.width, self.height / 480.0 * Window.height]
+            source=image_source,
+            allow_stretch=False
         )
         label = Label(
             size_hint_y = 2.0 / 480 * Window.height,
