@@ -42,7 +42,7 @@ class PopupNudgeDatum(Widget):
             valign="middle",
             text=description,
             color=[0, 0, 0, 1],
-            padding=get_scaled_tuple([40, 20]),
+            padding=get_scaled_tuple(40, 20),
             markup=True,
         )
 
@@ -126,7 +126,7 @@ class PopupNudgeWarning(Widget):
             valign="middle",
             text=description,
             color=[0, 0, 0, 1],
-            padding=get_scaled_tuple([20, 20]),
+            padding=get_scaled_tuple(20, 20),
             markup=True,
         )
 
@@ -144,7 +144,7 @@ class PopupNudgeWarning(Widget):
         btn_layout.add_widget(ok_button)
 
         layout_plan = BoxLayout(
-            orientation="vertical", spacing=get_scaled_tuple(10, orientation="vertical"), padding=get_scaled_tuple([20, 20, 20, 10])
+            orientation="vertical", spacing=get_scaled_tuple(10, orientation="vertical"), padding=get_scaled_tuple(20, 20, 20, 10)
         )
         layout_plan.add_widget(img)
         layout_plan.add_widget(label)
