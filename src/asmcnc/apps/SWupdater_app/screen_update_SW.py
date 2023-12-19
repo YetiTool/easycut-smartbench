@@ -15,7 +15,7 @@ import sys, os, socket
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.SWupdater_app import popup_update_SW
-from asmcnc.core_UI.custom_popups import PopupSoftwareUpdateWarning
+from asmcnc.core_UI.custom_popups import PopupSoftwareUpdateWarning, PopupSoftwareRepair
 
 Builder.load_string(
     """
@@ -558,7 +558,7 @@ class SWUpdateScreen(Screen):
                     + "\n\n"
                     + self.l.get_str("Would you like to repair your software now?")
                 )
-                popup_info.PopupSoftwareRepair(self.sm, self.l, self, description)
+                PopupSoftwareRepair(self.sm, self.l, self, description)
             elif outcome == "Software already up to date!":
                 description = self.l.get_str("Software already up to date!")
                 popup_info.PopupError(self.sm, self.l, description)
