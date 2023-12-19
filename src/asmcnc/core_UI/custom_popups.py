@@ -875,7 +875,7 @@ class PopupSoftwareUpdateWarning(Widget):
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1.4, text_size=get_scaled_tuple((560, None)), halign='center', valign='middle', text=description,
-                      color=[0, 0, 0, 1], padding=get_scaled_tuple((20, 20)), markup=True)
+                      color=[0, 0, 0, 1], padding=get_scaled_tuple((20, 20)), markup=True, font_size=get_scaled_sp("15sp"))
 
         ok_button = Button(text=update_string, markup=True, font_size=get_scaled_sp("15sp"))
         ok_button.background_normal = ''

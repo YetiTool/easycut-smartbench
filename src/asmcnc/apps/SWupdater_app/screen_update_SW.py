@@ -15,6 +15,7 @@ import sys, os, socket
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.SWupdater_app import popup_update_SW
+from asmcnc.core_UI.custom_popups import PopupSoftwareUpdateWarning
 
 Builder.load_string(
     """
@@ -494,7 +495,7 @@ class SWUpdateScreen(Screen):
         message = self.l.get_str(
             "This update may take anywhere between 2 minutes and 2 hours."
         )
-        popup_info.PopupSoftwareUpdateWarning(
+        PopupSoftwareUpdateWarning(
             self.sm,
             self.l,
             self,
