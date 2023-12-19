@@ -47,16 +47,17 @@ class PopupManager:
         self.park_popup = ParkPopup(sm=self.sm, m=self.m, l=self.l, main_string="")
 
     def show_error_popup(
-        self,
-        main_string,
-        button_one_callback=None,
-        button_two_callback=None,
-        button_one_text="Ok",
-        button_two_text=None,
-        width=500,
-        height=400,
-        main_label_size_delta=40,
-        title="Error!"
+            self,
+            main_string,
+            button_one_callback=None,
+            button_two_callback=None,
+            button_one_text="Ok",
+            button_two_text=None,
+            width=500,
+            height=400,
+            main_label_size_delta=40,
+            main_label_h_align="center",
+            title="Error!"
     ):
         self.error_popup.main_string = main_string
         self.error_popup.button_one_text = button_one_text
@@ -66,21 +67,23 @@ class PopupManager:
         self.error_popup.width = scaling_utils.get_scaled_width(width)
         self.error_popup.height = scaling_utils.get_scaled_height(height)
         self.error_popup.main_label_size_delta = main_label_size_delta
+        self.error_popup.main_label_h_align = main_label_h_align
         self.error_popup.title = title
         self.error_popup.build()
         self.error_popup.open()
 
     def show_info_popup(
-        self,
-        main_string,
-        width,
-        button_one_callback=None,
-        button_two_callback=None,
-        button_one_text="Ok",
-        button_two_text=None,
-        height=400,
-        main_label_size_delta=40,
-        title="Information"
+            self,
+            main_string,
+            width,
+            button_one_callback=None,
+            button_two_callback=None,
+            button_one_text="Ok",
+            button_two_text=None,
+            height=400,
+            main_label_size_delta=40,
+            title="Information",
+            main_label_h_align="left",
     ):
         self.info_popup.main_string = main_string
         self.info_popup.button_one_text = button_one_text
@@ -90,7 +93,8 @@ class PopupManager:
         self.info_popup.height = scaling_utils.get_scaled_height(height)
         self.info_popup.main_label_size_delta = main_label_size_delta
         self.info_popup.width = scaling_utils.get_scaled_width(width)
-        self.title = title
+        self.info_popup.title = title
+        self.info_popup.main_label_h_align = main_label_h_align
         self.info_popup.build()
         self.info_popup.open()
 
