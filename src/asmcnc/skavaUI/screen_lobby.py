@@ -548,7 +548,6 @@ class LobbyScreen(Screen):
         self.m = kwargs['machine']
         self.am = kwargs['app_manager']
         self.l = kwargs['localization']
-
         self.show_desired_apps()
         self.update_strings()
 
@@ -567,15 +566,12 @@ class LobbyScreen(Screen):
             self.remove_everything_but(self.shapecutter_container)
 
     def remove_everything_but(self, everything_but):
-
         containers = [
             self.drywall_app_container,
             self.yeti_cut_apps_container,
             self.shapecutter_container,
         ]
-
         containers.remove(everything_but)
-
         self.remove_container_from_parent(containers[0])
         self.remove_container_from_parent(containers[1])
 
@@ -583,7 +579,9 @@ class LobbyScreen(Screen):
         container.parent.remove_widget(container)
 
     def on_pre_enter(self):
-        if self.check_apps_on_pre_enter: self.show_desired_apps()
+        if self.check_apps_on_pre_enter: 
+            self.show_desired_apps()
+            self.check_apps_on_pre_enter = False
         # Hide upgrade app if older than V1.3, and only if it has not been hidden already
         if not ("V1.3" in self.m.smartbench_model()) and not self.upgrade_app_hidden:
             self.upgrade_app_container.parent.remove_widget(self.upgrade_app_container)
