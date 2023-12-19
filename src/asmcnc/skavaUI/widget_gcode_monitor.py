@@ -13,6 +13,7 @@ from kivy.base import runTouchApp
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty
 from asmcnc.skavaUI import popup_info
+from asmcnc.core_UI import scaling_utils
 
 Builder.load_string(
     """
@@ -106,6 +107,7 @@ Builder.load_string(
                         id:gCodeInput
                         multiline: False
                         text: ''
+                        font_size: scaling_utils.get_scaled_width(15)
                         on_text_validate: root.send_gcode_textinput()
                     
                     Button:
