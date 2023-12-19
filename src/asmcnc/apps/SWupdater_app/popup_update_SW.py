@@ -41,11 +41,13 @@ class PopupBetaUpdate(Widget):
 
         img = Image(
             source="./asmcnc/apps/shapeCutter_app/img/error_icon.png",
-            allow_stretch=False,
+            allow_stretch=True,
+            size = [self.width / 800.0 * Window.width, self.height / 480.0 * Window.height]
         )
         label = Label(
-            size_hint_y=2,
-            text_size=(620 / 800 * Window.width, None),
+            size_hint_y = 2.0 / 480 * Window.height,
+            font_size = str(15.0 / 800.0 * Window.width) + "sp",
+            text_size = (620.0 / 800.0 * Window.width, None),
             halign="center",
             valign="middle",
             text=description,
@@ -54,10 +56,10 @@ class PopupBetaUpdate(Widget):
             markup=True,
         )
 
-        ok_button = Button(text="[b]Yes[/b]", markup=True)
+        ok_button = Button(text="[b]Yes[/b]", markup=True, font_size = str(15.0 / 800 * Window.width) + "sp")
         ok_button.background_normal = ""
         ok_button.background_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
-        back_button = Button(text="[b]No[/b]", markup=True)
+        back_button = Button(text="[b]No[/b]", markup=True, font_size = str(15.0 / 800 * Window.width) + "sp")
         back_button.background_normal = ""
         back_button.background_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
 
