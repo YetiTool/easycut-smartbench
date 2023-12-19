@@ -542,7 +542,8 @@ class WifiScreen(Screen):
                         + "\n"
                         + self.l.get_str("Please refresh the list and try again.")
                     )
-                    popup_info.PopupWarning(self.sm, self.l, message)
+                    # popup_info.PopupWarning(self.sm, self.l, message)
+                    self.sm.pm.show_warning_popup(message)
             try:
                 self.country.text = (
                     str(
@@ -573,12 +574,14 @@ class WifiScreen(Screen):
         self.password = self._password.text
         if len(self.netname) < 1:
             message = self.l.get_str("Please enter a valid network name.")
-            popup_info.PopupWarning(self.sm, self.l, message)
+            self.sm.pm.show_warning_popup(message)
+            # popup_info.PopupWarning(self.sm, self.l, message)
         elif len(self.password) < 8 or len(self.password) > 63:
             message = self.l.get_str(
                 "Please enter a password between 8 and 63 characters."
             )
-            popup_info.PopupWarning(self.sm, self.l, message)
+            # popup_info.PopupWarning(self.sm, self.l, message)
+            self.sm.pm.show_warning_popup(message)
         else:
             self.connect_wifi()
 
@@ -733,7 +736,8 @@ class WifiScreen(Screen):
                 except:
                     pass
                 message = self.l.get_str("No WiFi connection!")
-                popup_info.PopupWarning(self.sm, self.l, message)
+                # popup_info.PopupWarning(self.sm, self.l, message)
+                self.sm.pm.show_warning_popup(message)
 
         self.dismiss_wait_popup_event = Clock.schedule_once(dismiss_wait_popup, 5)
         self.wifi_error_timeout_event = Clock.schedule_once(wifi_error_timeout, 30)

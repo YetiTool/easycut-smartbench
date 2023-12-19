@@ -808,7 +808,8 @@ class BuildInfoScreen(Screen):
             return True
         else:
             warning_message = self.l.get_str("Problem saving nickname!")
-            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            # popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            self.sm.pm.show_warning_popup(warning_message)
             return False
 
     ## SMARTBENCH LOCATION NAMING
@@ -861,5 +862,6 @@ class BuildInfoScreen(Screen):
             return True
         else:
             warning_message = self.l.get_str("Problem saving location!")
-            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            # popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            self.sm.pm.show_warning_popup(warning_message)
             return False

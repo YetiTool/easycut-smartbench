@@ -1,5 +1,5 @@
 from asmcnc.core_UI import scaling_utils
-from asmcnc.core_UI.popups import ErrorPopup, InfoPopup, MiniInfoPopup, StopPopup, ParkPopup, SoftwareUpdateSuccessPopup
+from asmcnc.core_UI.popups import ErrorPopup, InfoPopup, MiniInfoPopup, StopPopup, ParkPopup, SoftwareUpdateSuccessPopup, WarningPopup
 
 
 class PopupManager:
@@ -9,6 +9,7 @@ class PopupManager:
 
     error_popup = None
     info_popup = None
+    warning_popup = None
     mini_info_popup = None
     stop_popup = None
     park_popup = None
@@ -31,6 +32,10 @@ class PopupManager:
             main_string="",
             popup_width=500,
             popup_height=440,
+        )
+
+        self.warning_popup = WarningPopup(
+            sm=self.sm, m=self.m, l=self.l, main_string=""
         )
 
         self.mini_info_popup = MiniInfoPopup(
@@ -61,6 +66,10 @@ class PopupManager:
         self.info_popup.build()
         self.info_popup.open()
 
+    def show_warning_popup(self, main_string):
+        self.warning_popup.main_label.text = main_string
+        self.warning_popup.open()
+
     def show_mini_info_popup(self, main_string):
         self.mini_info_popup.main_label.text = main_string
         self.mini_info_popup.open()
@@ -87,6 +96,9 @@ class PopupManager:
 
     def close_info_popup(self):
         self.info_popup.dismiss()
+
+    def close_warning_popup(self,):
+        self.warning_popup.dismiss()
 
     def close_error_popup(self):
         self.error_popup.dismiss()
