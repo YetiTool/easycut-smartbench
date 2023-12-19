@@ -13,6 +13,7 @@ from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.clock import Clock
 from asmcnc.skavaUI import popup_info
+from kivy.core.window import Window
 
 import sys, textwrap
 
@@ -30,7 +31,7 @@ Builder.load_string("""
         pos: self.parent.pos      
 
         padding: 0
-        spacing: 10
+        spacing: 0.0208333333333333*app.height
         orientation: "vertical"
 
         Button:
@@ -146,6 +147,7 @@ class QuickCommands(Widget):
         self.m.stop_from_quick_command_reset()
     
     def stop(self):
+        # popup_info.PopupStop(self.m, self.sm, self.l)
         self.sm.pm.show_stop_popup()
 
     def proceed_to_go_screen(self):
@@ -163,6 +165,7 @@ class QuickCommands(Widget):
                 self.format_command(self.l.get_str('Tap the file chooser in the first tab (top left) to load a file.'))
                 )
 
+            # popup_info.PopupInfo(self.sm, self.l, 450, info)
             self.sm.pm.show_info_popup(info, 450)
 
         elif not self.m.state().startswith('Idle'):
@@ -273,6 +276,6 @@ class QuickCommands(Widget):
         else: return True
 
     def format_command(self, cmd):
-        wrapped_cmd = textwrap.fill(cmd, width=50, break_long_words=False)
+        wrapped_cmd = textwrap.fill(cmd, width=0.0625*Window.width, break_long_words=False)
         return wrapped_cmd
-        
+

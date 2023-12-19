@@ -200,7 +200,9 @@ class BasicPopup(Popup):
         self.popup_type = popup_type
         self.popup_image = popup_image
         self.popup_image_size_hint = popup_image_size_hint
-        self.button_one_text = self.l.get_str(button_one_text)
+        self.button_one_text = (
+            self.l.get_str(button_one_text) if button_one_text is not None else None
+        )
         self.button_one_callback = button_one_callback
         self.button_two_text = (
             self.l.get_str(button_two_text) if button_two_text is not None else None
@@ -338,17 +340,25 @@ class InfoPopup(BasicPopup):
         button_two_callback=None,
         button_two_background_color=None,
         title="Information",
+        main_label_padding=(10, 10),
+        main_layout_padding=(10, 10, 10, 10),
+        main_layout_spacing=10,
+        main_label_size_delta=40,
+        button_layout_padding=(150, 20, 150, 0),
+        button_layout_spacing=15,
+        main_label_h_align="left",
         **kwargs
     ):
         super(InfoPopup, self).__init__(
             main_string=main_string,
             popup_type=PopupType.INFO,
-            main_label_padding=(10, 10),
-            main_layout_padding=(10, 10, 10, 10),
-            main_layout_spacing=10,
-            main_label_size_delta=40,
-            button_layout_padding=(150, 20, 150, 0),
-            button_layout_spacing=15,
+            main_label_padding=main_label_padding,
+            main_layout_padding=main_layout_padding,
+            main_layout_spacing=main_layout_spacing,
+            main_label_size_delta=main_label_size_delta,
+            button_layout_padding=button_layout_padding,
+            button_layout_spacing=button_layout_spacing,
+            main_label_h_align=main_label_h_align,
             popup_width=popup_width,
             popup_height=popup_height,
             button_one_text=button_one_text,
@@ -357,7 +367,6 @@ class InfoPopup(BasicPopup):
             button_two_text=button_two_text,
             button_two_callback=button_two_callback,
             button_two_background_color=button_two_background_color,
-            main_label_h_align="left",
             title=title,
             **kwargs
         )

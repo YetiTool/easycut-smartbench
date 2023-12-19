@@ -38,6 +38,7 @@ Builder.load_string("""
     upgrade_app_label:upgrade_app_label
 
     shapecutter_container:shapecutter_container
+    yeti_cut_apps_container:yeti_cut_apps_container
     drywall_app_container:drywall_app_container
     upgrade_app_container:upgrade_app_container
 
@@ -138,6 +139,32 @@ Builder.load_string("""
                         font_size: str(0.03125*app.width) + 'sp'
                         text: 'Shape Cutter'
 
+                BoxLayout:
+                    id: yeti_cut_apps_container
+                    orientation: 'vertical'
+                    size_hint_x: 1
+                    spacing:0.0416666666667*app.height
+                                             
+                    Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
+                        disabled: False
+                        size_hint_y: 8
+                        background_color: hex('#FFFFFF00')
+                        BoxLayout:
+                            padding: 0
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            Image:
+                                id: image_select
+                                source: "./asmcnc/skavaUI/img/yeti_cut_apps_lobby_logo_coming_soon.png"
+                                center_x: self.parent.center_x
+                                y: self.parent.y
+                                size: self.parent.width, self.parent.height
+                                allow_stretch: True 
+                    Label:
+                        size_hint_y: 1
+                        font_size: str(0.03125*app.width) + 'sp'
+                        text: 'YetiCut'
 
                 BoxLayout:
                     id: drywall_app_container
@@ -513,6 +540,7 @@ class LobbyScreen(Screen):
     welcome_popup_description = ''
     update_message = ''
     upgrade_app_hidden = False
+    check_apps_on_pre_enter = False
 
     def __init__(self, **kwargs):
         super(LobbyScreen, self).__init__(**kwargs)
@@ -520,16 +548,40 @@ class LobbyScreen(Screen):
         self.m = kwargs['machine']
         self.am = kwargs['app_manager']
         self.l = kwargs['localization']
-
+        self.show_desired_apps()
         self.update_strings()
 
+    def show_desired_apps(self):
         # If it's a SmartCNC machine, then show the drywalltec app instead of shapecutter
         if "DRYWALLTEC" in self.m.smartbench_model():
-            self.shapecutter_container.parent.remove_widget(self.shapecutter_container)
+            self.remove_everything_but(self.drywall_app_container)
+        # Check that window.height is valid & being read in - otherwise will default to SC
+        elif type(Window.height) is not int and type(Window.height) is not float:
+            self.check_apps_on_pre_enter = True
+        # If using Console 10, show YetiCut coming soon
+        elif Window.height > 480:
+            self.remove_everything_but(self.yeti_cut_apps_container)
+        # If OG console, show shapecutter
         else:
-            self.drywall_app_container.parent.remove_widget(self.drywall_app_container)
+            self.remove_everything_but(self.shapecutter_container)
+
+    def remove_everything_but(self, everything_but):
+        containers = [
+            self.drywall_app_container,
+            self.yeti_cut_apps_container,
+            self.shapecutter_container,
+        ]
+        containers.remove(everything_but)
+        self.remove_container_from_parent(containers[0])
+        self.remove_container_from_parent(containers[1])
+
+    def remove_container_from_parent(self, container):
+        container.parent.remove_widget(container)
 
     def on_pre_enter(self):
+        if self.check_apps_on_pre_enter: 
+            self.show_desired_apps()
+            self.check_apps_on_pre_enter = False
         # Hide upgrade app if older than V1.3, and only if it has not been hidden already
         if not ("V1.3" in self.m.smartbench_model()) and not self.upgrade_app_hidden:
             self.upgrade_app_container.parent.remove_widget(self.upgrade_app_container)
