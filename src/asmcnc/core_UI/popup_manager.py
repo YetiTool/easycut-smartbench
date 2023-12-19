@@ -1,5 +1,11 @@
 from asmcnc.core_UI import scaling_utils
-from asmcnc.core_UI.popups import ErrorPopup, InfoPopup, MiniInfoPopup, StopPopup, ParkPopup
+from asmcnc.core_UI.popups import (
+    ErrorPopup,
+    InfoPopup,
+    MiniInfoPopup,
+    StopPopup,
+    ParkPopup,
+)
 
 
 class PopupManager:
@@ -36,22 +42,50 @@ class PopupManager:
             sm=self.sm, m=self.m, l=self.l, main_string=""
         )
 
-        self.stop_popup = StopPopup(
-            sm=self.sm, m=self.m, l=self.l
-        )
+        self.stop_popup = StopPopup(sm=self.sm, m=self.m, l=self.l)
 
-        self.park_popup = ParkPopup(
-            sm=self.sm, m=self.m, l=self.l, main_string=""
-        )
+        self.park_popup = ParkPopup(sm=self.sm, m=self.m, l=self.l, main_string="")
 
-    def show_error_popup(self, main_string, button_one_callback=None):
+    def show_error_popup(
+        self,
+        main_string,
+        button_one_callback=None,
+        button_two_callback=None,
+        button_one_text="Ok",
+        button_two_text=None,
+        width=500,
+        height=400,
+        main_label_size_delta=40,
+    ):
         self.error_popup.main_string = main_string
+        self.error_popup.button_one_text = button_one_text
+        self.error_popup.button_two_text = button_two_text
         self.error_popup.button_one_callback = button_one_callback
+        self.error_popup.button_two_callback = button_two_callback
+        self.error_popup.width = scaling_utils.get_scaled_width(width)
+        self.error_popup.height = scaling_utils.get_scaled_height(height)
+        self.error_popup.main_label_size_delta = main_label_size_delta
         self.error_popup.build()
         self.error_popup.open()
 
-    def show_info_popup(self, main_string, width):
+    def show_info_popup(
+        self,
+        main_string,
+        width,
+        button_one_callback=None,
+        button_two_callback=None,
+        button_one_text="Ok",
+        button_two_text=None,
+        height=400,
+        main_label_size_delta=40,
+    ):
         self.info_popup.main_string = main_string
+        self.info_popup.button_one_text = button_one_text
+        self.info_popup.button_two_text = button_two_text
+        self.info_popup.button_one_callback = button_one_callback
+        self.info_popup.button_two_callback = button_two_callback
+        self.info_popup.height = scaling_utils.get_scaled_height(height)
+        self.info_popup.main_label_size_delta = main_label_size_delta
         self.info_popup.width = scaling_utils.get_scaled_width(width)
         self.info_popup.build()
         self.info_popup.open()
