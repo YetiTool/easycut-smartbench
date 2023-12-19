@@ -98,8 +98,8 @@ class PopupNudgeWarning(Widget):
             self.l.get_str(
                 "You have nudged the machine Xmm, this will adjust your datum by this value."
             )
-            .replace("Xmm", nudge_distance + "mm")
-            .replace("xMM", nudge_distance + "MM")
+            .replace("Xmm", nudge_distance + " mm")
+            .replace("xMM", nudge_distance + " MM")
             + "\n\n"
             + self.l.get_str("Are you sure you want to continue?")
             + "\n\n"
