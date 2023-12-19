@@ -28,6 +28,7 @@ class Keyboard(VKeyboard):
         self.numeric_layout = "./asmcnc/keyboard/layouts/numeric.json"
         self.qwerty_layout = "data/keyboards/qwerty.json"
         self.qwertyKR_layout = "./asmcnc/keyboard/layouts/qwertyKR.json"
+        self.font_size = scaling_utils.get_scaled_width(20)
 
         try:
             if self.l.lang == self.l.ko:
@@ -46,7 +47,7 @@ class Keyboard(VKeyboard):
         self.height = int(Window.height / 2.1)
         self.pos = (Window.width - self.width, 0)
         self.on_key_up = self.key_up
-        self.set_font_size_of_characters()
+        # self.set_font_size_of_characters()
         self.set_keyboard_background()
 
 
