@@ -2,6 +2,7 @@ import sys
 
 from kivy.uix.rst import RstDocument
 from kivy.uix.scrollview import ScrollView
+from kivy.clock import Clock
 
 from asmcnc.core_UI import scaling_utils
 from asmcnc.core_UI.popups import (
@@ -177,6 +178,10 @@ class PopupManager:
         )
         self.software_update_successful_popup.main_label.text = description
         self.software_update_successful_popup.open()
+
+        def reboot(*args):
+            self.sm.current = 'rebooting'
+        Clock.schedule_once(reboot, 6)
 
     def show_wait_popup(self, main_string):
         self.wait_popup.main_label.text = main_string
