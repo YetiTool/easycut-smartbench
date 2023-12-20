@@ -83,12 +83,12 @@ class MenuScreen(Screen):
         self.update_strings()
         self.error_popups = [
             (self.popup_0_text),
-            (self.popup_1_text)]
-            # (self.popup_2_text),
-            # (self.popup_3_text),
-            # (self.popup_4_text),
-            # (self.popup_5_text),
-            # (self.popup_6_text),
+            (self.popup_1_text),
+            (self.popup_2_text),
+            (self.popup_3_text),
+            (self.popup_4_text),
+            (self.popup_5_text),
+            (self.popup_6_text)]
             # (self.popup_7_text),
             # (self.popup_8_text),
             # (self.popup_9_text)]
@@ -122,26 +122,58 @@ class MenuScreen(Screen):
 
     def update_strings(self):
         self.popup_0_text = (
-                self.l.get_str("Could not save laser crosshair offset!")
+                    self.l.get_str(
+                        "Please select a valid spindle brand from the drop down."
+                    )
+                    + "\n\n"
+                    + self.l.get_str(
+                        "If you can't find what you're looking for, please enter the version with a voltage and digital/manual option that matches what you have."
+                    )
+                )
+        self.popup_1_text = (
+                self.l.get_str(
+                    "Please select a valid spindle brand from the drop down."
+                )
                 + "\n\n"
                 + self.l.get_str(
-                    "You need to line up the laser crosshair with the mark you made with the spindle (press (i) for help)."
-                ).replace("(i)", "[b](i)[/b]")
-                + "\n\n"
-                + self.l.get_str("Please enable laser to set offset.")
+                    "If you can't find what you're looking for, please enter the version with a voltage and digital/manual option that matches what you have."
+                )
             )
-        self.popup_1_text = (
+        self.popup_2_text = (
+                    self.l.get_str(
+                        "The spindle cooldown time should be between 1 and 60 seconds."
+                    )
+                    + "\n\n"
+                    + self.l.get_str("Please enter a new value.")
+                )
+        self.popup_3_text = (
+                self.l.get_str(
+                    "The spindle cooldown time should be a number between 1 and 60 seconds."
+                )
+                + "\n\n"
+                + self.l.get_str("Please enter a new value.")
+            )
+        self.popup_4_text = (
+                    self.l.get_str(
+                        "The spindle cooldown speed should be between 10,000 and 20,000 RPM."
+                    )
+                    + "\n\n"
+                    + self.l.get_str("Please enter a new value.")
+                )
+        self.popup_5_text = (
+                self.l.get_str(
+                    "The spindle cooldown speed should be a number between 10,000 and 20,000 RPM."
+                )
+                + "\n\n"
+                + self.l.get_str("Please enter a new value.")
+            )
+        self.popup_6_text = (
                 self.l.get_str("There was a problem saving your settings.")
                 + "\n\n"
                 + self.l.get_str(
                     "Please check your settings and try again, or if the problem persists please contact the YetiTool support team."
                 )
             )
-        # self.popup_2_text =
-        # self.popup_3_text =
-        # self.popup_4_text =
-        # self.popup_5_text =
-        # self.popup_6_text =
         # self.popup_7_text =
         # self.popup_8_text =
         # self.popup_9_text =
