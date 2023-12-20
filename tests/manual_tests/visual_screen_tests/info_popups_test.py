@@ -63,7 +63,7 @@ class MenuScreen(Screen):
         self.sm = kwargs['sm']
         self.l = kwargs['l']
 
-        self.error_popups = None
+        self.wait_popups = None
         self.popup_9_text = 'None'
         self.popup_8_text = 'None'
         self.popup_7_text = 'None'
@@ -81,9 +81,9 @@ class MenuScreen(Screen):
 
     def set_strings(self):
         self.update_strings()
-        self.error_popups = [
-            (self.popup_0_text),
-            (self.popup_1_text)]
+        self.wait_popups = [
+            (self.popup_0_text)]
+            # (self.popup_1_text),
             # (self.popup_2_text),
             # (self.popup_3_text),
             # (self.popup_4_text),
@@ -97,14 +97,14 @@ class MenuScreen(Screen):
         self.next_lang()
         self.set_strings()
 
-        for i in range(len(self.error_popups)):
+        for i in range(len(self.wait_popups)):
             Clock.schedule_once(lambda dt, i=i: self.cycle(i), i * 3)
 
     def cycle(self, i):
         Clock.schedule_once(lambda dt: self.open_popup(i), 0.5)
 
     def open_popup(self, i):
-        self.sm.pm.show_error_popup(self.error_popups[i])
+        self.sm.pm.show_wait_popup(self.wait_popups[i])
 
     def format_command(self, cmd):
         wrapped_cmd = textwrap.fill(cmd, width=50, break_long_words=False)
@@ -121,8 +121,8 @@ class MenuScreen(Screen):
             self.test_no = 0
 
     def update_strings(self):
-        self.popup_0_text = "SB not Idle! Check status"
-        self.popup_1_text = "Issue contacting database - if you continue data send may fail!"
+        self.popup_0_text = 'Downloading report, please wait...'
+        # self.popup_1_text = 
         # self.popup_2_text = 
         # self.popup_3_text = 
         # self.popup_4_text = 
