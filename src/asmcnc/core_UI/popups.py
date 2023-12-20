@@ -171,18 +171,15 @@ class BasicPopup(Popup):
         button_two_background_color=None,
         main_label_h_align="center",
         main_label_size_hint_y=2,
+        button_layout_size_hint_y=1,
         **kwargs
     ):
         super(BasicPopup, self).__init__(**kwargs)
 
         if button_one_callback is None:
             button_one_callback = self.dismiss
-        if button_one_background_color is not None:
-            self.button_one_background_normal = ""
-        if button_two_background_color is not None:
-            self.button_two_background_normal = ""
 
-        self.title = self.l.get_str(kwargs["title"])
+        self.title = self.l.get_str(kwargs["title"], ignore_punctuation=True)
         self.size_hint = (None, None)
         self.width = dp(utils.get_scaled_width(popup_width))
         self.height = dp(utils.get_scaled_height(popup_height))
@@ -196,6 +193,7 @@ class BasicPopup(Popup):
         self.main_label_size_hint_y = main_label_size_hint_y
         self.button_layout_padding = button_layout_padding
         self.button_layout_spacing = button_layout_spacing
+        self.button_layout_size_hint_y = button_layout_size_hint_y
         self.main_layout_spacing = main_layout_spacing
         self.popup_type = popup_type
         self.popup_image = popup_image
@@ -276,6 +274,7 @@ class BasicPopup(Popup):
                 self.button_layout_spacing, orientation="horizontal"
             ),
             padding=utils.get_scaled_tuple(self.button_layout_padding),
+            size_hint_y=self.button_layout_size_hint_y
         )
 
         for button in self.build_buttons():
@@ -519,6 +518,7 @@ class StopPopup(BasicPopup):
         button_layout_padding=(0, 5, 0, 0),
         button_layout_spacing=15,
         main_label_size_hint_y=2,
+        button_layout_size_hint_y=2,
         **kwargs
     ):
         self.m = kwargs['m']
@@ -546,6 +546,7 @@ class StopPopup(BasicPopup):
             button_two_background_color=button_two_background_color,
             title=title,
             main_label_size_hint_y=main_label_size_hint_y,
+            button_layout_size_hint_y=button_layout_size_hint_y,
             **kwargs
         )
 

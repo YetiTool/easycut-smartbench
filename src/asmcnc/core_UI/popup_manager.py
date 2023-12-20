@@ -177,7 +177,7 @@ class PopupManager:
         self.software_update_successful_popup.main_label.text = description
         self.software_update_successful_popup.open()
 
-    def show_wait_popup(self, main_string):
+    def show_wait_popup(self, main_string="Please wait..."):
         self.wait_popup.main_label.text = main_string
         self.wait_popup.open()
 

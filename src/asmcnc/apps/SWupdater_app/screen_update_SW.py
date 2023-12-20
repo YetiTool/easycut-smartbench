@@ -548,7 +548,7 @@ class SWUpdateScreen(Screen):
 
         def do_sw_update():
             outcome = self.set.get_sw_update_via_wifi()
-            if outcome == False:
+            if not outcome:
                 description = (
                     self.l.get_str("There was a problem updating your software.")
                     + " \n\n"
