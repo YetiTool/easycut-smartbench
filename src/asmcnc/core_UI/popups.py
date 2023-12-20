@@ -278,7 +278,7 @@ class BasicPopup(Popup):
             padding=utils.get_scaled_tuple(self.button_layout_padding),
         )
 
-        for button in self.build_buttons():
+        for button in self.build_buttons() or []:
             button_layout.add_widget(button)
         return button_layout
 
