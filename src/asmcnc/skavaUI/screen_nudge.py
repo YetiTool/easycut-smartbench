@@ -283,7 +283,8 @@ class NudgeScreen(Screen):
             success, message = self.jd.generate_recovery_gcode()
             self.sm.pm.close_wait_popup()
             if not success:
-                popup_info.PopupError(self.sm, self.l, message)
+                # popup_info.PopupError(self.sm, self.l, message)
+                self.sm.pm.show_error_popup(message)
                 self.jd.reset_recovery()
                 self.jd.job_recovery_from_beginning = True
             else:

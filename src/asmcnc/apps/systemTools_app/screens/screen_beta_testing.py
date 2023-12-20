@@ -362,9 +362,10 @@ class BetaTestingScreen(Screen):
                             "Please check the spelling of your branch and your internet connection."
                         )
                     )
-                    error_popup = popup_info.PopupError(
-                        self.systemtools_sm.sm, self.l, message
-                    )
+                    # error_popup = popup_info.PopupError(
+                    #     self.systemtools_sm.sm, self.l, message
+                    # )
+                    self.sm.pm.show_error_popup(message)
 
             Clock.schedule_once(nested_branch_update, 0.5)
 

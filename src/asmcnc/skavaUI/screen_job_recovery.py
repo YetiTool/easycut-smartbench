@@ -608,7 +608,8 @@ class JobRecoveryScreen(Screen):
             error_message = self.l.get_str(
                 "Please ensure machine is idle before continuing."
             )
-            popup_info.PopupError(self.sm, self.l, error_message)
+            # popup_info.PopupError(self.sm, self.l, error_message)
+            self.sm.pm.show_error_popup(error_message)
 
     def wait_for_idle(self, dt):
         if self.m.state().startswith("Idle"):

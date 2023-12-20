@@ -602,7 +602,8 @@ class GoScreen(Screen):
                 return
             except:
                 print(traceback.format_exc())
-        popup_info.PopupError(self.sm, self.l, self.l.get_str("Error!"))
+        # popup_info.PopupError(self.sm, self.l, self.l.get_str("Error!"))
+        self.sm.pm.show_error_popup(self.l.get_str("Error!"))
 
     def check_brush_use_and_lifetime(self, use, lifetime):
         if use >= 0.9 * lifetime:
