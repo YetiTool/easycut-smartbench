@@ -121,12 +121,8 @@ class MenuScreen(Screen):
             self.test_no = 0
 
     def update_strings(self):
-        self.popup_0_text = "Please ensure machine is idle before continuing."
-        self.popup_1_text = (
-                    self.l.get_str("No SC2 Spindle motor detected.")
-                    + " "
-                    + self.l.get_str("Please check your connections.")
-            )
+        self.popup_0_text = "SB not Idle! Check status"
+        self.popup_1_text = "Issue contacting database - if you continue data send may fail!"
         # self.popup_2_text = 
         # self.popup_3_text = 
         # self.popup_4_text = 
