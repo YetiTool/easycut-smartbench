@@ -188,9 +188,7 @@ class PopupManager:
     def close_info_popup(self):
         self.info_popup.dismiss()
 
-    def close_warning_popup(
-        self,
-    ):
+    def close_warning_popup(self):
         self.warning_popup.dismiss()
 
     def close_error_popup(self):
@@ -282,7 +280,7 @@ class PopupManager:
         self.show_error_popup(
             main_string=main_string,
             title="Warning!",
-            button_one_text="Cancel",
+            button_one_text="No",
             button_two_text="Ok",
             button_two_callback=button_two_callback,
             button_one_background_color=(230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0),
