@@ -311,15 +311,16 @@ class PopupManager:
             button_two_callback=button_two_callback,
             button_one_background_color=(230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0),
             button_two_background_color=(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0),
-            width=550,
-            height=400,
-            main_label_size_delta=140,
+            width=300,
+            height=300,
+            main_label_size_delta=40,
             main_label_padding=(0, 0),
             main_layout_padding=(30, 20, 30, 0),
             main_layout_spacing=10,
-            button_layout_padding=(0, 10, 0, 0),
+            button_layout_padding=(0, 0, 0, 0),
             button_layout_spacing=15,
             main_label_h_align="center",
+            main_label_size_hint_y=1.7,
         )
 
     """
