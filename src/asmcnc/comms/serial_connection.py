@@ -175,8 +175,7 @@ class SerialConnection(object):
             # If given port doesn't work, try others:
             if not SmartBench_port:
 
-                port_list = [port.device for port in serial.tools.list_ports.comports() if
-                             'n/a' not in port.description]
+                port_list = []
 
                 print("Windows port list: ")  # for debugging
                 print(str(port_list))
