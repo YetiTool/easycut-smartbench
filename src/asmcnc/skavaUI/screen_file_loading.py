@@ -238,7 +238,8 @@ class LoadingScreen(Screen):
                 + "\n\n"
                 + self.l.get_str("Please load a different file.")
             )
-            popup_info.PopupError(self.sm, self.l, file_empty_warning)
+            # popup_info.PopupError(self.sm, self.l, file_empty_warning)
+            self.sm.pm.show_error_popup(file_empty_warning)
             self.sm.current = "local_filechooser"
             return
         self.jd.generate_job_data(self.job_file_as_list)

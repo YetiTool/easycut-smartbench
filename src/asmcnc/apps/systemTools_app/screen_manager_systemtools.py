@@ -49,14 +49,15 @@ class ScreenManagerSystemTools(object):
     def download_logs_to_usb(self):
         self.usb_stick.enable()
         message = self.l.get_str('Downloading logs, please wait') + '...'
-        wait_popup = popup_info.PopupWait(self.sm, self.l, description=message)
+        # wait_popup = popup_info.PopupWait(self.sm, self.l, description=message)
+        self.sm.pm.show_wait_popup(message)
         count = 0
 
         def get_logs(count):
             if self.usb_stick.is_usb_mounted_flag == True:
                 os.system(
                     "journalctl > smartbench_logs.txt && sudo cp --no-preserve=mode,ownership smartbench_logs.txt /media/usb/ && rm smartbench_logs.txt")
-                wait_popup.popup.dismiss()
+                self.sm.pm.close_wait_popup()
                 self.usb_stick.disable()
 
                 message = self.l.get_str('Logs downloaded')
@@ -65,7 +66,7 @@ class ScreenManagerSystemTools(object):
             elif count > 30:
                 message = self.l.get_str('No USB found!')
                 self.sm.pm.show_mini_info_popup(message)
-                wait_popup.popup.dismiss()
+                self.sm.pm.close_wait_popup()
                 if self.usb_stick.is_available(): self.usb_stick.disable()
 
             else:
@@ -78,7 +79,8 @@ class ScreenManagerSystemTools(object):
     def reinstall_pika(self):
 
         message = self.l.get_str('Please wait') + '...'
-        wait_popup = popup_info.PopupWait(self.sm, self.l, description=message)
+        # wait_popup = popup_info.PopupWait(self.sm, self.l, description=message)
+        self.sm.pm.show_wait_popup(message)
 
         def do_reinstall():
 
@@ -86,12 +88,12 @@ class ScreenManagerSystemTools(object):
                 os.system('python -m pip uninstall pika -y')
                 os.system('python -m pip install pika==1.2.0')
                 os.system('sudo reboot')
-                wait_popup.popup.dismiss()
+                self.sm.pm.close_wait_popup()
 
             except:
                 message = self.l.get_str('Issue trying to reinstall pika!')
                 self.sm.pm.show_mini_info_popup(message)
-                wait_popup.popup.dismiss()
+                self.sm.pm.close_wait_popup()
 
         Clock.schedule_once(lambda dt: do_reinstall(), 0.2)
 
@@ -116,7 +118,8 @@ class ScreenManagerSystemTools(object):
 
         self.usb_stick.enable()
         message = self.l.get_str('Downloading grbl settings, please wait') + '...'
-        wait_popup = popup_info.PopupWait(self.sm, self.l, description=message)
+        # wait_popup = popup_info.PopupWait(self.sm, self.l, description=message)
+        self.sm.pm.show_wait_popup(message)
 
         def get_grbl_settings_onto_usb():
             if self.usb_stick.is_usb_mounted_flag == True:
@@ -124,7 +127,7 @@ class ScreenManagerSystemTools(object):
                     "sudo cp --no-preserve=mode,ownership /home/pi/easycut-smartbench/src/sb_values/saved_grbl_settings_params.txt /media/usb/")
                 os.system("rm /home/pi/easycut-smartbench/src/sb_values/saved_grbl_settings_params.txt")
 
-                wait_popup.popup.dismiss()
+                self.sm.pm.close_wait_popup()
                 self.usb_stick.disable()
 
                 message = self.l.get_str('GRBL settings downloaded')
@@ -138,13 +141,14 @@ class ScreenManagerSystemTools(object):
     def restore_grbl_settings_from_usb(self):
         self.usb_stick.enable()
         message = self.l.get_str('Restoring grbl settings, please wait') + '...'
-        wait_popup = popup_info.PopupWait(self.sm, self.l, description=message)
+        # wait_popup = popup_info.PopupWait(self.sm, self.l, description=message)
+        self.sm.pm.show_wait_popup(message)
 
         def get_grbl_settings_from_usb():
             if self.usb_stick.is_usb_mounted_flag == True:
                 filename = '/media/usb/saved_grbl_settings_params.txt'
                 success_flag = self.m.restore_grbl_settings_from_file(filename)
-                wait_popup.popup.dismiss()
+                self.sm.pm.close_wait_popup()
                 self.usb_stick.disable()
                 if success_flag:
                     message = self.l.get_str('GRBL settings restored!')
@@ -238,9 +242,16 @@ class ScreenManagerSystemTools(object):
 
     def do_usb_first_aid(self):
         message = self.l.get_str('Ensuring USB is unmounted, please wait...')
+# <<<<<<< HEAD
+#         self.sm.pm.show_wait_popup(message)
+#         umount_out = (str(os.popen("sudo umount /media/usb/").read()))  # using popen for the block
+#         self.sm.pm.show_usb_first_aid_popup(self)
+# =======
+        # wait_popup = popup_info.PopupWait(self.sm, self.l, description=message)
         self.sm.pm.show_wait_popup(message)
         umount_out = (str(os.popen("sudo umount /media/usb/").read()))  # using popen for the block
-        self.sm.pm.show_usb_first_aid_popup(self)
+        popup_system.PopupUSBFirstAid(self, self.l)
+# >>>>>>> c10_aj_popups_vp
         self.sm.pm.close_wait_popup()
 
     def clear_usb_mountpoint(self):
@@ -255,6 +266,10 @@ class ScreenManagerSystemTools(object):
     def check_git_repository(self):
 
         message = self.l.get_str("Please wait")
+# <<<<<<< HEAD
+# =======
+        # wait_popup = popup_info.PopupWait(self.sm, self.l, description=message)
+# >>>>>>> c10_aj_popups_vp
         self.sm.pm.show_wait_popup(message)
 
         def nested_check_git_repository(dt):

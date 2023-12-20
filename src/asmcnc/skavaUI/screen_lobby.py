@@ -655,7 +655,8 @@ class LobbyScreen(Screen):
         if self.m.state().startswith('Idle'):
             self.am.start_upgrade_app()
         else:
-            popup_info.PopupError(self.sm, self.l, self.l.get_str("Please ensure machine is idle before continuing."))
+            # popup_info.PopupError(self.sm, self.l, self.l.get_str("Please ensure machine is idle before continuing."))
+            self.sm.pm.show_error_popup(self.l.get_str("Please ensure machine is idle before continuing."))
 
     def drywall_cutter_app(self):
         self.am.start_drywall_cutter_app()

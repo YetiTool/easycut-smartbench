@@ -1598,7 +1598,8 @@ class RouterMachine(object):
                 self.l.get_str("Datum has not been set.") + " " + \
                 self.l.get_str("Please choose a different datum using the laser crosshair.")
                 )
-            popup_info.PopupError(self.sm, self.l, error_message)
+            # popup_info.PopupError(self.sm, self.l, error_message)
+            self.sm.pm.show_error_popup(error_message)
 
     def set_x_datum_with_laser(self):
         if self.jog_spindle_to_laser_datum('X'): 
@@ -1617,7 +1618,8 @@ class RouterMachine(object):
                 self.l.get_str("Datum has not been set.") + \
                 self.l.get_str("Please choose a different datum using the laser crosshair.")
                 )
-            popup_info.PopupError(self.sm, self.l, error_message)
+            # popup_info.PopupError(self.sm, self.l, error_message)
+            self.sm.pm.show_error_popup(error_message)
 
     def set_y_datum_with_laser(self):
         if self.jog_spindle_to_laser_datum('Y'): 
@@ -1636,7 +1638,8 @@ class RouterMachine(object):
                 self.l.get_str("Datum has not been set.") + \
                 self.l.get_str("Please choose a different datum using the laser crosshair.")
                 )
-            popup_info.PopupError(self.sm, self.l, error_message)
+            # popup_info.PopupError(self.sm, self.l, error_message)
+            self.sm.pm.show_error_popup(error_message)
 
 
     def set_jobstart_z(self):

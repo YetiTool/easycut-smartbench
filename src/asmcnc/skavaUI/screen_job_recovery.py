@@ -599,7 +599,8 @@ class JobRecoveryScreen(Screen):
 
     def next_screen(self):
         if self.m.state().startswith("Idle"):
-            self.wait_popup = popup_info.PopupWait(self.sm, self.l)
+            # self.wait_popup = popup_info.PopupWait(self.sm, self.l)
+            self.sm.pm.show_wait_popup()
             self.jd.job_recovery_selected_line = self.selected_line_index + 1
             self.go_xy()
             Clock.schedule_once(self.wait_for_idle, 0.4)
@@ -607,7 +608,8 @@ class JobRecoveryScreen(Screen):
             error_message = self.l.get_str(
                 "Please ensure machine is idle before continuing."
             )
-            popup_info.PopupError(self.sm, self.l, error_message)
+            # popup_info.PopupError(self.sm, self.l, error_message)
+            self.sm.pm.show_error_popup(error_message)
 
     def wait_for_idle(self, dt):
         if self.m.state().startswith("Idle"):
@@ -616,10 +618,10 @@ class JobRecoveryScreen(Screen):
         elif self.m.state().startswith("Run"):
             Clock.schedule_once(self.wait_for_idle, 0.4)
         else:
-            self.wait_popup.popup.dismiss()
+            self.sm.pm.close_wait_popup()
 
     def proceed_to_next_screen(self, dt):
-        self.wait_popup.popup.dismiss()
+        self.sm.pm.close_wait_popup()
         self.sm.current = "nudge"
 
     def update_strings(self):

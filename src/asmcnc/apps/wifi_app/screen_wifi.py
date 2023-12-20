@@ -596,7 +596,8 @@ class WifiScreen(Screen):
 
     def connect_wifi(self):
         self._password.text = ""
-        wait_popup = popup_info.PopupWait(self.sm, self.l)
+        # wait_popup = popup_info.PopupWait(self.sm, self.l)
+        self.sm.pm.show_wait_popup()
         
         # pass credentials to wpa_supplicant file
         self.wpanetpass = (
@@ -721,7 +722,7 @@ class WifiScreen(Screen):
                 if self.wifi_error_timeout_event:
                     Clock.unschedule(self.wifi_error_timeout_event)
                 try:
-                    wait_popup.popup.dismiss()
+                    self.sm.pm.close_wait_popup()
                 except:
                     pass
                 return
@@ -732,7 +733,7 @@ class WifiScreen(Screen):
                 if self.dismiss_wait_popup_event:
                     Clock.unschedule(self.dismiss_wait_popup_event)
                 try:
-                    wait_popup.popup.dismiss()
+                    self.sm.pm.close_wait_popup()
                 except:
                     pass
                 message = self.l.get_str("No WiFi connection!")
@@ -773,8 +774,9 @@ class WifiScreen(Screen):
         return SSID_list
 
     def refresh_available_networks(self):
-        wait_popup = popup_info.PopupWait(self.sm, self.l)
-        Clock.schedule_once(lambda dt: wait_popup.popup.dismiss(), 0.5)
+        # wait_popup = popup_info.PopupWait(self.sm, self.l)
+        self.sm.pm.show_wait_popup()
+        Clock.schedule_once(lambda dt: self.sm.pm.close_wait_popup(), 0.5)
 
         def get_networks():
             self.network_name.values = self.get_available_networks()

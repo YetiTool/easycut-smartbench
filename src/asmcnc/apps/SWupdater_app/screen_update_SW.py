@@ -433,16 +433,18 @@ class SWUpdateScreen(Screen):
                                     "Please check the file on your USB stick."
                                 )
                             )
-                            popup_info.PopupError(
-                                self.sm, self.l, refresh_error_message
-                            )
+                            # popup_info.PopupError(
+                            #     self.sm, self.l, refresh_error_message
+                            # )
+                            self.sm.pm.show_error_popup(refresh_error_message)
                     elif self.wifi_image.source != self.wifi_on:
                         refresh_error_message = (
                             self.l.get_str("Could not refresh version!")
                             + "\n\n"
                             + self.l.get_str("Please check the file on your USB stick.")
                         )
-                        popup_info.PopupError(self.sm, self.l, refresh_error_message)
+                        # popup_info.PopupError(self.sm, self.l, refresh_error_message)
+                        self.sm.pm.show_error_popup(refresh_error_message)
                     try:
                         self.set.clear_remote_repo(dir_path_name)
                     except:
@@ -458,14 +460,16 @@ class SWUpdateScreen(Screen):
                         + "\n\n"
                         + self.l.get_str("Please check your connection.")
                     )
-                    popup_info.PopupError(self.sm, self.l, refresh_error_message)
+                    # popup_info.PopupError(self.sm, self.l, refresh_error_message)
+                    self.sm.pm.show_error_popup(refresh_error_message)
             except:
                 refresh_error_message = (
                     self.l.get_str("Could not refresh version!")
                     + "\n\n"
                     + self.l.get_str("Please check your connection.")
                 )
-                popup_info.PopupError(self.sm, self.l, refresh_error_message)
+                # popup_info.PopupError(self.sm, self.l, refresh_error_message)
+                self.sm.pm.show_error_popup(refresh_error_message)
             self.update_screen_with_latest_version()
             self.refresh_button.disabled = False
 
@@ -507,44 +511,48 @@ class SWUpdateScreen(Screen):
 
     def prep_for_sw_update_over_wifi(self):
         self.set.usb_or_wifi = "WiFi"
-        wait_popup = popup_info.PopupWait(self.sm, self.l)
+        self.sm.pm.show_wait_popup()
 
         def check_connection_and_version():
             if self.wifi_image.source != self.wifi_on:
                 description = self.l.get_str("No WiFi connection!")
-                popup_info.PopupError(self.sm, self.l, description)
-                wait_popup.popup.dismiss()
+                # popup_info.PopupError(self.sm, self.l, description)
+                self.sm.pm.show_error_popup(description)
+                self.sm.pm.close_wait_popup()
                 return
             if self.set.latest_sw_version.endswith("beta"):
-                wait_popup.popup.dismiss()
+                self.sm.pm.close_wait_popup()
                 popup_update_SW.PopupBetaUpdate(self.sm, "wifi")
                 return
-            Clock.schedule_once(lambda dt: wait_popup.popup.dismiss(), 0.2)
+            Clock.schedule_once(lambda dt: self.sm.pm.close_wait_popup(), 0.2)
             self.get_sw_update_over_wifi()
 
         Clock.schedule_once(lambda dt: check_connection_and_version(), 3)
 
     def prep_for_sw_update_over_usb(self):
         self.set.usb_or_wifi = "USB"
-        wait_popup = popup_info.PopupWait(self.sm, self.l)
+        # wait_popup = popup_info.PopupWait(self.sm, self.l)
+        self.sm.pm.show_wait_popup()
 
         def check_connection_and_version():
             if self.usb_image.source != self.usb_on:
                 description = self.l.get_str("No USB drive found!")
-                popup_info.PopupError(self.sm, self.l, description)
-                wait_popup.popup.dismiss()
+                # popup_info.PopupError(self.sm, self.l, description)
+                self.sm.pm.show_error_popup(description)
+                self.sm.pm.close_wait_popup()
                 return
             if self.set.latest_sw_version.endswith("beta"):
-                wait_popup.popup.dismiss()
+                self.sm.pm.close_wait_popup()
                 popup_update_SW.PopupBetaUpdate(self.sm, "usb")
                 return
-            Clock.schedule_once(lambda dt: wait_popup.popup.dismiss(), 0.2)
+            Clock.schedule_once(lambda dt: self.sm.pm.close_wait_popup(), 0.2)
             self.get_sw_update_over_usb()
 
         Clock.schedule_once(lambda dt: check_connection_and_version(), 3)
 
     def get_sw_update_over_wifi(self):
-        updating_wait_popup = popup_info.PopupWait(self.sm, self.l)
+        # updating_wait_popup = popup_info.PopupWait(self.sm, self.l)
+        self.sm.pm.show_wait_popup()
 
         def do_sw_update():
             outcome = self.set.get_sw_update_via_wifi()
@@ -561,12 +569,14 @@ class SWUpdateScreen(Screen):
                 PopupSoftwareRepair(self.sm, self.l, self, description)
             elif outcome == "Software already up to date!":
                 description = self.l.get_str("Software already up to date!")
-                popup_info.PopupError(self.sm, self.l, description)
+                # popup_info.PopupError(self.sm, self.l, description)
+                self.sm.pm.show_error_popup(description)
             elif "Could not resolve host: github.com" in outcome:
                 description = self.l.get_str(
                     "Could not connect to github. Please check that your connection is stable, or try again later."
                 )
-                popup_info.PopupError(self.sm, self.l, description)
+                # popup_info.PopupError(self.sm, self.l, description)
+                self.sm.pm.show_error_popup(description)
             else:
                 # popup_info.PopupSoftwareUpdateSuccess(self.sm, self.l, outcome)
                 self.sm.pm.show_software_update_successful_popup(outcome)
@@ -579,7 +589,7 @@ class SWUpdateScreen(Screen):
                 Clock.schedule_once(
                     lambda dt: self.sm.pm.show_mini_info_popup(message), 3
                 )
-            Clock.schedule_once(lambda dt: updating_wait_popup.popup.dismiss(), 0.1)
+            Clock.schedule_once(lambda dt: self.sm.pm.close_wait_popup(), 0.1)
 
         Clock.schedule_once(lambda dt: do_sw_update(), 2)
 
@@ -603,7 +613,8 @@ class SWUpdateScreen(Screen):
                             "If this issue persists, please contact Yeti Tool Ltd for support."
                         )
                     )
-                    popup_info.PopupError(self.sm, self.l, description)
+                    # popup_info.PopupError(self.sm, self.l, description)
+                    self.sm.pm.show_error_popup(description)
             else:
                 description = (
                     self.l.get_str("No WiFi connection!")
@@ -614,12 +625,14 @@ class SWUpdateScreen(Screen):
                     + "\n\n"
                     + self.l.get_str("Please try again later.")
                 )
-                popup_info.PopupError(self.sm, self.l, description)
+                # popup_info.PopupError(self.sm, self.l, description)
+                self.sm.pm.show_error_popup(description)
 
         Clock.schedule_once(lambda dt: delay_clone_to_update_screen(), 3)
 
     def get_sw_update_over_usb(self):
-        wait_popup = popup_info.PopupWait(self.sm, self.l)
+        # wait_popup = popup_info.PopupWait(self.sm, self.l)
+        self.sm.pm.show_wait_popup()
 
         def do_sw_update():
             outcome = self.set.get_sw_update_via_usb()
@@ -639,8 +652,10 @@ class SWUpdateScreen(Screen):
                         "[b]easycut-smartbench[/b]",
                     )
                 )
-                popup_info.PopupError(self.sm, self.l, description)
-                wait_popup.popup.dismiss()
+                # popup_info.PopupError(self.sm, self.l, description)
+                self.sm.pm.show_error_popup(description)
+                # wait_popup.popup.dismiss()
+                self.sm.pm.close_wait_popup()
             elif outcome == 0:
                 description = (
                     self.l.get_str(
@@ -657,8 +672,10 @@ class SWUpdateScreen(Screen):
                         "[b]easycut-smartbench[/b]",
                     )
                 )
-                popup_info.PopupError(self.sm, self.l, description)
-                wait_popup.popup.dismiss()
+                # popup_info.PopupError(self.sm, self.l, description)
+                self.sm.pm.show_error_popup(description)
+                # wait_popup.popup.dismiss()
+                self.sm.pm.close_wait_popup()
             elif outcome == "update failed":
                 description = (
                     self.l.get_str(
@@ -676,8 +693,10 @@ class SWUpdateScreen(Screen):
                         "If this problem persists you may need to connect to the internet to update your software, and repair it if necessary."
                     )
                 )
-                popup_info.PopupError(self.sm, self.l, description)
-                wait_popup.popup.dismiss()
+                # popup_info.PopupError(self.sm, self.l, description)
+                self.sm.pm.show_error_popup(description)
+                # wait_popup.popup.dismiss()
+                self.sm.pm.close_wait_popup()
             else:
                 self.usb_stick.disable()
                 update_success = outcome
@@ -692,7 +711,8 @@ class SWUpdateScreen(Screen):
                 Clock.schedule_once(
                     lambda dt: self.sm.pm.show_mini_info_popup(message), 3
                 )
-                wait_popup.dismiss()
+                # wait_popup.dismiss()
+                self.sm.pm.close_wait_popup()
 
         Clock.schedule_once(lambda dt: do_sw_update(), 2)
 

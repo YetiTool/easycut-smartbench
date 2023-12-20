@@ -1492,7 +1492,8 @@ class CalibrationTesting(Screen):
             self.zero_Z()
             self.next_run_event = Clock.schedule_once(self.part_1_unweighted_x, 3)
         else:
-            popup_info.PopupError(self.sm, self.l, "SB not Idle! Check status")
+            # popup_info.PopupError(self.sm, self.l, "SB not Idle! Check status")
+            self.sm.pm.show_error_popup("SB not Idle! Check status")
 
     def part_1_unweighted_x(self, dt):
         if self.m.state().startswith("Idle"):
@@ -1712,4 +1713,5 @@ class CalibrationTesting(Screen):
             log("Could not insert final test stage into DB!!")
             print(traceback.format_exc())
             message = "Issue contacting database - if you continue data send may fail!"
-            popup_info.PopupError(self.sm, self.l, message)
+            # popup_info.PopupError(self.sm, self.l, message)
+            self.sm.pm.show_error_popup(message)

@@ -244,8 +244,8 @@ class BasicPopup(Popup):
             markup=True,
             font_size=str(utils.get_scaled_width(15)) + "sp",
         )
-
-        self.button_layout = self.build_button_layout()
+        if self.button_layout_padding:
+            self.button_layout = self.build_button_layout()
 
         self.main_layout = BoxLayout(
             orientation="vertical",
@@ -260,7 +260,8 @@ class BasicPopup(Popup):
             self.main_layout.add_widget(image)
 
         self.main_layout.add_widget(self.main_label)
-        self.main_layout.add_widget(self.button_layout)
+        if self.button_layout:
+            self.main_layout.add_widget(self.button_layout)
 
         self.content = self.main_layout
         self.update_font_sizes()
@@ -698,7 +699,11 @@ class WarningPopup(BasicPopup):
 class WaitPopup(BasicPopup):
     def __init__(
         self,
+# <<<<<<< HEAD
         main_string=None,
+# =======
+#         main_string,
+# >>>>>>> c10_aj_popups_vp
         popup_width=500,
         popup_height=200,
         button_one_text=None,
@@ -712,6 +717,7 @@ class WaitPopup(BasicPopup):
         main_layout_spacing=10,
         main_label_size_delta=140,
         main_label_h_align="center",
+# <<<<<<< HEAD
         title="Please wait...",
         button_layout_padding=(0, 0),
         button_layout_spacing=0,
@@ -724,6 +730,17 @@ class WaitPopup(BasicPopup):
         super(WaitPopup, self).__init__(
             main_string=main_string,
             popup_type=PopupType.ERROR,
+# =======
+#         title="Please Wait",
+#         button_layout_padding=None,
+#         button_layout_spacing=None,
+#         main_label_size_hint_y=1,
+#         **kwargs
+#     ):
+#         super(WaitPopup, self).__init__(
+#             main_string=main_string,
+#             popup_type=PopupType.INFO,
+# >>>>>>> c10_aj_popups_vp
             main_label_padding=main_label_padding,
             main_layout_padding=main_layout_padding,
             main_layout_spacing=main_layout_spacing,

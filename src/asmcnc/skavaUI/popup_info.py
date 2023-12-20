@@ -512,7 +512,7 @@ class PopupMiniInfo(Widget):  # done (maintenance pr has the others)
         popup.open()
 
 
-class PopupSoftwareUpdateSuccess(Widget):
+class PopupSoftwareUpdateSuccess(Widget):  # done, moved to popups.py
     def __init__(self, screen_manager, localization, message):
         self.sm = screen_manager
         self.l = localization
@@ -567,7 +567,7 @@ class PopupSoftwareUpdateSuccess(Widget):
         Clock.schedule_once(reboot, 6)
 
 # Popup asking the user if they are sure they want to continue with the update with a given warning_message
-class PopupSoftwareUpdateWarning(Widget):
+class PopupSoftwareUpdateWarning(Widget):  # done, moved to custom_popups
     def __init__(self, screen_manager, localization, settings_manager, warning_message, update_method, prep_for_sw_update_over_wifi, prep_for_sw_update_over_usb):
         self.sm = screen_manager
         self.set = settings_manager
@@ -630,7 +630,7 @@ class PopupSoftwareUpdateWarning(Widget):
         popup.open()
 
 
-class PopupSoftwareRepair(Widget):
+class PopupSoftwareRepair(Widget):  # done, moved to custom_popus
     def __init__(self, screen_manager, localization, settings_manager, warning_message):
         self.sm = screen_manager
         self.set = settings_manager
@@ -685,7 +685,7 @@ class PopupSoftwareRepair(Widget):
         popup.open()
 
 
-class PopupError(Widget):
+class PopupError(Widget):  # done moved to popups.py
     def __init__(self, screen_manager, localization, warning_message):
         self.sm = screen_manager
         self.l = localization
@@ -729,7 +729,7 @@ class PopupError(Widget):
         popup.open()
 
 
-class PopupWarning(Widget):
+class PopupWarning(Widget):  # done, moved to popups.py
     def __init__(self, screen_manager, localization, warning_message):
         self.sm = screen_manager
         self.l = localization
@@ -772,7 +772,7 @@ class PopupWarning(Widget):
         popup.open()
 
 
-class PopupWait(Widget):
+class PopupWait(Widget):  # done, moved to popups.py
     def __init__(self, screen_manager, localization, description=False):
         self.sm = screen_manager
         self.l = localization

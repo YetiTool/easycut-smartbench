@@ -429,8 +429,9 @@ class SpindleSettingsWidget(Widget):
                    popup_width=700, popup_height=460).open()
 
     def raise_z_then_get_data(self):
-        if self.m.state().startswith("Idle"):
-            self.wait_popup.open()
+        if self.m.state().startswith('Idle'):
+            # self.wait_popup = popup_info.PopupWait(self.sm, self.l, self.l.get_str('SmartBench is raising the Z axis.'))
+            self.sm.pm.show_wait_popup(self.l.get_str('SmartBench is raising the Z axis.'))
             self.m.zUp()
             Clock.schedule_once(self.get_spindle_data, 0.4)
         else:
@@ -438,9 +439,10 @@ class SpindleSettingsWidget(Widget):
 
     def get_spindle_data(self, dt):
         if not self.m.smartbench_is_busy():
-            self.wait_popup.dismiss()
-            self.wait_popup.open()
-            self.m.s.write_command("M3 S0")
+            self.sm.pm.close_wait_popup()
+            # self.wait_popup = popup_info.PopupWait(self.sm, self.l)
+            self.sm.pm.show_wait_popup()
+            self.m.s.write_command('M3 S0')
             Clock.schedule_once(self.get_spindle_info, 0.3)
         else:
             Clock.schedule_once(self.get_spindle_data, 0.4)
@@ -464,12 +466,12 @@ class SpindleSettingsWidget(Widget):
             Clock.schedule_once(self.check_spindle_info, 0.3)
 
     def read_restore_info(self):
-        self.m.s.write_command("M5")
-        self.wait_popup.dismiss()
-        if (
-                self.m.s.digital_spindle_ld_qdA != -999
-                and self.m.s.spindle_serial_number not in [None, -999, 999]
-        ):
+        self.m.s.write_command('M5')
+        # self.wait_popup.popup.dismiss()
+        self.sm.pm.close_wait_popup()
+        # Value of -999 for ld_qdA represents disconnected spindle
+        if self.m.s.digital_spindle_ld_qdA != -999 and self.m.s.spindle_serial_number not in [None, -999, 999]:
+            # Get info was successful, show info
             PopupDisplaySpindleData(self.sm, self.l, self.m.s)
         else:
             error_message = (

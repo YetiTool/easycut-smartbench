@@ -14,6 +14,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from asmcnc.skavaUI import popup_info
 from kivy.clock import Clock
+from asmcnc.core_UI import scaling_utils as utils
 
 Builder.load_string(
     """
@@ -160,7 +161,7 @@ Builder.load_string(
 class SquaringScreenDecisionManualVsSquare(Screen):
     cancel_to_screen = "lobby"
     return_to_screen = "lobby"
-    default_font_size = 30
+    default_font_size = utils.get_scaled_width(30)
 
     def __init__(self, **kwargs):
         super(SquaringScreenDecisionManualVsSquare, self).__init__(**kwargs)

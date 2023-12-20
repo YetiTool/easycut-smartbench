@@ -4,16 +4,20 @@ from kivy.uix.rst import RstDocument
 from kivy.uix.scrollview import ScrollView
 
 from asmcnc.core_UI import scaling_utils
-from asmcnc.core_UI.popups import (
-    ErrorPopup,
-    InfoPopup,
-    MiniInfoPopup,
-    StopPopup,
-    ParkPopup,
-    SoftwareUpdateSuccessPopup,
-    WaitPopup,
-    WarningPopup,
-)
+# <<<<<<< HEAD
+# from asmcnc.core_UI.popups import (
+#     ErrorPopup,
+#     InfoPopup,
+#     MiniInfoPopup,
+#     StopPopup,
+#     ParkPopup,
+#     SoftwareUpdateSuccessPopup,
+#     WaitPopup,
+#     WarningPopup,
+# )
+# =======
+from asmcnc.core_UI.popups import ErrorPopup, InfoPopup, MiniInfoPopup, StopPopup, ParkPopup, SoftwareUpdateSuccessPopup, WarningPopup, WaitPopup
+# >>>>>>> c10_aj_popups_vp
 
 
 class PopupManager:
@@ -65,6 +69,7 @@ class PopupManager:
             sm=self.sm, m=self.m, l=self.l, main_string=""
         )
 
+# <<<<<<< HEAD
         self.wait_popup = WaitPopup(sm=self.sm, m=self.m, l=self.l)
 
     def show_error_popup(
@@ -87,6 +92,14 @@ class PopupManager:
         button_one_background_color=(230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0),
         button_two_background_color=None,
     ):
+# =======
+#         self.wait_popup = WaitPopup(
+#             sm=self.sm, m=self.m, l=self.l, main_string=self.l.get_str("Please wait") + "...",
+#             title=self.l.get_str("Please Wait") + "..."
+#         )
+
+#     def show_error_popup(self, main_string, button_one_callback=None):
+# >>>>>>> c10_aj_popups_vp
         self.error_popup.main_string = main_string
         self.error_popup.button_one_text = button_one_text
         self.error_popup.button_two_text = button_two_text
@@ -177,6 +190,7 @@ class PopupManager:
         self.software_update_successful_popup.main_label.text = description
         self.software_update_successful_popup.open()
 
+# <<<<<<< HEAD
     def show_wait_popup(self, main_string):
         self.wait_popup.main_label.text = main_string
         self.wait_popup.open()
@@ -184,6 +198,15 @@ class PopupManager:
     def close_wait_popup(self):
         self.wait_popup.dismiss()
 
+# =======
+#     def show_wait_popup(self, main_string=None):
+#         if main_string:
+#             self.wait_popup.main_label.text = main_string
+#         else:
+#             self.wait_popup.main_label.text = self.l.get_str("Please wait") + "..."
+#         self.wait_popup.open()
+
+# >>>>>>> c10_aj_popups_vp
     def close_mini_info_popup(self):
         self.mini_info_popup.dismiss()
 
@@ -204,6 +227,7 @@ class PopupManager:
     def close_software_update_successful_popup(self):
         self.software_update_successful_popup.dismiss()
 
+# <<<<<<< HEAD
     # INDIVIDUAL POPUPS
     def show_quit_to_console_popup(self):
         def button_two_callback(*args):
@@ -381,3 +405,7 @@ class PopupManager:
                 self.info_popup.main_layout.add_widget(self.info_popup.button_layout)
         else:
             self.show_error_popup(**parameters)
+# =======
+#     def close_wait_popup(self):
+#         self.wait_popup.dismiss()
+# >>>>>>> c10_aj_popups_vp
