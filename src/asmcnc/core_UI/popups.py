@@ -284,7 +284,8 @@ class BasicPopup(Popup):
         return button_layout
 
     def on_button_pressed(self, callback):
-        callback()
+        if callback:
+            callback()
         self.dismiss()
 
     def get_image(self):
