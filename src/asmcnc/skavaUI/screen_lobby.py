@@ -20,6 +20,7 @@ from shutil import copy
 
 from asmcnc.skavaUI import popup_info
 from asmcnc.core_UI.popups import BasicPopup, PopupType
+from kivy.core.window import Window
 
 Builder.load_string("""
 
@@ -37,6 +38,7 @@ Builder.load_string("""
     upgrade_app_label:upgrade_app_label
 
     shapecutter_container:shapecutter_container
+    yeti_cut_apps_container:yeti_cut_apps_container
     drywall_app_container:drywall_app_container
     upgrade_app_container:upgrade_app_container
 
@@ -56,7 +58,7 @@ Builder.load_string("""
 
         BoxLayout:
             size_hint_y: 70
-            padding: [10, 10, 734, 0]
+            padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height, dp(0.9175)*app.width, 0]
             orientation: 'horizontal'
 
         Carousel:
@@ -66,15 +68,16 @@ Builder.load_string("""
                             
             BoxLayout:
                 orientation: 'horizontal'
-                padding: [100, 20, 100, 50]
-                spacing: 20
+                padding:[dp(0.125)*app.width, dp(0.0416666666667)*app.height, dp(0.125)*app.width, dp(0.104166666667)*app.height]
+                spacing:0.0416666666667*app.height
 
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_x: 1
-                    spacing: 20
+                    spacing:0.0416666666667*app.height
     
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y: 8
                         disabled: False
                         background_color: hex('#FFFFFF00')
@@ -97,7 +100,7 @@ Builder.load_string("""
                     Label:
                         id: pro_app_label
                         size_hint_y: 1
-                        font_size: '25sp'
+                        font_size: str(0.03125*app.width) + 'sp'
                         text: 'CAD / CAM'
 
 
@@ -106,9 +109,10 @@ Builder.load_string("""
                     id: shapecutter_container
                     orientation: 'vertical'
                     size_hint_x: 1
-                    spacing: 20
+                    spacing:0.0416666666667*app.height
                                              
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         
                         disabled: False
                         size_hint_y: 8
@@ -132,18 +136,45 @@ Builder.load_string("""
                     Label:
                         id: shapecutter_app_label
                         size_hint_y: 1
-                        font_size: '25sp'
+                        font_size: str(0.03125*app.width) + 'sp'
                         text: 'Shape Cutter'
 
+                BoxLayout:
+                    id: yeti_cut_apps_container
+                    orientation: 'vertical'
+                    size_hint_x: 1
+                    spacing:0.0416666666667*app.height
+                                             
+                    Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
+                        disabled: False
+                        size_hint_y: 8
+                        background_color: hex('#FFFFFF00')
+                        BoxLayout:
+                            padding: 0
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            Image:
+                                id: image_select
+                                source: "./asmcnc/skavaUI/img/yeti_cut_apps_lobby_logo_coming_soon.png"
+                                center_x: self.parent.center_x
+                                y: self.parent.y
+                                size: self.parent.width, self.parent.height
+                                allow_stretch: True 
+                    Label:
+                        size_hint_y: 1
+                        font_size: str(0.03125*app.width) + 'sp'
+                        text: 'YetiCut'
 
                 BoxLayout:
                     id: drywall_app_container
                     orientation: 'vertical'
                     size_hint_x: 1
-                    spacing: 20
-                    padding: [65,0]
+                    spacing:0.0416666666667*app.height
+                    padding:[dp(0.08125)*app.width, 0]
 
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y: 8
                         disabled: False
                         background_color: hex('#FFFFFF00')
@@ -162,11 +193,12 @@ Builder.load_string("""
                                     size: self.parent.size
                                     pos: self.parent.pos
                             Label:
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 text: 'Drywall cutter'
                                 color: 0,0,0,1
                     Label:
                         size_hint_y: 1
-                        font_size: '25sp'
+                        font_size: str(0.03125*app.width) + 'sp'
                         text: 'Drywall cutter'
                         markup: True
 
@@ -174,15 +206,16 @@ Builder.load_string("""
             # Carousel pane 2
             BoxLayout:
                 orientation: 'horizontal'
-                padding: [100, 20, 100, 50]
-                spacing: 20
+                padding:[dp(0.125)*app.width, dp(0.0416666666667)*app.height, dp(0.125)*app.width, dp(0.104166666667)*app.height]
+                spacing:0.0416666666667*app.height
 
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_x: 1
-                    spacing: 20
+                    spacing:0.0416666666667*app.height
     
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y: 8
                         disabled: False
                         background_color: hex('#FFFFFF00')
@@ -205,16 +238,17 @@ Builder.load_string("""
                     Label:
                         id: wifi_app_label
                         size_hint_y: 1
-                        font_size: '25sp'
+                        font_size: str(0.03125*app.width) + 'sp'
                         text: 'Wi-Fi'
                 
                 
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_x: 1
-                    spacing: 20
+                    spacing:0.0416666666667*app.height
     
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y: 8
                         disabled: False
                         background_color: hex('#FFFFFF00')
@@ -237,22 +271,23 @@ Builder.load_string("""
                     Label:
                         id: calibrate_app_label
                         size_hint_y: 1
-                        font_size: '25sp'
+                        font_size: str(0.03125*app.width) + 'sp'
                         text: 'Calibrate'
                         markup: True
 
             # Carousel pane 3
             BoxLayout:
                 orientation: 'horizontal'
-                padding: [100, 20, 100, 50]
-                spacing: 20
+                padding:[dp(0.125)*app.width, dp(0.0416666666667)*app.height, dp(0.125)*app.width, dp(0.104166666667)*app.height]
+                spacing:0.0416666666667*app.height
 
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_x: 1
-                    spacing: 20
+                    spacing:0.0416666666667*app.height
     
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y: 8
                         disabled: False
                         background_color: hex('#FFFFFF00')
@@ -275,16 +310,17 @@ Builder.load_string("""
                     Label:
                         id: update_app_label
                         size_hint_y: 1
-                        font_size: '25sp'
+                        font_size: str(0.03125*app.width) + 'sp'
                         text: 'Update'
                 
                 
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_x: 1
-                    spacing: 20
+                    spacing:0.0416666666667*app.height
     
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y: 8
                         disabled: False
                         background_color: hex('#FFFFFF00')
@@ -307,22 +343,23 @@ Builder.load_string("""
                     Label:
                         id: maintenance_app_label
                         size_hint_y: 1
-                        font_size: '25sp'
+                        font_size: str(0.03125*app.width) + 'sp'
                         text: 'Maintenance'
 
             # Carousel pane 4
             BoxLayout:
                 orientation: 'horizontal'
-                padding: [100, 20, 100, 50]
-                spacing: 20
+                padding:[dp(0.125)*app.width, dp(0.0416666666667)*app.height, dp(0.125)*app.width, dp(0.104166666667)*app.height]
+                spacing:0.0416666666667*app.height
 
                 BoxLayout:
                     id: upgrade_app_container
                     orientation: 'vertical'
                     size_hint_x: 1
-                    spacing: 20
+                    spacing:0.0416666666667*app.height
 
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y: 8
                         disabled: False
                         background_color: hex('#FFFFFF00')
@@ -345,16 +382,17 @@ Builder.load_string("""
                     Label:
                         id: upgrade_app_label
                         size_hint_y: 1
-                        font_size: '25sp'
+                        font_size: str(0.03125*app.width) + 'sp'
                         text: 'Upgrade'
                         markup: True
 
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_x: 1
-                    spacing: 20
+                    spacing:0.0416666666667*app.height
                 
                     Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y: 8
                         disabled: False
                         background_color: hex('#FFFFFF00')
@@ -377,7 +415,7 @@ Builder.load_string("""
                     Label:
                         id: system_tools_app_label
                         size_hint_y: 1
-                        font_size: '25sp'
+                        font_size: str(0.03125*app.width) + 'sp'
                         text: 'System Tools'
                         markup: True
 
@@ -395,12 +433,13 @@ Builder.load_string("""
 
             BoxLayout:
                 size_hint_x: None
-                width: 720
+                width: 0.9*app.width
                 height: self.parent.height
-                padding: [80, 40, 0, 40]
+                padding:[dp(0.1)*app.width, dp(0.0833333333333)*app.height, 0, dp(0.0833333333333)*app.height]
                 orientation: 'horizontal'
                 
                 Button:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     disabled: False
                     size_hint_y: 1
                     background_color: hex('#FFFFFF00')
@@ -420,9 +459,11 @@ Builder.load_string("""
                             size: self.parent.width, self.parent.height
                             allow_stretch: True 
                 Label:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     size_hint_y: 0.8
 
                 Button:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     id: shutdown_button
                     size_hint_y: 1
                     background_color: hex('#FFFFFF00')
@@ -440,9 +481,11 @@ Builder.load_string("""
                             allow_stretch: True
 
                 Label:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     size_hint_y: 0.8
 
                 Button:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     id: load_button
                     disabled: False
                     size_hint_y: 1
@@ -465,10 +508,11 @@ Builder.load_string("""
 
             BoxLayout:
                 size_hint: (None, None)
-                size: (80,80)
+                size: (dp(80.0/800.0)*app.width,dp(80.0/480.0)*app.height)
                 orientation: 'horizontal'
-                padding: [29,29,10,10]
+                padding:[dp(0.03625)*app.width, dp(0.0604166666667)*app.height, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                 Button:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     disabled: False
                     background_color: hex('#FFFFFF00')
                     on_press: root.help_popup()
@@ -496,6 +540,7 @@ class LobbyScreen(Screen):
     welcome_popup_description = ''
     update_message = ''
     upgrade_app_hidden = False
+    check_apps_on_pre_enter = False
 
     def __init__(self, **kwargs):
         super(LobbyScreen, self).__init__(**kwargs)
@@ -503,16 +548,40 @@ class LobbyScreen(Screen):
         self.m = kwargs['machine']
         self.am = kwargs['app_manager']
         self.l = kwargs['localization']
-
+        self.show_desired_apps()
         self.update_strings()
 
+    def show_desired_apps(self):
         # If it's a SmartCNC machine, then show the drywalltec app instead of shapecutter
         if "DRYWALLTEC" in self.m.smartbench_model():
-            self.shapecutter_container.parent.remove_widget(self.shapecutter_container)
+            self.remove_everything_but(self.drywall_app_container)
+        # Check that window.height is valid & being read in - otherwise will default to SC
+        elif type(Window.height) is not int and type(Window.height) is not float:
+            self.check_apps_on_pre_enter = True
+        # If using Console 10, show YetiCut coming soon
+        elif Window.height > 480:
+            self.remove_everything_but(self.yeti_cut_apps_container)
+        # If OG console, show shapecutter
         else:
-            self.drywall_app_container.parent.remove_widget(self.drywall_app_container)
+            self.remove_everything_but(self.shapecutter_container)
+
+    def remove_everything_but(self, everything_but):
+        containers = [
+            self.drywall_app_container,
+            self.yeti_cut_apps_container,
+            self.shapecutter_container,
+        ]
+        containers.remove(everything_but)
+        self.remove_container_from_parent(containers[0])
+        self.remove_container_from_parent(containers[1])
+
+    def remove_container_from_parent(self, container):
+        container.parent.remove_widget(container)
 
     def on_pre_enter(self):
+        if self.check_apps_on_pre_enter: 
+            self.show_desired_apps()
+            self.check_apps_on_pre_enter = False
         # Hide upgrade app if older than V1.3, and only if it has not been hidden already
         if not ("V1.3" in self.m.smartbench_model()) and not self.upgrade_app_hidden:
             self.upgrade_app_container.parent.remove_widget(self.upgrade_app_container)
@@ -625,7 +694,7 @@ class LobbyScreen(Screen):
         )
 
         self.update_message = (
-                self.l.get_str('New software update available for download!') + '\n\n' + \
+                self.l.get_str('New software update available for download!') + '\n\n' +
                 self.l.get_str(
                     'Please use the Update app to get the latest version.'
                 ).replace(self.l.get_str('Update'), self.l.get_bold('Update'))
