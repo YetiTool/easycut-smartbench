@@ -261,7 +261,7 @@ class ScreenManagerSystemTools(object):
 
             if self.set.do_git_fsck():
                 message = self.l.get_str("No errors found. You're good to go!")
-                self.sm.pm.show_git_fsck_popup(message, "more info", "error")
+                self.sm.pm.show_git_fsck_popup(message, self.set.details_of_fsck, "good")
 
             else:
                 message = self.l.get_str("Errors found!") + "\n" + \
