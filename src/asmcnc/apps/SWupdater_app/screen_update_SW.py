@@ -395,7 +395,7 @@ class SWUpdateScreen(Screen):
         self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25)
 
         # TESTING
-        self.sm.pm.show_software_update_successful_popup("Software already up to date!")
+        self.sm.pm.show_software_update_successful_popup("Could not resolve host: github.com")
 
     def on_leave(self):
         if self.poll_USB:
