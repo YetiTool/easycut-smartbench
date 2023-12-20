@@ -302,6 +302,9 @@ class BasicPopup(Popup):
         )
 
     def build_buttons(self):
+        if self.button_one_text is None:
+            return []
+
         buttons = [
             Button(
                 text=self.l.get_bold(self.button_one_text),
@@ -336,7 +339,7 @@ class InfoPopup(BasicPopup):
         popup_height,
         button_one_text="Ok",
         button_one_callback=None,
-        button_one_background_color=[76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0],
+        button_one_background_color=(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0),
         button_two_text=None,
         button_two_callback=None,
         button_two_background_color=None,
@@ -696,7 +699,7 @@ class WarningPopup(BasicPopup):
 class WaitPopup(BasicPopup):
     def __init__(
         self,
-        main_string,
+        main_string=None,
         popup_width=500,
         popup_height=200,
         button_one_text=None,
@@ -710,15 +713,18 @@ class WaitPopup(BasicPopup):
         main_layout_spacing=10,
         main_label_size_delta=140,
         main_label_h_align="center",
-        title="Please Wait",
+        title="Please wait...",
         button_layout_padding=None,
         button_layout_spacing=None,
         main_label_size_hint_y=1,
         **kwargs
     ):
+        if not main_string:
+            main_string = "Please wait..."
+
         super(WaitPopup, self).__init__(
             main_string=main_string,
-            popup_type=PopupType.INFO,
+            popup_type=PopupType.ERROR,
             main_label_padding=main_label_padding,
             main_layout_padding=main_layout_padding,
             main_layout_spacing=main_layout_spacing,
