@@ -394,6 +394,9 @@ class SWUpdateScreen(Screen):
         self.check_USB_status(1)
         self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25)
 
+        # TESTING
+        self.sm.pm.show_software_update_successful_popup(outcome)
+
     def on_leave(self):
         if self.poll_USB:
             Clock.unschedule(self.poll_USB)
