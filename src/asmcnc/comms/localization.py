@@ -85,14 +85,20 @@ class Localization(object):
         self.load_from_dictionary()
 
     # Getters/formatters
-    def get_str(self, string):
+    def get_str(self, string, ignore_punctuation=False):
+        if ignore_punctuation:
+            punctuation = ''
+            while string[-1] in ['.', ',', '!', '?']:
+                punctuation += string[-1]
+                string = string[:-1]
+            return str(self.dictionary.get(str(string), str(string))) + punctuation
         return str(self.dictionary.get(str(string), str(string)))
 
     def get_bold(self, string):
-        return ('[b]' + str(self.dictionary.get(str(string), str(string))) + '[/b]')
+        return '[b]' + str(self.dictionary.get(str(string), str(string))) + '[/b]'
 
     def get_italic(self, string):
-        return ('[i]' + str(self.dictionary.get(str(string), str(string))) + '[/i]')
+        return '[i]' + str(self.dictionary.get(str(string), str(string))) + '[/i]'
 
     def get_localized_days(self, string):
 
