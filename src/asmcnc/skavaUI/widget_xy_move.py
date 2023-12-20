@@ -397,13 +397,21 @@ class XYMove(Widget):
             .replace("X-Y", "[b]X-Y[/b]")
             .replace(self.l.get_str("datum"), self.l.get_bold("datum"))
         )
+# <<<<<<< HEAD
         PopupDatum(self.sm, self.m, self.l, 'XY', warning)
+# =======
+#         popup_info.PopupDatum(self.sm, self.m, self.l, "XY", warning)
+# >>>>>>> master
 
     def set_standby_to_pos(self):
         warning = self.format_command(
             self.l.get_str("Is this where you want to set your standby position?")
         )
+# <<<<<<< HEAD
         self.sm.pm.show_park_popup(warning)
+# =======
+#         popup_info.PopupPark(self.sm, self.m, self.l, warning)
+# >>>>>>> master
 
     def go_x_datum(self):
         if self.m.is_machine_homed == False:
@@ -423,7 +431,11 @@ class XYMove(Widget):
             .replace("X-Y", "[b]X[/b]")
             .replace(self.l.get_str("datum"), self.l.get_bold("datum"))
         )
+# <<<<<<< HEAD
         PopupDatum(self.sm, self.m, self.l, 'X', warning)
+# =======
+#         popup_info.PopupDatum(self.sm, self.m, self.l, "X", warning)
+# >>>>>>> master
 
     def set_y_datum(self):
         warning = self.format_command(
@@ -431,8 +443,16 @@ class XYMove(Widget):
             .replace("X-Y", "[b]Y[/b]")
             .replace(self.l.get_str("datum"), self.l.get_bold("datum"))
         )
+# <<<<<<< HEAD
         PopupDatum(self.sm, self.m, self.l, 'Y', warning)
 
     def format_command(self, cmd):
         wrapped_cmd = textwrap.fill(cmd, width=0.04375*Window.width, break_long_words=False)
         return wrapped_cmd
+# =======
+#         popup_info.PopupDatum(self.sm, self.m, self.l, "Y", warning)
+
+#     def format_command(self, cmd):
+#         wrapped_cmd = textwrap.fill(cmd, width=0.04375*Window.width, break_long_words=False)
+#         return wrapped_cmd
+# >>>>>>> master
