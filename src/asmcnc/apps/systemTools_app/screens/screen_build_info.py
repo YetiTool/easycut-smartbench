@@ -673,7 +673,7 @@ class BuildInfoScreen(Screen):
                 )
             )
             self.data_consent_app.open_data_consent("build_info", "build_info")
-            self.systemtools_sm.sm.pm.show_wait_popup()
+            self.systemtools_sm.sm.pm.close_wait_popup()
 
         Clock.schedule_once(nested_open_data_consent_app, 0.2)
 
