@@ -234,14 +234,12 @@ class USB_storage(object):
                     description = self.l.get_str('It is now safe to remove your USB stick.')
                     ok_button_background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
 
-                popup_usb = ErrorPopup(sm=self.sm, m=self.m, l=self.l,
-                                       main_string=description,
-                                       popup_width=350, popup_height=350,
-                                       main_label_padding=(40, 20),
-                                       button_layout_padding=(0, 0, 0, 0),
-                                       button_one_background_color=ok_button_background_color,
-                                       )
-                popup_usb.open()
+                self.sm.show_error_popup(main_string=description,
+                                         width=350, height=350,
+                                         main_label_padding=(40, 20),
+                                         button_layout_padding=(0, 0, 0, 0),
+                                         button_one_background_color=ok_button_background_color,
+                                         )
 
-                event = Clock.schedule_once(lambda dt: popup_usb.dismiss(), 1.8)
+                event = Clock.schedule_once(lambda dt: self.sm.close_error_popup(), 1.8)
                 return popup_usb
