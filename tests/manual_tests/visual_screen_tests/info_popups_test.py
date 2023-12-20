@@ -82,12 +82,12 @@ class MenuScreen(Screen):
     def set_strings(self):
         self.update_strings()
         self.wait_popups = [
-            (self.popup_0_text)]
-            # (self.popup_1_text),
-            # (self.popup_2_text),
-            # (self.popup_3_text),
-            # (self.popup_4_text),
-            # (self.popup_5_text),
+            (self.popup_0_text),
+            (self.popup_1_text),
+            (self.popup_2_text),
+            (self.popup_3_text),
+            (self.popup_4_text),
+            (self.popup_5_text)]
             # (self.popup_6_text),
             # (self.popup_7_text),
             # (self.popup_8_text),
@@ -105,7 +105,7 @@ class MenuScreen(Screen):
 
     def open_popup(self, i):
         self.sm.pm.show_wait_popup(self.wait_popups[i])
-         Clock.schedule_once(self.sm.pm.close_wait_popup(), 2)
+        Clock.schedule_once(self.sm.pm.close_wait_popup(), 2)
         
 
     def format_command(self, cmd):
@@ -123,12 +123,12 @@ class MenuScreen(Screen):
             self.test_no = 0
 
     def update_strings(self):
-        self.popup_0_text = 'Downloading report, please wait...'
-        # self.popup_1_text = 
-        # self.popup_2_text = 
-        # self.popup_3_text = 
-        # self.popup_4_text = 
-        # self.popup_5_text = 
+        self.popup_0_text = self.l.get_str('Downloading logs, please wait') + '...'
+        self.popup_1_text = self.l.get_str('Please wait') + '...'
+        self.popup_2_text = self.l.get_str('Downloading grbl settings, please wait') + '...'
+        self.popup_3_text = self.l.get_str('Restoring grbl settings, please wait') + '...'
+        self.popup_4_text = self.l.get_str('Ensuring USB is unmounted, please wait...')
+        self.popup_5_text = self.l.get_str("Please wait")
         # self.popup_6_text = 
         # self.popup_7_text =
         # self.popup_8_text =
