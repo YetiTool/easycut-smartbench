@@ -332,9 +332,9 @@ class BetaTestingScreen(Screen):
     def checkout_branch(self):
         if sys.platform != "win32" and sys.platform != "darwin":
             message = (
-                self.l.get_str("Please wait")
-                + "...\n"
-                + self.l.get_str("Console will reboot to finish update.")
+                    self.l.get_str("Please wait")
+                    + "...\n"
+                    + self.l.get_str("Console will reboot to finish update.")
             )
             wait_popup = popup_info.PopupWait(
                 self.systemtools_sm.sm, self.l, description=message
@@ -355,11 +355,11 @@ class BetaTestingScreen(Screen):
                 else:
                     wait_popup.popup.dismiss()
                     message = (
-                        self.l.get_str("Failed to checkout and pull branch.")
-                        + "\n"
-                        + self.l.get_str(
-                            "Please check the spelling of your branch and your internet connection."
-                        )
+                            self.l.get_str("Failed to checkout and pull branch.")
+                            + "\n"
+                            + self.l.get_str(
+                        "Please check the spelling of your branch and your internet connection."
+                    )
                     )
                     error_popup = popup_info.PopupError(
                         self.systemtools_sm.sm, self.l, message
@@ -387,5 +387,5 @@ class BetaTestingScreen(Screen):
         self.reset_language = True
 
     def restart_app(self):
-        if self.reset_language == True:
-            popup_system.RebootAfterLanguageChange(self.systemtools_sm, self.l)
+        if self.reset_language:
+            self.systemtools_sm.sm.pm.show_reboot_after_language_change_popup()

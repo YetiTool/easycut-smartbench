@@ -267,7 +267,7 @@ class SystemMenuScreen(Screen):
         self.systemtools_sm.do_usb_first_aid()
 
     def beta_testing(self):
-        popup_system.PopupBetaTesting(self.systemtools_sm, self.l)
+        self.sm.pm.show_beta_testing_popup(self)
 
     def grbl_settings(self):
         popup_system.PopupGRBLSettingsPassword(self.systemtools_sm, self.l, self.kb)

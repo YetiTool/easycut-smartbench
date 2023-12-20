@@ -238,10 +238,10 @@ class ScreenManagerSystemTools(object):
 
     def do_usb_first_aid(self):
         message = self.l.get_str('Ensuring USB is unmounted, please wait...')
-        wait_popup = popup_info.PopupWait(self.sm, self.l, description=message)
+        self.sm.pm.show_wait_popup(message)
         umount_out = (str(os.popen("sudo umount /media/usb/").read()))  # using popen for the block
-        popup_system.PopupUSBFirstAid(self, self.l)
-        wait_popup.popup.dismiss()
+        self.sm.pm.show_usb_first_aid_popup(self)
+        self.sm.pm.close_wait_popup()
 
     def clear_usb_mountpoint(self):
         clear_mountpoint_out = (str(os.popen("sudo rm /media/usb/*").read()))  # using popen for the block
@@ -255,20 +255,20 @@ class ScreenManagerSystemTools(object):
     def check_git_repository(self):
 
         message = self.l.get_str("Please wait")
-        wait_popup = popup_info.PopupWait(self.sm, self.l, description=message)
+        self.sm.pm.show_wait_popup(message)
 
         def nested_check_git_repository(dt):
 
             if self.set.do_git_fsck():
                 message = self.l.get_str("No errors found. You're good to go!")
-                popup_system.PopupFSCKGood(self.sm, self.l, message, self.set.details_of_fsck)
+                self.sm.pm.show_git_fsck_popup(message, self.set.details_of_fsck, "good")
 
             else:
                 message = self.l.get_str("Errors found!") + "\n" + \
                           self.l.get_str("Contact us at https://www.yetitool.com/support")
 
-                popup_system.PopupFSCKErrors(self.sm, self.l, message, self.set.details_of_fsck)
+                self.sm.pm.show_git_fsck_popup(message, self.set.details_of_fsck, "error")
 
-            wait_popup.popup.dismiss()
+            self.sm.pm.close_wait_popup()
 
         Clock.schedule_once(nested_check_git_repository, 0.1)

@@ -757,8 +757,8 @@ class BuildInfoScreen(Screen):
             self.hardware_header.font_size = utils.get_scaled_width(18)
 
     def restart_app(self):
-        if self.reset_language == True:
-            popup_system.RebootAfterLanguageChange(self.systemtools_sm, self.l)
+        if self.reset_language:
+            self.systemtools_sm.sm.pm.show_reboot_after_language_change_popup()
 
     ## SMARTBENCH NAMING
     def on_focus(self, instance, value):

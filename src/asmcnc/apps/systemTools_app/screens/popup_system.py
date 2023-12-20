@@ -190,7 +190,7 @@ class QuitToConsole(Widget):  # done
 
 
 ### USB First Aid
-class PopupUSBFirstAid(Widget):
+class PopupUSBFirstAid(Widget):  # done
     def __init__(self, screen_manager, localization):
         self.systemtools_sm = screen_manager
         self.l = localization
@@ -315,7 +315,7 @@ class PopupBetaTesting(Widget):
 
 
 ## GRBL settings and password
-class PopupGRBLSettingsPassword(Widget):
+class PopupGRBLSettingsPassword(Widget):  # skipping
     def __init__(self, screen_manager, localization, keyboard):
         self.systemtools_sm = screen_manager
         self.l = localization
@@ -377,7 +377,7 @@ class PopupGRBLSettingsPassword(Widget):
 
 
 ### Factory settings and password
-class PopupFactorySettingsPassword(Widget):
+class PopupFactorySettingsPassword(Widget):  # skipping
     def __init__(self, screen_manager, localization, keyboard):
         self.systemtools_sm = screen_manager
         self.l = localization
@@ -434,7 +434,7 @@ class PopupFactorySettingsPassword(Widget):
 
 
 ### Update testing and password
-class PopupUpdateTestingPassword(Widget):
+class PopupUpdateTestingPassword(Widget):  # skipping
     def __init__(self, screen_manager, localization, keyboard):
         self.systemtools_sm = screen_manager
         self.l = localization
@@ -497,7 +497,7 @@ class PopupUpdateTestingPassword(Widget):
 
 
 ### Developer and password
-class PopupDeveloperPassword(Widget):
+class PopupDeveloperPassword(Widget):  # skipping
     def __init__(self, screen_manager, localization, keyboard):
         self.systemtools_sm = screen_manager
         self.l = localization
@@ -560,7 +560,7 @@ class PopupDeveloperPassword(Widget):
 
 
 ### Reboot Console
-class RebootAfterLanguageChange(Widget):
+class RebootAfterLanguageChange(Widget):  # done
     def __init__(self, screen_manager, localization):
         self.systemtools_sm = screen_manager
         self.l = localization
@@ -613,7 +613,7 @@ class RebootAfterLanguageChange(Widget):
         popup.open()
 
 
-class PopupSSHToggleFailed(Widget):
+class PopupSSHToggleFailed(Widget):  # skipped
     def __init__(self, localization):
         self.l = localization
 
@@ -655,7 +655,7 @@ class PopupSSHToggleFailed(Widget):
         popup.open()
 
 
-class PopupFailedToSendSSHKey(Widget):
+class PopupFailedToSendSSHKey(Widget):  # skipped
     def __init__(self):
         description = "The public SSH key file failed to send, please contact Archie or Lettie"
         title_string = "Couldn't send SSH Key"
@@ -695,7 +695,7 @@ class PopupFailedToSendSSHKey(Widget):
         popup.open()
 
 
-class PopupNoSSHFile(Widget):
+class PopupNoSSHFile(Widget):  # skipped
     def __init__(self):
         description = "The public SSH key file hasn't been generated, please contact Archie/Lettie"
         title_string = "Couldn't find SSH Key"
@@ -735,7 +735,7 @@ class PopupNoSSHFile(Widget):
         popup.open()
 
 
-class PopupCSVOnUSB(Widget):
+class PopupCSVOnUSB(Widget):  # skipped
     def __init__(self):
         description = 'The final test data has been transferred to the USB stick, please hand it to Archie or Lettie ' \
                       'when possible. '
@@ -776,7 +776,7 @@ class PopupCSVOnUSB(Widget):
         popup.open()
 
 
-class PopupStopOvernightTest(Widget):
+class PopupStopOvernightTest(Widget):  # skipped
 
     def __init__(self, machine, screen_manager, localization, overnight_test_class):
         self.m = machine
@@ -843,7 +843,7 @@ class PopupStopOvernightTest(Widget):
         popup.open()
 
 
-class PopupFSCKGood(Widget):
+class PopupFSCKGood(Widget):  # done
 
     def __init__(self, screen_manager, localization, description, more_info):
 
@@ -901,7 +901,7 @@ class PopupFSCKGood(Widget):
         popup.open()
 
 
-class PopupFSCKErrors(Widget):
+class PopupFSCKErrors(Widget):  # done
 
     def __init__(self, screen_manager, localization, description, more_info):
         self.sm = screen_manager
@@ -957,7 +957,7 @@ class PopupFSCKErrors(Widget):
         popup.open()
 
 
-class PopupFSCKInfo(Widget):
+class PopupFSCKInfo(Widget):  # done
 
     def __init__(self, screen_manager, localization, description):
         self.sm = screen_manager
@@ -1005,7 +1005,7 @@ class PopupFSCKInfo(Widget):
         popup.open()
 
 
-class PopupStopStallJig(Widget):
+class PopupStopStallJig(Widget): # skipping
 
     def __init__(self, machine, screen_manager, localization, stall_jig_class):
         self.m = machine
@@ -1077,7 +1077,7 @@ class PopupStopStallJig(Widget):
         popup.open()
 
 
-class PopupConfirmStoreCurrentValues(Widget):
+class PopupConfirmStoreCurrentValues(Widget):  # skipping
 
     def __init__(self, machine, screen_manager, localization, current_adjustment_screen):
         self.m = machine
@@ -1135,7 +1135,7 @@ class PopupConfirmStoreCurrentValues(Widget):
         popup.open()
 
 
-class PopupConfirmSpindleTest(Widget):
+class PopupConfirmSpindleTest(Widget): # skipping
     popup = None
     confirm_func = None
 
