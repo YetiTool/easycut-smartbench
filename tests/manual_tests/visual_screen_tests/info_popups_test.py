@@ -1,18 +1,24 @@
 """
 From the easycut folder: python -m tests.manual_tests.visual_screen_tests.info_popups_test
 """
-import sys, os, textwrap
+import os
+import sys
+import textwrap
+from functools import partial
+
+from kivy.clock import Clock
+from mock.mock import MagicMock
+
 
 path_to_EC = os.getcwd()
 sys.path.append('./src')
 os.chdir('./src')
 
-import kivy
 from kivy.app import App
 
+from asmcnc.core_UI.popup_manager import PopupManager
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen, ScreenManager
-from kivy.clock import Clock
 from asmcnc.skavaUI import popup_info
 from asmcnc.comms import localization
 
@@ -67,29 +73,38 @@ class MenuScreen(Screen):
         self.popup_3_text = 'None'
         self.popup_2_text = 'None'
         self.popup_1_text = 'None'
-        self.popup_0_text = 'None'
 
+        print(kwargs)
+        self.sm = kwargs['sm']
+        self.l = kwargs['l']
+        self.set_strings()
+
+    def set_strings(self):
+        self.update_strings()
         self.info_popups = [
-            (self.sm, self.l, 500, self.popup_0_text),
-            (self.sm, self.l, 780, self.popup_1_text),
-            (self.sm, self.l, 750, self.popup_2_text),
-            (self.sm, self.l, 700, self.popup_3_text),
-            (self.sm, self.l, 500, self.popup_4_text),
-            (self.sm, self.l, 500, self.popup_5_text),
-            (self.sm, self.l, 760, self.popup_6_text),
+            # (self.sm, self.l, 500, self.l.get_str("File names must be between 1 and 40 characters long.")),
+            # (self.sm, self.l, 780, self.popup_1_text),
+            # (self.sm, self.l, 750, self.popup_2_text),
+            # (self.sm, self.l, 700, self.popup_3_text),
+            # (self.sm, self.l, 500, self.popup_4_text),
+            # (self.sm, self.l, 500, 'Calibration complete!'),
+            # (self.sm, self.l, 760, self.popup_6_text),
             (self.sm, self.l, 450, self.popup_7_text),
             (self.sm, self.l, 760, self.popup_8_text),
             (self.sm, self.l, 450, self.popup_9_text)]
 
     def test(self):
-        for j in range(0, len(self.l.approved_languages)):
-            self.next_lang()
-            self.update_strings()
-            args = self.info_popups[self.popup_no]
-            popup_info.PopupInfo(args[0], args[1], args[2], args[3])
-        self.popup_no += 1
-        if self.popup_no > len(self.info_popups):
-            self.popup_no = 0
+        self.next_lang()
+        self.set_strings()
+
+        for i in range(len(self.info_popups)):
+            Clock.schedule_once(lambda dt, i=i: self.cycle(i), i * 3)
+
+    def cycle(self, i):
+        Clock.schedule_once(lambda dt: self.open_popup(i), 0.5)
+
+    def open_popup(self, i):
+        self.sm.pm.show_info_popup(self.info_popups[i][3], self.info_popups[i][2])
 
     def format_command(self, cmd):
         wrapped_cmd = textwrap.fill(cmd, width=50, break_long_words=False)
@@ -224,17 +239,7 @@ class MenuScreen(Screen):
                 self.format_command(self.l.get_str('Before running, a file needs to be loaded.')) + '\n\n' + \
                 self.format_command(self.l.get_str('Tap the file chooser in the first tab (top left) to load a file.'))
         )
-        self.info_popups = [
-            (self.sm, self.l, 500, self.popup_0_text),
-            (self.sm, self.l, 780, self.popup_1_text),
-            (self.sm, self.l, 750, self.popup_2_text),
-            (self.sm, self.l, 700, self.popup_3_text),
-            (self.sm, self.l, 500, self.popup_4_text),
-            (self.sm, self.l, 500, self.popup_5_text),
-            (self.sm, self.l, 760, self.popup_6_text),
-            (self.sm, self.l, 450, self.popup_7_text),
-            (self.sm, self.l, 760, self.popup_8_text),
-            (self.sm, self.l, 450, self.popup_9_text)]
+
 
 class TestApp(App):
 
@@ -244,6 +249,11 @@ class TestApp(App):
         # Create the screen manager
         sm = ScreenManager()
         sm.add_widget(MenuScreen(name='menu', sm=sm, l=l))
+
+        m = MagicMock()
+
+        popup_manager = PopupManager(sm, m, l)
+        sm.pm = popup_manager
 
         return sm
 
