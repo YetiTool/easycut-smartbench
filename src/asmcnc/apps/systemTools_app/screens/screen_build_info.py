@@ -664,7 +664,7 @@ class BuildInfoScreen(Screen):
         #     self.l,
         #     self.l.get_str("Loading Data and Wi-Fi") + "...",
         # )
-        self.sm.pm.show_wait_popup(self.l.get_str("Loading Data and Wi-Fi") + "...")
+        self.systemtools_sm.sm.pm.show_wait_popup(self.l.get_str("Loading Data and Wi-Fi") + "...")
 
         def nested_open_data_consent_app(dt):
             self.data_consent_app = (
@@ -673,7 +673,7 @@ class BuildInfoScreen(Screen):
                 )
             )
             self.data_consent_app.open_data_consent("build_info", "build_info")
-            self.sm.pm.show_wait_popup()
+            self.systemtools_sm.sm.pm.show_wait_popup()
 
         Clock.schedule_once(nested_open_data_consent_app, 0.2)
 
@@ -810,7 +810,7 @@ class BuildInfoScreen(Screen):
         else:
             warning_message = self.l.get_str("Problem saving nickname!")
             # popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
-            self.sm.pm.show_warning_popup(warning_message)
+            self.systemtools_sm.sm.pm.show_warning_popup(warning_message)
             return False
 
     ## SMARTBENCH LOCATION NAMING
@@ -864,5 +864,5 @@ class BuildInfoScreen(Screen):
         else:
             warning_message = self.l.get_str("Problem saving location!")
             # popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
-            self.sm.pm.show_warning_popup(warning_message)
+            self.systemtools_sm.sm.pm.show_warning_popup(warning_message)
             return False
