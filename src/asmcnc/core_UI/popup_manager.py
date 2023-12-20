@@ -118,7 +118,7 @@ class PopupManager:
         button_two_text=None,
         button_one_background_color=(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0),
         button_two_background_color=None,
-        height=400,
+        height=440,
         main_label_size_delta=40,
         title="Information",
         main_label_h_align="left",
