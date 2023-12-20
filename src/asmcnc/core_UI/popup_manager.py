@@ -330,7 +330,7 @@ class PopupManager:
             if fsck_type == "good" or fsck_type == "error":
                 self.show_git_fsck_popup(main_string, more_info, "info")
 
-        if not more_info:
+        if not more_info or fsck_type == "info":
             button_two_callback = None
 
         title = (
