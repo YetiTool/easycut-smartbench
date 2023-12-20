@@ -105,7 +105,7 @@ class MenuScreen(Screen):
 
     def open_popup(self, i):
         self.sm.pm.show_wait_popup(self.wait_popups[i])
-        Clock.schedule_once(self.sm.pm.close_wait_popup(), 2)
+        Clock.schedule_once(lambda dt: self.sm.pm.close_wait_popup(), 2)
         
 
     def format_command(self, cmd):
