@@ -461,7 +461,7 @@ class Settings(object):
 
 ## REPOSITORY HEALTHCARE
 
-    details_of_fsck = ""
+    details_of_fsck = "a"
 
     def do_git_fsck(self):
 
