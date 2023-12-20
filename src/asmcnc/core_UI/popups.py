@@ -709,8 +709,8 @@ class WaitPopup(BasicPopup):
         main_label_size_delta=140,
         main_label_h_align="center",
         title="Please wait...",
-        button_layout_padding=None,
-        button_layout_spacing=None,
+        button_layout_padding=(0, 0),
+        button_layout_spacing=0,
         main_label_size_hint_y=1,
         **kwargs
     ):
