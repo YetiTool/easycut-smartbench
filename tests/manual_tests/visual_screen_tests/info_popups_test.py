@@ -84,10 +84,10 @@ class MenuScreen(Screen):
         self.wait_popups = [
             (self.popup_0_text),
             (self.popup_1_text),
-            (self.popup_2_text),
-            (self.popup_3_text),
-            (self.popup_4_text),
-            (self.popup_5_text)]
+            (self.popup_2_text)]
+            # (self.popup_3_text),
+            # (self.popup_4_text),
+            # (self.popup_5_text),
             # (self.popup_6_text),
             # (self.popup_7_text),
             # (self.popup_8_text),
@@ -123,12 +123,27 @@ class MenuScreen(Screen):
             self.test_no = 0
 
     def update_strings(self):
-        self.popup_0_text = self.l.get_str('Downloading logs, please wait') + '...'
-        self.popup_1_text = self.l.get_str('Please wait') + '...'
-        self.popup_2_text = self.l.get_str('Downloading grbl settings, please wait') + '...'
-        self.popup_3_text = self.l.get_str('Restoring grbl settings, please wait') + '...'
-        self.popup_4_text = self.l.get_str('Ensuring USB is unmounted, please wait...')
-        self.popup_5_text = self.l.get_str("Please wait")
+        self.popup_0_text = (
+                self.l.get_str("Laser crosshair is out of bounds!") + \
+                "\n\n" + \
+                self.l.get_str("Datum has not been set.") + " " + \
+                self.l.get_str("Please choose a different datum using the laser crosshair.")
+                )
+        self.popup_1_text = (
+                self.l.get_str("Laser crosshair is out of bounds!") + \
+                "\n\n" + \
+                self.l.get_str("Datum has not been set.") + \
+                self.l.get_str("Please choose a different datum using the laser crosshair.")
+                )
+        self.popup_2_text = (
+                self.l.get_str("Laser crosshair is out of bounds!") + \
+                "\n\n" + \
+                self.l.get_str("Datum has not been set.") + \
+                self.l.get_str("Please choose a different datum using the laser crosshair.")
+                )
+        # self.popup_3_text = 
+        # self.popup_4_text = 
+        # self.popup_5_text = 
         # self.popup_6_text = 
         # self.popup_7_text =
         # self.popup_8_text =
