@@ -240,4 +240,4 @@ class USB_storage(object):
                                          button_one_background_color=ok_button_background_color,
                                          )
 
-                event = Clock.schedule_once(lambda dt: self.sm.pm.close_error_popup(), 2.5)
+                event = Clock.schedule_once(lambda dt: self.sm.pm.close_error_popup(), 1.8)
