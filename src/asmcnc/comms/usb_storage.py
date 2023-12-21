@@ -119,10 +119,9 @@ class USB_storage(object):
 
     def unmount_linux_usb(self):
         dismiss_event = None
-        ejecting_popup = None
         unmount_command = 'echo posys | sudo umount ' + self.linux_usb_path
 
-        ejecting_popup = self.show_user_usb_status("ejecting")
+        self.show_user_usb_status("ejecting")
 
         try:
             os.system(unmount_command)
@@ -153,7 +152,7 @@ class USB_storage(object):
 
                     Clock.schedule_once(lambda dt: tell_user_safe_to_remove_usb(), 0.75)
 
-        poll_for_dismount = Clock.schedule_interval(lambda dt: check_linux_usb_unmounted(ejecting_popup), 0.5)
+        poll_for_dismount = Clock.schedule_interval(lambda dt: check_linux_usb_unmounted(), 0.5)
 
     def mount_linux_usb(self, device):
 
