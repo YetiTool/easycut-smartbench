@@ -98,7 +98,7 @@ class PopupManager:
         self.error_popup.height = scaling_utils.get_scaled_height(height)
         self.error_popup.main_label_size_delta = main_label_size_delta
         self.error_popup.main_label_h_align = main_label_h_align
-        self.error_popup.title = title
+        self.error_popup.title = self.l.get_str(title)
         self.error_popup.main_label_padding = main_label_padding
         self.error_popup.main_layout_padding = main_layout_padding
         self.error_popup.main_layout_spacing = main_layout_spacing
