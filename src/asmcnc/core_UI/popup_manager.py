@@ -188,7 +188,6 @@ class PopupManager:
             self.wait_popup.main_label.text = main_string
         else:
             self.wait_popup.main_label.text = self.l.get_str("Please wait") + "..."
-        self.wait_popup.title = self.l.get_str("Please wait") + "..." # there's no nice way to do this in popups.py
         self.wait_popup.open()
 
     def close_mini_info_popup(self):
