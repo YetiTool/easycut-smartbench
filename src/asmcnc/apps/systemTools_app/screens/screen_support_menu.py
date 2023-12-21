@@ -55,7 +55,6 @@ Builder.load_string(
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/download_logs.png"
             background_down: "./asmcnc/apps/systemTools_app/img/download_logs.png"
-            border: [dp(25.0/800.0*app.width)]*4
             padding_y: 5.0/800.0*app.width
             border: (0,0,0,0)
 
@@ -70,7 +69,6 @@ Builder.load_string(
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/pika_reinstall.png"
             background_down: "./asmcnc/apps/systemTools_app/img/pika_reinstall.png"
-            border: [dp(25.0/800.0*app.width)]*4
             padding_y: 5.0/800.0*app.width
             border: (0,0,0,0)
 
@@ -85,7 +83,6 @@ Builder.load_string(
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/git_fsck_button.png"
             background_down: "./asmcnc/apps/systemTools_app/img/git_fsck_button.png"
-            border: [dp(25.0/800.0*app.width)]*4
             padding_y: 5.0/800.0*app.width
             border: (0,0,0,0)
 
@@ -113,7 +110,6 @@ Builder.load_string(
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/exit_system_tools.png"
             background_down: "./asmcnc/apps/systemTools_app/img/exit_system_tools.png"
-            border: [dp(25.0/800.0*app.width)]*4
             padding_y: 5.0/800.0*app.width
             border: (0,0,0,0)
 """
