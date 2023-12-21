@@ -15,7 +15,21 @@ from asmcnc.core_UI.scaling_utils import (
     get_scaled_width,
     get_scaled_sp,
     get_scaled_tuple,
+    is_screen_big,
 )
+
+info_img_source = (
+    "./asmcnc/apps/shapeCutter_app/img/info_icon_scaled_up.png"
+    if is_screen_big()
+    else "./asmcnc/apps/shapeCutter_app/img/info_icon.png"
+)
+
+error_img_source = (
+    "./asmcnc/apps/shapeCutter_app/img/error_icon_scaled_up.png"
+    if is_screen_big()
+    else "./asmcnc/apps/shapeCutter_app/img/error_icon.png"
+)
+
 
 
 class PopupBrushInfo(Widget):
@@ -79,8 +93,9 @@ class PopupBrushInfo(Widget):
         )
 
         title_string = self.l.get_str("Information")
+
         img = Image(
-            source="./asmcnc/apps/shapeCutter_app/img/info_icon.png",
+            source=info_img_source,
             allow_stretch=False,
         )
         label_top = Label(
@@ -413,7 +428,7 @@ class PopupDisplaySpindleData(Widget):
 
         img = Image(
             size_hint_y=0.5,
-            source="./asmcnc/apps/shapeCutter_app/img/info_icon.png",
+            source=info_img_source,
             allow_stretch=False,
         )
 
@@ -543,7 +558,7 @@ class PopupSpindleSettingsInfo(Widget):
         ok_string = self.l.get_bold("Ok")
 
         img = Image(
-            source="./asmcnc/apps/shapeCutter_app/img/info_icon.png",
+            source=info_img_source,
             allow_stretch=False,
         )
 
@@ -757,7 +772,7 @@ class PopupDatum(Widget):
             return self.sm.get_screen("home").default_datum_choice == "laser"
 
         img = Image(
-            source="./asmcnc/apps/shapeCutter_app/img/error_icon.png",
+            source=error_img_source,
             allow_stretch=False,
         )
         label = Label(
@@ -793,7 +808,7 @@ class PopupDatum(Widget):
 
         layout_plan = BoxLayout(
             orientation="vertical",
-            spacing=get_scaled_tuple((10, 10)),
+            spacing=get_scaled_tuple(10, 'vertical'),
             padding=get_scaled_tuple((20, 20, 20, 20)),
         )
         layout_plan.add_widget(img)
@@ -873,7 +888,7 @@ class PopupSoftwareUpdateWarning(Widget):
                          "\nShould be: 'WiFi' or 'USB'" + \
                          "\nBut was: " + update_method)
 
-        img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
+        img = Image(source=error_img_source, allow_stretch=False)
         label = Label(size_hint_y=1.4, text_size=get_scaled_tuple((560, None)), halign='center', valign='middle', text=description,
                       color=[0, 0, 0, 1], padding=get_scaled_tuple((20, 20)), markup=True, font_size=get_scaled_sp("15sp"))
 
@@ -928,7 +943,7 @@ class PopupSoftwareRepair(Widget):
         def repair(*args):
             self.sm.get_screen('update').repair_sw_over_wifi()
 
-        img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
+        img = Image(source=error_img_source, allow_stretch=False)
         label = Label(size_hint_y=1.4, text_size=get_scaled_tuple((560, None)), halign='center', valign='middle', text=description,
                       color=[0, 0, 0, 1], padding=get_scaled_tuple((20, 20)), markup=True, font_size=get_scaled_sp("15sp"))
 
