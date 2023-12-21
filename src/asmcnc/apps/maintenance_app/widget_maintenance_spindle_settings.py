@@ -233,16 +233,16 @@ Builder.load_string(
                         BoxLayout:
                             size_hint_x: 0.5
 
-                            # AnchorLayout:
-                            Switch:
-                                id: stylus_switch
-                                background_color: [0,0,0,0]
-                                center_x: self.parent.center_x
-                                center_y: self.parent.center_y
-                                y: self.parent.y
-                                pos: self.parent.pos
-                                size_hint: (None, None)
-                                size: (sp(83.0/800.0*app.width), sp(32.0/800.0*app.width))
+                            AnchorLayout:
+                                Switch:
+                                    id: stylus_switch
+                                    background_color: [0,0,0,0]
+                                    center_x: self.parent.center_x
+                                    center_y: self.parent.center_y
+                                    y: self.parent.y
+                                    pos: self.parent.pos
+                                    size_hint: (None, None)
+                                    size: (sp(83.0/800.0*app.width), sp(32.0/800.0*app.width))
 
                     BoxLayout:
                         id: spindle_data_container
