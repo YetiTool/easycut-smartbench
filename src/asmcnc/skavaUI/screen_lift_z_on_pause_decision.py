@@ -14,6 +14,8 @@ from kivy.uix.screenmanager import Screen
 
 from asmcnc.skavaUI import popup_info
 
+from asmcnc.core_UI.scaling_utils import get_scaled_sp
+
 Builder.load_string(
     """
 
@@ -107,7 +109,7 @@ def log(message):
 
 
 class LiftZOnPauseDecisionScreen(Screen):
-    default_font_size = "36sp"  # unused
+    default_font_size = get_scaled_sp("36sp")
 
     def __init__(self, **kwargs):
         super(LiftZOnPauseDecisionScreen, self).__init__(**kwargs)
