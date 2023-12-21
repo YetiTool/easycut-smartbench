@@ -63,7 +63,7 @@ class MenuScreen(Screen):
         self.sm = kwargs['sm']
         self.l = kwargs['l']
 
-        self.wait_popups = None
+        self.error_popups = None
         self.popup_9_text = 'None'
         self.popup_8_text = 'None'
         self.popup_7_text = 'None'
@@ -81,7 +81,7 @@ class MenuScreen(Screen):
 
     def set_strings(self):
         self.update_strings()
-        self.wait_popups = [
+        self.error_popups = [
             (self.popup_0_text),
             (self.popup_1_text),
             (self.popup_2_text)]
@@ -97,15 +97,15 @@ class MenuScreen(Screen):
         self.next_lang()
         self.set_strings()
 
-        for i in range(len(self.wait_popups)):
+        for i in range(len(self.error_popups)):
             Clock.schedule_once(lambda dt, i=i: self.cycle(i), i * 3)
 
     def cycle(self, i):
         Clock.schedule_once(lambda dt: self.open_popup(i), 0.5)
 
     def open_popup(self, i):
-        self.sm.pm.show_wait_popup(self.wait_popups[i])
-        Clock.schedule_once(lambda dt: self.sm.pm.close_wait_popup(), 2)
+        self.sm.pm.show_error_popup(self.error_popups[i])
+        # Clock.schedule_once(lambda dt: self.sm.pm.close_wait_popup(), 2) # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< check this guy is for  w a i t  popups
         
 
     def format_command(self, cmd):
