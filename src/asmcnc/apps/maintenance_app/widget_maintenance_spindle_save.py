@@ -208,4 +208,4 @@ class SpindleSaveWidget(Widget):
                     "You will still be able to use the real time spindle speed feedback feature to assist your adjustment."
                 )
             )
-            self.sm.pm.show_info_popup(spindle_voltage_info)
+            self.sm.pm.show_info_popup(spindle_voltage_info, 780)
