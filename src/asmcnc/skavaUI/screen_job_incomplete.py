@@ -152,7 +152,7 @@ Builder.load_string(
 
                             Label:
                                 id: batch_number_label
-                                size_hint_x: None
+                                size_hint_x: 0.45
                                 color: hex('#333333ff') #grey
                                 font_size: dp(0.025*app.width)
                                 halign: "left"
@@ -160,20 +160,23 @@ Builder.load_string(
                                 markup: True
                                 text_size: self.size
 
-                            TextInput:
-                                id: batch_number_input
-                                padding:[dp(0.005)*app.width, dp(0.00416666666667)*app.height]
-                                color: hex('#333333ff')
-                                # foreground_color: hex('#333333ff')
-                                text_size: self.size
-                                size_hint_x: None
-                                width: dp(0.125*app.width)
-                                halign: "left"
-                                valign: "bottom"
-                                markup: True
-                                font_size: dp(0.025*app.width)
-                                multiline: False
-                                background_color: hex('#e5e5e5ff')
+                            BoxLayout:
+                                size_hint_y: 1
+                                size_hint_x: 0.55
+                                TextInput:
+                                    id: batch_number_input
+                                    padding:[dp(0.005)*app.width, dp(0.00416666666667)*app.height]
+                                    color: hex('#333333ff')
+                                    # foreground_color: hex('#333333ff')
+                                    text_size: self.size
+                                    size_hint_x: 1
+                                    width: dp(0.125*app.width)
+                                    halign: "left"
+                                    valign: "bottom"
+                                    markup: True
+                                    font_size: dp(0.025*app.width)
+                                    multiline: False
+                                    background_color: hex('#e5e5e5ff')
 
 
                         Label:
