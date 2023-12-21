@@ -183,8 +183,11 @@ class PopupManager:
             self.sm.current = 'rebooting'
         Clock.schedule_once(reboot, 6)
 
-    def show_wait_popup(self, main_string):
-        self.wait_popup.main_label.text = main_string
+    def show_wait_popup(self, main_string=None):
+        if main_string:
+            self.wait_popup.main_label.text = main_string
+        else:
+            self.wait_popup.main_label.text = self.l.get_str("Please wait") + "..."
         self.wait_popup.open()
 
     def close_mini_info_popup(self):
