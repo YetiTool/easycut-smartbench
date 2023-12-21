@@ -724,7 +724,7 @@ class WaitPopup(BasicPopup):
 
         super(WaitPopup, self).__init__(
             main_string=main_string,
-            popup_type=PopupType.ERROR,
+            popup_type=PopupType.INFO,
             main_label_padding=main_label_padding,
             main_layout_padding=main_layout_padding,
             main_layout_spacing=main_layout_spacing,
