@@ -717,17 +717,14 @@ class WaitPopup(BasicPopup):
         main_layout_spacing=10,
         main_label_size_delta=140,
         main_label_h_align="center",
-        title=None,
+        title="Please wait...",
         button_layout_padding=None,
         button_layout_spacing=None,
         main_label_size_hint_y=1,
         **kwargs
     ):
         if not main_string:
-            main_string = kwargs['l'].get_str("Please wait") + "..."
-
-        if title is None:
-            title = kwargs['l'].get_str("Please wait") + "..."
+            main_string = "Please wait..."
 
         super(WaitPopup, self).__init__(
             main_string=main_string,
