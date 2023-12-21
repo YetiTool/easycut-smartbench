@@ -888,7 +888,11 @@ class PopupSoftwareUpdateWarning(Widget):
                          "\nShould be: 'WiFi' or 'USB'" + \
                          "\nBut was: " + update_method)
 
-        img = Image(source=error_img_source, allow_stretch=False)
+        img_source = "./asmcnc/apps/shapeCutter_app/img/error_icon.png"
+        if is_screen_big():
+            img_source = "./asmcnc/apps/shapeCutter_app/img/error_icon_sacled_up.png"
+            
+        img = Image(source=img_source, allow_stretch=False)
         label = Label(size_hint_y=1.4, text_size=get_scaled_tuple((560, None)), halign='center', valign='middle', text=description,
                       color=[0, 0, 0, 1], padding=get_scaled_tuple((20, 20)), markup=True, font_size=get_scaled_sp("15sp"))
 
