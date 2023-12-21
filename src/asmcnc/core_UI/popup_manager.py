@@ -98,7 +98,7 @@ class PopupManager:
         self.error_popup.height = scaling_utils.get_scaled_height(height)
         self.error_popup.main_label_size_delta = main_label_size_delta
         self.error_popup.main_label_h_align = main_label_h_align
-        self.error_popup.title = title
+        self.error_popup.title = self.l.get_str(title)
         self.error_popup.main_label_padding = main_label_padding
         self.error_popup.main_layout_padding = main_layout_padding
         self.error_popup.main_layout_spacing = main_layout_spacing
@@ -188,6 +188,7 @@ class PopupManager:
             self.wait_popup.main_label.text = main_string
         else:
             self.wait_popup.main_label.text = self.l.get_str("Please wait") + "..."
+        self.wait_popup.title = self.l.get_str("Please wait") + "..." # there's no nice way to do this in popups.py
         self.wait_popup.open()
 
     def close_mini_info_popup(self):
