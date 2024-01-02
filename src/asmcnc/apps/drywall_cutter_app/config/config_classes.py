@@ -89,6 +89,6 @@ class Configuration:
                              canvas_shape_dims={'x': 100.0, 'y': 100.0, 'r': 0.0, 'd': 100.0, 'l': 100.0},
                              cutter_type='test_cutter.json',
                              toolpath_offset='inside',
-                             cutting_depths={'material_thickness': 12.0, 'bottom_offset': 0.5, 'auto_pass': True,
+                             cutting_depths={'material_thickness': 12.0, 'bottom_offset': 1, 'auto_pass': True,
                                              'depth_per_pass': 6.0},
                              datum_position={'x': 0.0, 'y': 0.0})
