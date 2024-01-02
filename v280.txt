@@ -1,0 +1,14 @@
+.. _top:
+
+Graphical patch, draggable keyboard, and preparing for the next big thing…
+=================================================================================
+
+The keyboard can now be moved around the screen, and converted into a number pad by pressing the button to the right of the spacebar.
+
+This release also contains a patch for some of the graphical issues that users were seeing, including greyed out text and the rainbow splash screen.
+
+We’ve also been working in the background on setting up for the next big thing, watch this space!
+
+**Find full release notes on our website, by scanning the QR code on the right.**
+
+.. _bottom:

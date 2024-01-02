@@ -171,6 +171,7 @@ class BasicPopup(Popup):
         button_two_background_color=None,
         main_label_h_align="center",
         main_label_size_hint_y=2,
+        button_layout_size_hint_y=1,
         **kwargs
     ):
         super(BasicPopup, self).__init__(**kwargs)
@@ -196,6 +197,7 @@ class BasicPopup(Popup):
         self.main_label_size_hint_y = main_label_size_hint_y
         self.button_layout_padding = button_layout_padding
         self.button_layout_spacing = button_layout_spacing
+        self.button_layout_size_hint_y = button_layout_size_hint_y
         self.main_layout_spacing = main_layout_spacing
         self.popup_type = popup_type
         self.popup_image = popup_image
@@ -245,8 +247,6 @@ class BasicPopup(Popup):
             font_size=str(utils.get_scaled_width(15)) + "sp",
         )
 
-        self.button_layout = self.build_button_layout()
-
         self.main_layout = BoxLayout(
             orientation="vertical",
             spacing=utils.get_scaled_tuple(
@@ -260,7 +260,10 @@ class BasicPopup(Popup):
             self.main_layout.add_widget(image)
 
         self.main_layout.add_widget(self.main_label)
-        self.main_layout.add_widget(self.button_layout)
+
+        if self.button_one_text:
+            self.button_layout = self.build_button_layout()
+            self.main_layout.add_widget(self.button_layout)
 
         self.content = self.main_layout
         self.update_font_sizes()
@@ -283,7 +286,8 @@ class BasicPopup(Popup):
         return button_layout
 
     def on_button_pressed(self, callback):
-        callback()
+        if callback:
+            callback()
         self.dismiss()
 
     def get_image(self):
@@ -300,6 +304,9 @@ class BasicPopup(Popup):
         )
 
     def build_buttons(self):
+        if self.button_one_text is None:
+            return []
+
         buttons = [
             Button(
                 text=self.l.get_bold(self.button_one_text),
@@ -334,7 +341,7 @@ class InfoPopup(BasicPopup):
         popup_height,
         button_one_text="Ok",
         button_one_callback=None,
-        button_one_background_color=[76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0],
+        button_one_background_color=(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0),
         button_two_text=None,
         button_two_callback=None,
         button_two_background_color=None,
@@ -506,15 +513,16 @@ class StopPopup(BasicPopup):
         button_one_background_color=(230 / 255., 74 / 255., 25 / 255., 1.),
         button_two_text="Resume",
         button_two_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
-        main_label_padding=(0, 10),
-        main_layout_padding=(40, 20, 40, 20),
-        main_layout_spacing=10,
+        main_label_padding=(0, 0),
+        main_layout_padding=(30, 20, 30, 0),
+        main_layout_spacing=5,
         main_label_size_delta=40,
         main_label_h_align="center",
         title="Warning!",
         button_layout_padding=(0, 5, 0, 0),
         button_layout_spacing=15,
         main_label_size_hint_y=2,
+        button_layout_size_hint_y=2,
         **kwargs
     ):
         self.m = kwargs['m']
@@ -542,6 +550,7 @@ class StopPopup(BasicPopup):
             button_two_background_color=button_two_background_color,
             title=title,
             main_label_size_hint_y=main_label_size_hint_y,
+            button_layout_size_hint_y=button_layout_size_hint_y,
             **kwargs
         )
 
@@ -550,21 +559,21 @@ class ParkPopup(BasicPopup):
     def __init__(
         self,
         main_string,
-        popup_width=400,
-        popup_height=300,
+        popup_width=300,
+        popup_height=350,
         button_one_text="No",
         button_one_background_color=(230 / 255., 74 / 255., 25 / 255., 1.),
         button_two_text="Yes",
         button_two_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
-        main_label_padding=(0, 10),
+        main_label_padding=(40, 20),
         main_layout_padding=(40, 20, 40, 20),
         main_layout_spacing=10,
-        main_label_size_delta=40,
+        main_label_size_delta=-60,
         main_label_h_align="center",
         title="Warning!",
         button_layout_padding=(0, 0, 0, 0),
         button_layout_spacing=10,
-        main_label_size_hint_y=2,
+        main_label_size_hint_y=1,
         **kwargs
     ):
         self.m = kwargs['m']
@@ -588,6 +597,149 @@ class ParkPopup(BasicPopup):
             popup_height=popup_height,
             button_one_text=button_one_text,
             button_one_callback=None,
+            button_one_background_color=button_one_background_color,
+            button_two_text=button_two_text,
+            button_two_callback=button_two_callback,
+            button_two_background_color=button_two_background_color,
+            title=title,
+            main_label_size_hint_y=main_label_size_hint_y,
+            **kwargs
+        )
+
+
+class SoftwareUpdateSuccessPopup(BasicPopup):
+    def __init__(
+        self,
+        main_string,
+        popup_width=700,
+        popup_height=400,
+        button_one_text="Ok",
+        button_one_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
+        button_two_text=None,
+        button_two_background_color=None,
+        main_label_padding=(40, 10),
+        main_layout_padding=(40, 20, 40, 20),
+        main_layout_spacing=10,
+        main_label_size_delta=40,
+        main_label_h_align="center",
+        title="Update Successful!",
+        button_layout_padding=(0, 0, 0, 0),
+        button_layout_spacing=10,
+        main_label_size_hint_y=1.2,
+        **kwargs
+    ):
+
+        super(SoftwareUpdateSuccessPopup, self).__init__(
+            main_string=main_string,
+            popup_type=PopupType.INFO,
+            main_label_padding=main_label_padding,
+            main_layout_padding=main_layout_padding,
+            main_layout_spacing=main_layout_spacing,
+            main_label_size_delta=main_label_size_delta,
+            button_layout_padding=button_layout_padding,
+            button_layout_spacing=button_layout_spacing,
+            main_label_h_align=main_label_h_align,
+            popup_width=popup_width,
+            popup_height=popup_height,
+            button_one_text=button_one_text,
+            button_one_callback=None,
+            button_one_background_color=button_one_background_color,
+            button_two_text=button_two_text,
+            button_two_callback=None,
+            button_two_background_color=button_two_background_color,
+            title=title,
+            main_label_size_hint_y=main_label_size_hint_y,
+            **kwargs
+        )
+
+
+class WarningPopup(BasicPopup):
+    def __init__(
+        self,
+        main_string,
+        popup_width=500,
+        popup_height=400,
+        button_one_text="Ok",
+        button_one_callback=None,
+        button_one_background_color=[230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0],
+        button_two_text=None,
+        button_two_callback=None,
+        button_two_background_color=None,
+        main_label_padding=(0, 0),
+        main_layout_padding=(40, 20, 40, 20),
+        main_layout_spacing=10,
+        main_label_size_delta=140,
+        main_label_h_align="center",
+        title="Warning!",
+        button_layout_padding=(20, 10, 20, 0),
+        button_layout_spacing=10,
+        main_label_size_hint_y=1,
+        **kwargs
+    ):
+        super(WarningPopup, self).__init__(
+            main_string=main_string,
+            popup_type=PopupType.ERROR,
+            main_label_padding=main_label_padding,
+            main_layout_padding=main_layout_padding,
+            main_layout_spacing=main_layout_spacing,
+            main_label_size_delta=main_label_size_delta,
+            button_layout_padding=button_layout_padding,
+            button_layout_spacing=button_layout_spacing,
+            main_label_h_align=main_label_h_align,
+            popup_width=popup_width,
+            popup_height=popup_height,
+            button_one_text=button_one_text,
+            button_one_callback=button_one_callback,
+            button_one_background_color=button_one_background_color,
+            button_two_text=button_two_text,
+            button_two_callback=button_two_callback,
+            button_two_background_color=button_two_background_color,
+            title=title,
+            main_label_size_hint_y=main_label_size_hint_y,
+            **kwargs
+        )
+
+
+class WaitPopup(BasicPopup):
+    def __init__(
+        self,
+        main_string=None,
+        popup_width=500,
+        popup_height=200,
+        button_one_text=None,
+        button_one_callback=None,
+        button_one_background_color=None,
+        button_two_text=None,
+        button_two_callback=None,
+        button_two_background_color=None,
+        main_label_padding=(40, 20),
+        main_layout_padding=(40, 20, 40, 20),
+        main_layout_spacing=10,
+        main_label_size_delta=140,
+        main_label_h_align="center",
+        title="Please wait...",
+        button_layout_padding=None,
+        button_layout_spacing=None,
+        main_label_size_hint_y=1,
+        **kwargs
+    ):
+        if not main_string:
+            main_string = "Please wait..."
+
+        super(WaitPopup, self).__init__(
+            main_string=main_string,
+            popup_type=PopupType.INFO,
+            main_label_padding=main_label_padding,
+            main_layout_padding=main_layout_padding,
+            main_layout_spacing=main_layout_spacing,
+            main_label_size_delta=main_label_size_delta,
+            button_layout_padding=button_layout_padding,
+            button_layout_spacing=button_layout_spacing,
+            main_label_h_align=main_label_h_align,
+            popup_width=popup_width,
+            popup_height=popup_height,
+            button_one_text=button_one_text,
+            button_one_callback=button_one_callback,
             button_one_background_color=button_one_background_color,
             button_two_text=button_two_text,
             button_two_callback=button_two_callback,

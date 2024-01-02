@@ -7,6 +7,7 @@ from kivy.lang import Builder
 from kivy.uix.widget import Widget
 
 from asmcnc.core_UI.custom_popups import PopupSpindleSettingsInfo
+from asmcnc.skavaUI import popup_info
 
 Builder.load_string(
     """
@@ -208,4 +209,4 @@ class SpindleSaveWidget(Widget):
                     "You will still be able to use the real time spindle speed feedback feature to assist your adjustment."
                 )
             )
-            self.sm.pm.show_info_popup(spindle_voltage_info)
+            popup_info.PopupInfo(self.sm, self.l, 780, spindle_voltage_info)

@@ -4,6 +4,7 @@ Popups that aren't covered by the default popup system.
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.carousel import Carousel
+from kivy.uix.checkbox import CheckBox
 from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
@@ -14,7 +15,21 @@ from asmcnc.core_UI.scaling_utils import (
     get_scaled_width,
     get_scaled_sp,
     get_scaled_tuple,
+    is_screen_big,
 )
+
+info_img_source = (
+    "./asmcnc/apps/shapeCutter_app/img/info_icon_scaled_up.png"
+    if is_screen_big()
+    else "./asmcnc/apps/shapeCutter_app/img/info_icon.png"
+)
+
+error_img_source = (
+    "./asmcnc/apps/shapeCutter_app/img/error_icon_scaled_up.png"
+    if is_screen_big()
+    else "./asmcnc/apps/shapeCutter_app/img/error_icon.png"
+)
+
 
 
 class PopupBrushInfo(Widget):
@@ -78,8 +93,9 @@ class PopupBrushInfo(Widget):
         )
 
         title_string = self.l.get_str("Information")
+
         img = Image(
-            source="./asmcnc/apps/shapeCutter_app/img/info_icon.png",
+            source=info_img_source,
             allow_stretch=False,
         )
         label_top = Label(
@@ -412,7 +428,7 @@ class PopupDisplaySpindleData(Widget):
 
         img = Image(
             size_hint_y=0.5,
-            source="./asmcnc/apps/shapeCutter_app/img/info_icon.png",
+            source=info_img_source,
             allow_stretch=False,
         )
 
@@ -425,7 +441,7 @@ class PopupDisplaySpindleData(Widget):
             padding=(0, 0),
             markup=True,
             bold=True,
-            font_size=default_font_size
+            font_size=default_font_size,
         )
         value_label = Label(
             text_size=get_scaled_tuple((250, None)),
@@ -435,7 +451,7 @@ class PopupDisplaySpindleData(Widget):
             color=(0, 0, 0, 1),
             padding=(0, 0),
             markup=True,
-            font_size=default_font_size
+            font_size=default_font_size,
         )
 
         label_layout = BoxLayout(
@@ -542,7 +558,7 @@ class PopupSpindleSettingsInfo(Widget):
         ok_string = self.l.get_bold("Ok")
 
         img = Image(
-            source="./asmcnc/apps/shapeCutter_app/img/info_icon.png",
+            source=info_img_source,
             allow_stretch=False,
         )
 
@@ -646,7 +662,9 @@ class PopupSpindleSettingsInfo(Widget):
             background_down="./asmcnc/skavaUI/img/lobby_scrollleft.png",
             font_size=default_font_size,
         )
-        left_button_container = BoxLayout(size_hint_x=0.06, padding=get_scaled_tuple((0, 90)))
+        left_button_container = BoxLayout(
+            size_hint_x=0.06, padding=get_scaled_tuple((0, 90))
+        )
         left_button_container.add_widget(left_button)
         right_button = Button(
             background_color=[0, 0, 0, 0.2],
@@ -655,10 +673,14 @@ class PopupSpindleSettingsInfo(Widget):
             background_down="./asmcnc/skavaUI/img/lobby_scrollright.png",
             font_size=default_font_size,
         )
-        right_button_container = BoxLayout(size_hint_x=0.06, padding=get_scaled_tuple((0, 90)))
+        right_button_container = BoxLayout(
+            size_hint_x=0.06, padding=get_scaled_tuple((0, 90))
+        )
         right_button_container.add_widget(right_button)
 
-        carousel_layout = BoxLayout(orientation="horizontal", spacing=get_scaled_tuple((15, 15)), size_hint_y=4)
+        carousel_layout = BoxLayout(
+            orientation="horizontal", spacing=get_scaled_tuple((15, 15)), size_hint_y=4
+        )
         carousel_layout.add_widget(left_button_container)
         carousel_layout.add_widget(carousel)
         carousel_layout.add_widget(right_button_container)
@@ -668,7 +690,9 @@ class PopupSpindleSettingsInfo(Widget):
         ok_button.background_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
 
         btn_layout = BoxLayout(
-            orientation="horizontal", spacing=15, padding=get_scaled_tuple((300, 10, 300, 0))
+            orientation="horizontal",
+            spacing=get_scaled_width(15),
+            padding=get_scaled_tuple((300, 10, 300, 0)),
         )
         btn_layout.add_widget(ok_button)
 
@@ -701,5 +725,259 @@ class PopupSpindleSettingsInfo(Widget):
         ok_button.bind(on_press=popup.dismiss)
         left_button.bind(on_press=cycle_left)
         right_button.bind(on_press=cycle_right)
+
+        popup.open()
+
+
+class PopupDatum(Widget):
+    def __init__(
+        self, screen_manager, machine, localization, xy, warning_message, **kwargs
+    ):
+        super(PopupDatum, self).__init__(**kwargs)
+        self.sm = screen_manager
+        self.m = machine
+        self.l = localization
+
+        description = warning_message
+        title_string = self.l.get_str("Warning!")
+        yes_string = self.l.get_bold("Yes")
+        no_string = self.l.get_bold("No")
+        chk_message = self.l.get_str("Use laser crosshair?")
+
+        def on_checkbox_active(checkbox, value):
+            self.sm.get_screen("home").default_datum_choice = (
+                "laser" if value else "spindle"
+            )
+
+        def set_datum(*args):
+            if (
+                self.sm.get_screen("home").default_datum_choice == "laser"
+                and self.m.is_laser_enabled
+            ):
+                if xy == "X":
+                    self.m.set_x_datum_with_laser()  # testing!!
+                elif xy == "Y":
+                    self.m.set_y_datum_with_laser()
+                elif xy == "XY":
+                    self.m.set_workzone_to_pos_xy_with_laser()
+            else:
+                if xy == "X":
+                    self.m.set_x_datum()
+                elif xy == "Y":
+                    self.m.set_y_datum()
+                elif xy == "XY":
+                    self.m.set_workzone_to_pos_xy()
+
+        def set_checkbox_default():
+            return self.sm.get_screen("home").default_datum_choice == "laser"
+
+        img = Image(
+            source=error_img_source,
+            allow_stretch=False,
+        )
+        label = Label(
+            size_hint_y=1,
+            text_size=get_scaled_tuple((360, None)),
+            halign="center",
+            valign="middle",
+            text=description,
+            color=[0, 0, 0, 1],
+            padding=get_scaled_tuple((40, 20)),
+            markup=True,
+            font_size=get_scaled_sp("15sp"),
+        )
+
+        ok_button = Button(
+            text=yes_string, markup=True, font_size=get_scaled_sp("15sp")
+        )
+        ok_button.background_normal = ""
+        ok_button.background_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
+        back_button = Button(
+            text=no_string, markup=True, font_size=get_scaled_sp("15sp")
+        )
+        back_button.background_normal = ""
+        back_button.background_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
+
+        btn_layout = BoxLayout(
+            orientation="horizontal",
+            spacing=get_scaled_width(10),
+            padding=[0, 0, 0, 0],
+        )
+        btn_layout.add_widget(back_button)
+        btn_layout.add_widget(ok_button)
+
+        layout_plan = BoxLayout(
+            orientation="vertical",
+            spacing=get_scaled_tuple(10, 'vertical'),
+            padding=get_scaled_tuple((20, 20, 20, 20)),
+        )
+        layout_plan.add_widget(img)
+        layout_plan.add_widget(label)
+
+        if self.m.is_laser_enabled:
+            chk_label = Label(
+                size_hint_y=1,
+                size_hint_x=0.8,
+                halign="center",
+                valign="middle",
+                text=chk_message,
+                text_size=get_scaled_tuple((200, 100)),
+                color=[0, 0, 0, 1],
+                font_size=get_scaled_sp("15sp"),
+                padding=get_scaled_tuple((0, 20)),
+                markup=True,
+            )
+            checkbox = CheckBox(
+                size_hint_x=0.2,
+                background_checkbox_normal="./asmcnc/skavaUI/img/checkbox_inactive.png",
+                active=set_checkbox_default(),
+            )
+            checkbox.bind(active=on_checkbox_active)
+
+            chk_layout = BoxLayout(
+                orientation="horizontal",
+                spacing=0,
+                padding=get_scaled_tuple((5, 0, 5, 0)),
+            )
+            chk_layout.add_widget(chk_label)
+            chk_layout.add_widget(checkbox)
+            layout_plan.add_widget(chk_layout)
+
+        layout_plan.add_widget(btn_layout)
+
+        popup = Popup(
+            title=title_string,
+            title_color=[0, 0, 0, 1],
+            title_size=get_scaled_sp("20sp"),
+            content=layout_plan,
+            size_hint=(None, None),
+            size=get_scaled_tuple((300, 350)),
+            auto_dismiss=False,
+            separator_color=[230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0],
+            separator_height=str(get_scaled_height(4)) + "dp",
+            background="./asmcnc/apps/shapeCutter_app/img/popup_background.png",
+        )
+
+        ok_button.bind(on_press=popup.dismiss)
+        ok_button.bind(on_press=set_datum)
+        back_button.bind(on_press=popup.dismiss)
+
+        popup.open()
+
+
+class PopupSoftwareUpdateWarning(Widget):
+    def __init__(self, screen_manager, localization, settings_manager, warning_message, update_method, prep_for_sw_update_over_wifi, prep_for_sw_update_over_usb):
+        self.sm = screen_manager
+        self.set = settings_manager
+        self.l = localization
+
+        title_string = self.l.get_str('Are you sure you want to update?')
+        update_string = self.l.get_bold('Update')
+        back_string = self.l.get_bold('Cancel')
+
+        description = warning_message
+
+        # Decide which update function should be run depending on which button was pressed
+        def update(*args):
+            if update_method == "WiFi":
+                prep_for_sw_update_over_wifi()
+            elif update_method == "USB":
+                prep_for_sw_update_over_usb()
+            else:  # Fail-safe message to make debugging easier in case usb_or_wifi strings are broken
+                print("Error getting update method. Please check screen_update_SW.py" + \
+                         "\nShould be: 'WiFi' or 'USB'" + \
+                         "\nBut was: " + update_method)
+
+        img = Image(source=error_img_source, allow_stretch=False)
+        label = Label(size_hint_y=1.4, text_size=get_scaled_tuple((560, None)), halign='center', valign='middle', text=description,
+                      color=[0, 0, 0, 1], padding=get_scaled_tuple((20, 20)), markup=True, font_size=get_scaled_sp("15sp"))
+
+        ok_button = Button(text=update_string, markup=True, font_size=get_scaled_sp("15sp"))
+        ok_button.background_normal = ''
+        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        back_button = Button(text=back_string, markup=True, font_size=get_scaled_sp("15sp"))
+        back_button.background_normal = ''
+        back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+
+        btn_layout = BoxLayout(orientation='horizontal', spacing=get_scaled_width(10), padding=[0, 0, 0, 0])
+        btn_layout.add_widget(back_button)
+        btn_layout.add_widget(ok_button)
+
+        layout_plan = BoxLayout(orientation='vertical', spacing=get_scaled_height(10), padding=get_scaled_tuple((10, 20, 10, 20)))
+        layout_plan.add_widget(img)
+        layout_plan.add_widget(label)
+        layout_plan.add_widget(btn_layout)
+
+        popup = Popup(title=title_string,
+                      title_color=[0, 0, 0, 1],
+                      title_size=get_scaled_sp("20sp"),
+                      content=layout_plan,
+                      size_hint=(None, None),
+                      size=get_scaled_tuple((600, 420)),
+                      auto_dismiss=False
+                      )
+
+        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        popup.separator_height = str(get_scaled_height(4)) + "dp"
+        popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
+
+        ok_button.bind(on_press=popup.dismiss)
+        ok_button.bind(on_press=update)
+        back_button.bind(on_press=popup.dismiss)
+
+        popup.open()
+
+
+class PopupSoftwareRepair(Widget):
+    def __init__(self, screen_manager, localization, settings_manager, warning_message):
+        self.sm = screen_manager
+        self.set = settings_manager
+        self.l = localization
+
+        title_string = self.l.get_str('There was a problem updating the software') + '...'
+        repair_string = self.l.get_bold('Repair')
+        back_string = self.l.get_bold('Go Back')
+
+        description = warning_message
+
+        def repair(*args):
+            self.sm.get_screen('update').repair_sw_over_wifi()
+
+        img = Image(source=error_img_source, allow_stretch=False)
+        label = Label(size_hint_y=1.4, text_size=get_scaled_tuple((560, None)), halign='center', valign='middle', text=description,
+                      color=[0, 0, 0, 1], padding=get_scaled_tuple((20, 20)), markup=True, font_size=get_scaled_sp("15sp"))
+
+        ok_button = Button(text=repair_string, markup=True, font_size=get_scaled_sp("15sp"))
+        ok_button.background_normal = ''
+        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        back_button = Button(text=back_string, markup=True, font_size=get_scaled_sp("15sp"))
+        back_button.background_normal = ''
+        back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+
+        btn_layout = BoxLayout(orientation='horizontal', spacing=get_scaled_width(10), padding=[0, 0, 0, 0])
+        btn_layout.add_widget(back_button)
+        btn_layout.add_widget(ok_button)
+
+        layout_plan = BoxLayout(orientation='vertical', spacing=get_scaled_height(10), padding=get_scaled_tuple((10, 20, 10, 20)))
+        layout_plan.add_widget(img)
+        layout_plan.add_widget(label)
+        layout_plan.add_widget(btn_layout)
+
+        popup = Popup(title=title_string,
+                      title_color=[0, 0, 0, 1],
+                      title_size=get_scaled_sp("20sp"),
+                      content=layout_plan,
+                      size_hint=(None, None),
+                      size=get_scaled_tuple((600, 420)),
+                      auto_dismiss=False
+                      )
+
+        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        popup.separator_height = str(get_scaled_height(4)) + "dp"
+        popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
+
+        ok_button.bind(on_press=popup.dismiss)
+        ok_button.bind(on_press=repair)
+        back_button.bind(on_press=popup.dismiss)
 
         popup.open()

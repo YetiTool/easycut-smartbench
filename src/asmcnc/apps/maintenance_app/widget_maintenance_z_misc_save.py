@@ -97,15 +97,7 @@ class ZMiscSaveWidget(Widget):
         self.show_popup = True
         if self.save_touchplate_offset() and self.save_z_head_maintenance():
             saved_success = self.l.get_str("Settings saved!")
-            popup = InfoPopup(
-                sm=self.sm,
-                m=self.m,
-                l=self.m,
-                main_string=saved_success,
-                popup_width=300,
-                popup_height=300,
-            )
-            popup.open()
+            self.sm.pm.show_mini_info_popup(saved_success)
         elif self.show_popup:
             warning_message = (
                 self.l.get_str("There was a problem saving your settings.")

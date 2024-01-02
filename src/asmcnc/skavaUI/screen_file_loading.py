@@ -25,6 +25,8 @@ from kivy.uix.screenmanager import Screen
 from asmcnc.geometry import job_envelope
 from asmcnc.skavaUI import popup_info
 
+from asmcnc.core_UI.scaling_utils import get_scaled_sp
+
 Builder.load_string(
     """
 
@@ -163,7 +165,7 @@ class LoadingScreen(Screen):
     minimum_feed_rate = 100
     maximum_feed_rate = 5000
     usb_status = None
-    default_font_size = "30sp"
+    default_font_size = get_scaled_sp("30sp")
     skip_check_decision = False
     continuing_to_recovery = False
 
@@ -238,7 +240,8 @@ class LoadingScreen(Screen):
                 + "\n\n"
                 + self.l.get_str("Please load a different file.")
             )
-            popup_info.PopupError(self.sm, self.l, file_empty_warning)
+            # popup_info.PopupError(self.sm, self.l, file_empty_warning)
+            self.sm.pm.show_error_popup(file_empty_warning)
             self.sm.current = "local_filechooser"
             return
         self.jd.generate_job_data(self.job_file_as_list)
