@@ -550,10 +550,10 @@ class GCodeEngine():
         simulation_feedrate = 6000 #mm/s
         pocket = True
 
-        if self.config.active_cutter.cutting_direction.lower() == "climb":
-            is_climb = True
-        else:
-            is_climb = False
+        if pocket and self.config.active_config.toolpath_offset != u"inside":
+            raise Exception(u"Pocketing is only available for inside offset cutting")
+        
+        is_climb = self.config.active_cutter.cutting_direction.lower() == "climb"
 
         # Calculated parameters
         total_cut_depth = self.config.active_config.cutting_depths.material_thickness + self.config.active_config.cutting_depths.bottom_offset
