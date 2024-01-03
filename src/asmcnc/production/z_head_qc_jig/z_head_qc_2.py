@@ -441,7 +441,7 @@ class ZHeadQC2(Screen):
             self.spindle_pass_fail = self.spindle_pass_fail*(False)
 
     def stop(self):
-        popup_info.PopupStop(self.m, self.sm, self.l)
+        self.sm.pm.show_stop_popup()
 
     def set_spindle_digital(self):
         self.m.s.write_command('$51 = 1')

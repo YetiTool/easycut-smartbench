@@ -292,7 +292,8 @@ class GCodeMonitor(Widget):
                 + self.l.get_str("Please exercise caution when using this feature.")
                 + "\n\n"
             )
-            popup_info.PopupWarning(self.sm, self.l, description)
+            # popup_info.PopupWarning(self.sm, self.l, description)
+            self.sm.pm.show_warning_popup(description)
             self.popup_flag = False
         elif self.validate_gcode_textinput(self.gCodeInput.text):
             self.m.send_any_gcode_command(str(self.gCodeInput.text))
@@ -306,7 +307,8 @@ class GCodeMonitor(Widget):
                     "If you need to alter the fundamental settings of the machine please contact YetiTool support."
                 )
             )
-            popup_info.PopupWarning(self.sm, self.l, message)
+            # popup_info.PopupWarning(self.sm, self.l, message)
+            self.sm.pm.show_warning_popup(message)
 
     def validate_gcode_textinput(self, gcode_input):
         if "$50" in gcode_input:

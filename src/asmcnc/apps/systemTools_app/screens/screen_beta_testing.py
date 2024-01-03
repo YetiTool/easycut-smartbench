@@ -336,9 +336,10 @@ class BetaTestingScreen(Screen):
                 + "...\n"
                 + self.l.get_str("Console will reboot to finish update.")
             )
-            wait_popup = popup_info.PopupWait(
-                self.systemtools_sm.sm, self.l, description=message
-            )
+            # wait_popup = popup_info.PopupWait(
+            #     self.systemtools_sm.sm, self.l, description=message
+            # )
+            self.systemtools_sm.sm.pm.show_wait_popup(message)
 
             def nested_branch_update(dt):
                 self.set.update_config()
@@ -350,10 +351,10 @@ class BetaTestingScreen(Screen):
                 pull_exit_code = os.system("git pull")
                 if checkout_exit_code == 0 and pull_exit_code == 0:
                     self.set.ansible_service_run_without_reboot()
-                    wait_popup.popup.dismiss()
+                    self.systemtools_sm.sm.pm.close_wait_popup()
                     self.systemtools_sm.sm.current = "rebooting"
                 else:
-                    wait_popup.popup.dismiss()
+                    self.systemtools_sm.sm.pm.close_wait_popup()
                     message = (
                         self.l.get_str("Failed to checkout and pull branch.")
                         + "\n"
@@ -361,9 +362,10 @@ class BetaTestingScreen(Screen):
                             "Please check the spelling of your branch and your internet connection."
                         )
                     )
-                    error_popup = popup_info.PopupError(
-                        self.systemtools_sm.sm, self.l, message
-                    )
+                    # error_popup = popup_info.PopupError(
+                    #     self.systemtools_sm.sm, self.l, message
+                    # )
+                    self.systemtools_sm.sm.pm.show_error_popup(message)
 
             Clock.schedule_once(nested_branch_update, 0.5)
 

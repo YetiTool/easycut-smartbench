@@ -659,11 +659,12 @@ class BuildInfoScreen(Screen):
         self.fw_version_label.text = str(str(self.m.s.fw_version).split("; HW")[0])
 
     def open_data_consent_app(self):
-        wait_popup = popup_info.PopupWait(
-            self.systemtools_sm.sm,
-            self.l,
-            self.l.get_str("Loading Data and Wi-Fi") + "...",
-        )
+        # wait_popup = popup_info.PopupWait(
+        #     self.systemtools_sm.sm,
+        #     self.l,
+        #     self.l.get_str("Loading Data and Wi-Fi") + "...",
+        # )
+        self.systemtools_sm.sm.pm.show_wait_popup(self.l.get_str("Loading Data and Wi-Fi") + "...")
 
         def nested_open_data_consent_app(dt):
             self.data_consent_app = (
@@ -672,7 +673,7 @@ class BuildInfoScreen(Screen):
                 )
             )
             self.data_consent_app.open_data_consent("build_info", "build_info")
-            wait_popup.popup.dismiss()
+            self.systemtools_sm.sm.pm.close_wait_popup()
 
         Clock.schedule_once(nested_open_data_consent_app, 0.2)
 
@@ -808,7 +809,8 @@ class BuildInfoScreen(Screen):
             return True
         else:
             warning_message = self.l.get_str("Problem saving nickname!")
-            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            # popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            self.systemtools_sm.sm.pm.show_warning_popup(warning_message)
             return False
 
     ## SMARTBENCH LOCATION NAMING
@@ -861,5 +863,6 @@ class BuildInfoScreen(Screen):
             return True
         else:
             warning_message = self.l.get_str("Problem saving location!")
-            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            # popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            self.systemtools_sm.sm.pm.show_warning_popup(warning_message)
             return False

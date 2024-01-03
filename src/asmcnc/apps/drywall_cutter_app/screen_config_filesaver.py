@@ -409,8 +409,7 @@ class ConfigFileSaver(Screen):
 
             self.sm.current = 'drywall_cutter'
         else:
-            popup_info.PopupInfo(screen_manager=self.sm, localization=self.l, popup_width=500,
-                                 description=self.l.get_str("File names must be between 1 and 40 characters long."))
+            self.sm.pm.show_info_popup("File names must be between 1 and 40 characters long.", 500)
 
     def validate_file_name(self, file_name):
         return 0 < len(file_name) <= 40

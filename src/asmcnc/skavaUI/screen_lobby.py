@@ -596,7 +596,7 @@ class LobbyScreen(Screen):
 
         # Tell user to update if update is available
         if self.trigger_update_popup:
-            popup_info.PopupInfo(self.sm, self.l, 450, self.update_message)
+            self.sm.pm.show_info_popup(self.update_message, 450)
 
         # Trigger welcome popup is machine is being used for the first time
         if self.m.trigger_setup: self.help_popup()
@@ -614,7 +614,7 @@ class LobbyScreen(Screen):
                                    title=self.l.get_str('Welcome to SmartBench'),
                                    main_string=self.welcome_popup_description,
                                    popup_type=PopupType.INFO,
-                                   popup_width=500, popup_height=440, main_label_size_delta=80,
+                                   popup_width=500, popup_height=440, main_label_size_delta=0,
                                    main_label_padding=(0, 0), main_layout_padding=(10, 10, 10, 10),
                                    main_layout_spacing=10, button_layout_padding=(20, 10, 20, 0),
                                    button_layout_spacing=15,
@@ -655,7 +655,8 @@ class LobbyScreen(Screen):
         if self.m.state().startswith('Idle'):
             self.am.start_upgrade_app()
         else:
-            popup_info.PopupError(self.sm, self.l, self.l.get_str("Please ensure machine is idle before continuing."))
+            # popup_info.PopupError(self.sm, self.l, self.l.get_str("Please ensure machine is idle before continuing."))
+            self.sm.pm.show_error_popup(self.l.get_str("Please ensure machine is idle before continuing."))
 
     def drywall_cutter_app(self):
         self.am.start_drywall_cutter_app()

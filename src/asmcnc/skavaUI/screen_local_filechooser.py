@@ -610,7 +610,8 @@ class LocalFileChooser(Screen):
             self.manager.current = "loading"
         else:
             error_message = self.l.get_str("File selected does not exist!")
-            popup_info.PopupError(self.sm, self.l, error_message)
+            # popup_info.PopupError(self.sm, self.l, error_message)
+            self.sm.pm.show_error_popup(error_message)
 
     def delete_popup(self, **kwargs):
         if kwargs["file_selection"] == "all":

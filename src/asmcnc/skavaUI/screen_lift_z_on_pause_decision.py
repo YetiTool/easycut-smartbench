@@ -145,7 +145,7 @@ class LiftZOnPauseDecisionScreen(Screen):
                 "Do not allow this feature if the tool has any inverted horizontal features which would rip through the job if the tool were to be lifted (e.g. a biscuit cutter tool profile)."
             )
         )
-        popup_info.PopupInfo(self.sm, self.l, 760, info)
+        self.sm.pm.show_info_popup(info, 760)
 
     def decision_no(self):
         if self.m.fw_can_operate_zUp_on_pause():  # precaution (this screen shouldn't appear if fw not capable)

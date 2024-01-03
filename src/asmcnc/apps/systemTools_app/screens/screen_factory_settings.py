@@ -708,14 +708,16 @@ class FactorySettingsScreen(Screen):
             float(self.z_touch_plate_entry.text)
         except:
             warning_message = "Touchplate offset should be between 1.00 and 2.00 mm"
-            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            # popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            self.systemtools_sm.sm.pm.show_warning_popup(warning_message)
             return False
         if (
             float(self.z_touch_plate_entry.text) < 1
             or float(self.z_touch_plate_entry.text) > 2
         ):
             warning_message = "Touchplate offset should be between 1.00 and 2.00 mm"
-            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            # popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            self.systemtools_sm.sm.pm.show_warning_popup(warning_message)
             return False
         else:
             return True
@@ -732,13 +734,15 @@ class FactorySettingsScreen(Screen):
             or str(self.serial_prefix.text) == ""
         ):
             warning_message = "Serial number format should be: YS6-0000-.00"
-            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            # popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            self.systemtools_sm.sm.pm.show_warning_popup(warning_message)
             return False
         elif len(str(self.serial_number_input.text)) != 4:
             warning_message = (
                 "Second part of the serial number should be 4 digits long."
             )
-            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            # popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            self.systemtools_sm.sm.pm.show_warning_popup(warning_message)
             return False
         elif not (
             str(self.product_number_input.text) == "01"
@@ -746,13 +750,15 @@ class FactorySettingsScreen(Screen):
             or str(self.product_number_input.text) == "03"
         ):
             warning_message = "Product code should 01, 02, or 03."
-            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            # popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            self.systemtools_sm.sm.pm.show_warning_popup(warning_message)
             return False
         elif len(str(self.serial_prefix.text)) != 3:
             warning_message = (
                 "First part of the serial number should be 3 characters long."
             )
-            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            # popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            self.systemtools_sm.sm.pm.show_warning_popup(warning_message)
             return False
         elif (
             len(
@@ -764,7 +770,8 @@ class FactorySettingsScreen(Screen):
             != 10
         ):
             warning_message = "Serial number format should be: YS6-0000-.00"
-            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            # popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            self.systemtools_sm.sm.pm.show_warning_popup(warning_message)
             return False
         else:
             return True
@@ -862,9 +869,10 @@ class FactorySettingsScreen(Screen):
                     warning_message = (
                         "Please ensure $54 is set to 0 before doing a factory reset."
                     )
-                    popup_info.PopupWarning(
-                        self.systemtools_sm.sm, self.l, warning_message
-                    )
+                    # popup_info.PopupWarning(
+                    #     self.systemtools_sm.sm, self.l, warning_message
+                    # )
+                    self.systemtools_sm.sm.pm.show_warning_popup(warning_message)
                     return
             except:
                 pass
@@ -872,16 +880,20 @@ class FactorySettingsScreen(Screen):
                 warning_message = (
                     "Please ensure machine model is set before doing a factory reset."
                 )
-                popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+                # popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+                self.systemtools_sm.sm.pm.show_warning_popup(warning_message)
             elif not self.check_serial_number_for_factory_reset():
                 warning_message = "Please ensure machine has a serial number before doing a factory reset."
-                popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+                # popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+                self.systemtools_sm.sm.pm.show_warning_popup(warning_message)
             elif self.software_version_label.text != self.latest_software_version.text:
                 warning_message = "Please ensure machine is fully updated before doing a factory reset."
-                popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+                # popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+                self.systemtools_sm.sm.pm.show_warning_popup(warning_message)
             elif self.platform_version_label.text != self.latest_platform_version.text:
                 warning_message = "Please ensure machine is fully updated before doing a factory reset."
-                popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+                # popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+                self.systemtools_sm.sm.pm.show_warning_popup(warning_message)
             elif nested_factory_reset():
                 reset_warning = (
                     "FACTORY RESET TRIGGERED\n\n"
@@ -894,13 +906,14 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
 """
                     + "Not doing this may corrupt the warranty registration start up sequence."
                 )
-                popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 700, reset_warning)
+                self.systemtools_sm.sm.pm.show_info_popup(reset_warning, 700)
                 Clock.schedule_once(self.shutdown_console, 5)
             else:
                 warning_message = (
                     "There was an issue doing the factory reset! Get Letty for help."
                 )
-                popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+                # popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+                self.systemtools_sm.sm.pm.show_warning_popup(warning_message)
 
     def close_sw(self, dt):
         sys.exit()
@@ -914,7 +927,8 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
                 warning_message = (
                     "Please ensure $54 is set to 0 before doing an update."
                 )
-                popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+                # popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+                self.systemtools_sm.sm.pm.show_warning_popup(warning_message)
                 return
         except:
             pass
@@ -935,7 +949,8 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
                 self.set.update_platform()
             else:
                 message = "Could not get software update, please check connection."
-                popup_info.PopupWarning(self.systemtools_sm.sm, self.l, message)
+                # popup_info.PopupWarning(self.systemtools_sm.sm, self.l, message)
+                self.systemtools_sm.sm.pm.show_warning_popup(warning_message)
                 self.console_update_button.text = "Full Console Update (wifi)"
 
         Clock.schedule_once(nested_full_console_update, 1)
@@ -971,7 +986,7 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
         else:
             self.setting_54_label.text = "$54 = N/A"
             self.setting_54_toggle.state = "normal"
-            popup_info.PopupError(self.systemtools_sm, self.l, "FW not compatible!")
+            self.systemtools_sm.sm.pm.show_error_popup("FW not compatible!")
 
     def setting_54_info(self):
         info = (
@@ -981,7 +996,7 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
 """
             + "$54 should be set to 0 when SB is ready to be factory reset and packed"
         )
-        popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 700, info)
+        self.systemtools_sm.sm.pm.show_info_popup(info, 700)
 
     def diagnostics(self):
         self.systemtools_sm.open_diagnostics_screen()
@@ -1080,14 +1095,16 @@ $51 is currently set to """
                 self.m.disable_theateam()
             except:
                 warning_message = "Problem removing SC2 compatability file!!"
-                popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+                # popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+                self.systemtools_sm.sm.pm.show_warning_popup(warning_message)
         else:
             self.sc2_compatability_toggle.text = "Disable SC2 compatability"
             try:
                 self.m.enable_theateam()
             except:
                 warning_message = "Problem creating SC2 compatability file!!"
-                popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+                # popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+                self.systemtools_sm.sm.pm.show_warning_popup(warning_message)
 
     def undo_toggle(self):
         if self.sc2_compatability_toggle.state == "normal":
@@ -1105,7 +1122,8 @@ $51 is currently set to """
             return True
         except:
             warning_message = "Problem saving serial number!!"
-            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            # popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            self.systemtools_sm.sm.pm.show_warning_popup(warning_message)
             return False
 
     def write_activation_code_to_file(self):
@@ -1117,7 +1135,8 @@ $51 is currently set to """
             return True
         except:
             warning_message = "Problem saving activation code!!"
-            popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            # popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
+            self.systemtools_sm.sm.pm.show_warning_popup(warning_message)
             return False
 
     def get_serial_number(self):

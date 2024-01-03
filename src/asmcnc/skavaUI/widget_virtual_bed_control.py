@@ -11,6 +11,8 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
+
+from asmcnc.core_UI.custom_popups import PopupDatum
 from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
@@ -185,7 +187,7 @@ class VirtualBedControl(Widget):
                 ).replace('X-Y', '[b]X-Y[/b]')).replace(self.l.get_str('datum'), self.l.get_bold('datum'))
             )
 
-        popup_info.PopupDatum(self.sm, self.m, self.l, 'XY', warning)
+        PopupDatum(self.sm, self.m, self.l, 'XY', warning)
     
     def set_standby_to_pos(self):
         # warning = 'Is this where you want to set your\nstandby position?'
@@ -195,7 +197,7 @@ class VirtualBedControl(Widget):
         warning = self.format_command(
             self.l.get_str('Is this where you want to set your standby position?')
             )
-        popup_info.PopupPark(self.sm, self.m, self.l, warning)
+        self.sm.pm.show_park_popup(warning)
         
     def go_to_jobstart_xy(self):
         if self.m.is_machine_homed == False:

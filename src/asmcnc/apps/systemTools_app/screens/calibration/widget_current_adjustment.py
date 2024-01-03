@@ -103,12 +103,15 @@ class CurrentAdjustmentWidget(Widget):
                     self.m.set_motor_current(self.motor_name_dict[self.motor], self.current_current)
 
                 else:
-                    popup_info.PopupError(self.systemtools_sm, self.l, "Invalid current value!")
+                    # popup_info.PopupError(self.systemtools_sm, self.l, "Invalid current value!")
+                    self.sm.pm.show_error_popup("Invalid current value!")
             else:
-                popup_info.PopupError(self.systemtools_sm, self.l, "Can't change current when not Idle!")
+                # popup_info.PopupError(self.systemtools_sm, self.l, "Can't change current when not Idle!")
+                self.sm.pm.show_error_popup("Can't change current when not Idle!")
 
         except:
-            popup_info.PopupError(self.systemtools_sm, self.l, "Issue setting current")
+            # popup_info.PopupError(self.systemtools_sm, self.l, "Issue setting current")
+            self.sm.pm.show_error_popup("Issue setting current")
             print(traceback.format_exc())
 
         self.current_current_label.text = str(self.current_current)

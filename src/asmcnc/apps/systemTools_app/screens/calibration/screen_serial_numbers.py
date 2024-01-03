@@ -244,7 +244,7 @@ class UploadSerialNumbersScreen(Screen):
                 "This serial number is already in the database! You cannot overwrite."
             )
             log(message)
-            popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 500, message)
+            self.sm.pm.show_info_popup(message, 500)
             return True
         except:
             return False

@@ -27,7 +27,7 @@ def log(message):
     timestamp = datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
-class PopupWelcome(Widget):
+class PopupWelcome(Widget):  # done
 
     def __init__(self, screen_manager, machine, localization, description):
         self.sm = screen_manager
@@ -88,7 +88,7 @@ class PopupWelcome(Widget):
         popup.open()
 
 
-class PopupDatum(Widget):
+class PopupDatum(Widget):  # done (moved to custom_popups and scaled)
 
     def __init__(self, screen_manager, machine, localization, xy, warning_message):
 
@@ -189,7 +189,7 @@ class PopupDatum(Widget):
         popup.open()
 
 
-class PopupPark(Widget):
+class PopupPark(Widget):  # done
 
     def __init__(self, screen_manager, machine, localization, warning_message):
         self.sm = screen_manager
@@ -245,7 +245,7 @@ class PopupPark(Widget):
         popup.open()
 
 
-class PopupStop(Widget):
+class PopupStop(Widget):  # done
 
     def __init__(self, machine, screen_manager, localization):
         self.m = machine
@@ -306,7 +306,7 @@ class PopupStop(Widget):
         popup.open()
 
 
-class PopupUSBInfo(Widget):
+class PopupUSBInfo(Widget):  # done
 
     def __init__(self, screen_manager, localization, safe_to_remove):
 
@@ -371,7 +371,7 @@ class PopupUSBInfo(Widget):
         self.popup.open()
 
 
-class PopupUSBError(Widget):
+class PopupUSBError(Widget):  # last usage in tests
 
     def __init__(self, screen_manager, localization, usb):
         self.sm = screen_manager
@@ -469,7 +469,7 @@ class PopupInfo(Widget):
         popup.open()
 
 
-class PopupMiniInfo(Widget):
+class PopupMiniInfo(Widget):  # done (maintenance pr has the others)
 
     def __init__(self, screen_manager, localization, description):
         self.sm = screen_manager
@@ -512,7 +512,7 @@ class PopupMiniInfo(Widget):
         popup.open()
 
 
-class PopupSoftwareUpdateSuccess(Widget):
+class PopupSoftwareUpdateSuccess(Widget):  # done, moved to popups.py
     def __init__(self, screen_manager, localization, message):
         self.sm = screen_manager
         self.l = localization
@@ -567,7 +567,7 @@ class PopupSoftwareUpdateSuccess(Widget):
         Clock.schedule_once(reboot, 6)
 
 # Popup asking the user if they are sure they want to continue with the update with a given warning_message
-class PopupSoftwareUpdateWarning(Widget):
+class PopupSoftwareUpdateWarning(Widget):  # done, moved to custom_popups
     def __init__(self, screen_manager, localization, settings_manager, warning_message, update_method, prep_for_sw_update_over_wifi, prep_for_sw_update_over_usb):
         self.sm = screen_manager
         self.set = settings_manager
@@ -630,7 +630,7 @@ class PopupSoftwareUpdateWarning(Widget):
         popup.open()
 
 
-class PopupSoftwareRepair(Widget):
+class PopupSoftwareRepair(Widget):  # done, moved to custom_popus
     def __init__(self, screen_manager, localization, settings_manager, warning_message):
         self.sm = screen_manager
         self.set = settings_manager
@@ -685,7 +685,7 @@ class PopupSoftwareRepair(Widget):
         popup.open()
 
 
-class PopupError(Widget):
+class PopupError(Widget):  # done moved to popups.py
     def __init__(self, screen_manager, localization, warning_message):
         self.sm = screen_manager
         self.l = localization
@@ -729,7 +729,7 @@ class PopupError(Widget):
         popup.open()
 
 
-class PopupWarning(Widget):
+class PopupWarning(Widget):  # done, moved to popups.py
     def __init__(self, screen_manager, localization, warning_message):
         self.sm = screen_manager
         self.l = localization
@@ -772,7 +772,7 @@ class PopupWarning(Widget):
         popup.open()
 
 
-class PopupWait(Widget):
+class PopupWait(Widget):  # done, moved to popups.py
     def __init__(self, screen_manager, localization, description=False):
         self.sm = screen_manager
         self.l = localization

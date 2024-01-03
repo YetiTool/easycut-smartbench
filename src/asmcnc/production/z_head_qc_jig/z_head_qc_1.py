@@ -419,7 +419,7 @@ class ZHeadQC1(Screen):
         try:
             self.console_status_text.text = self.sm.get_screen('home').gcode_monitor_widget.consoleStatusText.text
 
-        except: 
+        except:
             pass
 
     # SCREEN GRID FUNCTIONS: 
@@ -431,16 +431,16 @@ class ZHeadQC1(Screen):
         try:
             self.fw_version_label.text = "FW: " + str((str(self.m.s.fw_version)).split('; HW')[0])
             if self.poll_for_fw != None: Clock.unschedule(self.poll_for_fw)
-        
+
         except:
             pass
 
-    def bake_grbl_settings(self):     
+    def bake_grbl_settings(self):
 
         if self.m.bake_default_grbl_settings(z_head_qc_bake=True):
             self.bake_grbl_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
-        else: 
+        else:
             self.bake_grbl_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
             popup_info.PopupError(self.sm, self.l, "X current read in as 0! Can't set correct Z travel.")
 
@@ -547,21 +547,21 @@ class ZHeadQC1(Screen):
         self.m.quit_jog()
 
     def set_spindle(self):
-        if self.spindle_toggle.state == 'normal': 
+        if self.spindle_toggle.state == 'normal':
             self.m.spindle_off()
-        else: 
+        else:
             self.m.spindle_on()
 
     def set_laser(self):
-        if self.laser_toggle.state == 'normal': 
+        if self.laser_toggle.state == 'normal':
             self.m.laser_off()
-        else: 
+        else:
             self.m.laser_on()
 
     def set_vac(self):
-        if self.vac_toggle.state == 'normal': 
+        if self.vac_toggle.state == 'normal':
             self.m.vac_off()
-        else: 
+        else:
             self.m.vac_on()
 
     def dust_shoe_red(self):
@@ -659,7 +659,7 @@ class ZHeadQC1(Screen):
             self.temp_voltage_power_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
     def stop(self):
-        popup_info.PopupStop(self.m, self.sm, self.l)
+        self.sm.pm.show_stop_popup()
 
     def disable_alarms(self):
         self.m.s.write_command('$20 = 0') # disable soft limit, to allow jog for motor chips test

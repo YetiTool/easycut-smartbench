@@ -196,7 +196,7 @@ class DrywallCutterScreen(Screen):
         pass
 
     def stop(self):
-        popup_info.PopupStop(self.m, self.sm, self.l)
+        self.sm.pm.show_stop_popup()
 
     def quit_to_lobby(self):
         self.sm.current = 'lobby'

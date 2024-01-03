@@ -147,7 +147,8 @@ class QuickCommands(Widget):
         self.m.stop_from_quick_command_reset()
     
     def stop(self):
-        popup_info.PopupStop(self.m, self.sm, self.l)
+        # popup_info.PopupStop(self.m, self.sm, self.l)
+        self.sm.pm.show_stop_popup()
 
     def proceed_to_go_screen(self):
         
@@ -164,7 +165,8 @@ class QuickCommands(Widget):
                 self.format_command(self.l.get_str('Tap the file chooser in the first tab (top left) to load a file.'))
                 )
 
-            popup_info.PopupInfo(self.sm, self.l, 450, info)
+            # popup_info.PopupInfo(self.sm, self.l, 450, info)
+            self.sm.pm.show_info_popup(info, 450)
 
         elif not self.m.state().startswith('Idle'):
             self.sm.current = 'mstate'
@@ -183,7 +185,8 @@ class QuickCommands(Widget):
                     self.format_command(self.l.get_str('Press Ok to clear this reminder.').replace(self.l.get_str('Ok'), self.l.get_bold('Ok')))
                 )
 
-                popup_info.PopupWarning(self.sm, self.l, z_datum_reminder_message)
+                # popup_info.PopupWarning(self.sm, self.l, z_datum_reminder_message)
+                self.sm.pm.show_warning_popup(z_datum_reminder_message)
                 self.sm.get_screen('home').z_datum_reminder_flag = False
 
         else:
@@ -275,4 +278,4 @@ class QuickCommands(Widget):
     def format_command(self, cmd):
         wrapped_cmd = textwrap.fill(cmd, width=0.0625*Window.width, break_long_words=False)
         return wrapped_cmd
-        
+

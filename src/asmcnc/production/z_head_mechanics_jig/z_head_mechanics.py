@@ -378,7 +378,7 @@ class ZHeadMechanics(Screen):
         if not self.m.run_calibration:
             self.m.send_command_to_motor("DISABLE MOTOR DRIVERS", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=0)
 
-            popup_info.PopupInfo(self.sm, self.l, 500, 'Calibration complete!')
+            self.sm.pm.show_info_popup('Calibration complete!', 500)
 
             self.begin_test_button.disabled = False
             self.calibrate_button.disabled = False

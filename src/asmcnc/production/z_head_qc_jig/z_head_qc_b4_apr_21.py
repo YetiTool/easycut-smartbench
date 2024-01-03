@@ -495,7 +495,7 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
             self.cycle_limit_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"        
 
     def stop(self):
-        popup_info.PopupStop(self.m, self.sm, self.l)
+        self.sm.pm.show_stop_popup()
 
     def quit_jog(self):
         self.m.quit_jog()
