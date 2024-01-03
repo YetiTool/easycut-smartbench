@@ -7,6 +7,7 @@ from kivy.uix.image import Image
 Builder.load_string("""
 <CuttingDepthsPopup>:
     float_layout:float_layout
+    cutter_layout:cutter_layout
     
     material_graphic:material_graphic
     material_thickness:material_thickness
@@ -132,14 +133,6 @@ Builder.load_string("""
             size: self.parent.size
             allow_stretch: True
         
-        Image:
-            id: total_cut_depth_arrow
-            source: "./asmcnc/apps/drywall_cutter_app/img/total_cut_depth_bottom_arrow.png"
-            pos_hint: {'center_x': 0.45, 'y': 0.225}
-            y: self.parent.y
-            size: self.parent.size
-            allow_stretch: True
-        
         Label:
             id: total_cut_depth_label
             pos_hint: {'x': -0.42, 'y': -0.275}
@@ -161,13 +154,30 @@ Builder.load_string("""
             text: ''
             disabled: True
             
-        Image:
-            id: cutter_graphic
-            source: "./asmcnc/apps/drywall_cutter_app/img/cutter_graphic.png"
-            pos_hint: {'center_x': 0.45, 'y': 0.225}
-            # y: self.parent.y
+        StencilView:
             size: self.parent.size
-            allow_stretch: True 
+            pos: self.parent.pos
+            
+            FloatLayout:
+                id: cutter_layout
+                size: self.parent.size
+                pos: self.parent.pos
+                
+                Image:
+                    id: total_cut_depth_arrow
+                    source: "./asmcnc/apps/drywall_cutter_app/img/total_cut_depth_bottom_arrow.png"
+                    pos_hint: {'center_x': 0.45, 'y': 0.225}
+                    y: self.parent.y
+                    size: self.parent.size
+                    allow_stretch: True
+                
+                Image:
+                    id: cutter_graphic
+                    source: "./asmcnc/apps/drywall_cutter_app/img/cutter_graphic.png"
+                    pos_hint: {'center_x': 0.45, 'y': 0.225}
+                    # y: self.parent.y
+                    size: self.parent.size
+                    allow_stretch: True 
         
         Label:
             id: cut_depth_warning
@@ -368,6 +378,7 @@ class CuttingDepthsPopup(Popup):
             self.cutter_graphic.pos_hint['y'] = cutter_y
             self.total_cut_depth_arrow.pos_hint['y'] = cutter_y
             self.float_layout.do_layout()
+            self.cutter_layout.do_layout()
         except:
             pass
 
@@ -440,12 +451,12 @@ class CuttingDepthsPopup(Popup):
         ratio = 0 if material_thickness == 0 else depth_per_pass / material_thickness
         singular_cut = 0 if self.depth_per_pass.text == "" else round(ratio * line_range, 4)
         for pass_line in self.pass_depth_lines:
-            self.float_layout.remove_widget(pass_line)
+            self.cutter_layout.remove_widget(pass_line)
         if self.total_cut_depth.text != "0.0":
             for i in range(0, int(number_of_passes)):
                 img = Image()
 
-                self.float_layout.add_widget(img)
+                self.cutter_layout.add_widget(img)
 
                 img.source = "./asmcnc/apps/drywall_cutter_app/img/pass_depth_line.png"
 
@@ -458,7 +469,7 @@ class CuttingDepthsPopup(Popup):
                 img.allow_stretch = True
 
                 self.pass_depth_lines.append(img)
-        self.float_layout.do_layout()
+        self.cutter_layout.do_layout()
 
     def calculate_depth_per_pass(self, *args):
         max_cut_depth_per_pass = self.dwt_config.active_cutter.max_depth_per_pass
