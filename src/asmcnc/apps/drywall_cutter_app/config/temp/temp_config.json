@@ -18,7 +18,7 @@
     "units": "mm", 
     "rotation": "horizontal", 
     "datum_position": {
-        "y": 6.0, 
-        "x": 5.0
+        "y": 0.0, 
+        "x": 0.0
     }
 }

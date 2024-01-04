@@ -49,6 +49,8 @@ class Keyboard(VKeyboard):
         self.pos = (Window.width - self.width, 0)
         self.on_key_up = self.key_up
 
+        self.pos = (410,60)
+
     def generic_for_loop_alternative(self, func, list_of_items, i=0, end_func=0):
 
         '''

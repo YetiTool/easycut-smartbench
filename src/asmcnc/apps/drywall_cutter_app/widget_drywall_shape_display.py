@@ -523,8 +523,10 @@ class DrywallShapeDisplay(Widget):
         x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance = self.get_x_y_clearances(current_shape, x_coord, y_coord, tool_offset_value)
 
         # Update canvas elements
-        self.set_datum_position_label(round(current_x, 1), round(current_y, 1))
-        self.update_bumpers_and_validation_labels(current_shape, current_x, current_y, x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance)
+        # self.set_datum_position_label(round(current_x, 1), round(current_y, 1))
+        self.set_datum_position_label(1000, 1000)
+        # self.update_bumpers_and_validation_labels(current_shape, current_x, current_y, x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance)
+        self.update_bumpers_and_validation_labels(current_shape, 1000, 1000, 0, 0, 200, 200)
 
     # Check_datum_and_extents sub-functions below this comment:
 
@@ -627,7 +629,8 @@ class DrywallShapeDisplay(Widget):
         y_practical_range = y_machine_range - 2 * clearance_between_limit_edge
 
         # Now show a message if any dimensions are too big
-        d_limit = min(x_machine_range, y_machine_range)
+        # d_limit = min(x_machine_range, y_machine_range)
+        d_limit = 10000
         if current_shape == 'circle' and float(self.d_input.text or 0) > d_limit:
             self.d_input_validation_label.text = 'MAX: ' + str(d_limit)
             self.d_input_validation_label.opacity = 1

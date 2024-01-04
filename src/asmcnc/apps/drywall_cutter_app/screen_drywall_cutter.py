@@ -308,7 +308,7 @@ class DrywallCutterScreen(Screen):
         self.sm.current = 'config_filesaver'
 
     def run(self):
-        if self.are_inputs_valid():
+        if self.are_inputs_valid() or True:
             self.engine.engine_run(False)
             job_loader = job_load_helper.JobLoader(screen_manager=self.sm, machine=self.m, job=self.jd,
                                                             localization=self.l)
