@@ -47,34 +47,6 @@ Builder.load_string(
 
 
         Button:
-            id: button_download_settings_to_usb
-            text: 'Download Settings to USB'
-            on_press: root.download_settings_to_usb()
-            valign: "bottom"
-            halign: "center"
-            markup: True
-            font_size: root.default_font_size
-            text_size: self.size
-            background_normal: "./asmcnc/apps/systemTools_app/img/download_to_usb.png"
-            background_down: "./asmcnc/apps/systemTools_app/img/download_to_usb.png"
-            padding_y: 5.0/800.0*app.width
-            border: (0,0,0,0)
-
-        Button:
-            id: button_upload_settings_from_usb
-            text: 'Upload Settings from USB'
-            on_press: root.download_logs()
-            valign: "bottom"
-            halign: "center"
-            markup: True
-            font_size: root.default_font_size
-            text_size: self.size
-            background_normal: "./asmcnc/apps/systemTools_app/img/upload_from_usb.png"
-            background_down: "./asmcnc/apps/systemTools_app/img/upload_from_usb.png"
-            padding_y: 5.0/800.0*app.width
-            border: (0,0,0,0)
-
-        Button:
             id: button_download_logs
             text: 'Download Logs'
             on_press: root.download_logs()
@@ -122,10 +94,35 @@ Builder.load_string(
 
         BoxLayout:
             padding: 0
-        BoxLayout:
-            padding: 0
-        BoxLayout:
-            padding: 0
+            
+        Button:
+            id: button_download_settings_to_usb
+            text: 'Save Settings'
+            on_press: root.download_settings_to_usb()
+            valign: "bottom"
+            halign: "center"
+            markup: True
+            font_size: root.default_font_size
+            text_size: self.size
+            background_normal: "./asmcnc/apps/systemTools_app/img/download_to_usb.png"
+            background_down: "./asmcnc/apps/systemTools_app/img/download_to_usb.png"
+            padding_y: 5.0/800.0*app.width
+            border: (0,0,0,0)
+
+        Button:
+            id: button_upload_settings_from_usb
+            text: 'Restore Settings'
+            on_press: root.upload_settings_from_usb()
+            valign: "bottom"
+            halign: "center"
+            markup: True
+            font_size: root.default_font_size
+            text_size: self.size
+            background_normal: "./asmcnc/apps/systemTools_app/img/upload_from_usb.png"
+            background_down: "./asmcnc/apps/systemTools_app/img/upload_from_usb.png"
+            padding_y: 5.0/800.0*app.width
+            border: (0,0,0,0)
+
         BoxLayout:
             padding: 0
 
@@ -167,10 +164,10 @@ class SupportMenuScreen(Screen):
         self.systemtools_sm.exit_app()
 
     def download_settings_to_usb(self):
-        return
+        self.systemtools_sm.download_settings_to_usb()
 
     def upload_settings_from_usb(self):
-        return
+        self.systemtools_sm.upload_settings_from_usb()
 
     def download_logs(self):
         popup_system.PopupDownloadLogs(self.systemtools_sm, self.l)
@@ -191,6 +188,7 @@ class SupportMenuScreen(Screen):
         self.button_download_logs.text = self.l.get_str("Download Logs")
         self.button_reinstall_pika.text = self.l.get_str("Get Pika")
         self.button_git_fsck.txt = self.l.get_str("Git FSCK")
+        self.button_download_settings_to_usb.text = self.l.get_str("Save Settings")
         self.button_go_back.text = self.l.get_str("Go Back")
         for id_object in self.id_list:
             self.update_font_size(id_object)

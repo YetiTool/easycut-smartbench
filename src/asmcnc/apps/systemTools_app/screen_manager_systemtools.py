@@ -145,6 +145,66 @@ class ScreenManagerSystemTools(object):
 
         Clock.schedule_once(lambda dt: get_grbl_settings_from_usb(), 0.2)
 
+    '''Copies all the relevant files for upgrading the console to a c10 to the mounted usb stick.'''
+    def download_settings_to_usb(self):
+        self.usb_stick.enable()
+        message = self.l.get_str('Saving settings to USB. Please wait') + '...'
+        wait_popup = popup_info.PopupWait(self.sm, self.l, description=message)
+
+        def copy_settings_to_usb():
+            if self.usb_stick.is_usb_mounted_flag:
+                # TODO copy files here
+                '''
+                Pro+ Reactivation and health check option (Also Spindle cooldown and Stylus settings?)
+                Spindle information (SC1 or SC2 and Voltage)
+                Job files
+                Maintenance intervals
+                Laser datum offset
+                Console hostname (Where possible, or a note to update SmartManger hostname)
+                Smartbench name
+                Wi-Fi information (Maybe already inputted by customer)
+                '''
+                success_flag = True
+                wait_popup.popup.dismiss()
+                if success_flag:
+                    message = self.l.get_str('Successfully saved settings to USB!')
+                    popup_info.PopupMiniInfo(self.sm, self.l, description=message)
+                else:
+                    message = self.l.get_str('Could not save settings. Please check USB!')
+                    popup_info.PopupMiniInfo(self.sm, self.l, description=message)
+
+        Clock.schedule_once(lambda dt: copy_settings_to_usb(), 0.2)
+
+    '''Restores all the relevant files from USB for upgrading the console to a c10 .'''
+    def upload_settings_from_usb(self):
+        self.usb_stick.enable()
+        message = self.l.get_str('Restoring settings from USB. Please wait') + '...'
+        wait_popup = popup_info.PopupWait(self.sm, self.l, description=message)
+
+        def restore_settings_from_usb():
+            if self.usb_stick.is_usb_mounted_flag:
+                # TODO copy files here
+                '''
+                Pro+ Reactivation and health check option (Also Spindle cooldown and Stylus settings?)
+                Spindle information (SC1 or SC2 and Voltage)
+                Job files
+                Maintenance intervals
+                Laser datum offset
+                Console hostname (Where possible, or a note to update SmartManger hostname)
+                Smartbench name
+                Wi-Fi information (Maybe already inputted by customer)
+                '''
+                success_flag = True
+                wait_popup.popup.dismiss()
+                if success_flag:
+                    message = self.l.get_str('Successfully restored settings from USB!')
+                    popup_info.PopupMiniInfo(self.sm, self.l, description=message)
+                else:
+                    message = self.l.get_str('Could not restore Settings. Please check USB!')
+                    popup_info.PopupMiniInfo(self.sm, self.l, description=message)
+
+        Clock.schedule_once(lambda dt: restore_settings_from_usb(), 0.2)
+
     def restore_grbl_settings_from_file(self): # first half to system tools, second half to machine module
         filename = '/home/pi/easycut-smartbench/src/sb_values/saved_grbl_settings_params.txt'
         success_flag = self.m.restore_grbl_settings_from_file(filename)
