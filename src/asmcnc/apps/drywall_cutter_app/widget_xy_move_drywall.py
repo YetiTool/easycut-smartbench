@@ -227,9 +227,9 @@ class XYMoveDrywall(Widget):
     def __init__(self, **kwargs):
 
         super(XYMoveDrywall, self).__init__(**kwargs)
-        self.m=kwargs['machine']
-        self.sm=kwargs['screen_manager']
-        self.l=kwargs['localization']
+        self.m = kwargs['machine']
+        self.sm = kwargs['screen_manager']
+        self.l = kwargs['localization']
 
         self.set_jog_speeds()
 
@@ -242,11 +242,11 @@ class XYMoveDrywall(Widget):
     fast_y_speed = 6000
 
     def set_jog_speeds(self):
-        if self.speed_toggle.state == 'normal': 
+        if self.speed_toggle.state == 'normal':
             self.speed_image.source = "./asmcnc/skavaUI/img/slow.png"
             self.feedSpeedJogX = self.fast_x_speed / 5
             self.feedSpeedJogY = self.fast_y_speed / 5
-        else: 
+        else:
             self.speed_image.source = "./asmcnc/skavaUI/img/fast.png"
             self.feedSpeedJogX = self.fast_x_speed
             self.feedSpeedJogY = self.fast_y_speed
@@ -322,34 +322,53 @@ class XYMoveDrywall(Widget):
         self.m.probe_z(fast_probe=True)
 
     def go_to_datum(self):
-        if self.m.is_machine_homed == False and sys.platform != 'win32':
+        if not self.m.is_machine_homed and sys.platform != 'win32':
             popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'drywall_cutter', 'drywall_cutter')
         else:
-            self.m.go_xy_datum()
+            if self.m.is_laser_enabled:
+                self.m.jog_laser_to_datum()
+            else:
+                self.m.go_xy_datum()
 
     def check_zh_at_datum(self, dt):
         # wpos == 0,0 when zh is at datum
         # Round to 1dp instead of 2dp to make up for grbl error
-        if not (round(self.m.wpos_x(), 1) == 0 and round(self.m.wpos_y(), 1) == 0):
-            # Pulse overlay by smoothly alternating between 0 and 1 opacity
-            # Hacky way to track pulsing on or off without a variable by storing that information in the opacity value
-            if self.go_to_datum_button_overlay.opacity <= 0:
-                self.go_to_datum_button_overlay.opacity = 0.01
-            elif self.go_to_datum_button_overlay.opacity >= 1:
-                self.go_to_datum_button_overlay.opacity = 0.98
-            # Check if second decimal place is even or odd
-            elif int(("%.2f" % self.go_to_datum_button_overlay.opacity)[-1]) % 2 == 1:
-                self.go_to_datum_button_overlay.opacity += 0.1
+        if self.m.is_laser_enabled:
+            if not (round(self.m.wpos_x() + self.m.laser_offset_x_value, 1) == 0 and round(self.m.wpos_y() + self.m.laser_offset_y_value, 1) == 0):
+                # Pulse overlay by smoothly alternating between 0 and 1 opacity
+                # Hacky way to track pulsing on or off without a variable by storing that information in the opacity value
+                if self.go_to_datum_button_overlay.opacity <= 0:
+                    self.go_to_datum_button_overlay.opacity = 0.01
+                elif self.go_to_datum_button_overlay.opacity >= 1:
+                    self.go_to_datum_button_overlay.opacity = 0.98
+                # Check if second decimal place is even or odd
+                elif int(("%.2f" % self.go_to_datum_button_overlay.opacity)[-1]) % 2 == 1:
+                    self.go_to_datum_button_overlay.opacity += 0.1
+                else:
+                    self.go_to_datum_button_overlay.opacity -= 0.1
             else:
-                self.go_to_datum_button_overlay.opacity -= 0.1
+                self.go_to_datum_button_overlay.opacity = 0
         else:
-            self.go_to_datum_button_overlay.opacity = 0
+            if not (round(self.m.wpos_x(), 1) == 0 and round(self.m.wpos_y(), 1) == 0):
+                # Pulse overlay by smoothly alternating between 0 and 1 opacity
+                # Hacky way to track pulsing on or off without a variable by storing that information in the opacity value
+                if self.go_to_datum_button_overlay.opacity <= 0:
+                    self.go_to_datum_button_overlay.opacity = 0.01
+                elif self.go_to_datum_button_overlay.opacity >= 1:
+                    self.go_to_datum_button_overlay.opacity = 0.98
+                # Check if second decimal place is even or odd
+                elif int(("%.2f" % self.go_to_datum_button_overlay.opacity)[-1]) % 2 == 1:
+                    self.go_to_datum_button_overlay.opacity += 0.1
+                else:
+                    self.go_to_datum_button_overlay.opacity -= 0.1
+            else:
+                self.go_to_datum_button_overlay.opacity = 0
 
     def set_datum(self):
         warning = self.format_command(
             (self.l.get_str('Is this where you want to set your X-Y datum?'
-                ).replace('X-Y', '[b]X-Y[/b]')).replace(self.l.get_str('datum'), self.l.get_bold('datum'))
-            )
+                            ).replace('X-Y', '[b]X-Y[/b]')).replace(self.l.get_str('datum'), self.l.get_bold('datum'))
+        )
 
         popup_info.PopupDatum(self.sm, self.m, self.l, 'XY', warning)
 

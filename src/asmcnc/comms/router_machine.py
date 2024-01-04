@@ -91,7 +91,7 @@ class RouterMachine(object):
     z_lift_after_probing = 20.0
     z_probe_speed = 60
     z_touch_plate_thickness = 1.53
-    z_probe_speed_fast = 500
+    z_probe_speed_fast = 400
     fast_probing = False
 
     ## CALIBRATION SETTINGS
@@ -1575,7 +1575,11 @@ class RouterMachine(object):
 
     def set_workzone_to_pos_xy(self):
         self.set_datum(x=0, y=0)
-        Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
+        Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2) 
+
+    def set_datum_at_laser_pos(self):
+        self.set_datum(x=-self.laser_offset_x_value, y=-self.laser_offset_y_value)
+        Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2) 
 
     def set_x_datum(self):
         self.set_datum(x=0)
@@ -1586,12 +1590,12 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
 
     def set_workzone_to_pos_xy_with_laser(self):
-        if self.jog_spindle_to_laser_datum('XY'): 
+        if True: #self.jog_spindle_to_laser_datum('XY'): 
 
             def wait_for_movement_to_complete(dt):
                 if not self.state() == 'Jog':
                     Clock.unschedule(xy_poll_for_success)
-                    self.set_workzone_to_pos_xy()
+                    self.set_datum_at_laser_pos()
 
             xy_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
 
@@ -1785,6 +1789,9 @@ class RouterMachine(object):
             else: return False
 
         return True
+    
+    def jog_laser_to_datum(self):
+        self.s.write_command("G90 G1 X{} Y{} F{}".format(-self.laser_offset_x_value, -self.laser_offset_y_value, 6000.0))
 
     # Realtime XYZ feed adjustment
     def feed_override_reset(self):
@@ -2068,8 +2075,7 @@ class RouterMachine(object):
             else:
                 probe_speed = self.z_probe_speed
                 self.fast_probing = False
-            self.s.write_command('G91 G38.2 Z' + str(probeZTarget) + ' F' + str(probe_speed))
-            self.s.write_command('G90')
+            self.s.write_command('G90 G38.2 Z0 F' + str(probe_speed))
             # Serial module then looks for probe detection
             # On detection "probe_z_detection_event" is called (for a single immediate EEPROM write command)....
             # ... followed by a delayed call to "probe_z_post_operation" for any post-write actions.

@@ -299,6 +299,8 @@ class CuttingDepthsPopup(Popup):
             text_input.bind(text=self.update_text)
         self.depth_per_pass.bind(text=self.calculate_depth_per_pass)
         self.update_strings()
+
+    def on_open(self):
         self.load_active_config()
 
     def load_active_config(self):

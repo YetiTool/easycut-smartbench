@@ -71,7 +71,7 @@ Builder.load_string("""
 
                 TextInput:
                     id: d_input
-                    font_size: dp(25)
+                    font_size: dp(22)
                     halign: 'center'
                     input_filter: 'float'
                     multiline: False
@@ -102,7 +102,7 @@ Builder.load_string("""
 
                 TextInput:
                     id: l_input
-                    font_size: dp(25)
+                    font_size: dp(22)
                     halign: 'center'
                     input_filter: 'float'
                     multiline: False
@@ -133,7 +133,7 @@ Builder.load_string("""
 
                 TextInput:
                     id: r_input
-                    font_size: dp(25)
+                    font_size: dp(22)
                     halign: 'center'
                     input_filter: 'float'
                     multiline: False
@@ -164,7 +164,7 @@ Builder.load_string("""
 
                 TextInput:
                     id: x_input
-                    font_size: dp(25)
+                    font_size: dp(22)
                     halign: 'center'
                     input_filter: 'float'
                     multiline: False
@@ -195,14 +195,14 @@ Builder.load_string("""
 
                 TextInput:
                     id: y_input
-                    font_size: dp(25)
+                    font_size: dp(22)
                     halign: 'center'
                     input_filter: 'float'
                     multiline: False
                     size: self.parent.size
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
-
+                    
             Label:
                 id: y_input_validation_label
                 font_size: dp(15)
@@ -215,7 +215,7 @@ Builder.load_string("""
 
             Label:
                 id: x_datum_label
-                font_size: dp(25)
+                font_size: dp(22)
                 size: dp(150), dp(40)
                 size_hint: (None, None)
                 text: 'X:'
@@ -234,7 +234,7 @@ Builder.load_string("""
 
             Label:
                 id: y_datum_label
-                font_size: dp(25)
+                font_size: dp(22)
                 size: dp(150), dp(40)
                 size_hint: (None, None)
                 text: 'Y:'
@@ -314,6 +314,7 @@ class DrywallShapeDisplay(Widget):
         self.kb.setup_text_inputs(self.text_inputs)
 
         Clock.schedule_interval(self.check_datum_and_extents, 0.1)
+        Clock.schedule_interval(self.set_datum_in_config_with_m_wco, 0.1)
 
     def on_touch(self):
         for text_input in self.text_inputs:
@@ -409,15 +410,33 @@ class DrywallShapeDisplay(Widget):
                 self.shape_toolpath_image.source = self.image_filepath + shape + "_" + toolpath + "_toolpath.png"
             self.shape_toolpath_image.opacity = 1
 
+    def format_input(self, text, decimal_places):
+        # Format input to allow only 'decimal_places' digits after the decimal point
+        try:
+            parts = text.split('.')
+            if len(parts) > 1:
+                integer_part = parts[0]
+                decimal_part = parts[1][:decimal_places]
+                return "%s.%s" % (integer_part, decimal_part)
+            else:
+                return text
+        except Exception as e:
+            print("Error formatting input: %s" % e)
+            return text
+
     def d_input_change(self, instance, value):
         # On startup it seems to call these functions and set everything to 0, so check that drywall app is open
         if self.sm.current == 'drywall_cutter':
             value = self.remove_negatives(instance, value)
+            value = self.format_input(value, 1)
+            instance.text = value
             self.dwt_config.on_parameter_change('canvas_shape_dims.d', float(value or 0))
 
     def l_input_change(self, instance, value):
         if self.sm.current == 'drywall_cutter':
             value = self.remove_negatives(instance, value)
+            value = self.format_input(value, 1)
+            instance.text = value
             self.dwt_config.on_parameter_change('canvas_shape_dims.l', float(value or 0))
 
     def r_input_change(self, instance, value):
@@ -428,12 +447,16 @@ class DrywallShapeDisplay(Widget):
     def x_input_change(self, instance, value):
         if self.sm.current == 'drywall_cutter':
             value = self.remove_negatives(instance, value)
+            value = self.format_input(value, 1)
+            instance.text = value
             self.do_rectangle_checks()
             self.dwt_config.on_parameter_change('canvas_shape_dims.x', float(value or 0))
 
     def y_input_change(self, instance, value):
         if self.sm.current == 'drywall_cutter':
             value = self.remove_negatives(instance, value)
+            value = self.format_input(value, 1)
+            instance.text = value
             self.do_rectangle_checks()
             self.dwt_config.on_parameter_change('canvas_shape_dims.y', float(value or 0))
 
@@ -441,7 +464,7 @@ class DrywallShapeDisplay(Widget):
         if not self.swapping_lengths:
             if self.rotation_required():
                 self.sm.get_screen('drywall_cutter').rotate_shape(swap_lengths=False)
-            if self.rectangle_with_equal_sides():
+            if self.rectangle_with_equal_sides() and False: # DISABLE
                 toolpath = self.dwt_config.active_config.toolpath_offset
                 self.sm.get_screen('drywall_cutter').select_shape('square')
                 self.sm.get_screen('drywall_cutter').select_toolpath(toolpath)
@@ -469,21 +492,57 @@ class DrywallShapeDisplay(Widget):
             value = ""
         return value
 
-    def check_datum_and_extents(self, dt):
-        # All maths in this function from Ed, documented here https://docs.google.com/spreadsheets/d/1X37CWF8bsXeC0dY-HsbwBu_QR6N510V-5aPTnxwIR6I/edit#gid=677510108
-        current_x = round(self.m.x_wco() + (self.m.get_dollar_setting(130) - self.m.limit_switch_safety_distance) - self.m.laser_offset_tool_clearance_to_access_edge_of_sheet, 2)
-        current_y = round(self.m.y_wco() + (self.m.get_dollar_setting(131) - self.m.limit_switch_safety_distance) - (self.m.get_dollar_setting(27) - self.m.limit_switch_safety_distance), 2)
-        self.x_datum_label.text = 'X: ' + str(current_x)
-        self.y_datum_label.text = 'Y: ' + str(current_y)
 
+    def set_datum_in_config_with_m_wco(self, dt):
         if self.dwt_config.active_config.datum_position.x != self.m.x_wco():
             self.dwt_config.active_config.datum_position.x = self.m.x_wco()
 
         if self.dwt_config.active_config.datum_position.y != self.m.y_wco():
             self.dwt_config.active_config.datum_position.y = self.m.y_wco()
 
+    def check_datum_and_extents(self, dt):
+        # All maths in this function from Ed, documented here https://docs.google.com/spreadsheets/d/1X37CWF8bsXeC0dY-HsbwBu_QR6N510V-5aPTnxwIR6I/edit#gid=677510108
+
+        # DATUM/POSITION COORDINATES
+        # Coordinates were originally the current datum position, m.[]_wco()
+        # Now we've set them to be the live machine coordinates so that you can see coords update as you move the machine around
+        # I've put both options here, so we can comment in/out as Ed & Az change their minds about what they want (:
+
+        # x_coord = self.m.x_wco()
+        # y_coord = self.m.y_wco()
+
+        x_coord = self.m.mpos_x() + self.m.laser_offset_x_value if self.m.is_laser_on else self.m.mpos_x()
+        y_coord = self.m.mpos_y() + self.m.laser_offset_y_value if self.m.is_laser_on else self.m.mpos_y()
+
+        # REST OF THIS FUNCTION
+
+        # Get current x/y values & shape clearances
+        current_shape = self.dwt_config.active_config.shape_type.lower()
+        current_x, current_y = self.get_current_x_y(x_coord, y_coord)
+        tool_offset_value = self.tool_offset_value()
+        x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance = self.get_x_y_clearances(current_shape, x_coord, y_coord, tool_offset_value)
+
+        # Update canvas elements
+        self.set_datum_position_label(round(current_x, 1), round(current_y, 1))
+        self.update_bumpers_and_validation_labels(current_shape, current_x, current_y, x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance)
+
+    # Check_datum_and_extents sub-functions below this comment:
+
+    def get_current_x_y(self, x_coord, y_coord):
+        current_x = round(x_coord + (self.m.get_dollar_setting(130) - self.m.limit_switch_safety_distance) - self.m.laser_offset_tool_clearance_to_access_edge_of_sheet, 2)
+        current_y = round(y_coord + (self.m.get_dollar_setting(131) - self.m.limit_switch_safety_distance) - (self.m.get_dollar_setting(27) - self.m.limit_switch_safety_distance), 2)
+        return current_x, current_y
+
+    def set_datum_position_label(self, current_x, current_y):
+        self.x_datum_label.text = 'X: ' + str(current_x)
+        self.y_datum_label.text = 'Y: ' + str(current_y)
+
+    def tool_offset_value(self):
         # Account for cutter size
-        cutter_radius = self.dwt_config.active_cutter.diameter / 2
+        if self.dwt_config.active_cutter.units == "mm":
+            cutter_radius = self.dwt_config.active_cutter.diameter / 2
+        else:
+            cutter_radius = 0
         if self.dwt_config.active_config.toolpath_offset == 'inside':
             tool_offset_value = -cutter_radius
         elif self.dwt_config.active_config.toolpath_offset == 'outside':
@@ -491,8 +550,10 @@ class DrywallShapeDisplay(Widget):
         else:
             tool_offset_value = 0
 
+        return tool_offset_value
+
+    def get_x_y_clearances(self, current_shape, x_coord, y_coord, tool_offset_value):
         # Calculate shape's extent from datum using shape type and input dimensions
-        current_shape = self.dwt_config.active_config.shape_type.lower()
         if current_shape == 'circle':
             x_min = y_min = -(float(self.d_input.text or 0) / 2) - tool_offset_value
             x_dim = y_dim = (float(self.d_input.text or 0) / 2) + tool_offset_value
@@ -516,13 +577,20 @@ class DrywallShapeDisplay(Widget):
             x_dim, y_dim, x_min, y_min = self.engine.get_custom_shape_extents()
 
         # Calculate shape's distances from every edge
-        x_min_clearance = self.m.x_wco() + x_min + self.m.get_dollar_setting(130) - self.m.limit_switch_safety_distance
-        y_min_clearance = self.m.y_wco() + y_min + self.m.get_dollar_setting(131) - self.m.limit_switch_safety_distance
-        x_max_clearance = -(self.m.x_wco() + x_dim) - self.m.limit_switch_safety_distance
-        y_max_clearance = -(self.m.y_wco() + y_dim) - self.m.limit_switch_safety_distance
+        x_min_clearance = x_coord + x_min + self.m.get_dollar_setting(130) - self.m.limit_switch_safety_distance
+        y_min_clearance = y_coord + y_min + self.m.get_dollar_setting(131) - self.m.limit_switch_safety_distance
+        x_max_clearance = -(x_coord + x_dim) - self.m.limit_switch_safety_distance
+        y_max_clearance = -(y_coord + y_dim) - self.m.limit_switch_safety_distance
+
+        return x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance
+
+    def update_bumpers_and_validation_labels(self, current_shape, current_x, current_y, 
+                                            x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance):
+        # I think this function could be broken down & refactored as well, but I don't need to address it right now.
 
         self.x_datum_validation_label.opacity = 0
         self.y_datum_validation_label.opacity = 0
+
         # Set bumper colours based on whether anything crosses a boundary, and show validation labels
         if x_min_clearance < 0:
             self.bumper_bottom_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_bottom_red.png"

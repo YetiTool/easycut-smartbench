@@ -6,6 +6,7 @@ from kivy.lang import Builder
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen
+from kivy.clock import Clock
 
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
@@ -29,6 +30,7 @@ Builder.load_string("""
     tool_selection:tool_selection
     shape_selection:shape_selection
     rotate_button:rotate_button
+    simulate_button:simulate_button
     toolpath_selection:toolpath_selection
     shape_display_container:shape_display_container
     xy_move_container:xy_move_container
@@ -131,6 +133,7 @@ Builder.load_string("""
                         allow_stretch: True
                         text: 'Simulate'
                         on_press: root.simulate()
+                        id: simulate_button
                     ImageButton:
                         source: './asmcnc/apps/drywall_cutter_app/img/save_button.png'
                         allow_stretch: True
@@ -247,7 +250,7 @@ class DrywallCutterScreen(Screen):
         else:
             self.rotate_button.disabled = True
 
-        self.rotation = 'horizontal'
+        self.rotation = self.dwt_config.active_config.rotation
         self.drywall_shape_display_widget.select_shape(shape, self.rotation)
         self.select_toolpath(new_toolpath)
 
@@ -283,9 +286,15 @@ class DrywallCutterScreen(Screen):
         self.jd.reset_values()
         self.sm.current = 'lobby'
 
-    def simulate(self):
+    def simulate(self):        
         if self.are_inputs_valid():
+            self.simulate_button.disabled = True
             self.engine.engine_run(simulate=True)
+            sim_popup = popup_info.PopupWait(self.sm, self.l, "Preparing for simulation")
+            Clock.schedule_once(
+                                lambda dt: self.dismiss_popup(sim_popup), 2)
+            Clock.schedule_once(
+                            lambda dt: self.enable_simulation_button(), 5)
         else:
             popup_info.PopupError(self.sm, self.l, "Please check your inputs are valid, and not too small.")
 
@@ -317,6 +326,12 @@ class DrywallCutterScreen(Screen):
     def set_return_screens(self):
         self.sm.get_screen('go').return_to_screen = 'drywall_cutter' if self.sm.get_screen('go').return_to_screen == 'home' else 'home'
         self.sm.get_screen('go').cancel_to_screen = 'drywall_cutter' if self.sm.get_screen('go').cancel_to_screen == 'home' else 'home'
+
+    def enable_simulation_button(self):
+        self.simulate_button.disabled = False
+
+    def dismiss_popup(self, popup):
+        popup.popup.dismiss()
 
     def proceed_to_go_screen(self):
 
@@ -427,5 +442,9 @@ class DrywallCutterScreen(Screen):
 
         self.dwt_config.save_config(file_name)
 
+    def on_enter(self):
+        self.m.laser_on()
+
     def on_leave(self, *args):
         self.dwt_config.save_temp_config()
+        self.m.laser_off()
