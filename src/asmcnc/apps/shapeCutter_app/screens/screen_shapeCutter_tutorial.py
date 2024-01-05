@@ -57,8 +57,10 @@ Builder.load_string(
                     pos: self.parent.pos
                     Image:
                         source: "./asmcnc/apps/shapeCutter_app/img/prepare_tab_blue.png"
-                        size: self.parent.size
-                        stretch: True
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
                 id: load_tab
@@ -73,8 +75,10 @@ Builder.load_string(
                     pos: self.parent.pos
                     Image:
                         source: "./asmcnc/apps/shapeCutter_app/img/load_tab_blue.png"
-                        size: self.parent.size
-                        stretch: True
+                        center_x: self.parent.center_x
+                        y: self.parent.y
+                        size: self.parent.width, self.parent.height
+                        allow_stretch: True
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
                 id: define_tab
