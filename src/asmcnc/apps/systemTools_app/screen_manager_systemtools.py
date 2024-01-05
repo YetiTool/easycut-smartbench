@@ -154,24 +154,38 @@ class ScreenManagerSystemTools(object):
         def copy_settings_to_usb():
             if self.usb_stick.is_usb_mounted_flag:
                 # TODO copy files here
-                '''
-                Pro+ Reactivation and health check option (Also Spindle cooldown and Stylus settings?)
-                Spindle information (SC1 or SC2 and Voltage)
-                Job files
-                Maintenance intervals
-                Laser datum offset
-                Console hostname (Where possible, or a note to update SmartManger hostname)
-                Smartbench name
-                Wi-Fi information (Maybe already inputted by customer)
-                '''
-                success_flag = True
+                try:
+                    # create temp folder
+                    os.system('mkdir -p /home/pi/easycut-smartbench/transfer_tmp/easycut-smartbench/src')
+                    # copy settings
+                    os.system('cp -r /home/pi/easycut-smartbench/src/sb_values /home/pi/easycut-smartbench/transfer_tmp/easycut-smartbench/src/')
+                    # remove GRBL-file if exists. might be outdated. There is a separate function for that.
+                    os.system('rm /home/pi/easycut-smartbench/transfer_tmp/easycut-smartbench/src/sb_values/saved_grbl_settings_params.txt')
+                    # copy job files
+                    os.system('cp -r /home/pi/easycut-smartbench/src/jobCache /home/pi/easycut-smartbench/transfer_tmp/easycut-smartbench/src/')
+                    # smartbench name, model-name, location
+                    os.system('cp /home/pi/smartbench* /home/pi/easycut-smartbench/transfer_tmp/')
+                    # model version files
+                    os.system('cp /home/pi/multiply.txt /home/pi/easycut-smartbench/transfer_tmp/')
+                    os.system('cp /home/pi/plus.txt /home/pi/easycut-smartbench/transfer_tmp/')
+                    # compress everything to usb
+                    os.system('tar czf /media/usb/transfer.tar.gz -C /home/pi/easycut-smartbench/transfer_tmp .')
+                except:
+                    pass
+                try:
+                    #clean up
+                    os.system('rm -r /home/pi/easycut-smartbench/transfer_tmp')
+                except:
+                    pass
                 wait_popup.popup.dismiss()
-                if success_flag:
+                #check if transfer file exists
+                if os.path.isfile('/media/usb/transfer.tar.gz'):
                     message = self.l.get_str('Successfully saved settings to USB!')
                     popup_info.PopupMiniInfo(self.sm, self.l, description=message)
                 else:
                     message = self.l.get_str('Could not save settings. Please check USB!')
                     popup_info.PopupMiniInfo(self.sm, self.l, description=message)
+                self.usb_stick.disable()
 
         Clock.schedule_once(lambda dt: copy_settings_to_usb(), 0.2)
 
@@ -183,19 +197,18 @@ class ScreenManagerSystemTools(object):
 
         def restore_settings_from_usb():
             if self.usb_stick.is_usb_mounted_flag:
-                # TODO copy files here
-                '''
-                Pro+ Reactivation and health check option (Also Spindle cooldown and Stylus settings?)
-                Spindle information (SC1 or SC2 and Voltage)
-                Job files
-                Maintenance intervals
-                Laser datum offset
-                Console hostname (Where possible, or a note to update SmartManger hostname)
-                Smartbench name
-                Wi-Fi information (Maybe already inputted by customer)
-                '''
+                # TODO restore files here
                 success_flag = True
+                try:
+                    # decompress from usb
+                    os.system('tar xf /media/usb/transfer.tar.gz -C /home/pi/')
+                    # clean up
+                    os.system('rm /media/usb/transfer.tar.gz')
+                except:
+                    success_flag = False
+                    pass
                 wait_popup.popup.dismiss()
+                self.usb_stick.disable()
                 if success_flag:
                     message = self.l.get_str('Successfully restored settings from USB!')
                     popup_info.PopupMiniInfo(self.sm, self.l, description=message)
