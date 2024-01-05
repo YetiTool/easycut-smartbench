@@ -3,21 +3,16 @@
 Created on 1 Feb 2018
 @author: Ed
 """
-
 import kivy, textwrap
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import (
-    ObjectProperty,
-    ListProperty,
-    NumericProperty,
-)  # @UnresolvedImport
+from kivy.properties import ObjectProperty, ListProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.clock import Clock
 from asmcnc.skavaUI import popup_info
-
+from kivy.core.window import Window
 
 Builder.load_string(
     """
@@ -33,8 +28,8 @@ Builder.load_string(
         size: self.parent.size
         pos: self.parent.pos      
         orientation: 'vertical'
-        padding: 10
-        spacing: 10
+        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+        spacing:0.0208333333333*app.height
         
         GridLayout:
             cols: 3
@@ -46,10 +41,11 @@ Builder.load_string(
 
             # go x datum
             BoxLayout:
-                padding: 10
+                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                 size: self.parent.size
                 pos: self.parent.pos                 
                 Button:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     background_color: hex('#F4433600')
                     on_release: 
                         self.background_color = hex('#F4433600')
@@ -69,6 +65,7 @@ Builder.load_string(
 
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 background_color: hex('#F4433600')
                 always_release: True
                 on_release: 
@@ -90,10 +87,11 @@ Builder.load_string(
 
             # go y datum
             BoxLayout:
-                padding: 10
+                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                 size: self.parent.size
                 pos: self.parent.pos                 
                 Button:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     background_color: hex('#F4433600')
                     on_release: 
                         self.background_color = hex('#F4433600')
@@ -111,6 +109,7 @@ Builder.load_string(
                             allow_stretch: True  
                             
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 background_color: hex('#F4433600')
                 always_release: True
                 on_release: 
@@ -130,6 +129,7 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True                                    
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 background_color: hex('#F4433600')
                 on_release: 
                     self.background_color = hex('#F4433600')
@@ -148,6 +148,7 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True  
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 background_color: hex('#F4433600')
                 always_release: True
                 on_release: 
@@ -169,10 +170,11 @@ Builder.load_string(
 
             # set x datum
             BoxLayout:
-                padding: 10
+                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                 size: self.parent.size
                 pos: self.parent.pos                 
                 Button:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     background_color: hex('#F4433600')
                     on_release: 
                         self.background_color = hex('#F4433600')
@@ -190,6 +192,7 @@ Builder.load_string(
                             allow_stretch: True               
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 background_color: hex('#F4433600')
                 always_release: True
                 on_release:
@@ -213,10 +216,11 @@ Builder.load_string(
 
             # set y datum
             BoxLayout:
-                padding: 10
+                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                 size: self.parent.size
                 pos: self.parent.pos
                 Button:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     background_color: hex('#F4433600')
                     on_release: 
                         self.background_color = hex('#F4433600')
@@ -236,9 +240,10 @@ Builder.load_string(
                 
         BoxLayout:
             orientation: 'horizontal'
-            spacing: 10
+            spacing:0.0125*app.width
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 background_color: hex('#F4433600')
                 on_release: 
                     self.background_color = hex('#F4433600')
@@ -246,7 +251,7 @@ Builder.load_string(
                     root.set_standby_to_pos()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: [0, 20, 40, 20]
+                    padding:[0, dp(0.0416666666667)*app.height, dp(0.05)*app.width, dp(0.0416666666667)*app.height]
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
@@ -257,6 +262,7 @@ Builder.load_string(
                         allow_stretch: True            
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 background_color: hex('#F4433600')
                 on_release: 
                     self.background_color = hex('#F4433600')
@@ -264,7 +270,7 @@ Builder.load_string(
                     root.set_workzone_to_pos_xy()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: [40, 20, 0, 20]
+                    padding:[dp(0.05)*app.width, dp(0.0416666666667)*app.height, 0, dp(0.0416666666667)*app.height]
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
@@ -279,8 +285,6 @@ Builder.load_string(
 
 
 class XYMove(Widget):
-    # localize meee
-
     def __init__(self, **kwargs):
         super(XYMove, self).__init__(**kwargs)
         self.m = kwargs["machine"]
@@ -316,7 +320,6 @@ class XYMove(Widget):
     def buttonJogXY(self, case):
         x_feed_speed = self.sm.get_screen("home").common_move_widget.feedSpeedJogX
         y_feed_speed = self.sm.get_screen("home").common_move_widget.feedSpeedJogY
-
         if self.jogMode == "free":
             if case == "X-":
                 self.m.jog_absolute_single_axis(
@@ -334,7 +337,6 @@ class XYMove(Widget):
                 self.m.jog_absolute_single_axis(
                     "Y", self.m.y_max_jog_abs_limit, y_feed_speed
                 )
-
         elif self.jogMode == "plus_0-01":
             if case == "X+":
                 self.m.jog_relative("X", 0.01, x_feed_speed)
@@ -344,7 +346,6 @@ class XYMove(Widget):
                 self.m.jog_relative("Y", 0.01, y_feed_speed)
             if case == "Y-":
                 self.m.jog_relative("Y", -0.01, y_feed_speed)
-
         elif self.jogMode == "plus_0-1":
             if case == "X+":
                 self.m.jog_relative("X", 0.1, x_feed_speed)
@@ -354,7 +355,6 @@ class XYMove(Widget):
                 self.m.jog_relative("Y", 0.1, y_feed_speed)
             if case == "Y-":
                 self.m.jog_relative("Y", -0.1, y_feed_speed)
-
         elif self.jogMode == "plus_1":
             if case == "X+":
                 self.m.jog_relative("X", 1, x_feed_speed)
@@ -364,7 +364,6 @@ class XYMove(Widget):
                 self.m.jog_relative("Y", 1, y_feed_speed)
             if case == "Y-":
                 self.m.jog_relative("Y", -1, y_feed_speed)
-
         elif self.jogMode == "plus_10":
             if case == "X+":
                 self.m.jog_relative("X", 10, x_feed_speed)
@@ -374,12 +373,10 @@ class XYMove(Widget):
                 self.m.jog_relative("Y", 10, y_feed_speed)
             if case == "Y-":
                 self.m.jog_relative("Y", -10, y_feed_speed)
-
         elif self.jogMode == "job":
             job_box = self.sm.get_screen("home").job_box
             job_x_range = job_box.range_x[1] - job_box.range_x[0]
             job_y_range = job_box.range_y[1] - job_box.range_y[0]
-
             if case == "X+":
                 self.m.jog_relative("X", job_x_range, x_feed_speed)
             if case == "X-":
@@ -395,13 +392,10 @@ class XYMove(Widget):
 
     def set_workzone_to_pos_xy(self):
         warning = self.format_command(
-            (
-                self.l.get_str("Is this where you want to set your X-Y datum?").replace(
-                    "X-Y", "[b]X-Y[/b]"
-                )
-            ).replace(self.l.get_str("datum"), self.l.get_bold("datum"))
+            self.l.get_str("Is this where you want to set your X-Y datum?")
+            .replace("X-Y", "[b]X-Y[/b]")
+            .replace(self.l.get_str("datum"), self.l.get_bold("datum"))
         )
-
         popup_info.PopupDatum(self.sm, self.m, self.l, "XY", warning)
 
     def set_standby_to_pos(self):
@@ -424,26 +418,20 @@ class XYMove(Widget):
 
     def set_x_datum(self):
         warning = self.format_command(
-            (
-                self.l.get_str("Is this where you want to set your X-Y datum?").replace(
-                    "X-Y", "[b]X[/b]"
-                )
-            ).replace(self.l.get_str("datum"), self.l.get_bold("datum"))
+            self.l.get_str("Is this where you want to set your X-Y datum?")
+            .replace("X-Y", "[b]X[/b]")
+            .replace(self.l.get_str("datum"), self.l.get_bold("datum"))
         )
-
         popup_info.PopupDatum(self.sm, self.m, self.l, "X", warning)
 
     def set_y_datum(self):
         warning = self.format_command(
-            (
-                self.l.get_str("Is this where you want to set your X-Y datum?").replace(
-                    "X-Y", "[b]Y[/b]"
-                )
-            ).replace(self.l.get_str("datum"), self.l.get_bold("datum"))
+            self.l.get_str("Is this where you want to set your X-Y datum?")
+            .replace("X-Y", "[b]Y[/b]")
+            .replace(self.l.get_str("datum"), self.l.get_bold("datum"))
         )
-
         popup_info.PopupDatum(self.sm, self.m, self.l, "Y", warning)
 
     def format_command(self, cmd):
-        wrapped_cmd = textwrap.fill(cmd, width=35, break_long_words=False)
+        wrapped_cmd = textwrap.fill(cmd, width=0.04375*Window.width, break_long_words=False)
         return wrapped_cmd

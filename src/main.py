@@ -105,7 +105,7 @@ from asmcnc.skavaUI import screen_homing_decision  # @UnresolvedImport
 Cmport = "COM3"
 
 # Current version active/working on
-initial_version = "v2.7.0"
+initial_version = 'v2.8.0'
 
 config_flag = False
 
@@ -430,7 +430,7 @@ class SkavaUI(App):
         #     else:
         #         self.test_no = 0
         
-        # Clock.schedule_interval(test_cycle, 5)
+        # Clock.schedule_interval(test_cycle, 20)
 
         # def test_run_through_sequence(dt):
 

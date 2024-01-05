@@ -3,7 +3,6 @@ Created on 26 Jul 2021
 @author: Dennis
 Widget to display gcode as an alternative to a drawing
 """
-
 import kivy
 from kivy.lang import Builder
 from kivy.uix.scrollview import ScrollView
@@ -18,6 +17,7 @@ Builder.load_string(
     text_container: text_container
 
     Label:
+        font_size: str(0.01875 * app.width) + 'sp'
         id: text_container
         color: [0, 0, 0, 1]
         size_hint_y: None

@@ -1,8 +1,5 @@
 from kivy.lang import Builder
-from kivy.uix.widget import Widget
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.label import Label
-from kivy.graphics import RoundedRectangle
 
 Builder.load_string(
     """
@@ -16,19 +13,19 @@ Builder.load_string(
 
     BoxLayout: 
         orientation: "horizontal"
-        padding: 20
+        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
 
         BoxLayout: 
             orientation: "vertical"
             size_hint_x: 0.88
-            spacing: 2
+            spacing:0.00416666666667*app.height
 
             Label: 
                 id: title_text
                 size_hint_y: 0.15
                 text: "Spindle motor health check"
                 color: [0,0,0,1]
-                font_size: "24sp"
+                font_size: str(0.03*app.width) + 'sp'
                 halign: "left"
                 # valign: "top"
                 markup: True
@@ -39,7 +36,7 @@ Builder.load_string(
                 size_hint_y: 0.85
                 text: ""
                 color: [0,0,0,1]
-                font_size: "18sp"
+                font_size: str(0.0225*app.width) + 'sp'
                 halign: "left"
                 valign: "top"
                 markup: True
@@ -47,7 +44,7 @@ Builder.load_string(
 
         BoxLayout: 
             size_hint_x: 0.12
-            padding: [0,0,0,50]
+            padding:[0, 0, 0, dp(0.104166666667)*app.height]
             spacing: 0
             orientation: 'vertical'
 
@@ -59,12 +56,13 @@ Builder.load_string(
 
             BoxLayout: 
                 size_hint_y: 0.1
-                padding: [10,0,0,0]
+                padding:[dp(0.0125)*app.width, 0, 0, 0]
 
                 ToggleButton:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     id: switch
                     size_hint: (None, None)
-                    size: ('64dp', '29dp')
+                    size: (dp(64.0/800)*app.width, dp(29.0/480)*app.height)
                     background_normal: ''
                     background_down: ''
                     on_press: root.toggle_yeti_pilot_availability(self)
@@ -89,7 +87,6 @@ class WidgetSpindleHealthCheck(BoxLayout):
         self.sm = kwargs["screen_manager"]
         self.m = kwargs["machine"]
         self.l = kwargs["localization"]
-
         self.set_switch_state_to_health_check()
         self.toggle_yeti_pilot_availability(self.switch)
         self.update_strings()
@@ -101,7 +98,7 @@ class WidgetSpindleHealthCheck(BoxLayout):
 
     def toggle_button_img(self, state):
         self.yp_toggle_img.source = "./asmcnc/core_UI/job_go/img/yp_toggle_%s.png" % (
-            ("on" if state == "down" else "off")
+            "on" if state == "down" else "off"
         )
 
     def toggle_yeti_pilot_availability(self, switch):
@@ -111,7 +108,6 @@ class WidgetSpindleHealthCheck(BoxLayout):
 
     def update_strings(self):
         self.title_text.text = self.l.get_bold("Spindle motor health check")
-
         self.body_text.text = (
             "[color=e64a19ff]"
             + self.l.get_str(

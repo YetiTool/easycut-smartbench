@@ -2,24 +2,13 @@
 Created on 1 Feb 2018
 @author: Ed
 """
-
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import (
-    ObjectProperty,
-    ListProperty,
-    NumericProperty,
-)  # @UnresolvedImport
 from kivy.uix.widget import Widget
-from kivy.base import runTouchApp
-
-from asmcnc.skavaUI import widget_z_height
-from kivy.clock import Clock
 
 from asmcnc.skavaUI import popup_info
+from asmcnc.skavaUI import widget_z_height
 
+from asmcnc.core_UI.popups import InfoPopup
 
 Builder.load_string(
     """
@@ -32,12 +21,12 @@ Builder.load_string(
 
         size: self.parent.size
         pos: self.parent.pos      
-        padding: 20
-        spacing: 20
+        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+        spacing:0.025*app.width
         orientation: 'horizontal'
         
         BoxLayout:
-            spacing: 10
+            spacing:0.0208333333333*app.height
             orientation: "vertical"
             
             BoxLayout:
@@ -45,10 +34,11 @@ Builder.load_string(
                 id: virtual_z_container
 
         BoxLayout:
-            spacing: 10
+            spacing:0.0208333333333*app.height
             orientation: "vertical"
             
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release:
@@ -70,6 +60,7 @@ Builder.load_string(
                         allow_stretch: True   
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 
@@ -91,13 +82,14 @@ Builder.load_string(
                         allow_stretch: True   
                         
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 background_color: hex('#F4433600')
                 on_press: root.get_info()
                 BoxLayout:
-                    padding: (dp(7.5), dp(20), dp(32.5), dp(20))
+                    padding:[dp(0.009375)*app.width, dp(0.0416666666667)*app.height, dp(0.040625)*app.width, dp(0.0416666666667)*app.height]
                     size_hint: (None,None)
-                    height: dp(100)
-                    width: dp(100)
+                    height: dp(0.208333333333*app.height)
+                    width: dp(0.125*app.width)
                     pos: self.parent.pos
                     Image:
                         source: "./asmcnc/apps/shapeCutter_app/img/info_icon.png"
@@ -125,9 +117,7 @@ class MaintenanceZMove(Widget):
 
     def jog_z(self, case):
         self.m.set_led_colour("WHITE")
-
         feed_speed = self.sm.get_screen("maintenance").xy_move_widget.feedSpeedJogZ
-
         if self.sm.get_screen("maintenance").xy_move_widget.jogMode == "free":
             if case == "Z-":
                 self.m.jog_absolute_single_axis(
@@ -137,31 +127,26 @@ class MaintenanceZMove(Widget):
                 self.m.jog_absolute_single_axis(
                     "Z", self.m.z_max_jog_abs_limit, feed_speed
                 )
-
         elif self.sm.get_screen("maintenance").xy_move_widget.jogMode == "plus_0-01":
             if case == "Z+":
                 self.m.jog_relative("Z", 0.01, feed_speed)
             if case == "Z-":
                 self.m.jog_relative("Z", -0.01, feed_speed)
-
         elif self.sm.get_screen("maintenance").xy_move_widget.jogMode == "plus_0-1":
             if case == "Z+":
                 self.m.jog_relative("Z", 0.1, feed_speed)
             if case == "Z-":
                 self.m.jog_relative("Z", -0.1, feed_speed)
-
         elif self.sm.get_screen("maintenance").xy_move_widget.jogMode == "plus_1":
             if case == "Z+":
                 self.m.jog_relative("Z", 1, feed_speed)
             if case == "Z-":
                 self.m.jog_relative("Z", -1, feed_speed)
-
         elif self.sm.get_screen("maintenance").xy_move_widget.jogMode == "plus_10":
             if case == "Z+":
                 self.m.jog_relative("Z", 10, feed_speed)
             if case == "Z-":
                 self.m.jog_relative("Z", -10, feed_speed)
-
         elif self.sm.get_screen("maintenance").xy_move_widget.jogMode == "job":
             if case == "Z-":
                 self.m.jog_absolute_single_axis(
@@ -201,4 +186,6 @@ class MaintenanceZMove(Widget):
             )
         )
 
-        popup_info.PopupInfo(self.sm, self.l, 700, info)
+        popup = InfoPopup(sm=self.sm, m=self.m, l=self.l, main_string=info, popup_width=700, popup_height=440)
+        popup.open()
+

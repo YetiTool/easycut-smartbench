@@ -2,22 +2,15 @@
 Created on 1 Feb 2018
 @author: Ed
 """
-
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import (
-    ObjectProperty,
-    ListProperty,
-    NumericProperty,
-)  # @UnresolvedImport
+from kivy.properties import ObjectProperty, ListProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
-
 from asmcnc.skavaUI import widget_z_height
 from kivy.clock import Clock
-
 
 Builder.load_string(
     """
@@ -30,12 +23,12 @@ Builder.load_string(
 
         size: self.parent.size
         pos: self.parent.pos      
-        padding: 20
-        spacing: 10
+        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+        spacing:0.0125*app.width
         orientation: 'horizontal'
         
         BoxLayout:
-            spacing: 10
+            spacing:0.0208333333333*app.height
             orientation: "vertical"
             
             BoxLayout:
@@ -43,6 +36,7 @@ Builder.load_string(
                 id: virtual_z_container
                 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 
@@ -65,10 +59,11 @@ Builder.load_string(
     
     
         BoxLayout:
-            spacing: 10
+            spacing:0.0208333333333*app.height
             orientation: "vertical"
             
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release:
@@ -89,6 +84,7 @@ Builder.load_string(
                         allow_stretch: True   
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 
@@ -110,6 +106,7 @@ Builder.load_string(
                         allow_stretch: True   
                         
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 
@@ -129,6 +126,7 @@ Builder.load_string(
                         allow_stretch: True   
                         
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 
@@ -150,16 +148,16 @@ Builder.load_string(
     FloatLayout:
         
         Label:
-            x: 662
-            y: 420
+            x: 0.8275*app.width
+            y: 0.875*app.height
             size_hint: None, None            
-            height: 30
-            width: 30
+            height: dp(30.0/480.0)*app.height
+            width: 0.0375*app.width
             text: 'Z'
             markup: True
             bold: True
             color: 0,0,0,0.2
-            font_size: 20     
+            font_size: 0.025*app.width     
         
 """
 )
@@ -179,9 +177,7 @@ class ZMove(Widget):
 
     def jog_z(self, case):
         self.m.set_led_colour("WHITE")
-
         feed_speed = self.sm.get_screen("home").common_move_widget.feedSpeedJogZ
-
         if self.sm.get_screen("home").xy_move_widget.jogMode == "free":
             if case == "Z-":
                 self.m.jog_absolute_single_axis(
@@ -191,31 +187,26 @@ class ZMove(Widget):
                 self.m.jog_absolute_single_axis(
                     "Z", self.m.z_max_jog_abs_limit, feed_speed
                 )
-
         elif self.sm.get_screen("home").xy_move_widget.jogMode == "plus_0-01":
             if case == "Z+":
                 self.m.jog_relative("Z", 0.01, feed_speed)
             if case == "Z-":
                 self.m.jog_relative("Z", -0.01, feed_speed)
-
         elif self.sm.get_screen("home").xy_move_widget.jogMode == "plus_0-1":
             if case == "Z+":
                 self.m.jog_relative("Z", 0.1, feed_speed)
             if case == "Z-":
                 self.m.jog_relative("Z", -0.1, feed_speed)
-
         elif self.sm.get_screen("home").xy_move_widget.jogMode == "plus_1":
             if case == "Z+":
                 self.m.jog_relative("Z", 1, feed_speed)
             if case == "Z-":
                 self.m.jog_relative("Z", -1, feed_speed)
-
         elif self.sm.get_screen("home").xy_move_widget.jogMode == "plus_10":
             if case == "Z+":
                 self.m.jog_relative("Z", 10, feed_speed)
             if case == "Z-":
                 self.m.jog_relative("Z", -10, feed_speed)
-
         elif self.sm.get_screen("home").xy_move_widget.jogMode == "job":
             if case == "Z-":
                 self.m.jog_absolute_single_axis(

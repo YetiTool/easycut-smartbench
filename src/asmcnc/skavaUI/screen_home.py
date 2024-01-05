@@ -4,25 +4,16 @@ Created on 19 Aug 2017
 
 @author: Ed
 """
-# config
-
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, FadeTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import (
-    ObjectProperty,
-    ListProperty,
-    NumericProperty,
-)  # @UnresolvedImport
+from kivy.properties import ObjectProperty, ListProperty, NumericProperty
 from kivy.uix.widget import Widget
-
 from kivy.clock import Clock
-
 import os, sys, threading
 from datetime import datetime
 from multiprocessing import Process, Manager
-
 from asmcnc.skavaUI import (
     widget_virtual_bed,
     widget_status_bar,
@@ -30,17 +21,16 @@ from asmcnc.skavaUI import (
     widget_xy_move,
     widget_common_move,
     widget_quick_commands,
-)  # @UnresolvedImport
+)
 from asmcnc.skavaUI import (
     widget_virtual_bed_control,
     widget_gcode_monitor,
     widget_gcode_summary,
     widget_gcode_view,
-)  # @UnresolvedImport
+)
 from asmcnc.skavaUI import popup_info
-from asmcnc.geometry import job_envelope  # @UnresolvedImport
+from asmcnc.geometry import job_envelope
 from time import sleep
-
 
 Builder.load_string(
     """
@@ -72,13 +62,13 @@ Builder.load_string(
 
     BoxLayout:
         padding: 0
-        spacing: 10
+        spacing:0.0208333333333*app.height
         orientation: "vertical"
 
         BoxLayout:
             size_hint_y: 0.9
             padding: 0
-            spacing: 10
+            spacing:0.0125*app.width
             orientation: "horizontal"
 
             BoxLayout:
@@ -90,16 +80,16 @@ Builder.load_string(
                     pos_hint: {'center_x': .5, 'center_y': .5}
                     do_default_tab: False
                     tab_pos: 'left_top'
-                    tab_height: 90
-                    tab_width: 90
+                    tab_height: 0.1875*app.height
+                    tab_width: 0.1125*app.width
 
                     TabbedPanelItem:
                         background_normal: 'asmcnc/skavaUI/img/tab_set_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_set_up.png'
                         on_press: root.m.laser_off()
                         BoxLayout:
-                            padding: 20
-                            spacing: 20
+                            padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                            spacing:0.025*app.width
                             canvas:
                                 Color:
                                     rgba: hex('#E5E5E5FF')
@@ -118,8 +108,8 @@ Builder.load_string(
                         on_press: root.m.laser_on()
                         BoxLayout:
                             orientation: 'horizontal'
-                            padding: 20
-                            spacing: 20
+                            padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                            spacing:0.025*app.width
                             canvas:
                                 Color:
                                     rgba: hex('#E5E5E5FF')
@@ -159,8 +149,8 @@ Builder.load_string(
                         on_press: root.m.laser_on()
                         BoxLayout:
                             orientation: 'vertical'
-                            padding: 20
-                            spacing: 20
+                            padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                            spacing:0.0416666666667*app.height
                             canvas:
                                 Color:
                                     rgba: hex('#E5E5E5FF')
@@ -170,7 +160,7 @@ Builder.load_string(
 
                             BoxLayout:
                                 size_hint_y: 5
-                                padding: 10
+                                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                                 canvas:
                                     Color:
                                         rgba: 1,1,1,1
@@ -191,8 +181,8 @@ Builder.load_string(
                         id: home_tab
                         BoxLayout:
                             orientation: 'vertical'
-                            padding: 20
-                            spacing: 20
+                            padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                            spacing:0.0416666666667*app.height
                             id: job_container
                             canvas:
                                 Color:
@@ -203,8 +193,8 @@ Builder.load_string(
 
                             BoxLayout:
                                 size_hint_y: 1
-                                padding: 10
-                                spacing: 10
+                                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                                spacing:0.0125*app.width
                                 orientation: 'horizontal'
                                 canvas:
                                     Color:
@@ -214,6 +204,7 @@ Builder.load_string(
                                         pos: self.pos
 
                                 Button:
+                                    font_size: str(0.01875 * app.width) + 'sp'
                                     size_hint_x: 1
                                     background_color: hex('#F4433600')
                                     on_press:
@@ -230,6 +221,7 @@ Builder.load_string(
                                             allow_stretch: True
 
                                 Button:
+                                    font_size: str(0.01875 * app.width) + 'sp'
                                     id: job_recovery_button
                                     size_hint_x: 1
                                     background_color: hex('#F4433600')
@@ -251,7 +243,7 @@ Builder.load_string(
                                     id: file_data_label
                                     size_hint_x: 4
                                     text_size: self.size
-                                    font_size: '20sp'
+                                    font_size: str(0.025*app.width) + 'sp'
                                     markup: True
                                     text: '[color=333333]Load a file...[/color]'
                                     halign: 'center'
@@ -259,7 +251,7 @@ Builder.load_string(
 
                             BoxLayout:
                                 size_hint_y: 3
-                                padding: 20
+                                padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
                                 orientation: 'horizontal'
                                 canvas:
                                     Color:
@@ -302,7 +294,6 @@ class HomeScreen(Screen):
     def __init__(self, **kwargs):
         super(HomeScreen, self).__init__(**kwargs)
         Clock.schedule_once(lambda *args: self.tab_panel.switch_to(self.home_tab))
-
         self.m = kwargs["machine"]
         self.sm = kwargs["screen_manager"]
         self.jd = kwargs["job"]
@@ -313,7 +304,6 @@ class HomeScreen(Screen):
         # Job tab
         self.gcode_summary_widget = widget_gcode_summary.GCodeSummary(job=self.jd)
         self.gcode_preview_container.add_widget(self.gcode_summary_widget)
-
         self.gcode_preview_widget = widget_gcode_view.GCodeView(job=self.jd)
         self.gcode_preview_container.add_widget(self.gcode_preview_widget)
 
@@ -367,7 +357,6 @@ class HomeScreen(Screen):
     def on_enter(self):
         self.kb.setup_text_inputs(self.text_inputs)
         self.m.stylus_router_choice = "router"
-
         if (
             self.tab_panel.current_tab == self.move_tab
             or self.tab_panel.current_tab == self.pos_tab
@@ -375,7 +364,6 @@ class HomeScreen(Screen):
             Clock.schedule_once(lambda dt: self.m.laser_on(), 0.2)
         else:
             Clock.schedule_once(lambda dt: self.m.set_led_colour("GREEN"), 0.2)
-
         if self.jd.job_gcode != []:
             self.gcode_summary_widget.display_summary()
 
@@ -392,7 +380,6 @@ class HomeScreen(Screen):
                 "[color=333333]" + self.l.get_str("Load a file") + "..." + "[/color]"
             )
             self.job_filename = ""
-
             self.job_box.range_x[0] = 0
             self.job_box.range_x[1] = 0
             self.job_box.range_y[0] = 0
@@ -406,13 +393,10 @@ class HomeScreen(Screen):
                 self.gcode_preview_widget.get_non_modal_gcode([])
             except:
                 print("No G-code loaded.")
-
             self.gcode_summary_widget.hide_summary()
-
         else:
             # File label at the top
             self.file_data_label.text = "[color=333333]" + self.jd.job_name + "[/color]"
-
         # Check if job recovery (or job redo) is available
         if self.jd.job_recovery_cancel_line != None:
             # Cancel on line -1 represents last job completing successfully
@@ -420,12 +404,10 @@ class HomeScreen(Screen):
                 self.job_recovery_button_image.source = (
                     "./asmcnc/skavaUI/img/recover_job_disabled.png"
                 )
-
             else:
                 self.job_recovery_button_image.source = (
                     "./asmcnc/skavaUI/img/recover_job.png"
                 )
-
             # Line -1 being selected represents no selected line
             if self.jd.job_recovery_selected_line == -1:
                 if self.jd.job_recovery_from_beginning:
@@ -459,7 +441,6 @@ class HomeScreen(Screen):
             log("< draw_file_in_xy_plane")
         except:
             print("Unable to draw gcode")
-
         log("DONE")
 
     def on_pre_leave(self):

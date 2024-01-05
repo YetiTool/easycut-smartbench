@@ -50,7 +50,7 @@ Builder.load_string(
                 size_hint_x: 1 
                 markup: True
                 color: hex('#ff9800ff')
-                font_size: 20
+                font_size: 20.0 / 800 * app.width
 
             Button:
                 background_color: hex('#F4433600')
@@ -122,7 +122,7 @@ Builder.load_string(
                 size_hint_x: 1 
                 markup: True
                 color: hex('#4caf50ff')
-                font_size: 20        
+                font_size: 20.0 / 800 * app.width    
             Button:
                 background_color: hex('#F4433600')
                 on_release: 

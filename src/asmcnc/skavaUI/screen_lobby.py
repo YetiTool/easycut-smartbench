@@ -620,7 +620,7 @@ class LobbyScreen(Screen):
                                    button_layout_spacing=15,
                                    button_two_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
                                    button_one_background_color=(230 / 255., 74 / 255., 25 / 255., 1.),
-                                   button_one_text="Remind me", button_two_text="Ok",
+                                   button_one_text="Remind me later", button_two_text="Ok",
                                    button_one_callback=self.set_trigger_to_true,
                                    button_two_callback=self.set_trigger_to_false)
 

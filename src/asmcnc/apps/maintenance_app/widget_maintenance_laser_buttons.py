@@ -3,14 +3,11 @@ Created on 10 June 2020
 @author: Letty
 widget to hold laser datum setting buttons
 """
-
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
 
+from asmcnc.core_UI.popups import InfoPopup
 from asmcnc.apps.maintenance_app import popup_maintenance
-from asmcnc.skavaUI import popup_info
 
 Builder.load_string(
     """
@@ -30,8 +27,8 @@ Builder.load_string(
         size: self.parent.size
         pos: self.parent.pos
         orientation: 'vertical'
-        padding: 10
-        spacing: 10
+        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+        spacing:0.0208333333333*app.height
         
         GridLayout:
             cols: 2
@@ -44,16 +41,17 @@ Builder.load_string(
                 size: self.parent.size
                 pos: self.parent.pos 
                 ToggleButton:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     id: vacuum_toggle
                     on_press: root.set_vacuum()
                     size_hint: (None,None)
-                    height: dp(120)
-                    width: dp(120)
+                    height: dp(0.25*app.height)
+                    width: dp(0.15*app.width)
                     background_color: [0,0,0,0]
                     center: self.parent.center
                     pos: self.parent.pos
                     BoxLayout:
-                        padding: 10
+                        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                         size: self.parent.size
                         pos: self.parent.pos      
                         Image:
@@ -68,16 +66,17 @@ Builder.load_string(
                 size: self.parent.size
                 pos: self.parent.pos 
                 ToggleButton:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     id: spindle_toggle
                     on_press: root.set_spindle()
                     size_hint: (None,None)
-                    height: dp(120)
-                    width: dp(120)
+                    height: dp(0.25*app.height)
+                    width: dp(0.15*app.width)
                     background_color: [0,0,0,0]
                     center: self.parent.center
                     pos: self.parent.pos
                     BoxLayout:
-                        padding: 10
+                        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                         size: self.parent.size
                         pos: self.parent.pos      
                         Image:
@@ -92,10 +91,11 @@ Builder.load_string(
                 size: self.parent.size
                 pos: self.parent.pos 
                 Button:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     id: reset_button
                     size_hint: (None,None)
-                    height: dp(135)
-                    width: dp(132)
+                    height: dp(0.28125*app.height)
+                    width: dp(0.165*app.width)
                     background_color: [0,0,0,0]
                     center: self.parent.center
                     pos: self.parent.pos
@@ -112,13 +112,14 @@ Builder.load_string(
                             allow_stretch: True
 
             BoxLayout: 
-				size: self.parent.size
+                size: self.parent.size
                 pos: self.parent.pos 
                 Button:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     id: save_button
                     size_hint: (None,None)
-                    height: dp(135)
-                    width: dp(132)
+                    height: dp(0.28125*app.height)
+                    width: dp(0.165*app.width)
                     background_color: [0,0,0,0]
                     center: self.parent.center
                     pos: self.parent.pos
@@ -156,7 +157,7 @@ class LaserDatumButtons(Widget):
             popup_maintenance.PopupSaveOffset(self.sm, self.l)
 
         else:
-            warning_message = (
+            main_string = (
                 self.l.get_str("Could not save laser crosshair offset!")
                 + "\n\n"
                 + self.l.get_str(
@@ -165,7 +166,7 @@ class LaserDatumButtons(Widget):
                 + "\n\n"
                 + self.l.get_str("Please enable laser to set offset.")
             )
-            popup_info.PopupError(self.sm, self.l, warning_message)
+            self.sm.pm.show_error_popup(main_string)
 
     def reset_laser_offset(self):
         self.sm.get_screen(
@@ -174,15 +175,12 @@ class LaserDatumButtons(Widget):
         self.sm.get_screen(
             "maintenance"
         ).laser_datum_reset_coordinate_y = self.m.mpos_y()
-
-        # Save button becomes available
         self.save_button_image.source = (
             "./asmcnc/apps/maintenance_app/img/save_button_132.png"
         )
         self.save_button.disabled = False
 
     def save_laser_offset(self):
-        # need to cleverly calculate from movements & saving calibration from maintenance screen
         self.m.laser_offset_x_value = (
             self.sm.get_screen("maintenance").laser_datum_reset_coordinate_x
             - self.m.mpos_x()
@@ -191,29 +189,24 @@ class LaserDatumButtons(Widget):
             self.sm.get_screen("maintenance").laser_datum_reset_coordinate_y
             - self.m.mpos_y()
         )
-
         if self.m.write_z_head_laser_offset_values(
             "True", self.m.laser_offset_x_value, self.m.laser_offset_y_value
         ):
             saved_success = self.l.get_str("Settings saved!")
-            popup_info.PopupMiniInfo(self.sm, self.l, saved_success)
-
-            # Save button becomes unavailable
+            self.sm.pm.show_mini_info_popup(saved_success)
             self.save_button_image.source = (
                 "./asmcnc/apps/maintenance_app/img/save_button_132_greyscale.png"
             )
             self.save_button.disabled = True
-
         else:
-            warning_message = (
+            main_string = (
                 self.l.get_str("There was a problem saving your settings.")
                 + "\n\n"
                 + self.l.get_str(
                     "Please check your settings and try again, or if the problem persists please contact the YetiTool support team."
                 )
             )
-
-            popup_info.PopupError(self.sm, self.l, warning_message)
+            self.sm.pm.show_error_popup(main_string)
 
     def set_vacuum(self):
         if self.vacuum_toggle.state == "normal":

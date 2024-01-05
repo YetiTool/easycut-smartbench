@@ -12,11 +12,10 @@ from datetime import datetime
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 
-<<<<<<< HEAD
-=======
 from asmcnc.skavaUI import popup_info
 
->>>>>>> master
+from asmcnc.core_UI.scaling_utils import get_scaled_sp
+
 Builder.load_string(
     """
 
@@ -110,21 +109,13 @@ def log(message):
 
 
 class LiftZOnPauseDecisionScreen(Screen):
-<<<<<<< HEAD
-    default_font_size = "36sp"
-=======
     default_font_size = "36sp"  # unused
->>>>>>> master
 
     def __init__(self, **kwargs):
         super(LiftZOnPauseDecisionScreen, self).__init__(**kwargs)
         self.sm = kwargs["screen_manager"]
         self.m = kwargs["machine"]
         self.l = kwargs["localization"]
-<<<<<<< HEAD
-
-=======
->>>>>>> master
         self.update_strings()
 
     def popup_help(self):
@@ -154,31 +145,15 @@ class LiftZOnPauseDecisionScreen(Screen):
                 "Do not allow this feature if the tool has any inverted horizontal features which would rip through the job if the tool were to be lifted (e.g. a biscuit cutter tool profile)."
             )
         )
-<<<<<<< HEAD
-
-        popup_info.PopupInfo(self.sm, self.l, 760, info)
-
-    def decision_no(self):
-        if (
-            self.m.fw_can_operate_zUp_on_pause()
-        ):  # precaution (this screen shouldn't appear if fw not capable)
-=======
         popup_info.PopupInfo(self.sm, self.l, 760, info)
 
     def decision_no(self):
         if self.m.fw_can_operate_zUp_on_pause():  # precaution (this screen shouldn't appear if fw not capable)
->>>>>>> master
             self.sm.get_screen("go").lift_z_on_job_pause = False
         self.sm.current = "jobstart_warning"
 
     def decision_yes(self):
-<<<<<<< HEAD
-        if (
-            self.m.fw_can_operate_zUp_on_pause()
-        ):  # precaution (this screen shouldn't appear if fw not capable)
-=======
         if self.m.fw_can_operate_zUp_on_pause():  # precaution (this screen shouldn't appear if fw not capable)
->>>>>>> master
             self.sm.get_screen("go").lift_z_on_job_pause = True
         self.sm.current = "jobstart_warning"
 
