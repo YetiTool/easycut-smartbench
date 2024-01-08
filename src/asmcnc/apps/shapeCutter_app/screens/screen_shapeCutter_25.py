@@ -51,7 +51,7 @@ Builder.load_string(
                     Image:
                         source: "./asmcnc/apps/shapeCutter_app/img/prepare_tab_blue.png"
                         size: self.parent.size
-                        stretch: True
+                        allow_stretch: True
             Button:
                 size_hint: (None,None)
                 height: dp(90)
@@ -64,7 +64,7 @@ Builder.load_string(
                     Image:
                         source: "./asmcnc/apps/shapeCutter_app/img/load_tab_blue.png"
                         size: self.parent.size
-                        stretch: True
+                        allow_stretch: True
             Button:
                 size_hint: (None,None)
                 height: dp(90)
@@ -257,7 +257,7 @@ Builder.load_string(
                                             id: save_image
                                             source: "./asmcnc/apps/shapeCutter_app/img/save_file.png"
                                             size: self.parent.size
-                                            stretch: True
+                                            allow_stretch: True
                             BoxLayout: 
                                 size_hint: (None,None)
                                 height: dp(62)
