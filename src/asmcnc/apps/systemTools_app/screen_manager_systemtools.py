@@ -169,7 +169,7 @@ class ScreenManagerSystemTools(object):
                     os.system('cp /home/pi/multiply.txt /home/pi/easycut-smartbench/transfer_tmp/')
                     os.system('cp /home/pi/plus.txt /home/pi/easycut-smartbench/transfer_tmp/')
                     # compress everything to usb
-                    os.system('tar czf /media/usb/transfer.tar.gz -C /home/pi/easycut-smartbench/transfer_tmp .')
+                    os.system('sudo tar czf /media/usb/transfer.tar.gz -C /home/pi/easycut-smartbench/transfer_tmp .')
                 except:
                     pass
                 try:
@@ -186,6 +186,8 @@ class ScreenManagerSystemTools(object):
                     message = self.l.get_str('Could not save settings. Please check USB!')
                     popup_info.PopupMiniInfo(self.sm, self.l, description=message)
                 self.usb_stick.disable()
+            else:
+                Clock.schedule_once(lambda dt: copy_settings_to_usb(), 0.2)
 
         Clock.schedule_once(lambda dt: copy_settings_to_usb(), 0.2)
 
@@ -200,10 +202,17 @@ class ScreenManagerSystemTools(object):
                 # TODO restore files here
                 success_flag = True
                 try:
-                    # decompress from usb
-                    os.system('tar xf /media/usb/transfer.tar.gz -C /home/pi/')
-                    # clean up
-                    os.system('rm /media/usb/transfer.tar.gz')
+                    if not os.path.isfile('/media/usb/transfer.tar.gz'):
+                        wait_popup.popup.dismiss()
+                        self.usb_stick.disable()
+                        message = self.l.get_str('Could not restore Settings. Please check USB!')
+                        popup_info.PopupMiniInfo(self.sm, self.l, description=message)
+                        return
+                    else:
+                        # decompress from usb
+                        os.system('sudo tar xf /media/usb/transfer.tar.gz -C /home/pi/')
+                        # clean up
+                        os.system('sudo rm /media/usb/transfer.tar.gz')
                 except:
                     success_flag = False
                     pass
@@ -215,6 +224,8 @@ class ScreenManagerSystemTools(object):
                 else:
                     message = self.l.get_str('Could not restore Settings. Please check USB!')
                     popup_info.PopupMiniInfo(self.sm, self.l, description=message)
+            else:
+                Clock.schedule_once(lambda dt: restore_settings_from_usb(), 0.2)
 
         Clock.schedule_once(lambda dt: restore_settings_from_usb(), 0.2)
 
