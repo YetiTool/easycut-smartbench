@@ -10,6 +10,7 @@ from kivy.properties import ObjectProperty, NumericProperty, StringProperty
 from kivy.uix.textinput import TextInput
 from kivy.uix.switch import Switch
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
+from asmcnc.core_UI import scaling_utils as utils
 
 Builder.load_string(
     """
@@ -141,22 +142,22 @@ Builder.load_string(
                                         center: self.parent.center
                                         pos: self.parent.pos
                                         on_active: root.toggle_units()
-                                        active_norm_pos: max(0., min(1., (int(self.active) + self.touch_distance / sp(41))))
+                                        active_norm_pos: max(0., min(1., (int(self.active) + self.touch_distance / sp(0.05125*app.width))))
                                         canvas.after:
                                             Color:
                                                 rgb: 1,1,1
                                             Rectangle:
                                                 source: './asmcnc/apps/shapeCutter_app/img/slider_bg_mm.png' if unit_toggle.active else './asmcnc/apps/shapeCutter_app/img/slider_bg_inch.png' 
                                                 # make or download your background jpg
-                                                size: sp(83), sp(32)
-                                                pos: int(self.center_x - sp(41)), int(self.center_y - sp(16))                        
+                                                size: sp(0.10375*app.width), sp(0.0666666666667*app.height)
+                                                pos: int(self.center_x - sp(0.05125*app.width)), int(self.center_y - sp(0.0333333333333*app.height))                        
                                          
                                             Rectangle:
                                                 #id: switch_rectangle
                                                 source: './asmcnc/apps/shapeCutter_app/img/slider_fg_inch.png' if unit_toggle.active else './asmcnc/apps/shapeCutter_app/img/slider_fg_mm.png'
                                                 # make or download your slider jpg
-                                                size: sp(43), sp(32)
-                                                pos: int(self.center_x - sp(41) + self.active_norm_pos * sp(41)), int(self.center_y - sp(16))
+                                                size: sp(0.05375*app.width), sp(0.0666666666667*app.height)
+                                                pos: int(self.center_x - sp(0.05125*app.width) + self.active_norm_pos * sp(0.05125*app.width)), int(self.center_y - sp(0.0333333333333*app.height))
                                                        
                             # BL horizontal
                                 # label + text entry
@@ -443,7 +444,7 @@ class ShapeCutterDimensionsScreenClass(Screen):
         if self.j.shape_dict["shape"] == "circle":
             self.dimension_1.height = "0"
             self.dimesion_1_input_box.height = "0"
-            self.text_entry_box.padding = 0, 0, 0, 70
+            self.text_entry_box.padding = 0, 0, 0, utils.get_scaled_width(70)
             self.input_dim1.opacity = 0
             self.input_dim2.opacity = 1
             self.input_dim3.opacity = 1
@@ -466,9 +467,9 @@ class ShapeCutterDimensionsScreenClass(Screen):
                     "./asmcnc/apps/shapeCutter_app/img/dims_apt_circ.png"
                 )
         elif self.j.shape_dict["shape"] == "rectangle":
-            self.dimension_1.height = "40"
-            self.dimesion_1_input_box.height = "40"
-            self.text_entry_box.padding = 0, 0, 0, 30
+            self.dimension_1.height = utils.get_scaled_width(40)
+            self.dimesion_1_input_box.height = utils.get_scaled_width(40)
+            self.text_entry_box.padding = 0, 0, 0, utils.get_scaled_width(30)
             self.input_dim1.opacity = 1
             self.input_dim2.opacity = 1
             self.input_dim3.opacity = 1
