@@ -53,7 +53,7 @@ Builder.load_string(
                     Image:
                         source: "./asmcnc/apps/shapeCutter_app/img/prepare_tab_blue.png"
                         size: self.parent.size
-                        stretch: True
+                        allow_stretch: True
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
                 size_hint: (None,None)
@@ -67,7 +67,7 @@ Builder.load_string(
                     Image:
                         source: "./asmcnc/apps/shapeCutter_app/img/load_tab_blue.png"
                         size: self.parent.size
-                        stretch: True
+                        allow_stretch: True
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
                 size_hint: (None,None)

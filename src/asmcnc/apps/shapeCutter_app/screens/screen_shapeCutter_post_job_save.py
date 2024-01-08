@@ -119,7 +119,7 @@ Builder.load_string(
                                         id: save_image
                                         source: "./asmcnc/apps/shapeCutter_app/img/save_file.png"
                                         size: self.parent.size
-                                        stretch: True
+                                        allow_stretch: True
                         BoxLayout: 
                             size_hint: (None,None)
                             height: dp(0.0833333333333*app.height)
