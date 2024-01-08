@@ -337,6 +337,7 @@ Click the button below if you want to calibrate SmartBench.
     def on_pre_enter(self):
         self.info_button.opacity = 0
 
+# Action buttons
     def get_info(self):
         pass
 
@@ -346,6 +347,7 @@ Click the button below if you want to calibrate SmartBench.
     def next_screen(self):
         self.shapecutter_sm.next_screen()
 
+# Tab functions
     def prepare(self):
         self.shapecutter_sm.prepare_tab()
 
@@ -364,5 +366,6 @@ Click the button below if you want to calibrate SmartBench.
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
 
+# Screen specific
     def calibrate(self):
         self.shapecutter_sm.am.start_calibration_app("sC1")
