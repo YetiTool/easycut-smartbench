@@ -549,12 +549,14 @@ class ShapeCutterDimensionsScreenClass(Screen):
             self.j.shape_dict["units"] = "mm"
         units = self.j.shape_dict["units"]
         if self.j.shape_dict["shape"] == "rectangle":
+            # if all fields are full
             if (
                 not self.input_dim1.text == ""
                 and not self.input_dim2.text == ""
                 and not self.input_dim3.text == ""
                 and not self.input_dim4.text == ""
             ):
+                # save the dimensions
                 input_dim_list = [
                     ("X", float(self.input_dim1.text)),
                     ("Y", float(self.input_dim2.text)),
@@ -584,6 +586,7 @@ class ShapeCutterDimensionsScreenClass(Screen):
                 pass
         if self.j.shape_dict["shape"] == "circle":
             if not self.input_dim2.text == "" and not self.input_dim3.text == "":
+                # save the dimensions
                 input_dim_list = [
                     ("D", float(self.input_dim2.text)),
                     ("Z", float(self.input_dim3.text)),
