@@ -3,11 +3,12 @@ import os
 import config_classes
 import inspect
 
-configurations_dir = 'asmcnc/apps/drywall_cutter_app/config/configurations'
-cutters_dir = 'asmcnc/apps/drywall_cutter_app/config/cutters'
+current_dir = os.path.dirname(os.path.realpath(__file__))
+configurations_dir = os.path.join(current_dir, 'configurations')
+cutters_dir = os.path.join(current_dir, 'cutters')
 
-TEMP_CONFIG_PATH = os.path.join(configurations_dir, '..', 'temp', 'temp_config.json')
-DEBUG_MODE = True
+TEMP_CONFIG_PATH = os.path.join(current_dir, 'temp', 'temp_config.json')
+DEBUG_MODE = False
 
 
 def debug(func):

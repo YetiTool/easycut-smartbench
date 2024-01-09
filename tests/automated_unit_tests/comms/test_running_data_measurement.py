@@ -4,6 +4,9 @@ Created August 2022
 '''
 
 import sys, os
+
+from kivy.app import App
+
 sys.path.append('./src')
 
 try: 
@@ -25,16 +28,19 @@ from asmcnc.production.database.calibration_database import CalibrationDatabase
 '''
 ######################################
 RUN FROM easycut-smartbench FOLDER WITH: 
-python -m pytest --show-capture=no --disable-pytest-warnings tests/automated_unit_tests/comms/test_running_data_measurement.py
+python -m pytest tests/automated_unit_tests/comms/test_running_data_measurement.py
 ######################################
 '''
 
 # FIXTURES
 
+app = App()
+app.width = 800
+app.height = 480
+
 # SERIAL CONNECTION
 @pytest.fixture
 def sc():
-
     l = localization.Localization()
     machine = Mock()
     screen_manager = Mock()
