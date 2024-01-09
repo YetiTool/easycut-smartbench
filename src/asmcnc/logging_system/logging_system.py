@@ -20,8 +20,8 @@ class FileFormatter(logging.Formatter):
         return super(FileFormatter, self).format(record)
 
 
-LOG_STRING_FORMAT = "[%(asctime)s] [%(name)s] - [%(levelname)s] - %(message)s"
-LOG_DATE_FORMAT = "%d-%m-%Y %H:%M:%S"
+LOG_STRING_FORMAT = "[%(asctime)s] - [%(levelname)s] [%(name)s] %(message)s"
+LOG_DATE_FORMAT = "%H:%M:%S %d-%m-%Y"
 
 LOG_FOLDER_PATH = os.path.join(os.path.dirname(__file__), "logs")
 
@@ -60,7 +60,7 @@ class Logger(logging.Logger):
                     "INFO": "green",
                     "WARNING": "yellow",
                     "ERROR": "red",
-                    "CRITICAL": "red,bg_white",
+                    "CRITICAL": "red,bg_black",
                 },
             )
         )
