@@ -1,6 +1,6 @@
 import unittest
 
-from automated_unit_tests.test_base import UnitTestBase
+from tests.automated_unit_tests.test_base import UnitTestBase
 
 
 class TestTestBase(UnitTestBase):
