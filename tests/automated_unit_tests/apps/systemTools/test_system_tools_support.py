@@ -67,9 +67,9 @@ def test_upload_from_usb(mock_os, mock_Clock):
     # fake an active USB:
     sm_st.usb_stick.is_usb_mounted_flag = True
     restore_settings_from_usb(1)
-    print(mock_os.method_calls)
     calls = []
     calls.append(call.path.isfile('/media/usb/transfer.tar.gz'))
+    calls.append(call.path.isfile().__nonzero__()) #had to add this, as path.isfile() calls __nonzero__() itself
     calls.append(call.system('sudo tar xf /media/usb/transfer.tar.gz -C /home/pi/'))
     calls.append(call.system('sudo rm /media/usb/transfer.tar.gz'))
 
