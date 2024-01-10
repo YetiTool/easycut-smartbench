@@ -164,10 +164,10 @@ class SupportMenuScreen(Screen):
         self.systemtools_sm.exit_app()
 
     def download_settings_to_usb(self):
-        self.systemtools_sm.download_settings_to_usb()
+        self.systemtools_sm.show_popup_before_download_settings_to_usb()
 
     def upload_settings_from_usb(self):
-        self.systemtools_sm.upload_settings_from_usb()
+        self.systemtools_sm.show_popup_before_upload_settings_from_usb()
 
     def download_logs(self):
         popup_system.PopupDownloadLogs(self.systemtools_sm, self.l)
@@ -189,6 +189,7 @@ class SupportMenuScreen(Screen):
         self.button_reinstall_pika.text = self.l.get_str("Get Pika")
         self.button_git_fsck.txt = self.l.get_str("Git FSCK")
         self.button_download_settings_to_usb.text = self.l.get_str("Save Settings")
+        self.button_upload_settings_from_usb.text = self.l.get_str("Restore Settings")
         self.button_go_back.text = self.l.get_str("Go Back")
         for id_object in self.id_list:
             self.update_font_size(id_object)
