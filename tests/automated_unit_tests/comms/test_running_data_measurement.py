@@ -3,9 +3,9 @@ Created August 2022
 @author: Letty
 '''
 
-import sys, os
+import sys
 
-from kivy.app import App
+from tests import test_utils
 
 sys.path.append('./src')
 
@@ -32,11 +32,9 @@ python -m pytest tests/automated_unit_tests/comms/test_running_data_measurement.
 ######################################
 '''
 
-# FIXTURES
+test_utils.create_app()
 
-app = App()
-app.width = 800
-app.height = 480
+# FIXTURES
 
 # SERIAL CONNECTION
 @pytest.fixture
