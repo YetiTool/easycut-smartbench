@@ -152,7 +152,7 @@ class ScreenManagerSystemTools(object):
             '\n-' + self.l.get_str('machine settings') + \
             '\n-' + self.l.get_str('job files') + \
             '\n-' + self.l.get_str('log files') + \
-            '\n\n' + self.l.get_str('Make sure a USB-stick is connected properly! ') + \
+            '\n\n' + self.l.get_str('Make sure a USB-stick is connected properly!') + \
             '\n\n' + self.l.get_str('This might take a few minutes, depending of the size of your files.')
         popup_info.PopupInfo(self.sm, self.l, popup_width=Window.width * 3/4, description=message, callback=self.download_settings_to_usb)
 
@@ -215,7 +215,7 @@ class ScreenManagerSystemTools(object):
             '\n-' + self.l.get_str('machine settings') + \
             '\n-' + self.l.get_str('job files') + \
             '\n-' + self.l.get_str('log files') + \
-            '\n\n' + self.l.get_str('Make sure a USB-stick is connected properly! ') + \
+            '\n\n' + self.l.get_str('Make sure a USB-stick is connected properly!') + \
             '\n\n' + self.l.get_str('This might take a few minutes, depending of the size of your files.')
         popup_info.PopupInfo(self.sm, self.l, popup_width=Window.width * 3/4, description=message, callback=self.upload_settings_from_usb)
 
