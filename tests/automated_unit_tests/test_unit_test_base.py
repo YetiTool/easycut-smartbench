@@ -3,9 +3,9 @@ import unittest
 from tests.automated_unit_tests.test_base import UnitTestBase
 
 
-class Test_UnitTestBase(UnitTestBase):
+class TestUnitTestBase(UnitTestBase):
     def setUp(self):
-        super(Test_UnitTestBase, self).setUp()
+        super(TestUnitTestBase, self).setUp()
 
         # Create modules
         self._create_modules()
