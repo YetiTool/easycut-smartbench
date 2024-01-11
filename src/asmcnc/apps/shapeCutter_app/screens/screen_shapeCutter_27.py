@@ -4,13 +4,11 @@ Screen 27 for the Shape Cutter App
 
 @author: Letty
 """
-
 from kivy.lang import Builder
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.uix.screenmanager import ScreenManager, Screen
 from asmcnc.apps.shapeCutter_app.screens import popup_info
-
 
 Builder.load_string(
     """
@@ -22,24 +20,25 @@ Builder.load_string(
 
     BoxLayout:
         size_hint: (None,None)
-        width: dp(800)
-        height: dp(480)
+        width: dp(1.0*app.width)
+        height: dp(1.0*app.height)
         padding: 0
         spacing: 0
         orientation: "vertical"
 
         BoxLayout:
             size_hint: (None,None)
-            width: dp(800)
-            height: dp(90)
+            width: dp(1.0*app.width)
+            height: dp(0.1875*app.height)
             padding: 0
             spacing: 0
             orientation: "horizontal"
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint: (None,None)
-                height: dp(90)
-                width: dp(142)
+                height: dp(0.1875*app.height)
+                width: dp(0.1775*app.width)
                 on_press: root.prepare()
                 BoxLayout:
                     padding: 0
@@ -50,9 +49,10 @@ Builder.load_string(
                         size: self.parent.size
                         allow_stretch: True
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint: (None,None)
-                height: dp(90)
-                width: dp(142)
+                height: dp(0.1875*app.height)
+                width: dp(0.1775*app.width)
                 on_press: root.load()
                 BoxLayout:
                     padding: 0
@@ -63,9 +63,10 @@ Builder.load_string(
                         size: self.parent.size
                         allow_stretch: True
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint: (None,None)
-                height: dp(90)
-                width: dp(142)
+                height: dp(0.1875*app.height)
+                width: dp(0.1775*app.width)
                 on_press: root.define()
                 BoxLayout:
                     padding: 0
@@ -78,9 +79,10 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint: (None,None)
-                height: dp(90)
-                width: dp(142)
+                height: dp(0.1875*app.height)
+                width: dp(0.1775*app.width)
                 on_press: root.position()
                 BoxLayout:
                     padding: 0
@@ -93,9 +95,10 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint: (None,None)
-                height: dp(90)
-                width: dp(142)
+                height: dp(0.1875*app.height)
+                width: dp(0.1775*app.width)
                 on_press: root.check()
                 BoxLayout:
                     padding: 0
@@ -108,9 +111,10 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint: (None,None)
-                height: dp(90)
-                width: dp(90)
+                height: dp(0.1875*app.height)
+                width: dp(0.1125*app.width)
                 on_press: root.exit()
                 BoxLayout:
                     padding: 0
@@ -126,8 +130,8 @@ Builder.load_string(
         BoxLayout:
             size_hint: (None,None)
             padding: 0
-            height: dp(390)
-            width: dp(800)
+            height: dp(0.8125*app.height)
+            width: dp(1.0*app.width)
             canvas:
                 Rectangle: 
                     pos: self.pos
@@ -141,16 +145,16 @@ Builder.load_string(
                     
                 BoxLayout: #Header
                     size_hint: (None,None)
-                    height: dp(60)
-                    width: dp(800)
-                    padding: (20,0,0,0)
+                    height: dp(0.125*app.height)
+                    width: dp(1.0*app.width)
+                    padding:[dp(0.025)*app.width, 0, 0, 0]
                     orientation: "horizontal"
                     
                     BoxLayout: #Screen number
                         size_hint: (None,None)
                         padding: 0
-                        height: dp(40)
-                        width: dp(40)
+                        height: dp(0.0833333333333*app.height)
+                        width: dp(0.05*app.width)
                         canvas:
                             Rectangle: 
                                 pos: self.pos
@@ -160,21 +164,21 @@ Builder.load_string(
                             text: root.screen_number
                             valign: "middle"
                             halign: "center"
-                            font_size: 26
+                            font_size: 0.0325*app.width
                             markup: True
                                 
                                 
                         
                     BoxLayout: #Title
                         size_hint: (None,None)
-                        height: dp(60)
-                        width: dp(740)
-                        padding: (20,20,0,0)
+                        height: dp(0.125*app.height)
+                        width: dp(0.925*app.width)
+                        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height, 0, 0]
                         
                         Label:
                             text: root.title_label
                             color: 0,0,0,1
-                            font_size: 28
+                            font_size: 0.035*app.width
                             markup: True
                             halign: "left"
                             valign: "bottom"
@@ -185,28 +189,28 @@ Builder.load_string(
                     
                 BoxLayout: #Body
                     size_hint: (None,None)
-                    height: dp(330)
-                    width: dp(800)
-                    padding: 0,20,0,0
+                    height: dp(0.6875*app.height)
+                    width: dp(1.0*app.width)
+                    padding:[0, dp(0.0416666666667)*app.height, 0, 0]
                     orientation: "horizontal"
                     
                     BoxLayout: # text and pics
                         size_hint: (None,None)
-                        height: dp(310)
-                        width: dp(675)
-                        padding: 0,0,0,0
+                        height: dp(0.645833333333*app.height)
+                        width: dp(0.84375*app.width)
+                        padding:[0, 0, 0, 0]
                         orientation: "vertical"
                     
                         BoxLayout: #text box
                             size_hint: (None,None)
-                            height: dp(55)
-                            width: dp(675)
-                            padding: 80,0,0,0
+                            height: dp(0.114583333333*app.height)
+                            width: dp(0.84375*app.width)
+                            padding:[dp(0.1)*app.width, 0, 0, 0]
                             orientation: "vertical"                       
                             Label:
                                 text: root.user_instructions
                                 color: 0,0,0,1
-                                font_size: 20
+                                font_size: 0.025*app.width
                                 markup: True
                                 halign: "left"
                                 valign: "top"
@@ -215,16 +219,16 @@ Builder.load_string(
                                 pos: self.parent.pos
                         BoxLayout:
                             size_hint: (None,None)
-                            height: dp(255)
-                            width: dp(675)
-                            padding:0,0,0,15
-                            spacing: 20
+                            height: dp(0.53125*app.height)
+                            width: dp(0.84375*app.width)
+                            padding:[0, 0, 0, dp(0.03125)*app.height]
+                            spacing:0.025*app.width
                             BoxLayout: #image box
                                 id: image_box
                                 size_hint: (None,None)
-                                height: dp(240)
-                                width: dp(500)
-                                padding:25,0,0,0
+                                height: dp(0.5*app.height)
+                                width: dp(0.625*app.width)
+                                padding:[dp(0.03125)*app.width, 0, 0, 0]
                                 Image:
                                     source: root.image_source
                                     center_x: self.parent.center_x
@@ -235,7 +239,7 @@ Builder.load_string(
                             Label:          
                                 text: "In the next step, you will need to centre the tool over the datum position."
                                 color: 0,0,0,1
-                                font_size: 20
+                                font_size: 0.025*app.width
                                 markup: True
                                 halign: "left"
                                 valign: "top"
@@ -246,22 +250,23 @@ Builder.load_string(
                                 
                     BoxLayout: #action box
                         size_hint: (None,None)
-                        height: dp(310)
-                        width: dp(125)
-                        padding: 0,0,0,34
-                        spacing: 34
+                        height: dp(0.645833333333*app.height)
+                        width: dp(0.15625*app.width)
+                        padding:[0, 0, 0, dp(0.0708333333333)*app.height]
+                        spacing:0.0708333333333*app.height
                         orientation: "vertical"
                         
                         BoxLayout: 
                             size_hint: (None,None)
-                            height: dp(67)
-                            width: dp(88)
-                            padding: (24,0,24,34)
+                            height: dp(0.139583333333*app.height)
+                            width: dp(0.11*app.width)
+                            padding:[dp(0.03)*app.width, 0, dp(0.03)*app.width, dp(0.0708333333333)*app.height]
                             Button:
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 id: info_button
                                 size_hint: (None,None)
-                                height: dp(40)
-                                width: dp(40)
+                                height: dp(0.0833333333333*app.height)
+                                width: dp(0.05*app.width)
                                 background_color: hex('#F4433600')
                                 opacity: 1
                                 on_press: root.get_info()
@@ -277,9 +282,10 @@ Builder.load_string(
                                         allow_stretch: True
 
                         Button: 
+                            font_size: str(0.01875 * app.width) + 'sp'
                             size_hint: (None,None)
-                            height: dp(67)
-                            width: dp(88)
+                            height: dp(0.139583333333*app.height)
+                            width: dp(0.11*app.width)
                             background_color: hex('#F4433600')
                             on_press: root.go_back()
                             BoxLayout:
@@ -293,9 +299,10 @@ Builder.load_string(
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True
                         Button: 
+                            font_size: str(0.01875 * app.width) + 'sp'
                             size_hint: (None,None)
-                            height: dp(67)
-                            width: dp(88)
+                            height: dp(0.139583333333*app.height)
+                            width: dp(0.11*app.width)
                             background_color: hex('#F4433600')
                             on_press: root.next_screen()
                             BoxLayout:
@@ -315,15 +322,12 @@ Builder.load_string(
 
 class ShapeCutter27ScreenClass(Screen):
     shape = "circle"
-
     info_button = ObjectProperty()
     image_box = ObjectProperty()
-
     screen_number = StringProperty("[b]27[/b]")
     title_label = StringProperty("[b]Set job XY datum[/b]")
     user_instructions = StringProperty(
-        "Mark the shape's datum position on the material. "
-        "This is always in the bottom right corner of your rectangle."
+        "Mark the shape's datum position on the material. This is always in the bottom right corner of your rectangle."
     )
     image_source = StringProperty("./asmcnc/apps/shapeCutter_app/img/27_rect.png")
 
@@ -335,23 +339,16 @@ class ShapeCutter27ScreenClass(Screen):
 
     def on_pre_enter(self):
         self.info_button.opacity = 1
-
         if self.j.shape_dict["shape"] == "circle":
-            self.user_instructions = (
-                "Mark the shape's datum position on the material. "
-                "This is always in the centre of your circle. "
-            )
+            self.user_instructions = "Mark the shape's datum position on the material. This is always in the centre of your circle. "
             self.image_source = "./asmcnc/apps/shapeCutter_app/img/27_circ.png"
             self.image_box.padding = 120, 0, 0, 0
         elif self.j.shape_dict["shape"] == "rectangle":
-            self.user_instructions = (
-                "Mark the shape's datum position on the material. "
-                "This is always in the bottom right corner of your rectangle."
-            )
+            self.user_instructions = "Mark the shape's datum position on the material. This is always in the bottom right corner of your rectangle."
             self.image_source = "./asmcnc/apps/shapeCutter_app/img/27_rect.png"
             self.image_box.padding = 25, 0, 0, 0
 
-    # Action buttons
+# Action buttons       
     def get_info(self):
         info = "The X-Y datum is SmartBench's reference point for the job coordinates."
         popup_info.PopupInfo(self.shapecutter_sm, info)
@@ -362,7 +359,7 @@ class ShapeCutter27ScreenClass(Screen):
     def next_screen(self):
         self.shapecutter_sm.next_screen()
 
-    # Tab functions
+# Tab functions
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()
