@@ -2,16 +2,11 @@
 Created on 1 Feb 2018
 @author: Ed
 """
-
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import (
-    ObjectProperty,
-    ListProperty,
-    NumericProperty,
-)  # @UnresolvedImport
+from kivy.properties import ObjectProperty, ListProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.clock import Clock
@@ -112,6 +107,7 @@ class SCStencilBox2(StencilView, BoxLayout):
 
 
 class SCVirtualBed(Widget):
+
     # G54: workpiece co-ordinates
     # G28: set reference point
 
@@ -120,9 +116,7 @@ class SCVirtualBed(Widget):
         self.m = kwargs["machine"]
         self.sm = kwargs["screen_manager"]
         self.j = kwargs["job_parameters"]
-        Clock.schedule_interval(
-            self.refresh_widget, self.m.s.STATUS_INTERVAL
-        )  # Poll for status
+        Clock.schedule_interval(self.refresh_widget, self.m.s.STATUS_INTERVAL)      # Poll for status
 
     def refresh_widget(self, dt):
         self.setG54PosByMachineCoords(self.m.x_wco(), self.m.y_wco())
@@ -138,28 +132,24 @@ class SCVirtualBed(Widget):
 
     def on_touch_down(self, touch):
         pass
-
-    #         if self.touch_zone.collide_point(*touch.pos):
-    # #             if homeScreen.zoomToggleButton.state == 'normal': self.setCarriagePosByTouch_andGo(touch)
-    #             self.setCarriagePosByTouch_andGo(touch)
+#         if self.touch_zone.collide_point(*touch.pos): 
+# #             if homeScreen.zoomToggleButton.state == 'normal': self.setCarriagePosByTouch_andGo(touch)
+#             self.setCarriagePosByTouch_andGo(touch)
 
     def setCarriagePosByTouch_andGo(self, touch):
         machineX = int(
-            ((touch.y - self.touch_zone.y) / self.touch_zone.height)
+            (touch.y - self.touch_zone.y)
+            / self.touch_zone.height
             * self.m.grbl_x_max_travel
             - self.m.grbl_x_max_travel
         )
         machineY = int(
-            (
-                (self.touch_zone.x + self.touch_zone.width - touch.x)
-                / self.touch_zone.width
-            )
+            (self.touch_zone.x + self.touch_zone.width - touch.x)
+            / self.touch_zone.width
             * self.m.grbl_y_max_travel
             - self.m.grbl_y_max_travel
         )
-
         print("Y: ", str(touch.y), str(self.touch_zone.y), str(self.touch_zone.pos[1]))
-
         self.m.quit_jog()
         self.m.jog_absolute_xy(machineX, machineY, self.bedWidgetJogFeedrate)
 
@@ -176,7 +166,6 @@ class SCVirtualBed(Widget):
         self.g54box_y1 = (
             self.j.range_y[1] / self.m.grbl_y_max_travel * self.touch_zone.width
         )
-
         self.g54_zone.width = self.g54box_y1 - self.g54box_y0
         self.g54_zone.height = self.g54box_x1 - self.g54box_x0
 
@@ -219,7 +208,6 @@ class SCVirtualBed(Widget):
         )
         self.g54_zone.y = pos_pixels_y
         self.g54_zone.x = pos_pixels_x
-
         pos_pixels_x = (
             pixel_datum[0]
             + pixel_canvas[0]
@@ -252,11 +240,9 @@ class SCVirtualBed(Widget):
             / self.m.grbl_x_max_travel
             * pixel_canvas[1]
         )
-
-        #         self.carriage.width = self.xBar.width
-        #         self.carriage.width = self.xBar.width
+#         self.carriage.width = self.xBar.width
+#         self.carriage.width = self.xBar.width
         self.carriage.width = self.touch_zone.width / 6
-
         self.carriage.x = pixels_x - self.carriage.width / 2
         self.carriage.y = pixels_y - self.carriage.height / 2
         self.xBar.x = pixels_x - self.xBar.width / 2

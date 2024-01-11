@@ -2,23 +2,17 @@
 Created on 1 Feb 2018
 @author: Ed
 """
-
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import (
-    ObjectProperty,
-    ListProperty,
-    NumericProperty,
-)  # @UnresolvedImport
+from kivy.properties import ObjectProperty, ListProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.clock import Clock
 from asmcnc.skavaUI import widget_virtual_bed
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
 from asmcnc.skavaUI import popup_info
-
 
 Builder.load_string(
     """
@@ -36,8 +30,8 @@ Builder.load_string(
         size: self.parent.size
         pos: self.parent.pos      
         orientation: 'vertical'
-        padding: 10
-        spacing: 10
+        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+        spacing:0.0208333333333*app.height
         
         GridLayout:
             cols: 3
@@ -49,10 +43,11 @@ Builder.load_string(
 
             # go x datum
             BoxLayout:
-                padding: 10
+                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                 size: self.parent.size
                 pos: self.parent.pos                 
                 Button:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     background_color: hex('#F4433600')
                     on_release: 
                         self.background_color = hex('#F4433600')
@@ -72,6 +67,7 @@ Builder.load_string(
 
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 background_color: hex('#F4433600')
                 always_release: True
                 on_release: 
@@ -93,10 +89,11 @@ Builder.load_string(
 
             # go y datum
             BoxLayout:
-                padding: 10
+                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                 size: self.parent.size
                 pos: self.parent.pos                 
                 Button:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     background_color: hex('#F4433600')
                     on_release: 
                         self.background_color = hex('#F4433600')
@@ -114,6 +111,7 @@ Builder.load_string(
                             allow_stretch: True  
                             
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 background_color: hex('#F4433600')
                 always_release: True
                 on_release: 
@@ -133,6 +131,7 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True                                    
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 background_color: hex('#F4433600')
                 on_release: 
                     self.background_color = hex('#F4433600')
@@ -151,6 +150,7 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True  
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 background_color: hex('#F4433600')
                 always_release: True
                 on_release: 
@@ -172,10 +172,11 @@ Builder.load_string(
 
             # set x datum
             BoxLayout:
-                padding: 10
+                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                 size: self.parent.size
                 pos: self.parent.pos                 
                 Button:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     background_color: hex('#F4433600')
                     on_release: 
                         self.background_color = hex('#F4433600')
@@ -193,6 +194,7 @@ Builder.load_string(
                             allow_stretch: True               
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 background_color: hex('#F4433600')
                 always_release: True
                 on_release:
@@ -216,10 +218,11 @@ Builder.load_string(
 
             # set y datum
             BoxLayout:
-                padding: 10
+                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                 size: self.parent.size
                 pos: self.parent.pos
                 Button:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     background_color: hex('#F4433600')
                     on_release: 
                         self.background_color = hex('#F4433600')
@@ -239,9 +242,10 @@ Builder.load_string(
                 
         BoxLayout:
             orientation: 'horizontal'
-            spacing: 10
+            spacing:0.0125*app.width
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 background_color: hex('#F4433600')
                 on_release: 
                     self.background_color = hex('#F4433600')
@@ -261,11 +265,12 @@ Builder.load_string(
             BoxLayout:
                 size_hint_x: 3
                 ToggleButton:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     id: speed_toggle
                     on_press: root.set_jog_speeds()
                     background_color: 1, 1, 1, 0 
                     BoxLayout:
-                        padding: 10
+                        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                         size: self.parent.size
                         pos: self.parent.pos      
                         Image:
@@ -276,6 +281,7 @@ Builder.load_string(
                             size: self.parent.width, self.parent.height
                             allow_stretch: True
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 background_color: hex('#F4433600')
                 on_release: 
                     self.background_color = hex('#F4433600')
@@ -307,7 +313,6 @@ class SC28XYMove(Widget):
 
     jogMode = "free"
     jog_mode_button_press_counter = 0
-
     fast_x_speed = 6000
     fast_y_speed = 6000
     fast_z_speed = 750
@@ -350,7 +355,6 @@ class SC28XYMove(Widget):
     def buttonJogXY(self, case):
         x_feed_speed = self.feedSpeedJogX
         y_feed_speed = self.feedSpeedJogY
-
         if self.jogMode == "free":
             if case == "X-":
                 self.m.jog_absolute_single_axis(
@@ -368,7 +372,6 @@ class SC28XYMove(Widget):
                 self.m.jog_absolute_single_axis(
                     "Y", self.m.y_max_jog_abs_limit, y_feed_speed
                 )
-
         elif self.jogMode == "plus_0-01":
             if case == "X+":
                 self.m.jog_relative("X", 0.01, x_feed_speed)
@@ -378,7 +381,6 @@ class SC28XYMove(Widget):
                 self.m.jog_relative("Y", 0.01, y_feed_speed)
             if case == "Y-":
                 self.m.jog_relative("Y", -0.01, y_feed_speed)
-
         elif self.jogMode == "plus_0-1":
             if case == "X+":
                 self.m.jog_relative("X", 0.1, x_feed_speed)
@@ -388,7 +390,6 @@ class SC28XYMove(Widget):
                 self.m.jog_relative("Y", 0.1, y_feed_speed)
             if case == "Y-":
                 self.m.jog_relative("Y", -0.1, y_feed_speed)
-
         elif self.jogMode == "plus_1":
             if case == "X+":
                 self.m.jog_relative("X", 1, x_feed_speed)
@@ -398,7 +399,6 @@ class SC28XYMove(Widget):
                 self.m.jog_relative("Y", 1, y_feed_speed)
             if case == "Y-":
                 self.m.jog_relative("Y", -1, y_feed_speed)
-
         elif self.jogMode == "plus_10":
             if case == "X+":
                 self.m.jog_relative("X", 10, x_feed_speed)
@@ -408,11 +408,9 @@ class SC28XYMove(Widget):
                 self.m.jog_relative("Y", 10, y_feed_speed)
             if case == "Y-":
                 self.m.jog_relative("Y", -10, y_feed_speed)
-
         elif self.jogMode == "job":
             job_x_range = self.j.range_x[1] - self.j.range_x[0]
             job_y_range = self.j.range_y[1] - self.j.range_y[0]
-
             if case == "X+":
                 self.m.jog_relative("X", job_x_range, x_feed_speed)
             if case == "X-":
