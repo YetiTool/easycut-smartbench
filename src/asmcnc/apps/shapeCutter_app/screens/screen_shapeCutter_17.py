@@ -254,6 +254,7 @@ Builder.load_string(
                                 RstDocument:
                                     text: root.display_profile
                                     background_color: hex('#FFFFFF')
+                                    base_font_size: str(31.0/800.0*app.width) + 'sp'
 
                     BoxLayout: #action box
                         size_hint: (None,None)
