@@ -2,19 +2,13 @@
 Created on 5 March 2020
 @author: Letty
 """
-
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import (
-    ObjectProperty,
-    ListProperty,
-    NumericProperty,
-)  # @UnresolvedImport
+from kivy.properties import ObjectProperty, ListProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
-
 
 Builder.load_string(
     """
@@ -29,7 +23,7 @@ Builder.load_string(
         size: self.parent.size
         pos: self.parent.pos      
 
-        spacing: 20
+        spacing:0.0416666666667*app.height
         
         orientation: "vertical"
         
@@ -46,11 +40,12 @@ Builder.load_string(
                     pos: self.pos 
 
             ToggleButton:
+                font_size: str(0.01875 * app.width) + 'sp'
                 id: speed_toggle
                 on_press: root.set_jog_speeds()
                 background_color: 1, 1, 1, 0 
                 BoxLayout:
-                    padding: 10
+                    padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
@@ -62,6 +57,7 @@ Builder.load_string(
                         allow_stretch: True  
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 
@@ -81,6 +77,7 @@ Builder.load_string(
                         allow_stretch: True
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 
