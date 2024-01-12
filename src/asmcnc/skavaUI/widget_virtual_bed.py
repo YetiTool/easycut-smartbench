@@ -13,6 +13,7 @@ from kivy.clock import Clock
 from kivy.uix.stencilview import StencilView
 from kivy.uix.boxlayout import BoxLayout
 from kivy.core.window import Window
+from asmcnc.core_UI.scaling_utils import is_screen_big
 
 Builder.load_string(
     """
@@ -59,7 +60,7 @@ Builder.load_string(
                     allow_stretch: True
                     keep_ratio: True
                     height: self.parent.height
-                    pos: self.parent.pos
+                    pos: self.parent.pos                
                 Image:
                     id: carriage
                     source: './asmcnc/skavaUI/img/virtual_carriage.png'
@@ -116,6 +117,12 @@ class VirtualBed(Widget):
     width_modifier = NumericProperty()
     x_pos_modifier = NumericProperty()
 
+    # For use with big screen only
+    screen_big = is_screen_big()
+    manual_adjustment = 0.78
+    manual_shift = -7.0
+    scaling_factor = (768.0 / 800.0) * manual_adjustment
+
     def __init__(self, **kwargs):
         super(VirtualBed, self).__init__(**kwargs)
         self.m = kwargs["machine"]
@@ -168,6 +175,12 @@ class VirtualBed(Widget):
         self.m.quit_jog()
         self.m.jog_absolute_xy(machineX, machineY, self.bedWidgetJogFeedrate)
 
+    def scale_position_about_centre(self, total_range, value_to_scale, scaling_factor, manual_shift=0.0):
+        value_scaled = value_to_scale * scaling_factor
+        centre_correction_shift_ammount = 0.5 * (total_range - (total_range * scaling_factor))
+        value_scaled_and_shifted = value_scaled + centre_correction_shift_ammount
+        return value_scaled_and_shifted + manual_shift
+
     def setG54SizePx(self):
         job_box = self.sm.get_screen("home").job_box
         self.g54box_x0 = (
@@ -201,8 +214,18 @@ class VirtualBed(Widget):
             / self.m.grbl_x_max_travel
             * pixel_canvas[1]
         )
-        self.g28Marker.y = pos_pixels_y - self.g28Marker.height / 2
-        self.g28Marker.x = pos_pixels_x - self.g28Marker.width / 2
+        x_pos = pos_pixels_x - self.g28Marker.width / 2
+        y_pos = pos_pixels_y - self.g28Marker.height / 2
+
+        if (self.screen_big):            
+            y_range = abs((pixel_datum[1] - self.g28Marker.height / 2) 
+                          - (pixel_datum[1] + pixel_canvas[1] - self.g28Marker.height / 2)
+                          )
+            self.g28Marker.x = x_pos
+            self.g28Marker.y = self.scale_position_about_centre(y_range, y_pos, self.scaling_factor, self.manual_shift)
+        else:
+            self.g28Marker.x = x_pos
+            self.g28Marker.y = y_pos
 
     def setG54PosByMachineCoords(self, x_mc_coords, y_mc_coords):
         pixel_datum = self.touch_zone.pos
@@ -237,8 +260,19 @@ class VirtualBed(Widget):
             / self.m.grbl_x_max_travel
             * pixel_canvas[1]
         )
-        self.g54_marker.y = pos_pixels_y - self.g54_marker.height / 2
-        self.g54_marker.x = pos_pixels_x - self.g54_marker.width / 2
+
+        x_pos = pos_pixels_x - self.g54_marker.width / 2
+        y_pos = pos_pixels_y - self.g54_marker.height / 2
+
+        if (self.screen_big):
+            y_range = abs((pixel_datum[1] - self.g54_marker.height / 2) 
+                          - (pixel_datum[1] + pixel_canvas[1] - self.g54_marker.height / 2)
+                          )
+            self.g54_marker.x = x_pos
+            self.g54_marker.y = self.scale_position_about_centre(y_range, y_pos, self.scaling_factor, self.manual_shift)
+        else:
+            self.g54_marker.x = x_pos
+            self.g54_marker.y = y_pos
 
     def setCarriagePosByMachineCoords(self, grbl_x, grbl_y):
         pixel_datum = self.touch_zone.pos
@@ -256,6 +290,18 @@ class VirtualBed(Widget):
             / self.m.grbl_x_max_travel
             * pixel_canvas[1]
         )
-        self.carriage.x = pixels_x - self.carriage.width / 2
-        self.carriage.y = pixels_y - self.carriage.height / 2
-        self.xBar.x = pixels_x - self.xBar.width / 2
+        
+        x_pos = pixels_x - self.carriage.width / 2
+        y_pos = pixels_y - self.carriage.height / 2
+        
+        if (self.screen_big):
+            y_range = abs((pixel_datum[1] - self.carriage.height / 2) 
+                          - (pixel_datum[1] + pixel_canvas[1] - self.carriage.height / 2)
+                          )
+            self.carriage.x = x_pos
+            self.carriage.y = self.scale_position_about_centre(y_range, y_pos, self.scaling_factor, self.manual_shift)
+            self.xBar.x = pixels_x - self.xBar.width / 2
+        else:
+            self.carriage.x = x_pos
+            self.carriage.y = y_pos
+            self.xBar.x = pixels_x - self.xBar.width / 2
