@@ -1,6 +1,11 @@
 import unittest
 
-from tests.automated_unit_tests.test_base import UnitTestBase
+from unit_test_base import UnitTestBase
+
+"""
+Run unit tests with: python -m unittest discover -s tests/automated_unit_tests
+or in IDE
+"""
 
 
 class TestUnitTestBase(UnitTestBase):

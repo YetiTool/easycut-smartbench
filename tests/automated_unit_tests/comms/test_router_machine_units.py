@@ -6,10 +6,10 @@ Created on 1 Aug 2022
 import os
 import sys
 
+from tests import test_utils
+
 sys.path.append('./src')
 
-# worried about paths for this import?? where should it be relative to?
-from tests import test_utils
 
 try:
     import unittest

@@ -5,17 +5,19 @@ from datetime import datetime
 from kivy.lang import Builder
 from kivy.core.text import LabelBase
 
+current_dir = os.path.dirname(os.path.realpath(__file__))
+fonts_folder = os.path.join(current_dir, '..', 'keyboard', 'fonts')
 
-kr_font_path = '/asmcnc/keyboard/fonts/KRFont.ttf'
-kr_font_bold_path = '/asmcnc/keyboard/fonts/KRFont-Bold.ttf'
+kr_font_path = os.path.join(fonts_folder, 'KRFont.ttf')
+kr_font_bold_path = os.path.join(fonts_folder, 'KRFont-Bold.ttf')
 
 try: 
     LabelBase.register(name='KRFont',
-                       fn_regular="." + kr_font_path,
-                       fn_bold="." + kr_font_bold_path)
+                       fn_regular=kr_font_path,
+                       fn_bold=kr_font_bold_path)
 
     LabelBase.register(name='KRFont-Bold',
-                       fn_regular="." + kr_font_bold_path)
+                       fn_regular=kr_font_bold_path)
 
 except:
     LabelBase.register(name='KRFont',
