@@ -34,9 +34,9 @@ class UnitTestBase(unittest.TestCase):
     _job_data_module = None
 
     def setUp(self):
-        self.__app = App()
-        self.__app.width = 800
-        self.__app.height = 480
+        self._app = App()
+        self._app.width = 800
+        self._app.height = 480
 
     def _create_serial_connection_module(
         self, machine, screen_manager, settings_manager, localization, job
