@@ -20,12 +20,8 @@ try:
                        fn_regular=kr_font_bold_path)
 
 except:
-    LabelBase.register(name='KRFont',
-                       fn_regular="./src" + kr_font_path,
-                       fn_bold="./src" + kr_font_bold_path)
+    print("Could not load Korean font")
 
-    LabelBase.register(name='KRFont-Bold',
-                       fn_regular="./src" + kr_font_bold_path)
 
 builder_font_string = """
 <Widget>:
