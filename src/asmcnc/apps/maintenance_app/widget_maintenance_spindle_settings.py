@@ -243,8 +243,8 @@ Builder.load_string(
                                 y: self.parent.y
                                 pos: self.parent.pos
                                 size_hint: (None,None)
-                                # height: dp(get_scaled_height(32))
-                                # width: dp(get_scaled_width(83))
+                                height: dp(get_scaled_height(100))
+                                width: dp(get_scaled_width(100))
 
                     BoxLayout:
                         id: spindle_data_container
