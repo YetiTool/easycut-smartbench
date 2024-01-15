@@ -14,10 +14,12 @@ from kivy.clock import Clock
 from asmcnc.apps.maintenance_app import (
     widget_maintenance_spindle_save,
 )
-from asmcnc.core_UI.scaling_utils import get_scaled_width, get_scaled_height
 
 Builder.load_string(
     """
+#: import get_scaled_width asmcnc.core_UI.scaling_utils.get_scaled_width
+#: import get_scaled_height asmcnc.core_UI.scaling_utils.get_scaled_height
+
 
 <SpindleSpinner@SpinnerOption>
 
