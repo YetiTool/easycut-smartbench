@@ -2,7 +2,7 @@ from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivy.base import runTouchApp
-from kivy.properties import ObjectProperty
+from kivy.properties import ObjectProperty # @UnresolvedImport
 from kivy.clock import Clock
 from kivy.graphics import *
 from kivy.utils import *
@@ -78,8 +78,11 @@ class GCodeView(Widget):
         self.jd = kwargs["job"]
 
     def draw_file_in_xy_plane(self, gcode_list):
+        # log('len(gcode_list) ' + str(len(gcode_list)))
         self.gCodePreview.canvas.clear()
+        # log('> set_canvas_scale')
         self.set_canvas_scale(gcode_list)
+        # log('< set_canvas_scale')
         last_x, last_y = 0, 0
         target_x, target_y = 0, 0
         plane = "G17"
@@ -93,22 +96,22 @@ class GCodeView(Widget):
             for bit in line.split(" "):
                 # find plane
                 if bit == "G17":
-                    plane = "G17"
+                    plane = "G17" # 'xy'
                 elif bit == "G18":
-                    plane = "G18"
+                    plane = "G18" # 'zx'
                 elif bit == "G19":
-                    plane = "G19"
+                    plane = "G19" # 'yz'
                 # else plane remains same as last loop
 
                 # find move
                 elif bit == "G0":
-                    move = "G0"
+                    move = "G0" # Fast move, straight
                 elif bit == "G1":
-                    move = "G1"
+                    move = "G1"  # Feed move, straight
                 elif bit == "G2":
-                    move = "G2"
+                    move = "G2" # CW arc
                 elif bit == "G3":
-                    move = "G3"
+                    move = "G3" # CCW arc
                 # else move remains same as last loop
 
             if plane == "G17":
@@ -333,20 +336,20 @@ class GCodeView(Widget):
                         continue
                     if idx == 2:
                         if bit == "G2":
-                            self.move = "G2"
+                            self.move = "G2" # CW arc
                         elif bit == "G3":
-                            self.move = "G3"
+                            self.move = "G3" # CCW arc
                         elif bit == "G0":
-                            self.move = "G0"
+                            self.move = "G0" # Fast self.move, straight
                         elif bit == "G1":
-                            self.move = "G1"
+                            self.move = "G1" # Feed self.move, straight
                         # find self.plane
                         elif bit == "G17":
-                            self.plane = "G17"
+                            self.plane = "G17" # 'xy'
                         elif bit == "G18":
-                            self.plane = "G18"
+                            self.plane = "G18" # 'zx'
                         elif bit == "G19":
-                            self.plane = "G19"
+                            self.plane = "G19" # 'yz' 
                     start = bit[0]
                     if start == "X":
                         try:
