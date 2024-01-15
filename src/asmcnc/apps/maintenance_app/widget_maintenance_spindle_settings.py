@@ -376,7 +376,7 @@ class SpindleSettingsWidget(Widget):
                                     main_label_size_delta=140,
                                     popup_width=500, popup_height=200, button_one_text=None, auto_dismiss=True)
 
-        print(self.stylus_switch.size)
+        print("size: " + str(self.stylus_switch.size))
 
     def cooldown_speed_updated(self, instance, value):
         self.rpm_label.text = "%i " % value + self.l.get_str("RPM")
