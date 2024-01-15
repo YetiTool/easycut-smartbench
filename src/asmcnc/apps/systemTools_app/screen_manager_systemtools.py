@@ -7,7 +7,7 @@ from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info, screen_diagnostics
 from asmcnc.apps.systemTools_app.screens import popup_system, screen_system_menu, screen_build_info, screen_beta_testing, \
 screen_grbl_settings, screen_factory_settings, screen_update_testing, screen_developer_temp, screen_final_test, screen_support_menu
-
+from threading import Lock
 class ScreenManagerSystemTools(object):
 
     def __init__(self, app_manager, screen_manager, machine, settings, localization, keyboard):
@@ -19,6 +19,7 @@ class ScreenManagerSystemTools(object):
         self.l = localization
         self.kb = keyboard
         self.usb_stick = usb_storage.USB_storage(self.sm, self.l)
+        self.mutex = Lock()
 
     def open_system_tools(self):
         if not self.sm.has_screen('system_menu'): 
@@ -157,9 +158,15 @@ class ScreenManagerSystemTools(object):
         popup_info.PopupInfo(self.sm, self.l, popup_width=Window.width * 3/4, description=message, callback=self.download_settings_to_usb)
 
     def download_settings_to_usb(self, dummy):
+        if self.mutex.locked():
+            # already running
+            print('mutex locked!')
+            return
+        self.mutex.acquire(True)
         self.usb_stick.enable()
         message = self.l.get_str('Saving settings to USB. Please wait') + '...'
         wait_popup = popup_info.PopupWait(self.sm, self.l, description=message)
+
 
         def copy_settings_to_usb(loop_counter):
             print('Loop: {}').format(loop_counter)
@@ -200,10 +207,12 @@ class ScreenManagerSystemTools(object):
                     message = self.l.get_str('Could not save settings. Please check USB!')
                     popup_info.PopupMiniInfo(self.sm, self.l, description=message)
                 self.usb_stick.disable()
+                self.mutex.release()
             elif loop_counter > 30:
                 wait_popup.popup.dismiss()
                 message = self.l.get_str('No USB found!')
                 popup_info.PopupMiniInfo(self.sm, self.l, description=message)
+                self.mutex.release()
             else:
                 Clock.schedule_once(lambda dt: copy_settings_to_usb(loop_counter+1), 0.2)
 
