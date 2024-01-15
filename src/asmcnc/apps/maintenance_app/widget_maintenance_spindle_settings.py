@@ -244,7 +244,7 @@ Builder.load_string(
                                 pos: self.parent.pos
                                 size_hint: (None,None)
                                 height: float(self.height) / 480.0 * app.height
-                                width: float(self.width / 800.0) * app.width
+                                width: float(self.width) / 800.0 * app.width
 
                     BoxLayout:
                         id: spindle_data_container
