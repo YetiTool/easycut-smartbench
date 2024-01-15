@@ -243,8 +243,8 @@ Builder.load_string(
                                 y: self.parent.y
                                 pos: self.parent.pos
                                 size_hint: (None,None)
-                                height: float(self.height) / 480.0 * app.height
-                                width: float(self.width) / 800.0 * app.width
+                                # height: dp(get_scaled_height(32))
+                                # width: dp(get_scaled_width(83))
 
                     BoxLayout:
                         id: spindle_data_container
@@ -375,6 +375,8 @@ class SpindleSettingsWidget(Widget):
                                     main_layout_padding=(40, 20, 40, 20), main_layout_spacing=10,
                                     main_label_size_delta=140,
                                     popup_width=500, popup_height=200, button_one_text=None, auto_dismiss=True)
+
+        print(self.stylus_switch.size)
 
     def cooldown_speed_updated(self, instance, value):
         self.rpm_label.text = "%i " % value + self.l.get_str("RPM")
