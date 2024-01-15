@@ -14,6 +14,7 @@ from kivy.clock import Clock
 from asmcnc.apps.maintenance_app import (
     widget_maintenance_spindle_save,
 )
+from asmcnc.core_UI.scaling_utils import get_scaled_width, get_scaled_height
 
 Builder.load_string(
     """
@@ -239,6 +240,9 @@ Builder.load_string(
                                 center_x: self.parent.center_x
                                 y: self.parent.y
                                 pos: self.parent.pos
+                                size_hint: (None,None)
+                                height: dp(get_scaled_height(32))
+                                width: dp(get_scaled_width(83))
 
                     BoxLayout:
                         id: spindle_data_container
