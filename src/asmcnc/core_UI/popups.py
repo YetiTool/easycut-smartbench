@@ -748,3 +748,97 @@ class WaitPopup(BasicPopup):
             main_label_size_hint_y=main_label_size_hint_y,
             **kwargs
         )
+
+
+class UploadSettingsFromUsbPopup(BasicPopup):
+    def __init__(
+        self,
+        main_string,
+        popup_width=600,
+        popup_height=450,
+        button_one_text="Ok",
+        button_one_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
+        main_label_padding=(40, 20),
+        main_layout_padding=(40, 20, 40, 20),
+        main_layout_spacing=10,
+        main_label_size_delta=-60,
+        main_label_h_align="left",
+        title="Information!",
+        button_layout_padding=(150, 40, 150, 0),
+        button_layout_spacing=10,
+        main_label_size_hint_y=1,
+        **kwargs
+    ):
+        self.sm = kwargs['sm']
+
+        def button_one_callback(*args):
+            self.sm.upload_settings_from_usb(*args)
+
+        super(UploadSettingsFromUsbPopup, self).__init__(
+            main_string=main_string,
+            popup_type=PopupType.INFO,
+            main_label_padding=main_label_padding,
+            main_layout_padding=main_layout_padding,
+            main_layout_spacing=main_layout_spacing,
+            main_label_size_delta=main_label_size_delta,
+            button_layout_padding=button_layout_padding,
+            button_layout_spacing=button_layout_spacing,
+            main_label_h_align=main_label_h_align,
+            popup_width=popup_width,
+            popup_height=popup_height,
+            button_one_text=button_one_text,
+            button_one_callback=button_one_callback,
+            button_one_background_color=button_one_background_color,
+            title=title,
+            main_label_size_hint_y=main_label_size_hint_y,
+            button_layout_size_hint_y= 1,
+            **kwargs
+        )
+
+
+class DownloadSettingsToUsbPopup(BasicPopup):
+    def __init__(
+        self,
+        main_string,
+        popup_width=600,
+        popup_height=450,
+        button_one_text="Ok",
+        button_one_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
+        main_label_padding=(40, 20),
+        main_layout_padding=(40, 20, 40, 20),
+        main_layout_spacing=10,
+        main_label_size_delta=-60,
+        main_label_h_align="left",
+        title="Information!",
+        button_layout_padding=(150, 40, 150, 0),
+        button_layout_spacing=10,
+        main_label_size_hint_y=1,
+        **kwargs
+    ):
+        self.sm = kwargs['sm']
+
+        def button_one_callback(*args):
+            self.sm.download_settings_to_usb(*args)
+
+
+
+        super(DownloadSettingsToUsbPopup, self).__init__(
+            main_string=main_string,
+            popup_type=PopupType.INFO,
+            main_label_padding=main_label_padding,
+            main_layout_padding=main_layout_padding,
+            main_layout_spacing=main_layout_spacing,
+            main_label_size_delta=main_label_size_delta,
+            button_layout_padding=button_layout_padding,
+            button_layout_spacing=button_layout_spacing,
+            main_label_h_align=main_label_h_align,
+            popup_width=popup_width,
+            popup_height=popup_height,
+            button_one_text=button_one_text,
+            button_one_callback=button_one_callback,
+            button_one_background_color=button_one_background_color,
+            title=title,
+            main_label_size_hint_y=main_label_size_hint_y,
+            button_layout_size_hint_y= 1,
+            **kwargs
+        )

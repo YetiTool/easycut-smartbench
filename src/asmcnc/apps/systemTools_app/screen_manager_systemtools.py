@@ -7,6 +7,7 @@ from asmcnc.skavaUI import popup_info, screen_diagnostics
 from asmcnc.apps.systemTools_app.screens import popup_system, screen_system_menu, screen_build_info, screen_beta_testing, \
 screen_grbl_settings, screen_factory_settings, screen_update_testing, screen_developer_temp, screen_final_test, screen_support_menu
 from threading import Lock
+from asmcnc.core_UI.popup_manager import PopupManager
 class ScreenManagerSystemTools(object):
 
     def __init__(self, app_manager, screen_manager, machine, settings, localization, keyboard):
@@ -148,7 +149,7 @@ class ScreenManagerSystemTools(object):
 
     '''Copies all the relevant files for upgrading the console to a c10 to the mounted usb stick.'''
     def show_popup_before_download_settings_to_usb(self):
-        popup_system.PopupDownloadSettingsToUsb(self, self.l)
+        self.sm.pm.show_download_settings_popup(self)
 
     def download_settings_to_usb(self, *args):
         if self.mutex.locked():
@@ -213,7 +214,8 @@ class ScreenManagerSystemTools(object):
 
     '''Restores all the relevant files from USB for upgrading the console to a c10 .'''
     def show_popup_before_upload_settings_from_usb(self):
-        popup_system.PopupUploadSettingsFromUsb(self, self.l)
+        self.sm.pm.show_upload_settings_popup(self)
+        #popup_system.PopupUploadSettingsFromUsb(self, self.l)
 
     def upload_settings_from_usb(self, *args):
         if self.mutex.locked():
