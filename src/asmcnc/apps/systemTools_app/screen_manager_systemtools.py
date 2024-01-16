@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from kivy.clock import Clock
-from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from asmcnc.comms import usb_storage
@@ -149,15 +148,9 @@ class ScreenManagerSystemTools(object):
 
     '''Copies all the relevant files for upgrading the console to a c10 to the mounted usb stick.'''
     def show_popup_before_download_settings_to_usb(self):
-        message = self.l.get_str('This will copy all necessary files for migrating to a new console:') + '\n' + \
-            '\n-' + self.l.get_str('machine settings') + \
-            '\n-' + self.l.get_str('job files') + \
-            '\n-' + self.l.get_str('log files') + \
-            '\n\n' + self.l.get_str('Make sure a USB-stick is connected properly!') + \
-            '\n\n' + self.l.get_str('This might take a few minutes, depending of the size of your files.')
-        popup_info.PopupInfo(self.sm, self.l, popup_width=Window.width * 3/4, description=message, callback=self.download_settings_to_usb)
+        popup_system.PopupDownloadSettingsToUsb(self, self.l)
 
-    def download_settings_to_usb(self, dummy):
+    def download_settings_to_usb(self, *args):
         if self.mutex.locked():
             # already running
             print('mutex locked!')
@@ -220,15 +213,14 @@ class ScreenManagerSystemTools(object):
 
     '''Restores all the relevant files from USB for upgrading the console to a c10 .'''
     def show_popup_before_upload_settings_from_usb(self):
-        message = self.l.get_str('This will restore all necessary files from USB for migrating to a new console:') + '\n' + \
-            '\n-' + self.l.get_str('machine settings') + \
-            '\n-' + self.l.get_str('job files') + \
-            '\n-' + self.l.get_str('log files') + \
-            '\n\n' + self.l.get_str('Make sure a USB-stick is connected properly!') + \
-            '\n\n' + self.l.get_str('This might take a few minutes, depending of the size of your files.')
-        popup_info.PopupInfo(self.sm, self.l, popup_width=Window.width * 3/4, description=message, callback=self.upload_settings_from_usb)
+        popup_system.PopupUploadSettingsFromUsb(self, self.l)
 
-    def upload_settings_from_usb(self, dummy):
+    def upload_settings_from_usb(self, *args):
+        if self.mutex.locked():
+            # already running
+            print('mutex locked!')
+            return
+        self.mutex.acquire(True)
         self.usb_stick.enable()
         message = self.l.get_str('Restoring settings from USB. Please wait') + '...'
         wait_popup = popup_info.PopupWait(self.sm, self.l, description=message)
@@ -261,11 +253,12 @@ class ScreenManagerSystemTools(object):
                 else:
                     message = self.l.get_str('Could not restore Settings. Please check USB!')
                     popup_info.PopupMiniInfo(self.sm, self.l, description=message)
-
+                self.mutex.release()
             elif loop_counter > 30:
                 wait_popup.popup.dismiss()
                 message = self.l.get_str('No USB found!')
                 popup_info.PopupMiniInfo(self.sm, self.l, description=message)
+                self.mutex.release()
             else:
                 Clock.schedule_once(lambda dt: restore_settings_from_usb(loop_counter+1), 0.2)
 
