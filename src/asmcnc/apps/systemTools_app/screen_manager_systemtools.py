@@ -215,7 +215,6 @@ class ScreenManagerSystemTools(object):
     '''Restores all the relevant files from USB for upgrading the console to a c10 .'''
     def show_popup_before_upload_settings_from_usb(self):
         self.sm.pm.show_upload_settings_popup(self)
-        #popup_system.PopupUploadSettingsFromUsb(self, self.l)
 
     def upload_settings_from_usb(self, *args):
         if self.mutex.locked():
