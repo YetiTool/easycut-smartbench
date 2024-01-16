@@ -427,7 +427,7 @@ class PopupUSBError(Widget):
 
 class PopupInfo(Widget):
 
-    def __init__(self, screen_manager, localization, popup_width, description, callback=None):
+    def __init__(self, screen_manager, localization, popup_width, description):
         self.sm = screen_manager
         self.l = localization
         label_width = popup_width - 40
@@ -465,8 +465,6 @@ class PopupInfo(Widget):
         popup.separator_height = '4dp'
 
         ok_button.bind(on_press=popup.dismiss)
-        if callback:
-            ok_button.bind(on_press=callback)
 
         popup.open()
 
