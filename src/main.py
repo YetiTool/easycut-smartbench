@@ -25,6 +25,7 @@ from os import path
 
 from kivy.config import Config
 from kivy.clock import Clock
+from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 
 from asmcnc.core_UI.popup_manager import PopupManager
@@ -151,12 +152,23 @@ def log(message):
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 
+# load scaled kv
+Builder.load_file('scaled_kv.kv')
+
+
 class SkavaUI(App):
 
     test_no = 0
 
     width = Window.width
     height = Window.height if Window.height == 480 else Window.height - 32
+
+    def get_scaled_width(self, val):
+        return float(val) / 800 * self.width
+
+    def get_scaled_height(self, val):
+        return float(val) / 480 * self.height
+
 
     def build(self):
 
