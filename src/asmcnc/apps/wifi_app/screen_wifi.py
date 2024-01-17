@@ -30,6 +30,7 @@ Builder.load_string(
     color: 0,0,0,1
     halign: 'left'
     markup: 'True'
+    font_size: str(0.01875*app.width) + 'sp'
 
 <WifiScreen>:
     
@@ -479,6 +480,7 @@ class WifiScreen(Screen):
         self.kb = kwargs["keyboard"]
         if sys.platform != "win32" and sys.platform != "darwin":
             self.network_name.values = self.get_available_networks()
+        self.network_name.values = ["Test"]
         self.update_strings()
         self.get_rst_source()
 
