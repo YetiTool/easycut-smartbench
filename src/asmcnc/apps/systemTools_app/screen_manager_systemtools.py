@@ -159,7 +159,7 @@ class ScreenManagerSystemTools(object):
         self.mutex.acquire(True)
         self.usb_stick.enable()
         message = self.l.get_str('Saving settings to USB. Please wait') + '...'
-        self.sm.pm.show_info_popup(message, 400)
+        self.sm.pm.show_info_popup(message, 600)
 
         def copy_settings_to_usb(loop_counter):
             print('Loop: {}').format(loop_counter)
