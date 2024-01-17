@@ -89,7 +89,7 @@ Builder.load_string(
             center_x: self.parent.center_x
             y: self.parent.y
             size: self.parent.width, self.parent.height
-            allow_stretch: False
+            allow_stretch: True
 
 
 
