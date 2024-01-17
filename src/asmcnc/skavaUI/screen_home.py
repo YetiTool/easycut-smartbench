@@ -88,7 +88,7 @@ Builder.load_string(
                         background_down: 'asmcnc/skavaUI/img/tab_set_up.png'
                         on_press: root.m.laser_off()
                         BoxLayout:
-                            padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                            padding:[app.get_scaled_width(20), app.get_scaled_height(20.000000000015998)]
                             spacing:0.025*app.width
                             canvas:
                                 Color:
@@ -108,7 +108,7 @@ Builder.load_string(
                         on_press: root.m.laser_on()
                         BoxLayout:
                             orientation: 'horizontal'
-                            padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                            padding:[app.get_scaled_width(20), app.get_scaled_height(20.000000000015998)]
                             spacing:0.025*app.width
                             canvas:
                                 Color:
@@ -149,7 +149,7 @@ Builder.load_string(
                         on_press: root.m.laser_on()
                         BoxLayout:
                             orientation: 'vertical'
-                            padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                            padding:[app.get_scaled_width(20), app.get_scaled_height(20.000000000015998)]
                             spacing:0.0416666666667*app.height
                             canvas:
                                 Color:
@@ -160,7 +160,7 @@ Builder.load_string(
 
                             BoxLayout:
                                 size_hint_y: 5
-                                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                                padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
                                 canvas:
                                     Color:
                                         rgba: 1,1,1,1
@@ -181,7 +181,7 @@ Builder.load_string(
                         id: home_tab
                         BoxLayout:
                             orientation: 'vertical'
-                            padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                            padding:[app.get_scaled_width(20), app.get_scaled_height(20.000000000015998)]
                             spacing:0.0416666666667*app.height
                             id: job_container
                             canvas:
@@ -193,7 +193,7 @@ Builder.load_string(
 
                             BoxLayout:
                                 size_hint_y: 1
-                                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                                padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
                                 spacing:0.0125*app.width
                                 orientation: 'horizontal'
                                 canvas:
@@ -251,7 +251,7 @@ Builder.load_string(
 
                             BoxLayout:
                                 size_hint_y: 3
-                                padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                                padding:[app.get_scaled_width(20), app.get_scaled_height(20.000000000015998)]
                                 orientation: 'horizontal'
                                 canvas:
                                     Color:

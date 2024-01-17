@@ -37,7 +37,7 @@ Builder.load_string(
 
         BoxLayout:
             orientation: 'horizontal'
-            padding:[dp(0.1125)*app.width, dp(0.104166666667)*app.height, dp(0.0375)*app.width, dp(0.104166666667)*app.height]
+            padding:[app.get_scaled_width(90), app.get_scaled_height(50.00000000016), dp(0.0375)*app.width, app.get_scaled_height(50.00000000016)]
             spacing: 0
             size_hint_x: 1
 
@@ -88,7 +88,7 @@ Builder.load_string(
                             root.skip_to_lobby()
                             
                         BoxLayout:
-                            padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                            padding:[app.get_scaled_width(5), app.get_scaled_height(5.0000000000160005)]
                             size: self.parent.size
                             pos: self.parent.pos
                             
@@ -112,7 +112,7 @@ Builder.load_string(
                             root.next_screen()
                             
                         BoxLayout:
-                            padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                            padding:[app.get_scaled_width(5), app.get_scaled_height(5.0000000000160005)]
                             size: self.parent.size
                             pos: self.parent.pos
                             
@@ -124,7 +124,7 @@ Builder.load_string(
 
         BoxLayout:
             size_hint_x: 0.1
-            padding:[0, 0, 0, dp(0.833333333333)*app.height]
+            padding:[0, 0, 0, app.get_scaled_height(399.99999999984)]
 
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'

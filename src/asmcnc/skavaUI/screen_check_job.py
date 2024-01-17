@@ -116,7 +116,7 @@ Builder.load_string(
                 orientation: 'vertical'
                 size_hint_x: 1
                 spacing: 0
-                padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                padding:[app.get_scaled_width(20), app.get_scaled_height(20.000000000015998)]
                     
                 Label:
                     size_hint_y: 3
@@ -132,7 +132,7 @@ Builder.load_string(
                 BoxLayout:
                     orientation: 'horizontal'
                     size_hint_y: 1
-                    padding:[dp(0.030625)*app.width, 0]
+                    padding:[app.get_scaled_width(24.5), 0]
 
                     Button:
                         id: quit_button
@@ -154,7 +154,7 @@ Builder.load_string(
                 size_hint_x: 1
                 orientation: 'vertical'
                 spacing:0.0104166666667*app.height
-                padding:[0, 0, dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                padding:[0, 0, app.get_scaled_width(20), app.get_scaled_height(20.000000000015998)]
                                 
                 ScrollView:
                     size_hint: 1, 1

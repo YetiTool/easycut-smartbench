@@ -69,7 +69,7 @@ Builder.load_string(
 
         # Door label
         BoxLayout: 
-            padding:[dp(0.01875)*app.width, 0, 0, 0]
+            padding:[app.get_scaled_width(15), 0, 0, 0]
             spacing: 0
             size_hint: (None, None)
             height: dp(0.104166666667*app.height)
@@ -88,7 +88,7 @@ Builder.load_string(
                 pos: self.parent.pos
 
         BoxLayout: 
-            padding:[dp(0.0125)*app.width, 0, dp(0.0125)*app.width, 0]
+            padding:[app.get_scaled_width(10), 0, app.get_scaled_width(10), 0]
             spacing: 0
             size_hint: (None, None)
             height: dp(0.0104166666667*app.height)
@@ -166,7 +166,7 @@ Builder.load_string(
             size_hint: (None, None)
             height: dp(0.270833333333*app.height)
             width: dp(1.0*app.width)
-            padding:[0, 0, 0, dp(0.0208333333333)*app.height]
+            padding:[0, 0, 0, app.get_scaled_height(9.999999999984)]
    
 
             Button:

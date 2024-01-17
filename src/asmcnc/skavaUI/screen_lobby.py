@@ -58,7 +58,7 @@ Builder.load_string("""
 
         BoxLayout:
             size_hint_y: 70
-            padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height, dp(0.9175)*app.width, 0]
+            padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984), dp(0.9175)*app.width, 0]
             orientation: 'horizontal'
 
         Carousel:
@@ -68,7 +68,7 @@ Builder.load_string("""
                             
             BoxLayout:
                 orientation: 'horizontal'
-                padding:[dp(0.125)*app.width, dp(0.0416666666667)*app.height, dp(0.125)*app.width, dp(0.104166666667)*app.height]
+                padding:[app.get_scaled_width(100), app.get_scaled_height(20.000000000015998), app.get_scaled_width(100), dp(0.104166666667)*app.height]
                 spacing:0.0416666666667*app.height
 
                 BoxLayout:
@@ -171,7 +171,7 @@ Builder.load_string("""
                     orientation: 'vertical'
                     size_hint_x: 1
                     spacing:0.0416666666667*app.height
-                    padding:[dp(0.08125)*app.width, 0]
+                    padding:[app.get_scaled_width(65), 0]
 
                     Button:
                         font_size: str(0.01875 * app.width) + 'sp'
@@ -206,7 +206,7 @@ Builder.load_string("""
             # Carousel pane 2
             BoxLayout:
                 orientation: 'horizontal'
-                padding:[dp(0.125)*app.width, dp(0.0416666666667)*app.height, dp(0.125)*app.width, dp(0.104166666667)*app.height]
+                padding:[app.get_scaled_width(100), app.get_scaled_height(20.000000000015998), app.get_scaled_width(100), dp(0.104166666667)*app.height]
                 spacing:0.0416666666667*app.height
 
                 BoxLayout:
@@ -278,7 +278,7 @@ Builder.load_string("""
             # Carousel pane 3
             BoxLayout:
                 orientation: 'horizontal'
-                padding:[dp(0.125)*app.width, dp(0.0416666666667)*app.height, dp(0.125)*app.width, dp(0.104166666667)*app.height]
+                padding:[app.get_scaled_width(100), app.get_scaled_height(20.000000000015998), app.get_scaled_width(100), dp(0.104166666667)*app.height]
                 spacing:0.0416666666667*app.height
 
                 BoxLayout:
@@ -349,7 +349,7 @@ Builder.load_string("""
             # Carousel pane 4
             BoxLayout:
                 orientation: 'horizontal'
-                padding:[dp(0.125)*app.width, dp(0.0416666666667)*app.height, dp(0.125)*app.width, dp(0.104166666667)*app.height]
+                padding:[app.get_scaled_width(100), app.get_scaled_height(20.000000000015998), app.get_scaled_width(100), dp(0.104166666667)*app.height]
                 spacing:0.0416666666667*app.height
 
                 BoxLayout:
@@ -435,7 +435,7 @@ Builder.load_string("""
                 size_hint_x: None
                 width: 0.9*app.width
                 height: self.parent.height
-                padding:[dp(0.1)*app.width, dp(0.0833333333333)*app.height, 0, dp(0.0833333333333)*app.height]
+                padding:[app.get_scaled_width(80), app.get_scaled_height(39.999999999984), 0, app.get_scaled_height(39.999999999984)]
                 orientation: 'horizontal'
                 
                 Button:
@@ -510,7 +510,7 @@ Builder.load_string("""
                 size_hint: (None, None)
                 size: (dp(80.0/800.0)*app.width,dp(80.0/480.0)*app.height)
                 orientation: 'horizontal'
-                padding:[dp(0.03625)*app.width, dp(0.0604166666667)*app.height, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                padding:[app.get_scaled_width(28.999999999999996), app.get_scaled_height(29.000000000016), dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                 Button:
                     font_size: str(0.01875 * app.width) + 'sp'
                     disabled: False

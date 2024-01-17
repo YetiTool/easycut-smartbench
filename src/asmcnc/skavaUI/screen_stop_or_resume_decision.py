@@ -33,14 +33,14 @@ Builder.load_string(
 
     BoxLayout: 
         spacing: 0
-        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+        padding:[app.get_scaled_width(20), app.get_scaled_height(20.000000000015998)]
         orientation: 'vertical'
 
 
         BoxLayout:
             orientation: 'vertical'
             spacing:0.0*app.height
-            padding:[0, 0, 0, dp(0.0208333333333)*app.height]
+            padding:[0, 0, 0, app.get_scaled_height(9.999999999984)]
             size_hint_y: 5
             
 

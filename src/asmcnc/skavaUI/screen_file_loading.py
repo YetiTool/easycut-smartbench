@@ -67,11 +67,11 @@ Builder.load_string(
             valign: 'middle'
             halign: 'left'
             text_size: self.size
-            padding:[dp(0.0125)*app.width, 0]
+            padding:[app.get_scaled_width(10), 0]
 
         BoxLayout: 
             spacing: 0
-            padding:[dp(0.025)*app.width, 0, dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+            padding:[app.get_scaled_width(20), 0, app.get_scaled_width(20), app.get_scaled_height(20.000000000015998)]
             orientation: 'vertical'
             size_hint_y: 7.81
              
@@ -112,7 +112,7 @@ Builder.load_string(
 
             BoxLayout:
                 orientation: 'horizontal'
-                padding:[dp(0.025)*app.width, dp(0.0208333333333)*app.height, dp(0.025)*app.width, dp(0.0208333333333)*app.height]
+                padding:[app.get_scaled_width(20), app.get_scaled_height(9.999999999984), app.get_scaled_width(20), app.get_scaled_height(9.999999999984)]
                 spacing:0.075*app.width
                 size_hint_y: 3
 
@@ -128,7 +128,7 @@ Builder.load_string(
                     background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                     background_disabled_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                     border: [dp(30)]*4
-                    padding:[dp(0.0375)*app.width, dp(0.0625)*app.height]
+                    padding:[app.get_scaled_width(30), app.get_scaled_height(30)]
                     on_press: root.quit_to_home()
 
                 Button:
@@ -144,7 +144,7 @@ Builder.load_string(
                     background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                     background_disabled_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                     border: [dp(30)]*4
-                    padding:[dp(0.0375)*app.width, dp(0.0625)*app.height]
+                    padding:[app.get_scaled_width(30), app.get_scaled_height(30)]
 """
 )
 job_cache_dir = "./jobCache/"

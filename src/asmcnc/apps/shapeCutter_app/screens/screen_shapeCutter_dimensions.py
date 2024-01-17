@@ -65,7 +65,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 width: dp(1.0*app.width)
                 height: dp(0.114583333333*app.height)
-                padding:[dp(0.1875)*app.width, 0, dp(0.1875)*app.width, 0]
+                padding:[app.get_scaled_width(150), 0, app.get_scaled_width(150), 0]
                 spacing: 0
                 orientation: 'horizontal'
                 pos: self.parent.pos
@@ -101,7 +101,7 @@ Builder.load_string(
                         size_hint: (None,None)
                         width: dp(0.84375*app.width)
                         height: dp(0.6875*app.height)
-                        padding:[dp(0.0075)*app.width, 0, dp(0.00875)*app.width, 0]
+                        padding:[app.get_scaled_width(6), 0, dp(0.00875)*app.width, 0]
                         spacing: 0
                         orientation: 'horizontal'
                         pos: self.parent.pos
@@ -113,7 +113,7 @@ Builder.load_string(
                             size_hint: (None,None)
                             width: dp(0.245*app.width)
                             height: dp(0.6875*app.height)
-                            padding:[0, 0, 0, dp(0.0625)*app.height]
+                            padding:[0, 0, 0, app.get_scaled_height(30)]
                             spacing:0.0416666666667*app.height
                             pos: self.parent.pos
                             
@@ -123,7 +123,7 @@ Builder.load_string(
                                 size_hint: (None,None)
                                 height: dp(0.0666666666667*app.height)
                                 width: dp(0.245*app.width)
-                                padding:[dp(0.07)*app.width, 0, dp(0.0125)*app.width, 0]
+                                padding:[app.get_scaled_width(56.00000000000001), 0, dp(0.0125)*app.width, 0]
                                 orientation: "horizontal"
         
                                                               
@@ -131,7 +131,7 @@ Builder.load_string(
                                     size_hint: (None,None)
                                     height: dp(0.0666666666667*app.height)
                                     width: dp(0.15*app.width)
-                                    padding:[dp(0.04625)*app.width, 0, 0, 0]
+                                    padding:[app.get_scaled_width(37), 0, 0, 0]
                                
                                     Switch:
                                         id: unit_toggle
@@ -166,7 +166,7 @@ Builder.load_string(
                                 size_hint: (None,None)
                                 height: dp(0.0833333333333*app.height)
                                 width: dp(0.245*app.width)
-                                padding:[dp(0.0375)*app.width, 0, dp(0.025)*app.width, 0]
+                                padding:[app.get_scaled_width(30), 0, dp(0.025)*app.width, 0]
                                 orientation: "horizontal"
                                 
                                 Label: 
@@ -185,7 +185,7 @@ Builder.load_string(
                                     size_hint: (None,None)
                                     height: dp(0.0833333333333*app.height)
                                     width: dp(0.15*app.width)
-                                    padding:[dp(0.025)*app.width, 0, 0, 0]
+                                    padding:[app.get_scaled_width(20), 0, 0, 0]
                                                 
                                     TextInput: 
                                         id: input_dim1
@@ -202,7 +202,7 @@ Builder.load_string(
                                 size_hint: (None,None)
                                 height: dp(0.0833333333333*app.height)
                                 width: dp(0.245*app.width)
-                                padding:[dp(0.0375)*app.width, 0, dp(0.025)*app.width, 0]
+                                padding:[app.get_scaled_width(30), 0, dp(0.025)*app.width, 0]
                                 orientation: "horizontal"
                                 
                                 Label: 
@@ -220,7 +220,7 @@ Builder.load_string(
                                     size_hint: (None,None)
                                     height: dp(0.0833333333333*app.height)
                                     width: dp(0.15*app.width)
-                                    padding:[dp(0.025)*app.width, 0, 0, 0]
+                                    padding:[app.get_scaled_width(20), 0, 0, 0]
                                                 
                                     TextInput: 
                                         id: input_dim2
@@ -238,7 +238,7 @@ Builder.load_string(
                                 size_hint: (None,None)
                                 height: dp(0.0833333333333*app.height)
                                 width: dp(0.245*app.width)
-                                padding:[dp(0.0375)*app.width, 0, dp(0.025)*app.width, 0]
+                                padding:[app.get_scaled_width(30), 0, dp(0.025)*app.width, 0]
                                 orientation: "horizontal"
                                 
                                 Label: 
@@ -256,7 +256,7 @@ Builder.load_string(
                                     size_hint: (None,None)
                                     height: dp(0.0833333333333*app.height)
                                     width: dp(0.15*app.width)
-                                    padding:[dp(0.025)*app.width, 0, 0, 0]
+                                    padding:[app.get_scaled_width(20), 0, 0, 0]
                                                 
                                     TextInput: 
                                         id: input_dim3
@@ -273,7 +273,7 @@ Builder.load_string(
                                 size_hint: (None,None)
                                 height: dp(0.0833333333333*app.height)
                                 width: dp(0.245*app.width)
-                                padding:[dp(0.0375)*app.width, 0, dp(0.025)*app.width, 0]
+                                padding:[app.get_scaled_width(30), 0, dp(0.025)*app.width, 0]
                                 orientation: "horizontal"
                                 
                                 Label: 
@@ -291,7 +291,7 @@ Builder.load_string(
                                     size_hint: (None,None)
                                     height: dp(0.0833333333333*app.height)
                                     width: dp(0.15*app.width)
-                                    padding:[dp(0.025)*app.width, 0, 0, 0]
+                                    padding:[app.get_scaled_width(20), 0, 0, 0]
                                                 
                                     TextInput: 
                                         id: input_dim4
@@ -309,7 +309,7 @@ Builder.load_string(
                             size_hint: (None,None)
                             width: dp(0.58*app.width)
                             height: dp(0.6875*app.height)
-                            padding:[0, 0, 0, dp(0.0458333333333)*app.height]
+                            padding:[0, 0, 0, app.get_scaled_height(21.999999999984002)]
                             pos: self.parent.pos
                             
                             # image box
@@ -337,7 +337,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     height: dp(0.6875*app.height)
                     width: dp(0.15625*app.width)
-                    padding:[0, dp(0.0416666666667)*app.height, dp(0.04625)*app.width, dp(0.0708333333333)*app.height]
+                    padding:[0, app.get_scaled_height(20.000000000015998), app.get_scaled_width(37), dp(0.0708333333333)*app.height]
                     spacing:0.0708333333333*app.height
                     orientation: "vertical"
                     
@@ -345,7 +345,7 @@ Builder.load_string(
                         size_hint: (None,None)
                         height: dp(0.139583333333*app.height)
                         width: dp(0.11*app.width)
-                        padding:[dp(0.03)*app.width, 0, dp(0.03)*app.width, dp(0.0708333333333)*app.height]
+                        padding:[app.get_scaled_width(24), 0, app.get_scaled_width(24), app.get_scaled_height(33.999999999984)]
                         Button:
                             font_size: str(0.01875 * app.width) + 'sp'
                             id: info_button

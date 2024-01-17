@@ -21,7 +21,7 @@ Builder.load_string(
 
         size: self.parent.size
         pos: self.parent.pos      
-        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+        padding:[app.get_scaled_width(20), app.get_scaled_height(20.000000000015998)]
         spacing:0.025*app.width
         orientation: 'horizontal'
         
@@ -86,7 +86,7 @@ Builder.load_string(
                 background_color: hex('#F4433600')
                 on_press: root.get_info()
                 BoxLayout:
-                    padding:[dp(0.009375)*app.width, dp(0.0416666666667)*app.height, dp(0.040625)*app.width, dp(0.0416666666667)*app.height]
+                    padding:[app.get_scaled_width(7.5), app.get_scaled_height(20.000000000015998), dp(0.040625)*app.width, app.get_scaled_height(20.000000000015998)]
                     size_hint: (None,None)
                     height: dp(0.208333333333*app.height)
                     width: dp(0.125*app.width)

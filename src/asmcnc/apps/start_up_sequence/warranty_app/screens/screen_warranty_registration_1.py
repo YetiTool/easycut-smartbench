@@ -98,7 +98,7 @@ Builder.load_string(
 					orientation: 'vertical'
 					width: dp(1.0*app.width)
 					height: dp(0.416666666667*app.height)
-					padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height, dp(0.025)*app.width, 0]
+					padding:[app.get_scaled_width(20), app.get_scaled_height(20.000000000015998), app.get_scaled_width(20), 0]
 					size_hint: (None,None)
 					spacing: 0
 
@@ -122,7 +122,7 @@ Builder.load_string(
 						spacing: 0
 
 						BoxLayout:
-							padding:[dp(0.0125)*app.width, 0, 0, 0]
+							padding:[app.get_scaled_width(10), 0, 0, 0]
 							width: dp(0.2025*app.width)
 							height: dp(0.275*app.height)
 							size_hint: (None,None)
@@ -175,7 +175,7 @@ Builder.load_string(
 
 			# FOOTER
 			BoxLayout: 
-				padding:[dp(0.0125)*app.width, 0, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+				padding:[app.get_scaled_width(10), 0, app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
 				size_hint: (None, None)
 				height: dp(0.254166666667*app.height)
 				width: dp(1.0*app.width)
@@ -185,7 +185,7 @@ Builder.load_string(
 					size_hint: (None, None)
 					height: dp(0.254166666667*app.height)
 					width: dp(0.305625*app.width)
-					padding:[0, 0, dp(0.230625)*app.width, 0]
+					padding:[0, 0, app.get_scaled_width(184.5), 0]
 					Button:
 					    font_size: str(0.01875 * app.width) + 'sp'
 						id: prev_screen_button
@@ -212,7 +212,7 @@ Builder.load_string(
 					size_hint: (None, None)
 					height: dp(0.254166666667*app.height)
 					width: dp(0.36375*app.width)
-					padding:[0, 0, 0, dp(0.0666666666667)*app.height]
+					padding:[0, 0, 0, app.get_scaled_height(32.000000000016)]
 					Button:
 						id: next_button
 						background_normal: "./asmcnc/skavaUI/img/next.png"
@@ -233,7 +233,7 @@ Builder.load_string(
 					size_hint: (None, None)
 					height: dp(0.254166666667*app.height)
 					width: dp(0.305625*app.width)
-					padding:[dp(0.240625)*app.width, 0, 0, 0]
+					padding:[app.get_scaled_width(192.5), 0, 0, 0]
 
 					Button:
 					    font_size: str(0.01875 * app.width) + 'sp'

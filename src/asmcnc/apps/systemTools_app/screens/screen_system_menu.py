@@ -43,8 +43,8 @@ Builder.load_string(
     GridLayout:
         size: self.parent.size
         pos: self.parent.pos
-        padding:[dp(0.0104125)*app.width, dp(0.125)*app.height]
-        spacing:[dp(0.0104125)*app.width, dp(0.125)*app.height]
+        padding:[app.get_scaled_width(8.33), app.get_scaled_height(60)]
+        spacing:[app.get_scaled_width(8.33), app.get_scaled_height(60)]
         cols: 5
         rows: 2
 

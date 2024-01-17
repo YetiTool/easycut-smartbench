@@ -35,7 +35,7 @@ Builder.load_string(
              
     BoxLayout:
         orientation: 'vertical'
-        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+        padding:[app.get_scaled_width(20), app.get_scaled_height(20.000000000015998)]
         spacing: 0
 
         BoxLayout:
@@ -58,7 +58,7 @@ Builder.load_string(
                     root.repeat_section()
                     
                 BoxLayout:
-                    padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                    padding:[app.get_scaled_width(5), app.get_scaled_height(5.0000000000160005)]
                     size: self.parent.size
                     pos: self.parent.pos
                     
@@ -81,7 +81,7 @@ Builder.load_string(
                     root.skip_section()
                     
                 BoxLayout:
-                    padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                    padding:[app.get_scaled_width(5), app.get_scaled_height(5.0000000000160005)]
                     size: self.parent.size
                     pos: self.parent.pos
                     
@@ -104,7 +104,7 @@ Builder.load_string(
                     root.quit_calibration()
                     
                 BoxLayout:
-                    padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                    padding:[app.get_scaled_width(5), app.get_scaled_height(5.0000000000160005)]
                     size: self.parent.size
                     pos: self.parent.pos
                     
@@ -116,7 +116,7 @@ Builder.load_string(
         BoxLayout:
             orientation: 'horizontal'
             spacing:0.0416666666667*app.height
-            padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+            padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
 
             BoxLayout:
                 orientation: 'vertical'
@@ -146,7 +146,7 @@ Builder.load_string(
                         
                 BoxLayout: 
                     orientation: 'horizontal' 
-                    padding:[dp(0.0375)*app.width, dp(0.0625)*app.height]
+                    padding:[app.get_scaled_width(30), app.get_scaled_height(30)]
                     spacing:0.0125*app.width
                     
                     Button:
@@ -162,7 +162,7 @@ Builder.load_string(
                             root.left_button()
                             
                         BoxLayout:
-                            padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                            padding:[app.get_scaled_width(5), app.get_scaled_height(5.0000000000160005)]
                             size: self.parent.size
                             pos: self.parent.pos
                             
@@ -185,7 +185,7 @@ Builder.load_string(
                             root.right_button()
                             
                         BoxLayout:
-                            padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                            padding:[app.get_scaled_width(5), app.get_scaled_height(5.0000000000160005)]
                             size: self.parent.size
                             pos: self.parent.pos
                             

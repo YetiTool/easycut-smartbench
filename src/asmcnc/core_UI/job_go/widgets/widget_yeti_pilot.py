@@ -19,7 +19,7 @@ Builder.load_string(
         orientation: 'horizontal'
         size: self.parent.size
         pos: self.parent.pos
-        padding:[dp(0.0125)*app.width, dp(0.0166666666667)*app.height, dp(0.0125)*app.width, dp(0.0166666666667)*app.height]
+        padding:[app.get_scaled_width(10), app.get_scaled_height(8.000000000016), app.get_scaled_width(10), app.get_scaled_height(8.000000000016)]
 
         
         BoxLayout:
@@ -39,7 +39,7 @@ Builder.load_string(
             BoxLayout: 
                 id: bl
                 size_hint_y: 0.5
-                padding:[dp(0.017620614025)*app.width, 0]
+                padding:[app.get_scaled_width(14.096491219999999), 0]
 
                 ToggleButton:
                     font_size: str(0.01875 * app.width) + 'sp'
@@ -77,7 +77,7 @@ Builder.load_string(
         BoxLayout:
             orientation: 'vertical'
             size_hint_x: 0.6
-            padding:[dp(0.0025)*app.width, 0, dp(0.00625)*app.width, 0]
+            padding:[app.get_scaled_width(2), 0, dp(0.00625)*app.width, 0]
             spacing: 0
             Label: 
                 id: profile_label
@@ -102,7 +102,7 @@ Builder.load_string(
 
         BoxLayout: 
             size_hint_x: 0.1
-            padding:[0, 0, dp(0.0125)*app.width, 0]
+            padding:[0, 0, app.get_scaled_width(10), 0]
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
                 id: yp_cog_button

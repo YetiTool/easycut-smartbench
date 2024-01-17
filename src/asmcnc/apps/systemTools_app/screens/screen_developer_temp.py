@@ -69,7 +69,7 @@ Builder.load_string(
                 pos: self.pos
 
         BoxLayout:
-            padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+            padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
             spacing:0.0208333333333*app.height
             orientation: "vertical"
             BoxLayout:
@@ -104,7 +104,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(0.721875*app.width)
                     height: dp(0.5*app.height)
-                    padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                    padding:[app.get_scaled_width(20), app.get_scaled_height(20.000000000015998)]
                     spacing:0.0416666666667*app.height
                     orientation: 'vertical'
                     canvas:
@@ -189,7 +189,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(0.240625*app.width)
                     height: dp(0.5*app.height)
-                    padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                    padding:[app.get_scaled_width(20), app.get_scaled_height(20.000000000015998)]
                     spacing: 0
                     orientation: 'vertical'
                     canvas:
@@ -236,7 +236,7 @@ Builder.load_string(
                         size_hint: (None, None)
                         height: dp(0.270833333333*app.height)
                         width: dp(0.240625*app.width)
-                        padding:[dp(0.0653125)*app.width, dp(0.0645833333333)*app.height, dp(0.0653125)*app.width, dp(0.0645833333333)*app.height]
+                        padding:[app.get_scaled_width(52.25), app.get_scaled_height(30.999999999984002), app.get_scaled_width(52.25), app.get_scaled_height(30.999999999984002)]
                         Button:
                             font_size: str(0.01875 * app.width) + 'sp'
                             size_hint: (None,None)
@@ -261,7 +261,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(0.48125*app.width)
                     height: dp(0.270833333333*app.height)
-                    padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                    padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
                     spacing: 0
                     orientation: 'vertical'
 
@@ -280,7 +280,7 @@ Builder.load_string(
                         size_hint: (None, None)
                         height: dp(0.270833333333*app.height)
                         width: dp(0.240625*app.width)
-                        padding:[dp(0.0503125)*app.width, dp(0.01875)*app.height, dp(0.0503125)*app.width, dp(0.01875)*app.height]
+                        padding:[app.get_scaled_width(40.25), app.get_scaled_height(9), app.get_scaled_width(40.25), app.get_scaled_height(9)]
                         Button:
                             font_size: str(0.01875 * app.width) + 'sp'
                             size_hint: (None,None)

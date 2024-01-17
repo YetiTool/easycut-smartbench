@@ -115,7 +115,7 @@ Builder.load_string(
                             pos: self.parent.pos
                             cols: 0
                             rows: 4
-                            padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                            padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
                             spacing:0.0104166666667*app.height
                             BoxLayout: 
                                 orientation: 'vertical'
@@ -149,7 +149,7 @@ Builder.load_string(
                                     pos: self.parent.pos
                                     cols: 4
                                     rows: 0
-                                    padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                                    padding:[app.get_scaled_width(5), app.get_scaled_height(5.0000000000160005)]
                                     spacing:0.0125*app.width
                                     Label:
                                         font_size: str(0.01875 * app.width) + 'sp'
@@ -225,7 +225,7 @@ Builder.load_string(
                                     pos: self.parent.pos
                                     cols: 4
                                     rows: 0
-                                    padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                                    padding:[app.get_scaled_width(5), app.get_scaled_height(5.0000000000160005)]
                                     spacing:0.0125*app.width
 
                                     Label:
@@ -257,7 +257,7 @@ Builder.load_string(
                         BoxLayout:
                             size_hint_y: 0.3
                             orientation: 'horizontal'
-                            spacing:dp(0.0125)*app.width
+                            spacing:app.get_scaled_width(10)
 
                             Button:
                                 font_size: str(0.01875 * app.width) + 'sp'
@@ -282,7 +282,7 @@ Builder.load_string(
                         size_hint: (None,None)
                         width: dp(0.721875*app.width)
                         height: dp(0.166666666667*app.height)
-                        padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                        padding:[app.get_scaled_width(5), app.get_scaled_height(5.0000000000160005)]
                         spacing: 0
                         orientation: 'vertical'
 
@@ -502,7 +502,7 @@ Builder.load_string(
                         size_hint: (None, None)
                         height: dp(0.166666666667*app.height)
                         width: dp(0.1*app.width)
-                        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                        padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984), app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
                         Button:
                             font_size: str(0.01875 * app.width) + 'sp'
                             size_hint: (None,None)
@@ -527,7 +527,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(0.775*app.width)
                     height: dp(0.166666666667*app.height)
-                    padding:[dp(0.2)*app.width, 0]
+                    padding:[app.get_scaled_width(160), 0]
                     spacing: 0
                     orientation: 'vertical'
                     BoxLayout:
@@ -547,7 +547,7 @@ Builder.load_string(
                         size_hint: (None, None)
                         height: dp(0.166666666667*app.height)
                         width: dp(0.1*app.width)
-                        padding:[dp(0.02375)*app.width, dp(0.0208333333333)*app.height, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                        padding:[app.get_scaled_width(19), app.get_scaled_height(9.999999999984), dp(0.0125)*app.width, app.get_scaled_height(9.999999999984)]
                         Button:
                             font_size: str(0.01875 * app.width) + 'sp'
                             size_hint: (None,None)

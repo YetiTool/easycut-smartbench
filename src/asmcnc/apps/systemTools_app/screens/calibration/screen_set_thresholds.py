@@ -31,14 +31,14 @@ Builder.load_string(
         BoxLayout:
             size_hint_y: 5
             orientation: 'vertical'
-            padding:[dp(0.0375)*app.width, dp(0.0625)*app.height]
-            spacing:dp(0.0625)*app.height
+            padding:[app.get_scaled_width(30), app.get_scaled_height(30)]
+            spacing:app.get_scaled_height(30)
 
             GridLayout:
                 size_hint_y: 1.5
                 cols: 7
                 rows: 3
-                spacing:dp(0.0125)*app.width
+                spacing:app.get_scaled_width(10)
 
                 Label:
                     font_size: str(0.01875 * app.width) + 'sp'

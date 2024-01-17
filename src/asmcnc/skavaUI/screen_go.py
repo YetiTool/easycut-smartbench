@@ -75,7 +75,7 @@ Builder.load_string(
 
             BoxLayout:
                 size_hint_x: 0.9
-                padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                padding:[app.get_scaled_width(20), app.get_scaled_height(20.000000000015998)]
                 spacing:0.025*app.width
                 orientation: "horizontal"
 
@@ -93,7 +93,7 @@ Builder.load_string(
 
                     BoxLayout:
                         size_hint_y: 0.3
-                        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                        padding:[app.get_scaled_width(20), app.get_scaled_height(20.000000000015998)]
                         canvas:
                             Color:
                                 rgba: hex('#FFFFFFFF')
@@ -159,12 +159,12 @@ Builder.load_string(
                         id: override_and_progress_container
                         orientation: 'horizontal'
                         size_hint_y: 0.7
-                        padding:[dp(0.0)*app.width, dp(0.0)*app.height]
+                        padding:[app.get_scaled_width(0), app.get_scaled_height(0)]
                         spacing:0.0416666666667*app.height
 
                         BoxLayout:
                             orientation: 'vertical'
-                            padding:[0, 0, 0, dp(0.0104166666667)*app.height]
+                            padding:[0, 0, 0, app.get_scaled_height(5.0000000000160005)]
                             spacing:0.0208333333333*app.height
                             size_hint_x: 0.2
                             canvas:
@@ -177,7 +177,7 @@ Builder.load_string(
                             BoxLayout:
                                 size_hint_y: 1.8
                                 orientation: 'vertical'
-                                padding:[dp(0.0)*app.width, dp(0.0)*app.height]
+                                padding:[app.get_scaled_width(0), app.get_scaled_height(0)]
                                 spacing:0.0*app.height
                                 canvas:
                                     Color:
@@ -210,7 +210,7 @@ Builder.load_string(
                         BoxLayout:
                             id: speed_override_container
                             orientation: 'vertical'
-                            padding:[0, 0, 0, dp(0.0104166666667)*app.height]
+                            padding:[0, 0, 0, app.get_scaled_height(5.0000000000160005)]
                             spacing:0.0208333333333*app.height
                             size_hint_x: 0.2
                             canvas:
@@ -223,7 +223,7 @@ Builder.load_string(
                             BoxLayout:
                                 size_hint_y: 1.8
                                 orientation: 'vertical'
-                                padding:[dp(0.0)*app.width, dp(0.0)*app.height]
+                                padding:[app.get_scaled_width(0), app.get_scaled_height(0)]
                                 spacing:0.0*app.height
                                 canvas:
                                     Color:
@@ -273,7 +273,7 @@ Builder.load_string(
                                 id: job_progress_container
                                 size_hint_y: 2.5
                                 orientation: 'vertical'
-                                padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                                padding:[app.get_scaled_width(20), app.get_scaled_height(20.000000000015998)]
                                 spacing:0.0*app.height
 
                                 canvas:
@@ -330,7 +330,7 @@ Builder.load_string(
                     id: spindle_widgets
                     orientation: 'vertical'
                     size_hint_x: 0.15
-                    padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                    padding:[app.get_scaled_width(20), app.get_scaled_height(20.000000000015998)]
                     spacing:0.0416666666667*app.height
 
                     canvas:

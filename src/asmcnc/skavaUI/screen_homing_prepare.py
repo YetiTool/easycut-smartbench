@@ -31,14 +31,14 @@ Builder.load_string(
 
     BoxLayout: 
         spacing: 0
-        padding:[dp(0.025)*app.width, dp(0.0833333333333)*app.height]
+        padding:[app.get_scaled_width(20), app.get_scaled_height(39.999999999984)]
         orientation: 'vertical'
 
         # Cancel button
         BoxLayout:
             size_hint: (None,None)
             height: dp(0.0416666666667*app.height)
-            padding:[dp(0.025)*app.width, 0, dp(0.025)*app.width, 0]
+            padding:[app.get_scaled_width(20), 0, app.get_scaled_width(20), 0]
             spacing:0.85*app.width
             orientation: 'horizontal'
             pos: self.parent.pos

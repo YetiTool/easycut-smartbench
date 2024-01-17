@@ -112,7 +112,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 width: dp(0.975*app.width)
                 height: dp(0.666666666667*app.height)
-                padding:[dp(0.025)*app.width, 0]
+                padding:[app.get_scaled_width(20), 0]
                 spacing: 0
                 orientation: 'horizontal'
 
@@ -121,7 +121,7 @@ Builder.load_string(
                     size_hint: (None, None)
                     height: dp(0.729166666667*app.height)
                     width: dp(0.6875*app.width)
-                    padding:[0, dp(0.0416666666667)*app.height, 0, 0]
+                    padding:[0, app.get_scaled_height(20.000000000015998), 0, 0]
 
                     Button:
                         font_size: str(0.01875 * app.width) + 'sp'
@@ -139,13 +139,13 @@ Builder.load_string(
                             pos: self.parent.pos
                             size: self.parent.size
                             orientation: 'horizontal'
-                            spacing:dp(0.025)*app.width
-                            padding:[0, dp(0.00625)*app.height]
+                            spacing:app.get_scaled_width(20)
+                            padding:[0, app.get_scaled_height(3)]
 
                             BoxLayout:
                                 size_hint_y: None
                                 height: dp(0.0708333333333*app.height)
-                                padding:[dp(0.005)*app.width, 0]
+                                padding:[app.get_scaled_width(4), 0]
                                 canvas:
                                     Color:
                                         rgba: hex('#f9f9f9ff')
@@ -174,7 +174,7 @@ Builder.load_string(
                                     allow_stretch: True
 
                     TextInput:
-                        padding:[dp(0.005)*app.width, dp(0.00416666666667)*app.height]
+                        padding:[app.get_scaled_width(4), app.get_scaled_height(2.0000000000016)]
                         id: smartbench_name_input
                         text: 'My SmartBench'
                         color: hex('#333333ff')
@@ -211,13 +211,13 @@ Builder.load_string(
                             pos: self.parent.pos
                             size: self.parent.size
                             orientation: 'horizontal'
-                            spacing:dp(0.025)*app.width
-                            padding:[0, dp(0.00208333333333)*app.height]
+                            spacing:app.get_scaled_width(20)
+                            padding:[0, app.get_scaled_height(0.9999999999984001)]
 
                             BoxLayout:
                                 size_hint_y: None
                                 height: dp(0.0583333333333*app.height)
-                                padding:[dp(0.005)*app.width, 0]
+                                padding:[app.get_scaled_width(4), 0]
                                 canvas:
                                     Color:
                                         rgba: hex('#f9f9f9ff')
@@ -243,7 +243,7 @@ Builder.load_string(
                                     allow_stretch: True
 
                     TextInput:
-                        padding:[dp(0.005)*app.width, dp(0.00416666666667)*app.height]
+                        padding:[app.get_scaled_width(4), app.get_scaled_height(2.0000000000016)]
                         id: smartbench_location_input
                         text: 'SmartBench location'
                         color: hex('#333333ff')
@@ -528,7 +528,7 @@ Builder.load_string(
                         size_hint: (None, None)
                         height: dp(0.166666666667*app.height)
                         width: dp(0.1*app.width)
-                        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                        padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984), app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
                         Button:
                             font_size: str(0.01875 * app.width) + 'sp'
                             size_hint: (None,None)
@@ -553,7 +553,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(0.775*app.width)
                     height: dp(0.166666666667*app.height)
-                    padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                    padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
                     spacing: 0
                     orientation: 'vertical'
 
@@ -568,7 +568,7 @@ Builder.load_string(
                         size_hint: (None, None)
                         height: dp(0.166666666667*app.height)
                         width: dp(0.1*app.width)
-                        padding:[dp(0.02375)*app.width, dp(0.0208333333333)*app.height, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                        padding:[app.get_scaled_width(19), app.get_scaled_height(9.999999999984), dp(0.0125)*app.width, app.get_scaled_height(9.999999999984)]
                         Button:
                             font_size: str(0.01875 * app.width) + 'sp'
                             size_hint: (None,None)

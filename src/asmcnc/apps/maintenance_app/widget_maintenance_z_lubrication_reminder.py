@@ -23,7 +23,7 @@ Builder.load_string(
         width: dp(0.725*app.width)
         pos: self.parent.pos
         orientation: 'vertical'
-        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+        padding:[app.get_scaled_width(20), app.get_scaled_height(20.000000000015998)]
         spacing:0.0208333333333*app.height
 
         Label:
@@ -38,7 +38,7 @@ Builder.load_string(
 
         BoxLayout: 
             orientation: 'horizontal'
-            padding:[0, dp(0.0104166666667)*app.height, 0, 0]
+            padding:[0, app.get_scaled_height(5.0000000000160005), 0, 0]
             spacing:0.0125*app.width
             size_hint: (None, None)
             height: dp(0.3125*app.height)

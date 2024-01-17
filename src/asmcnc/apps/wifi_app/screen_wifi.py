@@ -70,7 +70,7 @@ Builder.load_string(
             size_hint: (None, None)
             height: dp(0.395833333333*app.height)
             width: dp(1.0*app.width)
-            padding:[dp(0.0375)*app.width, dp(0.0625)*app.height, dp(0.0375)*app.width, dp(0.0416666666667)*app.height]
+            padding:[app.get_scaled_width(30), app.get_scaled_height(30), app.get_scaled_width(30), dp(0.0416666666667)*app.height]
             spacing:0.0375*app.width
             orientation: 'horizontal'
             
@@ -80,7 +80,7 @@ Builder.load_string(
                 height: dp(0.291666666667*app.height)
                 width: dp(0.1875*app.width)
                 orientation: 'vertical'
-                padding:[0, dp(0.0729166666667)*app.height, 0, dp(0.0208333333333)*app.height]
+                padding:[0, app.get_scaled_height(35.000000000016), 0, dp(0.0208333333333)*app.height]
                 spacing:0.0208333333333*app.height
                 canvas:
                     Color:
@@ -132,7 +132,7 @@ Builder.load_string(
                 size_hint: (None, None)
                 height: dp(0.291666666667*app.height)
                 width: dp(0.7*app.width)
-                padding:[dp(0.0125)*app.width, dp(0.0416666666667)*app.height, dp(0.0125)*app.width, dp(0.0625)*app.height]
+                padding:[app.get_scaled_width(10), app.get_scaled_height(20.000000000015998), app.get_scaled_width(10), dp(0.0625)*app.height]
                 spacing:0.0125*app.width
                 canvas:
                     Color:
@@ -147,7 +147,7 @@ Builder.load_string(
                     width: dp(0.275*app.width)
                     pos_hint: {'top': 0.66}
                     orientation: "vertical"
-                    padding:[dp(0.0125)*app.width, 0, dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                    padding:[app.get_scaled_width(10), 0, dp(0.025)*app.width, app.get_scaled_height(20.000000000015998)]
                     
                     BoxLayout: 
                         size_hint: (None, None) 
@@ -176,7 +176,7 @@ Builder.load_string(
                             orientation: "vertical"
                             width: dp(0.04875*app.width)
                             height: dp(0.0833333333333*app.height)
-                            padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height, dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                            padding:[app.get_scaled_width(5), app.get_scaled_height(5.0000000000160005), app.get_scaled_width(5), app.get_scaled_height(5.0000000000160005)]
                             Button:
                                 font_size: str(0.01875 * app.width) + 'sp'
                                 size_hint: (None,None)
@@ -210,7 +210,7 @@ Builder.load_string(
                             size_hint: (None,None)
                             height: dp(0.0833333333333*app.height)
                             width: dp(0.2625*app.width)
-                            padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height, dp(0.00625)*app.width, dp(0.0166666666667)*app.height]
+                            padding:[app.get_scaled_width(5), app.get_scaled_height(5.0000000000160005), app.get_scaled_width(5), dp(0.0166666666667)*app.height]
                             id: network_name_box
                             
                             canvas:
@@ -263,7 +263,7 @@ Builder.load_string(
                         orientation: "horizontal"
                         width: dp(0.2625*app.width)
                         height: dp(0.0833333333333*app.height)
-                        padding:[0, dp(0.0104166666667)*app.height, 0, dp(0.0104166666667)*app.height]
+                        padding:[0, app.get_scaled_height(5.0000000000160005), 0, app.get_scaled_height(5.0000000000160005)]
                         ToggleButton:
                             id: custom_ssid_button
                             on_release: root.custom_ssid_input()
@@ -279,7 +279,7 @@ Builder.load_string(
                     height: dp(0.208333333333*app.height)
                     width: dp(0.2625*app.width)
                     orientation: "vertical"
-                    padding:[0, 0, 0, dp(0.0416666666667)*app.height]
+                    padding:[0, 0, 0, app.get_scaled_height(20.000000000015998)]
                               
                     Label:
                         id: password_label
@@ -315,7 +315,7 @@ Builder.load_string(
                     height: dp(0.208333333333*app.height)
                     width: dp(0.1125*app.width)
                     orientation: 'vertical'
-                    padding:[0, 0, dp(0.0125)*app.width, dp(0.0416666666667)*app.height]
+                    padding:[0, 0, app.get_scaled_width(10), app.get_scaled_height(20.000000000015998)]
                               
                     Label:
                         id: country_label
@@ -332,7 +332,7 @@ Builder.load_string(
                         size_hint: (None,None)
                         height: dp(0.0833333333333*app.height)
                         width: dp(0.1*app.width)
-                        padding:[dp(0.025)*app.width, 0, dp(0.00625)*app.width, 0]
+                        padding:[app.get_scaled_width(20), 0, dp(0.00625)*app.width, 0]
                         orientation: 'horizontal'
                         canvas:
                             Rectangle:
@@ -358,7 +358,7 @@ Builder.load_string(
             size_hint: (None, None)
             height: dp(0.604166666667*app.height)
             width: dp(1.0*app.width)
-            padding:[dp(0.0375)*app.width, 0, dp(0.0375)*app.width, dp(0.0625)*app.height]
+            padding:[app.get_scaled_width(30), 0, app.get_scaled_width(30), app.get_scaled_height(30)]
             spacing:0.0125*app.width
             
             # Doc viewer
@@ -366,7 +366,7 @@ Builder.load_string(
                 size_hint: (None, None)
                 height: dp(0.541666666667*app.height)
                 width: dp(0.7125*app.width)
-                padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                padding:[app.get_scaled_width(20), app.get_scaled_height(20.000000000015998)]
                 canvas:
                     Color:
                         rgba: [1,1,1,1]
@@ -402,7 +402,7 @@ Builder.load_string(
                     size_hint: (None, None)
                     height: dp(0.239583333333*app.height)
                     width: dp(0.2*app.width)
-                    padding:[dp(0.0025)*app.width, 0, 0, 0]
+                    padding:[app.get_scaled_width(2), 0, 0, 0]
                     canvas:
                         Color:
                             rgba: [226 / 255., 226 / 255., 226 / 255., 1.]
@@ -431,7 +431,7 @@ Builder.load_string(
                     size_hint: (None, None)
                     height: dp(0.233333333333*app.height)
                     width: dp(0.2*app.width)
-                    padding:[dp(0.035)*app.width, 0, dp(0.025)*app.width, 0]
+                    padding:[app.get_scaled_width(28.000000000000004), 0, dp(0.025)*app.width, 0]
                     Button:
                         font_size: str(0.01875 * app.width) + 'sp'
                         size_hint: (None,None)

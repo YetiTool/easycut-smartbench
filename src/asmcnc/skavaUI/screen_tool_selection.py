@@ -25,13 +25,13 @@ Builder.load_string(
 
     BoxLayout:
         orientation: 'vertical'
-        padding:[dp(0.0625)*app.width, dp(0.104166666667)*app.height]
+        padding:[app.get_scaled_width(50), app.get_scaled_height(50.00000000016)]
 
         # Top text
 
         BoxLayout:
             orientation: 'vertical'
-            padding:[0, dp(0.075)*app.height, 0, 0]
+            padding:[0, app.get_scaled_height(36), 0, 0]
             
 
             Label:
@@ -48,9 +48,9 @@ Builder.load_string(
 
         BoxLayout:
             orientation: 'horizontal'
-            spacing:dp(0.055)*app.width
+            spacing:app.get_scaled_width(44)
             size_hint_y: dp(2.5)
-            padding:[0, 0, 0, dp(0.0416666666667)*app.height]
+            padding:[0, 0, 0, app.get_scaled_height(20.000000000015998)]
 
             # Stylus button
 

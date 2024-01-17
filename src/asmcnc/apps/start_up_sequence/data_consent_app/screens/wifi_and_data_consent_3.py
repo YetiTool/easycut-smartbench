@@ -15,7 +15,7 @@ Builder.load_string(
 
 	RstDocument:
 		id: privacy_notice
-		base_font_size: dp(0.0375)*app.width
+		base_font_size: app.get_scaled_width(30)
 		underline_color: 'e5e5e5'
 		colors: root.color_dict
 
@@ -71,7 +71,7 @@ Builder.load_string(
 				size_hint: (None,None)
 				width: dp(1.0*app.width)
 				height: dp(0.6*app.height)
-				padding:[dp(0.01875)*app.width, dp(0.0104166666667)*app.height, dp(0.01875)*app.width, dp(0.0104166666667)*app.height]
+				padding:[app.get_scaled_width(15), app.get_scaled_height(5.0000000000160005), app.get_scaled_width(15), app.get_scaled_height(5.0000000000160005)]
 				spacing:0.0104166666667*app.height
 				orientation: 'vertical'
 
@@ -83,14 +83,14 @@ Builder.load_string(
 						Rectangle:
 							pos: self.pos
 							size: self.size
-					padding:[dp(0.00125)*app.width, dp(0.00208333333333)*app.height]
+					padding:[app.get_scaled_width(1), app.get_scaled_height(0.9999999999984001)]
 					ScrollPrivacyNotice:
 						id: scroll_privacy_notice
 
 				BoxLayout: 
 					size_hint: (1,1)
 					orientation: 'horizontal'
-					padding:[dp(0.025)*app.width, 0]
+					padding:[app.get_scaled_width(20), 0]
 					# canvas:
 					#	# Test to see box
 					#     Color:
@@ -120,7 +120,7 @@ Builder.load_string(
 
 			# FOOTER
 			BoxLayout: 
-				padding:[dp(0.0125)*app.width, 0, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+				padding:[app.get_scaled_width(10), 0, app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
 				size_hint: (None, None)
 				height: dp(0.275*app.height)
 				width: dp(1.0*app.width)
@@ -153,8 +153,8 @@ Builder.load_string(
 					size_hint: (None, None)
 					height: dp(0.254166666667*app.height)
 					width: dp(0.825*app.width)
-					padding:[dp(0.0075)*app.width, 0, dp(0.0075)*app.width, dp(0.0875)*app.height]
-					spacing:dp(0.0825)*app.width
+					padding:[app.get_scaled_width(6), 0, app.get_scaled_width(6), app.get_scaled_height(42)]
+					spacing:app.get_scaled_width(66)
 					Button:
 						id: decline_button
 						background_normal: "./asmcnc/skavaUI/img/next.png"

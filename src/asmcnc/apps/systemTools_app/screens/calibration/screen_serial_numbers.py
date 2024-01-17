@@ -44,12 +44,12 @@ Builder.load_string(
                 markup: 'True'
                 halign: 'left'
                 valign: 'middle'
-                padding:[dp(0.0125)*app.width, 0]
+                padding:[app.get_scaled_width(10), 0]
                 size_hint_x: 0.5
                 font_size: dp(0.025*app.width)
 
             BoxLayout:
-                padding:[dp(0.0125)*app.width, 0]
+                padding:[app.get_scaled_width(10), 0]
                 size_hint_x: 0.5
                 orientation: 'horizontal'
 

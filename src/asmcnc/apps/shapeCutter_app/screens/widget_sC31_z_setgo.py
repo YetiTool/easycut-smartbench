@@ -45,7 +45,7 @@ Builder.load_string(
                 on_press: root.set_jog_speeds()
                 background_color: 1, 1, 1, 0 
                 BoxLayout:
-                    padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                    padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:

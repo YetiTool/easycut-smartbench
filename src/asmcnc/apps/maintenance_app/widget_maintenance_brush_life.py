@@ -28,12 +28,12 @@ Builder.load_string(
         width: dp(0.35*app.width)
         pos: self.parent.pos
         orientation: 'vertical'
-        padding:[dp(0.016625)*app.width, dp(0.0208333333333)*app.height, dp(0.016625)*app.width, dp(0.0208333333333)*app.height]
+        padding:[app.get_scaled_width(13.3), app.get_scaled_height(9.999999999984), app.get_scaled_width(13.3), app.get_scaled_height(9.999999999984)]
         spacing:0.0208333333333*app.height
 
         BoxLayout: 
             orientation: 'vertical'
-            spacing:dp(0.0104166666667)*app.height
+            spacing:app.get_scaled_height(5.0000000000160005)
             size_hint: (None, None)
             height: dp(0.208333333333*app.height)
             width: dp(0.35*app.width)         
@@ -50,7 +50,7 @@ Builder.load_string(
 
             BoxLayout: 
                 orientation: 'horizontal'
-                padding:[0, dp(0.0104166666667)*app.height, 0, 0]
+                padding:[0, app.get_scaled_height(5.0000000000160005), 0, 0]
                 spacing:0.0125*app.width
                 size_hint: (None, None)
                 height: dp(0.110416666667*app.height)

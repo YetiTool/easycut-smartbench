@@ -22,7 +22,7 @@ Builder.load_string(
 
         size: self.parent.size
         pos: self.parent.pos      
-        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+        padding:[app.get_scaled_width(20), app.get_scaled_height(20.000000000015998)]
         spacing:0.0125*app.width
         orientation: 'horizontal'
         

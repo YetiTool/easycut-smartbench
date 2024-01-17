@@ -34,14 +34,14 @@ Builder.load_string(
         BoxLayout:
             size_hint_y: None
             height: self.width
-            padding:[dp(0.1)*app.width, dp(0.125)*app.height, dp(0.05)*app.width, dp(0.125)*app.height]
+            padding:[app.get_scaled_width(80), app.get_scaled_height(60), dp(0.05)*app.width, app.get_scaled_height(60)]
             ToggleButton:
                 font_size: str(0.01875 * app.width) + 'sp'
                 id: speed_toggle
                 on_press: root.set_jog_speeds()
                 background_color: 1, 1, 1, 0 
                 BoxLayout:
-                    padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                    padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
@@ -62,7 +62,7 @@ Builder.load_string(
 
 #             # go x datum
             BoxLayout:
-                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
                 size: self.parent.size
                 pos: self.parent.pos                 
 #                 Button:
@@ -107,7 +107,7 @@ Builder.load_string(
 
 #             # go y datum
             BoxLayout:
-                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
                 size: self.parent.size
                 pos: self.parent.pos                 
 #                 Button:
@@ -189,7 +189,7 @@ Builder.load_string(
 
 #             # set x datum
             BoxLayout:
-                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
                 size: self.parent.size
                 pos: self.parent.pos                 
 #                 Button:
@@ -233,7 +233,7 @@ Builder.load_string(
                         allow_stretch: True                                    
 
             BoxLayout:
-                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
                 size: self.parent.size
                 pos: self.parent.pos 
 #                 ToggleButton:

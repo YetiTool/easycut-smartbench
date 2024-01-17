@@ -22,7 +22,7 @@ Builder.load_string(
 
     BoxLayout: 
         spacing: 0
-        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+        padding:[app.get_scaled_width(20), app.get_scaled_height(20.000000000015998)]
         orientation: 'vertical'
         size_hint: (None, None)
         height: 1.0*app.height
@@ -58,7 +58,7 @@ Builder.load_string(
 
             BoxLayout: 
                 spacing: 0
-                padding:[dp(0.125)*app.width, 0, dp(0.125)*app.width, dp(0.270833333333)*app.height]
+                padding:[app.get_scaled_width(100), 0, app.get_scaled_width(100), app.get_scaled_height(129.99999999984)]
                 orientation: 'horizontal'          
                 size_hint: (None, None)
                 height: dp(251.0/480.0)*app.height
@@ -68,7 +68,7 @@ Builder.load_string(
 
                 BoxLayout: 
                     spacing: 0
-                    padding:[dp(0.01)*app.width, 0, dp(0.07125)*app.width, 0]
+                    padding:[app.get_scaled_width(8), 0, dp(0.07125)*app.width, 0]
                     orientation: 'horizontal'          
                     size_hint: (None, None)
                     height: dp(121.0/480.0)*app.height
@@ -104,7 +104,7 @@ Builder.load_string(
 
                 BoxLayout: 
                     spacing: 0
-                    padding:[dp(0.0875)*app.width, 0, dp(0.0125)*app.width, dp(0.00625)*app.height]
+                    padding:[app.get_scaled_width(70), 0, dp(0.0125)*app.width, app.get_scaled_height(3)]
                     orientation: 'horizontal'          
                     size_hint: (None, None)
                     height: dp(121.0/480.0)*app.height

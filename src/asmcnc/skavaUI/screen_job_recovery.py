@@ -35,7 +35,7 @@ Builder.load_string(
         BoxLayout:
             orientation: 'horizontal'
             size_hint_y: 0.9
-            spacing:dp(0.01875)*app.width
+            spacing:app.get_scaled_width(15)
             canvas:
                 Color:
                     rgba: hex('#E2E2E2FF')
@@ -44,16 +44,16 @@ Builder.load_string(
                     pos: self.pos
 
             BoxLayout:
-                padding:[dp(0.01875)*app.width, dp(0.03125)*app.height, 0, dp(0.03125)*app.height]
+                padding:[app.get_scaled_width(15), app.get_scaled_height(15), 0, app.get_scaled_height(15)]
 
                 BoxLayout:
                     orientation: 'vertical'
-                    spacing:dp(0.03125)*app.height
+                    spacing:app.get_scaled_height(15)
 
                     BoxLayout:
                         orientation: 'vertical'
                         size_hint_y: 3.5
-                        spacing:dp(0.03125)*app.height
+                        spacing:app.get_scaled_height(15)
 
                         BoxLayout:
                             orientation: 'vertical'
@@ -66,7 +66,7 @@ Builder.load_string(
                                 font_size: dp(0.03125*app.width)
 
                             BoxLayout:
-                                padding:[0, dp(0.00833333333333)*app.height, 0, 0]
+                                padding:[0, app.get_scaled_height(3.9999999999984004), 0, 0]
                                 canvas:
                                     Color:
                                         rgba: 1,1,1,1
@@ -86,8 +86,8 @@ Builder.load_string(
                         BoxLayout:
                             orientation: 'vertical'
                             size_hint_y: 2
-                            padding:[dp(0.0625)*app.width, 0]
-                            spacing:dp(0.0208333333333)*app.height
+                            padding:[app.get_scaled_width(50), 0]
+                            spacing:app.get_scaled_height(9.999999999984)
 
                             Button:
                                 font_size: str(0.01875 * app.width) + 'sp'
@@ -143,17 +143,17 @@ Builder.load_string(
 
             BoxLayout:
                 size_hint_x: 2
-                padding:[0, dp(0.03125)*app.height]
+                padding:[0, app.get_scaled_height(15)]
 
                 BoxLayout:
                     orientation: 'vertical'
-                    spacing:dp(0.03125)*app.height
+                    spacing:app.get_scaled_height(15)
 
                     BoxLayout:
                         id: gcode_container
                         orientation: 'vertical'
                         size_hint_y: 3.5
-                        padding:[dp(0.015)*app.width, dp(0.025)*app.height, dp(0.015)*app.width, 0]
+                        padding:[app.get_scaled_width(12), app.get_scaled_height(12), app.get_scaled_width(12), 0]
                         canvas:
                             Color:
                                 rgba: 1,1,1,1
@@ -193,8 +193,8 @@ Builder.load_string(
 
                     BoxLayout:
                         orientation: 'vertical'
-                        padding:[dp(0.015)*app.width, dp(0.025)*app.height]
-                        spacing:dp(0.0145833333333)*app.height
+                        padding:[app.get_scaled_width(12), app.get_scaled_height(12)]
+                        spacing:app.get_scaled_height(6.999999999984)
                         canvas:
                             Color:
                                 rgba: 1,1,1,1
@@ -232,14 +232,14 @@ Builder.load_string(
 
             BoxLayout:
                 orientation: 'vertical'
-                spacing:dp(0.03125)*app.height
+                spacing:app.get_scaled_height(15)
 
                 BoxLayout:
                     orientation: 'horizontal'
-                    spacing:dp(0.03125)*app.width
+                    spacing:app.get_scaled_width(25)
 
                     BoxLayout:
-                        padding:[dp(0.01875)*app.width, dp(0.03125)*app.height, 0, dp(0.03125)*app.height]
+                        padding:[app.get_scaled_width(15), app.get_scaled_height(15), 0, app.get_scaled_height(15)]
                         Button:
                             font_size: str(0.01875 * app.width) + 'sp'
                             background_color: [0,0,0,0]
@@ -271,8 +271,8 @@ Builder.load_string(
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_y: 4
-                    padding:[0, 0, dp(0.01875)*app.width, dp(0.03125)*app.height]
-                    spacing:dp(0.03125)*app.height
+                    padding:[0, 0, app.get_scaled_width(15), app.get_scaled_height(15)]
+                    spacing:app.get_scaled_height(15)
 
                     BoxLayout:
                         id: z_move_container
@@ -286,7 +286,7 @@ Builder.load_string(
 
                     BoxLayout:
 
-                        padding:[0, dp(0.00208333333333)*app.height]
+                        padding:[0, app.get_scaled_height(0.9999999999984001)]
 
                         Button:
                             font_size: str(0.01875 * app.width) + 'sp'

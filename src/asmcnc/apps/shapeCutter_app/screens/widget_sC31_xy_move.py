@@ -27,7 +27,7 @@ Builder.load_string(
         size: self.parent.size
         pos: self.parent.pos      
         orientation: 'vertical'
-        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+        padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
         spacing:0.0208333333333*app.height
         
         GridLayout:
@@ -40,7 +40,7 @@ Builder.load_string(
 
             # go x datum
             BoxLayout:
-                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
                 size: self.parent.size
                 pos: self.parent.pos          
             
@@ -69,7 +69,7 @@ Builder.load_string(
 
             # go y datum
             BoxLayout:
-                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
                 size: self.parent.size
                 pos: self.parent.pos
                             
@@ -135,7 +135,7 @@ Builder.load_string(
 
             # set x datum
             BoxLayout:
-                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
                 size: self.parent.size
                 pos: self.parent.pos                 
 #                 Button:
@@ -180,7 +180,7 @@ Builder.load_string(
 
             # set y datum
             BoxLayout:
-                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
                 size: self.parent.size
                 pos: self.parent.pos
 #                 Button:

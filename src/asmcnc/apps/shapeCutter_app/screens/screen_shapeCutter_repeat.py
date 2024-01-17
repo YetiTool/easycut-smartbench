@@ -59,7 +59,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 width: dp(1.0*app.width)
                 height: dp(0.354166666667*app.height)
-                padding:[dp(0.125)*app.width, 0, dp(0.125)*app.width, dp(0.0625)*app.height]
+                padding:[app.get_scaled_width(100), 0, app.get_scaled_width(100), app.get_scaled_height(30)]
                 spacing: 0
                 orientation: 'horizontal'
                 pos: self.parent.pos                
@@ -68,7 +68,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(0.25*app.width)
                     height: dp(0.35625*app.height)
-                    padding:[dp(0.02)*app.width, 0, dp(0.02)*app.width, 0]
+                    padding:[app.get_scaled_width(16), 0, app.get_scaled_width(16), 0]
                     pos: self.parent.pos
                     
                     # Repeat
@@ -95,7 +95,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(0.25*app.width)
                     height: dp(0.35625*app.height)
-                    padding:[dp(0.02)*app.width, 0, dp(0.02)*app.width, 0]
+                    padding:[app.get_scaled_width(16), 0, app.get_scaled_width(16), 0]
                     pos: self.parent.pos
                     
                     # New
@@ -122,7 +122,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(0.25*app.width)
                     height: dp(0.35625*app.height)
-                    padding:[dp(0.02)*app.width, 0, dp(0.02)*app.width, 0]
+                    padding:[app.get_scaled_width(16), 0, app.get_scaled_width(16), 0]
                     pos: self.parent.pos
                     
                     # Next
@@ -149,7 +149,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 width: dp(1.0*app.width)
                 height: dp(0.166666666667*app.height)
-                padding:[dp(0.925)*app.width, 0, 0, dp(0.0416666666667)*app.height]
+                padding:[app.get_scaled_width(740), 0, 0, app.get_scaled_height(20.000000000015998)]
                 spacing: 0
                 orientation: 'horizontal'
                 pos: self.parent.pos

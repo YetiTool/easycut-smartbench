@@ -83,8 +83,8 @@ Builder.load_string(
 				size_hint: (None,None)
 				width: dp(1.0*app.width)
 				height: dp(0.620833333333*app.height)
-				padding:[dp(0.0375)*app.width, dp(0.0208333333333)*app.height]
-				spacing:dp(0.0208333333333)*app.height
+				padding:[app.get_scaled_width(30), app.get_scaled_height(9.999999999984)]
+				spacing:app.get_scaled_height(9.999999999984)
 				orientation: 'vertical'
 
 	            GridLayout:
@@ -277,7 +277,7 @@ Builder.load_string(
 
 			# FOOTER
 			BoxLayout: 
-				padding:[dp(0.0125)*app.width, 0, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+				padding:[app.get_scaled_width(10), 0, app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
 				size_hint: (None, None)
 				height: dp(0.254166666667*app.height)
 				width: dp(1.0*app.width)
@@ -286,13 +286,13 @@ Builder.load_string(
 					size_hint: (None, None)
 					height: dp(0.254166666667*app.height)
 					width: dp(0.305625*app.width)
-					padding:[0, 0, dp(0.230625)*app.width, 0]
+					padding:[0, 0, app.get_scaled_width(184.5), 0]
 
 				BoxLayout: 
 					size_hint: (None, None)
 					height: dp(0.254166666667*app.height)
 					width: dp(0.36375*app.width)
-					padding:[0, 0, 0, dp(0.0666666666667)*app.height]
+					padding:[0, 0, 0, app.get_scaled_height(32.000000000016)]
 					Button:
 						id: next_button
 						background_normal: "./asmcnc/skavaUI/img/next.png"
@@ -314,7 +314,7 @@ Builder.load_string(
 					size_hint: (None, None)
 					height: dp(0.254166666667*app.height)
 					width: dp(0.305625*app.width)
-					padding:[dp(0.241875)*app.width, 0, 0, 0]
+					padding:[app.get_scaled_width(193.5), 0, 0, 0]
 
 
 

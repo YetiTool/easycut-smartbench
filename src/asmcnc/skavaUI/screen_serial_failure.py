@@ -34,7 +34,7 @@ Builder.load_string(
              
     BoxLayout:
         orientation: 'horizontal'
-        padding:[dp(0.0625)*app.width, dp(0.104166666667)*app.height]
+        padding:[app.get_scaled_width(50), app.get_scaled_height(50.00000000016)]
         spacing:0.0625*app.height
         size_hint_x: 1
 
@@ -54,7 +54,7 @@ Builder.load_string(
  
             BoxLayout:
                 orientation: 'horizontal'
-                padding:[dp(0.025)*app.width, 0, 0, 0]
+                padding:[app.get_scaled_width(20), 0, 0, 0]
                 size_hint_y: 1
                 Label:
                     text_size: self.size
@@ -75,7 +75,7 @@ Builder.load_string(
                     
             BoxLayout:
                 orientation: 'horizontal'
-                padding:[dp(0.25)*app.width, 0]
+                padding:[app.get_scaled_width(200), 0]
                 spacing:0.05*app.width
                         
                 Button:
@@ -91,7 +91,7 @@ Builder.load_string(
                         root.reboot_button_press()
                         
                     BoxLayout:
-                        padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                        padding:[app.get_scaled_width(5), app.get_scaled_height(5.0000000000160005)]
                         size: self.parent.size
                         pos: self.parent.pos
                         

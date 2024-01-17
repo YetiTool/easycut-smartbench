@@ -73,7 +73,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 width: dp(1.0*app.width)
                 height: dp(0.875*app.height)
-                padding:[0, dp(0.0208333333333)*app.height]
+                padding:[0, app.get_scaled_height(9.999999999984)]
                 spacing: 0
                 orientation: 'vertical'
                 
@@ -82,7 +82,7 @@ Builder.load_string(
                     size_hint_y: None
                     height: dp(0.270833333333*app.height)
                     orientation: 'horizontal'
-                    padding:[dp(0.025)*app.width, 0, dp(0.025)*app.width, dp(0.0208333333333)*app.height]
+                    padding:[app.get_scaled_width(20), 0, app.get_scaled_width(20), app.get_scaled_height(9.999999999984)]
 
                     BoxLayout:
                         orientation: 'vertical'
@@ -116,7 +116,7 @@ Builder.load_string(
 
                             TextInput:
                                 id: parts_completed_input
-                                padding:[dp(0.005)*app.width, dp(0.00416666666667)*app.height]
+                                padding:[app.get_scaled_width(4), app.get_scaled_height(2.0000000000016)]
                                 size_hint_x: None
                                 width: dp(0.0625*app.width)
                                 color: hex('#333333ff')
@@ -148,7 +148,7 @@ Builder.load_string(
                             size_hint_y: None
                             height: dp(0.0854166666667*app.height)
                             orientation: 'horizontal'
-                            padding:[0, dp(0.0229166666667)*app.height, 0, 0]
+                            padding:[0, app.get_scaled_height(11.000000000016), 0, 0]
 
                             Label:
                                 id: batch_number_label
@@ -165,7 +165,7 @@ Builder.load_string(
                                 size_hint_x: 0.55
                                 TextInput:
                                     id: batch_number_input
-                                    padding:[dp(0.005)*app.width, dp(0.00416666666667)*app.height]
+                                    padding:[app.get_scaled_width(4), app.get_scaled_height(2.0000000000016)]
                                     color: hex('#333333ff')
                                     # foreground_color: hex('#333333ff')
                                     text_size: self.size
@@ -193,7 +193,7 @@ Builder.load_string(
                             id: post_production_notes
                             size_hint_y: None
                             height: dp(0.116666666667*app.height)
-                            padding:[dp(0.005)*app.width, dp(0.00416666666667)*app.height]
+                            padding:[app.get_scaled_width(4), app.get_scaled_height(2.0000000000016)]
                             text: ""
                             color: hex('#333333ff')
                             # foreground_color: hex('#333333ff')
@@ -229,7 +229,7 @@ Builder.load_string(
 
                     Label: 
                         id: event_details_label
-                        padding:[dp(0.025)*app.width, 0]
+                        padding:[app.get_scaled_width(20), 0]
                         color: hex('#333333ff') #grey
                         text_size: self.size
                         halign: "left"
@@ -239,7 +239,7 @@ Builder.load_string(
 
                     # Buttons
                     BoxLayout: 
-                        padding:[dp(0.0125)*app.width, 0, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                        padding:[app.get_scaled_width(10), 0, app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
                         size_hint: (None, None)
                         height: dp(0.185416666667*app.height)
                         width: dp(1.0*app.width)
@@ -248,7 +248,7 @@ Builder.load_string(
                             size_hint: (None, None)
                             height: dp(0.164583333333*app.height)
                             width: dp(0.305625*app.width)
-                            padding:[0, 0, dp(0.230625)*app.width, 0]
+                            padding:[0, 0, app.get_scaled_width(184.5), 0]
 
                         BoxLayout: 
                             size_hint: (None, None)
@@ -276,7 +276,7 @@ Builder.load_string(
                             size_hint: (None, None)
                             height: dp(0.164583333333*app.height)
                             width: dp(0.305625*app.width)
-                            padding:[dp(0.241875)*app.width, 0, 0, 0]
+                            padding:[app.get_scaled_width(193.5), 0, 0, 0]
  
 """
 )

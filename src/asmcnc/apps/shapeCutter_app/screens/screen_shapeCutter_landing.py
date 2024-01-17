@@ -61,7 +61,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 width: dp(1.0*app.width)
                 height: dp(0.354166666667*app.height)
-                padding:[dp(0.225)*app.width, 0, dp(0.225)*app.width, dp(0.0625)*app.height]
+                padding:[app.get_scaled_width(180), 0, app.get_scaled_width(180), app.get_scaled_height(30)]
                 spacing: 0
                 orientation: 'horizontal'
                 pos: self.parent.pos                
@@ -70,7 +70,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(0.275*app.width)
                     height: dp(0.354166666667*app.height)
-                    padding:[dp(0.03125)*app.width, 0, dp(0.03375)*app.width, 0]
+                    padding:[app.get_scaled_width(25), 0, dp(0.03375)*app.width, 0]
                     pos: self.parent.pos
                     
                     # Circle button
@@ -97,7 +97,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(0.275*app.width)
                     height: dp(0.354166666667*app.height)
-                    padding:[dp(0.03375)*app.width, 0, dp(0.03125)*app.width, 0]
+                    padding:[app.get_scaled_width(27), 0, dp(0.03125)*app.width, 0]
                     pos: self.parent.pos
                     
                     # rectangle button
@@ -125,7 +125,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 width: dp(1.0*app.width)
                 height: dp(0.166666666667*app.height)
-                padding:[dp(0.025)*app.width, 0, 0, dp(0.0416666666667)*app.height]
+                padding:[app.get_scaled_width(20), 0, 0, app.get_scaled_height(20.000000000015998)]
                 spacing:0.85*app.width
                 orientation: 'horizontal'
                 pos: self.parent.pos

@@ -25,7 +25,7 @@ Builder.load_string(
         BoxLayout:
             orientation: 'vertical'
             size_hint_y: 0.9
-            spacing:dp(0.0166666666667)*app.height
+            spacing:app.get_scaled_height(8.000000000016)
             canvas:
                 Color:
                     rgba: hex('#E2E2E2FF')
@@ -46,14 +46,14 @@ Builder.load_string(
                     halign: 'left'
                     valign: 'middle'
                     text_size: self.size
-                    padding:[dp(0.0625)*app.width, 0]
+                    padding:[app.get_scaled_width(50), 0]
 
                 BoxLayout:
                     orientation: 'horizontal'
-                    spacing:dp(0.03125)*app.width
+                    spacing:app.get_scaled_width(25)
 
                     BoxLayout:
-                        padding:[dp(0.01875)*app.width, dp(0.03125)*app.height, 0, dp(0.03125)*app.height]
+                        padding:[app.get_scaled_width(15), app.get_scaled_height(15), 0, app.get_scaled_height(15)]
                         Button:
                             font_size: str(0.01875 * app.width) + 'sp'
                             background_color: [0,0,0,0]
@@ -85,12 +85,12 @@ Builder.load_string(
             BoxLayout:
                 orientation: 'horizontal'
                 size_hint_y: 3
-                padding:[dp(0.125)*app.width, 0]
-                spacing:dp(0.0375)*app.width
+                padding:[app.get_scaled_width(100), 0]
+                spacing:app.get_scaled_width(30)
 
                 BoxLayout:
                     size_hint_x: 2.5
-                    padding:[0, dp(0.00208333333333)*app.height]
+                    padding:[0, app.get_scaled_height(0.9999999999984001)]
                     canvas:
                         Color:
                             rgba: 1,1,1,1
@@ -125,8 +125,8 @@ Builder.load_string(
 
             BoxLayout:
                 orientation: 'horizontal'
-                padding:[dp(0.0875)*app.width, dp(0.0208333333333)*app.height, 0, dp(0.0208333333333)*app.height]
-                spacing:dp(0.25)*app.width
+                padding:[app.get_scaled_width(70), app.get_scaled_height(9.999999999984), 0, app.get_scaled_height(9.999999999984)]
+                spacing:app.get_scaled_width(200)
 
                 Button:
                     font_size: str(0.01875 * app.width) + 'sp'

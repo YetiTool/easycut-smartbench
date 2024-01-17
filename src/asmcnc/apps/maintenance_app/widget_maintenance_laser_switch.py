@@ -47,7 +47,7 @@ Builder.load_string(
                 pos: self.parent.pos
                 height: dp(0.145833333333*app.height)
                 width: dp(0.06875*app.width)
-                padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                padding:[app.get_scaled_width(5), app.get_scaled_height(5.0000000000160005)]
                 Image:
                     id: laser_image
                     source: "./asmcnc/apps/maintenance_app/img/laser_on.png"

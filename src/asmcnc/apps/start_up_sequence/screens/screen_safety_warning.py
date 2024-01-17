@@ -51,7 +51,7 @@ Builder.load_string(
         BoxLayout:
             size_hint_y: 0.9
             orientation: 'vertical'
-            padding:[dp(0.05)*app.width, dp(0.0833333333333)*app.height, dp(0.05)*app.width, dp(0.0416666666667)*app.height]
+            padding:[app.get_scaled_width(40), app.get_scaled_height(39.999999999984), app.get_scaled_width(40), dp(0.0416666666667)*app.height]
             size: self.parent.size
             pos: self.parent.pos
       
@@ -76,7 +76,7 @@ Builder.load_string(
             BoxLayout:
                 size_hint_y: 4.1
     
-                padding:[dp(0.01875)*app.width, 0]
+                padding:[app.get_scaled_width(15), 0]
                 orientation: 'vertical'
                 BoxLayout:
                     orientation: 'horizontal'    

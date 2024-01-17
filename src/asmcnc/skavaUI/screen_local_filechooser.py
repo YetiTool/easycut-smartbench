@@ -81,7 +81,7 @@ Builder.load_string(
                 valign: 'middle'
                 halign: 'left'
                 text_size: self.size
-                padding:[dp(0.0125)*app.width, 0]
+                padding:[app.get_scaled_width(10), 0]
 
             Label:
                 font_size: str(0.01875 * app.width) + 'sp'
@@ -129,7 +129,7 @@ Builder.load_string(
                         size_hint_y: None
                         height: self.texture_size[1]
                         text_size: self.width, None
-                        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                        padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
                         markup: True
                
 
@@ -144,7 +144,7 @@ Builder.load_string(
                 on_press: root.switch_view()
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding:[dp(0.03125)*app.width, dp(0.0520833333333)*app.height]
+                    padding:[app.get_scaled_width(25), app.get_scaled_height(24.999999999984002)]
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -162,7 +162,7 @@ Builder.load_string(
                 on_press: root.switch_sort()
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding:[dp(0.03125)*app.width, dp(0.0520833333333)*app.height]
+                    padding:[app.get_scaled_width(25), app.get_scaled_height(24.999999999984002)]
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -185,7 +185,7 @@ Builder.load_string(
                     root.open_USB()
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding:[dp(0.03125)*app.width, dp(0.0520833333333)*app.height]
+                    padding:[app.get_scaled_width(25), app.get_scaled_height(24.999999999984002)]
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -207,7 +207,7 @@ Builder.load_string(
                     root.refresh_filechooser() 
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding:[dp(0.03125)*app.width, dp(0.0520833333333)*app.height]
+                    padding:[app.get_scaled_width(25), app.get_scaled_height(24.999999999984002)]
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -229,7 +229,7 @@ Builder.load_string(
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding:[dp(0.03125)*app.width, dp(0.0520833333333)*app.height]
+                    padding:[app.get_scaled_width(25), app.get_scaled_height(24.999999999984002)]
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -251,7 +251,7 @@ Builder.load_string(
                     root.delete_popup(file_selection = 'all')
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding:[dp(0.03125)*app.width, dp(0.0520833333333)*app.height]
+                    padding:[app.get_scaled_width(25), app.get_scaled_height(24.999999999984002)]
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -272,7 +272,7 @@ Builder.load_string(
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding:[dp(0.03125)*app.width, dp(0.0520833333333)*app.height]
+                    padding:[app.get_scaled_width(25), app.get_scaled_height(24.999999999984002)]
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -293,7 +293,7 @@ Builder.load_string(
                     root.go_to_loading_screen()
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding:[dp(0.03125)*app.width, dp(0.0520833333333)*app.height]
+                    padding:[app.get_scaled_width(25), app.get_scaled_height(24.999999999984002)]
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:

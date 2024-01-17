@@ -86,7 +86,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(0.75*app.width)
                     height: dp(0.666666666667*app.height)
-                    padding:[dp(0.05)*app.width, dp(0.0416666666667)*app.height]
+                    padding:[app.get_scaled_width(40), app.get_scaled_height(20.000000000015998)]
                     spacing:0.0416666666667*app.height
                     orientation: 'vertical'
 
@@ -174,7 +174,7 @@ Builder.load_string(
                         width: dp(0.240625*app.width)
                         height: dp(0.25*app.height)
                         orientation: 'horizontal'
-                        padding:[dp(0.025)*app.width, dp(0.0625)*app.height]
+                        padding:[app.get_scaled_width(20), app.get_scaled_height(30)]
                         ToggleButton:
                             font_size: str(0.01875 * app.width) + 'sp'
                             id: usb_toggle
@@ -190,7 +190,7 @@ Builder.load_string(
                         size_hint: (None,None)
                         width: dp(0.240625*app.width)
                         height: dp(0.25*app.height)
-                        padding:[dp(0.1021875)*app.width, dp(0.09375)*app.height]
+                        padding:[app.get_scaled_width(81.75), app.get_scaled_height(45)]
                         spacing: 0
 
                         Button:
@@ -232,7 +232,7 @@ Builder.load_string(
                         size_hint: (None, None)
                         height: dp(0.166666666667*app.height)
                         width: dp(0.1*app.width)
-                        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                        padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984), app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
                         Button:
                             font_size: str(0.01875 * app.width) + 'sp'
                             size_hint: (None,None)
@@ -257,7 +257,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(0.775*app.width)
                     height: dp(0.166666666667*app.height)
-                    padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                    padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
                     spacing: 0
                     orientation: 'vertical'
 
@@ -272,7 +272,7 @@ Builder.load_string(
                         size_hint: (None, None)
                         height: dp(0.166666666667*app.height)
                         width: dp(0.1*app.width)
-                        padding:[dp(0.02375)*app.width, dp(0.0208333333333)*app.height, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                        padding:[app.get_scaled_width(19), app.get_scaled_height(9.999999999984), dp(0.0125)*app.width, app.get_scaled_height(9.999999999984)]
                         Button:
                             font_size: str(0.01875 * app.width) + 'sp'
                             size_hint: (None,None)

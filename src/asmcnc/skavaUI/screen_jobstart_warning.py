@@ -76,7 +76,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 width: dp(1.0*app.width)
                 height: dp(0.666666666667*app.height)
-                padding:[dp(0.025)*app.width, dp(0.0208333333333)*app.height, dp(0.025)*app.width, 0]
+                padding:[app.get_scaled_width(20), app.get_scaled_height(9.999999999984), app.get_scaled_width(20), 0]
                 spacing: 0
                 orientation: 'vertical'
              
@@ -85,7 +85,7 @@ Builder.load_string(
                     spacing:0.0125*app.width
                     size_hint_y: 1.22
                     BoxLayout:
-                        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                        padding:[app.get_scaled_width(20), app.get_scaled_height(20.000000000015998)]
                         size_hint_x: 0.2
                         Image:
                             keep_ratio: True
@@ -95,7 +95,7 @@ Builder.load_string(
                     BoxLayout:
                         orientation: 'vertical'
                         size_hint_x: 0.8
-                        padding:[0, 0, dp(0.025)*app.width, 0]
+                        padding:[0, 0, app.get_scaled_width(20), 0]
                         Label:
                             id: risk_of_fire
                             size_hint_y: 0.2
@@ -180,7 +180,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 width: dp(1.0*app.width)
                 height: dp(0.166666666667*app.height)
-                padding:[dp(0.3125)*app.width, 0, dp(0.3125)*app.width, dp(0.0208333333333)*app.height]
+                padding:[app.get_scaled_width(250), 0, app.get_scaled_width(250), app.get_scaled_height(9.999999999984)]
                 orientation: 'horizontal'
 
                 Button:

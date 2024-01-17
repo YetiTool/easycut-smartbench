@@ -56,7 +56,7 @@ Builder.load_string(
             size_hint: (None, None)
             height: dp(0.333333333333*app.height)
             width: dp(1.0*app.width)
-            padding:[dp(0.0375)*app.width, dp(0.0625)*app.height, dp(0.0375)*app.width, dp(0.0375)*app.height]
+            padding:[app.get_scaled_width(30), app.get_scaled_height(30), app.get_scaled_width(30), dp(0.0375)*app.height]
             spacing:0.0375*app.width
             orientation: 'horizontal'
 
@@ -65,7 +65,7 @@ Builder.load_string(
                 size_hint: (None, None)
                 height: dp(0.233333333333*app.height)
                 width: dp(0.7475*app.width)
-                padding:[0, 0, 0, dp(0.025)*app.height]
+                padding:[0, 0, 0, app.get_scaled_height(12)]
                 BoxLayout: 
                     size_hint: (None, None)
                     height: dp(0.208333333333*app.height)
@@ -117,14 +117,14 @@ Builder.load_string(
                         height: dp(0.208333333333*app.height)
                         width: dp(0.27875*app.width)
                         orientation: "horizontal"
-                        padding:[0, 0, dp(0.0375)*app.width, 0]
+                        padding:[0, 0, app.get_scaled_width(30), 0]
 
                         BoxLayout: 
                             size_hint: (None, None) 
                             orientation: "vertical"
                             height: dp(0.208333333333*app.height)
                             width: dp(0.06125*app.width)
-                            padding:[dp(0.00625)*app.width, dp(0.0729166666667)*app.height, dp(0.01875)*app.width, dp(0.0729166666667)*app.height]
+                            padding:[app.get_scaled_width(5), app.get_scaled_height(35.000000000016), dp(0.01875)*app.width, app.get_scaled_height(35.000000000016)]
                             Button:
                                 id: refresh_button
                                 font_size: str(0.01875 * app.width) + 'sp'
@@ -188,7 +188,7 @@ Builder.load_string(
             size_hint: (None, None)
             height: dp(0.666666666667*app.height)
             width: dp(1.0*app.width)
-            padding:[dp(0.0375)*app.width, 0, dp(0.0375)*app.width, dp(0.0625)*app.height]
+            padding:[app.get_scaled_width(30), 0, app.get_scaled_width(30), app.get_scaled_height(30)]
             spacing:0.0375*app.width
             orientation: 'horizontal'
             
@@ -197,7 +197,7 @@ Builder.load_string(
                 height: dp(0.604166666667*app.height)
                 width: dp(0.44375*app.width)    
                 orientation: "vertical"  
-                padding:[dp(0.0375)*app.width, dp(0.0625)*app.height, dp(0.0375)*app.width, dp(0.0625)*app.height]
+                padding:[app.get_scaled_width(30), app.get_scaled_height(30), app.get_scaled_width(30), app.get_scaled_height(30)]
                 spacing: 0
                 canvas:
                     Color:
@@ -246,7 +246,7 @@ Builder.load_string(
                         size_hint: (None, None)
                         height: dp(0.229166666667*app.height)
                         width: dp(0.18125*app.width)
-                        padding:[dp(0.025)*app.width, dp(0.0520833333333)*app.height, dp(0.08125)*app.width, dp(0.0520833333333)*app.height]
+                        padding:[app.get_scaled_width(20), app.get_scaled_height(24.999999999984002), dp(0.08125)*app.width, app.get_scaled_height(24.999999999984002)]
                         Image:
                             id: wifi_image
                             source: root.wifi_on
@@ -280,7 +280,7 @@ Builder.load_string(
                 height: dp(0.604166666667*app.height)
                 width: dp(0.44375*app.width)
                 orientation: "vertical"  
-                padding:[dp(0.0375)*app.width, dp(0.0625)*app.height, dp(0.0375)*app.width, dp(0.0625)*app.height]
+                padding:[app.get_scaled_width(30), app.get_scaled_height(30), app.get_scaled_width(30), app.get_scaled_height(30)]
                 spacing: 0  
                 canvas:
                     Color:
@@ -328,7 +328,7 @@ Builder.load_string(
                         size_hint: (None, None)
                         height: dp(0.229166666667*app.height)
                         width: dp(0.18125*app.width)
-                        padding:[0, dp(0.0552083333333)*app.height, dp(0.04)*app.width, dp(0.0552083333333)*app.height]
+                        padding:[0, app.get_scaled_height(26.499999999984), app.get_scaled_width(32), app.get_scaled_height(26.499999999984)]
                         Image:
                             id: usb_image
                             source: root.usb_off

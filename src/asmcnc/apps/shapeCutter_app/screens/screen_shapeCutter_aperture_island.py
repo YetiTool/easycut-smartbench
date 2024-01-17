@@ -60,7 +60,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(1.0*app.width)
                     height: dp(0.177083333333*app.height)
-                    padding:[0, dp(0.0208333333333)*app.height, 0, 0]
+                    padding:[0, app.get_scaled_height(9.999999999984), 0, 0]
                     spacing: 0
                     Label:
                         size_hint: (None,None)
@@ -77,7 +77,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(1.0*app.width)
                     height: dp(0.46875*app.height)
-                    padding:[dp(0.1875)*app.width, 0, dp(0.1875)*app.width, 0]
+                    padding:[app.get_scaled_width(150), 0, app.get_scaled_width(150), 0]
                     spacing: 0
                     orientation: 'horizontal'
                     pos: self.parent.pos                
@@ -86,7 +86,7 @@ Builder.load_string(
                         size_hint: (None,None)
                         width: dp(0.3125*app.width)
                         height: dp(0.46875*app.height)
-                        padding:[dp(0.02875)*app.width, 0, dp(0.025)*app.width, 0]
+                        padding:[app.get_scaled_width(23), 0, dp(0.025)*app.width, 0]
                         pos: self.parent.pos
                         
                         # aperture
@@ -114,7 +114,7 @@ Builder.load_string(
                         size_hint: (None,None)
                         width: dp(0.3125*app.width)
                         height: dp(0.46875*app.height)
-                        padding:[dp(0.025)*app.width, 0, dp(0.02875)*app.width, 0]
+                        padding:[app.get_scaled_width(20), 0, dp(0.02875)*app.width, 0]
                         pos: self.parent.pos
                         
                         # island
@@ -142,7 +142,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(1.0*app.width)
                     height: dp(0.0416666666667*app.height)
-                    padding:[dp(0.1875)*app.width, 0, dp(0.1875)*app.width, 0]
+                    padding:[app.get_scaled_width(150), 0, app.get_scaled_width(150), 0]
                     spacing: 0
                     orientation: 'horizontal'
                     pos: self.parent.pos
@@ -150,7 +150,7 @@ Builder.load_string(
                         size_hint: (None,None)
                         width: dp(0.3125*app.width)
                         height: dp(0.0416666666667*app.height)
-                        padding:[dp(0.02875)*app.width, 0, dp(0.025)*app.width, 0]
+                        padding:[app.get_scaled_width(23), 0, dp(0.025)*app.width, 0]
                         pos: self.parent.pos
                         Label:
                             size_hint: (None,None)
@@ -166,7 +166,7 @@ Builder.load_string(
                         size_hint: (None,None)
                         width: dp(0.3125*app.width)
                         height: dp(0.0416666666667*app.height)
-                        padding:[dp(0.025)*app.width, 0, dp(0.02875)*app.width, 0]
+                        padding:[app.get_scaled_width(20), 0, dp(0.02875)*app.width, 0]
                         pos: self.parent.pos
                         Label:
                             size_hint: (None,None)
@@ -184,7 +184,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 width: dp(1.0*app.width)
                 height: dp(0.125*app.height)
-                padding:[dp(0.025)*app.width, 0, 0, dp(0.0416666666667)*app.height]
+                padding:[app.get_scaled_width(20), 0, 0, app.get_scaled_height(20.000000000015998)]
                 spacing:0.85*app.width
                 orientation: 'horizontal'
                 pos: self.parent.pos

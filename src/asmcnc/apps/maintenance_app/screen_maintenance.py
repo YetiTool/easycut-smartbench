@@ -92,7 +92,7 @@ Builder.load_string(
                 width: dp(1.005*app.width)
                 height: dp(0.8125*app.height)
                 orientation: "horizontal" 
-                padding:[dp(0.015)*app.width, dp(0.0208333333333)*app.height, dp(0.015)*app.width, dp(0.0416666666667)*app.height]
+                padding:[app.get_scaled_width(12), app.get_scaled_height(9.999999999984), app.get_scaled_width(12), dp(0.0416666666667)*app.height]
                 spacing:0.0125*app.width
                 canvas:
                     Color:
@@ -123,7 +123,7 @@ Builder.load_string(
                             size_hint: (None, None)
                             height: dp(0.145833333333*app.height)
                             width: dp(0.35*app.width)
-                            padding:[dp(0.025)*app.width, 0, dp(0.025)*app.width, 0]
+                            padding:[app.get_scaled_width(20), 0, app.get_scaled_width(20), 0]
                             orientation: 'horizontal'
 
                             Label: 
@@ -200,7 +200,7 @@ Builder.load_string(
                 width: dp(1.005*app.width)
                 height: dp(0.8125*app.height)
                 orientation: "vertical" 
-                padding:[dp(0.0275)*app.width, dp(0.0416666666667)*app.height, dp(0.0275)*app.width, dp(0.0416666666667)*app.height]
+                padding:[app.get_scaled_width(22), app.get_scaled_height(20.000000000015998), app.get_scaled_width(22), app.get_scaled_height(20.000000000015998)]
                 spacing:0.0416666666667*app.height
                 canvas:
                     Color:
@@ -268,7 +268,7 @@ Builder.load_string(
                         size_hint: (None, None)
                         height: dp(0.166666666667*app.height)
                         width: dp(0.95*app.width)
-                        padding:[dp(0.0125)*app.width, dp(0.0104166666667)*app.height, dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                        padding:[app.get_scaled_width(10), app.get_scaled_height(5.0000000000160005), dp(0.00625)*app.width, app.get_scaled_height(5.0000000000160005)]
                         orientation: 'horizontal'
                         Label: 
                             id: brush_monitor_label
@@ -299,7 +299,7 @@ Builder.load_string(
                 width: dp(1.005*app.width)
                 height: dp(0.8125*app.height)
                 orientation: "vertical" 
-                padding:[dp(0.0275)*app.width, dp(0.0416666666667)*app.height, dp(0.0275)*app.width, dp(0.0416666666667)*app.height]
+                padding:[app.get_scaled_width(22), app.get_scaled_height(20.000000000015998), app.get_scaled_width(22), app.get_scaled_height(20.000000000015998)]
                 spacing:0.0416666666667*app.height
                 canvas:
                     Color:
@@ -314,7 +314,7 @@ Builder.load_string(
                     height: dp(0.729166666667*app.height)
                     orientation: "horizontal" 
                     padding: dp(0)
-                    spacing:dp(0.025)*app.width
+                    spacing:app.get_scaled_width(20)
 
                     BoxLayout:
                         size_hint: (None,None)
@@ -333,7 +333,7 @@ Builder.load_string(
                 width: dp(1.005*app.width)
                 height: dp(0.8125*app.height)
                 orientation: "horizontal" 
-                padding:[dp(0.0275)*app.width, dp(0.0416666666667)*app.height, dp(0.0275)*app.width, dp(0.0416666666667)*app.height]
+                padding:[app.get_scaled_width(22), app.get_scaled_height(20.000000000015998), app.get_scaled_width(22), app.get_scaled_height(20.000000000015998)]
                 spacing:0.025*app.width
                 canvas:
                     Color:
@@ -348,7 +348,7 @@ Builder.load_string(
                     height: dp(0.729166666667*app.height)
                     orientation: "vertical" 
                     padding: dp(0)
-                    spacing:dp(0.0416666666667)*app.height
+                    spacing:app.get_scaled_height(20.000000000015998)
 
                     BoxLayout:
                         size_hint: (None,None)
@@ -401,7 +401,7 @@ Builder.load_string(
                 width: dp(1.005*app.width)
                 height: dp(0.8125*app.height)
                 orientation: "vertical" 
-                padding:[dp(0.0275)*app.width, dp(0.0416666666667)*app.height, dp(0.0275)*app.width, dp(0.0416666666667)*app.height]
+                padding:[app.get_scaled_width(22), app.get_scaled_height(20.000000000015998), app.get_scaled_width(22), app.get_scaled_height(20.000000000015998)]
                 spacing:0.0416666666667*app.height
                 canvas:
                     Color:

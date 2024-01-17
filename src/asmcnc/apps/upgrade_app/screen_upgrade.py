@@ -37,7 +37,7 @@ Builder.load_string(
                     pos: self.pos
 
             BoxLayout:
-                padding:[dp(0.075)*app.width, 0, 0, 0]
+                padding:[app.get_scaled_width(60), 0, 0, 0]
 
                 Label:
                     id: title_label
@@ -49,7 +49,7 @@ Builder.load_string(
 
             BoxLayout:
                 size_hint_x: 0.08
-                padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                padding:[app.get_scaled_width(5), app.get_scaled_height(5.0000000000160005)]
 
                 Button:
                     font_size: str(0.01875 * app.width) + 'sp'
@@ -74,7 +74,7 @@ Builder.load_string(
         BoxLayout:
             orientation: 'vertical'
             size_hint_y: 7
-            padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+            padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
 
             canvas: 
                 Color:
@@ -96,7 +96,7 @@ Builder.load_string(
                     text_size: self.size
 
                 BoxLayout:
-                    padding:[dp(0.25)*app.width, 0, dp(0.25)*app.width, dp(0.0416666666667)*app.height]
+                    padding:[app.get_scaled_width(200), 0, app.get_scaled_width(200), app.get_scaled_height(20.000000000015998)]
 
                     TextInput:
                         id: upgrade_code_input

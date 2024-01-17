@@ -27,7 +27,7 @@ Builder.load_string(
         size: self.parent.size
         pos: self.parent.pos
         orientation: 'vertical'
-        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+        padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
         spacing:0.0208333333333*app.height
         
         GridLayout:
@@ -51,7 +51,7 @@ Builder.load_string(
                     center: self.parent.center
                     pos: self.parent.pos
                     BoxLayout:
-                        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                        padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
                         size: self.parent.size
                         pos: self.parent.pos      
                         Image:
@@ -76,7 +76,7 @@ Builder.load_string(
                     center: self.parent.center
                     pos: self.parent.pos
                     BoxLayout:
-                        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                        padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
                         size: self.parent.size
                         pos: self.parent.pos      
                         Image:

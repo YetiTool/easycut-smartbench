@@ -33,7 +33,7 @@ Builder.load_string(
             on_press: root.speed_up()
             background_color: 1, 1, 1, 0 
             BoxLayout:
-                padding:[dp(0.0025)*app.width, dp(0.00416666666667)*app.height]
+                padding:[app.get_scaled_width(2), app.get_scaled_height(2.0000000000016)]
                 size: self.parent.size
                 pos: self.parent.pos      
                 Image:
@@ -72,7 +72,7 @@ Builder.load_string(
             on_press: root.speed_down()
             background_color: 1, 1, 1, 0 
             BoxLayout:
-                padding:[dp(0.0025)*app.width, dp(0.00416666666667)*app.height]
+                padding:[app.get_scaled_width(2), app.get_scaled_height(2.0000000000016)]
                 size: self.parent.size
                 pos: self.parent.pos      
                 Image:

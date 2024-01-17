@@ -43,7 +43,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 width: dp(1.0*app.width)
                 height: dp(0.8125*app.height)
-                padding:[0, dp(0.229166666667)*app.height, 0, dp(0.229166666667)*app.height]
+                padding:[0, app.get_scaled_height(110.00000000016), 0, app.get_scaled_height(110.00000000016)]
                 spacing: 0
                 Label:
                     size_hint: (None,None)

@@ -48,20 +48,20 @@ Builder.load_string(
                 size_hint: (None,None)
                 height: dp(0.8125*app.height)
                 width: dp(1.0*app.width)
-                padding:[0, dp(0.0416666666667)*app.height, 0, 0]
+                padding:[0, app.get_scaled_height(20.000000000015998), 0, 0]
                 orientation: "horizontal"
                 
                 BoxLayout: #text box
                     size_hint: (None,None)
                     height: dp(0.8125*app.height)
                     width: dp(0.84375*app.width)
-                    padding:[dp(0.0125)*app.width, 0, dp(0.03125)*app.width, dp(0.0208333333333)*app.height]
+                    padding:[app.get_scaled_width(10), 0, dp(0.03125)*app.width, app.get_scaled_height(9.999999999984)]
                     orientation: "horizontal"
                     BoxLayout: # file save
                         size_hint: (None,None)
                         height: dp(0.791666666667*app.height)
                         width: dp(0.375*app.width)
-                        padding:[0, dp(0.104166666667)*app.height, 0, 0]
+                        padding:[0, app.get_scaled_height(50.00000000016), 0, 0]
                         orientation: "vertical"
                         spacing:0.0416666666667*app.height
                         BoxLayout: 
@@ -87,7 +87,7 @@ Builder.load_string(
                                 size_hint: (None,None)
                                 height: dp(0.0833333333333*app.height)
                                 width: dp(0.375*app.width)
-                                padding:[dp(0.0125)*app.width, 0, dp(0.0125)*app.width, 0]
+                                padding:[app.get_scaled_width(10), 0, app.get_scaled_width(10), 0]
                                             
                                 TextInput: 
                                     id: file_name
@@ -103,7 +103,7 @@ Builder.load_string(
                             size_hint: (None,None)
                             height: dp(0.35*app.height)
                             width: dp(0.375*app.width)
-                            padding:[dp(0.0825)*app.width, 0, dp(0.0825)*app.width, 0]
+                            padding:[app.get_scaled_width(66), 0, app.get_scaled_width(66), 0]
                             Button:
                                 font_size: str(0.01875 * app.width) + 'sp'
                                 size_hint: (None,None)
@@ -146,7 +146,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     height: dp(0.645833333333*app.height)
                     width: dp(0.15625*app.width)
-                    padding:[0, 0, 0, dp(0.0708333333333)*app.height]
+                    padding:[0, 0, 0, app.get_scaled_height(33.999999999984)]
                     spacing:0.0708333333333*app.height
                     orientation: "vertical"
                     
@@ -154,7 +154,7 @@ Builder.load_string(
                         size_hint: (None,None)
                         height: dp(0.139583333333*app.height)
                         width: dp(0.11*app.width)
-                        padding:[dp(0.03)*app.width, 0, dp(0.03)*app.width, dp(0.0708333333333)*app.height]
+                        padding:[app.get_scaled_width(24), 0, app.get_scaled_width(24), app.get_scaled_height(33.999999999984)]
                         Button:
                             font_size: str(0.01875 * app.width) + 'sp'
                             id: info_button

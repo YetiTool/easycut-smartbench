@@ -69,7 +69,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 width: dp(1.0*app.width)
                 height: dp(0.875*app.height)
-                padding:[0, dp(0.0208333333333)*app.height]
+                padding:[0, app.get_scaled_height(9.999999999984)]
                 spacing: 0
                 orientation: 'vertical'
                 
@@ -78,7 +78,7 @@ Builder.load_string(
                     size_hint_y: None
                     height: dp(0.270833333333*app.height)
                     orientation: 'horizontal'
-                    padding:[dp(0.025)*app.width, 0, dp(0.025)*app.width, dp(0.0208333333333)*app.height]
+                    padding:[app.get_scaled_width(20), 0, app.get_scaled_width(20), app.get_scaled_height(9.999999999984)]
                     
                     BoxLayout:
                         orientation: 'vertical'
@@ -119,7 +119,7 @@ Builder.load_string(
                             size_hint_y: None
                             height: dp(0.0854166666667*app.height)
                             orientation: 'horizontal'
-                            padding:[0, dp(0.0229166666667)*app.height, 0, 0]
+                            padding:[0, app.get_scaled_height(11.000000000016), 0, 0]
 
                             Label:
                                 id: batch_number_label
@@ -136,7 +136,7 @@ Builder.load_string(
                                 size_hint_x: 0.55
                                 TextInput:
                                     id: batch_number_input
-                                    padding:[dp(0.005)*app.width, dp(0.00416666666667)*app.height]
+                                    padding:[app.get_scaled_width(4), app.get_scaled_height(2.0000000000016)]
                                     color: hex('#333333ff')
                                     # foreground_color: hex('#333333ff')
                                     text_size: self.size
@@ -164,7 +164,7 @@ Builder.load_string(
                             id: post_production_notes
                             size_hint_y: None
                             height: dp(0.116666666667*app.height)
-                            padding:[dp(0.005)*app.width, dp(0.00416666666667)*app.height]
+                            padding:[app.get_scaled_width(4), app.get_scaled_height(2.0000000000016)]
                             text: ""
                             color: hex('#333333ff')
                             # foreground_color: hex('#333333ff')
@@ -196,15 +196,15 @@ Builder.load_string(
                     height: dp(0.5*app.height)
                     width: dp(1.0*app.width)
                     orientation: 'vertical'
-                    padding:[0, dp(0.0416666666667)*app.height, 0, 0]
+                    padding:[0, app.get_scaled_height(20.000000000015998), 0, 0]
 
                     BoxLayout:
                         size_hint: (None,None)
                         height: dp(0.416666666667*app.height)
                         width: dp(1.0*app.width)
                         orientation: 'horizontal'
-                        spacing:dp(0.12)*app.width
-                        padding:[dp(0.1875)*app.width, 0]
+                        spacing:app.get_scaled_width(96)
+                        padding:[app.get_scaled_width(150), 0]
 
                         # Thumbs down button
                         Button:

@@ -22,13 +22,13 @@ Builder.load_string(
         orientation: 'horizontal'
         size: self.parent.size
         pos: self.parent.pos
-        padding:[dp(0.0125)*app.width, dp(0.0166666666667)*app.height, dp(0.0125)*app.width, dp(0.0166666666667)*app.height]
+        padding:[app.get_scaled_width(10), app.get_scaled_height(8.000000000016), app.get_scaled_width(10), app.get_scaled_height(8.000000000016)]
 
         BoxLayout:
             id: text_container
             size_hint_x: 0.85
             orientation: 'vertical'
-            padding:[dp(0.0025)*app.width, 0, dp(0.00625)*app.width, 0]
+            padding:[app.get_scaled_width(2), 0, dp(0.00625)*app.width, 0]
             spacing: 0
 
             ScrollView:

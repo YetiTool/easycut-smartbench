@@ -21,7 +21,7 @@ Builder.load_string(
         size: self.parent.size
         pos: self.parent.pos      
         orientation: 'vertical'
-        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+        padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
         spacing:0.0208333333333*app.height
 
         BoxLayout:
@@ -55,7 +55,7 @@ Builder.load_string(
     
 
             BoxLayout:
-                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
                 size: self.parent.size
                 pos: self.parent.pos                               
 
@@ -81,7 +81,7 @@ Builder.load_string(
                         allow_stretch: True                                    
 
             BoxLayout:
-                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
                 size: self.parent.size
                 pos: self.parent.pos                 
                             
@@ -146,7 +146,7 @@ Builder.load_string(
                         allow_stretch: True                                    
 
             BoxLayout:
-                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
                 size: self.parent.size
                 pos: self.parent.pos  
 
@@ -174,7 +174,7 @@ Builder.load_string(
                         allow_stretch: True                                    
 
             BoxLayout:
-                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                padding:[app.get_scaled_width(10), app.get_scaled_height(9.999999999984)]
                 size: self.parent.size
                 pos: self.parent.pos 
 """
