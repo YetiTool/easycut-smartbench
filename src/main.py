@@ -27,6 +27,7 @@ from kivy.config import Config
 from kivy.clock import Clock
 from kivy.uix.boxlayout import BoxLayout
 
+from asmcnc.core_UI import scaling_utils
 from asmcnc.core_UI.popup_manager import PopupManager
 
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
@@ -157,6 +158,12 @@ class SkavaUI(App):
 
     width = Window.width
     height = Window.height if Window.height == 480 else Window.height - 32
+
+    def get_scaled_width(self, width):
+        return scaling_utils.get_scaled_width(width)
+
+    def get_scaled_height(self, height):
+        return scaling_utils.get_scaled_height(height)
 
     def build(self):
 
