@@ -161,11 +161,9 @@ class ScreenManagerSystemTools(object):
         message = self.l.get_str('Saving settings to USB. Please wait') + '...'
         wait_popup = popup_info.PopupWait(self.sm, self.l, description=message)
 
-
         def copy_settings_to_usb(loop_counter):
             print('Loop: {}').format(loop_counter)
             if self.usb_stick.is_usb_mounted_flag:
-                # TODO copy files here
                 try:
                     print('Copying...')
                     # create temp folder
