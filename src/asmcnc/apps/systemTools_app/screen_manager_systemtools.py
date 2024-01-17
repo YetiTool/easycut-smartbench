@@ -196,16 +196,19 @@ class ScreenManagerSystemTools(object):
                 #check if transfer file exists
                 if os.path.isfile('/media/usb/transfer.tar.gz'):
                     message = self.l.get_str('Successfully saved settings to USB!')
-                    popup_info.PopupMiniInfo(self.sm, self.l, description=message)
+                    self.sm.pm.show_mini_info_popup(message)
+                    #popup_info.PopupMiniInfo(self.sm, self.l, description=message)
                 else:
                     message = self.l.get_str('Could not save settings. Please check USB!')
-                    popup_info.PopupMiniInfo(self.sm, self.l, description=message)
+                    self.sm.pm.show_mini_info_popup(message)
+                    #popup_info.PopupMiniInfo(self.sm, self.l, description=message)
                 self.usb_stick.disable()
                 self.mutex.release()
             elif loop_counter > 30:
                 wait_popup.popup.dismiss()
                 message = self.l.get_str('No USB found!')
-                popup_info.PopupMiniInfo(self.sm, self.l, description=message)
+                self.sm.pm.show_mini_info_popup(message)
+                #popup_info.PopupMiniInfo(self.sm, self.l, description=message)
                 self.mutex.release()
             else:
                 Clock.schedule_once(lambda dt: copy_settings_to_usb(loop_counter+1), 0.2)
@@ -237,6 +240,7 @@ class ScreenManagerSystemTools(object):
                         self.usb_stick.disable()
                         message = self.l.get_str('Could not restore Settings. Please check USB!')
                         popup_info.PopupMiniInfo(self.sm, self.l, description=message)
+                        self.mutex.release()
                         return
                     else:
                         # decompress from usb
@@ -250,15 +254,18 @@ class ScreenManagerSystemTools(object):
                 self.usb_stick.disable()
                 if success_flag:
                     message = self.l.get_str('Successfully restored settings from USB!')
-                    popup_info.PopupMiniInfo(self.sm, self.l, description=message)
+                    self.sm.pm.show_mini_info_popup(message)
+                    #popup_info.PopupMiniInfo(self.sm, self.l, description=message)
                 else:
                     message = self.l.get_str('Could not restore Settings. Please check USB!')
-                    popup_info.PopupMiniInfo(self.sm, self.l, description=message)
+                    self.sm.pm.show_mini_info_popup(message)
+                    #popup_info.PopupMiniInfo(self.sm, self.l, description=message)
                 self.mutex.release()
             elif loop_counter > 30:
                 wait_popup.popup.dismiss()
                 message = self.l.get_str('No USB found!')
-                popup_info.PopupMiniInfo(self.sm, self.l, description=message)
+                self.sm.pm.show_mini_info_popup(message)
+                #popup_info.PopupMiniInfo(self.sm, self.l, description=message)
                 self.mutex.release()
             else:
                 Clock.schedule_once(lambda dt: restore_settings_from_usb(loop_counter+1), 0.2)
