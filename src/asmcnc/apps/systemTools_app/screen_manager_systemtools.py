@@ -222,7 +222,7 @@ class ScreenManagerSystemTools(object):
         self.mutex.acquire(True)
         self.usb_stick.enable()
         message = self.l.get_str('Restoring settings from USB. Please wait') + '...'
-        self.sm.pm.show_info_popup(message, 400)
+        self.sm.pm.show_info_popup(message, 600)
 
         def restore_settings_from_usb(loop_counter):
             print('Loop: {}').format(loop_counter)
