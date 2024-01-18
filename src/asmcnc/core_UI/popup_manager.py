@@ -201,9 +201,9 @@ class PopupManager:
     def show_upload_settings_popup(self, sm):
         description = self.l.get_str(
             'This will restore all necessary files from USB for migrating to a new console:') + '\n' + \
-            '\n-' + self.l.get_str('machine settings') + \
-            '\n-' + self.l.get_str('job files') + \
-            '\n-' + self.l.get_str('log files') + \
+            '\n-' + self.l.get_str('Machine settings') + \
+            '\n-' + self.l.get_str('Job files') + \
+            '\n-' + self.l.get_str('Log files') + \
             '\n\n' + self.l.get_str('Make sure a USB-stick is connected properly!') + \
             '\n\n' + self.l.get_str('This might take a few minutes, depending of the size of your files.')
         self.upload_settings_from_usb.main_label.text = description
@@ -212,9 +212,9 @@ class PopupManager:
 
     def show_download_settings_popup(self, sm):
         description = self.l.get_str('This will copy all necessary files for migrating to a new console:') + '\n' + \
-            '\n-' + self.l.get_str('machine settings') + \
-            '\n-' + self.l.get_str('job files') + \
-            '\n-' + self.l.get_str('log files') + \
+            '\n-' + self.l.get_str('Machine settings') + \
+            '\n-' + self.l.get_str('Job files') + \
+            '\n-' + self.l.get_str('Log files') + \
             '\n\n' + self.l.get_str('Make sure a USB-stick is connected properly!') + \
             '\n\n' + self.l.get_str('This might take a few minutes, depending of the size of your files.')
         self.download_settings_to_usb.main_label.text = description
