@@ -609,7 +609,7 @@
       ]
     },
     {
-      "Material Type": "Acrylic",
+      "Material Type": "Extruded Acrylic",
       "Cutter Diameter": "3 mm",
       "Cutter Type": "1 flute upcut spiral",
       "Step Down": "2 mm",
@@ -625,7 +625,7 @@
       ]
     },
     {
-      "Material Type": "Acrylic",
+      "Material Type": "Extruded Acrylic",
       "Cutter Diameter": "4 mm",
       "Cutter Type": "1 flute upcut spiral",
       "Step Down": "2 mm",
@@ -641,7 +641,7 @@
       ]
     },
     {
-      "Material Type": "Acrylic",
+      "Material Type": "Extruded Acrylic",
       "Cutter Diameter": "5 mm",
       "Cutter Type": "1 flute upcut spiral",
       "Step Down": "2 mm",
@@ -657,7 +657,7 @@
       ]
     },
     {
-      "Material Type": "Acrylic",
+      "Material Type": "Extruded Acrylic",
       "Cutter Diameter": "6 mm",
       "Cutter Type": "1 flute upcut spiral",
       "Step Down": "2 mm",
@@ -717,6 +717,70 @@
         {
           "Name": "target_spindle_speed",
           "Value": 22500.0
+        }
+      ]
+    },
+   {
+      "Material Type": "Cast Acrylic",
+      "Cutter Diameter": "4 mm",
+      "Cutter Type": "1 flute upcut spiral",
+      "Step Down": "2 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 110
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22500
+        }
+      ]
+    },
+    {
+      "Material Type": "Cast Acrylic",
+      "Cutter Diameter": "5 mm",
+      "Cutter Type": "1 flute upcut spiral",
+      "Step Down": "2 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 150
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22500
+        }
+      ]
+    },
+    {
+      "Material Type": "Cast Acrylic",
+      "Cutter Diameter": "3 mm",
+      "Cutter Type": "1 flute upcut spiral",
+      "Step Down": "2 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 100
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22500
+        }
+      ]
+    },
+    {
+      "Material Type": "Cast Acrylic",
+      "Cutter Diameter": "6 mm",
+      "Cutter Type": "1 flute upcut spiral",
+      "Step Down": "2 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 270
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22500
         }
       ]
     }
