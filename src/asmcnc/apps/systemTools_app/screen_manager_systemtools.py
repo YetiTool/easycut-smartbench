@@ -233,7 +233,7 @@ class ScreenManagerSystemTools(object):
                     if not os.path.isfile('/media/usb/transfer.tar.gz'):
                         self.sm.pm.close_info_popup()
                         self.usb_stick.disable()
-                        message = self.l.get_str('Could not restore Settings. Please check USB!')
+                        message = self.l.get_str('Could not restore settings. Please check USB!')
                         self.sm.pm.show_mini_info_popup(message)
                         self.mutex.release()
                         return
