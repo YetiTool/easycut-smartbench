@@ -122,7 +122,6 @@ def log(message):
 
 
 class DrywallCutterScreen(Screen):
-    tool_options = ['6mm', '8mm', 'V groove']
     shape_options = ['circle', 'square', 'rectangle', 'line', 'geberit']
     line_cut_options = ['inside', 'on', 'outside']
     rotation = 'horizontal'
