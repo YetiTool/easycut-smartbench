@@ -37,6 +37,7 @@ Builder.load_string("""
     system_tools_app_label: system_tools_app_label
     upgrade_app_label:upgrade_app_label
 
+    pro_app_container:pro_app_container
     shapecutter_container:shapecutter_container
     yeti_cut_apps_container:yeti_cut_apps_container
     drywall_app_container:drywall_app_container
@@ -72,6 +73,7 @@ Builder.load_string("""
                 spacing:0.0416666666667*app.height
 
                 BoxLayout:
+                    id: pro_app_container
                     orientation: 'vertical'
                     size_hint_x: 1
                     spacing:0.0416666666667*app.height
@@ -555,6 +557,7 @@ class LobbyScreen(Screen):
         # If it's a SmartCNC machine, then show the drywalltec app instead of shapecutter
         if "DRYWALLTEC" in self.m.smartbench_model():
             self.remove_everything_but(self.drywall_app_container)
+            self.put_drywall_app_first()
         # Check that window.height is valid & being read in - otherwise will default to SC
         elif type(Window.height) is not int and type(Window.height) is not float:
             self.check_apps_on_pre_enter = True
@@ -564,6 +567,11 @@ class LobbyScreen(Screen):
         # If OG console, show shapecutter
         else:
             self.remove_everything_but(self.shapecutter_container)
+
+    def put_drywall_app_first(self):
+        # move drywall app to first position in carousel
+        self.carousel.slides.insert(0, self.drywall_app_container)
+        # self.carousel.slides.insert(1, self.pro_app_container)
 
     def remove_everything_but(self, everything_but):
         containers = [
