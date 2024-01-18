@@ -38,6 +38,7 @@ Builder.load_string("""
     system_tools_app_label: system_tools_app_label
     upgrade_app_label:upgrade_app_label
 
+    carousel_pane_1:carousel_pane_1
     pro_app_container:pro_app_container
     shapecutter_container:shapecutter_container
     yeti_cut_apps_container:yeti_cut_apps_container
@@ -69,6 +70,7 @@ Builder.load_string("""
             loop: True
                             
             BoxLayout:
+                id: carousel_pane_1
                 orientation: 'horizontal'
                 padding:[dp(0.125)*app.width, dp(0.0416666666667)*app.height, dp(0.125)*app.width, dp(0.104166666667)*app.height]
                 spacing:0.0416666666667*app.height
@@ -570,9 +572,11 @@ class LobbyScreen(Screen):
             self.remove_everything_but(self.shapecutter_container)
 
     def put_drywall_app_first(self):
-        # move drywall app to first position in carousel
+        self.pro_app_container.parent.remove_widget(self.pro_app_container)
         self.drywall_app_container.parent.remove_widget(self.drywall_app_container)
-        self.carousel.slides.insert(0, self.drywall_app_container)
+
+        self.carousel_pane_1.add_widget(self.drywall_app_container)
+        self.carousel_pane_1.add_widget(self.pro_app_container)
 
     def remove_everything_but(self, everything_but):
         containers = [
