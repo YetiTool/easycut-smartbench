@@ -126,11 +126,13 @@ class DrywallCutterScreen(Screen):
     shape_options = ['circle', 'square', 'rectangle', 'line', 'geberit']
     line_cut_options = ['inside', 'on', 'outside']
     rotation = 'horizontal'
-    dwt_config = config_loader.DWTConfig()
+    dwt_config = None
     tool_options = dwt_config.get_available_cutter_names()
 
     def __init__(self, **kwargs):
         super(DrywallCutterScreen, self).__init__(**kwargs)
+
+        self.dwt_config = config_loader.DWTConfig(self)
 
         self.sm = kwargs['screen_manager']
         self.m = kwargs['machine']
