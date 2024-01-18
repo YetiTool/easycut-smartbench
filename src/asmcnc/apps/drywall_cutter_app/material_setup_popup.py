@@ -1,8 +1,8 @@
-from kivy.uix.popup import Popup
-from kivy.lang import Builder
 import math
-from kivy.core.window import Window
+
+from kivy.lang import Builder
 from kivy.uix.image import Image
+from kivy.uix.popup import Popup
 
 Builder.load_string("""
 <CuttingDepthsPopup>:
@@ -403,6 +403,9 @@ class CuttingDepthsPopup(Popup):
                 self.disable_confirm_button()
             except:
                 pass
+
+        # Update config name on edit
+        self.dwt_config.update_config_name_on_edit()
 
     def disable_confirm_button(self):
         children = self.float_layout.children
