@@ -18,6 +18,7 @@ import sys, os, textwrap
 from os.path import expanduser
 from shutil import copy
 
+from asmcnc.core_UI import scaling_utils
 from asmcnc.skavaUI import popup_info
 from asmcnc.core_UI.popups import BasicPopup, PopupType
 from kivy.core.window import Window
@@ -562,7 +563,7 @@ class LobbyScreen(Screen):
         elif type(Window.height) is not int and type(Window.height) is not float:
             self.check_apps_on_pre_enter = True
         # If using Console 10, show YetiCut coming soon
-        elif Window.height > 480:
+        elif scaling_utils.is_screen_big():
             self.remove_everything_but(self.yeti_cut_apps_container)
         # If OG console, show shapecutter
         else:
@@ -571,7 +572,7 @@ class LobbyScreen(Screen):
     def put_drywall_app_first(self):
         # move drywall app to first position in carousel
         self.drywall_app_container.parent.remove_widget(self.drywall_app_container)
-        self.carousel.add_widget(self.drywall_app_container, 0)
+        self.carousel.slides.insert(0, self.drywall_app_container)
 
     def remove_everything_but(self, everything_but):
         containers = [
