@@ -3,10 +3,12 @@ import os
 import config_classes
 import inspect
 
-configurations_dir = 'asmcnc/apps/drywall_cutter_app/config/configurations'
-cutters_dir = 'asmcnc/apps/drywall_cutter_app/config/cutters'
+dwt_config_dir = os.path.dirname(os.path.realpath(__file__))
 
-TEMP_CONFIG_PATH = os.path.join(configurations_dir, '..', 'temp', 'temp_config.json')
+configurations_dir = os.path.join(dwt_config_dir, 'configurations')
+cutters_dir = os.path.join(dwt_config_dir, 'cutters')
+
+TEMP_CONFIG_PATH = os.path.join(dwt_config_dir, 'temp', 'temp_config.json')
 DEBUG_MODE = True
 
 
@@ -24,7 +26,10 @@ class DWTConfig(object):
     active_config = None  # type: config_classes.Configuration
     active_cutter = None  # type: config_classes.Cutter
 
-    def __init__(self):
+    __screen = None
+
+    def __init__(self, screen):
+        self.__screen = screen
         # Load the temp config if it exists, otherwise load the default config.
         if os.path.exists(TEMP_CONFIG_PATH):
             self.load_temp_config()
@@ -123,6 +128,9 @@ class DWTConfig(object):
         """
         file_path = os.path.join(configurations_dir, config_name)
 
+        # Mark the configuration as not temporary
+        self.active_config.temp = False
+
         with open(file_path, 'w') as f:
             json.dump(self.active_config, f, indent=4, default=lambda o: o.__dict__)
 
@@ -206,3 +214,13 @@ class DWTConfig(object):
             setattr(parameter, parameter_names[-1], parameter_value)
         else:
             setattr(self.active_config, parameter_name, parameter_value)
+
+        self.update_config_name_on_edit()
+
+    @debug
+    def update_config_name_on_edit(self):
+        # If the change is on a non-temporary configuration, treat as temp config
+        if not self.active_config.temp:
+            self.active_config.temp = True
+            self.__screen.set_shape_display_widget_config_name("New Configuration")
+            self.save_temp_config()

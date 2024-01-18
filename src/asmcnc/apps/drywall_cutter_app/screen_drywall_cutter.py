@@ -224,6 +224,9 @@ class DrywallCutterScreen(Screen):
                                                                            callback=self.load_config))
         self.sm.current = 'config_filechooser'
 
+    def set_shape_display_widget_config_name(self, name):
+        self.drywall_shape_display_widget.config_name_label.text = name
+
     def load_config(self, config):
         # type: (str) -> None
         """
@@ -235,7 +238,7 @@ class DrywallCutterScreen(Screen):
 
         # Show config name
         file_name = config.rsplit(os.sep, 1)[-1]
-        self.drywall_shape_display_widget.config_name_label.text = file_name
+        self.set_shape_display_widget_config_name(file_name)
 
         toolpath_offset = self.dwt_config.active_config.toolpath_offset
         self.shape_selection.text = self.dwt_config.active_config.shape_type

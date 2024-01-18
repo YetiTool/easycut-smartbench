@@ -20,5 +20,6 @@
     "datum_position": {
         "y": 0.0, 
         "x": 0.0
-    }
+    },
+    "temp": true
 }

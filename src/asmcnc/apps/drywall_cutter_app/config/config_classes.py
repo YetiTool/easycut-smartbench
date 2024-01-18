@@ -73,7 +73,7 @@ class DatumPosition:
 
 class Configuration:
     def __init__(self, shape_type, units, rotation, canvas_shape_dims, cutter_type, toolpath_offset, cutting_depths,
-                 datum_position):
+                 datum_position, temp=True):
         self.shape_type = shape_type  # type: str
         self.units = units  # type: str
         self.rotation = rotation
@@ -82,6 +82,7 @@ class Configuration:
         self.toolpath_offset = toolpath_offset  # type: str
         self.cutting_depths = CuttingDepths(**cutting_depths)  # type: CuttingDepths
         self.datum_position = DatumPosition(**datum_position)  # type: DatumPosition
+        self.temp = temp
 
     @staticmethod
     def default():
@@ -91,4 +92,5 @@ class Configuration:
                              toolpath_offset='inside',
                              cutting_depths={'material_thickness': 12.0, 'bottom_offset': 0.5, 'auto_pass': True,
                                              'depth_per_pass': 6.0},
-                             datum_position={'x': 0.0, 'y': 0.0})
+                             datum_position={'x': 0.0, 'y': 0.0},
+                             temp=True)
