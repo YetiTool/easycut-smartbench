@@ -28,14 +28,16 @@ class DWTConfig(object):
 
     __screen = None
 
-    def __init__(self, screen):
-        self.__screen = screen
+    def __init__(self):
         # Load the temp config if it exists, otherwise load the default config.
         if os.path.exists(TEMP_CONFIG_PATH):
             self.load_temp_config()
         else:
             self.active_config = config_classes.Configuration.default()
             self.load_cutter(self.active_config.cutter_type)
+
+    def set_screen(self, screen):
+        self.__screen = screen
 
     @staticmethod
     @debug
