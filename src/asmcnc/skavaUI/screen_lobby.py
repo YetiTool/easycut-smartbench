@@ -570,8 +570,8 @@ class LobbyScreen(Screen):
 
     def put_drywall_app_first(self):
         # move drywall app to first position in carousel
-        self.carousel.slides.insert(0, self.drywall_app_container)
-        # self.carousel.slides.insert(1, self.pro_app_container)
+        self.carousel.remove_widget(self.drywall_app_container)
+        self.carousel.add_widget(self.drywall_app_container, 0)
 
     def remove_everything_but(self, everything_but):
         containers = [
