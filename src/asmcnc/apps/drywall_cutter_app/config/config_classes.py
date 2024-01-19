@@ -73,7 +73,7 @@ class DatumPosition:
 
 class Configuration:
     def __init__(self, shape_type, units, rotation, canvas_shape_dims, cutter_type, toolpath_offset, cutting_depths,
-                 datum_position, temp=True):
+                 datum_position):
         self.shape_type = shape_type  # type: str
         self.units = units  # type: str
         self.rotation = rotation
