@@ -82,7 +82,6 @@ class Configuration:
         self.toolpath_offset = toolpath_offset  # type: str
         self.cutting_depths = CuttingDepths(**cutting_depths)  # type: CuttingDepths
         self.datum_position = DatumPosition(**datum_position)  # type: DatumPosition
-        self.temp = temp
 
     @staticmethod
     def default():
@@ -92,5 +91,4 @@ class Configuration:
                              toolpath_offset='inside',
                              cutting_depths={'material_thickness': 12.0, 'bottom_offset': 1, 'auto_pass': True,
                                              'depth_per_pass': 6.0},
-                             datum_position={'x': 0.0, 'y': 0.0},
-                             temp=True)
+                             datum_position={'x': 0.0, 'y': 0.0})

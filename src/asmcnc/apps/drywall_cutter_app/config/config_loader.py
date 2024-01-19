@@ -222,9 +222,7 @@ class DWTConfig(object):
     @debug
     def update_config_name_on_edit(self):
         # If the change is on a non-temporary configuration, treat as temp config
-        if not self.active_config.temp:
-            self.active_config.temp = True
-            self.save_temp_config()
-
-            if self.__screen:
+        if self.__screen:
+            if self.__screen.get_shape_display_widget_config_name():
                 self.__screen.set_shape_display_widget_config_name("New Configuration")
+                self.save_temp_config()

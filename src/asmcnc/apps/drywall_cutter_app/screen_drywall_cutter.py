@@ -227,6 +227,9 @@ class DrywallCutterScreen(Screen):
                                                                            callback=self.load_config))
         self.sm.current = 'config_filechooser'
 
+    def get_shape_display_widget_config_name(self):
+        return self.drywall_shape_display_widget.config_name_label.text
+
     def set_shape_display_widget_config_name(self, name):
         self.drywall_shape_display_widget.config_name_label.text = name
 
