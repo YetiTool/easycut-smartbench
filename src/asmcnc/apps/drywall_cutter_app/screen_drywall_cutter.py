@@ -240,6 +240,8 @@ class DrywallCutterScreen(Screen):
 
         :param config: The path to the config file, including extension.
         """
+        self.drywall_shape_display_widget.unbind_inputs()
+
         self.dwt_config.load_config(config)
 
         # Show config name
@@ -259,6 +261,8 @@ class DrywallCutterScreen(Screen):
         # Shape rotation is automatically set when these inputs are changed
         self.drywall_shape_display_widget.x_input.text = str(self.dwt_config.active_config.canvas_shape_dims.x)
         self.drywall_shape_display_widget.y_input.text = str(self.dwt_config.active_config.canvas_shape_dims.y)
+
+        self.drywall_shape_display_widget.bind_inputs()
 
     def save_config(self, name):
         # type: (str) -> None

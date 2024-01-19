@@ -191,13 +191,23 @@ class DrywallShapeDisplay(Widget):
         self.sm = kwargs['screen_manager']
         self.dwt_config = kwargs['dwt_config']
 
-        self.d_input.bind(text=self.d_input_change) # Diameter of circle
-        self.l_input.bind(text=self.l_input_change) # Length of line
-        self.r_input.bind(text=self.r_input_change) # Radius of corners
-        self.x_input.bind(text=self.x_input_change) # Square/rectangle x length
-        self.y_input.bind(text=self.y_input_change) # Square/rectangle y length
+        self.bind_inputs()
 
         Clock.schedule_interval(self.poll_position, 0.1)
+
+    def unbind_inputs(self):
+        self.d_input.unbind(text=self.d_input_change)
+        self.l_input.unbind(text=self.l_input_change)
+        self.r_input.unbind(text=self.r_input_change)
+        self.x_input.unbind(text=self.x_input_change)
+        self.y_input.unbind(text=self.y_input_change)
+
+    def bind_inputs(self):
+        self.d_input.bind(text=self.d_input_change)  # Diameter of circle
+        self.l_input.bind(text=self.l_input_change)  # Length of line
+        self.r_input.bind(text=self.r_input_change)  # Radius of corners
+        self.x_input.bind(text=self.x_input_change)  # Square/rectangle x length
+        self.y_input.bind(text=self.y_input_change)  # Square/rectangle y length
 
     def select_shape(self, shape, rotation, swap_lengths=False):
         image_source = self.image_filepath + shape
