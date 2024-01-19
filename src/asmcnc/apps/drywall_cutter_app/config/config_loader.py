@@ -213,8 +213,15 @@ class DWTConfig(object):
             for parameter_name in parameter_names[:-1]:
                 parameter = getattr(parameter, parameter_name)
 
+            # if the value hasn't changed (likely loading)
+            if getattr(parameter, parameter_names[-1]) == parameter_value:
+                return
+
             setattr(parameter, parameter_names[-1], parameter_value)
         else:
+            # if the value hasn't changed (likely loading)
+            if getattr(self.active_config, parameter_name) == parameter_value:
+                return
             setattr(self.active_config, parameter_name, parameter_value)
 
         self.update_config_name_on_edit()
