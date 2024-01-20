@@ -18,7 +18,7 @@
 ## Notes
 
 ## Dependencies for merge
-- [ ] [Pull request link]()
+- [ ] [#<pull_request_number>]
 
 ## Testing
 
@@ -38,4 +38,4 @@
 - [ ] Not applicable
 - [ ] Completed
 
-## Screenshots (optional)
+## Screenshots (if applicable)
