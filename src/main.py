@@ -25,6 +25,12 @@ from os import path
 
 from kivy.config import Config
 from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.boxlayout import BoxLayout
+
+from asmcnc.core_UI import scaling_utils
+from asmcnc.core_UI.popup_manager import PopupManager
+
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
 
 if sys.platform.startswith("linux"):
@@ -101,7 +107,7 @@ from asmcnc.skavaUI import screen_homing_decision # @UnresolvedImport
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v2.7.0'
+initial_version = 'v2.8.1'
 
 config_flag = False
         
@@ -147,12 +153,23 @@ def log(message):
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 
+# load scaled kv
+Builder.load_file('scaled_kv.kv')
+
+
 class SkavaUI(App):
 
     test_no = 0
 
     width = Window.width
-    height = Window.height
+    height = Window.height if Window.height == 480 else Window.height - 32
+
+    def get_scaled_width(self, val):
+        return scaling_utils.get_scaled_width(val)
+
+    def get_scaled_height(self, val):
+        return scaling_utils.get_scaled_height(val)
+
 
     def build(self):
 
@@ -160,6 +177,7 @@ class SkavaUI(App):
 
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
+
 
         # Localization/language object
         l = localization.Localization()
@@ -193,7 +211,11 @@ class SkavaUI(App):
 
         # Server connection object
         sc = server_connection.ServerConnection(sett)
-        
+
+        # Popup manager
+        pm = PopupManager(sm, m, l)
+        sm.pm = pm  # store in screen manager for access by screens
+
         # initialise the screens (legacy)
         lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m, app_manager = am, localization = l)
         home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l, keyboard = kb)
@@ -264,24 +286,22 @@ class SkavaUI(App):
 
 
         ## LOCALIZATION TESTING -----------------------------------------------------------
-
-        # test_languages = ["English (GB)", "Deutsch (DE)",  "Français (FR)", "Italiano (IT)", "Suomalainen (FI)", "Polski (PL)", "Dansk (DK)"]
-
+        
         # def test_cycle(dt):
-        #     if self.test_no < len(test_languages):
-        #         lang = test_languages[self.test_no]
+        #     if self.test_no < len(l.approved_languages):
+        #         lang = l.approved_languages[self.test_no]
         #         l.load_in_new_language(lang)
         #         print("New lang: " + str(lang))
         #         try:
         #             sm.get_screen(str(sm.current)).update_strings()
-        #         except: 
+        #         except:
         #             print(str(sm.current) + " has no update strings function")
-
+        
         #         self.test_no = self.test_no + 1
-        #     else: 
+        #     else:
         #         self.test_no = 0
-
-        # Clock.schedule_interval(test_cycle, 5)
+        
+        # Clock.schedule_interval(test_cycle, 20)
 
 
 
@@ -304,6 +324,13 @@ class SkavaUI(App):
         # Clock.schedule_once(start_loop, 10)
 
         ## -----------------------------------------------------------------------------------
+        if self.height == 768:
+            root = BoxLayout(orientation='vertical', size_hint=(None, None), size=(self.width, self.height + 32))
+            sm.size_hint = (None, None)
+            sm.size = (self.width, self.height)
+            root.add_widget(sm)
+            return root
+
         return sm
 
 if __name__ == '__main__':
