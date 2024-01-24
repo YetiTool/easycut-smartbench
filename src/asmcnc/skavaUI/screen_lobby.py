@@ -18,6 +18,7 @@ import sys, os, textwrap
 from os.path import expanduser
 from shutil import copy
 
+from asmcnc.core_UI import scaling_utils
 from asmcnc.skavaUI import popup_info
 from asmcnc.core_UI.popups import BasicPopup, PopupType
 from kivy.core.window import Window
@@ -37,6 +38,8 @@ Builder.load_string("""
     system_tools_app_label: system_tools_app_label
     upgrade_app_label:upgrade_app_label
 
+    carousel_pane_1:carousel_pane_1
+    pro_app_container:pro_app_container
     shapecutter_container:shapecutter_container
     yeti_cut_apps_container:yeti_cut_apps_container
     drywall_app_container:drywall_app_container
@@ -67,11 +70,13 @@ Builder.load_string("""
             loop: True
                             
             BoxLayout:
+                id: carousel_pane_1
                 orientation: 'horizontal'
                 padding:[dp(0.125)*app.width, dp(0.0416666666667)*app.height, dp(0.125)*app.width, dp(0.104166666667)*app.height]
                 spacing:0.0416666666667*app.height
 
                 BoxLayout:
+                    id: pro_app_container
                     orientation: 'vertical'
                     size_hint_x: 1
                     spacing:0.0416666666667*app.height
@@ -555,15 +560,23 @@ class LobbyScreen(Screen):
         # If it's a SmartCNC machine, then show the drywalltec app instead of shapecutter
         if "DRYWALLTEC" in self.m.smartbench_model():
             self.remove_everything_but(self.drywall_app_container)
+            self.put_drywall_app_first()
         # Check that window.height is valid & being read in - otherwise will default to SC
         elif type(Window.height) is not int and type(Window.height) is not float:
             self.check_apps_on_pre_enter = True
         # If using Console 10, show YetiCut coming soon
-        elif Window.height > 480:
+        elif scaling_utils.is_screen_big():
             self.remove_everything_but(self.yeti_cut_apps_container)
         # If OG console, show shapecutter
         else:
             self.remove_everything_but(self.shapecutter_container)
+
+    def put_drywall_app_first(self):
+        self.pro_app_container.parent.remove_widget(self.pro_app_container)
+        self.drywall_app_container.parent.remove_widget(self.drywall_app_container)
+
+        self.carousel_pane_1.add_widget(self.drywall_app_container)
+        self.carousel_pane_1.add_widget(self.pro_app_container)
 
     def remove_everything_but(self, everything_but):
         containers = [
