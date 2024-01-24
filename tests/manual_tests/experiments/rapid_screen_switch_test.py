@@ -27,20 +27,20 @@ from kivy.clock import Clock
 
 Builder.load_string("""
 <MenuScreen>:
-    BoxLayout:
-        Button:
-            text: 'Goto settings'
-            on_press: root.manager.current = 'settings'
-        Button:
-            text: 'Quit'
+	BoxLayout:
+		Button:
+			text: 'Goto settings'
+			on_press: root.manager.current = 'settings'
+		Button:
+			text: 'Quit'
 
 <SettingsScreen>:
-    BoxLayout:
-        Button:
-            text: 'My settings button'
-        Button:
-            text: 'Back to menu'
-            on_press: root.manager.current = 'menu'
+	BoxLayout:
+		Button:
+			text: 'My settings button'
+		Button:
+			text: 'Back to menu'
+			on_press: root.manager.current = 'menu'
 """)
 
 # Declare both screens
@@ -49,31 +49,31 @@ class SettingsScreen(Screen):
 
 class MenuScreen(Screen):
 
-    def __init__(self, **kwargs):
-        super(MenuScreen, self).__init__(**kwargs)
-        self.sm = kwargs['sm']
+	def __init__(self, **kwargs):
+		super(MenuScreen, self).__init__(**kwargs)
+		self.sm = kwargs['sm']
 
-    def on_enter(self):
-    	Clock.schedule_once(self.go_to_settings, 1)
+	def on_enter(self):
+		Clock.schedule_once(self.go_to_settings, 1)
 
-    def go_to_settings(self, dt):
-    	self.sm.current = 'settings'
+	def go_to_settings(self, dt):
+		self.sm.current = 'settings'
 
-    def on_leave(self):
+	def on_leave(self):
 		self.sm.current = 'menu'	
 
 
 class TestApp(App):
 
-    def build(self):
-        # Create the screen manager
-        sm = ScreenManager()
-        sm.add_widget(SettingsScreen(name='settings'))
-        sm.add_widget(MenuScreen(name='menu', sm=sm))
+	def build(self):
+		# Create the screen manager
+		sm = ScreenManager()
+		sm.add_widget(SettingsScreen(name='settings'))
+		sm.add_widget(MenuScreen(name='menu', sm=sm))
 
-        sm.current = 'menu'
+		sm.current = 'menu'
 
-        return sm
+		return sm
 
 if __name__ == '__main__':
-    TestApp().run()
+	TestApp().run()

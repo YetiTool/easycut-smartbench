@@ -6,6 +6,7 @@ from settings.settings_manager import Settings
 from asmcnc.job.job_data import JobData
 from asmcnc.comms.router_machine import RouterMachine
 from asmcnc.comms.localization import Localization
+from asmcnc.keyboard.custom_keyboard import Keyboard
 from asmcnc.comms import smartbench_flurry_database_connection
 
 from asmcnc.skavaUI.screen_home import HomeScreen
@@ -40,6 +41,8 @@ class ZHeadMechanicsApp(App):
 
         l = Localization()
 
+        kb = Keyboard(localization=l)
+
         jd = JobData(localization = l, settings_manager = sett)
 
         m = RouterMachine(Cmport, sm, sett, l, jd)
@@ -49,7 +52,7 @@ class ZHeadMechanicsApp(App):
         if m.s.is_connected():
             Clock.schedule_once(m.s.start_services, 4)
 
-        home_screen = HomeScreen(name = 'home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
+        home_screen = HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l, keyboard = kb)
         sm.add_widget(home_screen)
 
         squaring_decision_screen = SquaringScreenDecisionManualVsSquare(name = 'squaring_decision', screen_manager = sm, machine =m, localization = l)

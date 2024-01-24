@@ -9,8 +9,17 @@ if len(sys.argv) != 2:
 from kivy.config import Config
 from kivy.clock import Clock
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
-Config.set('graphics', 'width', '800')
-Config.set('graphics', 'height', '480')
+
+if sys.platform.startswith("linux"):
+    # get screen resolution as "1280x800" or "800x480"
+    resolution = os.popen(""" fbset | grep -oP 'mode "\K[^"]+' """).read().strip()
+    width, height = resolution.split("x")
+    Config.set('graphics', 'width', width)
+    Config.set('graphics', 'height', height)
+else:
+    Config.set('graphics', 'width', '800')
+    Config.set('graphics', 'height', '480')
+
 Config.set('graphics', 'maxfps', '60')
 Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
 
@@ -33,6 +42,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 from kivy.uix.label import Label
+from kivy.uix.boxlayout import BoxLayout
 from asmcnc.comms import localization
 from asmcnc.keyboard import custom_keyboard
 from asmcnc.comms import router_machine
@@ -41,6 +51,7 @@ from asmcnc.comms import smartbench_flurry_database_connection
 from asmcnc.apps import app_manager
 from asmcnc.job.yetipilot.yetipilot import YetiPilot
 from asmcnc.comms import server_connection
+from asmcnc.core_UI.popup_manager import PopupManager
 
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_error, screen_rebooting, screen_file_loading, screen_lobby
 from asmcnc.skavaUI import screen_job_recovery, screen_nudge, screen_recovery_decision, screen_homing_decision, popup_nudge
@@ -48,7 +59,7 @@ from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_s
 from asmcnc.skavaUI import screen_door, screen_mstate_warning, screen_serial_failure, screen_squaring_active, screen_jobstart_warning
 from asmcnc.skavaUI import screen_check_job, popup_info
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
-from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety
+from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety, screen_starting_smartbench
 from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1
 from asmcnc.apps.systemTools_app.screens.calibration import screen_stall_jig
 from asmcnc.apps.upgrade_app import screen_upgrade, screen_upgrade_successful, screen_already_upgraded
@@ -81,15 +92,18 @@ class BasicScreen(Screen):
 Cmport = 'COM3'
 
 class ScreenTest(App):
+    width = Window.width
+    height = Window.height if Window.height == 480 else Window.height - 32
 
-    lang_idx = 7
-    cycle_languages = False
+    lang_idx = 0
+    cycle_languages = True
+    cycle_time = 10
 
     gb = "English (GB)"
-    it = "Italiano (IT)"
-    fi = "Suomalainen (FI)"
     de = "Deutsch (DE)"
     fr = "Français (FR)"
+    it = "Italiano (IT)"
+    fi = "Suomalainen (FI)"
     pl = "Polski (PL)"
     dk = "Dansk (DK)"
     ko = "한국어 (KO)"
@@ -97,20 +111,20 @@ class ScreenTest(App):
 
     test_languages = [
                         gb,
-                        it, 
-                        fi, 
                         de,
                         fr,
+                        it, 
+                        fi, 
                         pl,
                         dk,
                         ko
                     ]
 
     # 0 - English (y)
-    # 1 - Italian (y)
-    # 2 - Finnish (y)
-    # 3 - German (y)
-    # 4 - French (y)
+    # 1 - German (y)
+    # 2 - French (y)
+    # 3 - Italian (y)
+    # 4 - Finnish (y)
     # 5 - Polish (y)
     # 6 - Danish (y)
     # 7 - Korean (y)
@@ -176,9 +190,9 @@ class ScreenTest(App):
 
                 index += 1
                 if index >= len(test_languages):
-                    Clock.schedule_once(lambda dt: show_next_language(test_languages, 0), 5)
+                    Clock.schedule_once(lambda dt: show_next_language(test_languages, 0), self.cycle_time)
                 else:
-                    Clock.schedule_once(lambda dt: show_next_language(test_languages, index), 5)
+                    Clock.schedule_once(lambda dt: show_next_language(test_languages, index), self.cycle_time)
 
             show_next_language(test_languages, 0)
 
@@ -237,8 +251,8 @@ class ScreenTest(App):
 
             sm.get_screen('stop_or_resume_job_decision').return_screen = 'go'
 
-            sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'spindle_overload'
-            # sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'job_pause'
+            # sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'spindle_overload'
+            sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'job_pause'
             # sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'yetipilot_low_feed'
             # sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'yetipilot_spindle_data_loss'
             # sm.get_screen('stop_or_resume_job_decision').reason_for_pause = 'spindle_health_check_failed'
@@ -271,6 +285,12 @@ class ScreenTest(App):
 
             set_up_screens([[screen_rebooting.RebootingScreen, 'rebooting']])
 
+        def starting_smartbench_test():
+            set_up_screens([[screen_home.HomeScreen, 'home'],
+                            [screen_lobby.LobbyScreen, 'lobby']])
+            sm.get_screen('starting_smartbench').next_screen = Mock()
+            sm.current = 'starting_smartbench'
+
         def release_notes_test():
 
             '''
@@ -291,7 +311,9 @@ class ScreenTest(App):
         def job_recovery_tests():
             # Set this to None, -1, or 6 for the three cases on the decision screen
             # Set this to 1 to show arc movement message on line selection screen
-            jd.job_recovery_cancel_line = 1
+            # jd.job_recovery_cancel_line = 1
+            # jd.job_recovery_cancel_line = None
+            jd.job_recovery_cancel_line = -1
 
             # Choose between following cases to show different error messages on completion
             success, message = True, ''
@@ -331,6 +353,19 @@ class ScreenTest(App):
                             [screen_file_loading.LoadingScreen, 'loading']])
 
             sm.current = 'recovery_decision'
+
+        def homing_decision_test():
+            set_up_screens([
+                            # [screen_home.HomeScreen, 'home'],
+                            # [screen_job_recovery.JobRecoveryScreen, 'job_recovery'],
+                            # [screen_nudge.NudgeScreen, 'nudge'],
+                            # [screen_recovery_decision.RecoveryDecisionScreen, 'recovery_decision'],
+                            [screen_homing_decision.HomingDecisionScreen, 'homing_decision'],
+                            # [screen_file_loading.LoadingScreen, 'loading']
+                            ])
+
+            sm.current = 'homing_decision'
+
 
         def job_recovery_nudge_warning_popup_test():
             set_up_screens([[BasicScreen, 'basic']])
@@ -374,6 +409,17 @@ class ScreenTest(App):
             m.homing_interrupted = False
             m.homing_in_progress = True
             sm.current = 'squaring_active'
+
+        def spindle_shutdown_screen_test():
+
+            # m.stylus_router_choice = "router"
+            m.stylus_router_choice = "stylus"
+
+            set_up_screens([[screen_spindle_shutdown.SpindleShutdownScreen, 'spindle_shutdown'],
+                            [screen_stop_or_resume_decision.StopOrResumeDecisionScreen, 'stop_or_resume_job_decision']],
+                )
+            sm.get_screen('spindle_shutdown').time_to_allow_spindle_to_rest = 1000
+            sm.current = 'spindle_shutdown'
 
         def go_screen_reminder_popup_test():
             set_up_dummy_serial_stateless()
@@ -432,6 +478,19 @@ class ScreenTest(App):
 
             sm.current = 'basic'
 
+        def job_feedback_screen_test():
+            jd.metadata_dict = {}
+            jd.pause_duration = "0"
+            jd.actual_runtime = "0"
+            jd.post_production_notes  = ""
+            jd.metadata_dict["Internal Order Code"] = "Project_name"
+            jd.metadata_dict["Process Step"] = "Step 1 of 3"
+            jd.job_name = "Job name :).gcode"
+            set_up_screens([
+                            [screen_job_feedback.JobFeedbackScreen, 'job_feedback'],
+                            [screen_go.GoScreen, 'go']
+                            ])
+            sm.current = 'job_feedback'
 
         # ALARM/ERROR/DOOR
 
@@ -779,11 +838,15 @@ class ScreenTest(App):
 
         # App manager object
         config_flag = False
-        initial_version = 'v2.6.5'
+        initial_version = 'v2.7.0'
         am = app_manager.AppManagerClass(sm, m, sett, l, kb, jd, db, config_flag, initial_version)
 
         # Server connection object
         sc = server_connection.ServerConnection(sett)
+
+        # Popup manager
+        pm = PopupManager(sm, m, l)
+        sm.pm = pm  # store in screen manager for access by screens
 
         start_seq = Mock()
 
@@ -794,6 +857,13 @@ class ScreenTest(App):
 
         if self.cycle_languages:
             cycle_through_languages(self.test_languages)
+
+        if self.height == 768:
+            root = BoxLayout(orientation='vertical', size_hint=(None, None), size=(self.width, self.height + 32))
+            sm.size_hint = (None, None)
+            sm.size = (self.width, self.height)
+            root.add_widget(sm)
+            return root
 
         return sm
 
