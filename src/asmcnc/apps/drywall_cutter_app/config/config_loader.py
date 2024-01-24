@@ -3,10 +3,11 @@ import os
 import config_classes
 import inspect
 
-configurations_dir = 'asmcnc/apps/drywall_cutter_app/config/configurations'
-cutters_dir = 'asmcnc/apps/drywall_cutter_app/config/cutters'
+configurations_dir = './asmcnc/apps/drywall_cutter_app/config/configurations'
+cutters_dir = './asmcnc/apps/drywall_cutter_app/config/cutters'
+temp_dir = './asmcnc/apps/drywall_cutter_app/config/temp'
 
-TEMP_CONFIG_PATH = os.path.join(configurations_dir, '..', 'temp', 'temp_config.json')
+TEMP_CONFIG_PATH = os.path.join(temp_dir, 'temp_config')
 DEBUG_MODE = True
 
 
@@ -26,6 +27,9 @@ class DWTConfig(object):
 
     def __init__(self):
         # Load the temp config if it exists, otherwise load the default config.
+        if not os.path.exists(temp_dir):
+            os.makedirs(temp_dir)
+
         if os.path.exists(TEMP_CONFIG_PATH):
             self.load_temp_config()
         else:
@@ -172,7 +176,7 @@ class DWTConfig(object):
 
         This is used to save the configuration when the Drywall Cutter screen is left.
         """
-        self.save_config(os.path.join('..', 'temp', 'temp_config.json'))
+        self.save_config(os.path.join('..', 'temp', 'temp_config'))
 
     @debug
     def load_temp_config(self):
@@ -182,7 +186,7 @@ class DWTConfig(object):
 
         This is used to load the configuration when the Drywall Cutter screen is loaded.
         """
-        self.load_config(os.path.join('..', 'temp', 'temp_config.json'))
+        self.load_config(os.path.join('..', 'temp', 'temp_config'))
 
     @debug
     def on_parameter_change(self, parameter_name, parameter_value):
