@@ -11,7 +11,7 @@ from kivy.properties import StringProperty, ObjectProperty
 from kivy.clock import Clock
 from asmcnc.apps.shapeCutter_app.screens import popup_info
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
-from asmcnc.core_UI.popups import WarningPopup
+from asmcnc.core_UI.popups import InfoPopup, WarningPopup
 
 Builder.load_string(
     """
@@ -559,9 +559,21 @@ class ShapeCutter23ScreenClass(Screen):
         # "[b]Z Feed Rate (Plunge Rate):[/b] Feed when vertically plunging into stock.\n\n" \
         # "[b]Spindle Speed:[/b] Rotational speed of the tool.\n\n" \
         # "For more help please visit: https://www.yetitool.com/support/knowledge-\nbase/hardware-smartbench-feeds-speeds"
-        message = ", loading feeds and speeds look-up table..."
-        popup_info.PopupWait(self.shapecutter_sm, message)
-        # popup_info.PopupInfo(self.shapecutter_sm, info)
+        wait_popup = InfoPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
+                               main_string="Please wait, loading feeds and speeds look-up table...",
+                               popup_width=500,
+                               popup_height=400,
+                               main_label_size_delta=140,
+                               button_layout_padding=[0,0,0,0],
+                               main_layout_padding=[40,20,40,20],
+                               main_label_padding=[40,20],
+                               main_label_size_hint_y=1,
+                               main_label_h_align="center")
+        wait_popup.open()
+        Clock.schedule_once(
+            lambda dt: wait_popup.dismiss(),
+            2.5,
+        )
         Clock.schedule_once(
             lambda dt: popup_info.PopupFeedsAndSpeedsLookupTable(self.shapecutter_sm),
             1.5,
