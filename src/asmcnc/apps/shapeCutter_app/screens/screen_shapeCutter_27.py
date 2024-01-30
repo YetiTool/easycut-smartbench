@@ -9,6 +9,7 @@ from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.uix.screenmanager import ScreenManager, Screen
 from asmcnc.apps.shapeCutter_app.screens import popup_info
+from asmcnc.core_UI.popups import InfoPopup
 
 Builder.load_string(
     """
@@ -351,7 +352,11 @@ class ShapeCutter27ScreenClass(Screen):
 # Action buttons       
     def get_info(self):
         info = "The X-Y datum is SmartBench's reference point for the job coordinates."
-        popup_info.PopupInfo(self.shapecutter_sm, info)
+        InfoPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
+                  main_string=info,
+                  popup_width=500,
+                  popup_height=400,
+                  main_label_size_delta=140).open()
 
     def go_back(self):
         self.shapecutter_sm.previous_screen()
