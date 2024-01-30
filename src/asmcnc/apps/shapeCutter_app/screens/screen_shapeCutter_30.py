@@ -9,6 +9,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from asmcnc.apps.shapeCutter_app.screens import popup_info
+from asmcnc.core_UI.popups import InfoPopup
 
 Builder.load_string(
     """
@@ -317,7 +318,11 @@ You should set the Z datum from the top of your material."""
 # Action buttons       
     def get_info(self):
         info = "The Z datum is SmartBench's reference point for the surface of the material."
-        popup_info.PopupInfo(self.shapecutter_sm, info)
+        InfoPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
+                  main_string=info,
+                  popup_width=500,
+                  popup_height=400,
+                  main_label_size_delta=140).open()
 
     def go_back(self):
         if not self.m.state().startswith("Jog"):
