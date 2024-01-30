@@ -282,3 +282,12 @@ class CuttingDepthsPopup(Popup):
         self.l = localization
         self.kb = keyboard
         self.dwt_config = dwt_config
+
+    def confirm(self):
+        self.dismiss()
+
+    def cancel(self):
+        self.dismiss()
+
+    def on_touch(self):
+        pass
