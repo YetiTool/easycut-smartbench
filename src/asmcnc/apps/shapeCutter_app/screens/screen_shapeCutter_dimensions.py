@@ -11,6 +11,7 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.switch import Switch
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
 from asmcnc.core_UI import scaling_utils as utils
+from asmcnc.core_UI.popups import WarningPopup
 
 Builder.load_string(
     """
@@ -577,9 +578,15 @@ class ShapeCutterDimensionsScreenClass(Screen):
                             + ".\n\n"
                             + "Please re-enter your dimensions."
                         )
-                        popup_input_error.PopupInputError(
-                            self.shapecutter_sm, description
-                        )
+                        WarningPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
+                                    main_string=description,
+                                    popup_width=400,
+                                    popup_height=380,
+                                    main_label_size_delta=40,
+                                    button_layout_padding=[50,25,50,0],
+                                    main_label_h_align='left',
+                                    main_layout_padding=[50,20,50,20],
+                                    main_label_padding=[20,20]).open()
                         return False
                 self.next_screen()
             else:
@@ -605,9 +612,15 @@ class ShapeCutterDimensionsScreenClass(Screen):
                             + ".\n\n"
                             + "Please re-enter your dimensions."
                         )
-                        popup_input_error.PopupInputError(
-                            self.shapecutter_sm, description
-                        )
+                        WarningPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
+                                    main_string=description,
+                                    popup_width=400,
+                                    popup_height=380,
+                                    main_label_size_delta=40,
+                                    button_layout_padding=[50,25,50,0],
+                                    main_label_h_align='left',
+                                    main_layout_padding=[50,20,50,20],
+                                    main_label_padding=[20,20]).open()
                         return False
                 self.next_screen()
             else:
