@@ -419,7 +419,11 @@ class ShapeCutterTutorialScreenClass(Screen):
 If you get stuck, I'm here to give you some handy hints and tips ;). 
 
 Happy shaping!"""
-        InfoPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l, main_string=info, popup_width=500, popup_height=400, main_label_size_delta=140).open()
+        InfoPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
+                  main_string=info,
+                  popup_width=500,
+                  popup_height=400,
+                  main_label_size_delta=140).open()
 
     def go_back(self):
         self.shapecutter_sm.previous_screen()

@@ -594,7 +594,11 @@ class ShapeCutter24ScreenClass(Screen):
 [b]Step Down:[/b] Specifies the maximum step down between Z-levels.
 
 [b]Finishing Passes:[/b] Specifies the number of finishing passes."""
-        InfoPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l, main_string=info, popup_width=500, popup_height=400, main_label_size_delta=140).open()
+        InfoPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
+                  main_string=info,
+                  popup_width=500,
+                  popup_height=400,
+                  main_label_size_delta=140).open()
 
     def go_back(self):
         self.shapecutter_sm.previous_screen()
