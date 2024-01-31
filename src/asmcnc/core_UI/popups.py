@@ -860,7 +860,7 @@ class SpindleSafetyPopup(BasicPopup):
         main_layout_padding=(10, 10, 10, 10),
         main_layout_spacing=10,
         main_label_size_delta=40,
-        button_layout_padding=(150, 20, 150, 0),
+        button_layout_padding=(0, 0, 0, 0),
         button_layout_spacing=15,
         main_label_h_align="left",
         main_label_size_hint_y=2,
