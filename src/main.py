@@ -173,6 +173,11 @@ class SkavaUI(App):
 
     def build(self):
 
+        if sys.platform == 'darwin':
+            self.width = 800
+            self.height = 480
+            Window.size = (self.width, self.height)
+
         log("Starting App:")
 
         # Establish screens
