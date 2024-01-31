@@ -13,7 +13,7 @@ def get_scaled_width(width):
         return None
     if width is 0:
         return 0
-    return float(width) / 800.0 * Window.width
+    return float(width) / 800.0 * Width
 
 
 def get_scaled_height(height):
@@ -21,7 +21,7 @@ def get_scaled_height(height):
         return None
     if height is 0:
         return 0
-    return float(height) / 480.0 * Window.height
+    return float(height) / 480.0 * Height
 
 
 def get_scaled_tuple(tup, orientation="horizontal"):
@@ -43,4 +43,4 @@ def get_scaled_tuple(tup, orientation="horizontal"):
 def get_scaled_sp(sp_str):
     if sp_str is None:
         return None
-    return str(float(sp_str[:-2]) / 800.0 * Window.width) + "sp"
+    return str(float(sp_str[:-2]) / 800.0 * Width) + "sp"
