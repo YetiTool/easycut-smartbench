@@ -26,7 +26,9 @@
 - [ ] Not applicable
 - [ ] Own computer
 - [ ] Console 7"
+  - [ ] I have tested all languages to ensure all text is entirely readable (if applicable)
 - [ ] Console 10"
+  - [ ] I have tested all languages to ensure all text is entirely readable (if applicable)
 
 ### Function Test
 - [ ] Not applicable
