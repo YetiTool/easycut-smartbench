@@ -33,7 +33,7 @@ Builder.load_string(
         
         BoxLayout:
             spacing: 0
-            padding: 0
+            padding:dp(0)
             size_hint_y: 1
             orientation: 'vertical'
             canvas:
@@ -62,7 +62,7 @@ Builder.load_string(
             
         BoxLayout:
             spacing: 0
-            padding: 0
+            padding:dp(0)
             size_hint_y: 2
             orientation: 'vertical'
             canvas:
@@ -145,9 +145,12 @@ class CommonMove(Widget):
             self.m.vac_on()
 
     def set_spindle(self):
+        def button_two_callback():
+            self.spindle_image.source = "./asmcnc/skavaUI/img/spindle_on.png"
+            self.m.spindle_on()
+
         if self.spindle_toggle.state == "normal":
             self.spindle_image.source = "./asmcnc/skavaUI/img/spindle_off.png"
             self.m.spindle_off()
         else:
-            self.spindle_image.source = "./asmcnc/skavaUI/img/spindle_on.png"
-            self.m.spindle_on()
+            self.sm.pm.show_spindle_safety_popup(None, button_two_callback)
