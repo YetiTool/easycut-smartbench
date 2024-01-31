@@ -16,9 +16,8 @@ class HoldButton(Button):
     clock = None
     animation = None
 
-    def __init__(self, button_text, hold_time, callback, background_color, held_background_color, **kwargs):
+    def __init__(self, hold_time, callback, background_color, held_background_color, **kwargs):
         super(HoldButton, self).__init__(**kwargs)
-        self.button_text = button_text
         self.hold_time = hold_time
         self.callback = callback
         self.background_color = background_color
@@ -27,10 +26,16 @@ class HoldButton(Button):
         self.bind(on_press=self.on_press)
         self.bind(on_release=self.on_release)
 
-        self.canvas.add(self.held_background_color)
+        self.canvas.add(Color(*self.held_background_color))
 
         self.rect = Rectangle(pos=self.pos, size=(0, self.height))
         self.canvas.add(self.rect)
+
+        self.bind(pos=self.update_rect, size=self.update_rect)
+
+    def update_rect(self, *args):
+        self.rect.pos = self.pos
+        self.rect.size = self.size
 
     def start_animation(self):
         self.animation = Animation(size=(self.width, self.height), duration=self.hold_time)
@@ -62,8 +67,8 @@ class HoldButton(Button):
 
 class WarningHoldButton(HoldButton):
     background_color = (255.0 / 255, 246.0 / 255, 143.0 / 255, 1)
-    held_background_color = Color(255. / 255, 240.0 / 255, 0, 0.3)
+    held_background_color = (255. / 255, 165.0 / 255, 0, 0.3)
 
-    def __init__(self, button_text, hold_time, callback, **kwargs):
-        super(WarningHoldButton, self).__init__(button_text, hold_time, callback,
+    def __init__(self, hold_time, callback, **kwargs):
+        super(WarningHoldButton, self).__init__(hold_time, callback,
                                                 self.background_color, self.held_background_color, **kwargs)
