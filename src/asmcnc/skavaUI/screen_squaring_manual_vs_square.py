@@ -60,7 +60,7 @@ Builder.load_string(
                 opacity: 1
                 on_press: root.cancel()
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:

@@ -46,7 +46,7 @@ Builder.load_string(
                 source: "./asmcnc/apps/shapeCutter_app/img/landing_background.png"
 
         BoxLayout:
-            padding: 0
+            padding:dp(0)
             spacing: 0
             orientation: "vertical"       
             
@@ -56,7 +56,7 @@ Builder.load_string(
                 height: dp(0.1875*app.height)
                 width: dp(1.0*app.width)
                 text: "Shape Cutter"
-                font_size: 0.0375*app.width
+                font_size:dp(0.0375*app.width)
                 halign: "center"
                 valign: "bottom"
                 markup: True
@@ -72,7 +72,7 @@ Builder.load_string(
 
                 Label:
                     color: 0,0,0,1
-                    font_size: 0.03*app.width
+                    font_size:dp(0.03*app.width)
                     markup: True
                     halign: "center"
                     valign: "bottom"
@@ -87,14 +87,14 @@ Builder.load_string(
                 height: dp(0.6875*app.height)
                 orientation: "horizontal"
                 spacing: 0
-                padding: 0
+                padding:dp(0)
 
                 BoxLayout:
                     size_hint: (None,None)
                     width: dp(0.84375*app.width)
                     height: dp(0.697916666667*app.height)             
                     spacing: 0
-                    padding: 0
+                    padding:dp(0)
                         
                     # Body
                     BoxLayout:
@@ -172,7 +172,7 @@ Builder.load_string(
                                 Label: 
                                     text: root.dim_1
                                     color: 0,0,0,1
-                                    font_size: 0.03*app.width
+                                    font_size:dp(0.03*app.width)
                                     markup: True
                                     halign: "left"
                                     valign: "middle"
@@ -208,7 +208,7 @@ Builder.load_string(
                                 Label: 
                                     text: root.dim_2
                                     color: 0,0,0,1
-                                    font_size: 0.03*app.width
+                                    font_size:dp(0.03*app.width)
                                     markup: True
                                     halign: "left"
                                     valign: "middle"
@@ -244,7 +244,7 @@ Builder.load_string(
                                 Label: 
                                     text: root.dim_3
                                     color: 0,0,0,1
-                                    font_size: 0.03*app.width
+                                    font_size:dp(0.03*app.width)
                                     markup: True
                                     halign: "left"
                                     valign: "middle"
@@ -279,7 +279,7 @@ Builder.load_string(
                                 Label: 
                                     text: root.dim_4
                                     color: 0,0,0,1
-                                    font_size: 0.03*app.width
+                                    font_size:dp(0.03*app.width)
                                     markup: True
                                     halign: "left"
                                     valign: "middle"
@@ -314,7 +314,7 @@ Builder.load_string(
                             
                             # image box
                             BoxLayout:
-                                padding: 0
+                                padding:dp(0)
                                 size: self.parent.size
                                 pos: self.parent.pos
                                 Image:
@@ -328,7 +328,7 @@ Builder.load_string(
                         size_hint: (None,None)
                         width: dp(0.84375*app.width)
                         height: dp(0.00625*app.height)
-                        padding: 0
+                        padding:dp(0)
                         spacing: 0
                         orientation: 'horizontal'
                         pos: self.parent.pos
@@ -356,7 +356,7 @@ Builder.load_string(
                             opacity: 1
                             on_press: root.get_info()
                             BoxLayout:
-                                padding: 0
+                                padding:dp(0)
                                 size: self.parent.size
                                 pos: self.parent.pos
                                 Image:
@@ -375,7 +375,7 @@ Builder.load_string(
                         background_color: hex('#F4433600')
                         on_press: root.go_back()
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -392,7 +392,7 @@ Builder.load_string(
                         background_color: hex('#F4433600')
                         on_press: root.check_dimensions()
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:

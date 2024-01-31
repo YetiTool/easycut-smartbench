@@ -33,7 +33,7 @@ Builder.load_string(
     color: 0,0,0,1
     halign: 'left'
     markup: 'True'
-    font_size: 0.0225*app.width
+    font_size:dp(0.0225*app.width)
     font_name: 'KRFont'
 
 <BuildInfoScreen>
@@ -82,11 +82,11 @@ Builder.load_string(
                 pos: self.pos
 
         BoxLayout:
-            padding: 0
+            padding:dp(0)
             spacing:0.0208333333333*app.height
             orientation: "vertical"
             BoxLayout:
-                padding: 0
+                padding:dp(0)
                 spacing: 0
                 canvas:
                     Color:
@@ -102,7 +102,7 @@ Builder.load_string(
                     text: "System Information"
                     color: hex('#f9f9f9ff')
                     # color: hex('#333333ff') #grey
-                    font_size: 0.0375*app.width
+                    font_size:dp(0.0375*app.width)
                     halign: "center"
                     valign: "bottom"
                     markup: True
@@ -160,7 +160,7 @@ Builder.load_string(
                                     halign: "left"
                                     valign: "middle"
                                     markup: True
-                                    font_size: 0.0375*app.width
+                                    font_size:dp(0.0375*app.width)
                                     color: hex('#333333ff')
                                     shorten_from: 'right'
                                     shorten: True
@@ -182,7 +182,7 @@ Builder.load_string(
                         halign: "left"
                         valign: "middle"
                         markup: True
-                        font_size: 0.03*app.width
+                        font_size:dp(0.03*app.width)
                         size_hint_y: None
                         height: dp(0.0*app.height)
                         size_hint_x: None
@@ -231,7 +231,7 @@ Builder.load_string(
                                     halign: "left"
                                     valign: "middle"
                                     markup: True
-                                    font_size: 0.03*app.width
+                                    font_size:dp(0.03*app.width)
                                     shorten_from: 'right'
                                     shorten: True
 
@@ -251,7 +251,7 @@ Builder.load_string(
                         halign: "left"
                         valign: "middle"
                         markup: True
-                        font_size: 0.025*app.width
+                        font_size:dp(0.025*app.width)
                         size_hint_y: None
                         height: dp(0.0*app.height)
                         size_hint_x: None
@@ -282,7 +282,7 @@ Builder.load_string(
                             halign: "left"
                             valign: "middle"
                             markup: True
-                            font_size: 0.025*app.width
+                            font_size:dp(0.025*app.width)
 
                         Label:
                             id: smartbench_model
@@ -292,7 +292,7 @@ Builder.load_string(
                             halign: "left"
                             valign: "middle"
                             markup: True
-                            font_size: 0.025*app.width
+                            font_size:dp(0.025*app.width)
 
                         Label:
                             id: serial_number_header
@@ -302,7 +302,7 @@ Builder.load_string(
                             halign: "left"
                             valign: "middle"
                             markup: True
-                            font_size: 0.025*app.width
+                            font_size:dp(0.025*app.width)
                         Label:
                             id: machine_serial_number_label
                             color: hex('#333333ff')
@@ -311,7 +311,7 @@ Builder.load_string(
                             halign: "left"
                             valign: "middle"
                             markup: True
-                            font_size: 0.025*app.width
+                            font_size:dp(0.025*app.width)
 
                         Label:
                             id: console_serial_number_header
@@ -320,7 +320,7 @@ Builder.load_string(
                             halign: "left"
                             valign: "middle"
                             markup: True
-                            font_size: 0.025*app.width
+                            font_size:dp(0.025*app.width)
                         Label:
                             id: console_serial_number
                             text: '-'
@@ -329,7 +329,7 @@ Builder.load_string(
                             halign: "left"
                             valign: "middle"
                             markup: True
-                            font_size: 0.025*app.width
+                            font_size:dp(0.025*app.width)
                         Label: 
                             id: software_header
                             text: '[b]Software[/b]'
@@ -338,7 +338,7 @@ Builder.load_string(
                             halign: "left"
                             valign: "middle"
                             markup: True
-                            font_size: 0.025*app.width
+                            font_size:dp(0.025*app.width)
                         Label:
                             id: sw_version_label
                             color: hex('#333333ff')
@@ -348,7 +348,7 @@ Builder.load_string(
                             markup: True
                             text_size: self.size
                             markup: 'True'
-                            font_size: 0.025*app.width
+                            font_size:dp(0.025*app.width)
                         Label: 
                             id: platform_header
                             text: '[b]Platform[/b]'
@@ -357,7 +357,7 @@ Builder.load_string(
                             halign: "left"
                             valign: "middle"
                             markup: True
-                            font_size: 0.025*app.width
+                            font_size:dp(0.025*app.width)
                         Label: 
                             id: pl_version_label
                             color: hex('#333333ff')
@@ -367,7 +367,7 @@ Builder.load_string(
                             markup: True
                             text_size: self.size
                             markup: 'True'
-                            font_size: 0.025*app.width
+                            font_size:dp(0.025*app.width)
                         Label: 
                             id: firmware_header
                             text: '[b]Firmware[/b]'
@@ -376,7 +376,7 @@ Builder.load_string(
                             halign: "left"
                             valign: "middle"
                             markup: True
-                            font_size: 0.025*app.width
+                            font_size:dp(0.025*app.width)
                         Label: 
                             id: fw_version_label
                             color: hex('#333333ff')
@@ -386,7 +386,7 @@ Builder.load_string(
                             markup: True
                             text_size: self.size
                             markup: 'True'
-                            font_size: 0.025*app.width
+                            font_size:dp(0.025*app.width)
                         Label: 
                             id: zhead_header
                             text: '[b]Z head[/b]'
@@ -395,7 +395,7 @@ Builder.load_string(
                             halign: "left"
                             valign: "middle"
                             markup: True
-                            font_size: 0.025*app.width
+                            font_size:dp(0.025*app.width)
                         Label: 
                             id: zh_version_label
                             color: hex('#333333ff')
@@ -405,7 +405,7 @@ Builder.load_string(
                             markup: True
                             text_size: self.size
                             markup: 'True'
-                            font_size: 0.025*app.width
+                            font_size:dp(0.025*app.width)
                         Label: 
                             id: hardware_header
                             text: '[b]Hardware[/b]'
@@ -414,7 +414,7 @@ Builder.load_string(
                             halign: "left"
                             valign: "middle"
                             markup: True
-                            font_size: 0.025*app.width
+                            font_size:dp(0.025*app.width)
                         Label: 
                             id: hw_version_label
                             color: hex('#333333ff')
@@ -424,13 +424,13 @@ Builder.load_string(
                             markup: True
                             text_size: self.size
                             markup: 'True'
-                            font_size: 0.025*app.width
+                            font_size:dp(0.025*app.width)
 
                 BoxLayout:
                     size_hint: (None,None)
                     width: dp(0.2625*app.width)
                     height: dp(0.583333333333*app.height)
-                    padding: 0
+                    padding:dp(0)
                     spacing:0.0416666666667*app.height
                     orientation: 'vertical'
 
@@ -500,7 +500,7 @@ Builder.load_string(
                         size_hint: (None, None)
                         height: dp(0.166666666667*app.height)
                         width: dp(0.2625*app.width)
-                        padding:[0, 0]
+                        padding:(dp(0),dp(0))
 
                         Label: 
                             font_size: str(0.01875 * app.width) + 'sp'
@@ -513,7 +513,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 width: dp(1.0*app.width)
                 height: dp(0.166666666667*app.height)
-                padding: 0
+                padding:dp(0)
                 spacing:0.0125*app.width
                 orientation: 'horizontal'
 
@@ -521,7 +521,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(0.1*app.width)
                     height: dp(0.166666666667*app.height)
-                    padding: 0
+                    padding:dp(0)
                     spacing: 0
 
                     BoxLayout: 
@@ -539,7 +539,7 @@ Builder.load_string(
                             pos: self.parent.pos
                             on_press: root.go_back()
                             BoxLayout:
-                                padding: 0
+                                padding:dp(0)
                                 size: self.parent.size
                                 pos: self.parent.pos
                                 Image:
@@ -561,7 +561,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(0.1*app.width)
                     height: dp(0.166666666667*app.height)
-                    padding: 0
+                    padding:dp(0)
                     spacing: 0
 
                     BoxLayout: 
@@ -579,7 +579,7 @@ Builder.load_string(
                             pos: self.parent.pos
                             on_press: root.exit_app()
                             BoxLayout:
-                                padding: 0
+                                padding:dp(0)
                                 size: self.parent.size
                                 pos: self.parent.pos
                                 Image:

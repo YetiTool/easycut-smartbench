@@ -33,7 +33,7 @@ Builder.load_string(
         
         BoxLayout:
             spacing: 0
-            padding: 0
+            padding:dp(0)
             size_hint_y: 1
             orientation: 'vertical'
             canvas:
@@ -62,7 +62,7 @@ Builder.load_string(
             
         BoxLayout:
             spacing: 0
-            padding: 0
+            padding:dp(0)
             size_hint_y: 2
             orientation: 'vertical'
             canvas:

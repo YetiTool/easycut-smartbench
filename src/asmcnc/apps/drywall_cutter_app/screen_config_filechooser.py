@@ -45,7 +45,7 @@ Builder.load_string("""
     file_selected_label : file_selected_label
 
     BoxLayout:
-        padding: 0
+        padding:dp(0)
         spacing: 10
         size: root.size
         pos: root.pos
@@ -100,13 +100,13 @@ Builder.load_string("""
                         size_hint_y: None
                         height: self.texture_size[1]
                         text_size: self.width, None
-                        padding: 10, 10
+                        padding:(dp(0),dp(1))
                         markup: True
 
 
         BoxLayout:
             size_hint_y: None
-            height: 100
+            height:dp(100)
 
             ToggleButton:
                 id: toggle_view_button
@@ -114,7 +114,7 @@ Builder.load_string("""
                 on_press: root.switch_view()
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding: 25
+                    padding:dp(25)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -131,7 +131,7 @@ Builder.load_string("""
                 on_press: root.switch_sort()
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding: 25
+                    padding:dp(25)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -147,7 +147,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding: 25
+                    padding:dp(25)
                     size: self.parent.size
                     pos: self.parent.pos
                     
@@ -156,7 +156,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding: 25
+                    padding:dp(25)
                     size: self.parent.size
                     pos: self.parent.pos
                     
@@ -171,7 +171,7 @@ Builder.load_string("""
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding: 25
+                    padding:dp(25)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -192,7 +192,7 @@ Builder.load_string("""
                     root.delete_popup(file_selection = 'all')
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding: 25
+                    padding:dp(25)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -212,7 +212,7 @@ Builder.load_string("""
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding: 25
+                    padding:dp(25)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -232,7 +232,7 @@ Builder.load_string("""
                     root.load_config_and_return_to_dwt()
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding: 25
+                    padding:dp(25)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:

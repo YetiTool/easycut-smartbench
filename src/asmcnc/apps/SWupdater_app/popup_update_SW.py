@@ -19,6 +19,8 @@ from kivy.clock import Clock
 from kivy.graphics import Color, Rectangle
 from kivy.core.window import Window
 
+from asmcnc.core_UI import scaling_utils
+
 
 class PopupBetaUpdate(Widget):
     def __init__(self, screen_manager, wifi_or_usb):
@@ -39,7 +41,7 @@ class PopupBetaUpdate(Widget):
             elif wifi_or_usb == "usb":
                 self.sm.get_screen("update").get_sw_update_over_usb()
 
-        if Window.height >= 800: #Console 10"
+        if scaling_utils.Height >= 800: #Console 10"
             image_source = "./asmcnc/apps/shapeCutter_app/img/error_icon_scaled_up.png"
         else:
             image_source = "./asmcnc/apps/shapeCutter_app/img/error_icon.png"
@@ -49,8 +51,8 @@ class PopupBetaUpdate(Widget):
         )
         label = Label(
             size_hint_y = 2.0,
-            font_size = str(15.0 / 800.0 * Window.width) + "sp",
-            text_size = (620.0 / 800.0 * Window.width, None),
+            font_size = str(15.0 / 800.0 * scaling_utils.Width) + "sp",
+            text_size = (620.0 / 800.0 * scaling_utils.Width, None),
             halign="center",
             valign="middle",
             text=description,
@@ -59,17 +61,17 @@ class PopupBetaUpdate(Widget):
             markup=True,
         )
 
-        ok_button = Button(text="[b]Yes[/b]", markup=True, font_size = str(15.0 / 800 * Window.width) + "sp")
+        ok_button = Button(text="[b]Yes[/b]", markup=True, font_size = str(15.0 / 800 * scaling_utils.Width) + "sp")
         ok_button.background_normal = ""
         ok_button.background_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
-        back_button = Button(text="[b]No[/b]", markup=True, font_size = str(15.0 / 800 * Window.width) + "sp")
+        back_button = Button(text="[b]No[/b]", markup=True, font_size = str(15.0 / 800 * scaling_utils.Width) + "sp")
         back_button.background_normal = ""
         back_button.background_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
 
         btn_layout = BoxLayout(
-            orientation="horizontal", spacing= 15.0 / 800.0 * Window.width, padding=[
+            orientation="horizontal", spacing= 15.0 / 800.0 * scaling_utils.Width, padding=[
                                                                                 0,
-                                                                                5.0 / 480.0 * Window.height, 
+                                                                                5.0 / 480.0 * scaling_utils.Height, 
                                                                                 0, 
                                                                                 0]
         )
@@ -77,10 +79,10 @@ class PopupBetaUpdate(Widget):
         btn_layout.add_widget(ok_button)
 
         layout_plan = BoxLayout(
-            orientation="vertical", spacing= 10.0 / 800.0 * Window.width, padding=[
-                                                                                30.0 / 800.0 * Window.width, 
-                                                                                20.0 / 480.0 * Window.height, 
-                                                                                30.0 / 800.0 * Window.width, 
+            orientation="vertical", spacing= 10.0 / 800.0 * scaling_utils.Width, padding=[
+                                                                                30.0 / 800.0 * scaling_utils.Width, 
+                                                                                20.0 / 480.0 * scaling_utils.Height, 
+                                                                                30.0 / 800.0 * scaling_utils.Width, 
                                                                                 0]
         )
         layout_plan.add_widget(img)
@@ -90,18 +92,18 @@ class PopupBetaUpdate(Widget):
         popup = Popup(
             title="Warning!",
             title_color=[0, 0, 0, 1],
-            title_size=str(20.0 / 800.0 * Window.width) + "sp",
+            title_size=str(20.0 / 800.0 * scaling_utils.Width) + "sp",
             content=layout_plan,
             size_hint=(None, None),
             size=(
-                700.0 / 800.0 * Window.width, 
-                450.0 / 480.0 * Window.height
+                700.0 / 800.0 * scaling_utils.Width, 
+                450.0 / 480.0 * scaling_utils.Height
                 ),
             auto_dismiss=False,
         )
 
         popup.separator_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
-        popup.separator_height = str(4.0 / 480 * Window.height) + "dp"
+        popup.separator_height = str(4.0 / 480 * scaling_utils.Height) + "dp"
         popup.background = "./asmcnc/apps/shapeCutter_app/img/popup_background.png"
 
         ok_button.bind(on_press=popup.dismiss)

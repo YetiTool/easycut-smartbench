@@ -60,7 +60,7 @@ Builder.load_string(
             background_normal: "./asmcnc/apps/systemTools_app/img/system_info.png"
             background_down: "./asmcnc/apps/systemTools_app/img/system_info.png"
             padding_y: 5.0/800.0*app.width
-            border: (0,0,0,0)
+            border:(dp(0),dp(0),dp(0),dp(0))
 
         Button:
             id: button_reboot
@@ -74,7 +74,7 @@ Builder.load_string(
             background_normal: "./asmcnc/apps/systemTools_app/img/reboot_console.png"
             background_down: "./asmcnc/apps/systemTools_app/img/reboot_console.png"
             padding_y: 5.0/800.0*app.width
-            border: (0,0,0,0)
+            border:(dp(0),dp(0),dp(0),dp(0))
 
         Button:
             id: button_support_menu
@@ -88,7 +88,7 @@ Builder.load_string(
             background_normal: "./asmcnc/apps/systemTools_app/img/support.png"
             background_down: "./asmcnc/apps/systemTools_app/img/support.png"
             padding_y: 5.0/800.0*app.width
-            border: (0,0,0,0)
+            border:(dp(0),dp(0),dp(0),dp(0))
 
         Button:
             id: button_exit_software
@@ -102,7 +102,7 @@ Builder.load_string(
             background_normal: "./asmcnc/apps/systemTools_app/img/quit_to_console.png"
             background_down: "./asmcnc/apps/systemTools_app/img/quit_to_console.png"
             padding_y: 5.0/800.0*app.width
-            border: (0,0,0,0)
+            border:(dp(0),dp(0),dp(0),dp(0))
 
         Button:
             id: button_usb_first_aid
@@ -116,7 +116,7 @@ Builder.load_string(
             background_normal: "./asmcnc/apps/systemTools_app/img/usb_first_aid.png"
             background_down: "./asmcnc/apps/systemTools_app/img/usb_first_aid.png"
             padding_y: 5.0/800.0*app.width
-            border: (0,0,0,0)
+            border:(dp(0),dp(0),dp(0),dp(0))
 
         Button:
             id: button_beta_testing
@@ -130,7 +130,7 @@ Builder.load_string(
             background_normal: "./asmcnc/apps/systemTools_app/img/beta_testing.png"
             background_down: "./asmcnc/apps/systemTools_app/img/beta_testing.png"
             padding_y: 5.0/800.0*app.width
-            border: (0,0,0,0)
+            border:(dp(0),dp(0),dp(0),dp(0))
 
         Button:
             id: button_grbl_settings
@@ -144,7 +144,7 @@ Builder.load_string(
             background_normal: "./asmcnc/apps/systemTools_app/img/grbl_settings.png"
             background_down: "./asmcnc/apps/systemTools_app/img/grbl_settings.png"
             padding_y: 5.0/800.0*app.width
-            border: (0,0,0,0)
+            border:(dp(0),dp(0),dp(0),dp(0))
 
         Button:
             id: button_factory
@@ -158,7 +158,7 @@ Builder.load_string(
             background_normal: "./asmcnc/apps/systemTools_app/img/factory.png"
             background_down: "./asmcnc/apps/systemTools_app/img/factory.png"
             padding_y: 5.0/800.0*app.width
-            border: (0,0,0,0)
+            border:(dp(0),dp(0),dp(0),dp(0))
 
         # Button:
         #     id: button_update_testing
@@ -172,7 +172,7 @@ Builder.load_string(
         #     background_normal: "./asmcnc/apps/systemTools_app/img/update_developer.png"
         #     background_down: "./asmcnc/apps/systemTools_app/img/update_developer.png"
         #     padding_y: 5.0/800.0*app.width
-        #     border: (0,0,0,0)
+        #     border:(dp(0),dp(0),dp(0),dp(0))
 
 
         Button:
@@ -188,7 +188,7 @@ Builder.load_string(
             background_normal: "./asmcnc/apps/systemTools_app/img/developer.png"
             background_down: "./asmcnc/apps/systemTools_app/img/developer.png"
             padding_y: 5.0/800.0*app.width
-            border: (0,0,0,0)
+            border:(dp(0),dp(0),dp(0),dp(0))
 
         Button:
             id: button_go_back
@@ -202,7 +202,7 @@ Builder.load_string(
             background_normal: "./asmcnc/apps/systemTools_app/img/exit_system_tools.png"
             background_down: "./asmcnc/apps/systemTools_app/img/exit_system_tools.png"
             padding_y: 5.0/800.0*app.width
-            border: (0,0,0,0)
+            border:(dp(0),dp(0),dp(0),dp(0))
 
 """
 )

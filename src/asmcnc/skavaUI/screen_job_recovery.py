@@ -99,7 +99,7 @@ Builder.load_string(
                                     self.background_color = hex('#F4433600')
                                     root.stop_scrolling_up()
                                 BoxLayout:
-                                    padding: 0
+                                    padding:dp(0)
                                     size: self.parent.size
                                     pos: self.parent.pos
                                     Image:
@@ -119,7 +119,7 @@ Builder.load_string(
                                     root.stop_scrolling_down()
                                     self.background_color = hex('#F4433600')
                                 BoxLayout:
-                                    padding: 0
+                                    padding:dp(0)
                                     size: self.parent.size
                                     pos: self.parent.pos
                                     Image:

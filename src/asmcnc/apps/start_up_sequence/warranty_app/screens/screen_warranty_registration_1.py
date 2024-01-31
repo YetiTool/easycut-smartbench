@@ -42,13 +42,13 @@ Builder.load_string(
 				pos: self.pos
 
 		BoxLayout:
-			padding: 0
+			padding:dp(0)
 			spacing: 0
 			orientation: "vertical"
 
 			# HEADER
 			BoxLayout:
-				padding: 0
+				padding:dp(0)
 				spacing: 0
 				canvas:
 					Color:
@@ -117,7 +117,7 @@ Builder.load_string(
 						orientation: 'horizontal'
 						width: dp(1.0*app.width)
 						height: dp(0.275*app.height)
-						# padding: [20, 0]
+						# padding:(dp(20),dp(0))
 						size_hint: (None,None)
 						spacing: 0
 
@@ -137,7 +137,7 @@ Builder.load_string(
 							orientation: 'vertical'
 							width: dp(0.7475*app.width)
 							height: dp(0.275*app.height)
-							padding:[0, 0, 0, 0]
+							padding:(dp(0),dp(0),dp(0),dp(0))
 							size_hint: (None,None)
 
 							Label:
@@ -198,7 +198,7 @@ Builder.load_string(
 						on_press: root.prev_screen()
 						opacity: 1
 						BoxLayout:
-							padding: 0
+							padding:dp(0)
 							size: self.parent.size
 							pos: self.parent.pos
 							Image:

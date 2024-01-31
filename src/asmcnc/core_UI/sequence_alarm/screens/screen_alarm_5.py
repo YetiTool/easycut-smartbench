@@ -25,7 +25,7 @@ Builder.load_string(
 			pos: self.pos
 	BoxLayout:
 		orientation: 'vertical'
-		padding: 0
+		padding:dp(0)
 		spacing: 0
 		size_hint: (None, None)
 		height: dp(1.0*app.height)
@@ -124,7 +124,7 @@ Builder.load_string(
 					pos: self.parent.pos
 					on_press: root.prev_screen()
 					BoxLayout:
-						padding: 0
+						padding:dp(0)
 						size: self.parent.size
 						pos: self.parent.pos
 						Image:
@@ -169,7 +169,7 @@ Builder.load_string(
 					pos: self.parent.pos
 					on_press: root.next_screen()
 					BoxLayout:
-						padding: 0
+						padding:dp(0)
 						size: self.parent.size
 						pos: self.parent.pos
 						Image:

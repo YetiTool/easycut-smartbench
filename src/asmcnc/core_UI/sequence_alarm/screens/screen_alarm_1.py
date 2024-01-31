@@ -25,7 +25,7 @@ Builder.load_string(
 			pos: self.pos
 	BoxLayout:
 		orientation: 'vertical'
-		padding: 0
+		padding:dp(0)
 		spacing: 0
 		size_hint: (None, None)
 		height: dp(1.0*app.height)

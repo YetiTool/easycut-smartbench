@@ -52,11 +52,11 @@ Builder.load_string("""
                 pos: self.pos
 
         BoxLayout:
-            padding: 0
+            padding:dp(0)
             spacing: 10
             orientation: "vertical"
             BoxLayout:
-                padding: 0
+                padding:dp(0)
                 spacing: 0
                 canvas:
                     Color:
@@ -70,7 +70,7 @@ Builder.load_string("""
                     width: dp(800)
                     text: "Update Testing"
                     color: hex('#f9f9f9ff')
-                    font_size: 30
+                    font_size:dp(30)
                     halign: "center"
                     valign: "bottom"
                     markup: True
@@ -79,7 +79,7 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(800)
                 height: dp(320)
-                padding: 20
+                padding:dp(20)
                 spacing: 0
                 orientation: 'vertical'
 
@@ -149,7 +149,7 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(800)
                 height: dp(80)
-                padding: 0
+                padding:dp(0)
                 spacing: 10
                 orientation: 'horizontal'
 
@@ -157,14 +157,14 @@ Builder.load_string("""
                     size_hint: (None,None)
                     width: dp(80)
                     height: dp(80)
-                    padding: 0
+                    padding:dp(0)
                     spacing: 0
 
                     BoxLayout: 
                         size_hint: (None, None)
                         height: dp(80)
                         width: dp(80)
-                        padding: [10, 10, 10, 10]
+                        padding:(dp(10),dp(10),dp(10),dp(10))
                         Button:
                             size_hint: (None,None)
                             height: dp(52)
@@ -174,7 +174,7 @@ Builder.load_string("""
                             pos: self.parent.pos
                             on_press: root.go_back()
                             BoxLayout:
-                                padding: 0
+                                padding:dp(0)
                                 size: self.parent.size
                                 pos: self.parent.pos
                                 Image:
@@ -188,7 +188,7 @@ Builder.load_string("""
                     size_hint: (None,None)
                     width: dp(620)
                     height: dp(80)
-                    padding: 10
+                    padding:dp(10)
                     spacing: 0
                     orientation: 'vertical'
                     ScrollableLabelOSOutput:
@@ -198,14 +198,14 @@ Builder.load_string("""
                     size_hint: (None,None)
                     width: dp(80)
                     height: dp(80)
-                    padding: 0
+                    padding:dp(0)
                     spacing: 0
 
                     BoxLayout: 
                         size_hint: (None, None)
                         height: dp(80)
                         width: dp(80)
-                        padding: [19, 10, 10, 10]
+                        padding:(dp(19),dp(10),dp(10),dp(10))
                         Button:
                             size_hint: (None,None)
                             height: dp(60)
@@ -215,7 +215,7 @@ Builder.load_string("""
                             pos: self.parent.pos
                             on_press: root.exit_app()
                             BoxLayout:
-                                padding: 0
+                                padding:dp(0)
                                 size: self.parent.size
                                 pos: self.parent.pos
                                 Image:

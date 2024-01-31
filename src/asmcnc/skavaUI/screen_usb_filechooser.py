@@ -42,7 +42,7 @@ Builder.load_string(
 
 
     BoxLayout:
-        padding: 0
+        padding:dp(0)
         spacing: 0
         size: root.size
         pos: root.pos

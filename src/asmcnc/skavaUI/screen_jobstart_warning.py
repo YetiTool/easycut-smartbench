@@ -46,12 +46,12 @@ Builder.load_string(
                 pos: self.pos
 
         BoxLayout:
-            padding: 0
+            padding:dp(0)
             orientation: "vertical"
             spacing:0.0208333333333*app.height
 
             BoxLayout:
-                padding: 0
+                padding:dp(0)
                 spacing: 0
                 canvas:
                     Color:
@@ -66,7 +66,7 @@ Builder.load_string(
                     width: dp(1.0*app.width)
                     text: "Safety Warning"
                     color: hex('#f9f9f9ff')
-                    font_size: 0.0375*app.width
+                    font_size:dp(0.0375*app.width)
                     halign: "center"
                     valign: "bottom"
                     markup: True
@@ -131,7 +131,7 @@ Builder.load_string(
                         size_hint_x: 0.75
 
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size_hint_x: 0.27
                             Image:
                                 keep_ratio: True

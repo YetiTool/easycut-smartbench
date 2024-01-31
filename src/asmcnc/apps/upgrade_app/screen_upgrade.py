@@ -61,7 +61,7 @@ Builder.load_string(
                     opacity: 1
                     on_press: root.quit_to_lobby()
                     BoxLayout:
-                        padding: 0
+                        padding:dp(0)
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:
@@ -116,7 +116,7 @@ Builder.load_string(
                     Label:
                         id: error_label
                         size_hint_y: 0
-                        height: 0
+                        height:dp(0)
                         font_size: dp(0.02875*app.width)
                         color: 1,0,0,1
                         halign: 'center'
@@ -150,7 +150,7 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint_y: 0
-                    height: 0
+                    height:dp(0)
 
 """
 )

@@ -13,6 +13,8 @@ from kivy.uix.spinner import Spinner, SpinnerOption
 from kivy.clock import Clock
 import socket, sys, os
 from kivy.properties import StringProperty, ObjectProperty
+
+from asmcnc.core_UI import scaling_utils
 from asmcnc.skavaUI import popup_info
 from kivy.core.window import Window
 
@@ -109,7 +111,7 @@ Builder.load_string(
                     Label:
                         id: ip_address_label
                         color: 1,1,1,1
-                        font_size: 0.0225*app.width
+                        font_size:dp(0.0225*app.width)
                         markup: True
                         halign: "center"
                         valign: "middle"
@@ -120,7 +122,7 @@ Builder.load_string(
                     Label:
                         id: ip_status_label
                         color: 1,1,1,1
-                        font_size: 0.0225*app.width
+                        font_size:dp(0.0225*app.width)
                         markup: True
                         halign: "center"
                         valign: "middle"
@@ -164,7 +166,7 @@ Builder.load_string(
                                 id: network_name_label
                                 width: dp(0.18875*app.width)
                                 color: 0,0,0,1
-                                font_size: 0.025*app.width
+                                font_size:dp(0.025*app.width)
                                 markup: True
                                 halign: "left"
                                 valign: "middle"
@@ -188,7 +190,7 @@ Builder.load_string(
                                 pos: self.parent.pos
                                 on_press: root.refresh_available_networks()
                                 BoxLayout:
-                                    padding: 0
+                                    padding:dp(0)
                                     size: self.parent.size
                                     pos: self.parent.pos
                                     Image:
@@ -202,7 +204,7 @@ Builder.load_string(
                         size_hint: (None,None)
                         height: dp(0.0833333333333*app.height)
                         width: dp(0.2625*app.width)
-                        padding:[0, 0, 0, 0]
+                        padding:(dp(0),dp(0),dp(0),dp(0))
                         orientation: 'horizontal'
                         id: network_name_input
                         
@@ -243,7 +245,7 @@ Builder.load_string(
                             size_hint: (None,None)
                             height: dp(0.0833333333333*app.height)
                             width: dp(0.2625*app.width)
-                            padding:[0, 0, 0, 0]
+                            padding:(dp(0),dp(0),dp(0),dp(0))
                             id: custom_network_name_box
                             
                             TextInput: 
@@ -268,7 +270,7 @@ Builder.load_string(
                         ToggleButton:
                             id: custom_ssid_button
                             on_release: root.custom_ssid_input()
-                            font_size: 0.025*app.width
+                            font_size:dp(0.025*app.width)
                             color: hex('#f9f9f9ff')
                             markup: True
                             background_normal: "./asmcnc/apps/wifi_app/img/CustomSSID_blank.png"
@@ -285,7 +287,7 @@ Builder.load_string(
                     Label:
                         id: password_label
                         color: 0,0,0,1
-                        font_size: 0.025*app.width
+                        font_size:dp(0.025*app.width)
                         markup: True
                         halign: "left"
                         valign: "middle"
@@ -297,7 +299,7 @@ Builder.load_string(
                         size_hint: (None,None)
                         height: dp(0.0833333333333*app.height)
                         width: dp(0.2625*app.width)
-                        padding:[0, 0, 0, 0]
+                        padding:(dp(0),dp(0),dp(0),dp(0))
                                     
                         TextInput: 
                             id: _password
@@ -321,7 +323,7 @@ Builder.load_string(
                     Label:
                         id: country_label
                         color: 0,0,0,1
-                        font_size: 0.025*app.width
+                        font_size:dp(0.025*app.width)
                         markup: True
                         halign: "left"
                         valign: "middle"
@@ -443,7 +445,7 @@ Builder.load_string(
                         pos: self.parent.pos
                         on_press: root.quit_to_lobby()
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -457,7 +459,7 @@ Builder.load_string(
 
 
 class WifiScreen(Screen):
-    default_font_size = 20.0 / 800.0 * Window.width
+    default_font_size = 20.0 / 800.0 * scaling_utils.Width
     IP_REPORT_INTERVAL = 2
     status_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
     network_name = ObjectProperty()
@@ -1043,18 +1045,18 @@ class WifiScreen(Screen):
         self.custom_ssid_input()
         self.custom_network_name.hint_text = self.l.get_str("Enter network name")
         self.update_hint_font_size(self.custom_network_name)
-        self.update_button_font_size(self.connect_button, 28.0 / 800.0 * Window.width, 10)
-        self.update_button_font_size(self.custom_ssid_button, 20.0 / 800.0 * Window.width, 20)
+        self.update_button_font_size(self.connect_button, 28.0 / 800.0 * scaling_utils.Width, 10)
+        self.update_button_font_size(self.custom_ssid_button, 20.0 / 800.0 * scaling_utils.Width, 20)
 
     def update_hint_font_size(self, value):
         if value.hint_text:
             if len(value.hint_text) > 22:
-                value.font_size = (self.default_font_size - (3 / 800*Window.width))/ 800.0 * Window.width
+                value.font_size = str((self.default_font_size - (3 / 800*scaling_utils.Width))/ 800.0 * scaling_utils.Width) + 'sp'
 
     def update_button_font_size(self, value, default_size, max_length):
-        value.font_size = default_size
+        value.font_size = str(default_size) + 'sp'
         if len(value.text) > max_length:
-            value.font_size = 19.0 / 800.0 * Window.width
+            value.font_size = str(19.0 / 800.0 * scaling_utils.Width) + 'sp'
 
     def get_rst_source(self):
         try:

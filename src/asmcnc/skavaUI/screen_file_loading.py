@@ -48,7 +48,7 @@ Builder.load_string(
              
     BoxLayout:
         orientation: 'vertical'
-        padding: 0
+        padding:dp(0)
         spacing: 0
         size_hint_x: 1
 

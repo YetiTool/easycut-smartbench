@@ -61,12 +61,12 @@ Builder.load_string(
                             allow_stretch: False
 
         BoxLayout:
-            padding:[0, 0]
+            padding:(dp(0),dp(0))
             size_hint_x: 0.025
             
             BoxLayout:
                 size_hint_x: None
-                width: 0.0025*app.width
+                width:dp(0.0025*app.width)
                 canvas:
                     Color:
                         rgba: hex('#ccccccff')

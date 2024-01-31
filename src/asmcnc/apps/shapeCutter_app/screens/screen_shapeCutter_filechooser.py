@@ -32,7 +32,7 @@ Builder.load_string(
     image_view : image_view
 
     BoxLayout:
-        padding: 0
+        padding:dp(0)
         spacing:0.0208333333333*app.height
         size: root.size
         pos: root.pos

@@ -46,13 +46,13 @@ Builder.load_string(
 
 
 		BoxLayout:
-			padding: 0
+			padding:dp(0)
 			spacing: 0
 			orientation: "vertical"
 
 			# HEADER
 			BoxLayout:
-				padding: 0
+				padding:dp(0)
 				spacing: 0
 				canvas:
 					Color:
@@ -159,7 +159,7 @@ Builder.load_string(
 						pos: self.parent.pos
 						on_press: root.prev_screen()
 						BoxLayout:
-							padding: 0
+							padding:dp(0)
 							size: self.parent.size
 							pos: self.parent.pos
 							Image:

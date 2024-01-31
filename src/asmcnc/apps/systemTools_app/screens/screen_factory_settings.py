@@ -67,11 +67,11 @@ Builder.load_string(
                 pos: self.pos
 
         BoxLayout:
-            padding: 0
+            padding:dp(0)
             spacing:0.0208333333333*app.height
             orientation: "vertical"
             BoxLayout:
-                padding: 0
+                padding:dp(0)
                 spacing: 0
                 canvas:
                     Color:
@@ -85,7 +85,7 @@ Builder.load_string(
                     width: dp(1.0*app.width)
                     text: "Factory settings"
                     color: hex('#f9f9f9ff')
-                    font_size: 0.0375*app.width
+                    font_size:dp(0.0375*app.width)
                     halign: "center"
                     valign: "bottom"
                     markup: True
@@ -99,14 +99,14 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(0.721875*app.width)
                     height: dp(0.666666666667*app.height)
-                    padding: 0
+                    padding:dp(0)
                     spacing:0.0208333333333*app.height
                     orientation: 'vertical'
                     BoxLayout:
                         size_hint: (None,None)
                         width: dp(0.721875*app.width)
                         height: dp(0.479166666667*app.height)
-                        padding: 0
+                        padding:dp(0)
                         spacing: 0
                         orientation: 'vertical'
 
@@ -291,7 +291,7 @@ Builder.load_string(
                             pos: self.parent.pos
                             cols: 3
                             rows: 0
-                            padding: 0
+                            padding:dp(0)
                             spacing:0.0125*app.width
 
                             Button:
@@ -305,7 +305,7 @@ Builder.load_string(
                                 pos: self.parent.pos
                                 cols: 0
                                 rows: 3
-                                padding: 0
+                                padding:dp(0)
                                 spacing:0.0025*app.width
                                 Label:
                                     font_size: str(0.01875 * app.width) + 'sp'
@@ -329,7 +329,7 @@ Builder.load_string(
                                 pos: self.parent.pos
                                 cols: 0
                                 rows: 3
-                                padding: 0
+                                padding:dp(0)
                                 spacing:0.0025*app.width
                                 Label:
                                     font_size: str(0.01875 * app.width) + 'sp'
@@ -487,7 +487,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 width: dp(1.0*app.width)
                 height: dp(0.166666666667*app.height)
-                padding: 0
+                padding:dp(0)
                 spacing:0.0125*app.width
                 orientation: 'horizontal'
 
@@ -495,7 +495,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(0.1*app.width)
                     height: dp(0.166666666667*app.height)
-                    padding: 0
+                    padding:dp(0)
                     spacing: 0
 
                     BoxLayout: 
@@ -513,7 +513,7 @@ Builder.load_string(
                             pos: self.parent.pos
                             on_press: root.go_back()
                             BoxLayout:
-                                padding: 0
+                                padding:dp(0)
                                 size: self.parent.size
                                 pos: self.parent.pos
                                 Image:
@@ -540,7 +540,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(0.1*app.width)
                     height: dp(0.166666666667*app.height)
-                    padding: 0
+                    padding:dp(0)
                     spacing: 0
 
                     BoxLayout: 
@@ -558,7 +558,7 @@ Builder.load_string(
                             pos: self.parent.pos
                             on_press: root.exit_app()
                             BoxLayout:
-                                padding: 0
+                                padding:dp(0)
                                 size: self.parent.size
                                 pos: self.parent.pos
                                 Image:

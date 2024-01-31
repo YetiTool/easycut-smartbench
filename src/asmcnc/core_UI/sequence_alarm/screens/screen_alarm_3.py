@@ -70,7 +70,7 @@ Builder.load_string(
                         pos: self.parent.pos
                         on_press: root.prev_screen()
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -111,7 +111,7 @@ Builder.load_string(
             y: 321.60 / 480 * app.height
             size_hint: None, None
             height: dp(100.0/480.0)*app.height
-            width: 0.15*app.width
+            width:dp(0.15*app.width)
             allow_stretch: True
             opacity: 1
     # FloatLayout:
@@ -120,8 +120,8 @@ Builder.load_string(
  #            x: 680
  #            y: 238.6
  #            size_hint: None, None
- #            height: 63
- #            width: 100
+ #            height:dp(63)
+ #            width:dp(100)
  #            allow_stretch: True
 """
 )

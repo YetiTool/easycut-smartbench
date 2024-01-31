@@ -28,7 +28,7 @@ Builder.load_string(
         size: self.parent.size
         pos: self.parent.pos      
         orientation: 'horizontal'
-        padding: 0
+        padding:dp(0)
         spacing: 0
         
         BoxLayout:
@@ -95,7 +95,7 @@ Builder.load_string(
                     root.buttonJogXY('X+')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -138,7 +138,7 @@ Builder.load_string(
                     root.buttonJogXY('Y+')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -156,7 +156,7 @@ Builder.load_string(
                     root.jogModeCycled()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -177,7 +177,7 @@ Builder.load_string(
                     root.buttonJogXY('Y-')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos  
                     Image:
@@ -222,7 +222,7 @@ Builder.load_string(
                     root.buttonJogXY('X-')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
@@ -241,7 +241,7 @@ Builder.load_string(
 #                     on_press: root.set_jog_speeds()
 #                     background_color: 1, 1, 1, 0 
 #                     BoxLayout:
-#                         padding: 10
+#                         padding:dp(10)
 #                         size: self.parent.size
 #                         pos: self.parent.pos      
 #                         Image:

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from kivy.core.window import Window
 
+from asmcnc.core_UI import scaling_utils
+
 """
 Created on 19 March 2020
 Software updater screen
@@ -91,7 +93,7 @@ Builder.load_string(
                             Label:
                                 id: current_version_label
                                 color: 0,0,0,1
-                                font_size: 0.025*app.width
+                                font_size:dp(0.025*app.width)
                                 markup: True
                                 valign: "bottom"
                                 text_size: self.size
@@ -99,7 +101,7 @@ Builder.load_string(
                             Label:
                                 id: sw_version_label
                                 color: 0,0,0,1
-                                font_size: 0.02875*app.width
+                                font_size:dp(0.02875*app.width)
                                 markup: True
                                 text_size: self.size
 
@@ -107,7 +109,7 @@ Builder.load_string(
                                 id: find_release_notes_label
                                 size_hint_y: 1.1
                                 color: 0,0,0,1
-                                font_size: 0.01625*app.width
+                                font_size:dp(0.01625*app.width)
                                 markup: True
                                 valign: "middle"
                                 text_size: self.size
@@ -136,7 +138,7 @@ Builder.load_string(
                                 pos: self.parent.pos
                                 on_press: root.refresh_latest_software_version()
                                 BoxLayout:
-                                    padding: 0
+                                    padding:dp(0)
                                     size: self.parent.size
                                     pos: self.parent.pos
                                     Image:
@@ -149,7 +151,7 @@ Builder.load_string(
                         Label: 
                             id: latest_software_version_label
                             color: 0,0,0,1
-                            font_size: 0.0225*app.width
+                            font_size:dp(0.0225*app.width)
                             markup: True
                             halign: "center"
                             valign: "center"
@@ -173,7 +175,7 @@ Builder.load_string(
                     pos: self.parent.pos
                     on_press: root.quit_to_lobby()
                     BoxLayout:
-                        padding: 0
+                        padding:dp(0)
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:
@@ -210,11 +212,11 @@ Builder.load_string(
                     size_hint: (None, None)
                     height: dp(0.0416666666667*app.height)
                     width: dp(0.36875*app.width)
-                    # padding: [0,5,0,0]
+                    # padding:(dp(0),dp(5),dp(0),dp(0))
                     Label: 
                         id: update_using_wifi_label
                         color: 0,0,0,1
-                        font_size: 0.0225*app.width
+                        font_size:dp(0.0225*app.width)
                         markup: True
                         halign: "left"
                         valign: "middle"
@@ -226,11 +228,11 @@ Builder.load_string(
                     size_hint: (None, None)
                     height: dp(0.208333333333*app.height)
                     width: dp(0.36875*app.width)
-                    # padding: [0,5,0,0]
+                    # padding:(dp(0),dp(5),dp(0),dp(0))
                     Label:
                         id: update_using_wifi_instructions_label
                         color: 0,0,0,1
-                        font_size: 0.02*app.width
+                        font_size:dp(0.02*app.width)
                         markup: True
                         halign: "left"
                         valign: "top"
@@ -296,7 +298,7 @@ Builder.load_string(
                     Label:
                         id: update_using_usb_label
                         color: 0,0,0,1
-                        font_size: 0.0225*app.width
+                        font_size:dp(0.0225*app.width)
                         markup: True
                         halign: "left"
                         valign: "middle"
@@ -311,7 +313,7 @@ Builder.load_string(
                     Label:
                         id: update_using_usb_instructions_label
                         color: 0,0,0,1
-                        font_size: 0.02*app.width
+                        font_size:dp(0.02*app.width)
                         markup: True
                         halign: "left"
                         valign: "top"
@@ -368,7 +370,7 @@ class SWUpdateScreen(Screen):
     wifi_warning = "./asmcnc/apps/SWupdater_app/img/wifi_warning.png"
     usb_on = "./asmcnc/apps/SWupdater_app/img/USB_on.png"
     usb_off = "./asmcnc/apps/SWupdater_app/img/USB_off.png"
-    default_font_size = 30.0 / 800.0 * Window.width
+    default_font_size = 30.0 / 800.0 * scaling_utils.Width
     poll_USB = None
     poll_wifi = None
 
@@ -380,7 +382,6 @@ class SWUpdateScreen(Screen):
         self.update_strings()
         self.usb_stick = usb_storage.USB_storage(self.sm, self.l)
         self.sw_version_label.text = "[b]" + self.set.sw_version + "[/b]"
-        self.update_screen_with_latest_version()
 
     def on_enter(self):
         # Keep tabs on wifi connection
@@ -733,10 +734,10 @@ class SWUpdateScreen(Screen):
         if text_length < 9:
             value.font_size = self.default_font_size
         elif text_length > 8:
-            value.font_size = self.default_font_size - 0.0025 * Window.width
+            value.font_size = self.default_font_size - 0.0025 * scaling_utils.Width
         if text_length > 9:
-            value.font_size = self.default_font_size - 0.005 * Window.width
+            value.font_size = self.default_font_size - 0.005 * scaling_utils.Width
         if text_length > 11:
-            value.font_size = self.default_font_size - 0.0075 * Window.width
+            value.font_size = self.default_font_size - 0.0075 * scaling_utils.Width
         if text_length > 12:
-            value.font_size = self.default_font_size - 0.01 * Window.width
+            value.font_size = self.default_font_size - 0.01 * scaling_utils.Width

@@ -54,7 +54,7 @@ Builder.load_string(
     usb_status_label : usb_status_label
 
     BoxLayout:
-        padding: 0
+        padding:dp(0)
         spacing:0.0208333333333*app.height
         size: root.size
         pos: root.pos

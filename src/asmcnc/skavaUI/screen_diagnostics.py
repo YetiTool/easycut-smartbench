@@ -29,12 +29,12 @@ Builder.load_string(
     dust_shoe_cover_label:dust_shoe_cover_label
 
     BoxLayout:
-        padding: 0
+        padding:dp(0)
         spacing: 0
         orientation: "vertical"
 
         BoxLayout:
-            padding: 0
+            padding:dp(0)
             spacing: 0
             orientation: "horizontal"
 
@@ -69,7 +69,7 @@ Builder.load_string(
                 text: 'Dust cover'
                 
         BoxLayout:
-            padding: 0
+            padding:dp(0)
             spacing: 0
             orientation: "horizontal"
 
@@ -94,7 +94,7 @@ Builder.load_string(
                 text: 'X Max'
 
         BoxLayout:
-            padding: 0
+            padding:dp(0)
             spacing: 0
             orientation: "horizontal"
 
@@ -119,7 +119,7 @@ Builder.load_string(
                 text: 'Y Max'
 
         BoxLayout:
-            padding: 0
+            padding:dp(0)
             spacing: 0
             orientation: "horizontal"
 

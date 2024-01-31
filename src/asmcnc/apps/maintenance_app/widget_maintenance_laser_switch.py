@@ -20,7 +20,7 @@ Builder.load_string(
         height: dp(0.145833333333*app.height)
         width: dp(0.1875*app.width)
         pos: self.parent.pos
-        padding:[0, 0, 0, 0]
+        padding:(dp(0),dp(0),dp(0),dp(0))
         
         GridLayout:
             cols: 2

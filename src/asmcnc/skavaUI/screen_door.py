@@ -61,7 +61,7 @@ Builder.load_string(
 
     BoxLayout:
         orientation: 'vertical'
-        padding: 0
+        padding:dp(0)
         spacing: 0
         size_hint: (None, None)
         height: dp(1.0*app.height)
@@ -103,7 +103,7 @@ Builder.load_string(
         
         # Alarm image and text
         BoxLayout: 
-            padding: 0
+            padding:dp(0)
             spacing: 0
             size_hint: (None, None)
             height: dp(0.614583333333*app.height)
@@ -111,7 +111,7 @@ Builder.load_string(
             orientation: 'vertical'
 
             BoxLayout: 
-                padding: 0
+                padding:dp(0)
                 spacing: 0
                 size_hint: (None, None)
                 height: dp(0.510416666667*app.height)
@@ -119,7 +119,7 @@ Builder.load_string(
                 orientation: 'vertical'
 
             FloatLayout: 
-                padding: 0
+                padding:dp(0)
                 spacing: 0
                 size_hint: (None, None)
                 height: dp(0.104166666667*app.height)

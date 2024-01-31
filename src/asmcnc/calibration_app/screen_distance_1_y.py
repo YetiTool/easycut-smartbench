@@ -43,7 +43,7 @@ Builder.load_string(
 
         BoxLayout:
             orientation: 'horizontal'
-            padding:[0, 0]
+            padding:(dp(0),dp(0))
             spacing:0.025*app.width
             size_hint_y: 0.2
         

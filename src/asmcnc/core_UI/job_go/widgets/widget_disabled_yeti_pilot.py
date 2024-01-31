@@ -35,7 +35,7 @@ Builder.load_string(
                 do_scroll_x: False
                 do_scroll_y: True
                 scroll_y: 1
-                bar_width: 0.005*app.width
+                bar_width:dp(0.005*app.width)
                 bar_inactive_color: [.7, .7, .7, .7]
 
                 Label:
@@ -65,7 +65,7 @@ Builder.load_string(
                     root.run_spindle_health_check()
 
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:

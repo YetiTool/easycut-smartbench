@@ -43,7 +43,7 @@ else:
     Config.set('graphics', 'width', '800')
     Config.set('graphics', 'height', '480')
 
-Config.set('graphics', 'maxfps', '60')
+Config.set('graphics', 'maxfps', '120')
 Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
 Config.write()
 
@@ -51,6 +51,9 @@ import kivy
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
+
+Window.size = (800, 480)
+Window.maximum_width, Window.maximum_height = Window.size
 
 
 # COMMS IMPORTS
@@ -176,7 +179,6 @@ class SkavaUI(App):
         if sys.platform == 'darwin':
             self.width = 800
             self.height = 480
-            Window.size = (self.width, self.height)
 
         log("Starting App:")
 
@@ -339,6 +341,6 @@ class SkavaUI(App):
         return sm
 
 if __name__ == '__main__':
-
+    Window.size = (800, 480)
     SkavaUI().run()
     

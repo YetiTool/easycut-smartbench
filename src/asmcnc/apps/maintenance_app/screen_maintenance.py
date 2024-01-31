@@ -70,7 +70,7 @@ Builder.load_string(
         size_hint: (None,None)
         height: dp(1.0*app.height)
         width: dp(1.005*app.width)
-        pos: (0, 0)
+        pos:(dp(0),dp(0))
         padding:[dp(-0.0025)*app.width, dp(-0.00416666666667)*app.height, dp(-0.0025)*app.width, 0]
         spacing:[0, dp(-0.00833333333333)*app.height]
         do_default_tab: False
@@ -214,7 +214,7 @@ Builder.load_string(
                     width: dp(0.95*app.width)
                     height: dp(0.520833333333*app.height)
                     orientation: "horizontal" 
-                    padding: 0
+                    padding:dp(0)
                     spacing:0.025*app.width
 
                     BoxLayout:
@@ -434,7 +434,7 @@ Builder.load_string(
             pos: self.parent.pos
             on_press: root.quit_to_lobby()
             BoxLayout:
-                padding: 0
+                padding:dp(0)
                 size: self.parent.size
                 pos: self.parent.pos
                 Image:

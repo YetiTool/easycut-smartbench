@@ -25,8 +25,8 @@ Builder.load_string(
         padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
         orientation: 'vertical'
         size_hint: (None, None)
-        height: 1.0*app.height
-        width: 1.0*app.width
+        height:dp(1.0*app.height)
+        width:dp(1.0*app.width)
         canvas:
             Color: 
                 rgba: hex('#E5E5E5FF')
@@ -62,7 +62,7 @@ Builder.load_string(
                 orientation: 'horizontal'          
                 size_hint: (None, None)
                 height: dp(251.0/480.0)*app.height
-                width: 1.0*app.width
+                width:dp(1.0*app.width)
                 pos: self.parent.pos
 
 
@@ -72,7 +72,7 @@ Builder.load_string(
                     orientation: 'horizontal'          
                     size_hint: (None, None)
                     height: dp(121.0/480.0)*app.height
-                    width: 0.225*app.width
+                    width:dp(0.225*app.width)
                     Image:
                         id: spindle_icon
                         source: "./asmcnc/core_UI/job_go/img/spindle_check.png"
@@ -86,11 +86,11 @@ Builder.load_string(
 
                 BoxLayout: 
                     spacing: 0
-                    padding:[0, 0, 0, 0]
+                    padding:(dp(0),dp(0),dp(0),dp(0))
                     orientation: 'horizontal'          
                     size_hint: (None, None)
                     height: dp(121.0/480.0)*app.height
-                    width: 0.25*app.width
+                    width:dp(0.25*app.width)
                     Label:
                         id: countdown
                         markup: True
@@ -108,7 +108,7 @@ Builder.load_string(
                     orientation: 'horizontal'          
                     size_hint: (None, None)
                     height: dp(121.0/480.0)*app.height
-                    width: 0.225*app.width
+                    width:dp(0.225*app.width)
                     Image:
                         id: countdown_icon
                         source: "./asmcnc/skavaUI/img/countdown_big.png"

@@ -61,13 +61,13 @@ Builder.load_string(
     on_touch_down:root.on_touch()
 
     BoxLayout:
-        padding: 0
+        padding:dp(0)
         spacing:0.0208333333333*app.height
         orientation: "vertical"
 
         BoxLayout:
             size_hint_y: 0.9
-            padding: 0
+            padding:dp(0)
             spacing:0.0125*app.width
             orientation: "horizontal"
 
@@ -80,8 +80,8 @@ Builder.load_string(
                     pos_hint: {'center_x': .5, 'center_y': .5}
                     do_default_tab: False
                     tab_pos: 'left_top'
-                    tab_height: 0.1875*app.height
-                    tab_width: 0.1125*app.width
+                    tab_height:dp(0.1875*app.height)
+                    tab_width:dp(0.1125*app.width)
 
                     TabbedPanelItem:
                         background_normal: 'asmcnc/skavaUI/img/tab_set_normal.png'
@@ -210,7 +210,7 @@ Builder.load_string(
                                     on_press:
                                         root.manager.current = 'local_filechooser'
                                     BoxLayout:
-                                        padding: 0
+                                        padding:dp(0)
                                         size: self.parent.size
                                         pos: self.parent.pos
                                         Image:
@@ -228,7 +228,7 @@ Builder.load_string(
                                     on_press:
                                         root.manager.current = 'recovery_decision'
                                     BoxLayout:
-                                        padding: 0
+                                        padding:dp(0)
                                         size: self.parent.size
                                         pos: self.parent.pos
                                         Image:

@@ -101,7 +101,7 @@ Builder.load_string(
                     pos: self.parent.pos
                     on_press: root.reset_button_press()
                     BoxLayout:
-                        padding: 0
+                        padding:dp(0)
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:
@@ -126,7 +126,7 @@ Builder.load_string(
                     on_press: root.save_button_press()
                     disabled: True
                     BoxLayout:
-                        padding: 0
+                        padding:dp(0)
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:

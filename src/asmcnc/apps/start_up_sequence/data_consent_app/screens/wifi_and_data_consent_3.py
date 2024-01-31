@@ -39,13 +39,13 @@ Builder.load_string(
 				pos: self.pos
 
 		BoxLayout:
-			padding: 0
+			padding:dp(0)
 			spacing: 0
 			orientation: "vertical"
 
 			# HEADER
 			BoxLayout:
-				padding: 0
+				padding:dp(0)
 				spacing: 0
 				canvas:
 					Color:
@@ -129,7 +129,7 @@ Builder.load_string(
 					size_hint: (None, None)
 					height: dp(0.254166666667*app.height)
 					width: dp(0.075*app.width)
-					# padding: [0, 0, 184.5, 0]
+					# padding:(dp(0),dp(0),dp(184.5),dp(0))
 					Button:
 					    font_size: str(0.01875 * app.width) + 'sp'
 						size_hint: (None,None)
@@ -140,7 +140,7 @@ Builder.load_string(
 						pos: self.parent.pos
 						on_press: root.prev_screen()
 						BoxLayout:
-							padding: 0
+							padding:dp(0)
 							size: self.parent.size
 							pos: self.parent.pos
 							Image:
@@ -191,7 +191,7 @@ Builder.load_string(
 					size_hint: (None, None)
 					height: dp(0.254166666667*app.height)
 					width: dp(0.075*app.width)
-					# padding: [193.5, 0, 0, 0]
+					# padding:(dp(193.5),dp(0),dp(0),dp(0))
 
 """
 )

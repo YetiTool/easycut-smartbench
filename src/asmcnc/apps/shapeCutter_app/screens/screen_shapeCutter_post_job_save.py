@@ -29,7 +29,7 @@ Builder.load_string(
                 source: "./asmcnc/apps/shapeCutter_app/img/landing_background.png"
 
         BoxLayout:
-            padding: 0
+            padding:dp(0)
             spacing: 0
             orientation: "vertical"       
                 
@@ -39,7 +39,7 @@ Builder.load_string(
                 height: dp(0.1875*app.height)
                 width: dp(1.0*app.width)
                 text: "Would you like to save this as a new profile?"
-                font_size: 0.0375*app.width
+                font_size:dp(0.0375*app.width)
                 halign: "center"
                 valign: "bottom"
                 markup: True
@@ -68,14 +68,14 @@ Builder.load_string(
                             size_hint: (None,None)
                             height: dp(0.208333333333*app.height)
                             width: dp(0.375*app.width)
-                            padding:[0, 0, 0, 0]
+                            padding:(dp(0),dp(0),dp(0),dp(0))
                             orientation: "vertical"
                             spacing:0.0416666666667*app.height
 
                             Label: 
                                 text: ''
                                 color: 0,0,0,1
-                                font_size: 0.025*app.width
+                                font_size:dp(0.025*app.width)
                                 markup: True
                                 halign: "center"
                                 valign: "top"
@@ -112,7 +112,7 @@ Builder.load_string(
                                 on_press: root.save_file()
                                 background_color: hex('#F4433600')
                                 BoxLayout:
-                                    padding: 0
+                                    padding:dp(0)
                                     size: self.parent.size
                                     pos: self.parent.pos
                                     Image:
@@ -124,13 +124,13 @@ Builder.load_string(
                             size_hint: (None,None)
                             height: dp(0.0833333333333*app.height)
                             width: dp(0.375*app.width)
-                            padding:[0, 0, 0, 0]
+                            padding:(dp(0),dp(0),dp(0),dp(0))
                                         
                     BoxLayout: # document viewer
                         size_hint: (None,None)
                         height: dp(0.625*app.height)
                         width: dp(0.4375*app.width)
-                        padding:[0, 0, 0, 0]
+                        padding:(dp(0),dp(0),dp(0),dp(0))
                         ScrollView:
                             size_hint: (None, None)
                             size: self.parent.size
@@ -165,7 +165,7 @@ Builder.load_string(
                             opacity: 0
                             on_press: root.get_info()
                             BoxLayout:
-                                padding: 0
+                                padding:dp(0)
                                 size: self.parent.size
                                 pos: self.parent.pos
                                 Image:
@@ -183,7 +183,7 @@ Builder.load_string(
                         background_color: hex('#F4433600')
                         opacity: 0
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -200,7 +200,7 @@ Builder.load_string(
                         background_color: hex('#F4433600')
                         on_press: root.next_screen()
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:

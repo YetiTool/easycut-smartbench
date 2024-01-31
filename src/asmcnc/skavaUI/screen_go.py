@@ -63,13 +63,13 @@ Builder.load_string(
     spindle_overload_label:spindle_overload_label
     
     BoxLayout:
-        padding: 0
+        padding:dp(0)
         spacing: 0
         orientation: "vertical"
 
         BoxLayout:
             size_hint_y: 0.92
-            padding: 0
+            padding:dp(0)
             spacing:0.0125*app.width
             orientation: "horizontal"
 
@@ -102,7 +102,7 @@ Builder.load_string(
                                 pos: self.pos
                         BoxLayout:
                             orientation: 'horizontal'
-                            padding: 0
+                            padding:dp(0)
                             spacing:0.0125*app.width
                             Button:
                                 font_size: str(0.01875 * app.width) + 'sp'
@@ -112,7 +112,7 @@ Builder.load_string(
                                 on_press:
                                     root.return_to_app()
                                 BoxLayout:
-                                    padding: 0
+                                    padding:dp(0)
                                     size: self.parent.size
                                     pos: self.parent.pos
                                     Image:
@@ -144,7 +144,7 @@ Builder.load_string(
                                     root.start_or_pause_button_press()
 
                                 BoxLayout:
-                                    padding: 0
+                                    padding:dp(0)
                                     size: self.parent.size
                                     pos: self.parent.pos
                                     Image:
@@ -197,7 +197,7 @@ Builder.load_string(
 
                             BoxLayout:
                                 id: feed_override_container
-                                padding: 0
+                                padding:dp(0)
                                 size_hint_y: 9
                                 canvas:
                                     Color:
@@ -243,7 +243,7 @@ Builder.load_string(
 
                             BoxLayout:
                                 id: speed_override_widget_container
-                                padding: 0
+                                padding:dp(0)
                                 size_hint_y: 9
                                 canvas:
                                     Color:

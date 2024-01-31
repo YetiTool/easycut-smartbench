@@ -71,7 +71,7 @@ Builder.load_string(
                     
                 BoxLayout:
                     orientation: 'horizontal'
-                    padding:[0, 0]
+                    padding:(dp(0),dp(0))
                     spacing:0.025*app.width
                 
                     Button:
@@ -136,7 +136,7 @@ Builder.load_string(
                 opacity: 1
                 on_press: root.skip_to_lobby()
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:

@@ -38,11 +38,11 @@ Builder.load_string(
                 size: self.size
                 pos: self.pos
         BoxLayout:
-            padding: 0
+            padding:dp(0)
             spacing: 0
             orientation: "vertical"
             BoxLayout:
-                padding: 0
+                padding:dp(0)
                 spacing: 0
                 canvas:
                     Color:

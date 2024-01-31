@@ -43,11 +43,11 @@ Builder.load_string(
                 size: self.size
                 pos: self.pos
         BoxLayout:
-            padding: 0
+            padding:dp(0)
             spacing: 0
             orientation: "vertical"
             BoxLayout:
-                padding: 0
+                padding:dp(0)
                 spacing: 0
                 canvas:
                     Color:
@@ -225,7 +225,7 @@ Builder.load_string(
                     width: dp(1.0*app.width)
                     orientation: 'vertical'
                     spacing: 0
-                    padding:[0, 0]
+                    padding:(dp(0),dp(0))
 
                     Label: 
                         id: event_details_label

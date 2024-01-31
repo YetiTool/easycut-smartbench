@@ -27,7 +27,7 @@ Builder.load_string(
     color: 0,0,0,1
     halign: 'left'
     markup: 'True'
-    font_size: 0.0225*app.width
+    font_size:dp(0.0225*app.width)
     font_name: 'KRFont'
 
 <BetaTestingScreen>
@@ -51,11 +51,11 @@ Builder.load_string(
                 pos: self.pos
 
         BoxLayout:
-            padding: 0
+            padding:dp(0)
             spacing:0.0208333333333*app.height
             orientation: "vertical"
             BoxLayout:
-                padding: 0
+                padding:dp(0)
                 spacing: 0
                 canvas:
                     Color:
@@ -69,7 +69,7 @@ Builder.load_string(
                     width: dp(1.0*app.width)
                     text: "Beta Testing"
                     color: hex('#f9f9f9ff')
-                    font_size: 0.0375*app.width
+                    font_size:dp(0.0375*app.width)
                     halign: "center"
                     valign: "bottom"
                     markup: True
@@ -78,7 +78,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 width: dp(1.0*app.width)
                 height: dp(0.666666666667*app.height)
-                padding: 0
+                padding:dp(0)
                 spacing:0.0125*app.width
                 orientation: 'horizontal'
 
@@ -94,13 +94,13 @@ Builder.load_string(
                         pos: self.parent.pos
                         cols: 2
                         rows: 0
-                        padding: 0
+                        padding:dp(0)
                         size_hint_y: 0.6
 
                         Label
                             text: 'Run developer branch:'
                             color: [0,0,0,1]
-                            font_size: 0.025*app.width
+                            font_size:dp(0.025*app.width)
                             halign: "left"
                             markup: True
                             text_size: self.size
@@ -109,7 +109,7 @@ Builder.load_string(
                             id: user_branch
                             text: 'branch'
                             multiline: False
-                            font_size: 0.025*app.width
+                            font_size:dp(0.025*app.width)
 
                     Button:
                         font_size: str(0.01875 * app.width) + 'sp'
@@ -121,12 +121,12 @@ Builder.load_string(
                         pos: self.parent.pos
                         cols: 2
                         rows: 0
-                        padding: 0
+                        padding:dp(0)
 
                         Label:
                             text: 'Latest beta version:'
                             color: [0,0,0,1]
-                            font_size: 0.025*app.width
+                            font_size:dp(0.025*app.width)
                             markup: True
                             halign: "left"
 
@@ -134,7 +134,7 @@ Builder.load_string(
                             id: beta_version
                             text: 'beta_version_no'
                             color: [0,0,0,1]
-                            font_size: 0.025*app.width
+                            font_size:dp(0.025*app.width)
                             markup: True
                             halign: "left"
 
@@ -148,7 +148,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(0.2375*app.width)
                     height: dp(0.666666666667*app.height)
-                    padding: 0
+                    padding:dp(0)
                     spacing: 0
                     orientation: 'vertical'
 
@@ -203,7 +203,7 @@ Builder.load_string(
                             pos: self.parent.pos
                             on_press: root.refresh_latest_software_version()
                             BoxLayout:
-                                padding: 0
+                                padding:dp(0)
                                 size: self.parent.size
                                 pos: self.parent.pos
                                 Image:
@@ -217,7 +217,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 width: dp(1.0*app.width)
                 height: dp(0.166666666667*app.height)
-                padding: 0
+                padding:dp(0)
                 spacing:0.0125*app.width
                 orientation: 'horizontal'
 
@@ -225,7 +225,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(0.1*app.width)
                     height: dp(0.166666666667*app.height)
-                    padding: 0
+                    padding:dp(0)
                     spacing: 0
 
                     BoxLayout: 
@@ -243,7 +243,7 @@ Builder.load_string(
                             pos: self.parent.pos
                             on_press: root.go_back()
                             BoxLayout:
-                                padding: 0
+                                padding:dp(0)
                                 size: self.parent.size
                                 pos: self.parent.pos
                                 Image:
@@ -265,7 +265,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(0.1*app.width)
                     height: dp(0.166666666667*app.height)
-                    padding: 0
+                    padding:dp(0)
                     spacing: 0
 
                     BoxLayout: 
@@ -283,7 +283,7 @@ Builder.load_string(
                             pos: self.parent.pos
                             on_press: root.exit_app()
                             BoxLayout:
-                                padding: 0
+                                padding:dp(0)
                                 size: self.parent.size
                                 pos: self.parent.pos
                                 Image:

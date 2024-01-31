@@ -29,7 +29,7 @@ Builder.load_string(
         
         BoxLayout:
             spacing: 0
-            padding: 0
+            padding:dp(0)
             size_hint_y: 1
             orientation: 'vertical'
             canvas:
@@ -66,7 +66,7 @@ Builder.load_string(
                     root.set_jobstart_z()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -86,7 +86,7 @@ Builder.load_string(
                     root.go_to_jobstart_z()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:

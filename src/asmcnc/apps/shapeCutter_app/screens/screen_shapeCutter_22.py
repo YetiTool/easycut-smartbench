@@ -34,7 +34,7 @@ Builder.load_string(
         size_hint: (None,None)
         width: dp(1.0*app.width)
         height: dp(1.0*app.height)
-        padding: 0
+        padding:dp(0)
         spacing: 0
         orientation: "vertical"
 
@@ -42,7 +42,7 @@ Builder.load_string(
             size_hint: (None,None)
             width: dp(1.0*app.width)
             height: dp(0.1875*app.height)
-            padding: 0
+            padding:dp(0)
             spacing: 0
             orientation: "horizontal"
 
@@ -53,7 +53,7 @@ Builder.load_string(
                 width: dp(0.1775*app.width)
                 on_press: root.prepare()
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -67,7 +67,7 @@ Builder.load_string(
                 width: dp(0.1775*app.width)
                 on_press: root.load()
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -81,7 +81,7 @@ Builder.load_string(
                 width: dp(0.1775*app.width)
                 on_press: root.define()
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -97,7 +97,7 @@ Builder.load_string(
                 width: dp(0.1775*app.width)
                 on_press: root.position()
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -113,7 +113,7 @@ Builder.load_string(
                 width: dp(0.1775*app.width)
                 on_press: root.check()
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -129,7 +129,7 @@ Builder.load_string(
                 width: dp(0.1125*app.width)
                 on_press: root.exit()
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -141,7 +141,7 @@ Builder.load_string(
                     
         BoxLayout:
             size_hint: (None,None)
-            padding: 0
+            padding:dp(0)
             height: dp(0.8125*app.height)
             width: dp(1.0*app.width)
             canvas:
@@ -152,7 +152,7 @@ Builder.load_string(
             
             BoxLayout:
                 orientation: "vertical"
-                padding: 0
+                padding:dp(0)
                 spacing: 0
                     
                 BoxLayout: #Header
@@ -164,7 +164,7 @@ Builder.load_string(
                     
                     BoxLayout: #Screen number
                         size_hint: (None,None)
-                        padding: 0
+                        padding:dp(0)
                         height: dp(0.0833333333333*app.height)
                         width: dp(0.05*app.width)
                         canvas:
@@ -176,7 +176,7 @@ Builder.load_string(
                             text: root.screen_number
                             valign: "middle"
                             halign: "center"
-                            font_size: 0.0325*app.width
+                            font_size:dp(0.0325*app.width)
                             markup: True
                                 
                                 
@@ -190,7 +190,7 @@ Builder.load_string(
                         Label:
                             text: root.title_label
                             color: 0,0,0,1
-                            font_size: 0.035*app.width
+                            font_size:dp(0.035*app.width)
                             markup: True
                             halign: "left"
                             valign: "bottom"
@@ -210,7 +210,7 @@ Builder.load_string(
                         size_hint: (None,None)
                         height: dp(0.645833333333*app.height)
                         width: dp(0.84375*app.width)
-                        padding:[0, 0, 0, 0]
+                        padding:(dp(0),dp(0),dp(0),dp(0))
                         orientation: "vertical"
                     
                         BoxLayout: #text box
@@ -227,7 +227,7 @@ Builder.load_string(
                                 Label:
                                     text: root.user_instructions
                                     color: 0,0,0,1
-                                    font_size: 0.025*app.width
+                                    font_size:dp(0.025*app.width)
                                     markup: True
                                     halign: "left"
                                     valign: "top"
@@ -346,7 +346,7 @@ Builder.load_string(
                                     Label: 
                                         text: "TD"
                                         color: 0,0,0,1
-                                        font_size: 0.03*app.width
+                                        font_size:dp(0.03*app.width)
                                         markup: True
                                         halign: "left"
                                         valign: "middle"
@@ -380,7 +380,7 @@ Builder.load_string(
                                     Label: 
                                         text: "TH"
                                         color: 0,0,0,1
-                                        font_size: 0.03*app.width
+                                        font_size:dp(0.03*app.width)
                                         markup: True
                                         halign: "left"
                                         valign: "middle"
@@ -414,7 +414,7 @@ Builder.load_string(
                                     Label: 
                                         text: "TW"
                                         color: 0,0,0,1
-                                        font_size: 0.03*app.width
+                                        font_size:dp(0.03*app.width)
                                         markup: True
                                         halign: "left"
                                         valign: "middle"
@@ -461,7 +461,7 @@ Builder.load_string(
                                 opacity: 1
                                 on_press: root.get_info()
                                 BoxLayout:
-                                    padding: 0
+                                    padding:dp(0)
                                     size: self.parent.size
                                     pos: self.parent.pos
                                     Image:
@@ -479,7 +479,7 @@ Builder.load_string(
                             background_color: hex('#F4433600')
                             on_press: root.go_back()
                             BoxLayout:
-                                padding: 0
+                                padding:dp(0)
                                 size: self.parent.size
                                 pos: self.parent.pos
                                 Image:
@@ -496,7 +496,7 @@ Builder.load_string(
                             background_color: hex('#F4433600')
                             on_press: root.next_screen()
                             BoxLayout:
-                                padding: 0
+                                padding:dp(0)
                                 size: self.parent.size
                                 pos: self.parent.pos
                                 Image:

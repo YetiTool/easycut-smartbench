@@ -51,13 +51,13 @@ Builder.load_string(
 				pos: self.pos
 
 		BoxLayout:
-			padding: 0
+			padding:dp(0)
 			spacing: 0
 			orientation: "vertical"
 
 			# HEADER
 			BoxLayout:
-				padding: 0
+				padding:dp(0)
 				spacing: 0
 				canvas:
 					Color:

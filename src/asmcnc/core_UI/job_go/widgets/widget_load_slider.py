@@ -29,7 +29,7 @@ Builder.load_string(
         orientation: 'vertical'
         size: self.parent.size
         pos: self.parent.pos
-        padding: 0
+        padding:dp(0)
         Label:
             id: load_label
             markup: True

@@ -56,7 +56,7 @@ Builder.load_string("""
         orientation: 'vertical'
         size: self.parent.size
         pos: self.parent.pos
-        padding: 0
+        padding:dp(0)
         spacing: 0
 
         BoxLayout:
@@ -92,7 +92,7 @@ Builder.load_string("""
                             root.pro_app()
                             self.background_color = hex('#FFFFFF00')
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -128,7 +128,7 @@ Builder.load_string("""
                             root.shapecutter_app()
                             self.background_color = hex('#FFFFFF00')
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -156,7 +156,7 @@ Builder.load_string("""
                         size_hint_y: 8
                         background_color: hex('#FFFFFF00')
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -230,7 +230,7 @@ Builder.load_string("""
                             root.wifi_app()
                             self.background_color = hex('#FFFFFF00')
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -263,7 +263,7 @@ Builder.load_string("""
                             root.calibrate_smartbench()
                             self.background_color = hex('#FFFFFF00')
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -302,7 +302,7 @@ Builder.load_string("""
                             root.update_app()
                             self.background_color = hex('#FFFFFF00')
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -335,7 +335,7 @@ Builder.load_string("""
                             root.maintenance_app()
                             self.background_color = hex('#FFFFFF00')
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -374,7 +374,7 @@ Builder.load_string("""
                             root.upgrade_app()
                             self.background_color = hex('#FFFFFF00')
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -407,7 +407,7 @@ Builder.load_string("""
                             root.developer_app()
                             self.background_color = hex('#FFFFFF00')
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -438,7 +438,7 @@ Builder.load_string("""
 
             BoxLayout:
                 size_hint_x: None
-                width: 0.9*app.width
+                width:dp(0.9*app.width)
                 height: self.parent.height
                 padding:[dp(0.1)*app.width, dp(0.0833333333333)*app.height, 0, dp(0.0833333333333)*app.height]
                 orientation: 'horizontal'

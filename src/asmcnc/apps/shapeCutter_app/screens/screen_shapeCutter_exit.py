@@ -24,7 +24,7 @@ Builder.load_string(
                 source: "./asmcnc/apps/shapeCutter_app/img/landing_background.png"
 
         BoxLayout:
-            padding: 0
+            padding:dp(0)
             spacing: 0
             orientation: "vertical"       
                 
@@ -33,7 +33,7 @@ Builder.load_string(
                 height: dp(0.1875*app.height)
                 width: dp(1.0*app.width)
                 text: "Leaving Shape Cutter..."
-                font_size: 0.0375*app.width
+                font_size:dp(0.0375*app.width)
                 halign: "center"
                 valign: "bottom"
                 markup: True
@@ -53,7 +53,7 @@ Builder.load_string(
                     valign: "middle"
                     text: "Bye!"
                     color: 0,0,0,1
-                    font_size: 0.0325*app.width
+                    font_size:dp(0.0325*app.width)
                     markup: True
 
 """

@@ -45,7 +45,7 @@ Builder.load_string(
                     root.set_jobstart_z()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -73,7 +73,7 @@ Builder.load_string(
                     root.jog_z('Z+') 
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -94,7 +94,7 @@ Builder.load_string(
                     root.jog_z('Z-') 
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -115,7 +115,7 @@ Builder.load_string(
                     root.probe_z()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -135,7 +135,7 @@ Builder.load_string(
                     root.go_to_jobstart_z()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -152,12 +152,12 @@ Builder.load_string(
             y: 0.875*app.height
             size_hint: None, None            
             height: dp(30.0/480.0)*app.height
-            width: 0.0375*app.width
+            width:dp(0.0375*app.width)
             text: 'Z'
             markup: True
             bold: True
             color: 0,0,0,0.2
-            font_size: 0.025*app.width     
+            font_size:dp(0.025*app.width)
         
 """
 )
