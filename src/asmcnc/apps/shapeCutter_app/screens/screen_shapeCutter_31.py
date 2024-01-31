@@ -16,6 +16,7 @@ from asmcnc.apps.shapeCutter_app.screens import (
     widget_sC_work_coordinates,
 )
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error, popup_info
+from asmcnc.core_UI.popups import InfoPopup
 
 Builder.load_string(
     """
@@ -359,7 +360,11 @@ Use the Z0 button to set the datum using the touchplate.
 Use the SET button to manually set the datum.
 
 Use the GO button to move the machine to the datum. """
-        popup_info.PopupInfo(self.shapecutter_sm, info)
+        InfoPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
+                  main_string=info,
+                  popup_width=500,
+                  popup_height=400,
+                  main_label_size_delta=140).open()
 
     def go_back(self):
         if not self.m.state().startswith("Jog"):

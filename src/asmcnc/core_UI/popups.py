@@ -353,6 +353,7 @@ class InfoPopup(BasicPopup):
         button_layout_padding=(150, 20, 150, 0),
         button_layout_spacing=15,
         main_label_h_align="left",
+        main_label_size_hint_y=2,
         **kwargs
     ):
         super(InfoPopup, self).__init__(
@@ -374,6 +375,7 @@ class InfoPopup(BasicPopup):
             button_two_callback=button_two_callback,
             button_two_background_color=button_two_background_color,
             title=title,
+            main_label_size_hint_y=main_label_size_hint_y,
             **kwargs
         )
 

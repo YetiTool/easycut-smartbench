@@ -15,6 +15,7 @@ from asmcnc.apps.shapeCutter_app.screens import (
     widget_sC_virtual_bed,
     popup_info,
 )
+from asmcnc.core_UI.popups import InfoPopup
 
 Builder.load_string(
     """
@@ -344,7 +345,11 @@ class ShapeCutter28ScreenClass(Screen):
 Set the datum by using the SET buttons.
 
 Move the machine to the datum by using the GO buttons."""
-        popup_info.PopupInfo(self.shapecutter_sm, info)
+        InfoPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
+                  main_string=info,
+                  popup_width=500,
+                  popup_height=400,
+                  main_label_size_delta=140).open()
 
     def go_back(self):
         if not self.m.state().startswith("Jog"):
