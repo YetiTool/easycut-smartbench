@@ -283,6 +283,49 @@ class CuttingDepthsPopup(Popup):
         self.kb = keyboard
         self.dwt_config = dwt_config
 
+        self.pass_depth_lines = []
+
+        self.float_layout.remove_widget(self.cut_depth_warning)
+        self.float_layout.remove_widget(self.pass_depth_warning)
+
+        # This resolves the 'weakly-referenced' objects exception by preventing garbage collection
+        self.refs = [self.cut_depth_warning.__self__, self.pass_depth_warning.__self__]
+
+        self.text_inputs = [self.material_thickness, self.bottom_offset, self.total_cut_depth, self.depth_per_pass]
+        self.kb.setup_text_inputs(self.text_inputs)
+        self.update_strings()
+
+    def on_open(self):
+        self.load_active_config()
+
+    def load_active_config(self):
+        self.material_thickness.text = str(self.dwt_config.active_config.cutting_depths.material_thickness)
+        self.bottom_offset.text = str(self.dwt_config.active_config.cutting_depths.bottom_offset)
+        self.auto_pass_checkbox.active = self.dwt_config.active_config.cutting_depths.auto_pass
+        self.depth_per_pass.text = str(self.dwt_config.active_config.cutting_depths.depth_per_pass)
+
+    def update_strings(self):
+        self.title_label.text = self.l.get_str("Cutting depths")
+        self.material_thickness_label.text = self.l.get_str("Material thickness")
+        self.bottom_offset_label.text = self.l.get_str("Bottom offset")
+        self.total_cut_depth_label.text = self.l.get_str("Total cut depth")
+        self.auto_pass_label.text = self.l.get_str("Auto pass")
+        self.depth_per_pass_label.text = self.l.get_str("Depth per pass")
+        self.pass_depth_warning.text = "[color=#FF0000]" + self.l.get_str("Max depth per pass for this tool is") \
+                                       + " Xmm[/color]".replace("X",
+                                                                str(self.dwt_config.active_cutter.max_depth_per_pass))
+        self.cut_depth_warning.text = "[color=#FF0000]" + self.l.get_str("Max allowable cut is 62mm") + "[/color]"
+
+    def on_checkbox_active(self):
+        if self.auto_pass_checkbox.active:
+            self.depth_per_pass.disabled = True
+            self.depth_per_pass.text = self.depth_per_pass.hint_text
+            self.depth_per_pass.hint_text = ''
+        else:
+            self.depth_per_pass.disabled = False
+            self.depth_per_pass.hint_text = self.depth_per_pass.text
+            self.depth_per_pass.text = ''
+
     def confirm(self):
         self.dismiss()
 
@@ -290,4 +333,12 @@ class CuttingDepthsPopup(Popup):
         self.dismiss()
 
     def on_touch(self):
-        pass
+        for text_input in self.text_inputs:
+            text_input.focus = False
+            if text_input.text != '':
+                try:
+                    text_input.text = str(float(text_input.text))
+                except:
+                    pass
+            # else:
+            #     text_input.text = str(float(0))
