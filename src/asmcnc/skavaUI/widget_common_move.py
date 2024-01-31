@@ -145,9 +145,12 @@ class CommonMove(Widget):
             self.m.vac_on()
 
     def set_spindle(self):
+        def button_two_callback(*args):
+            self.spindle_image.source = "./asmcnc/skavaUI/img/spindle_on.png"
+            self.m.spindle_on()
+
         if self.spindle_toggle.state == "normal":
             self.spindle_image.source = "./asmcnc/skavaUI/img/spindle_off.png"
             self.m.spindle_off()
         else:
-            self.spindle_image.source = "./asmcnc/skavaUI/img/spindle_on.png"
-            self.m.spindle_on()
+            self.sm.pm.show_spindle_safety_popup(None, button_two_callback)
