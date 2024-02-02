@@ -27,6 +27,7 @@ from os import path
 from asmcnc.skavaUI import popup_info
 
 def log(message):
+    # type: (str) -> None
     timestamp = datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
 
