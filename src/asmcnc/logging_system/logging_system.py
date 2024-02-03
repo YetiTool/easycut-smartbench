@@ -19,7 +19,7 @@ class ModuleLogger(logging.Logger):
 
     def debug(self, msg, *args, **kwargs):
         if self.isEnabledFor(logging.DEBUG):
-            self.log(logging.DEBUG, msg, *args, **kwargs)
+            self._log(logging.DEBUG, msg, *args, **kwargs)
 
     def info(self, msg, *args, **kwargs):
         if self.isEnabledFor(logging.INFO):
