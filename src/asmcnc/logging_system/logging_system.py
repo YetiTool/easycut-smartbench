@@ -19,7 +19,7 @@ class ModuleLogger(logging.Logger):
 
     def debug(self, msg, *args, **kwargs):
         if self.isEnabledFor(logging.DEBUG):
-            self._log(logging.DEBUG, msg, *args, **kwargs)
+            self._log(logging.DEBUG, msg, args, **kwargs)
 
     def info(self, msg, *args, **kwargs):
         if self.isEnabledFor(logging.INFO):
@@ -68,10 +68,10 @@ class LoggerSingleton(object):
     def _setup_logger(self, name, level=logging.DEBUG):
         self._logger = ModuleLogger(name, level)
         self._logger.setLevel(level)
-        self._logger.addHandler(self.get_console_handler())
+        self._logger.addHandler(self.__get_console_handler())
 
     @staticmethod
-    def get_console_handler():
+    def __get_console_handler():
         console_handler = logging.StreamHandler()
         console_handler.setLevel(logging.DEBUG)
         console_handler.setFormatter(
@@ -95,3 +95,9 @@ class LoggerSingleton(object):
 
 # Set up the singleton logger
 logger = LoggerSingleton().get_logger()
+
+logger.debug("This is a debug message")
+logger.info("This is an info message")
+logger.warning("This is a warning message")
+logger.error("This is an error message")
+logger.critical("This is a critical message")
