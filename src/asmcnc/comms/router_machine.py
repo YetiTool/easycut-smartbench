@@ -1098,7 +1098,8 @@ class RouterMachine(object):
                 rpm_to_set = convert_rpm_for_230(rpm)
             else:
                 raise ValueError('Spindle voltage: {} not recognised'.format(voltage))  
-                      
+
+            print("Requested RPM:", rpm, "Converted RPM:", rpm_to_set, "Voltage:", voltage)          
             self.s.write_command('M3 S' + str(rpm_to_set))
 
         else: # If no value is given, turn the spindle on at the last set value (handled by GRBL)
