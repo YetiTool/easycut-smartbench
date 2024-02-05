@@ -7,7 +7,7 @@ configurations_dir = 'asmcnc/apps/drywall_cutter_app/config/configurations'
 cutters_dir = 'asmcnc/apps/drywall_cutter_app/config/cutters'
 
 TEMP_CONFIG_PATH = os.path.join(configurations_dir, '..', 'temp', 'temp_config.json')
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 
 def debug(func):

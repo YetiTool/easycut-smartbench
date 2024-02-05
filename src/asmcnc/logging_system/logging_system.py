@@ -41,17 +41,19 @@ class ModuleLogger(logging.Logger):
         if extra is None:
             extra = {}
 
-        # Get the caller's stack frame and extract its module name.
+        # Get the caller's stack frame (two f_back as this class called _log) and extract its module name.
+        # https://stackoverflow.com/a/3711243
         frame = inspect.currentframe().f_back.f_back
         module_name = inspect.getmodule(frame).__name__
 
+        # Might want to change this to show more than just the last part of the module name.
         if "." in module_name:
             module_name = module_name.split(".")[-1]
 
         # Store the module name in the record.
         extra["module_name"] = module_name
 
-        # Call the parent class's _log() method.
+        # Call the parent class's _log() method and pass the extra information.
         super(ModuleLogger, self)._log(level, msg, args, exc_info, extra)
 
 
@@ -59,19 +61,39 @@ class LoggerSingleton(object):
     _instance = None
     _logger = None
 
-    def __new__(cls, *args, **kwargs):
+    def __new__(cls, level=logging.DEBUG, *args, **kwargs):
+        """
+        Creates and returns a new instance of the LoggerSingleton class if one does not already exist.
+        Returns the existing instance if one does exist.
+
+        :param level: The level to set the logger to, e.g. logging.DEBUG.
+        The logger will log all messages of this level and above.
+        :param args: Any positional arguments to pass to the __new__ method of the super class.
+        :param kwargs: Any keyword arguments to pass to the __new__ method of the super class.
+        """
         if not cls._instance:
             cls._instance = super(LoggerSingleton, cls).__new__(cls, *args, **kwargs)
-            cls._instance._setup_logger("yeti-logger")
+            cls._instance._setup_logger(level=level)
         return cls._instance
 
-    def _setup_logger(self, name, level=logging.DEBUG):
+    def _setup_logger(self, level, name="yeti_logger"):
+        """
+        Set up the logger.
+        :param level: The level to set the logger to, e.g. logging.DEBUG.
+        :param name: The name of the logger. Defaults to "yeti_logger".
+        :return: None
+        """
         self._logger = ModuleLogger(name, level)
         self._logger.setLevel(level)
         self._logger.addHandler(self.__get_console_handler())
 
     @staticmethod
     def __get_console_handler():
+        """
+        Get a console handler for the logger.
+
+        :return:  A console handler for the logger.
+        """
         console_handler = logging.StreamHandler()
         console_handler.setLevel(logging.DEBUG)
         console_handler.setFormatter(
@@ -90,14 +112,8 @@ class LoggerSingleton(object):
         return console_handler
 
     def get_logger(self):
+        """
+        Get the logger.
+        :return: The instance of the ModuleLogger.
+        """
         return self._logger
-
-
-# Set up the singleton logger
-logger = LoggerSingleton().get_logger()
-
-logger.debug("This is a debug message")
-logger.info("This is an info message")
-logger.warning("This is a warning message")
-logger.error("This is an error message")
-logger.critical("This is a critical message")

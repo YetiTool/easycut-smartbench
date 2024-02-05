@@ -4,17 +4,18 @@ Created on 31 Jan 2018
 Module to manage all serial comms between pi (EasyCut s/w) and realtime arduino chip (GRBL f/w)
 '''
 
-from kivy.config import Config
-
-
-import serial, sys, time, string, threading, serial.tools.list_ports
-from datetime import datetime, timedelta
-from os import listdir
-from kivy.clock import Clock
-
 import re
+from datetime import datetime, timedelta
 from functools import partial
-from serial.serialutil import SerialException
+from os import listdir
+
+import serial
+import serial.tools.list_ports
+import string
+import sys
+import threading
+import time
+from kivy.clock import Clock
 
 # Import managers for GRBL Notification screens (e.g. alarm, error, etc.)
 from asmcnc.core_UI.sequence_alarm import alarm_manager
@@ -120,7 +121,7 @@ class SerialConnection(object):
                     # Read in first input and log it
                     def strip_and_log(input_string):
                         new_string = input_string.strip()
-                        self.logger.info(new_string)
+                        self.logger.debug(new_string)
                         return new_string
 
                     stripped_input = map(strip_and_log, self.s.readlines())
