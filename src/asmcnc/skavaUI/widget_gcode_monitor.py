@@ -282,6 +282,9 @@ class GCodeMonitor(Widget):
             self.popup_flag = False
         else:
             if self.validate_gcode_textinput(self.gCodeInput.text):
+                if self.gCodeInput.text.upper().startswith('S'):
+                    userRPM = int(self.gCodeInput.text[1:])
+                    self.m.turn_on_spindle(rpm = userRPM)
                 self.m.send_any_gcode_command(str(self.gCodeInput.text))
             else:
                 message = (
