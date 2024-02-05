@@ -1884,20 +1884,20 @@ class SerialConnection(object):
 
     def mod_spindle_speed_command(self, spindle_speed_line):
 
-        upper_case_spindle_speed_line = spindle_speed_line.upper()
+        # upper_case_spindle_speed_line = spindle_speed_line.upper()
 
-        match = re.search(r'S(\d+(\.\d+)?)', upper_case_spindle_speed_line)
-        if match:
-            spindle_speed = float(match.group(1))
+        # match = re.search(r'S(\d+(\.\d+)?)', upper_case_spindle_speed_line)
+        # if match:
+        #     spindle_speed = float(match.group(1))
 
-        try:
-            spindle_speed = self.transform_intended_RPM_to_sendable_RPM(spindle_speed)
-            new_line = re.sub(r'(S\d+(\.\d+)?)', "S" + str(spindle_speed), upper_case_spindle_speed_line)
-            log("MODIFIED SPINDLE COMMAND: " + new_line)
-            return new_line
+        # try:
+        #     spindle_speed = self.transform_intended_RPM_to_sendable_RPM(spindle_speed)
+        #     new_line = re.sub(r'(S\d+(\.\d+)?)', "S" + str(spindle_speed), upper_case_spindle_speed_line)
+        #     log("MODIFIED SPINDLE COMMAND: " + new_line)
+        #     return new_line
 
-        except:
-            pass
+        # except:
+        #     pass
 
         return spindle_speed_line
 
