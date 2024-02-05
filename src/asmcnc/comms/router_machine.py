@@ -1068,6 +1068,44 @@ class RouterMachine(object):
         # else: return 0
         return float(rpm_red)
 
+    def turn_on_spindle(self, rpm=None, voltage=spindle_voltage):
+        """
+        Turns on the spindle.
+
+        Args:
+            rpm (int, optional): The desired RPM (Rotations Per Minute) of the spindle. Defaults to None, which will be same as last set value (handled by GRBL).
+            voltage (int, optional): The voltage of the spindle. Defaults to spindle_voltage.
+
+        Raises:
+            ValueError: If the spindle voltage is not recognized.
+
+        Returns:
+            None
+        """
+        if rpm: # If a value is given, set the spindle to that value
+            if voltage == 110 or voltage == 120: # Both values used to be safe
+                rpm_to_set = rpm
+            elif voltage == 230 or voltage == 240: # Both values used to be safe
+                rpm_to_set= rpm
+            else:
+                raise ValueError('Spindle voltage: {} not recognised'.format(voltage))  
+                      
+            self.s.write_command('M3 S' + str(rpm_to_set))
+
+        else: # If no value is given, turn the spindle on at the last set value (handled by GRBL)
+            self.s.write_command('M3')
+
+    def turn_off_spindle(self):
+        """
+        Turns off the spindle.
+
+        This method sends the command 'M5' to the Z Head to turn off the spindle.
+
+        Returns:
+            None
+        """
+        self.s.write_command('M5')
+
 # START UP SEQUENCES
 
     # BOOT UP SEQUENCE
