@@ -1082,11 +1082,20 @@ class RouterMachine(object):
         Returns:
             None
         """
+
+        def convert_rpm_for_120(target_rpm):
+            # See https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/
+            return (rpm - 8658) / 0.6739
+        
+        def convert_rpm_for_230(targer_rpm):
+            # See https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/
+            return (rpm - 1886) / 0.95915
+        
         if rpm: # If a value is given, set the spindle to that value
-            if voltage == 110 or voltage == 120: # Both values used to be safe
-                rpm_to_set = rpm
-            elif voltage == 230 or voltage == 240: # Both values used to be safe
-                rpm_to_set= rpm
+            if voltage == 110 or voltage == 120:            
+                rpm_to_set = convert_rpm_for_120(rpm)
+            elif voltage == 230 or voltage == 240:
+                rpm_to_set = convert_rpm_for_230(rpm)
             else:
                 raise ValueError('Spindle voltage: {} not recognised'.format(voltage))  
                       
