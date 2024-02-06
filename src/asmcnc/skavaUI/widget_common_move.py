@@ -146,7 +146,7 @@ class CommonMove(Widget):
 
     def set_spindle(self):
         def button_two_callback():
-            self.spindle_image.source = "./asmcnc/skavaUI/img/spindle_on.png"
+            self.spindle_image.source = "./asmcnc/skavaUI/img/blinking_spindle.gif"
             self.m.spindle_on()
 
         if self.spindle_toggle.state == "normal":

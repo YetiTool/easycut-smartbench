@@ -866,6 +866,7 @@ class SpindleSafetyPopup(BasicPopup):
         main_label_size_hint_y=2,
         **kwargs
     ):
+        # TODO: Localize this string
         main_string = """
         This will start the spindle! Please make sure:\n
         - the spindle is clamped properly\n
@@ -893,7 +894,7 @@ class SpindleSafetyPopup(BasicPopup):
             button_two_background_color=button_two_background_color,
             title=title,
             main_label_size_hint_y=main_label_size_hint_y,
-            button_layout_size_hint_y= 1,
+            button_layout_size_hint_y=1,
             **kwargs
         )
 
