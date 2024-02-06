@@ -564,10 +564,7 @@ class LobbyScreen(Screen):
         # Check that window.height is valid & being read in - otherwise will default to SC
         elif type(Window.height) is not int and type(Window.height) is not float:
             self.check_apps_on_pre_enter = True
-        # If using Console 10, show YetiCut coming soon
-        elif scaling_utils.is_screen_big():
-            self.remove_everything_but(self.yeti_cut_apps_container)
-        # If OG console, show shapecutter
+        # Else, show shapecutter
         else:
             self.remove_everything_but(self.shapecutter_container)
 
