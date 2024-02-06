@@ -26,7 +26,7 @@ class DWTConfig(object):
     active_config = None  # type: config_classes.Configuration
     active_cutter = None  # type: config_classes.Cutter
 
-    def __init__(self, screen_drywall_cutter):
+    def __init__(self, screen_drywall_cutter=None):
         self.screen_drywall_cutter = screen_drywall_cutter
         # Load the temp config if it exists, otherwise load the default config.
         if not os.path.exists(temp_dir):
@@ -209,8 +209,9 @@ class DWTConfig(object):
             for parameter_name in parameter_names[:-1]:
                 parameter = getattr(parameter, parameter_name)
 
-            if getattr(parameter, parameter_names[-1]) != parameter_value:
-                self.screen_drywall_cutter.drywall_shape_display_widget.config_name_label.text = "New Configuration"
+            if self.screen_drywall_cutter:
+                if getattr(parameter, parameter_names[-1]) != parameter_value:
+                    self.screen_drywall_cutter.drywall_shape_display_widget.config_name_label.text = "New Configuration"
 
             setattr(parameter, parameter_names[-1], parameter_value)
         else:
