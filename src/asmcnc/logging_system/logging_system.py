@@ -85,17 +85,17 @@ class LoggerSingleton(object):
         """
         self._logger = ModuleLogger(name, level)
         self._logger.setLevel(level)
-        self._logger.addHandler(self.__get_console_handler())
+        self._logger.addHandler(self.__get_console_handler(level))
 
     @staticmethod
-    def __get_console_handler():
+    def __get_console_handler(level):
         """
         Get a console handler for the logger.
 
         :return:  A console handler for the logger.
         """
         console_handler = logging.StreamHandler()
-        console_handler.setLevel(logging.DEBUG)
+        console_handler.setLevel(level)
         console_handler.setFormatter(
             ColoredFormatter(
                 fmt="%(log_color)s" + LOG_STRING_FORMAT,
@@ -117,3 +117,6 @@ class LoggerSingleton(object):
         :return: The instance of the ModuleLogger.
         """
         return self._logger
+
+
+logger = LoggerSingleton().get_logger()

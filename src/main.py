@@ -45,6 +45,11 @@ Config.set('graphics', 'maxfps', '60')
 Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
 Config.write()
 
+os.environ['KIVY_NO_FILELOG'] = '1'
+
+from kivy.logger import Logger, LOG_LEVELS
+Logger.setLevel(LOG_LEVELS['info'])
+
 import kivy
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
