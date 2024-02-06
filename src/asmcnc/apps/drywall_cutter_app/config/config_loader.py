@@ -9,7 +9,7 @@ cutters_dir = os.path.join(current_dir, 'cutters')
 temp_dir = os.path.join(current_dir, 'temp')
 
 TEMP_CONFIG_PATH = os.path.join(temp_dir, 'temp_config')
-DEBUG_MODE = False
+DEBUG_MODE = True
 
 
 def debug(func):
