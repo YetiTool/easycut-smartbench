@@ -29,7 +29,7 @@ class DWTConfig(object):
             self.load_config('temp_config.json')
         else:
             self.active_config = config_classes.Configuration.default()
-            self.active_cutter = self.load_cutter(self.active_config.cutter_type)
+            self.load_cutter(self.active_config.cutter_type)
 
     @staticmethod
     @debug
