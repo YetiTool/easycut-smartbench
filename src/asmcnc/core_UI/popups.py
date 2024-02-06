@@ -856,7 +856,7 @@ class SpindleSafetyPopup(BasicPopup):
         button_two_callback=None,
         button_two_background_color=None,
         title="Information",
-        main_label_padding=(10, 10),
+        main_label_padding=(0, 10),
         main_layout_padding=(10, 10, 10, 10),
         main_layout_spacing=10,
         main_label_size_delta=10,
