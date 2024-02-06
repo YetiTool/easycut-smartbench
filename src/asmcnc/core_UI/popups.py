@@ -847,8 +847,8 @@ class DownloadSettingsToUsbPopup(BasicPopup):
 class SpindleSafetyPopup(BasicPopup):
     def __init__(
         self,
-        popup_width=500,
-        popup_height=400,
+        popup_width=600,
+        popup_height=450,
         button_one_text="Cancel",
         button_one_callback=None,
         button_one_background_color=(230 / 255., 74 / 255., 25 / 255., 1.),
@@ -860,7 +860,7 @@ class SpindleSafetyPopup(BasicPopup):
         main_layout_padding=(10, 10, 10, 10),
         main_layout_spacing=10,
         main_label_size_delta=10,
-        button_layout_padding=(0, 0, 0, 0),
+        button_layout_padding=(0, 5, 0, 5),
         button_layout_spacing=15,
         main_label_h_align="left",
         main_label_size_hint_y=2,
