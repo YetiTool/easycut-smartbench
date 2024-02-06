@@ -1,3 +1,4 @@
+import sys
 from datetime import datetime
 
 from kivy.uix.screenmanager import Screen
@@ -32,9 +33,10 @@ class ZHeadMechanicsBooting(Screen):
 
     def next_screen(self, dt):
         try:
-            self.sm.get_screen('mechanics').z_axis_max_travel = -self.m.s.setting_132
-            self.sm.get_screen('mechanics').z_axis_max_speed = self.m.s.setting_112
-            self.m.send_command_to_motor("DISABLE MOTOR DRIVERS", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=0)
+            if sys.platform != 'darwin' and sys.platform != 'win32':
+                self.sm.get_screen('mechanics').z_axis_max_travel = -self.m.s.setting_132
+                self.sm.get_screen('mechanics').z_axis_max_speed = self.m.s.setting_112
+                self.m.send_command_to_motor("DISABLE MOTOR DRIVERS", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=0)
             self.sm.current = 'mechanics'
         except:
             Clock.schedule_once(self.next_screen, 1)

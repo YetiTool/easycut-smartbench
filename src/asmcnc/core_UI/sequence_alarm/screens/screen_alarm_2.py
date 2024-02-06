@@ -1,14 +1,13 @@
-'''
+"""
 Created on 31 March 2021
 @author: Letty
-'''
+"""
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
 
-
-# Kivy UI builder:
-Builder.load_string("""
+Builder.load_string(
+    """
 <AlarmScreen2>:
 	alarm_title : alarm_title
 	icon_container : icon_container
@@ -28,33 +27,33 @@ Builder.load_string("""
 		padding: 0
 		spacing: 0
 		size_hint: (None, None)
-		height: dp(480)
-		width: dp(800)
+		height: dp(1.0*app.height)
+		width: dp(1.0*app.width)
 		# Alarm header
 		BoxLayout: 
-			padding: [15,0,15,0]
+			padding:[dp(0.01875)*app.width, 0, dp(0.01875)*app.width, 0]
 			spacing: 0
 			size_hint: (None, None)
-			height: dp(50)
-			width: dp(800)
+			height: dp(0.104166666667*app.height)
+			width: dp(1.0*app.width)
 			orientation: 'horizontal'
 			Label:
 				id: alarm_title
 				size_hint: (None, None)
-				font_size: '30sp'
+				font_size: str(0.0375*app.width) + 'sp'
 				color: [0,0,0,1]
 				markup: True
 				halign: 'left'
-				height: dp(50)
-				width: dp(770)
+				height: dp(0.104166666667*app.height)
+				width: dp(0.9625*app.width)
 				text_size: self.size
 		# Red underline
 		BoxLayout: 
-			padding: [10,0,10,0]
+			padding:[dp(0.0125)*app.width, 0, dp(0.0125)*app.width, 0]
 			spacing: 0
 			size_hint: (None, None)
-			height: dp(5)
-			width: dp(800)
+			height: dp(0.0104166666667*app.height)
+			width: dp(1.0*app.width)
 			Image:
 				id: red_underline
 				source: "./asmcnc/skavaUI/img/red_underline.png"
@@ -64,42 +63,42 @@ Builder.load_string("""
 				allow_stretch: True
 		# Image and text
 		BoxLayout: 
-			padding: [0,35,0,0]
+			padding:[0, dp(0.0729166666667)*app.height, 0, 0]
 			spacing: 0
 			size_hint: (None, None)
-			height: dp(283)
-			width: dp(800)
+			height: dp(0.589583333333*app.height)
+			width: dp(1.0*app.width)
 			orientation: 'vertical'
 			BoxLayout: 
 				id: icon_container
-				padding: [190,30,218.5,0]
-				spacing: 208.5
+				padding:[dp(0.2375)*app.width, dp(0.0625)*app.height, dp(0.273125)*app.width, 0]
+				spacing:0.260625*app.width
 				size_hint: (None, None)
-				height: dp(130)
-				width: dp(800)
+				height: dp(0.270833333333*app.height)
+				width: dp(1.0*app.width)
 				orientation: 'horizontal'    
 				Image:
 					id: icon_left
 					allow_stretch: False
 					size_hint: (None, None)
-					height: dp(100)
-					width: dp(120)
+					height: dp(0.208333333333*app.height)
+					width: dp(0.15*app.width)
 				Image:
 					id: icon_right
 					allow_stretch: False
 					size_hint: (None, None)
-					height: dp(100)
-					width: dp(63)
+					height: dp(0.208333333333*app.height)
+					width: dp(0.07875*app.width)
 			BoxLayout:
 				id: description container
-				padding: [30,0,30,0]
+				padding:[dp(0.0375)*app.width, 0, dp(0.0375)*app.width, 0]
 				spacing: 0
 				size_hint: (None, None)
-				height: dp(118)
-				width: dp(800)
+				height: dp(0.245833333333*app.height)
+				width: dp(1.0*app.width)
 				Label:
 					id: description_label
-					font_size: '20sp'
+					font_size: str(0.025*app.width) + 'sp'
 					color: [0,0,0,1]
 					markup: True
 					halign: 'center'
@@ -108,20 +107,21 @@ Builder.load_string("""
 					size: self.parent.size
 		# Buttons
 		BoxLayout: 
-			padding: [10,0,10,10]
+			padding:[dp(0.0125)*app.width, 0, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
 			size_hint: (None, None)
-			height: dp(142)
-			width: dp(800)
+			height: dp(0.295833333333*app.height)
+			width: dp(1.0*app.width)
 			orientation: 'horizontal'
 			BoxLayout: 
 				size_hint: (None, None)
-				height: dp(132)
-				width: dp(244.5)
-				padding: [0, 0, 184.5, 0]
+				height: dp(0.275*app.height)
+				width: dp(0.305625*app.width)
+				padding:[0, 0, dp(0.230625)*app.width, 0]
 				Button:
+				    font_size: str(0.01875 * app.width) + 'sp'
 					size_hint: (None,None)
-					height: dp(52)
-					width: dp(60)
+					height: dp(0.108333333333*app.height)
+					width: dp(0.075*app.width)
 					background_color: hex('#F4433600')
 					center: self.parent.center
 					pos: self.parent.pos
@@ -138,50 +138,54 @@ Builder.load_string("""
 							allow_stretch: True
 			BoxLayout: 
 				size_hint: (None, None)
-				height: dp(132)
-				width: dp(291)
-				padding: [0,0,0,52]
+				height: dp(0.275*app.height)
+				width: dp(0.36375*app.width)
+				padding:[0, 0, 0, dp(0.108333333333)*app.height]
 				Button:
 					id: next_button
 					background_normal: "./asmcnc/skavaUI/img/next.png"
 					background_down: "./asmcnc/skavaUI/img/next.png"
 					border: [dp(14.5)]*4
 					size_hint: (None,None)
-					width: dp(291)
-					height: dp(79)
+					width: dp(0.36375*app.width)
+					height: dp(0.164583333333*app.height)
 					on_press: root.next_screen()
 					text: 'Next...'
-					font_size: '30sp'
+					font_size: str(0.0375*app.width) + 'sp'
 					color: hex('#f9f9f9ff')
 					markup: True
 					center: self.parent.center
 					pos: self.parent.pos
 			BoxLayout: 
 				size_hint: (None, None)
-				height: dp(132)
-				width: dp(244.5)
-				padding: [193.5, 0, 0, 0]
-""")
+				height: dp(0.275*app.height)
+				width: dp(0.305625*app.width)
+				padding:[dp(0.241875)*app.width, 0, 0, 0]
+"""
+)
+
 
 class AlarmScreen2(Screen):
-	
-	def __init__(self, **kwargs):
-		super(AlarmScreen2, self).__init__(**kwargs)
-		self.a=kwargs['alarm_manager']
+    def __init__(self, **kwargs):
+        super(AlarmScreen2, self).__init__(**kwargs)
+        self.a = kwargs["alarm_manager"]
+        self.alarm_title.text = self.a.l.get_bold("Alarm: Record details")
+        self.icon_left.source = "./asmcnc/core_UI/sequence_alarm/img/camera_dark.png"
+        self.icon_right.source = (
+            "./asmcnc/core_UI/sequence_alarm/img/usb_empty_dark.png"
+        )
+        self.description_label.text = self.a.l.get_str(
+            "Record the alarm report for diagnosis and support. Take a photo of the report on the next screen, or insert a USB stick now to download it."
+        )
+        self.next_button.text = self.a.l.get_str("Next") + "..."
 
-		self.alarm_title.text = self.a.l.get_bold("Alarm: Record details")
-		self.icon_left.source = "./asmcnc/core_UI/sequence_alarm/img/camera_dark.png"
-		self.icon_right.source = "./asmcnc/core_UI/sequence_alarm/img/usb_empty_dark.png"
-		self.description_label.text = self.a.l.get_str("Record the alarm report for diagnosis and support. Take a photo of the report on the next screen, or insert a USB stick now to download it.")
-		self.next_button.text = self.a.l.get_str("Next") + "..."
+    def next_screen(self):
+        self.a.sm.get_screen("alarm_3").for_support = True
+        self.a.sm.current = "alarm_3"
 
-	def next_screen(self):
-		self.a.sm.get_screen('alarm_3').for_support = True
-		self.a.sm.current = 'alarm_3'
-
-	def prev_screen(self):
-		if self.a.support_sequence:
-			self.a.sm.current = 'alarm_1'
-		else:
-			self.a.sm.get_screen('alarm_3').for_support = False
-			self.a.sm.current = 'alarm_3'
+    def prev_screen(self):
+        if self.a.support_sequence:
+            self.a.sm.current = "alarm_1"
+        else:
+            self.a.sm.get_screen("alarm_3").for_support = False
+            self.a.sm.current = "alarm_3"
