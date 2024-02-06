@@ -295,6 +295,9 @@ class DrywallCutterScreen(Screen):
         self.dwt_config.save_config(file_name)
 
     def on_parameter_change(self, parameter_name, parameter_value):
+        print(parameter_name, str(parameter_value))
+        print(self.dwt_config.active_config.__dict__[parameter_name])
+        print(self.dwt_config.active_config.__dict__[parameter_name] != str(parameter_value))
         if self.dwt_config.active_config.__dict__[parameter_name] != str(parameter_value):
             self.drywall_shape_display_widget.config_name_label.text = 'New Configuration'
         self.dwt_config.on_parameter_change(parameter_name, parameter_value)
