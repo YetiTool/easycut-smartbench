@@ -14,6 +14,8 @@ from asmcnc.core_UI.popups import (
     SoftwareUpdateSuccessPopup,
     WaitPopup,
     WarningPopup,
+    UploadSettingsFromUsbPopup,
+    DownloadSettingsToUsbPopup
 )
 
 
@@ -30,6 +32,8 @@ class PopupManager:
     park_popup = None
     software_update_successful_popup = None
     wait_popup = None
+    upload_settings_from_usb = None
+    download_settings_to_usb = None
 
     def __init__(self, sm, m, l):
         self.sm = sm
@@ -68,6 +72,10 @@ class PopupManager:
 
         self.wait_popup = WaitPopup(sm=self.sm, m=self.m, l=self.l)
 
+        self.upload_settings_from_usb = UploadSettingsFromUsbPopup(sm=self.sm, m=self.m, l=self.l, main_string="")
+
+        self.download_settings_to_usb = DownloadSettingsToUsbPopup(sm=self.sm, m=self.m, l=self.l, main_string="")
+
     def show_error_popup(
         self,
         main_string,
@@ -98,7 +106,7 @@ class PopupManager:
         self.error_popup.height = scaling_utils.get_scaled_height(height)
         self.error_popup.main_label_size_delta = main_label_size_delta
         self.error_popup.main_label_h_align = main_label_h_align
-        self.error_popup.title = title
+        self.error_popup.title = self.l.get_str(title)
         self.error_popup.main_label_padding = main_label_padding
         self.error_popup.main_layout_padding = main_layout_padding
         self.error_popup.main_layout_spacing = main_layout_spacing
@@ -189,6 +197,35 @@ class PopupManager:
         else:
             self.wait_popup.main_label.text = self.l.get_str("Please wait") + "..."
         self.wait_popup.open()
+
+    def show_upload_settings_popup(self, sm):
+        description = self.l.get_str(
+            'This will restore all necessary files from USB for migrating to a new console:') + '\n' + \
+            '\n-' + self.l.get_str('Machine settings') + \
+            '\n-' + self.l.get_str('Job files') + \
+            '\n-' + self.l.get_str('Log files') + \
+            '\n\n' + self.l.get_str('Make sure a USB-stick is connected properly!') + \
+            '\n\n' + self.l.get_str('This might take a few minutes, depending of the size of your files.')
+        self.upload_settings_from_usb.main_label.text = description
+        self.upload_settings_from_usb.sm = sm
+        self.upload_settings_from_usb.open()
+
+    def show_download_settings_popup(self, sm):
+        description = self.l.get_str('This will copy all necessary files for migrating to a new console:') + '\n' + \
+            '\n-' + self.l.get_str('Machine settings') + \
+            '\n-' + self.l.get_str('Job files') + \
+            '\n-' + self.l.get_str('Log files') + \
+            '\n\n' + self.l.get_str('Make sure a USB-stick is connected properly!') + \
+            '\n\n' + self.l.get_str('This might take a few minutes, depending of the size of your files.')
+        self.download_settings_to_usb.main_label.text = description
+        self.download_settings_to_usb.sm = sm
+        self.download_settings_to_usb.open()
+
+    def close_upload_settings_popup(self):
+        self.upload_settings_from_usb.dismiss()
+
+    def close_download_settings_popup(self):
+        self.download_settings_to_usb.dismiss()
 
     def close_mini_info_popup(self):
         self.mini_info_popup.dismiss()

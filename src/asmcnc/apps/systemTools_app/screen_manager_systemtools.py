@@ -6,7 +6,8 @@ from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info, screen_diagnostics
 from asmcnc.apps.systemTools_app.screens import popup_system, screen_system_menu, screen_build_info, screen_beta_testing, \
 screen_grbl_settings, screen_factory_settings, screen_update_testing, screen_developer_temp, screen_final_test, screen_support_menu
-
+from threading import Lock
+from asmcnc.core_UI.popup_manager import PopupManager
 class ScreenManagerSystemTools(object):
 
     def __init__(self, app_manager, screen_manager, machine, settings, localization, keyboard):
@@ -18,6 +19,7 @@ class ScreenManagerSystemTools(object):
         self.l = localization
         self.kb = keyboard
         self.usb_stick = usb_storage.USB_storage(self.sm, self.l)
+        self.mutex = Lock()
 
     def open_system_tools(self):
         if not self.sm.has_screen('system_menu'): 
@@ -144,6 +146,127 @@ class ScreenManagerSystemTools(object):
               Clock.schedule_once(lambda dt: get_grbl_settings_from_usb(), 0.2)
 
         Clock.schedule_once(lambda dt: get_grbl_settings_from_usb(), 0.2)
+
+    '''Copies all the relevant files for upgrading the console to a c10 to the mounted usb stick.'''
+    def show_popup_before_download_settings_to_usb(self):
+        self.sm.pm.show_download_settings_popup(self)
+
+    def download_settings_to_usb(self, *args):
+        if self.mutex.locked():
+            # already running
+            print('mutex locked!')
+            return
+        self.mutex.acquire(True)
+        self.usb_stick.enable()
+        message = self.l.get_str('Saving settings to USB. Please wait') + '...'
+        self.sm.pm.show_info_popup(message, 600)
+
+        def copy_settings_to_usb(loop_counter):
+            print('Loop: {}').format(loop_counter)
+            if self.usb_stick.is_usb_mounted_flag:
+                try:
+                    print('Copying...')
+                    # create temp folder
+                    os.system('mkdir -p /home/pi/easycut-smartbench/transfer_tmp/easycut-smartbench/src')
+                    # copy settings
+                    os.system('cp -r /home/pi/easycut-smartbench/src/sb_values /home/pi/easycut-smartbench/transfer_tmp/easycut-smartbench/src/')
+                    # remove GRBL-file if exists. might be outdated. There is a separate function for that.
+                    os.system('rm /home/pi/easycut-smartbench/transfer_tmp/easycut-smartbench/src/sb_values/saved_grbl_settings_params.txt')
+                    # copy job files
+                    os.system('cp -r /home/pi/easycut-smartbench/src/jobCache /home/pi/easycut-smartbench/transfer_tmp/easycut-smartbench/src/')
+                    # smartbench name, model-name, location
+                    os.system('cp /home/pi/smartbench* /home/pi/easycut-smartbench/transfer_tmp/')
+                    # model version files
+                    os.system('cp /home/pi/multiply.txt /home/pi/easycut-smartbench/transfer_tmp/')
+                    os.system('cp /home/pi/plus.txt /home/pi/easycut-smartbench/transfer_tmp/')
+                    # compress everything to usb
+                    print('Create tar...')
+                    os.system('sudo tar czf /media/usb/transfer.tar.gz -C /home/pi/easycut-smartbench/transfer_tmp .')
+                except Exception as e:
+                    print(e)
+                    pass
+                try:
+                    #clean up
+                    print('Clean up...')
+                    os.system('rm -r /home/pi/easycut-smartbench/transfer_tmp')
+                except Exception as e:
+                    print("Could not delete temporary files: {e}").format(e)
+                    pass
+                self.sm.pm.close_info_popup()
+                #check if transfer file exists
+                if os.path.isfile('/media/usb/transfer.tar.gz'):
+                    message = self.l.get_str('Successfully saved settings to USB!')
+                    self.sm.pm.show_mini_info_popup(message)
+                else:
+                    message = self.l.get_str('Could not save settings. Please check USB!')
+                    self.sm.pm.show_mini_info_popup(message)
+                self.usb_stick.disable()
+                self.mutex.release()
+            elif loop_counter > 30:
+                self.sm.pm.close_info_popup()
+                message = self.l.get_str('No USB found!')
+                self.sm.pm.show_mini_info_popup(message)
+                self.mutex.release()
+            else:
+                Clock.schedule_once(lambda dt: copy_settings_to_usb(loop_counter+1), 0.2)
+
+        Clock.schedule_once(lambda dt: copy_settings_to_usb(1), 0.2)
+
+    '''Restores all the relevant files from USB for upgrading the console to a c10 .'''
+    def show_popup_before_upload_settings_from_usb(self):
+        self.sm.pm.show_upload_settings_popup(self)
+
+    def upload_settings_from_usb(self, *args):
+        if self.mutex.locked():
+            # already running
+            print('mutex locked!')
+            return
+        self.mutex.acquire(True)
+        self.usb_stick.enable()
+        message = self.l.get_str('Restoring settings from USB. Please wait') + '...'
+        self.sm.pm.show_info_popup(message, 600)
+
+        def restore_settings_from_usb(loop_counter):
+            print('Loop: {}').format(loop_counter)
+            if self.usb_stick.is_usb_mounted_flag:
+                # TODO restore files here
+                success_flag = True
+                try:
+                    if not os.path.isfile('/media/usb/transfer.tar.gz'):
+                        self.sm.pm.close_info_popup()
+                        self.usb_stick.disable()
+                        message = self.l.get_str('Could not restore settings. Please check USB!')
+                        self.sm.pm.show_mini_info_popup(message)
+                        self.mutex.release()
+                        return
+                    else:
+                        # decompress from usb
+                        os.system('sudo tar xf /media/usb/transfer.tar.gz -C /home/pi/')
+                        # clean up
+                        os.system('sudo rm /media/usb/transfer.tar.gz')
+                        self.m.get_persistent_values()
+                except Exception as e:
+                    success_flag = False
+                    print(e)
+                    pass
+                self.sm.pm.close_info_popup()
+                self.usb_stick.disable()
+                if success_flag:
+                    message = self.l.get_str('Successfully restored settings from USB!')
+                    self.sm.pm.show_mini_info_popup(message)
+                else:
+                    message = self.l.get_str('Could not restore Settings. Please check USB!')
+                    self.sm.pm.show_mini_info_popup(message)
+                self.mutex.release()
+            elif loop_counter > 30:
+                self.sm.pm.close_info_popup()
+                message = self.l.get_str('No USB found!')
+                self.sm.pm.show_mini_info_popup(message)
+                self.mutex.release()
+            else:
+                Clock.schedule_once(lambda dt: restore_settings_from_usb(loop_counter+1), 0.2)
+
+        Clock.schedule_once(lambda dt: restore_settings_from_usb(1), 0.2)
 
     def restore_grbl_settings_from_file(self): # first half to system tools, second half to machine module
         filename = '/home/pi/easycut-smartbench/src/sb_values/saved_grbl_settings_params.txt'

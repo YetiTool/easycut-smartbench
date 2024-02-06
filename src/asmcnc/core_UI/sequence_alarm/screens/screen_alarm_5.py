@@ -7,6 +7,7 @@ Created on 31 March 2021
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
+from asmcnc.core_UI.scaling_utils import get_scaled_width
 
 Builder.load_string(
     """
@@ -183,7 +184,7 @@ Builder.load_string(
 
 class AlarmScreen5(Screen):
     return_to_screen = "alarm_1"
-    default_font_size = 30
+    default_font_size = get_scaled_width(30)
 
     def __init__(self, **kwargs):
         super(AlarmScreen5, self).__init__(**kwargs)

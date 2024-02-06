@@ -18,6 +18,7 @@ import sys, os, textwrap
 from os.path import expanduser
 from shutil import copy
 
+from asmcnc.core_UI import scaling_utils
 from asmcnc.skavaUI import popup_info
 from asmcnc.core_UI.popups import BasicPopup, PopupType
 from kivy.core.window import Window
@@ -37,6 +38,8 @@ Builder.load_string("""
     system_tools_app_label: system_tools_app_label
     upgrade_app_label:upgrade_app_label
 
+    carousel_pane_1:carousel_pane_1
+    pro_app_container:pro_app_container
     shapecutter_container:shapecutter_container
     yeti_cut_apps_container:yeti_cut_apps_container
     drywall_app_container:drywall_app_container
@@ -67,11 +70,13 @@ Builder.load_string("""
             loop: True
                             
             BoxLayout:
+                id: carousel_pane_1
                 orientation: 'horizontal'
                 padding:[dp(0.125)*app.width, dp(0.0416666666667)*app.height, dp(0.125)*app.width, dp(0.104166666667)*app.height]
                 spacing:0.0416666666667*app.height
 
                 BoxLayout:
+                    id: pro_app_container
                     orientation: 'vertical'
                     size_hint_x: 1
                     spacing:0.0416666666667*app.height
@@ -186,16 +191,13 @@ Builder.load_string("""
                         BoxLayout:
                             size: self.parent.size
                             pos: self.parent.pos
-                            canvas:
-                                Color:
-                                    rgba: 1,1,1,1
-                                RoundedRectangle:
-                                    size: self.parent.size
-                                    pos: self.parent.pos
-                            Label:
-                                font_size: str(0.01875 * app.width) + 'sp'
-                                text: 'Drywall cutter'
-                                color: 0,0,0,1
+                            Image:
+                                id: image_select
+                                source: "./asmcnc/apps/drywall_cutter_app/img/lobby_logo.png"
+                                center_x: self.parent.center_x
+                                y: self.parent.y
+                                size: self.parent.width, self.parent.height
+                                allow_stretch: True
                     Label:
                         size_hint_y: 1
                         font_size: str(0.03125*app.width) + 'sp'
@@ -555,15 +557,20 @@ class LobbyScreen(Screen):
         # If it's a SmartCNC machine, then show the drywalltec app instead of shapecutter
         if "DRYWALLTEC" in self.m.smartbench_model():
             self.remove_everything_but(self.drywall_app_container)
+            self.put_drywall_app_first()
         # Check that window.height is valid & being read in - otherwise will default to SC
         elif type(Window.height) is not int and type(Window.height) is not float:
             self.check_apps_on_pre_enter = True
-        # If using Console 10, show YetiCut coming soon
-        elif Window.height > 480:
-            self.remove_everything_but(self.yeti_cut_apps_container)
-        # If OG console, show shapecutter
+        # Else, show shapecutter
         else:
             self.remove_everything_but(self.shapecutter_container)
+
+    def put_drywall_app_first(self):
+        self.pro_app_container.parent.remove_widget(self.pro_app_container)
+        self.drywall_app_container.parent.remove_widget(self.drywall_app_container)
+
+        self.carousel_pane_1.add_widget(self.drywall_app_container)
+        self.carousel_pane_1.add_widget(self.pro_app_container)
 
     def remove_everything_but(self, everything_but):
         containers = [
@@ -579,7 +586,7 @@ class LobbyScreen(Screen):
         container.parent.remove_widget(container)
 
     def on_pre_enter(self):
-        if self.check_apps_on_pre_enter: 
+        if self.check_apps_on_pre_enter:
             self.show_desired_apps()
             self.check_apps_on_pre_enter = False
         # Hide upgrade app if older than V1.3, and only if it has not been hidden already
@@ -620,7 +627,7 @@ class LobbyScreen(Screen):
                                    button_layout_spacing=15,
                                    button_two_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
                                    button_one_background_color=(230 / 255., 74 / 255., 25 / 255., 1.),
-                                   button_one_text="Remind me", button_two_text="Ok",
+                                   button_one_text="Remind me later", button_two_text="Ok",
                                    button_one_callback=self.set_trigger_to_true,
                                    button_two_callback=self.set_trigger_to_false)
 

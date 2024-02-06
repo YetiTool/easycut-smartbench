@@ -5,23 +5,25 @@ from datetime import datetime
 from kivy.lang import Builder
 from kivy.core.text import LabelBase
 
-current_dir = os.path.dirname(os.path.realpath(__file__))
-fonts_folder = os.path.join(current_dir, '..', 'keyboard', 'fonts')
 
-kr_font_path = os.path.join(fonts_folder, 'KRFont.ttf')
-kr_font_bold_path = os.path.join(fonts_folder, 'KRFont-Bold.ttf')
+kr_font_path = '/asmcnc/keyboard/fonts/KRFont.ttf'
+kr_font_bold_path = '/asmcnc/keyboard/fonts/KRFont-Bold.ttf'
 
 try: 
     LabelBase.register(name='KRFont',
-                       fn_regular=kr_font_path,
-                       fn_bold=kr_font_bold_path)
+                       fn_regular="." + kr_font_path,
+                       fn_bold="." + kr_font_bold_path)
 
     LabelBase.register(name='KRFont-Bold',
-                       fn_regular=kr_font_bold_path)
+                       fn_regular="." + kr_font_bold_path)
 
 except:
-    print("Could not load Korean font")
+    LabelBase.register(name='KRFont',
+                       fn_regular="./src" + kr_font_path,
+                       fn_bold="./src" + kr_font_bold_path)
 
+    LabelBase.register(name='KRFont-Bold',
+                       fn_regular="./src" + kr_font_bold_path)
 
 builder_font_string = """
 <Widget>:
@@ -83,20 +85,7 @@ class Localization(object):
         self.load_from_dictionary()
 
     # Getters/formatters
-    def get_str(self, string, ignore_punctuation=False):
-        if ignore_punctuation:
-            punctuation = ""
-            while string[-1] in [".", ",", "!", "?"]:
-                punctuation += string[-1]
-                string = string[:-1]
-            return (
-                    str(
-                        self.dictionary.get(
-                            str(string), self.get_str(string, ignore_punctuation=False)
-                        )
-                    )
-                    + punctuation
-            )
+    def get_str(self, string):
         return str(self.dictionary.get(str(string), str(string)))
 
     def get_bold(self, string):

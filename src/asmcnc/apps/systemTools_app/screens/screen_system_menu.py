@@ -14,6 +14,7 @@ import sys
 from kivy.clock import Clock
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.systemTools_app.screens import popup_system
+from asmcnc.core_UI import scaling_utils
 
 Builder.load_string(
 """
@@ -58,8 +59,8 @@ Builder.load_string(
             on_press: root.go_to_build_info()
             background_normal: "./asmcnc/apps/systemTools_app/img/system_info.png"
             background_down: "./asmcnc/apps/systemTools_app/img/system_info.png"
-            border: [dp(25)]*4
-            padding_y: 5
+            padding_y: 5.0/800.0*app.width
+            border: (0,0,0,0)
 
         Button:
             id: button_reboot
@@ -72,8 +73,8 @@ Builder.load_string(
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/reboot_console.png"
             background_down: "./asmcnc/apps/systemTools_app/img/reboot_console.png"
-            border: [dp(25)]*4
-            padding_y: 5
+            padding_y: 5.0/800.0*app.width
+            border: (0,0,0,0)
 
         Button:
             id: button_support_menu
@@ -86,8 +87,8 @@ Builder.load_string(
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/support.png"
             background_down: "./asmcnc/apps/systemTools_app/img/support.png"
-            border: [dp(25)]*4
-            padding_y: 5
+            padding_y: 5.0/800.0*app.width
+            border: (0,0,0,0)
 
         Button:
             id: button_exit_software
@@ -100,8 +101,8 @@ Builder.load_string(
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/quit_to_console.png"
             background_down: "./asmcnc/apps/systemTools_app/img/quit_to_console.png"
-            border: [dp(25)]*4
-            padding_y: 5
+            padding_y: 5.0/800.0*app.width
+            border: (0,0,0,0)
 
         Button:
             id: button_usb_first_aid
@@ -114,8 +115,8 @@ Builder.load_string(
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/usb_first_aid.png"
             background_down: "./asmcnc/apps/systemTools_app/img/usb_first_aid.png"
-            border: [dp(25)]*4
-            padding_y: 5
+            padding_y: 5.0/800.0*app.width
+            border: (0,0,0,0)
 
         Button:
             id: button_beta_testing
@@ -128,8 +129,8 @@ Builder.load_string(
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/beta_testing.png"
             background_down: "./asmcnc/apps/systemTools_app/img/beta_testing.png"
-            border: [dp(25)]*4
-            padding_y: 5
+            padding_y: 5.0/800.0*app.width
+            border: (0,0,0,0)
 
         Button:
             id: button_grbl_settings
@@ -142,8 +143,8 @@ Builder.load_string(
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/grbl_settings.png"
             background_down: "./asmcnc/apps/systemTools_app/img/grbl_settings.png"
-            border: [dp(25)]*4
-            padding_y: 5
+            padding_y: 5.0/800.0*app.width
+            border: (0,0,0,0)
 
         Button:
             id: button_factory
@@ -156,8 +157,8 @@ Builder.load_string(
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/factory.png"
             background_down: "./asmcnc/apps/systemTools_app/img/factory.png"
-            border: [dp(25)]*4
-            padding_y: 5
+            padding_y: 5.0/800.0*app.width
+            border: (0,0,0,0)
 
         # Button:
         #     id: button_update_testing
@@ -170,8 +171,8 @@ Builder.load_string(
         #     text_size: self.size
         #     background_normal: "./asmcnc/apps/systemTools_app/img/update_developer.png"
         #     background_down: "./asmcnc/apps/systemTools_app/img/update_developer.png"
-        #     border: [dp(25)]*4
-        #     padding_y: 5
+        #     padding_y: 5.0/800.0*app.width
+        #     border: (0,0,0,0)
 
 
         Button:
@@ -186,8 +187,8 @@ Builder.load_string(
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/developer.png"
             background_down: "./asmcnc/apps/systemTools_app/img/developer.png"
-            border: [dp(25)]*4
-            padding_y: 5
+            padding_y: 5.0/800.0*app.width
+            border: (0,0,0,0)
 
         Button:
             id: button_go_back
@@ -200,15 +201,15 @@ Builder.load_string(
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/exit_system_tools.png"
             background_down: "./asmcnc/apps/systemTools_app/img/exit_system_tools.png"
-            border: [dp(25)]*4
-            padding_y: 5
+            padding_y: 5.0/800.0*app.width
+            border: (0,0,0,0)
 
 """
 )
 
 
 class SystemMenuScreen(Screen):
-    default_font_size = 16
+    default_font_size = scaling_utils.get_scaled_width(16)
 
     def __init__(self, **kwargs):
         super(SystemMenuScreen, self).__init__(**kwargs)

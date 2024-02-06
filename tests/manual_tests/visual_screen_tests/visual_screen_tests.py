@@ -51,6 +51,7 @@ from asmcnc.comms import smartbench_flurry_database_connection
 from asmcnc.apps import app_manager
 from asmcnc.job.yetipilot.yetipilot import YetiPilot
 from asmcnc.comms import server_connection
+from asmcnc.core_UI.popup_manager import PopupManager
 
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_error, screen_rebooting, screen_file_loading, screen_lobby
 from asmcnc.skavaUI import screen_job_recovery, screen_nudge, screen_recovery_decision, screen_homing_decision, popup_nudge
@@ -842,6 +843,10 @@ class ScreenTest(App):
 
         # Server connection object
         sc = server_connection.ServerConnection(sett)
+
+        # Popup manager
+        pm = PopupManager(sm, m, l)
+        sm.pm = pm  # store in screen manager for access by screens
 
         start_seq = Mock()
 
