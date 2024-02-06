@@ -10,27 +10,33 @@ from time import sleep
 from datetime import datetime
 from requests import get
 
-try: 
-    import pytz #, pigpio ## until production machines are running latest img
+try:
+    import pytz  # , pigpio ## until production machines are running latest img
 except:
     pytz = None
 
 import socket
 from kivy.clock import Clock
 
+
 def log(message):
     timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
+    print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
+
+
+# For testing purposes, the path to the platform root is defined as being one directory up from the current directory
+# (instead of enforcing the path to be on a pi)
+RASPI_PLATFORM_ROOT = os.path.join("..", "..", "console-raspi3b-plus-platform")
+
 
 class Settings(object):
-    
     wifi_check_thread = None
 
     ping_command = 'ping -c1 one.one.one.one'
     wifi_available = False
     ip_address = ''
     WIFI_REPORT_INTERVAL = 2
-    full_hostname = socket.gethostname() 
+    full_hostname = socket.gethostname()
     console_hostname = full_hostname.split('.')[0]
     public_ip_address = ''
     timezone = None
@@ -46,11 +52,11 @@ class Settings(object):
     latest_platform_version = ''
     fw_version = ''
     latest_fw_version = ''
-    grbl_mega_dir = '/home/pi/grbl-Mega/' 
+    grbl_mega_dir = '/home/pi/grbl-Mega/'
     usb_or_wifi = ''
 
     def __init__(self, screen_manager):
-        
+
         self.sm = screen_manager
 
         self.get_public_ip_address()
@@ -60,8 +66,7 @@ class Settings(object):
         self.wifi_check_thread.daemon = True
         self.wifi_check_thread.start()
 
-
-## WIFI AND CONNECTIONS
+    ## WIFI AND CONNECTIONS
 
     def check_wifi_and_refresh_ip_address(self):
 
@@ -70,7 +75,7 @@ class Settings(object):
             if sys.platform == "win32":
                 try:
                     # get IP address
-                    IPAddr=socket.gethostbyname(self.full_hostname)
+                    IPAddr = socket.gethostbyname(self.full_hostname)
                     self.ip_address = str(IPAddr)
                     self.wifi_available = True
 
@@ -81,7 +86,7 @@ class Settings(object):
             elif sys.platform == 'darwin':
                 try:
                     # get IP address
-                    IPAddr=socket.gethostbyname(self.full_hostname)
+                    IPAddr = socket.gethostbyname(self.full_hostname)
                     self.ip_address = str(IPAddr)
 
                     # ping to check connection
@@ -92,7 +97,7 @@ class Settings(object):
                     self.ip_address = ''
                     self.wifi_available = False
 
-            else: # i.e. is a linux platform
+            else:  # i.e. is a linux platform
                 try:
 
                     # get IP address
@@ -114,13 +119,12 @@ class Settings(object):
 
             sleep(self.WIFI_REPORT_INTERVAL)
 
-
     def do_ping_check(self):
 
         ping_delay = 0.1
         ping_timeout = 1
 
-        proc = subprocess.Popen(self.ping_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+        proc = subprocess.Popen(self.ping_command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
 
         while proc.poll() is None and ping_timeout > 0:
             time.sleep(ping_delay)
@@ -128,16 +132,17 @@ class Settings(object):
 
         if proc.poll() is not None:
 
-            if proc.returncode == 0: return True
-            else: return False
+            if proc.returncode == 0:
+                return True
+            else:
+                return False
 
         else:
             return False
 
-
     def get_public_ip_address(self):
 
-        try: 
+        try:
             self.public_ip_address = get("https://api.ipify.org", timeout=2).content.decode("utf8")
 
         except:
@@ -148,7 +153,8 @@ class Settings(object):
         try:
 
             if pytz:
-                self.timezone = pytz.timezone(get('http://ip-api.com/json/' + str(self.public_ip_address)).json()['timezone'])
+                self.timezone = pytz.timezone(
+                    get('http://ip-api.com/json/' + str(self.public_ip_address)).json()['timezone'])
 
             else:
                 self.timezone = None
@@ -158,8 +164,7 @@ class Settings(object):
 
         log('TIMEZONE: ' + str(self.timezone))
 
-
-## REFRESH EVERYTHING AT START UP    
+    ## REFRESH EVERYTHING AT START UP
     def refresh_all(self):
 
         self.refresh_latest_platform_version()
@@ -167,16 +172,15 @@ class Settings(object):
         self.refresh_latest_sw_version()
         self.refresh_sw_version()
 
+    ## VERSION REFRESH
 
-## VERSION REFRESH
-        
     def refresh_sw_version(self):
         self.sw_version = str(os.popen("git describe --tags").read()).strip('\n')
         self.sw_hash = str(os.popen("git rev-parse --short HEAD").read()).strip('\n')
         self.sw_branch = str(os.popen("git branch | grep \*").read()).strip('\n')
 
         if self.sw_version == "" or self.sw_version == None:
-            self.sw_version = "Unknown"        
+            self.sw_version = "Unknown"
 
     def refresh_latest_sw_version(self):
 
@@ -184,7 +188,7 @@ class Settings(object):
         timeout = 10.0
         fetch_command = "cd /home/pi/easycut-smartbench/ && git fetch --tags --quiet"
 
-        proc = subprocess.Popen(fetch_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+        proc = subprocess.Popen(fetch_command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
 
         while proc.poll() is None and timeout > 0:
             time.sleep(delay)
@@ -202,7 +206,7 @@ class Settings(object):
                 else:
                     self.latest_sw_beta = ""
 
-            except: 
+            except:
                 print("Could not sort software version tags")
                 self.latest_sw_version = ""
 
@@ -211,34 +215,42 @@ class Settings(object):
             self.latest_sw_version = ""
 
     def fetch_platform_tags(self):
-        os.system("cd /home/pi/console-raspi3b-plus-platform/ && git fetch --tags --quiet")
+        command = "cd %s && git fetch --tags --quiet" % RASPI_PLATFORM_ROOT
+        os.system(command)
 
     def refresh_platform_version(self):
-        self.platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --tags").read()).strip('\n')
-        self.pl_hash = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git rev-parse --short HEAD").read()).strip('\n')
-        self.pl_branch = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git branch | grep \*").read()).strip('\n')
+        version_command = "cd %s && git describe --tags" % RASPI_PLATFORM_ROOT
+        self.platform_version = str(
+            os.popen(version_command).read()).strip('\n')
+        pl_hash_command = "cd %s && git rev-parse --short HEAD" % RASPI_PLATFORM_ROOT
+        self.pl_hash = str(
+            os.popen(pl_hash_command).read()).strip('\n')
+        # should it be \\* or \*?
+        pl_branch_command = "cd %s && git branch | grep \\*" % RASPI_PLATFORM_ROOT
+        self.pl_branch = str(
+            os.popen(pl_branch_command).read()).strip('\n')
 
     def refresh_latest_platform_version(self):
-        self.latest_platform_version = str(os.popen("cd /home/pi/console-raspi3b-plus-platform/ && git describe --tags `git rev-list --tags --max-count=1`").read()).strip('\n')
-    
-## GET SOFTWARE UPDATES
+        command = "cd %s && git describe --tags `git rev-list --tags --max-count=1" % RASPI_PLATFORM_ROOT
+        self.latest_platform_version = str(os.popen(command).read()).strip('\n')
 
+    ## GET SOFTWARE UPDATES
 
     def do_fetch_from_github_check(self):
 
         # do a fetch to check that we have access to git
         fetch_command = "cd /home/pi/easycut-smartbench && git fetch origin"
-        proc = subprocess.Popen(fetch_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+        proc = subprocess.Popen(fetch_command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
         stdout, stderr = proc.communicate()
 
         # if it fails, return an error message for the user
         if ("Could not resolve" in str(stdout)) or ("unable to resolve" in str(stdout)):
             return False
 
-        else: 
+        else:
             return True
 
-    def get_sw_update_via_wifi(self, beta = False):
+    def get_sw_update_via_wifi(self, beta=False):
         if sys.platform != 'win32' and sys.platform != 'darwin':
 
             if not self.do_fetch_from_github_check():
@@ -248,8 +260,8 @@ class Settings(object):
         self.refresh_sw_version()
         checkout_success = self.checkout_latest_version(beta)
         return checkout_success
-    
-    def checkout_latest_version(self, beta = False):
+
+    def checkout_latest_version(self, beta=False):
 
         if not beta:
             version_to_checkout = self.latest_sw_version
@@ -260,19 +272,19 @@ class Settings(object):
             if version_to_checkout != self.sw_version:
                 os.system("cd /home/pi/easycut-smartbench/")
 
-                cmd  = ["git", "checkout", "-f", version_to_checkout]
+                cmd = ["git", "checkout", "-f", version_to_checkout]
                 p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                
+
                 unformatted_git_output = p.communicate()[1]
 
                 git_output = str(unformatted_git_output).split('\n')
-                git_output = list(filter(lambda x: x!= '', git_output))
-                     
+                git_output = list(filter(lambda x: x != '', git_output))
+
                 if str(git_output[-1]).startswith('HEAD is now at'):
                     self.update_config()
                     description = str(git_output[-1])
                     return description
-                
+
                 # elif str(git_output[-1]).endswith('Could not resolve host: github.com'):
                 elif "Could not resolve host: github.com" in str(git_output[-1]):
                     return "Could not resolve host: github.com"
@@ -280,67 +292,77 @@ class Settings(object):
                 else:
                     return False
 
-            else: return "Software already up to date!"
+            else:
+                return "Software already up to date!"
 
     def update_config(self):
         os.system('sudo sed -i "s/check_config=False/check_config=True/" /home/pi/easycut-smartbench/src/config.txt')
-        sed_sw_version = (''.join(['sudo sed -i "s/version=', str(self.sw_version) + '/version=', 
-                                str(self.latest_sw_version), '/" /home/pi/easycut-smartbench/src/config.txt'])).strip('\n')
+        sed_sw_version = (''.join(['sudo sed -i "s/version=', str(self.sw_version) + '/version=',
+                                   str(self.latest_sw_version),
+                                   '/" /home/pi/easycut-smartbench/src/config.txt'])).strip('\n')
         os.system(sed_sw_version)
-        os.system('sudo sed -i "s/power_cycle_alert=False/power_cycle_alert=True/" /home/pi/easycut-smartbench/src/config.txt')
+        os.system(
+            'sudo sed -i "s/power_cycle_alert=False/power_cycle_alert=True/" /home/pi/easycut-smartbench/src/config.txt')
 
     def reclone_EC(self):
 
         if not self.do_fetch_from_github_check():
             return False
-    
+
         def backup_EC():
             # check if backup directory exists, and delete it if it does
             os.system('[ -d "/home/pi/easycut-smartbench-backup/" ] && sudo rm /home/pi/easycut-smartbench-backup -r')
             # copy EC into a backup directory
-            os.system('mkdir /home/pi/easycut-smartbench-backup && cp -RT /home/pi/easycut-smartbench /home/pi/easycut-smartbench-backup')
-                
+            os.system(
+                'mkdir /home/pi/easycut-smartbench-backup && cp -RT /home/pi/easycut-smartbench /home/pi/easycut-smartbench-backup')
+
             # compare backup and current directory just in case, and return true if all is well    
-            directory_diff = (os.popen('diff -qr /home/pi/easycut-smartbench/ /home/pi/easycut-smartbench-backup/').read())
-            if directory_diff == '': return True
-            else: 
-                os.system('[ -d "/home/pi/easycut-smartbench-backup/" ] && sudo rm /home/pi/easycut-smartbench-backup -r')                
+            directory_diff = (
+                os.popen('diff -qr /home/pi/easycut-smartbench/ /home/pi/easycut-smartbench-backup/').read())
+            if directory_diff == '':
+                return True
+            else:
+                os.system(
+                    '[ -d "/home/pi/easycut-smartbench-backup/" ] && sudo rm /home/pi/easycut-smartbench-backup -r')
                 return False
-              
+
         def clone_new_EC_and_restart():
 
             if not self.do_fetch_from_github_check():
                 return False
 
-            else: 
+            else:
                 # Repair git repo by re-cloning from origin
-                os.system('cd /home/pi/ && sudo rm /home/pi/easycut-smartbench -r && git clone https://github.com/YetiTool/easycut-smartbench.git' + 
-                '&& cd /home/pi/easycut-smartbench/ && git checkout ' + self.latest_sw_version + ' && sudo reboot')
-        
+                os.system(
+                    'cd /home/pi/ && sudo rm /home/pi/easycut-smartbench -r && git clone https://github.com/YetiTool/easycut-smartbench.git' +
+                    '&& cd /home/pi/easycut-smartbench/ && git checkout ' + self.latest_sw_version + ' && sudo reboot')
+
         if backup_EC() == True:
             clone_new_EC_and_restart()
 
-        else: return False
+        else:
+            return False
 
-
-## USB SOFTWARE UPDATE
+    ## USB SOFTWARE UPDATE
 
     def find_usb_directory(self):
         try:
             # look for new SB file name first
-            zipped_file_name = (os.popen("find /media/usb/ -maxdepth 2 -name 'SmartBench-SW-update*.zip'").read()).strip('\n')
+            zipped_file_name = (
+                os.popen("find /media/usb/ -maxdepth 2 -name 'SmartBench-SW-update*.zip'").read()).strip('\n')
 
             if zipped_file_name == '':
                 # if it doesn't exist, then look for easycut-smartbench.zip file as a backup
-                zipped_file_name = (os.popen("find /media/usb/ -maxdepth 2 -name 'easycut-smartbench*.zip'").read()).strip('\n')
+                zipped_file_name = (
+                    os.popen("find /media/usb/ -maxdepth 2 -name 'easycut-smartbench*.zip'").read()).strip('\n')
 
         except:
             zipped_file_name = ''
 
         if zipped_file_name != '':
-            
+
             os.system('[ -d "/home/pi/temp_repo" ] && sudo rm /home/pi/temp_repo -r')
-            
+
             unzip_dir_command = 'unzip -q ' + zipped_file_name + ' -d /home/pi/temp_repo/'
             os.system(unzip_dir_command)
 
@@ -349,15 +371,16 @@ class Settings(object):
         else:
 
             try:
-                dir_path_name = (os.popen("find /media/usb/ -maxdepth 2 -name 'SmartBench-SW-update*'").read()).strip('\n')
+                dir_path_name = (os.popen("find /media/usb/ -maxdepth 2 -name 'SmartBench-SW-update*'").read()).strip(
+                    '\n')
 
                 if dir_path_name == '':
-                    dir_path_name = (os.popen("find /media/usb/ -maxdepth 2 -name 'easycut-smartbench*'").read()).strip('\n')
+                    dir_path_name = (os.popen("find /media/usb/ -maxdepth 2 -name 'easycut-smartbench*'").read()).strip(
+                        '\n')
 
             except:
                 dir_path_name = 0
 
-        
         log('directory name: ' + dir_path_name)
 
         if ((dir_path_name.count('SmartBench-SW-update') > 1) or (dir_path_name.count('easycut-smartbench') > 1)):
@@ -383,18 +406,18 @@ class Settings(object):
 
     def clear_remote_repo(self, dir_path_name):
         rm_remote = 'git remote rm temp_repository'
-        try: 
+        try:
             os.system(rm_remote)
-        except: 
+        except:
             pass
 
         if dir_path_name.startswith('/home/pi/temp_repo/'):
             rm_temp_repo = 'sudo rm /home/pi/temp_repo/ -r'
             os.system(rm_temp_repo)
 
-    def get_sw_update_via_usb(self, beta = False):
+    def get_sw_update_via_usb(self, beta=False):
         dir_path_name = self.find_usb_directory()
-        
+
         if dir_path_name == 2 or dir_path_name == 0:
             return dir_path_name
 
@@ -402,17 +425,16 @@ class Settings(object):
             log('Updating software from: ' + dir_path_name)
             self.refresh_sw_version()
             self.refresh_latest_sw_version()
-            checkout_success = self.checkout_latest_version(beta)   
+            checkout_success = self.checkout_latest_version(beta)
 
         self.clear_remote_repo(dir_path_name)
 
-        if checkout_success == False: 
+        if checkout_success == False:
             return "update failed"
         else:
             return checkout_success
 
-
-## FIRMWARE UPDATE FUNCTIONS
+    ## FIRMWARE UPDATE FUNCTIONS
     def get_fw_update(self):
         os.system("sudo pigpiod")
         print("pigpio daemon started")
@@ -420,7 +442,7 @@ class Settings(object):
 
     def get_hex_file(self):
         if not path.exists(self.grbl_mega_dir):
-            pass 
+            pass
             # clone git directory
         # then pull latest tags
 
@@ -433,11 +455,11 @@ class Settings(object):
         pi.set_mode(17, pigpio.ALT3)
         print(pi.get_mode(17))
         pi.stop()
-        os.system("sudo service pigpiod stop")    
+        os.system("sudo service pigpiod stop")
         os.system("./update_fw.sh")
         sys.exit()
 
-## PLATFORM UPDATES
+    ## PLATFORM UPDATES
 
     def update_platform(self):
         self.refresh_latest_platform_version()
@@ -446,11 +468,12 @@ class Settings(object):
         if self.latest_platform_version != self.platform_version:
             os.system("cd /home/pi/console-raspi3b-plus-platform/ && git checkout " + self.latest_platform_version)
             os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh")
-            os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh && sudo systemctl restart ansible.service && sudo reboot")
+            os.system(
+                "/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh && sudo systemctl restart ansible.service && sudo reboot")
 
         else:
-            os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh && sudo systemctl restart ansible.service && sudo reboot")
-
+            os.system(
+                "/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh && sudo systemctl restart ansible.service && sudo reboot")
 
     def ansible_service_run(self):
         os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh && sudo reboot")
@@ -458,8 +481,7 @@ class Settings(object):
     def ansible_service_run_without_reboot(self):
         os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh")
 
-
-## REPOSITORY HEALTHCARE
+    ## REPOSITORY HEALTHCARE
 
     details_of_fsck = ""
 
@@ -474,7 +496,7 @@ class Settings(object):
             log(self.details_of_fsck)
             log("END OF GIT FSCK DETAILS")
 
-        if any(sign in self.details_of_fsck for sign in bad_repo_signs): 
+        if any(sign in self.details_of_fsck for sign in bad_repo_signs):
             return False
 
         return True
@@ -519,6 +541,3 @@ class Settings(object):
         except:
             # this will happen on non linux systems
             log("Couldn't check status of service: " + service)
-
-
-            
