@@ -1,5 +1,4 @@
 import os
-import os
 from datetime import datetime
 
 from kivy.lang import Builder
@@ -258,9 +257,9 @@ class DrywallCutterScreen(Screen):
         """
         self.dwt_config.load_config(config)
 
+        # Show config name
         file_name = config.rsplit(os.sep, 1)[-1]
-
-        # set the label on the screen to the name of the config file below
+        self.drywall_shape_display_widget.config_name_label.text = file_name
 
         toolpath_offset = self.dwt_config.active_config.toolpath_offset
         self.shape_selection.text = self.dwt_config.active_config.shape_type
