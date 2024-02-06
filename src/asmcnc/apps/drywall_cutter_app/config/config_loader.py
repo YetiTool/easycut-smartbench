@@ -201,8 +201,6 @@ class DWTConfig(object):
         :param parameter_name: The name of the parameter that was changed.
         :param parameter_value: The new value of the parameter.
         """
-        if self.active_config.__dict__[parameter_name] != str(parameter_value):
-            self.screen_drywall_cutter.drywall_shape_display_widget.config_name_label.text = "New Configuration"
 
         if '.' in parameter_name:
             parameter_names = parameter_name.split('.')
@@ -210,6 +208,9 @@ class DWTConfig(object):
 
             for parameter_name in parameter_names[:-1]:
                 parameter = getattr(parameter, parameter_name)
+
+            if getattr(parameter, parameter_names[-1]) == parameter_value:
+                self.screen_drywall_cutter.drywall_shape_display_widget.config_name_label.text = "New Configuration"
 
             setattr(parameter, parameter_names[-1], parameter_value)
         else:
