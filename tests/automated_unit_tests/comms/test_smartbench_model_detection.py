@@ -1,4 +1,7 @@
 import sys, os
+
+from tests import test_utils
+
 sys.path.append('./src')
 
 try: 
@@ -18,9 +21,18 @@ from datetime import datetime
 '''
 ######################################
 RUN FROM easycut-smartbench FOLDER WITH: 
-python -m pytest --show-capture=no --disable-pytest-warnings tests/automated_unit_tests/comms/test_smartbench_model_detection.py
+python -m pytest tests/automated_unit_tests/comms/test_smartbench_model_detection.py
+
+THIS TEST STILL FAILS
+E       AssertionError: assert 'DRYWALLTEC SmartCNC' == 'SmartBench V1.2 Standard CNC Router'
+E         - DRYWALLTEC SmartCNC
+E         + SmartBench V1.2 Standard CNC Router
+
+
 ######################################
 '''
+
+test_utils.create_app()
 
 # FIXTURES
 @pytest.fixture

@@ -4,10 +4,6 @@ import sys
 sys.path.append('./src')
 from asmcnc.apps.drywall_cutter_app.config import config_loader
 
-config_loader.configurations_dir = 'src/asmcnc/apps/drywall_cutter_app/config/configurations'
-config_loader.cutters_dir = 'src/asmcnc/apps/drywall_cutter_app/config/cutters'
-config_loader.temp_dir = 'src/asmcnc/apps/drywall_cutter_app/config/temp'
-
 from asmcnc.apps.drywall_cutter_app.screen_drywall_cutter import DrywallCutterScreen
 from asmcnc.comms import router_machine
 

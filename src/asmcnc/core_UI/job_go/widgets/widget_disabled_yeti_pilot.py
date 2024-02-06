@@ -1,3 +1,5 @@
+from enum import Enum
+
 from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
@@ -80,7 +82,7 @@ Builder.load_string(
 )
 
 
-class DisabledYPCase:
+class DisabledYPCase(Enum):
     DISABLED = 0
     FAILED_AND_CAN_RUN_AGAIN = 1
     FAILED = 2
