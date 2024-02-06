@@ -2,6 +2,8 @@ import os
 from datetime import datetime
 
 from kivy.lang import Builder
+from kivy.uix.behaviors import ButtonBehavior
+from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen
 
 from asmcnc.skavaUI import popup_info
@@ -10,6 +12,11 @@ from asmcnc.apps.drywall_cutter_app import widget_drywall_shape_display
 from asmcnc.apps.drywall_cutter_app.config import config_loader
 from asmcnc.apps.drywall_cutter_app import screen_config_filechooser
 from asmcnc.apps.drywall_cutter_app import screen_config_filesaver
+
+
+class ImageButton(ButtonBehavior, Image):
+    pass
+
 
 Builder.load_string("""
 <DrywallCutterScreen>:
@@ -25,11 +32,14 @@ Builder.load_string("""
             orientation: 'horizontal'
             padding: dp(5)
             spacing: dp(10)
-            Button:
+            ImageButton:
+                source: './asmcnc/apps/drywall_cutter_app/img/home_button.png'
+                allow_stretch: True
                 size_hint_x: 7
-                text: 'Home'
                 on_press: root.home()
-            Button:
+            ImageButton:
+                source: './asmcnc/apps/drywall_cutter_app/img/open_button.png'
+                allow_stretch: True
                 size_hint_x: 7
                 text: 'File'
                 on_press: root.open_filechooser()
@@ -39,14 +49,19 @@ Builder.load_string("""
                 text: root.tool_options.keys()[0]
                 values: root.tool_options.keys()
                 on_text: root.select_tool()
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
             Spinner:
                 id: shape_selection
                 size_hint_x: 7
                 text: 'Shape'
                 values: root.shape_options
                 on_text: root.select_shape()
-            Button:
+            ImageButton:
                 id: rotate_button
+                source: './asmcnc/apps/drywall_cutter_app/img/rotate_button.png'
+                allow_stretch: True
                 size_hint_x: 7
                 text: 'Rotate'
                 on_press: root.rotate_shape()
@@ -59,18 +74,24 @@ Builder.load_string("""
                 valign: 'middle'
                 values: root.line_cut_options
                 on_text: root.select_toolpath()
-            Button:
+            ImageButton:
+                source: './asmcnc/apps/drywall_cutter_app/img/cutting_depths_button.png'
+                allow_stretch: True
                 size_hint_x: 7
                 text: 'Material setup'
                 text_size: self.size
                 halign: 'center'
                 valign: 'middle'
                 on_press: root.material_setup()
-            Button:
+            ImageButton:
+                source: './asmcnc/apps/drywall_cutter_app/img/stop_button.png'
+                allow_stretch: True
                 size_hint_x: 15
                 text: 'STOP'
                 on_press: root.stop()
-            Button:
+            ImageButton:
+                source: './asmcnc/apps/drywall_cutter_app/img/exit_button.png'
+                allow_stretch: True
                 size_hint_x: 7
                 on_press: root.quit_to_lobby()
                 text: 'Quit'
@@ -100,13 +121,19 @@ Builder.load_string("""
                     size_hint_y: 7
                     orientation: 'horizontal'
                     spacing: dp(10)
-                    Button:
+                    ImageButton:
+                        source: './asmcnc/apps/drywall_cutter_app/img/simulate_button.png'
+                        allow_stretch: True
                         text: 'Simulate'
                         on_press: root.simulate()
-                    Button:
+                    ImageButton:
+                        source: './asmcnc/apps/drywall_cutter_app/img/save_button.png'
+                        allow_stretch: True
                         text: 'Save'
                         on_press: root.save()
-                    Button:
+                    ImageButton:
+                        source: './asmcnc/apps/drywall_cutter_app/img/start_job_button.png'
+                        allow_stretch: True
                         text: 'Run'
                         on_press: root.run()
 """)
@@ -141,6 +168,8 @@ class DrywallCutterScreen(Screen):
 
         self.shape_selection.text = 'circle'
 
+        self.select_tool()
+
     def home(self):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
 
@@ -149,14 +178,19 @@ class DrywallCutterScreen(Screen):
 
         self.dwt_config.load_cutter(self.tool_options[selected_tool_name])
 
+        # Convert allowed toolpaths object to dict, then put attributes with True into a list
+        self.cut_offset_selection.values = [toolpath for toolpath, allowed in self.dwt_config.active_cutter.allowable_toolpath_offsets.__dict__.items() if allowed]
+        # Default to first cutter, so disabled cutter is never selected
+        self.cut_offset_selection.text = self.cut_offset_selection.values[0]
+
     def select_shape(self):
         if self.shape_selection.text in ['line', 'geberit']:
             # Only on line available for these options
             self.cut_offset_selection.text = 'on'
             self.cut_offset_selection.disabled = True
         else:
-            # Default to cut inside line
-            self.cut_offset_selection.text = 'inside'
+            # Default to cut inside line (when available)
+            self.cut_offset_selection.text = 'inside' if 'inside' in self.cut_offset_selection.values else self.cut_offset_selection.values[0]
             self.cut_offset_selection.disabled = False
 
         if self.shape_selection.text in ['rectangle', 'line']:
@@ -241,14 +275,13 @@ class DrywallCutterScreen(Screen):
         self.drywall_shape_display_widget.x_input.text = str(self.dwt_config.active_config.canvas_shape_dims.x)
         self.drywall_shape_display_widget.y_input.text = str(self.dwt_config.active_config.canvas_shape_dims.y)
 
-    def save_config(self, name):
+    def save_config(self, file_name):
         # type: (str) -> None
         """
         Saves the active configuration to the configurations directory.
 
-        :param name: The name of to save the configuration file as.
+        :param file_name: The name of to save the configuration file as.
         """
-        file_name = name + ('.json' if not name.endswith('.json') else '')
 
         self.dwt_config.save_config(file_name)
 

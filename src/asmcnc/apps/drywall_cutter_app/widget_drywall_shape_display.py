@@ -260,6 +260,8 @@ class DrywallShapeDisplay(Widget):
             self.place_widget(self.x_datum_label, (360, 19))
             self.place_widget(self.y_datum_label, (390, 77))
 
+        self.dwt_config.on_parameter_change('rotation', rotation)
+
     def enable_input(self, text_input, pos):
         text_input.parent.pos = pos
         text_input.disabled = False
