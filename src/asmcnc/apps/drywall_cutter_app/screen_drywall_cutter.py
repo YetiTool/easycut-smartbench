@@ -145,14 +145,14 @@ def log(message):
 
 
 class DrywallCutterScreen(Screen):
-    tool_options = ['6mm', '8mm', 'V groove']
     shape_options = ['circle', 'square', 'rectangle', 'line', 'geberit']
     line_cut_options = ['inside', 'on', 'outside']
     rotation = 'horizontal'
-    dwt_config = config_loader.DWTConfig()
-    tool_options = dwt_config.get_available_cutter_names()
 
     def __init__(self, **kwargs):
+        self.dwt_config = config_loader.DWTConfig(self)
+        self.tool_options = self.dwt_config.get_available_cutter_names()
+
         super(DrywallCutterScreen, self).__init__(**kwargs)
 
         self.sm = kwargs['screen_manager']
@@ -207,7 +207,7 @@ class DrywallCutterScreen(Screen):
         self.drywall_shape_display_widget.select_shape(self.shape_selection.text, self.rotation)
         self.select_toolpath()
 
-        self.on_parameter_change('shape_type', self.shape_selection.text)
+        self.dwt_config.on_parameter_change('shape_type', self.shape_selection.text)
 
     def rotate_shape(self, swap_lengths=True):
         if self.rotation == 'horizontal':
@@ -222,7 +222,7 @@ class DrywallCutterScreen(Screen):
         self.drywall_shape_display_widget.select_toolpath(self.shape_selection.text, self.cut_offset_selection.text,
                                                           self.rotation)
 
-        self.on_parameter_change('toolpath_offset', self.cut_offset_selection.text)
+        self.dwt_config.on_parameter_change('toolpath_offset', self.cut_offset_selection.text)
 
     def material_setup(self):
         pass
@@ -293,14 +293,6 @@ class DrywallCutterScreen(Screen):
         """
 
         self.dwt_config.save_config(file_name)
-
-    def on_parameter_change(self, parameter_name, parameter_value):
-        print(parameter_name, str(parameter_value))
-        print(self.dwt_config.active_config.__dict__[parameter_name])
-        print(self.dwt_config.active_config.__dict__[parameter_name] != str(parameter_value))
-        if self.dwt_config.active_config.__dict__[parameter_name] != str(parameter_value):
-            self.drywall_shape_display_widget.config_name_label.text = 'New Configuration'
-        self.dwt_config.on_parameter_change(parameter_name, parameter_value)
 
     def on_leave(self, *args):
         self.dwt_config.save_temp_config()

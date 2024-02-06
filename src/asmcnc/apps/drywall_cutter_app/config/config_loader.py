@@ -26,7 +26,8 @@ class DWTConfig(object):
     active_config = None  # type: config_classes.Configuration
     active_cutter = None  # type: config_classes.Cutter
 
-    def __init__(self):
+    def __init__(self, screen_drywall_cutter):
+        self.screen_drywall_cutter = screen_drywall_cutter
         # Load the temp config if it exists, otherwise load the default config.
         if not os.path.exists(temp_dir):
             os.mkdir(temp_dir)
@@ -200,6 +201,8 @@ class DWTConfig(object):
         :param parameter_name: The name of the parameter that was changed.
         :param parameter_value: The new value of the parameter.
         """
+        if self.dwt_config.active_config.__dict__[parameter_name] != str(parameter_value):
+            self.screen_drywall_cutter.drywall_shape_display_widget.config_name_label.text = "New Configuration"
 
         if '.' in parameter_name:
             parameter_names = parameter_name.split('.')
