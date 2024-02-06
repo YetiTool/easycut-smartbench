@@ -118,5 +118,3 @@ class LoggerSingleton(object):
         """
         return self._logger
 
-
-logger = LoggerSingleton().get_logger()

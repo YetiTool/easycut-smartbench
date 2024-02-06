@@ -6,7 +6,7 @@ Created on 16 Nov 2017
 YetiTool's UI for SmartBench
 www.yetitool.com
 '''
-
+import logging
 #config
 #import os
 #os.environ['KIVY_GL_BACKEND'] = 'sdl2'
@@ -28,6 +28,7 @@ from kivy.clock import Clock
 from kivy.uix.boxlayout import BoxLayout
 
 from asmcnc.core_UI.popup_manager import PopupManager
+from asmcnc.logging_system.logging_system import LoggerSingleton
 
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
 
@@ -166,6 +167,8 @@ class SkavaUI(App):
     def build(self):
 
         log("Starting App:")
+
+        logger = LoggerSingleton(level=logging.INFO).get_logger()
 
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
@@ -323,6 +326,7 @@ class SkavaUI(App):
             root.add_widget(sm)
             return root
 
+        logger.info("Easycut %s starting..." % initial_version)
         return sm
 
 if __name__ == '__main__':
