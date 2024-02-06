@@ -26,25 +26,13 @@ class HoldButton(Button):
         self.bind(on_press=self.on_press)
         self.bind(on_release=self.on_release)
 
-        self.canvas.add(Color(*self.held_background_color))
-
-        self.rect = Rectangle(pos=self.pos, size=(0, self.height))
-        self.canvas.add(self.rect)
-
-        self.bind(pos=self.update_rect, size=self.update_rect)
-
-    def update_rect(self, *args):
-        self.rect.pos = self.pos
-        self.rect.size = self.size
-
     def start_animation(self):
-        self.animation = Animation(size=(self.width, self.height), duration=self.hold_time)
+        self.animation = Animation(size=(self.width, self.height), background_color=self.held_background_color, duration=self.hold_time)
         self.animation.start(self.rect)
 
     def stop_animation(self):
         if self.animation:
             self.animation.stop(self.rect)
-            self.rect.size = (0, self.height)
             self.clock.cancel()
 
     def on_press(self, *args):
@@ -52,8 +40,9 @@ class HoldButton(Button):
             self.stop_animation()
 
         self.released = False
-        self.clock = Clock.schedule_once(self.call_if_not_released, self.hold_time)
+
         self.start_animation()
+        self.clock = Clock.schedule_once(self.call_if_not_released, self.hold_time)
 
     def call_if_not_released(self, *args):
         if not self.released:
