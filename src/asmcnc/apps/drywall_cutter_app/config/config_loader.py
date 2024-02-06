@@ -6,8 +6,9 @@ import inspect
 current_dir = os.path.dirname(os.path.realpath(__file__))
 configurations_dir = os.path.join(current_dir, 'configurations')
 cutters_dir = os.path.join(current_dir, 'cutters')
+temp_dir = os.path.join(current_dir, 'temp')
 
-TEMP_CONFIG_PATH = os.path.join(current_dir, 'temp', 'temp_config')
+TEMP_CONFIG_PATH = os.path.join(temp_dir, 'temp_config')
 DEBUG_MODE = False
 
 
@@ -27,6 +28,9 @@ class DWTConfig(object):
 
     def __init__(self):
         # Load the temp config if it exists, otherwise load the default config.
+        if not os.path.exists(temp_dir):
+            os.mkdir(temp_dir)
+
         if os.path.exists(TEMP_CONFIG_PATH):
             self.load_temp_config()
         else:
