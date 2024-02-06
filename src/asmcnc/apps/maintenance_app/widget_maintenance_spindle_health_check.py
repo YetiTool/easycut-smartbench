@@ -62,7 +62,7 @@ Builder.load_string(
                     font_size: str(0.01875 * app.width) + 'sp'
                     id: switch
                     size_hint: (None, None)
-                    size: (dp(64.0/800)*app.width, dp(29.0/480)*app.height)
+                    size: (dp(app.get_scaled_width(64)), dp(app.get_scaled_height(29)))
                     background_normal: ''
                     background_down: ''
                     on_press: root.toggle_yeti_pilot_availability(self)
@@ -75,7 +75,7 @@ Builder.load_string(
                             center_x: self.parent.center_x
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
-                            allow_stretch: False
+                            allow_stretch: True
 
 """
 )

@@ -166,6 +166,7 @@ Builder.load_string(
                     RstDocument:
                         text: root.display_output
                         background_color: hex('#E5E5E5FF')
+                        base_font_size: str(31.0/800.0*app.width) + 'sp'
 
                 BoxLayout:
                     orientation: 'horizontal'

@@ -89,7 +89,7 @@ Builder.load_string(
             center_x: self.parent.center_x
             y: self.parent.y
             size: self.parent.width, self.parent.height
-            allow_stretch: False
+            allow_stretch: True
 
 
 
@@ -174,9 +174,10 @@ class PopupYetiPilotSettings(Widget):
         def build_pre_cut_profiles():
             # Drop down menus (i.e. actual profile selection)
             left_BL_grid = GridLayout(cols=2, rows=3, cols_minimum=dropdowns_cols_dict)
-            optn_img_1 = Image(source=img_1_src)
-            optn_img_2 = Image(source=img_2_src)
-            optn_img_3 = Image(source=img_3_src)
+            sizing_args = {'allow_stretch': True, 'keep_ratio': True, 'height': 100 * Window.height / 480}
+            optn_img_1 = Image(source=img_1_src, **sizing_args)
+            optn_img_2 = Image(source=img_2_src, **sizing_args)
+            optn_img_3 = Image(source=img_3_src, **sizing_args)
 
             def update_step_down(step_down_range):
                 try:
@@ -276,6 +277,7 @@ class PopupYetiPilotSettings(Widget):
             material_BL = BoxLayout(orientation="vertical", padding=[5.0/800*Window.width, 2.5/480.0*Window.height])
             diameter_label = Label(
                 text=self.l.get_str("Tool diameter"),
+                font_size = str(15.0/800*Window.width) + "sp",
                 color=dark_grey,
                 markup=True,
                 halign="left",
@@ -284,6 +286,7 @@ class PopupYetiPilotSettings(Widget):
             )
             tool_label = Label(
                 text=self.l.get_str("Tool type"),
+                font_size = str(15.0/800*Window.width) + "sp",
                 color=dark_grey,
                 markup=True,
                 halign="left",
@@ -292,6 +295,7 @@ class PopupYetiPilotSettings(Widget):
             )
             material_label = Label(
                 text=self.l.get_str("Material"),
+                font_size = str(15.0/800*Window.width) + "sp",
                 color=dark_grey,
                 markup=True,
                 halign="left",
