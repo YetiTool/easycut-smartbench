@@ -1811,7 +1811,7 @@ class SerialConnection(object):
 
         # THIS IS A TEMPORARY FIX - DO NOT MERGE INTO MASTER: 
         # scale command sent to spindle for 110V machine: 
-        if 'S' in serialCommand.upper(): 
+        if 'S' in serialCommand.upper():
             serialCommand = self.mod_spindle_speed_command(serialCommand)
 
         # Finally issue the command        
@@ -1898,8 +1898,8 @@ class SerialConnection(object):
             spindle_speed = float(match.group(1))
 
         try:
-            spindle_speed = self.m.correct_rpm(spindle_speed)
-            new_line = re.sub(r'(S\d+(\.\d+)?)', "S" + str(spindle_speed), spindle_speed_line.upper())
+            corrected_spindle_speed = self.m.correct_rpm(spindle_speed)
+            new_line = re.sub(r'(S\d+(\.\d+)?)', "S" + str(corrected_spindle_speed), spindle_speed_line.upper())
             log("MODIFIED SPINDLE COMMAND: " + new_line)
             return new_line
 

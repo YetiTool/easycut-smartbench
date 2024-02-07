@@ -1068,7 +1068,7 @@ class RouterMachine(object):
         # else: return 0
         return float(rpm_red)
 
-    def convert_rpm_for_120(self, target_rpm):
+    def correct_rpm_for_120(self, target_rpm):
         # For conversion maths see https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/
 
         corrected_RPM = int(round((target_rpm - 8658) / 0.6739))
@@ -1081,7 +1081,7 @@ class RouterMachine(object):
 
         return corrected_RPM
     
-    def convert_rpm_for_230(self, target_rpm):
+    def correct_rpm_for_230(self, target_rpm):
         #For conversion maths see https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/
 
         corrected_RPM = int(round((target_rpm - 1886) / 0.95915))
@@ -1142,14 +1142,17 @@ class RouterMachine(object):
             Raises:
                 ValueError: If the spindle voltage is not recognised.
             """
+            
             if voltage in [110, 120]:            
-                rpm_to_set = self.convert_rpm_for_120(requested_rpm)
+                rpm_to_set = self.correct_rpm_for_120(requested_rpm)
                 log("Requested RPM: "+ str(requested_rpm) + " Converted RPM: " + str(rpm_to_set) + " Voltage: " + str(voltage))
                 return rpm_to_set
+            
             elif voltage in [230, 240]:
-                rpm_to_set = self.convert_rpm_for_230(requested_rpm)
+                rpm_to_set = self.correct_rpm_for_230(requested_rpm)
                 log("Requested RPM: "+ str(requested_rpm) + " Converted RPM: " + str(rpm_to_set) + " Voltage: " + str(voltage))
                 return rpm_to_set
+            
             else:
                 raise ValueError('Spindle voltage: {} not recognised'.format(voltage))
         
