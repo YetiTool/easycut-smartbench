@@ -1904,7 +1904,7 @@ class SerialConnection(object):
             return new_line
 
         except:
-            pass
+            log("Spindle speed command could not be modified")
 
         return spindle_speed_line
 
