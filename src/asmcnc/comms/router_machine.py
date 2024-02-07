@@ -1094,13 +1094,12 @@ class RouterMachine(object):
 
         return corrected_RPM
         
-    def turn_on_spindle(self, rpm=None, voltage=spindle_voltage):
+    def turn_on_spindle(self, rpm=None):
         """
         Turns on the spindle.
 
         Args:
             rpm (int, optional): The desired RPM (Rotations Per Minute) of the spindle. Defaults to None, which will be same as last set value (handled by GRBL).
-            voltage (int, optional): The voltage of the spindle. Defaults to spindle_voltage.
 
         Raises:
             ValueError: If the spindle voltage is not recognized.
@@ -1110,7 +1109,7 @@ class RouterMachine(object):
         """
             
         if rpm: # If a value is given
-            rpm_to_set = self.correct_rpm(rpm, voltage)         
+            rpm_to_set = self.correct_rpm(rpm)         
             self.s.write_command('M3 S' + str(rpm_to_set))
 
         else: # If no value is given, turn the spindle on at the last set value (handled by GRBL)
