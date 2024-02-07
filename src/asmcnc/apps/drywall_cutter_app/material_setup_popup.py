@@ -286,6 +286,7 @@ Builder.load_string("""
 
 
 class CuttingDepthsPopup(Popup):
+    soft_limit_total_cut_depth = 62
 
     def __init__(self, localization, keyboard, dwt_config, **kwargs):
         super(CuttingDepthsPopup, self).__init__(**kwargs)
