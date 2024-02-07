@@ -1151,9 +1151,13 @@ class RouterMachine(object):
                 ValueError: If the spindle voltage is not recognised.
             """
             if voltage in [110, 120]:            
-                return self.convert_rpm_for_120(rpm)
+                rpm_to_set = self.convert_rpm_for_120(rpm)
+                print("Requested RPM:", rpm, "Converted RPM:", rpm_to_set, "Voltage:", voltage)
+                return rpm_to_set
             elif voltage in [230, 240]:
-                return self.convert_rpm_for_230(rpm)
+                rpm_to_set = self.convert_rpm_for_230(rpm)
+                print("Requested RPM:", rpm, "Converted RPM:", rpm_to_set, "Voltage:", voltage)
+                return rpm_to_set
             else:
                 raise ValueError('Spindle voltage: {} not recognised'.format(voltage))
         
