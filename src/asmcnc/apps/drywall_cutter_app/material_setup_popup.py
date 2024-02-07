@@ -6,7 +6,8 @@ from kivy.uix.image import Image
 Builder.load_string("""
 <CuttingDepthsPopup>:
     float_layout:float_layout
-
+    cutter_layout:cutter_layout
+    
     material_graphic:material_graphic
     material_thickness:material_thickness
     bottom_offset:bottom_offset
@@ -159,15 +160,32 @@ Builder.load_string("""
             multiline: False
             text: ''
             disabled: True
-
-        Image:
-            id: cutter_graphic
-            source: "./asmcnc/apps/drywall_cutter_app/img/cutter_graphic.png"
-            pos_hint: {'center_x': 0.45, 'y': 0.225}
-            # y: self.parent.y
+            
+        StencilView:  # Prevents the images from going off the popup
             size: self.parent.size
-            allow_stretch: True 
-
+            pos: self.parent.pos
+            
+            FloatLayout:
+                id: cutter_layout
+                size: self.parent.size
+                pos: self.parent.pos
+                
+                Image:
+                    id: total_cut_depth_arrow
+                    source: "./asmcnc/apps/drywall_cutter_app/img/total_cut_depth_bottom_arrow.png"
+                    pos_hint: {'center_x': 0.45, 'y': 0.225}
+                    y: self.parent.y
+                    size: self.parent.size
+                    allow_stretch: True
+                
+                Image:
+                    id: cutter_graphic
+                    source: "./asmcnc/apps/drywall_cutter_app/img/cutter_graphic.png"
+                    pos_hint: {'center_x': 0.45, 'y': 0.225}
+                    # y: self.parent.y
+                    size: self.parent.size
+                    allow_stretch: True 
+        
         Label:
             id: cut_depth_warning
             pos_hint: {'x': -0.335, 'y': -0.4}
