@@ -153,7 +153,7 @@ Builder.load_string("""
             text: ''
             disabled: True
             
-        StencilView:
+        StencilView:  # Prevents the images from going off the popup
             size: self.parent.size
             pos: self.parent.pos
             
