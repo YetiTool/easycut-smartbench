@@ -204,10 +204,6 @@ class DrywallCutterView(Screen):
             orientation="horizontal", size_hint_y=31, padding=(dp(0), dp(30))
         )
 
-        with self.xy_move_container.canvas.before:
-            Color(229.0 / 255, 229.0 / 255, 1, 1)
-            Rectangle(pos=self.xy_move_container.pos, size=self.xy_move_container.size)
-
         self.xy_move_widget = XYMoveDrywall(machine=self.controller.router_machine,
                                             screen_manager=self.controller.screen_manager)
 
