@@ -264,7 +264,7 @@ class DrywallCutterView(Screen):
         :param cutter: The select cutter file name
         :return: None
         """
-        self.controller.set_cutter(cutter)
+        self.controller.handle_cutter_selection_changed(cutter)
 
     def on_shape_selected(self, shape, *args):
         """
@@ -272,7 +272,7 @@ class DrywallCutterView(Screen):
         :param shape: The selected shape
         :return: None
         """
-        self.controller.set_shape(shape)
+        self.controller.handle_shape_selection_changed(shape)
 
     def on_toolpath_selected(self, toolpath_offset, *args):
         """
@@ -280,7 +280,7 @@ class DrywallCutterView(Screen):
         :param toolpath_offset: The selected toolpath offset
         :return: None
         """
-        self.controller.set_toolpath_offset(toolpath_offset)
+        self.controller.handle_toolpath_offset_selection_changed(toolpath_offset)
 
     def on_rotate_button_pressed(self, *args):
         """

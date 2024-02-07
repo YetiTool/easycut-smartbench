@@ -32,9 +32,9 @@ class DrywallCutterController(object):
         # Build the view last
         self.view = DrywallCutterView(name=self.name, controller=self)
 
-        self.set_shape(self.model.config.active_config.shape_type)
+        self.handle_shape_selection_changed(self.model.config.active_config.shape_type)
 
-    def set_cutter(self, cutter):
+    def handle_cutter_selection_changed(self, cutter):
         """
         Called when a cutter is selected from the dropdown.
 
@@ -48,7 +48,7 @@ class DrywallCutterController(object):
         # Update the dropdown with the new cutter image
         self.view.set_cutter_image(self.model.config.active_cutter.image_path)
 
-    def set_shape(self, shape):
+    def handle_shape_selection_changed(self, shape):
         """
         Called when a shape is selected from the dropdown.
 
@@ -65,6 +65,7 @@ class DrywallCutterController(object):
         )
 
         # Update the dropdown with the available toolpath offsets
+        self.view.shape_display_widget.select_shape(shape, self.model.config.active_config.rotation)
         self.update_available_toolpath_offsets()
 
         # If the shape requires rotation (from current value), rotate it
@@ -82,7 +83,7 @@ class DrywallCutterController(object):
         toolpath_offset_options = self.model.config.get_toolpath_offset_options()
         self.view.toolpath_offset_drop_down.set_options(toolpath_offset_options)
 
-    def set_toolpath_offset(self, toolpath_offset):
+    def handle_toolpath_offset_selection_changed(self, toolpath_offset):
         """
         Called when a toolpath offset is selected from the dropdown.
 
