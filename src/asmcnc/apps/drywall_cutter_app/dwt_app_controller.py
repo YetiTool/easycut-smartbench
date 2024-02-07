@@ -1,5 +1,6 @@
 from kivy.properties import ObjectProperty
 
+from asmcnc.apps.drywall_cutter_app import material_setup_popup
 from asmcnc.apps.drywall_cutter_app.config.config_loader import DWTConfig
 from asmcnc.apps.drywall_cutter_app.dwt_app_view import DrywallCutterView
 from asmcnc.apps.drywall_cutter_app.engine import GCodeEngine
@@ -33,6 +34,9 @@ class DrywallCutterController(object):
 
         # Build the view last
         self.view = DrywallCutterView(name=self.name, controller=self)
+        self.material_setup_popup = material_setup_popup.CuttingDepthsPopup(
+            self.localization, self.keyboard, self.model.config
+        )
 
         self.__load_default_state()
 
@@ -129,8 +133,10 @@ class DrywallCutterController(object):
         shape = self.model.config.active_config.shape_type
         rotation = self.model.config.active_config.rotation
         swap_lengths = True
+        toolpath_offset = self.model.config.active_config.toolpath_offset
 
         self.view.shape_display_widget.select_shape(shape, rotation, swap_lengths)
+        self.view.shape_display_widget.select_toolpath(shape, toolpath_offset, rotation)
 
     def handle_stop_button_pressed(self):
         """
@@ -167,7 +173,7 @@ class DrywallCutterController(object):
         pass
 
     def handle_material_setup_pressed(self):
-        pass
+        self.material_setup_popup.open()
 
     def handle_simulate_pressed(self):
         #self.model.engine.simulate()

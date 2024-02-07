@@ -32,6 +32,9 @@ class DWTConfig(object):
     cutter_options = {
         "tool_6mm.json": {
             "image_path": os.path.join(cutters_image_dir, "tool_6mm.png"),
+        },
+        "tool_8mm.json": {
+            "image_path": os.path.join(cutters_image_dir, "tool_8mm.png"),
         }
     }
 
