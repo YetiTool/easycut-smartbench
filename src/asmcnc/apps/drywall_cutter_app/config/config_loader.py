@@ -38,57 +38,66 @@ class DWTConfig(object):
     shape_options = {
         "circle": {
             "image_path": os.path.join(IMG_DIR, "circle_shape_button.png"),
-            "toolpath_offset_options": [
-                "inside",
-                "on",
-                "outside"
-            ],
+            "toolpath_offset_options": {
+                "inside": {
+                    "image_path": os.path.join(IMG_DIR, "circle_inside_toolpath.png"),
+                },
+                "on": {
+                    "image_path": os.path.join(IMG_DIR, "circle_on_toolpath.png"),
+                },
+                "outside": {
+                    "image_path": os.path.join(IMG_DIR, "circle_outside_toolpath.png"),
+                }
+            },
             "rotatable": False
         },
         "square": {
             "image_path": os.path.join(IMG_DIR, "square_shape_button.png"),
-            "toolpath_offset_options": [
-                "inside",
-                "on",
-                "outside"
-            ],
+            "toolpath_offset_options": {
+                "inside": {
+                    "image_path": os.path.join(IMG_DIR, "square_inside_toolpath.png"),
+                },
+                "on": {
+                    "image_path": os.path.join(IMG_DIR, "square_on_toolpath.png"),
+                },
+                "outside": {
+                    "image_path": os.path.join(IMG_DIR, "square_outside_toolpath.png"),
+                }
+            },
             "rotatable": False
         },
         "line": {
             "image_path": os.path.join(IMG_DIR, "line_shape_button.png"),
-            "toolpath_offset_options": [
-                "on",
-            ],
+            "toolpath_offset_options": {
+                "on": {
+                    "image_path": os.path.join(IMG_DIR, "line_on_toolpath.png"),
+                }
+            },
             "rotatable": True
         },
         "geberit": {
             "image_path": os.path.join(IMG_DIR, "geberit_shape_button.png"),
-            "toolpath_offset_options": [
-                "on",
-            ],
+            "toolpath_offset_options": {
+                "on": {
+                    "image_path": os.path.join(IMG_DIR, "geberit_on_toolpath.png"),
+                }
+            },
             "rotatable": False
         },
         "rectangle": {
             "image_path": os.path.join(IMG_DIR, "rectangle_shape_button.png"),
-            "toolpath_offset_options": [
-                "inside",
-                "on",
-                "outside"
-            ],
+            "toolpath_offset_options": {
+                "inside": {
+                    "image_path": os.path.join(IMG_DIR, "rectangle_inside_toolpath.png"),
+                },
+                "on": {
+                    "image_path": os.path.join(IMG_DIR, "rectangle_on_toolpath.png"),
+                },
+                "outside": {
+                    "image_path": os.path.join(IMG_DIR, "rectangle_outside_toolpath.png"),
+                }
+            },
             "rotatable": True
-        }
-    }  # type: dict
-
-    # Don't use this to fill the dropdown, use get_toolpath_offset_options instead
-    toolpath_offset_options_images = {
-        "inside": {
-            "image_path": os.path.join(IMG_DIR, "toolpath_offset_inside_button.png"),
-        },
-        "on": {
-            "image_path": os.path.join(IMG_DIR, "toolpath_offset_on_button.png"),
-        },
-        "outside": {
-            "image_path": os.path.join(IMG_DIR, "toolpath_offset_outside_button.png"),
         }
     }  # type: dict
 
@@ -305,9 +314,9 @@ class DWTConfig(object):
         # If the active toolpath offset is not an option for the new shape,
         # set the active toolpath offset to the first option
         if self.active_config.toolpath_offset not in self.shape_options[shape]['toolpath_offset_options']:
-            self.active_config.toolpath_offset = self.shape_options[shape]['toolpath_offset_options'][0]
+            self.active_config.toolpath_offset = list(self.get_current_shape_toolpath_offsets().keys())[0]
         else:
-            self.active_config.toolpath_offset = self.shape_options[shape]['toolpath_offset_options'][0]
+            self.active_config.toolpath_offset = list(self.get_current_shape_toolpath_offsets())[0]
 
         # Set the rotation to horizontal by default
         self.active_config.rotation = 'horizontal'
@@ -344,11 +353,8 @@ class DWTConfig(object):
         """
         return self.shape_options[shape]['rotatable']
 
-    def get_toolpath_offset_options(self):
+    def get_current_shape_toolpath_offsets(self):
         """
-        :return: The toolpath offset options for the active configuration's shape.
+        :return: The available toolpath offsets for the active configuration's shape.
         """
-        # Get the toolpath offset options for the active configuration's shape
-        # and set the image_path on each option
-        toolpath_offset_options = self.shape_options[self.active_config.shape_type]['toolpath_offset_options']
-        return {option: self.toolpath_offset_options_images[option] for option in toolpath_offset_options}
+        return self.shape_options[self.active_config.shape_type]['toolpath_offset_options']

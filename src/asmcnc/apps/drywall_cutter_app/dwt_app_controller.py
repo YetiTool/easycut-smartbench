@@ -80,8 +80,7 @@ class DrywallCutterController(object):
 
         :return: None
         """
-        toolpath_offset_options = self.model.config.get_toolpath_offset_options()
-        self.view.toolpath_offset_drop_down.set_options(toolpath_offset_options)
+        self.view.toolpath_offset_drop_down.set_options(self.model.config.get_current_shape_toolpath_offsets())
 
     def handle_toolpath_offset_selection_changed(self, toolpath_offset):
         """

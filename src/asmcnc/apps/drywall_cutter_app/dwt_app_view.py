@@ -132,7 +132,7 @@ class DrywallCutterView(Screen):
         self.header.add_widget(self.rotate_button)
 
         self.toolpath_offset_drop_down = DryWallImageDropDownButton(
-            name_and_image_dict=self.controller.model.config.get_toolpath_offset_options(),
+            name_and_image_dict=self.controller.model.config.get_current_shape_toolpath_offsets(),
             callback=self.on_toolpath_selected,
             size_hint_x=self.BUTTON_SIZE_HINT_X,
             allow_stretch=True,
