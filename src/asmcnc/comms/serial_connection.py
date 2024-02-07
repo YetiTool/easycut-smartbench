@@ -1880,37 +1880,33 @@ class SerialConnection(object):
         self.write_protocol_buffer.append([serialCommand, altDisplayText])
         return serialCommand
 
-    # Functions for modifying spindle speed - specifically for 110 V machines!!
+    # Function for correcting spindle speed
 
     def mod_spindle_speed_command(self, spindle_speed_line):
+        """
+        Modifies the spindle speed command by correcting the RPM value and replacing it in the command line.
+        Correcting in this case refers to compensating for the conversion that happens from Z Head -> spindle
 
-        # upper_case_spindle_speed_line = spindle_speed_line.upper()
+        Args:
+            spindle_speed_line (str): The original spindle speed command line.
 
-        # match = re.search(r'S(\d+(\.\d+)?)', upper_case_spindle_speed_line)
-        # if match:
-        #     spindle_speed = float(match.group(1))
+        Returns:
+            str: The modified spindle speed command line with the corrected RPM value.
+        """
+        match = re.search(r'S(\d+(\.\d+)?)', spindle_speed_line.upper()) ## search for spnidle speed definition in the line
+        if match:
+            spindle_speed = float(match.group(1))
 
-        # try:
-        #     spindle_speed = self.transform_intended_RPM_to_sendable_RPM(spindle_speed)
-        #     new_line = re.sub(r'(S\d+(\.\d+)?)', "S" + str(spindle_speed), upper_case_spindle_speed_line)
-        #     log("MODIFIED SPINDLE COMMAND: " + new_line)
-        #     return new_line
+        try:
+            spindle_speed = self.m.correct_rpm(spindle_speed)
+            new_line = re.sub(r'(S\d+(\.\d+)?)', "S" + str(spindle_speed), spindle_speed_line.upper())
+            log("MODIFIED SPINDLE COMMAND: " + new_line)
+            return new_line
 
-        # except:
-        #     pass
+        except:
+            pass
 
         return spindle_speed_line
-
-    def transform_intended_RPM_to_sendable_RPM(self, speed):
-        if int(speed) > 8399:
-            return int((float(speed) - 8375)/0.714)
-        else: 
-            return speed
-
-    # This is a reverse of the above function, used for testing. 
-    # I think it makes sense to keep it next to its sister. 
-    def transform_sent_RPM_to_predicted_measured_RPM(self, speed):
-        return int((0.714*float(speed) + 8375))
 
 
 
