@@ -50,7 +50,6 @@ class DrywallCutterController(object):
         """
         return self.view
 
-
     def __load_default_state(self):
         # Set the dropdown images to the correct images
         self.view.set_cutter_drop_down_image(
