@@ -1109,15 +1109,8 @@ class RouterMachine(object):
             None
         """
             
-        if rpm: # If a value is given, set the spindle to that value
-            if voltage in [110, 120]:            
-                rpm_to_set = self.convert_rpm_for_120(rpm)
-            elif voltage in [230, 240]:
-                rpm_to_set = self.convert_rpm_for_230(rpm)
-            else:
-                raise ValueError('Spindle voltage: {} not recognised'.format(voltage))  
-
-            print("Requested RPM:", rpm, "Converted RPM:", rpm_to_set, "Voltage:", voltage)          
+        if rpm: # If a value is given
+            rpm_to_set = self.correct_rpm(rpm, voltage)         
             self.s.write_command('M3 S' + str(rpm_to_set))
 
         else: # If no value is given, turn the spindle on at the last set value (handled by GRBL)
@@ -1152,11 +1145,11 @@ class RouterMachine(object):
             """
             if voltage in [110, 120]:            
                 rpm_to_set = self.convert_rpm_for_120(rpm)
-                print("Requested RPM:", rpm, "Converted RPM:", rpm_to_set, "Voltage:", voltage)
+                log("Requested RPM:", rpm, "Converted RPM:", rpm_to_set, "Voltage:", voltage)
                 return rpm_to_set
             elif voltage in [230, 240]:
                 rpm_to_set = self.convert_rpm_for_230(rpm)
-                print("Requested RPM:", rpm, "Converted RPM:", rpm_to_set, "Voltage:", voltage)
+                log("Requested RPM:", rpm, "Converted RPM:", rpm_to_set, "Voltage:", voltage)
                 return rpm_to_set
             else:
                 raise ValueError('Spindle voltage: {} not recognised'.format(voltage))
