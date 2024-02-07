@@ -1068,6 +1068,32 @@ class RouterMachine(object):
         # else: return 0
         return float(rpm_red)
 
+    def convert_rpm_for_120(self, target_rpm):
+        # For conversion maths see https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/
+
+        corrected_RPM = int(round((target_rpm - 8658) / 0.6739))
+
+        if corrected_RPM < 0: 
+            log("Calculated RPM {} too low for 120V spindle, setting to 0".format(target_rpm))
+            corrected_RPM = 0
+        if corrected_RPM > 25000: 
+            corrected_RPM = 25000
+
+        return corrected_RPM
+    
+    def convert_rpm_for_230(self, target_rpm):
+        #For conversion maths see https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/
+
+        corrected_RPM = int(round((target_rpm - 3125) / 1.5625))
+
+        if corrected_RPM < 0:
+            log("Calculated RPM {} too low for 230V spindle, setting to 0".format(target_rpm))
+            corrected_RPM = 0
+        if corrected_RPM > 25000:
+            corrected_RPM = 25000
+
+        return int(round((rpm - 1886) / 0.95915))
+        
     def turn_on_spindle(self, rpm=None, voltage=spindle_voltage):
         """
         Turns on the spindle.
@@ -1082,39 +1108,12 @@ class RouterMachine(object):
         Returns:
             None
         """
-
-        def convert_rpm_for_120(self, target_rpm):
-            # For conversion maths see https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/
-
-            corrected_RPM = int(round((target_rpm - 8658) / 0.6739))
-
-            if corrected_RPM < 0: 
-                log("{} RPM too low for 120V spindle, setting to 0".format(target_rpm))
-                corrected_RPM = 0
-            if corrected_RPM > 25000: 
-                corrected_RPM = 25000
-
-            return corrected_RPM
-        
-        def convert_rpm_for_230(self, target_rpm):
-            #For conversion maths see https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/
-
-            corrected_RPM = int(round((target_rpm - 3125) / 1.5625))
-
-            if corrected_RPM < 0:
-                log("{} RPM too low for 230V spindle, setting to 0".format(target_rpm))
-                corrected_RPM = 0
-            if corrected_RPM > 25000:
-                corrected_RPM = 25000
-
-            return int(round((rpm - 1886) / 0.95915))
-        
             
         if rpm: # If a value is given, set the spindle to that value
             if voltage in [110, 120]:            
-                rpm_to_set = convert_rpm_for_120(rpm)
+                rpm_to_set = self.convert_rpm_for_120(rpm)
             elif voltage in [230, 240]:
-                rpm_to_set = convert_rpm_for_230(rpm)
+                rpm_to_set = self.convert_rpm_for_230(rpm)
             else:
                 raise ValueError('Spindle voltage: {} not recognised'.format(voltage))  
 
