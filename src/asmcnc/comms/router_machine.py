@@ -1084,13 +1084,32 @@ class RouterMachine(object):
         """
 
         def convert_rpm_for_120(target_rpm):
-            # See https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/
-            return int(round((rpm - 8658) / 0.6739))
+            # For conversion maths see https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/
+
+            corrected_RPM = int(round((target_rpm - 8658) / 0.6739))
+
+            if corrected_RPM < 0: 
+                log("{} RPM too low for 120V spindle, setting to 0".format(target_rpm))
+                corrected_RPM = 0
+            if corrected_RPM > 25000: 
+                corrected_RPM = 25000
+                
+            return corrected_RPM
         
         def convert_rpm_for_230(targer_rpm):
-            # See https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/
+            #For conversion maths see https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/
+
+            corrected_RPM = int(round((targer_rpm - 3125) / 1.5625))
+
+            if corrected_RPM < 0:
+                log("{} RPM too low for 230V spindle, setting to 0".format(targer_rpm))
+                corrected_RPM = 0
+            if corrected_RPM > 25000:
+                corrected_RPM = 25000
+
             return int(round((rpm - 1886) / 0.95915))
         
+            
         if rpm: # If a value is given, set the spindle to that value
             if voltage in [110, 120]:            
                 rpm_to_set = convert_rpm_for_120(rpm)
@@ -1116,6 +1135,29 @@ class RouterMachine(object):
         """
         self.s.write_command('M5')
 
+    def correct_rpm(self, rpm, voltage = spindle_voltage):
+            """
+            Corrects the RPM value based on the spindle voltage.
+
+            For use outside of router_machine
+
+            Args:
+                rpm (float): The RPM value to be corrected.
+                voltage (int, optional): The spindle voltage. Defaults to spindle_voltage.
+
+            Returns:
+                float: The corrected RPM value.
+
+            Raises:
+                ValueError: If the spindle voltage is not recognised.
+            """
+            if voltage in [110, 120]:            
+                return self.convert_rpm_for_120(rpm)
+            elif voltage in [230, 240]:
+                return self.convert_rpm_for_230(rpm)
+            else:
+                raise ValueError('Spindle voltage: {} not recognised'.format(voltage))
+        
 # START UP SEQUENCES
 
     # BOOT UP SEQUENCE
