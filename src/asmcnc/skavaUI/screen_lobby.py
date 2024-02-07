@@ -524,7 +524,7 @@ class LobbyScreen(Screen):
             pass # reinstate upgrade_app_container, tbc - this is placeholder for now
 
     def on_enter(self):
-        self.sm.current = 'drywall'
+        self.sm.current = 'drywall_cutter'
         if not sys.platform == "win32":
             self.m.set_led_colour('GREEN')
 

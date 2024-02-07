@@ -346,7 +346,7 @@ class DrywallCutterView(Screen):
     These methods are called to update the UI.
     """
 
-    def set_cutter_image(self, image_path):
+    def set_cutter_drop_down_image(self, image_path):
         """
         Sets the cutter image to the given image path.
         :param image_path: The image path
@@ -354,7 +354,7 @@ class DrywallCutterView(Screen):
         """
         self.cutter_drop_down.source = image_path
 
-    def set_toolpath_offset_image(self, image_path):
+    def set_toolpath_offset_drop_down_image(self, image_path):
         """
         Sets the toolpath offset image to the given image path.
         :param image_path: The image path
@@ -362,11 +362,18 @@ class DrywallCutterView(Screen):
         """
         self.toolpath_offset_drop_down.source = image_path
 
+    def set_shape_drop_down_image(self, image_path):
+        """
+        Sets the shape image to the given image path.
+        :param image_path: The image path
+        :return: None
+        """
+        self.shape_drop_down.source = image_path
+
     def set_rotate_button_disabled(self, disabled):
         """
         Sets the rotation button to disabled or not.
         :param disabled: True if the button should be disabled, False otherwise
         :return: None
         """
-        print("Rotate button disabled: " + str(disabled))
         self.rotate_button.disabled = disabled

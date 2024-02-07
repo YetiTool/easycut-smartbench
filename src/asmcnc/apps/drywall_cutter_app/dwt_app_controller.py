@@ -1,9 +1,10 @@
 from kivy.properties import ObjectProperty
 
-from asmcnc.apps.drywall_cutter_app import material_setup_popup
+from asmcnc.apps.drywall_cutter_app import material_setup_popup, screen_config_filesaver, screen_config_filechooser
 from asmcnc.apps.drywall_cutter_app.config.config_loader import DWTConfig
 from asmcnc.apps.drywall_cutter_app.dwt_app_view import DrywallCutterView
 from asmcnc.apps.drywall_cutter_app.engine import GCodeEngine
+from asmcnc.skavaUI import popup_info
 
 
 class DrywallCutterModel:
@@ -41,6 +42,15 @@ class DrywallCutterController(object):
         self.__load_default_state()
 
     def __load_default_state(self):
+        # Set the dropdown images to the correct images
+        self.view.set_cutter_drop_down_image(
+            self.model.config.cutter_options[str(self.model.config.active_config.cutter_type)]["image_path"])
+        self.view.set_shape_drop_down_image(
+            self.model.config.shape_options[str(self.model.config.active_config.shape_type)]["image_path"])
+        self.view.set_toolpath_offset_drop_down_image(
+            self.model.config.toolpath_offset_buttons[str(self.model.config.active_config.toolpath_offset)]["image_path"])
+
+        # Handle the integration of the config into the view
         self.handle_cutter_selection_changed(self.model.config.active_config.cutter_type)
         self.handle_shape_selection_changed(self.model.config.active_config.shape_type)
         self.handle_toolpath_offset_selection_changed(self.model.config.active_config.toolpath_offset)
@@ -76,6 +86,7 @@ class DrywallCutterController(object):
         self.view.shape_display_widget.select_shape(shape, self.model.config.active_config.rotation)
         self.update_toolpath_offsets_drop_down()
 
+        # Update the toolpath offset image on the shape display widget
         self.handle_toolpath_offset_selection_changed(self.model.config.active_config.toolpath_offset)
 
         # If the shape requires rotation (from current value), rotate it
@@ -84,8 +95,6 @@ class DrywallCutterController(object):
                 shape, self.model.config.active_config.rotation, swap_lengths=False
             )
 
-        # Update the toolpath offset image on the shape display widget
-
     def update_toolpath_offsets_drop_down(self):
         """
         Updates the available toolpath offsets in the dropdown based on the selected shape.
@@ -93,6 +102,8 @@ class DrywallCutterController(object):
         :return: None
         """
         self.view.toolpath_offset_drop_down.set_options(self.model.config.get_toolpath_offset_options())
+        self.view.set_toolpath_offset_drop_down_image(
+            self.model.config.toolpath_offset_buttons[self.model.config.active_config.toolpath_offset]["image_path"])
 
     def handle_toolpath_offset_selection_changed(self, toolpath_offset):
         """
@@ -146,6 +157,7 @@ class DrywallCutterController(object):
         :return: None
         """
         # Need to refactor so that the popup system module is singleton, so I don't have to pass it around
+        popup_info.PopupStop(self.router_machine, self.screen_manager, self.localization)
 
     def handle_exit_button_pressed(self):
         """
@@ -169,21 +181,77 @@ class DrywallCutterController(object):
         """
         self.model.config.save_temp_config()
 
+    def __handle_filechooser_callback(self, file_path):
+        """
+        Callback for the filechooser.
+
+        :param file_path: The file path selected
+        :return: None
+        """
+        self.model.config.load_config(file_path)
+        self.__load_default_state()
+
     def handle_load_filechooser_pressed(self):
-        pass
+        """
+        Called when the load button is pressed.
+        :return: None
+        """
+        if not self.screen_manager.has_screen('config_filechooser'):
+            self.screen_manager.add_widget(
+                screen_config_filechooser.ConfigFileChooser(name='config_filechooser',
+                                                            screen_manager=self.screen_manager,
+                                                            localization=self.localization,
+                                                            callback=self.__handle_filechooser_callback))
+        self.screen_manager.current = 'config_filechooser'
 
     def handle_material_setup_pressed(self):
+        """
+        Called when the material setup button is pressed.
+        :return: None
+        """
         self.material_setup_popup.open()
 
     def handle_simulate_pressed(self):
-        #self.model.engine.simulate()
+        """
+        Called when the simulate button is pressed.
+        :return: None
+        """
+        # self.model.engine.simulate()
         pass
+
+    def __handle_filesaver_callback(self, file_path):
+        """
+        Callback for the filesaver.
+
+        :param file_path: The file path selected
+        :return: None
+        """
+        self.model.config.save_config(file_path)
 
     def handle_save_pressed(self):
-        pass
+        """
+        Called when the save button is pressed.
+        :return: None
+        """
+        if not self.screen_manager.has_screen('config_filesaver'):
+            self.screen_manager.add_widget(
+                screen_config_filesaver.ConfigFileSaver(name='config_filesaver',
+                                                        screen_manager=self.screen_manager,
+                                                        localization=self.localization,
+                                                        callback=self.__handle_filesaver_callback,
+                                                        keyboard=self.keyboard))
+        self.screen_manager.current = 'config_filesaver'
 
     def handle_run_pressed(self):
+        """
+        Called when the run button is pressed.
+        :return: None
+        """
         self.model.engine.engine_run()
 
     def get_screen(self):
+        """
+        Returns the view/screen of the controller.
+        :return: None
+        """
         return self.view

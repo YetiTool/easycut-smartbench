@@ -227,7 +227,7 @@ class SkavaUI(App):
         recovery_decision_screen = screen_recovery_decision.RecoveryDecisionScreen(name = 'recovery_decision', screen_manager = sm, machine = m, job = jd, localization = l)
         homing_decision_screen = screen_homing_decision.HomingDecisionScreen(name = 'homing_decision', screen_manager = sm, machine = m, localization = l)
 
-        drywall_app_controller = DrywallCutterController(name='drywall', machine=m, screen_manager=sm, keyboard=kb, localization=l)
+        drywall_app_controller = DrywallCutterController(name='drywall_cutter', machine=m, screen_manager=sm, keyboard=kb, localization=l)
         sm.add_widget(drywall_app_controller.get_screen())
 
         # add the screens to screen manager
