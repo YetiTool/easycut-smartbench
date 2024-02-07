@@ -1,6 +1,5 @@
 import os
 
-from kivy.graphics import Color, Rectangle
 from kivy.metrics import dp
 from kivy.properties import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
@@ -368,4 +367,3 @@ class DrywallCutterView(Screen):
         :return: None
         """
         self.rotate_button.disabled = disabled
-
