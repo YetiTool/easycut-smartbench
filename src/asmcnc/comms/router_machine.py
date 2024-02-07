@@ -1083,7 +1083,7 @@ class RouterMachine(object):
             None
         """
 
-        def convert_rpm_for_120(target_rpm):
+        def convert_rpm_for_120(self, target_rpm):
             # For conversion maths see https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/
 
             corrected_RPM = int(round((target_rpm - 8658) / 0.6739))
@@ -1093,16 +1093,16 @@ class RouterMachine(object):
                 corrected_RPM = 0
             if corrected_RPM > 25000: 
                 corrected_RPM = 25000
-                
+
             return corrected_RPM
         
-        def convert_rpm_for_230(targer_rpm):
+        def convert_rpm_for_230(self, target_rpm):
             #For conversion maths see https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/
 
-            corrected_RPM = int(round((targer_rpm - 3125) / 1.5625))
+            corrected_RPM = int(round((target_rpm - 3125) / 1.5625))
 
             if corrected_RPM < 0:
-                log("{} RPM too low for 230V spindle, setting to 0".format(targer_rpm))
+                log("{} RPM too low for 230V spindle, setting to 0".format(target_rpm))
                 corrected_RPM = 0
             if corrected_RPM > 25000:
                 corrected_RPM = 25000
