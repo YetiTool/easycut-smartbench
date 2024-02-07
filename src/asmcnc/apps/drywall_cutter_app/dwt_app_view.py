@@ -238,7 +238,9 @@ class DrywallCutterView(Screen):
             allow_stretch=True,
             on_press=self.on_run_button_pressed,
         )
+        self.button_container.add_widget(self.run_button)
 
+        self.action_pane_container.add_widget(self.button_container)
         self.body.add_widget(self.action_pane_container)
 
     """
