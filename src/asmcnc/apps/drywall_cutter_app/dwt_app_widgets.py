@@ -12,6 +12,7 @@ class ImageButton(ButtonBehavior, Image):
 class DryWallImageDropDown(DropDown):
     def __init__(self, name_and_image_dict, callback, **kwargs):
         super(DryWallImageDropDown, self).__init__(**kwargs)
+        self.callback = callback
 
         for key in name_and_image_dict.keys():
             image = ImageButton(
