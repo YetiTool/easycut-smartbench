@@ -296,6 +296,7 @@ class CuttingDepthsPopup(Popup):
         self.kb.setup_text_inputs(self.text_inputs)
         for text_input in self.text_inputs:
             text_input.bind(text=self.update_text)
+        self.depth_per_pass.bind(text=self.calculate_depth_per_pass)
         self.update_strings()
 
     def on_open(self):
@@ -328,6 +329,21 @@ class CuttingDepthsPopup(Popup):
             self.depth_per_pass.disabled = False
             self.depth_per_pass.hint_text = self.depth_per_pass.text
             self.depth_per_pass.text = ''
+
+    def update_graphic_position(self):
+        try:
+            upper_limit = 0.225  # Value at which the cutter sits at the top of the material
+            lower_limit = -0.035  # Value at which the cutter sits at the bottom surface of the material
+            range = upper_limit - lower_limit
+            bottom_offset = 0 if self.bottom_offset.text == '' or self.bottom_offset.text == '-' else float(self.bottom_offset.text)
+            material_thickness = 0 if self.material_thickness.text == '' or self.material_thickness.text == '-' else float(self.material_thickness.text)
+            ratio = 0 if material_thickness == 0 else bottom_offset / material_thickness
+            cutter_y = lower_limit - (range * ratio)
+            self.cutter_graphic.pos_hint['y'] = cutter_y
+            self.total_cut_depth_arrow.pos_hint['y'] = cutter_y
+            self.float_layout.do_layout()
+        except:
+            pass
 
     def update_text(self, instance, value):
         cutter_max_depth_total = self.dwt_config.active_cutter.max_depth_total
@@ -365,6 +381,8 @@ class CuttingDepthsPopup(Popup):
                             bottom_offset = -material_thickness
 
                 self.total_cut_depth.text = str(material_thickness + bottom_offset)
+                self.update_graphic_position()
+                self.calculate_depth_per_pass(self.depth_per_pass, self.auto_pass_checkbox.active)
 
                 if float(self.total_cut_depth.text) > max_cut_depth:
                     self.float_layout.add_widget(self.cut_depth_warning)
@@ -384,6 +402,72 @@ class CuttingDepthsPopup(Popup):
             self.confirm_button.disabled = False
             self.confirm_button.opacity = 1
         self.float_layout.do_layout()
+
+    def generate_pass_depth_lines(self, number_of_passes):
+        upper_limit = 0.0825  # Value at which the line sits at the top of the material
+        lower_limit = -0.175  # Value at which the line sits at the bottom surface of the material
+        line_range = upper_limit - lower_limit
+        material_thickness = 0 if self.material_thickness.text == '' or self.material_thickness.text == '-' else float(
+            self.material_thickness.text)
+        depth_per_pass = 0 if self.depth_per_pass.text == '' or self.depth_per_pass.text == '-' else float(
+            self.depth_per_pass.text)
+        ratio = 0 if material_thickness == 0 else depth_per_pass / material_thickness
+        singular_cut = 0 if self.depth_per_pass.text == "" else round(ratio * line_range, 4)
+        for pass_line in self.pass_depth_lines:
+            self.float_layout.remove_widget(pass_line)
+        if self.total_cut_depth.text != "0.0":
+            for i in range(0, int(number_of_passes)):
+                img = Image()
+
+                self.float_layout.add_widget(img)
+
+                img.source = "./asmcnc/apps/drywall_cutter_app/img/pass_depth_line.png"
+
+                line_depth = upper_limit - (singular_cut * (i+1))
+                cutter_limit = lower_limit - (-0.035 - self.cutter_graphic.pos_hint['y'])
+                if line_depth < cutter_limit:
+                    line_depth = cutter_limit
+
+                img.pos_hint = {'center_x': 0.45, 'y': line_depth}
+                img.allow_stretch = True
+
+                self.pass_depth_lines.append(img)
+        self.float_layout.do_layout()
+
+    def calculate_depth_per_pass(self, instance, value):
+        max_cut_depth_per_pass = self.dwt_config.active_cutter.max_depth_per_pass
+        if self.auto_pass_checkbox.active:
+            try:
+                number_of_passes = math.ceil(float(self.total_cut_depth.text) / max_cut_depth_per_pass)
+
+                depth_per_pass = 0 if number_of_passes == 0 else float(self.total_cut_depth.text) / number_of_passes
+                if depth_per_pass > max_cut_depth_per_pass:
+                    self.depth_per_pass.text = str(max_cut_depth_per_pass)
+                else:
+                    self.depth_per_pass.text = str(round(depth_per_pass, 1))
+
+                if depth_per_pass == 0:
+                    self.float_layout.add_widget(self.pass_depth_warning)
+                elif self.pass_depth_warning in self.float_layout.children:
+                    self.float_layout.remove_widget(self.pass_depth_warning)
+                self.disable_confirm_button()
+                self.generate_pass_depth_lines(number_of_passes)
+            except:
+                pass
+        else:
+            depth_per_pass = 0 if self.depth_per_pass.text == "" else float(self.depth_per_pass.text)
+            try:
+                if depth_per_pass > max_cut_depth_per_pass or depth_per_pass == 0:
+                    self.float_layout.add_widget(self.pass_depth_warning)
+                    self.disable_confirm_button()
+
+                else:
+                    self.float_layout.remove_widget(self.pass_depth_warning)
+                    self.disable_confirm_button()
+                number_of_passes = 0 if depth_per_pass == 0 else math.ceil(float(self.total_cut_depth.text) / depth_per_pass)
+                self.generate_pass_depth_lines(number_of_passes)
+            except:
+                pass
 
     def confirm(self):
         self.dismiss()
