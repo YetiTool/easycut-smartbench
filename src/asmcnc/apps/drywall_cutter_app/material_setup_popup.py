@@ -372,12 +372,10 @@ class CuttingDepthsPopup(Popup):
                 # Update warning label text
                 if self.soft_limit_total_cut_depth < cutter_max_depth_total:
                     max_cut_depth = self.soft_limit_total_cut_depth
-                    self.cut_depth_warning.text = "[color=#FF0000]" + self.l.get_str("Max allowable cut is") + \
-                                                  " Xmm[/color]".replace("X", str(max_cut_depth))
+                    self.cut_depth_warning.text = self.cut_depth_warning_soft_limit
                 else:
                     max_cut_depth = cutter_max_depth_total
-                    self.cut_depth_warning.text = "[color=#FF0000]" + self.l.get_str("Max depth of tool is") + \
-                                                  " Xmm[/color]".replace("X", str(max_cut_depth))
+                    self.cut_depth_warning.text = self.cut_depth_warning_cutter_max
 
                 material_thickness = 0 if self.material_thickness.text == '' or self.material_thickness.text == '-' else float(
                     self.material_thickness.text)
@@ -402,6 +400,9 @@ class CuttingDepthsPopup(Popup):
                 self.total_cut_depth.text = str(material_thickness + bottom_offset)
 
                 if float(self.total_cut_depth.text) > max_cut_depth:
+                    self.float_layout.add_widget(self.cut_depth_warning)
+                elif float(self.total_cut_depth.text) <= 0:
+                    self.cut_depth_warning.text = self.cut_depth_warning_zero
                     self.float_layout.add_widget(self.cut_depth_warning)
                 else:
                     self.float_layout.remove_widget(self.cut_depth_warning)
