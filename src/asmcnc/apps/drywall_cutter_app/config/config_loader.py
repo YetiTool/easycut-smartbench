@@ -3,10 +3,15 @@ import os
 import config_classes
 import inspect
 
-configurations_dir = 'asmcnc/apps/drywall_cutter_app/config/configurations'
-cutters_dir = 'asmcnc/apps/drywall_cutter_app/config/cutters'
+current_dir = os.path.dirname(__file__)
+configurations_dir = os.path.join(current_dir, 'configurations')
+cutters_dir = os.path.join(current_dir, 'cutters')
+cutters_image_dir = os.path.join(cutters_dir, 'images')
+IMG_DIR = os.path.join(current_dir, '..', 'img')
 
-TEMP_CONFIG_PATH = os.path.join(configurations_dir, '..', 'temp', 'temp_config.json')
+temp_dir = os.path.join(current_dir, 'temp')
+
+TEMP_CONFIG_PATH = os.path.join(temp_dir, 'temp_config')
 DEBUG_MODE = True
 
 
@@ -24,7 +29,73 @@ class DWTConfig(object):
     active_config = None  # type: config_classes.Configuration
     active_cutter = None  # type: config_classes.Cutter
 
+    cutter_options = {
+        "tool_6mm.json": {
+            "image_path": os.path.join(cutters_image_dir, "tool_6mm.png"),
+        }
+    }
+
+    shape_options = {
+        "circle": {
+            "image_path": os.path.join(IMG_DIR, "circle_shape_button.png"),
+            "toolpath_offset_options": [
+                "inside",
+                "on",
+                "outside"
+            ],
+            "rotatable": False
+        },
+        "square": {
+            "image_path": os.path.join(IMG_DIR, "square_shape_button.png"),
+            "toolpath_offset_options": [
+                "inside",
+                "on",
+                "outside"
+            ],
+            "rotatable": False
+        },
+        "line": {
+            "image_path": os.path.join(IMG_DIR, "line_shape_button.png"),
+            "toolpath_offset_options": [
+                "on",
+            ],
+            "rotatable": True
+        },
+        "geberit": {
+            "image_path": os.path.join(IMG_DIR, "geberit_shape_button.png"),
+            "toolpath_offset_options": [
+                "on",
+            ],
+            "rotatable": False
+        },
+        "rectangle": {
+            "image_path": os.path.join(IMG_DIR, "rectangle_shape_button.png"),
+            "toolpath_offset_options": [
+                "inside",
+                "on",
+                "outside"
+            ],
+            "rotatable": True
+        }
+    }  # type: dict
+
+    # Don't use this to fill the dropdown, use get_toolpath_offset_options instead
+    toolpath_offset_options_images = {
+        "inside": {
+            "image_path": os.path.join(IMG_DIR, "toolpath_offset_inside_button.png"),
+        },
+        "on": {
+            "image_path": os.path.join(IMG_DIR, "toolpath_offset_on_button.png"),
+        },
+        "outside": {
+            "image_path": os.path.join(IMG_DIR, "toolpath_offset_outside_button.png"),
+        }
+    }  # type: dict
+
     def __init__(self):
+        if not os.path.exists(temp_dir):
+            os.mkdir(temp_dir)
+
         # Load the temp config if it exists, otherwise load the default config.
         if os.path.exists(TEMP_CONFIG_PATH):
             self.load_temp_config()
@@ -145,26 +216,23 @@ class DWTConfig(object):
     @staticmethod
     @debug
     def get_available_cutter_names():
-        # type () -> dict{str: dict{str: str}}
+        # type () -> dict{str: str}
         """
         :return: A list of the available cutter names and their file names.
         """
         cutters = {}
-        for cutter_file in sorted(os.listdir(cutters_dir)):
-            if not cutter_file.endswith('.json'):
+        for f_name in os.listdir(cutters_dir):
+            if not f_name.endswith('.json'):
                 continue
 
-            file_path = os.path.join(cutters_dir, cutter_file)
+            file_path = os.path.join(cutters_dir, f_name)
 
             if os.path.isfile(file_path):
                 with open(file_path, 'r') as f:
                     cutter = json.load(f)
 
-                    if 'cutter_description' in cutter and 'image_path' in cutter:
-                        cutters[cutter['cutter_description']] = {
-                            'cutter_path': cutter_file,
-                            'image_path': cutter['image_path']
-                        }
+                    if 'cutter_description' in cutter:
+                        cutters[cutter['cutter_description']] = f_name
         return cutters
 
     @debug
@@ -175,7 +243,7 @@ class DWTConfig(object):
 
         This is used to save the configuration when the Drywall Cutter screen is left.
         """
-        self.save_config(os.path.join('..', 'temp', 'temp_config.json'))
+        self.save_config(TEMP_CONFIG_PATH)
 
     @debug
     def load_temp_config(self):
@@ -185,7 +253,7 @@ class DWTConfig(object):
 
         This is used to load the configuration when the Drywall Cutter screen is loaded.
         """
-        self.load_config(os.path.join('..', 'temp', 'temp_config.json'))
+        self.load_config(TEMP_CONFIG_PATH)
 
     @debug
     def on_parameter_change(self, parameter_name, parameter_value):
@@ -209,3 +277,78 @@ class DWTConfig(object):
             setattr(parameter, parameter_names[-1], parameter_value)
         else:
             setattr(self.active_config, parameter_name, parameter_value)
+
+    def set_cutter_type(self, cutter_type):
+        """
+        Sets the cutter type for the active configuration.
+
+        This sets the active configuration's cutter type and loads the cutter file.
+
+        :param cutter_type: The name of the cutter file to load.
+        :return: None
+        """
+        self.active_config.cutter_type = cutter_type
+        self.load_cutter(cutter_type)
+
+    def set_shape(self, shape):
+        """
+        Sets the shape type for the active configuration.
+
+        This sets the active configuration's shape type and sets the active toolpath offset to the first option for the new shape.
+
+        :param shape: The name of the shape to set (from shape_options)
+        :return: None
+        """
+        # Set shape type
+        self.active_config.shape_type = shape
+
+        # If the active toolpath offset is not an option for the new shape,
+        # set the active toolpath offset to the first option
+        if self.active_config.toolpath_offset not in self.shape_options[shape]['toolpath_offset_options']:
+            self.active_config.toolpath_offset = self.shape_options[shape]['toolpath_offset_options'][0]
+        else:
+            self.active_config.toolpath_offset = self.shape_options[shape]['toolpath_offset_options'][0]
+
+        # Set the rotation to horizontal by default
+        self.active_config.rotation = 'horizontal'
+
+    def set_toolpath_offset(self, toolpath_offset):
+        """
+        Sets the toolpath offset for the active configuration.
+
+        :param toolpath_offset: The name of the toolpath offset to set (from shape_options)
+        :return: None
+        """
+        self.active_config.toolpath_offset = toolpath_offset
+
+    def toggle_rotation(self):
+        """
+        Toggles the rotation for the active configuration.
+
+        :return: None
+        """
+        if self.active_config.rotation == 'horizontal':
+            self.active_config.rotation = 'vertical'
+        else:
+            self.active_config.rotation = 'horizontal'
+
+    def is_current_shape_rotatable(self):
+        """
+        :return: True if the active configuration's shape is rotatable, otherwise False.
+        """
+        return self.shape_options[self.active_config.shape_type]['rotatable']
+
+    def is_shape_rotatable(self, shape):
+        """
+        :return: True if the shape is rotatable, otherwise False.
+        """
+        return self.shape_options[shape]['rotatable']
+
+    def get_toolpath_offset_options(self):
+        """
+        :return: The toolpath offset options for the active configuration's shape.
+        """
+        # Get the toolpath offset options for the active configuration's shape
+        # and set the image_path on each option
+        toolpath_offset_options = self.shape_options[self.active_config.shape_type]['toolpath_offset_options']
+        return {option: self.toolpath_offset_options_images[option] for option in toolpath_offset_options}
