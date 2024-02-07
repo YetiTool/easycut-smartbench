@@ -510,7 +510,50 @@ class CuttingDepthsPopup(Popup):
                 pass
 
     def confirm(self):
+        material_thickness = 0.0 if self.material_thickness.text == '' or self.material_thickness.text == '-' else float(
+            self.material_thickness.text)
+        bottom_offset = 0.0 if self.bottom_offset.text == '' or self.bottom_offset.text == '-' else float(
+            self.bottom_offset.text)
+        depth_per_pass = 0.0 if self.depth_per_pass.text == '' or self.depth_per_pass.text == '-' else float(
+            self.depth_per_pass.text)
+
+        self.dwt_config.active_config.cutting_depths.material_thickness = material_thickness
+        self.dwt_config.active_config.cutting_depths.bottom_offset = bottom_offset
+        self.dwt_config.active_config.cutting_depths.depth_per_pass = depth_per_pass
+        self.dwt_config.active_config.cutting_depths.auto_pass = self.auto_pass_checkbox.active
         self.dismiss()
 
     def cancel(self):
         self.dismiss()
+
+    def validate_inputs(self):
+        material_thickness = 0 if self.material_thickness.text == '' or self.material_thickness.text == '-' else float(
+            self.material_thickness.text)
+        bottom_offset = 0 if self.bottom_offset.text == '' or self.bottom_offset.text == '-' else float(
+            self.bottom_offset.text)
+        total_cut_depth = 0 if self.total_cut_depth.text == '' or self.total_cut_depth.text == '-' else float(
+            self.total_cut_depth.text)
+        depth_per_pass = 0 if self.depth_per_pass.text == '' or self.depth_per_pass.text == '-' else float(
+            self.depth_per_pass.text)
+        auto_pass_checkbox = self.auto_pass_checkbox.active
+        max_cut_depth_per_pass = self.dwt_config.active_cutter.max_depth_per_pass
+
+        # Check for negative material thickness
+        if material_thickness < 0:
+            return False
+
+        # The bottom offset should never have a greater value than the material thickness if negative
+        if abs(bottom_offset) > material_thickness:
+            if bottom_offset < 0:
+                return False
+
+        if total_cut_depth < 0 or total_cut_depth > self.soft_limit_total_cut_depth:
+            return False
+
+        if total_cut_depth != material_thickness + bottom_offset:
+            return False
+
+        if depth_per_pass > max_cut_depth_per_pass or depth_per_pass <= 0:
+            return False
+
+        return True
