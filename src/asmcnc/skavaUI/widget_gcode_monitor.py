@@ -282,11 +282,7 @@ class GCodeMonitor(Widget):
             self.popup_flag = False
         else:
             if self.validate_gcode_textinput(self.gCodeInput.text):
-                if self.gCodeInput.text.upper().startswith('SP'):
-                    user_set_RPM = int(self.gCodeInput.text[2:])
-                    self.m.turn_on_spindle(rpm = user_set_RPM)
-                else:
-                    self.m.send_any_gcode_command(str(self.gCodeInput.text))
+                self.m.send_any_gcode_command(str(self.gCodeInput.text))
             else:
                 message = (
                     self.l.get_str("This command is forbidden because it will alter the fundamental settings of the machine.") + \
