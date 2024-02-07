@@ -1,6 +1,7 @@
 from kivy.properties import ObjectProperty
 
-from asmcnc.apps.drywall_cutter_app import material_setup_popup, screen_config_filesaver, screen_config_filechooser
+from asmcnc.apps.drywall_cutter_app import material_setup_popup, screen_config_filesaver, screen_config_filechooser, \
+    job_load_helper
 from asmcnc.apps.drywall_cutter_app.config.config_loader import DWTConfig
 from asmcnc.apps.drywall_cutter_app.dwt_app_view import DrywallCutterView
 from asmcnc.apps.drywall_cutter_app.engine import GCodeEngine
@@ -25,13 +26,14 @@ class DrywallCutterController(object):
     The controller for the Drywall Cutter screen.
     """
 
-    def __init__(self, name, machine, screen_manager, keyboard, localization):
+    def __init__(self, name, machine, screen_manager, keyboard, localization, job_data):
         self.name = name
         self.model = DrywallCutterModel()
         self.screen_manager = screen_manager
         self.router_machine = machine
         self.keyboard = keyboard
         self.localization = localization
+        self.job_data = job_data
 
         # Build the view last
         self.view = DrywallCutterView(name=self.name, controller=self)
@@ -41,6 +43,14 @@ class DrywallCutterController(object):
 
         self.__load_default_state()
 
+    def get_screen(self):
+        """
+        Returns the view/screen of the controller.
+        :return: None
+        """
+        return self.view
+
+
     def __load_default_state(self):
         # Set the dropdown images to the correct images
         self.view.set_cutter_drop_down_image(
@@ -48,7 +58,8 @@ class DrywallCutterController(object):
         self.view.set_shape_drop_down_image(
             self.model.config.shape_options[str(self.model.config.active_config.shape_type)]["image_path"])
         self.view.set_toolpath_offset_drop_down_image(
-            self.model.config.toolpath_offset_buttons[str(self.model.config.active_config.toolpath_offset)]["image_path"])
+            self.model.config.toolpath_offset_buttons[str(self.model.config.active_config.toolpath_offset)][
+                "image_path"])
 
         # Handle the integration of the config into the view
         self.handle_cutter_selection_changed(self.model.config.active_config.cutter_type)
@@ -242,16 +253,67 @@ class DrywallCutterController(object):
                                                         keyboard=self.keyboard))
         self.screen_manager.current = 'config_filesaver'
 
+    """
+    Job running functions
+    
+    These functions all need major refactoring, the system for running jobs is not very good.
+    """
     def handle_run_pressed(self):
         """
         Called when the run button is pressed.
         :return: None
         """
-        self.model.engine.engine_run()
+        if self.__are_inputs_valid():
+            self.model.engine.engine_run()
+            job_loader = job_load_helper.JobLoader(screen_manager=self.screen_manager,
+                                                   localization=self.localization,
+                                                   router_machine=self.router_machine,
+                                                   job_data=self.job_data)
+            output_file = "jobCache/%s.nc" % self.model.config.active_config.shape_type
+            self.job_data.set_job_filename(output_file)
+            job_loader.load_gcode_file(output_file)
+            self.screen_manager.get_screen('go').return_to_screen = 'drywall_cutter'
+            self.screen_manager.get_screen('go').cancel_to_screen = 'drywall_cutter'
 
-    def get_screen(self):
+            if self.__is_machine_ready_to_go():
+                self.__proceed_to_go_screen()
+        else:
+            popup_info.PopupError(self.screen_manager, self.localization, "Please check your inputs are valid, and not too small.")
+
+    def __are_inputs_valid(self):
         """
-        Returns the view/screen of the controller.
-        :return: None
+        Check each widget for valid input.
+        :return: True if all inputs are valid, False otherwise
         """
-        return self.view
+        return self.view.shape_display_widget.are_inputs_valid() and self.material_setup_popup.validate_inputs()
+
+    def __is_machine_ready_to_go(self):
+        """
+        Checks if the machine is ready to go.
+        :return: True if the machine is ready to go, False otherwise
+        """
+        home_screen = self.screen_manager.get_screen('home')
+
+        if not self.router_machine.is_machine_homed:
+            self.handle_home_button_pressed()
+            return False
+
+        if home_screen.z_datum_reminder_flag and not home_screen.has_datum_been_reset:
+            # popup_manager.handle_z_datum_reminder()
+            return False
+
+        return True
+
+    def __proceed_to_go_screen(self):
+        self.job_data.screen_to_return_to_after_job = self.view.name
+        self.job_data.screen_to_return_to_after_cancel = self.view.name
+
+        if self.router_machine.is_stylus_enabled:
+            self.screen_manager.current = 'tool_selection'
+        else:
+            self.router_machine.stylus_router_choice = 'router'
+
+            if self.router_machine.fw_can_operate_zUP_on_pause():
+                self.screen_manager.current = 'lift_z_on_pause_or_not'
+            else:
+                self.screen_manager.current = 'jobstart_warning'
