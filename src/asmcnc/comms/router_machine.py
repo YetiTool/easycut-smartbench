@@ -1085,11 +1085,11 @@ class RouterMachine(object):
 
         def convert_rpm_for_120(target_rpm):
             # See https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/
-            return round((rpm - 8658) / 0.6739)
+            return int(round((rpm - 8658) / 0.6739))
         
         def convert_rpm_for_230(targer_rpm):
             # See https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/
-            return round((rpm - 1886) / 0.95915)
+            return int(round((rpm - 1886) / 0.95915))
         
         if rpm: # If a value is given, set the spindle to that value
             if voltage in [110, 120]:            
