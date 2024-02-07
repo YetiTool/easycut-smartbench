@@ -66,8 +66,8 @@ class HoldButton(Button):
 
 
 class WarningHoldButton(HoldButton):
-    background_color = (127 / 255, 255, 0, 1)
-    held_background_color = (0, 255, 0, 0.3)
+    background_color = (255.0 / 255, 246.0 / 255, 143.0 / 255, 1)
+    held_background_color = (255. / 255, 165.0 / 255, 0, 0.3)
 
     def __init__(self, hold_time, callback, **kwargs):
         super(WarningHoldButton, self).__init__(hold_time, callback,
