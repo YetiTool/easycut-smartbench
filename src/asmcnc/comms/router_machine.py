@@ -1092,9 +1092,9 @@ class RouterMachine(object):
             return round((rpm - 1886) / 0.95915)
         
         if rpm: # If a value is given, set the spindle to that value
-            if voltage == 110 or voltage == 120:            
+            if voltage in [110, 120]:            
                 rpm_to_set = convert_rpm_for_120(rpm)
-            elif voltage == 230 or voltage == 240:
+            elif voltage in [230, 240]:
                 rpm_to_set = convert_rpm_for_230(rpm)
             else:
                 raise ValueError('Spindle voltage: {} not recognised'.format(voltage))  
