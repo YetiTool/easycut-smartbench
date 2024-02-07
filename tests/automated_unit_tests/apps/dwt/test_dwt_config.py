@@ -3,9 +3,9 @@ import sys
 
 sys.path.append('./src')
 from asmcnc.apps.drywall_cutter_app.config import config_loader
-
-config_loader.configurations_dir = 'src/asmcnc/apps/drywall_cutter_app/config/configurations'
-config_loader.cutters_dir = 'src/asmcnc/apps/drywall_cutter_app/config/cutters'
+#
+# config_loader.configurations_dir = 'src/asmcnc/apps/drywall_cutter_app/config/configurations'
+# config_loader.cutters_dir = 'src/asmcnc/apps/drywall_cutter_app/config/cutters'
 
 from asmcnc.apps.drywall_cutter_app.screen_drywall_cutter import DrywallCutterScreen
 from asmcnc.comms import router_machine
@@ -90,6 +90,21 @@ def test_on_parameter_change():
     assert dwt_screen.dwt_config.active_config.shape_type == 'circle'
     assert dwt_screen.dwt_config.active_config.cutting_depths.material_thickness == 0.5
 
+
+def test_get_toolpath_offset_options():
+    dwt_config = config_loader.DWTConfig()
+
+    assert dwt_config.get_toolpath_offset_options() == {
+        'inside': {
+            'image_path': os.path.join(config_loader.IMG_DIR, 'toolpath_offset_inside_button.png')
+        },
+        'on': {
+            'image_path': os.path.join(config_loader.IMG_DIR, 'toolpath_offset_on_button.png')
+        },
+        'outside': {
+            'image_path': os.path.join(config_loader.IMG_DIR, 'toolpath_offset_outside_button.png')
+        }
+    }
 
 # def test_get_available_cutter_names():
 #     dwt_config = config_loader.DWTConfig()

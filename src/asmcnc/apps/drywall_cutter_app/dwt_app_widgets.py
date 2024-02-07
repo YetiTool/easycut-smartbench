@@ -10,9 +10,10 @@ class ImageButton(ButtonBehavior, Image):
 
 
 class DryWallImageDropDown(DropDown):
-    def __init__(self, name_and_image_dict, callback, **kwargs):
+    def __init__(self, name_and_image_dict, callback, parent_button, **kwargs):
         super(DryWallImageDropDown, self).__init__(**kwargs)
         self.callback = callback
+        self.parent_button = parent_button
 
         for key in name_and_image_dict.keys():
             image = ImageButton(
@@ -23,6 +24,7 @@ class DryWallImageDropDown(DropDown):
             )
 
             image.bind(on_press=self.dismiss)
+            image.bind(on_press=lambda x, k=key: self.set_parent_source(name_and_image_dict[k]["image_path"]))
             image.bind(on_press=lambda x, k=key: callback(k))
             self.add_widget(image)
 
@@ -37,8 +39,12 @@ class DryWallImageDropDown(DropDown):
             )
 
             image.bind(on_press=self.dismiss)
+            image.bind(on_press=lambda x, k=key: self.set_parent_source(name_and_image_dict[k]["image_path"]))
             image.bind(on_press=lambda x, k=key: self.callback(k))
             self.add_widget(image)
+
+    def set_parent_source(self, source):
+        self.parent_button.source = source
 
 
 class DryWallImageDropDownButton(ButtonBehavior, Image):
@@ -48,7 +54,7 @@ class DryWallImageDropDownButton(ButtonBehavior, Image):
         self.source = name_and_image_dict[list(name_and_image_dict.keys())[0]][
             "image_path"
         ]
-        self.dropdown = DryWallImageDropDown(name_and_image_dict, callback)
+        self.dropdown = DryWallImageDropDown(name_and_image_dict, callback, self)
         self.bind(on_release=self.dropdown.open)
 
     def set_options(self, name_and_image_dict):

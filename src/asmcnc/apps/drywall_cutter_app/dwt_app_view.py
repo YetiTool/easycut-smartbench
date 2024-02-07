@@ -132,7 +132,7 @@ class DrywallCutterView(Screen):
         self.header.add_widget(self.rotate_button)
 
         self.toolpath_offset_drop_down = DryWallImageDropDownButton(
-            name_and_image_dict=self.controller.model.config.get_current_shape_toolpath_offsets(),
+            name_and_image_dict=self.controller.model.config.get_toolpath_offset_options(),
             callback=self.on_toolpath_selected,
             size_hint_x=self.BUTTON_SIZE_HINT_X,
             allow_stretch=True,
@@ -184,7 +184,8 @@ class DrywallCutterView(Screen):
 
         self.shape_display_widget = DrywallShapeDisplay(
             machine=self.controller.router_machine, screen_manager=self.controller.screen_manager,
-            dwt_config=self.controller.model.config, engine=self.controller.model.engine
+            dwt_config=self.controller.model.config, engine=self.controller.model.engine,
+            keyboard=self.controller.keyboard
         )
         self.shape_display_container.add_widget(self.shape_display_widget)
 
@@ -204,7 +205,8 @@ class DrywallCutterView(Screen):
         )
 
         self.xy_move_widget = XYMoveDrywall(machine=self.controller.router_machine,
-                                            screen_manager=self.controller.screen_manager)
+                                            screen_manager=self.controller.screen_manager,
+                                            localization=self.controller.localization)
 
         self.xy_move_container.add_widget(self.xy_move_widget)
 
@@ -366,4 +368,5 @@ class DrywallCutterView(Screen):
         :param disabled: True if the button should be disabled, False otherwise
         :return: None
         """
+        print("Rotate button disabled: " + str(disabled))
         self.rotate_button.disabled = disabled

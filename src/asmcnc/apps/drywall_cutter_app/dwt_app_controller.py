@@ -23,16 +23,23 @@ class DrywallCutterController(object):
     The controller for the Drywall Cutter screen.
     """
 
-    def __init__(self, name, machine, screen_manager):
+    def __init__(self, name, machine, screen_manager, keyboard, localization):
         self.name = name
         self.model = DrywallCutterModel()
         self.screen_manager = screen_manager
         self.router_machine = machine
+        self.keyboard = keyboard
+        self.localization = localization
 
         # Build the view last
         self.view = DrywallCutterView(name=self.name, controller=self)
 
+        self.__load_default_state()
+
+    def __load_default_state(self):
+        self.handle_cutter_selection_changed(self.model.config.active_config.cutter_type)
         self.handle_shape_selection_changed(self.model.config.active_config.shape_type)
+        self.handle_toolpath_offset_selection_changed(self.model.config.active_config.toolpath_offset)
 
     def handle_cutter_selection_changed(self, cutter):
         """
@@ -44,9 +51,6 @@ class DrywallCutterController(object):
         """
         # Update the config with the new cutter
         self.model.config.set_cutter_type(cutter)
-
-        # Update the dropdown with the new cutter image
-        self.view.set_cutter_image(self.model.config.active_cutter.image_path)
 
     def handle_shape_selection_changed(self, shape):
         """
@@ -61,12 +65,14 @@ class DrywallCutterController(object):
 
         # Set the rotate button to disabled if the shape cannot be rotated
         self.view.set_rotate_button_disabled(
-            self.model.config.is_shape_rotatable(shape)
+            not self.model.config.is_shape_rotatable(shape)
         )
 
         # Update the dropdown with the available toolpath offsets
         self.view.shape_display_widget.select_shape(shape, self.model.config.active_config.rotation)
-        self.update_available_toolpath_offsets()
+        self.update_toolpath_offsets_drop_down()
+
+        self.handle_toolpath_offset_selection_changed(self.model.config.active_config.toolpath_offset)
 
         # If the shape requires rotation (from current value), rotate it
         if self.view.shape_display_widget.rotation_required():
@@ -74,13 +80,15 @@ class DrywallCutterController(object):
                 shape, self.model.config.active_config.rotation, swap_lengths=False
             )
 
-    def update_available_toolpath_offsets(self):
+        # Update the toolpath offset image on the shape display widget
+
+    def update_toolpath_offsets_drop_down(self):
         """
         Updates the available toolpath offsets in the dropdown based on the selected shape.
 
         :return: None
         """
-        self.view.toolpath_offset_drop_down.set_options(self.model.config.get_current_shape_toolpath_offsets())
+        self.view.toolpath_offset_drop_down.set_options(self.model.config.get_toolpath_offset_options())
 
     def handle_toolpath_offset_selection_changed(self, toolpath_offset):
         """
@@ -95,8 +103,6 @@ class DrywallCutterController(object):
 
         # Get the shape & rotation from config
         shape = self.model.config.active_config.shape_type
-
-        self.model.config.toggle_rotation()
         rotation = self.model.config.active_config.rotation
 
         # Set the shape display widget to the new shape & rotation
@@ -164,13 +170,14 @@ class DrywallCutterController(object):
         pass
 
     def handle_simulate_pressed(self):
+        #self.model.engine.simulate()
         pass
 
     def handle_save_pressed(self):
         pass
 
     def handle_run_pressed(self):
-        pass
+        self.model.engine.engine_run()
 
     def get_screen(self):
         return self.view

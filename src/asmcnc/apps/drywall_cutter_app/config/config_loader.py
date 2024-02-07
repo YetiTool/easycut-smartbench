@@ -101,6 +101,18 @@ class DWTConfig(object):
         }
     }  # type: dict
 
+    toolpath_offset_buttons = {
+        'inside': {
+            'image_path': os.path.join(IMG_DIR, 'toolpath_offset_inside_button.png')
+        },
+        'on': {
+            'image_path': os.path.join(IMG_DIR, 'toolpath_offset_on_button.png')
+        },
+        'outside': {
+            'image_path': os.path.join(IMG_DIR, 'toolpath_offset_outside_button.png')
+        }
+    }
+
     def __init__(self):
         if not os.path.exists(temp_dir):
             os.mkdir(temp_dir)
@@ -345,7 +357,7 @@ class DWTConfig(object):
         """
         :return: True if the active configuration's shape is rotatable, otherwise False.
         """
-        return self.shape_options[self.active_config.shape_type]['rotatable']
+        return self.is_shape_rotatable(self.active_config.shape_type)
 
     def is_shape_rotatable(self, shape):
         """
@@ -358,3 +370,12 @@ class DWTConfig(object):
         :return: The available toolpath offsets for the active configuration's shape.
         """
         return self.shape_options[self.active_config.shape_type]['toolpath_offset_options']
+
+    def get_toolpath_offset_options(self):
+        """
+        :return: The shape's available toolpath offsets as a dictionary of {toolpath_offset_name: button_image_path}
+
+        """
+        current_shape_toolpath_offsets = self.get_current_shape_toolpath_offsets()
+
+        return {key: self.toolpath_offset_buttons[key] for key in current_shape_toolpath_offsets}
