@@ -1092,7 +1092,7 @@ class RouterMachine(object):
         if corrected_RPM > 25000:
             corrected_RPM = 25000
 
-        return int(round((rpm - 1886) / 0.95915))
+        return corrected_RPM
         
     def turn_on_spindle(self, rpm=None, voltage=spindle_voltage):
         """
