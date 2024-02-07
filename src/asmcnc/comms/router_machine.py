@@ -1071,7 +1071,7 @@ class RouterMachine(object):
     def convert_rpm_for_120(self, target_rpm):
         # For conversion maths see https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/
 
-        corrected_RPM = int(round((target_rpm - 8658) / 0.6739))
+        corrected_RPM = round((target_rpm - 8658) / 0.6739)
 
         if corrected_RPM < 0: 
             log("Calculated RPM {} too low for 120V spindle, setting to 0".format(target_rpm))
@@ -1084,7 +1084,7 @@ class RouterMachine(object):
     def convert_rpm_for_230(self, target_rpm):
         #For conversion maths see https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/
 
-        corrected_RPM = int(round((target_rpm - 3125) / 1.5625))
+        corrected_RPM = round((target_rpm - 3125) / 1.5625)
 
         if corrected_RPM < 0:
             log("Calculated RPM {} too low for 230V spindle, setting to 0".format(target_rpm))
@@ -1126,14 +1126,14 @@ class RouterMachine(object):
         """
         self.s.write_command('M5')
 
-    def correct_rpm(self, rpm, voltage = spindle_voltage):
+    def correct_rpm(self, requested_rpm, voltage = spindle_voltage):
             """
             Corrects the RPM value based on the spindle voltage.
 
             For use outside of router_machine
 
             Args:
-                rpm (float): The RPM value to be corrected.
+                requested_rpm (float): The RPM value to be corrected.
                 voltage (int, optional): The spindle voltage. Defaults to spindle_voltage.
 
             Returns:
@@ -1143,12 +1143,12 @@ class RouterMachine(object):
                 ValueError: If the spindle voltage is not recognised.
             """
             if voltage in [110, 120]:            
-                rpm_to_set = self.convert_rpm_for_120(rpm)
-                log("Requested RPM:"+ str(rpm) + "Converted RPM:" + str(rpm_to_set) + "Voltage:" + str(voltage))
+                rpm_to_set = self.convert_rpm_for_120(requested_rpm)
+                log("Requested RPM: "+ str(requested_rpm) + " Converted RPM: " + str(rpm_to_set) + " Voltage: " + str(voltage))
                 return rpm_to_set
             elif voltage in [230, 240]:
-                rpm_to_set = self.convert_rpm_for_230(rpm)
-                log("Requested RPM:"+ str(rpm) + "Converted RPM:" + str(rpm_to_set) + "Voltage:" + str(voltage))
+                rpm_to_set = self.convert_rpm_for_230(requested_rpm)
+                log("Requested RPM: "+ str(requested_rpm) + " Converted RPM: " + str(rpm_to_set) + " Voltage: " + str(voltage))
                 return rpm_to_set
             else:
                 raise ValueError('Spindle voltage: {} not recognised'.format(voltage))
