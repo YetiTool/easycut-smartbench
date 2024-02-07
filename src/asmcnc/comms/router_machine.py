@@ -1145,11 +1145,11 @@ class RouterMachine(object):
             """
             if voltage in [110, 120]:            
                 rpm_to_set = self.convert_rpm_for_120(rpm)
-                log("Requested RPM:", rpm, "Converted RPM:", rpm_to_set, "Voltage:", voltage)
+                log("Requested RPM:"+ str(rpm) + "Converted RPM:" + str(rpm_to_set) + "Voltage:" + str(voltage))
                 return rpm_to_set
             elif voltage in [230, 240]:
                 rpm_to_set = self.convert_rpm_for_230(rpm)
-                log("Requested RPM:", rpm, "Converted RPM:", rpm_to_set, "Voltage:", voltage)
+                log("Requested RPM:"+ str(rpm) + "Converted RPM:" + str(rpm_to_set) + "Voltage:" + str(voltage))
                 return rpm_to_set
             else:
                 raise ValueError('Spindle voltage: {} not recognised'.format(voltage))
