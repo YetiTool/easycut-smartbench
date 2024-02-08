@@ -67,35 +67,25 @@ class CalibrationDatabase(object):
         try:
             from asmcnc.production.database import credentials
 
-        except ImportError:
-            if sys.platform != 'win32':
-                log("Can't import credentials (trying to get local folder creds)")
-                import credentials
-
-        try:
-            self.conn = my_sql_client.connect(host=credentials.server, db=credentials.database, user=credentials.username,
-                                        passwd=credentials.password)
+            self.conn = my_sql_client.connect(host=credentials.server, db=credentials.database,
+                                              user=credentials.username,
+                                              passwd=credentials.password)
             log("Connected to database")
 
-        except:
-            log('Unable to connect to database')
-            print(traceback.format_exc())
-
-        try:
             self.ssh_conn = my_sql_client.connect(host=credentials.server, db='sshdb', user=credentials.username,
                                                   passwd=credentials.password)
             log('Connected to ssh key db')
-        except:
-            log('Unable to connect to ssh key db')
 
-        try:
             self.influx_client = InfluxDBClient(credentials.influx_server, credentials.influx_port,
                                                 credentials.influx_username, credentials.influx_password,
                                                 credentials.influx_database)
             log("Connected to InfluxDB")
 
-        except:
-            log("Unable to connect to InfluxDB")
+        except Exception as e:
+            log(e)
+            if sys.platform != 'win32' and sys.platform != 'darwin':
+                log("Can't import credentials (trying to get local folder creds)")
+                import credentials
 
     def insert_serial_numbers(self, machine_serial, z_head_serial, lower_beam_serial, upper_beam_serial,
                               console_serial, y_bench_serial, spindle_serial, software_version, firmware_version,

@@ -6,7 +6,7 @@ Module to get and store settings info
 
 import sys, os, subprocess, time, threading
 from time import sleep
-from __builtin__ import True, False
+
 from datetime import datetime
 from requests import get
 
@@ -415,7 +415,7 @@ class Settings(object):
 ## FIRMWARE UPDATE FUNCTIONS
     def get_fw_update(self):
         os.system("sudo pigpiod")
-        print "pigpio daemon started"
+        print("pigpio daemon started")
         Clock.schedule_once(lambda dt: self.flash_fw(), 2)
 
     def get_hex_file(self):
