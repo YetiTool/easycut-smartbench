@@ -10,6 +10,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from asmcnc.apps.shapeCutter_app.screens import popup_machine
+from asmcnc.core_UI.popups import WarningPopup
 
 Builder.load_string(
     """
@@ -300,13 +301,22 @@ class ShapeCutter12ScreenClass(Screen):
         self.info_button.opacity = 0
         self.m.jog_absolute_single_axis("X", -660, 9999)
         # popup
-        popup_Zmove = popup_machine.PopupWait(self.shapecutter_sm)
+        popup_Zmove = WarningPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
+                                   main_string="Please wait while the machine moves...",
+                                   popup_width=400,
+                                   popup_height=200,
+                                   main_label_size_delta=40,
+                                   button_layout_padding=[50,25,50,0],
+                                   main_layout_padding=[50,20,50,20],
+                                   main_label_padding=[20,20],
+                                   button_one_text=None)
+        popup_Zmove.open()
 
         # Clock function to check machine state
         def check_Zmove_finished():
             if self.m.state().startswith("Idle"):
                 Clock.unschedule(check_Zmove_status)
-                popup_Zmove.popup.dismiss()
+                popup_Zmove.dismiss()
 
         check_Zmove_status = Clock.schedule_interval(
             lambda dt: check_Zmove_finished(), 0.5

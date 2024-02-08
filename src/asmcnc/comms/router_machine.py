@@ -1479,7 +1479,7 @@ class RouterMachine(object):
     def bench_is_dwt(self):
         return path.isfile(self.dwt_path)
 
-    def smartbench_model(self):
+    def smartbench_model(self):  # recommend refactoring models into an enum, relying on strings is error-prone
         if self.bench_is_dwt():
             return "DRYWALLTEC SmartCNC"
         elif self.bench_is_short():
