@@ -1073,68 +1073,55 @@ class RouterMachine(object):
         return float(rpm_red)
 
     def correct_rpm_for_120(self, target_rpm):
-        # For conversion maths see https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/
-
-        corrected_RPM = int(round((target_rpm - 8658) / 0.6739))
-
-        if corrected_RPM < 0: 
-            log("Calculated RPM {} too low for 120V spindle, setting to 0".format(target_rpm))
-            corrected_RPM = 0
-        if corrected_RPM > 25000: 
-            corrected_RPM = 25000
-
-        return corrected_RPM
-    
-    def correct_rpm_for_230(self, target_rpm):
-        #For conversion maths see https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/
-
-        corrected_RPM = int(round((target_rpm - 1886) / 0.95915))
-
-        if corrected_RPM < 0:
-            log("Calculated RPM {} too low for 230V spindle, setting to 0".format(target_rpm))
-            corrected_RPM = 0
-        if corrected_RPM > 25000:
-            corrected_RPM = 25000
-
-        return corrected_RPM
-        
-    def turn_on_spindle(self, rpm=None):
         """
-        Turns on the spindle.
+        Compensates for the desparity in set and actual spindle RPM for a 120V spindle.
 
         Args:
-            rpm (int, optional): The desired RPM (Rotations Per Minute) of the spindle. Defaults to None, which will be same as last set value (handled by GRBL).
-
-        Raises:
-            ValueError: If the spindle voltage is not recognized.
+            target_rpm (int): The target RPM to be corrected.
 
         Returns:
-            None
+            int: The corrected RPM value.
         """
-            
-        if rpm: # If a value is given
-            rpm_to_set = self.correct_rpm(rpm)         
-            self.s.write_command('M3 S' + str(rpm_to_set))
 
-        else: # If no value is given, turn the spindle on at the last set value (handled by GRBL)
-            self.s.write_command('M3')
+        # For conversion maths see https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/
 
-    def turn_off_spindle(self):
+        compensated_RPM = int(round((target_rpm - 8658) / 0.6739))
+
+        if compensated_RPM < 0: 
+            log("Calculated RPM {} too low for 120V spindle, setting to 0".format(target_rpm))
+            compensated_RPM = 0
+        elif compensated_RPM > 25000:
+            compensated_RPM = 25000
+
+        return compensated_RPM
+    
+    def correct_rpm_for_230(self, target_rpm):
         """
-        Turns off the spindle.
+        Compensates for the desparity in set and actual spindle RPM for a 230V spindle.
 
-        This method sends the command 'M5' to the Z Head to turn off the spindle.
+        Args:
+            target_rpm (int): The target RPM to be corrected.
 
         Returns:
-            None
+            int: The corrected RPM value.
         """
-        self.s.write_command('M5')
+        # For conversion maths see https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/
 
+        compensated_RPM = int(round((target_rpm - 1886) / 0.95915))
+
+        if compensated_RPM < 0:
+            log("Calculated RPM {} too low for 230V spindle, setting to 0".format(target_rpm))
+            compensated_RPM = 0
+        elif compensated_RPM > 25000:
+            compensated_RPM = 25000
+
+        return compensated_RPM
+        
     def correct_rpm(self, requested_rpm, voltage = spindle_voltage):
             """
             Corrects the RPM value based on the spindle voltage.
 
-            For use outside of router_machine
+            For use outside of router_machine.py
 
             Args:
                 requested_rpm (float): The RPM value to be corrected.
@@ -1150,16 +1137,47 @@ class RouterMachine(object):
             if voltage in [110, 120]:            
                 rpm_to_set = self.correct_rpm_for_120(requested_rpm)
                 log("Requested RPM: "+ str(requested_rpm) + " Converted RPM: " + str(rpm_to_set) + " Voltage: " + str(voltage))
-                return rpm_to_set
+                
             
             elif voltage in [230, 240]:
                 rpm_to_set = self.correct_rpm_for_230(requested_rpm)
                 log("Requested RPM: "+ str(requested_rpm) + " Converted RPM: " + str(rpm_to_set) + " Voltage: " + str(voltage))
-                return rpm_to_set
             
             else:
                 raise ValueError('Spindle voltage: {} not recognised'.format(voltage))
+            
+            return rpm_to_set
         
+    def turn_on_spindle(self, rpm=None):
+        """
+        This method sends the command 'M3' to the Z Head to turn on the spindle at a given speed.
+
+        Args:
+            rpm (int, optional): The desired RPM (Rotations Per Minute) of the spindle. Defaults to None, which will be same as last set value (handled by GRBL).
+
+        Raises:
+            ValueError: If the spindle voltage is not recognized.
+
+        Returns:
+            None
+        """
+            
+        if rpm: # If a value is given
+            rpm_to_set = self.correct_rpm(rpm) # Correct the RPM value based on the spindle voltage     
+            self.s.write_command('M3 S' + str(rpm_to_set))
+
+        else: # If no value is given, turn the spindle on at the last set value (handled by GRBL)
+            self.s.write_command('M3')
+
+    def turn_off_spindle(self):
+        """
+        This method sends the command 'M5' to the Z Head to turn off the spindle.
+
+        Returns:
+            None
+        """
+        self.s.write_command('M5')
+
 # START UP SEQUENCES
 
     # BOOT UP SEQUENCE
