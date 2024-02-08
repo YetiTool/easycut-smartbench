@@ -13,7 +13,7 @@
         "d": 100.0, 
         "l": 100.0
     }, 
-    "shape_type": "Square", 
+    "shape_type": "square", 
     "cutter_type": "tool_6mm.json", 
     "units": "mm", 
     "rotation": "horizontal", 

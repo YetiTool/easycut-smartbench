@@ -85,7 +85,7 @@ class Configuration:
 
     @staticmethod
     def default():
-        return Configuration(shape_type='Square', units='mm', rotation='horizontal',
+        return Configuration(shape_type='square', units='mm', rotation='horizontal',
                              canvas_shape_dims={'x': 100.0, 'y': 100.0, 'r': 0.0, 'd': 100.0, 'l': 100.0},
                              cutter_type='tool_6mm.json',
                              toolpath_offset='inside',
