@@ -318,13 +318,7 @@ class LoadingScreen(Screen):
                                 if rpm < self.jd.spindle_speed_min or self.jd.spindle_speed_min == None:
                                     self.jd.spindle_speed_min = rpm
 
-                                # If the bench has a 110V spindle, need to convert to "instructed" values into equivalent for 230V spindle, 
-                                # in order for the electronics to send the right voltage for the desired RPM
-                                if self.m.spindle_voltage == 110:
-                                    rpm = self.m.convert_from_110_to_230(rpm)
-                                    l_block = "M3S" + str(rpm)
-
-                                # Ensure all rpms are above the minimum (assuming a 230V spindle)
+                                # Ensure all rpms are above the minimum
                                 if rpm < self.minimum_spindle_rpm:
                                     l_block = "M3S" + str(self.minimum_spindle_rpm)
 

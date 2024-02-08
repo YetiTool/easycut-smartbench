@@ -1053,6 +1053,8 @@ class RouterMachine(object):
     """
 
     def convert_from_110_to_230(self, rpm_green):
+        # DEPRECATED
+        #
         # if float(rpm_green) != 0:
         #     v_green = (float(rpm_green) - 9375)/1562.5
         #     rpm_red = (2187.5*float(v_green)) + 3125
@@ -1061,6 +1063,8 @@ class RouterMachine(object):
         return float(rpm_green)
 
     def convert_from_230_to_110(self, rpm_red):
+        # DEPRECATED
+        #
         # if float(rpm_red) != 0:
         #     v_red = (float(rpm_red) - 3125)/2187.5
         #     rpm_green = (1562.5*float(v_red)) + 9375
@@ -1634,11 +1638,7 @@ class RouterMachine(object):
         return abs(constant_feed_target - current_feed_rate) <= tolerance_for_acceleration_detection, last_modal_feed_rate
 
     def spindle_speed(self): 
-        if self.spindle_voltage == 110:
-            converted_speed = self.convert_from_230_to_110(self.s.spindle_speed)
-            return int(converted_speed)
-        else: 
-            return int(self.s.spindle_speed)
+        return int(self.s.spindle_speed)
 
     def spindle_load(self): 
         try:
@@ -1780,7 +1780,7 @@ class RouterMachine(object):
         if self.spindle_voltage == 230:
             self.s.write_command('M3 S' + str(self.spindle_cooldown_rpm))
         else:
-            cooldown_rpm = self.convert_from_110_to_230(self.spindle_cooldown_rpm)
+            cooldown_rpm = self.spindle_cooldown_rpm
             self.s.write_command('M3 S' + str(cooldown_rpm))
         self.zUp()
 
