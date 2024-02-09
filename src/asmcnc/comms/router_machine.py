@@ -1153,11 +1153,10 @@ class RouterMachine(object):
         """
         This method sends the command 'M3' to the Z Head to turn on the spindle at a given speed.
 
+        For use outside of router_machine.py
+
         Args:
             rpm (int, optional): The desired RPM (Rotations Per Minute) of the spindle. Defaults to None, which will be same as last set value (handled by GRBL).
-
-        Raises:
-            ValueError: If the spindle voltage is not recognized.
 
         Returns:
             None
