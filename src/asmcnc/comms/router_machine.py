@@ -1117,7 +1117,7 @@ class RouterMachine(object):
 
         return compensated_RPM
         
-    def correct_rpm(self, requested_rpm, voltage = spindle_voltage):
+    def correct_rpm(self, requested_rpm, voltage = None):
             """
             Corrects the RPM value based on the spindle voltage.
 
@@ -1134,6 +1134,9 @@ class RouterMachine(object):
                 ValueError: If the spindle voltage is not recognised.
             """
             
+            if voltage is None:
+                voltage = self.spindle_voltage # Get the spindle voltage from the settings
+
             if voltage in [110, 120]:            
                 rpm_to_set = self.correct_rpm_for_120(requested_rpm)                
             
