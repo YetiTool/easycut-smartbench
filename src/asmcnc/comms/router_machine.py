@@ -1135,17 +1135,15 @@ class RouterMachine(object):
             """
             
             if voltage in [110, 120]:            
-                rpm_to_set = self.correct_rpm_for_120(requested_rpm)
-                log("Requested RPM: "+ str(requested_rpm) + " Converted RPM: " + str(rpm_to_set) + " Voltage: " + str(voltage))
-                
+                rpm_to_set = self.correct_rpm_for_120(requested_rpm)                
             
             elif voltage in [230, 240]:
                 rpm_to_set = self.correct_rpm_for_230(requested_rpm)
-                log("Requested RPM: "+ str(requested_rpm) + " Converted RPM: " + str(rpm_to_set) + " Voltage: " + str(voltage))
             
             else:
                 raise ValueError('Spindle voltage: {} not recognised'.format(voltage))
             
+            log("Requested RPM: "+ str(requested_rpm) + " Compensated RPM: " + str(rpm_to_set) + " Voltage: " + str(voltage))
             return rpm_to_set
         
     def turn_on_spindle(self, rpm=None):
