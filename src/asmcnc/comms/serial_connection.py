@@ -1809,9 +1809,9 @@ class SerialConnection(object):
         except:
             log("FAILED to display on CONSOLE: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
 
-        # Catach and correct all instances of the spindle speed command
+        # Catach and correct all instances of the spindle speed command "M3 S{RPM}"
         if 'S' in serialCommand.upper():
-            serialCommand = self.mod_spindle_speed_command(serialCommand)
+            serialCommand = self.compensate_spindle_speed_command(serialCommand)
 
         # Finally issue the command        
         if self.s:
@@ -1881,7 +1881,7 @@ class SerialConnection(object):
 
     # Function for correcting spindle speed
 
-    def mod_spindle_speed_command(self, spindle_speed_line):
+    def compensate_spindle_speed_command(self, spindle_speed_line):
         """
         Modifies the spindle speed command by correcting the RPM value and replacing it in the command line.
         Correcting in this case refers to compensating for the conversion that happens from Z Head -> spindle
