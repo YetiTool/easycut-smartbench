@@ -1809,8 +1809,7 @@ class SerialConnection(object):
         except:
             log("FAILED to display on CONSOLE: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
 
-        # THIS IS A TEMPORARY FIX - DO NOT MERGE INTO MASTER: 
-        # scale command sent to spindle for 110V machine: 
+        # Catach and correct all instances of the spindle speed command
         if 'S' in serialCommand.upper():
             serialCommand = self.mod_spindle_speed_command(serialCommand)
 

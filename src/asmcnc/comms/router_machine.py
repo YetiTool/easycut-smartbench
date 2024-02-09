@@ -1121,8 +1121,6 @@ class RouterMachine(object):
             """
             Corrects the RPM value based on the spindle voltage.
 
-            For use outside of router_machine.py
-
             Args:
                 requested_rpm (float): The RPM value to be corrected.
                 voltage (int, optional): The spindle voltage. Defaults to spindle_voltage.
@@ -1162,9 +1160,8 @@ class RouterMachine(object):
             None
         """
             
-        if rpm: # If a value is given
-            rpm_to_set = self.correct_rpm(rpm) # Correct the RPM value based on the spindle voltage     
-            self.s.write_command('M3 S' + str(rpm_to_set))
+        if rpm: # If a value is given, turn the spindle on at that speed
+            self.s.write_command('M3 S' + str(rpm))
 
         else: # If no value is given, turn the spindle on at the last set value (handled by GRBL)
             self.s.write_command('M3')
