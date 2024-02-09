@@ -281,7 +281,11 @@ class RouterMachine(object):
         self.read_z_head_laser_offset_values()
         self.read_spindle_brush_values()
         self.read_spindle_cooldown_rpm_override_settings()
-        self.read_spindle_cooldown_settings()
+        try:
+            self.read_spindle_cooldown_settings()
+            print("### Read in spindle cooldown settings")
+        except:
+            print("### Unable to read spindle cooldown settings")
         self.read_stylus_settings()
         self.read_spindle_health_check_settings()
         self.read_device_label()
@@ -545,6 +549,7 @@ class RouterMachine(object):
 
             self.spindle_brand = str(read_spindle[0])
             self.spindle_voltage = int(read_spindle[1])
+            print("### Spindle voltage: ", self.spindle_voltage)
             if read_spindle[2] == 'True': self.spindle_digital = True
             else: self.spindle_digital = False
             self.spindle_cooldown_time_seconds = int(read_spindle[3])
