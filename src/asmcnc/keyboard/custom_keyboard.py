@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 import sys
 from kivy.core.window import Window
 from kivy.uix.vkeyboard import VKeyboard
@@ -24,10 +25,12 @@ class Keyboard(VKeyboard):
 
         self.text_instance = None
 
-        self.kr_layout = "./asmcnc/keyboard/layouts/kr.json"
-        self.numeric_layout = "./asmcnc/keyboard/layouts/numeric.json"
+        base_folder = os.path.dirname(__file__)
+        layouts_folders = os.path.join(base_folder, "layouts")
+        self.kr_layout = os.path.join(layouts_folders, "kr.json")
+        self.numeric_layout = os.path.join(layouts_folders, "numeric.json")
         self.qwerty_layout = "data/keyboards/qwerty.json"
-        self.qwertyKR_layout = "./asmcnc/keyboard/layouts/qwertyKR.json"
+        self.qwertyKR_layout = os.path.join(layouts_folders, "qwertyKR.json")
         self.font_size = scaling_utils.get_scaled_width(20)
 
         try:

@@ -25,6 +25,7 @@ from datetime import datetime
 from kivy.config import Config
 
 from asmcnc.apps.drywall_cutter_app.dwt_app_controller import DrywallCutterController
+from asmcnc.core_UI import scaling_utils
 
 os.environ["KIVY_NO_CONSOLELOG"] = "0"
 # set log level to debug
@@ -155,6 +156,12 @@ class SkavaUI(App):
 
     width = Window.width
     height = Window.height
+
+    def get_scaled_width(self, w):
+        return scaling_utils.get_scaled_width(w)
+
+    def get_scaled_height(self, h):
+        return scaling_utils.get_scaled_height(h)
 
     def build(self):
 

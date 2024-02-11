@@ -64,7 +64,6 @@ class DrywallCutterView(Screen):
     """
     Screen Building Methods
     """
-
     def build_ui(self):
         """
         Builds the UI for the screen.
@@ -245,7 +244,6 @@ class DrywallCutterView(Screen):
     
     These methods are called when the user interacts with the screen.
     """
-
     def on_leave(self, *args):
         """
         Called when the screen is left.
@@ -345,7 +343,6 @@ class DrywallCutterView(Screen):
     
     These methods are called to update the UI.
     """
-
     def set_cutter_drop_down_image(self, image_path):
         """
         Sets the cutter image to the given image path.

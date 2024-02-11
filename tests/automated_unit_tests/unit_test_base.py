@@ -4,6 +4,8 @@ import sys
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager
 
+from asmcnc.keyboard.custom_keyboard import Keyboard
+
 """
 Need to use sys.path.append to add the src folder to the path so that the imports work
 
@@ -25,13 +27,14 @@ Run unit tests with: python -m unittest discover -s tests/automated_unit_tests
 
 
 class UnitTestBase(unittest.TestCase):
-    _serial_connection = None
-    _router_machine_module = None
-    _localization_module = None
-    _protocol_module = None
-    _screen_manager = None
-    _settings_manager_module = None
-    _job_data_module = None
+    _serial_connection = None  # type: SerialConnection
+    _router_machine_module = None  # type: RouterMachine
+    _localization_module = None  # type: Localization
+    _protocol_module = None  # type: protocol_v2
+    _screen_manager = None  # type: ScreenManager
+    _settings_manager_module = None  # type: Settings
+    _job_data_module = None  # type: JobData
+    _keyboard_module = None  # type: Keyboard
 
     def setUp(self):
         self._app = App()
@@ -75,6 +78,9 @@ class UnitTestBase(unittest.TestCase):
     def _create_settings_manager_module(self, screen_manager):
         return Settings(screen_manager=screen_manager)
 
+    def _create_keyboard(self, localization):
+        return Keyboard(localization=localization)
+
     def _create_modules(self):
         self._localization_module = self._create_localization_module()
 
@@ -103,6 +109,10 @@ class UnitTestBase(unittest.TestCase):
             self._settings_manager_module,
             self._localization_module,
             self._job_data_module,
+        )
+
+        self._keyboard_module = self._create_keyboard(
+            self._localization_module
         )
 
 

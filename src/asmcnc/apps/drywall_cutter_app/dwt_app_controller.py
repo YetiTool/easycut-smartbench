@@ -1,7 +1,11 @@
 from kivy.properties import ObjectProperty
 
-from asmcnc.apps.drywall_cutter_app import material_setup_popup, screen_config_filesaver, screen_config_filechooser, \
+from asmcnc.apps.drywall_cutter_app import (
+    material_setup_popup,
+    screen_config_filesaver,
+    screen_config_filechooser,
     job_load_helper
+)
 from asmcnc.apps.drywall_cutter_app.config.config_loader import DWTConfig
 from asmcnc.apps.drywall_cutter_app.dwt_app_view import DrywallCutterView
 from asmcnc.apps.drywall_cutter_app.engine import GCodeEngine
