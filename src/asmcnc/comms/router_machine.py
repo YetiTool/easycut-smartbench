@@ -1101,7 +1101,6 @@ class RouterMachine(object):
             log("Requested RPM {} outside of range for 120V spindle (10000 - 25000)".format(target_rpm))
             return 0
 
-    
     def correct_rpm_for_230(self, target_rpm):
         """
         Compensates for the desparity in set and actual spindle RPM for a 230V spindle.
