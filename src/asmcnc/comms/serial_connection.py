@@ -1906,34 +1906,3 @@ class SerialConnection(object):
             log("Spindle speed command could not be modified")
 
         return spindle_speed_line
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
