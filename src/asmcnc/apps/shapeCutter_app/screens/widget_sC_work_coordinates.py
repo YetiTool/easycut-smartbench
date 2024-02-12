@@ -1,22 +1,25 @@
-'''
+"""
 Created on 1 Feb 2018
 @author: Ed
-'''
-
+"""
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty # @UnresolvedImport
+from kivy.properties import (
+    ObjectProperty,
+    ListProperty,
+    NumericProperty,
+    StringProperty,
+)
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.clock import Clock
-
 import os, sys
 import socket
 
-
-Builder.load_string("""
+Builder.load_string(
+    """
 
 #:import hex kivy.utils.get_color_from_hex
 
@@ -43,8 +46,8 @@ Builder.load_string("""
             size: self.size
 
     BoxLayout:
-        padding: 1
-        spacing: 6
+        padding:[dp(0.00125)*app.width, dp(0.00208333333333)*app.height]
+        spacing:0.0075*app.width
         orientation: "horizontal"
         size: self.parent.size
         pos: self.parent.pos
@@ -57,7 +60,7 @@ Builder.load_string("""
             halign: 'center'
             valign: 'middle'
             markup: True
-            font_size: 13
+            font_size: 0.01625*app.width
         Label:
             size_hint_x: 0.1
             id: grbl_ym_label
@@ -66,7 +69,7 @@ Builder.load_string("""
             halign: 'center'
             valign: 'middle'
             markup: True
-            font_size: 13
+            font_size: 0.01625*app.width
         Label:
             size_hint_x: 0.1
             id: grbl_zm_label
@@ -75,7 +78,7 @@ Builder.load_string("""
             halign: 'center'
             valign: 'middle'
             markup: True
-            font_size: 13
+            font_size: 0.01625*app.width
 
         Label:
             size_hint_x: 0.1
@@ -85,7 +88,7 @@ Builder.load_string("""
             halign: 'center'
             valign: 'middle'
             markup: True
-            font_size: 13
+            font_size: 0.01625*app.width
         Label:
             size_hint_x: 0.1
             id: grbl_yw_label
@@ -94,7 +97,7 @@ Builder.load_string("""
             halign: 'center'
             valign: 'middle'
             markup: True
-            font_size: 13
+            font_size: 0.01625*app.width
         Label:
             size_hint_x: 0.1
             id: grbl_zw_label
@@ -103,33 +106,31 @@ Builder.load_string("""
             halign: 'center'
             valign: 'middle'
             markup: True
-            font_size: 13
-""")
-
+            font_size: 0.01625*app.width
+"""
+)
 
 
 class WorkCoordinates(Widget):
-
     GRBL_REPORT_INTERVAL = 0.1
-    
-    cheeky_color = StringProperty('#2498f4ff')
+    cheeky_color = StringProperty("#2498f4ff")
 
     def __init__(self, **kwargs):
-
         super(WorkCoordinates, self).__init__(**kwargs)
-        self.m=kwargs['machine']
-        self.sm = kwargs['screen_manager']
-        Clock.schedule_interval(self.refresh_grbl_label_values, self.GRBL_REPORT_INTERVAL)      # Poll for status
+        self.m = kwargs["machine"]
+        self.sm = kwargs["screen_manager"]
+        # Poll for status
+        Clock.schedule_interval(
+            self.refresh_grbl_label_values, self.GRBL_REPORT_INTERVAL
+        )
 
     def refresh_grbl_label_values(self, dt):
         if self.m.is_connected():
 #             self.serial_image.source = "./asmcnc/skavaUI/img/serial_on.png"
 #             self.grbl_status_label.text = self.m.state()
-            self.grbl_xm_label.text = 'mX:\n' + str(round(self.m.mpos_x(), 2))
-            self.grbl_ym_label.text = 'mY:\n' + str(round(self.m.mpos_y(), 2))
-            self.grbl_zm_label.text = 'mZ:\n' + str(round(self.m.mpos_z(), 2))
-            self.grbl_xw_label.text = 'wX:\n' + str(round(self.m.wpos_x(), 2))
-            self.grbl_yw_label.text = 'wY:\n' + str(round(self.m.wpos_y(), 2))
-            self.grbl_zw_label.text = 'wZ:\n' + str(round(self.m.wpos_z(), 2))
-
-
+            self.grbl_xm_label.text = "mX:\n" + str(round(self.m.mpos_x(), 2))
+            self.grbl_ym_label.text = "mY:\n" + str(round(self.m.mpos_y(), 2))
+            self.grbl_zm_label.text = "mZ:\n" + str(round(self.m.mpos_z(), 2))
+            self.grbl_xw_label.text = "wX:\n" + str(round(self.m.wpos_x(), 2))
+            self.grbl_yw_label.text = "wY:\n" + str(round(self.m.wpos_y(), 2))
+            self.grbl_zw_label.text = "wZ:\n" + str(round(self.m.wpos_z(), 2))

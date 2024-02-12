@@ -4,12 +4,8 @@ import sys
 sys.path.append('./src')
 from asmcnc.apps.drywall_cutter_app.config import config_loader
 
-config_loader.configurations_dir = 'src/asmcnc/apps/drywall_cutter_app/config/configurations'
-config_loader.cutters_dir = 'src/asmcnc/apps/drywall_cutter_app/config/cutters'
-
 from asmcnc.apps.drywall_cutter_app.screen_drywall_cutter import DrywallCutterScreen
 from asmcnc.comms import router_machine
-
 
 try:
     import unittest
@@ -26,6 +22,7 @@ python -m pytest -p python tests/automated_unit_tests/apps/dwt/test_dwt_config.p
 FROM EASYCUT-SMARTBENCH DIR
 """
 
+
 @pytest.fixture
 def m():
     l = None
@@ -36,9 +33,11 @@ def m():
     m.s.s = MagicMock()
     return m
 
+
 @pytest.fixture(scope="module")
 def l():
     return Mock()
+
 
 @pytest.fixture(scope="module")
 def sm():
@@ -48,7 +47,7 @@ def sm():
 def test_load_config():
     dwt_config = config_loader.DWTConfig()
 
-    dwt_config.load_config('test_config.json')
+    dwt_config.load_config('test_config')
 
     assert dwt_config.active_config.shape_type == 'rectangle'
 
@@ -56,11 +55,11 @@ def test_load_config():
 def test_save_config():
     dwt_config = config_loader.DWTConfig()
 
-    dwt_config.load_config('test_config.json')
+    dwt_config.load_config('test_config')
 
-    dwt_config.save_config('test_config_saved.json')
+    dwt_config.save_config('test_config_saved')
 
-    assert os.path.exists('src/asmcnc/apps/drywall_cutter_app/config/configurations/test_config_saved.json')
+    assert os.path.exists('src/asmcnc/apps/drywall_cutter_app/config/configurations/test_config_saved')
 
 
 def test_load_cutter():
@@ -76,7 +75,7 @@ def test_save_temp_config():
 
     dwt_config.save_temp_config()
 
-    assert os.path.exists('src/asmcnc/apps/drywall_cutter_app/config/configurations/temp_config.json')
+    assert os.path.exists(os.path.join('src', config_loader.TEMP_CONFIG_PATH))
 
 
 def test_on_parameter_change():

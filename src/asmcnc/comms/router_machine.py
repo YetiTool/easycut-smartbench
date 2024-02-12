@@ -22,7 +22,7 @@ from datetime import datetime
 import os.path
 from os import path
 
-from __builtin__ import True
+
 
 from asmcnc.skavaUI import popup_info
 
@@ -1510,14 +1510,14 @@ class RouterMachine(object):
     def disable_limit_switches(self):
 
         #turn soft limits, hard limts OFF
-        print 'switching soft limits & hard limts OFF'
+        print('switching soft limits & hard limts OFF')
         settings = ['$22=0','$20=0','$21=0']
         self.s.start_sequential_stream(settings)
     
     def enable_limit_switches(self):
 
         #turn soft limits, hard limts OFF
-        print 'switching soft limits & hard limts ON'
+        print('switching soft limits & hard limts ON')
         settings = ['$22=1','$20=1','$21=1']
         self.s.start_sequential_stream(settings)
 
@@ -1605,7 +1605,7 @@ class RouterMachine(object):
     def bench_is_dwt(self):
         return path.isfile(self.dwt_path)
 
-    def smartbench_model(self):
+    def smartbench_model(self):  # recommend refactoring models into an enum, relying on strings is error-prone
         if self.bench_is_dwt():
             return "DRYWALLTEC SmartCNC"
         elif self.bench_is_short():
@@ -2258,7 +2258,7 @@ class RouterMachine(object):
             end_on_colour = self.led_colour_status
             self._strobe_loop(strobe_colour1, strobe_colour2, colour_1_period, colour_2_period, cycles, end_on_colour)
 
-        else: print "Strobe situation: " + situation + " not recognised"
+        else: print ("Strobe situation: " + situation + " not recognised")
             
     strobe_cycle_count = 0
     
