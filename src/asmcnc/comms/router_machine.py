@@ -1117,39 +1117,44 @@ class RouterMachine(object):
 
         return compensated_RPM
         
-    def correct_rpm(self, requested_rpm, voltage = None):
-            """
-            Corrects the RPM value based on the spindle voltage.
+    def correct_rpm(self, requested_rpm, spindle_voltage = None):
+        """
+        Compensates for the desparity in set and actual spindle RPM for a spindle.
 
-            Args:
-                requested_rpm (float): The RPM value to be corrected.
-                voltage (int, optional): The spindle voltage. Defaults to spindle_voltage.
+        For use outside of router_machine.py
 
-            Returns:
-                float: The corrected RPM value.
+        Args:
+            requested_rpm (float): The RPM value to be corrected.
+            voltage (int, optional): The spindle voltage. Defaults to spindle_voltage.
 
-            Raises:
-                ValueError: If the spindle voltage is not recognised.
-            """
-            
-            if voltage is None:
-                voltage = self.spindle_voltage # Get the spindle voltage from the settings
+        Returns:
+            float: The corrected RPM value.
 
-            if voltage in [110, 120]:            
-                rpm_to_set = self.correct_rpm_for_120(requested_rpm)                
-            
-            elif voltage in [230, 240]:
-                rpm_to_set = self.correct_rpm_for_230(requested_rpm)
-            
-            else:
-                raise ValueError('Spindle voltage: {} not recognised'.format(voltage))
-            
-            log("Requested RPM: "+ str(requested_rpm) + " Compensated RPM: " + str(rpm_to_set) + " Voltage: " + str(voltage))
-            return rpm_to_set
+        Raises:
+            ValueError: If the spindle voltage is not recognised.
+        """
+        
+        if spindle_voltage is None:
+            spindle_voltage = self.spindle_voltage # Use spindle voltage set by user in maintenance app
+
+        if spindle_voltage in [110, 120]:            
+            rpm_to_set = self.correct_rpm_for_120(requested_rpm)                
+        
+        elif spindle_voltage in [230, 240]:
+            rpm_to_set = self.correct_rpm_for_230(requested_rpm)
+        
+        else:
+            raise ValueError('Spindle voltage: {} not recognised'.format(spindle_voltage))
+        
+        log("Requested RPM: "+ str(requested_rpm) + " Compensated RPM: " + str(rpm_to_set) + " Voltage: " + str(spindle_voltage))
+
+        return rpm_to_set
         
     def turn_on_spindle(self, rpm=None):
         """
         This method sends the command 'M3' to the Z Head to turn on the spindle at a given speed.
+
+        No RPM compensation occurs in this command as this is captured and handled by compensate_spindle_speed_command() in the SerialConnection object 
 
         For use outside of router_machine.py
 
