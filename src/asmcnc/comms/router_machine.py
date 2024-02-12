@@ -1083,7 +1083,7 @@ class RouterMachine(object):
             int: The corrected RPM value.
         """
 
-        # For conversion maths see https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/
+        # For conversion maths see https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/edit#gid=1507195715
 
         compensated_RPM = int(round((target_rpm - 8658) / 0.6739))
 
@@ -1105,7 +1105,7 @@ class RouterMachine(object):
         Returns:
             int: The corrected RPM value.
         """
-        # For conversion maths see https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/
+        # For conversion maths see https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/edit#gid=1507195715
 
         compensated_RPM = int(round((target_rpm - 1886) / 0.95915))
 
