@@ -1,5 +1,5 @@
 from tests.automated_unit_tests.unit_test_base import UnitTestBase
-from parameterized import parameterized
+from parameterized import parameterized #python -m pip install parameterized
 
 
 class TestRouterMachineSpindleRpm(UnitTestBase):
@@ -9,6 +9,8 @@ class TestRouterMachineSpindleRpm(UnitTestBase):
         self._create_modules()
 
     @parameterized.expand([
+        # Target RPM, expected 120V compensated RPM, expected 230V compensated RPM
+        # See https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/edit#gid=1507195715
         [1000, 0, 0],
         [2000, 0, 0],
         [3000, 0, 0],
