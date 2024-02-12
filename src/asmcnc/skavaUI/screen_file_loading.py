@@ -304,9 +304,8 @@ class LoadingScreen(Screen):
                                     or self.jd.spindle_speed_min == None
                                 ):
                                     self.jd.spindle_speed_min = rpm
-                                if self.m.spindle_voltage == 110:
-                                    rpm = self.m.convert_from_110_to_230(rpm)
-                                    l_block = "M3S" + str(rpm)
+
+                                # Ensure all rpms are above the minimum
                                 if rpm < self.minimum_spindle_rpm:
                                     l_block = "M3S" + str(self.minimum_spindle_rpm)
                                 if rpm > self.maximum_spindle_rpm:
