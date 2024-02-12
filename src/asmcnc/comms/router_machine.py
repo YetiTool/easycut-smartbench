@@ -1085,15 +1085,22 @@ class RouterMachine(object):
 
         # For conversion maths see https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/edit#gid=1507195715
 
-        compensated_RPM = int(round((target_rpm - 8658) / 0.6739))
+        if 10000 <= target_rpm <= 25000:
+        
+            compensated_RPM = int(round((target_rpm - 8658) / 0.6739))
 
-        if compensated_RPM < 0: 
-            log("Calculated RPM {} too low for 120V spindle, setting to 0".format(target_rpm))
-            compensated_RPM = 0
-        elif compensated_RPM > 25000:
-            compensated_RPM = 25000
+            if compensated_RPM < 0: 
+                log("Calculated RPM {} too low for 120V spindle, setting to 0".format(target_rpm))
+                compensated_RPM = 0
+            elif compensated_RPM > 25000:
+                compensated_RPM = 25000
 
-        return compensated_RPM
+            return compensated_RPM
+        
+        else:
+            log("Requested RPM {} outside of range for 120V spindle (10000 - 25000)".format(target_rpm))
+            return 0
+
     
     def correct_rpm_for_230(self, target_rpm):
         """
@@ -1107,15 +1114,21 @@ class RouterMachine(object):
         """
         # For conversion maths see https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/edit#gid=1507195715
 
-        compensated_RPM = int(round((target_rpm - 1886) / 0.95915))
+        if 4000 <= target_rpm <= 25000:
+        
+            compensated_RPM = int(round((target_rpm - 1886) / 0.95915))
 
-        if compensated_RPM < 0:
-            log("Calculated RPM {} too low for 230V spindle, setting to 0".format(target_rpm))
-            compensated_RPM = 0
-        elif compensated_RPM > 25000:
-            compensated_RPM = 25000
+            if compensated_RPM < 0:
+                log("Calculated RPM {} too low for 230V spindle, setting to 0".format(target_rpm))
+                compensated_RPM = 0
+            elif compensated_RPM > 25000:
+                compensated_RPM = 25000
 
-        return compensated_RPM
+            return compensated_RPM
+    
+        else:
+            log("Requested RPM {} outside of range for 230V spindle (4000 - 25000)".format(target_rpm))
+            return 0
         
     def correct_rpm(self, requested_rpm, spindle_voltage = None):
         """
