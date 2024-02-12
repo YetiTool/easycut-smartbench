@@ -209,10 +209,16 @@ class DWTConfig(object):
             for parameter_name in parameter_names[:-1]:
                 parameter = getattr(parameter, parameter_name)
 
-            if self.screen_drywall_cutter:
-                if getattr(parameter, parameter_names[-1]) != parameter_value:
-                    self.screen_drywall_cutter.drywall_shape_display_widget.config_name_label.text = "New Configuration"
+            if getattr(parameter, parameter_names[-1]) != parameter_value:
+                self.__set_new_configuration_label()
 
             setattr(parameter, parameter_names[-1], parameter_value)
         else:
+            if getattr(self.active_config, parameter_name) != parameter_value:
+                self.__set_new_configuration_label()
+
             setattr(self.active_config, parameter_name, parameter_value)
+
+    def __set_new_configuration_label(self):
+        if self.screen_drywall_cutter:
+            self.screen_drywall_cutter.drywall_shape_display_widget.config_name_label.text = "New Configuration"
