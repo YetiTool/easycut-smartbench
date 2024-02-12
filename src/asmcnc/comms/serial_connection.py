@@ -1809,7 +1809,7 @@ class SerialConnection(object):
         except:
             log("FAILED to display on CONSOLE: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
 
-        # Catach and correct all instances of the spindle speed command "M3 S{RPM}"
+        # Catch and correct all instances of the spindle speed command "M3 S{RPM}"
         if 'S' in serialCommand.upper():
             serialCommand = self.compensate_spindle_speed_command(serialCommand)
 
