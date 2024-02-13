@@ -142,8 +142,11 @@ class YetiPilot(object):
         return feed_multiplier
 
     def get_speed_adjustment_percentage(self):
-        # Obselete since implementing spindle RPM fix. PR here: https://github.com/YetiTool/easycut-smartbench/pull/1545
-        return 0 # Make no adjustments
+        last_gcode_rpm = self.jd.grbl_mode_tracker[0][2]
+
+        if abs(last_gcode_rpm - self.target_spindle_speed) > 500:
+            return ((self.target_spindle_speed - last_gcode_rpm) / last_gcode_rpm) * 100
+        return 0
 
     def start_feed_too_low_check(self):
         self.waiting_for_feed_too_low_decision = True
