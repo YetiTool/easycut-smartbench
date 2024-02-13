@@ -73,7 +73,6 @@ class YetiPilot(object):
         self.sm = kwargs['screen_manager']
         self.jd = kwargs['job_data']
         self.l = kwargs['localization']
-        self.m = kwargs['machine']
 
         if kwargs.get('test', False):
             self.profiles_path = 'src/' + self.profiles_path
