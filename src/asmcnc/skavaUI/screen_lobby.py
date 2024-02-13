@@ -191,16 +191,13 @@ Builder.load_string("""
                         BoxLayout:
                             size: self.parent.size
                             pos: self.parent.pos
-                            canvas:
-                                Color:
-                                    rgba: 1,1,1,1
-                                RoundedRectangle:
-                                    size: self.parent.size
-                                    pos: self.parent.pos
-                            Label:
-                                font_size: str(0.01875 * app.width) + 'sp'
-                                text: 'Drywall cutter'
-                                color: 0,0,0,1
+                            Image:
+                                id: image_select
+                                source: "./asmcnc/apps/drywall_cutter_app/img/lobby_logo.png"
+                                center_x: self.parent.center_x
+                                y: self.parent.y
+                                size: self.parent.width, self.parent.height
+                                allow_stretch: True
                     Label:
                         size_hint_y: 1
                         font_size: str(0.03125*app.width) + 'sp'
@@ -564,10 +561,7 @@ class LobbyScreen(Screen):
         # Check that window.height is valid & being read in - otherwise will default to SC
         elif type(Window.height) is not int and type(Window.height) is not float:
             self.check_apps_on_pre_enter = True
-        # If using Console 10, show YetiCut coming soon
-        elif scaling_utils.is_screen_big():
-            self.remove_everything_but(self.yeti_cut_apps_container)
-        # If OG console, show shapecutter
+        # Else, show shapecutter
         else:
             self.remove_everything_but(self.shapecutter_container)
 
@@ -592,7 +586,7 @@ class LobbyScreen(Screen):
         container.parent.remove_widget(container)
 
     def on_pre_enter(self):
-        if self.check_apps_on_pre_enter: 
+        if self.check_apps_on_pre_enter:
             self.show_desired_apps()
             self.check_apps_on_pre_enter = False
         # Hide upgrade app if older than V1.3, and only if it has not been hidden already

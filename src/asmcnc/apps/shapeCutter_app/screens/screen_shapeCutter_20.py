@@ -11,6 +11,7 @@ from kivy.properties import StringProperty, ObjectProperty
 from kivy.uix.switch import Switch
 from asmcnc.apps.shapeCutter_app.screens import popup_info
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
+from asmcnc.core_UI.popups import InfoPopup, WarningPopup
 
 Builder.load_string(
     """
@@ -531,7 +532,11 @@ class ShapeCutter20ScreenClass(Screen):
         info = """To maintain accuracy, it is important that you measure the dimensions of your cutter.
 
  The shoulder length must be equal or larger than the cutting length."""
-        popup_info.PopupInfo(self.shapecutter_sm, info)
+        InfoPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
+                  main_string=info,
+                  popup_width=500,
+                  popup_height=400,
+                  main_label_size_delta=140).open()
 
     def go_back(self):
         self.shapecutter_sm.previous_screen()
@@ -656,7 +661,15 @@ class ShapeCutter20ScreenClass(Screen):
                             + ".\n\n"
                             + "Please re-enter your parameters."
                         )
-                    popup_input_error.PopupInputError(self.shapecutter_sm, description)
+                    WarningPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
+                                 main_string=description,
+                                 popup_width=400,
+                                 popup_height=380,
+                                 main_label_size_delta=40,
+                                 button_layout_padding=[50,25,50,0],
+                                 main_label_h_align='left',
+                                 main_layout_padding=[50,20,50,20],
+                                 main_label_padding=[20,20]).open()
                     return False
             self.shapecutter_sm.next_screen()
         else:

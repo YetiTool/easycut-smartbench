@@ -23,7 +23,7 @@ from kivy.clock import Clock
 '''
 ######################################
 RUN FROM easycut-smartbench FOLDER WITH: 
-python -m pytest --show-capture=no --disable-pytest-warnings tests/automated_unit_tests/job/test_job_data_units.py
+python -m pytest tests/automated_unit_tests/job/test_job_data_units.py
 ######################################
 '''
 

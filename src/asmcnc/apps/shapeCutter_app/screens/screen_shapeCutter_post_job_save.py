@@ -8,6 +8,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, StringProperty
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
+from asmcnc.core_UI.popups import WarningPopup
 
 Builder.load_string(
     """
@@ -252,4 +253,12 @@ class ShapeCutterSaveJobScreenClass(Screen):
             description = """Filename input is empty.
 
 Please enter a name for your parameter profile."""
-            popup_input_error.PopupInputError(self.shapecutter_sm, description)
+            WarningPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
+                            main_string=description,
+                            popup_width=400,
+                            popup_height=380,
+                            main_label_size_delta=40,
+                            button_layout_padding=[50,25,50,0],
+                            main_label_h_align='left',
+                            main_layout_padding=[50,20,50,20],
+                            main_label_padding=[20,20]).open()
