@@ -603,17 +603,17 @@ class JobData(object):
             # Recover most recent position
             x_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'X' in s), None)
             if x_line:
-                x = re.split('(X|Y|Z|F|S|I|J|K|G)', x_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', x_line).index('X') + 1].strip()
+                x = re.split('(X|Y|Z|F|S|I|J|K|G|R)', x_line)[re.split('(X|Y|Z|F|S|I|J|K|G|R)', x_line).index('X') + 1].strip()
             else:
                 x = "0.000"
             y_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'Y' in s), None)
             if y_line:
-                y = re.split('(X|Y|Z|F|S|I|J|K|G)', y_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', y_line).index('Y') + 1].strip()
+                y = re.split('(X|Y|Z|F|S|I|J|K|G|R)', y_line)[re.split('(X|Y|Z|F|S|I|J|K|G|R)', y_line).index('Y') + 1].strip()
             else:
                 y = "0.000"
             z_line = next((s for s in reversed(self.job_gcode[:self.job_recovery_selected_line]) if 'Z' in s), None)
             if z_line:
-                z = re.split('(X|Y|Z|F|S|I|J|K|G)', z_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', z_line).index('Z') + 1].strip()
+                z = re.split('(X|Y|Z|F|S|I|J|K|G|R)', z_line)[re.split('(X|Y|Z|F|S|I|J|K|G|R)', z_line).index('Z') + 1].strip()
             else:
                 z = "0.000"
 
