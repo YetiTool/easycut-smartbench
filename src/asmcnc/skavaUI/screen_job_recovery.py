@@ -493,8 +493,8 @@ class JobRecoveryScreen(Screen):
         )
         if x_line:
             self.pos_x = float(
-                re.split("(X|Y|Z|F|S|I|J|K|G)", x_line)[
-                    re.split("(X|Y|Z|F|S|I|J|K|G)", x_line).index("X") + 1
+                re.split("(X|Y|Z|F|S|I|J|K|G|R)", x_line)[
+                    re.split("(X|Y|Z|F|S|I|J|K|G|R)", x_line).index("X") + 1
                 ]
             )
         else:
@@ -509,8 +509,8 @@ class JobRecoveryScreen(Screen):
         )
         if y_line:
             self.pos_y = float(
-                re.split("(X|Y|Z|F|S|I|J|K|G)", y_line)[
-                    re.split("(X|Y|Z|F|S|I|J|K|G)", y_line).index("Y") + 1
+                re.split("(X|Y|Z|F|S|I|J|K|G|R)", y_line)[
+                    re.split("(X|Y|Z|F|S|I|J|K|G|R)", y_line).index("Y") + 1
                 ]
             )
         else:
@@ -525,8 +525,8 @@ class JobRecoveryScreen(Screen):
         )
         if z_line:
             self.pos_z = float(
-                re.split("(X|Y|Z|F|S|I|J|K|G)", z_line)[
-                    re.split("(X|Y|Z|F|S|I|J|K|G)", z_line).index("Z") + 1
+                re.split("(X|Y|Z|F|S|I|J|K|G|R)", z_line)[
+                    re.split("(X|Y|Z|F|S|I|J|K|G|R)", z_line).index("Z") + 1
                 ]
             )
         else:
