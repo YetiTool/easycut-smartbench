@@ -74,7 +74,7 @@ Builder.load_string(
         size: self.parent.size
         pos: self.parent.pos
         orientation: "vertical"
-        padding:[app.get_scaled_width(5), app.get_scaled_height(5)]
+        padding:(dp(app.get_scaled_width(5)),dp(app.get_scaled_height(5)))
         spacing:0.0104166666667*app.height
         
         canvas:
@@ -97,7 +97,7 @@ Builder.load_string(
                 size_hint_x: 0.9
                 
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     spacing:0.0025*app.width
                     orientation: 'horizontal'
                     size_hint_y: 0.1
@@ -189,7 +189,7 @@ Builder.load_string(
                     background_color: 1, .8, 0, 1
         
         BoxLayout:
-            padding:[app.get_scaled_width(5), app.get_scaled_height(5)]
+            padding:(dp(app.get_scaled_width(5)),dp(app.get_scaled_height(5)))
             spacing: 0
             orientation: 'horizontal'
             size_hint_y: 0.09

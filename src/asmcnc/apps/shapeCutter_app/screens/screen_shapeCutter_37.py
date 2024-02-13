@@ -15,7 +15,7 @@ Builder.load_string("""
 <ShapeCutterTemplateButtonsScreenClass>
 
     BoxLayout:
-        padding: 0
+        padding:dp(0)
         spacing: 0
         orientation: "vertical"
 
@@ -23,7 +23,7 @@ Builder.load_string("""
             size_hint: (None,None)
             width: dp(800)
             height: dp(90)
-            padding: 0
+            padding:dp(0)
             spacing: 0
             orientation: "horizontal"
 
@@ -32,7 +32,7 @@ Builder.load_string("""
                 height: dp(90)
                 width: dp(142)
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -44,7 +44,7 @@ Builder.load_string("""
                 height: dp(90)
                 width: dp(142)
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -56,7 +56,7 @@ Builder.load_string("""
                 height: dp(90)
                 width: dp(142)
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -70,7 +70,7 @@ Builder.load_string("""
                 height: dp(90)
                 width: dp(142)
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -84,7 +84,7 @@ Builder.load_string("""
                 height: dp(90)
                 width: dp(142)
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -98,7 +98,7 @@ Builder.load_string("""
                 height: dp(90)
                 width: dp(90)
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -109,7 +109,7 @@ Builder.load_string("""
                         allow_stretch: True                    
                     
         BoxLayout:
-            padding: 10
+            padding:dp(10)
             height: dp(800)
             width: dp(480)
             canvas:

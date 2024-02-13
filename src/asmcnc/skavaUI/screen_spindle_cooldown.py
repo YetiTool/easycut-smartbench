@@ -20,11 +20,11 @@ Builder.load_string(
 
     BoxLayout: 
         spacing: 0
-        padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
+        padding:(dp(app.get_scaled_width(20)),dp(app.get_scaled_height(20)))
         orientation: 'vertical'
         size_hint: (None, None)
-        height: app.get_scaled_height(480)
-        width: 1.0*app.width
+        height:dp(app.get_scaled_height(480))
+        width:dp(1.0*app.width)
         canvas:
             Color: 
                 rgba: hex('#E5E5E5FF')
@@ -57,21 +57,21 @@ Builder.load_string(
 
             BoxLayout: 
                 spacing: 0
-                padding:[app.get_scaled_width(100), 0, app.get_scaled_width(100), app.get_scaled_height(130)]
+                padding:(dp(app.get_scaled_width(100)),dp(0),dp(app.get_scaled_width(100)),dp(app.get_scaled_height(130)))
                 orientation: 'horizontal'          
                 size_hint: (None, None)
                 height: dp(251.0/480.0)*app.height
-                width: 1.0*app.width
+                width:dp(1.0*app.width)
                 pos: self.parent.pos
 
 
                 BoxLayout: 
                     spacing: 0
-                    padding:[app.get_scaled_width(8), 0, app.get_scaled_width(8), 0]
+                    padding:(dp(app.get_scaled_width(8)),dp(0),dp(app.get_scaled_width(8)),dp(0))
                     orientation: 'horizontal'          
                     size_hint: (None, None)
                     height: dp(121.0/480.0)*app.height
-                    width: 0.225*app.width
+                    width:dp(0.225*app.width)
                     Image:
                         id: spindle_icon
                         source: "./asmcnc/skavaUI/img/spindle_cooldown_on.png"
@@ -85,11 +85,11 @@ Builder.load_string(
 
                 BoxLayout: 
                     spacing: 0
-                    padding:[0, 0, 0, 0]
+                    padding:(dp(0),dp(0),dp(0),dp(0))
                     orientation: 'horizontal'          
                     size_hint: (None, None)
                     height: dp(121.0/480.0)*app.height
-                    width: 0.25*app.width
+                    width:dp(0.25*app.width)
                     Label:
                         id: countdown
                         markup: True
@@ -103,11 +103,11 @@ Builder.load_string(
 
                 BoxLayout: 
                     spacing: 0
-                    padding:[app.get_scaled_width(70), 0, app.get_scaled_width(70), app.get_scaled_height(3)]
+                    padding:(dp(app.get_scaled_width(70)),dp(0),dp(app.get_scaled_width(70)),dp(app.get_scaled_height(3)))
                     orientation: 'horizontal'          
                     size_hint: (None, None)
                     height: dp(121.0/480.0)*app.height
-                    width: 0.225*app.width
+                    width:dp(0.225*app.width)
                     Image:
                         id: countdown_icon
                         source: "./asmcnc/skavaUI/img/countdown_big.png"

@@ -34,7 +34,7 @@ Builder.load_string(
 
     BoxLayout: 
         spacing: 0
-        padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
+        padding:(dp(app.get_scaled_width(20)),dp(app.get_scaled_height(20)))
         orientation: 'vertical'
 
         Label:
@@ -50,7 +50,7 @@ Builder.load_string(
     
         BoxLayout:
             orientation: 'horizontal'
-            padding:[app.get_scaled_width(20), 0, app.get_scaled_width(20), 0]
+            padding:(dp(app.get_scaled_width(20)),dp(0),dp(app.get_scaled_width(20)),dp(0))
             spacing:0.05*app.width
             size_hint_y: 3
 
@@ -66,7 +66,7 @@ Builder.load_string(
                 background_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                 background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                 border: [dp(30)]*4
-                padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
+                padding:(dp(app.get_scaled_width(20)),dp(app.get_scaled_height(20)))
                         
             Button:
                 font_size: str(get_scaled_width(15)) + 'sp'
@@ -93,7 +93,7 @@ Builder.load_string(
                 background_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                 background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                 border: [dp(30)]*4
-                padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
+                padding:(dp(app.get_scaled_width(20)),dp(app.get_scaled_height(20)))
                         
         Label:
             font_size: str(get_scaled_width(15)) + 'sp'

@@ -51,7 +51,7 @@ Builder.load_string("""
             size: self.size
 
     BoxLayout:
-        padding: 1
+        padding:dp(1)
         spacing: 6
         orientation: "horizontal"
         size: self.parent.size

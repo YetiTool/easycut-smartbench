@@ -29,7 +29,7 @@ Builder.load_string(
 
     BoxLayout: 
         spacing: 0
-        padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
+        padding:(dp(app.get_scaled_width(20)),dp(app.get_scaled_height(20)))
         orientation: 'vertical'
 
         Label:
@@ -37,7 +37,7 @@ Builder.load_string(
             size_hint_y: 1
 
         BoxLayout:
-            padding:[app.get_scaled_width(20), 0]
+            padding:(dp(app.get_scaled_width(20)),dp(0))
             orientation: 'horizontal'
             spacing:0.0375*app.width
             size_hint_y: 1.5

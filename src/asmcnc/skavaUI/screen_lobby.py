@@ -56,12 +56,12 @@ Builder.load_string("""
         orientation: 'vertical'
         size: self.parent.size
         pos: self.parent.pos
-        padding: 0
+        padding:dp(0)
         spacing: 0
 
         BoxLayout:
             size_hint_y: 70
-            padding:[app.get_scaled_width(10), app.get_scaled_height(10), app.get_scaled_width(10), 0]
+            padding:(dp(app.get_scaled_width(10)),dp(app.get_scaled_height(10)),dp(app.get_scaled_width(10)),dp(0))
             orientation: 'horizontal'
 
         Carousel:
@@ -72,7 +72,7 @@ Builder.load_string("""
             BoxLayout:
                 id: carousel_pane_1
                 orientation: 'horizontal'
-                padding:[app.get_scaled_width(100), app.get_scaled_height(20), app.get_scaled_width(100), app.get_scaled_height(20)]
+                padding:(dp(app.get_scaled_width(100)),dp(app.get_scaled_height(20)),dp(app.get_scaled_width(100)),dp(app.get_scaled_height(20)))
                 spacing:0.0416666666667*app.height
 
                 BoxLayout:
@@ -92,7 +92,7 @@ Builder.load_string("""
                             root.pro_app()
                             self.background_color = hex('#FFFFFF00')
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -128,7 +128,7 @@ Builder.load_string("""
                             root.shapecutter_app()
                             self.background_color = hex('#FFFFFF00')
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -156,7 +156,7 @@ Builder.load_string("""
                         size_hint_y: 8
                         background_color: hex('#FFFFFF00')
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -176,7 +176,7 @@ Builder.load_string("""
                     orientation: 'vertical'
                     size_hint_x: 1
                     spacing:0.0416666666667*app.height
-                    padding:[app.get_scaled_width(65), 0]
+                    padding:(dp(app.get_scaled_width(65)),dp(0))
 
                     Button:
                         font_size: str(get_scaled_width(15)) + 'sp'
@@ -208,7 +208,7 @@ Builder.load_string("""
             # Carousel pane 2
             BoxLayout:
                 orientation: 'horizontal'
-                padding:[app.get_scaled_width(100), app.get_scaled_height(20), app.get_scaled_width(100), app.get_scaled_height(20)]
+                padding:(dp(app.get_scaled_width(100)),dp(app.get_scaled_height(20)),dp(app.get_scaled_width(100)),dp(app.get_scaled_height(20)))
                 spacing:0.0416666666667*app.height
 
                 BoxLayout:
@@ -227,7 +227,7 @@ Builder.load_string("""
                             root.wifi_app()
                             self.background_color = hex('#FFFFFF00')
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -260,7 +260,7 @@ Builder.load_string("""
                             root.calibrate_smartbench()
                             self.background_color = hex('#FFFFFF00')
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -280,7 +280,7 @@ Builder.load_string("""
             # Carousel pane 3
             BoxLayout:
                 orientation: 'horizontal'
-                padding:[app.get_scaled_width(100), app.get_scaled_height(20), app.get_scaled_width(100), app.get_scaled_height(20)]
+                padding:(dp(app.get_scaled_width(100)),dp(app.get_scaled_height(20)),dp(app.get_scaled_width(100)),dp(app.get_scaled_height(20)))
                 spacing:0.0416666666667*app.height
 
                 BoxLayout:
@@ -299,7 +299,7 @@ Builder.load_string("""
                             root.update_app()
                             self.background_color = hex('#FFFFFF00')
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -332,7 +332,7 @@ Builder.load_string("""
                             root.maintenance_app()
                             self.background_color = hex('#FFFFFF00')
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -351,7 +351,7 @@ Builder.load_string("""
             # Carousel pane 4
             BoxLayout:
                 orientation: 'horizontal'
-                padding:[app.get_scaled_width(100), app.get_scaled_height(20), app.get_scaled_width(100), app.get_scaled_height(20)]
+                padding:(dp(app.get_scaled_width(100)),dp(app.get_scaled_height(20)),dp(app.get_scaled_width(100)),dp(app.get_scaled_height(20)))
                 spacing:0.0416666666667*app.height
 
                 BoxLayout:
@@ -371,7 +371,7 @@ Builder.load_string("""
                             root.upgrade_app()
                             self.background_color = hex('#FFFFFF00')
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -404,7 +404,7 @@ Builder.load_string("""
                             root.developer_app()
                             self.background_color = hex('#FFFFFF00')
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -435,9 +435,9 @@ Builder.load_string("""
 
             BoxLayout:
                 size_hint_x: None
-                width: 0.9*app.width
+                width:dp(0.9*app.width)
                 height: self.parent.height
-                padding:[app.get_scaled_width(80), app.get_scaled_height(40), 0, app.get_scaled_height(40)]
+                padding:(dp(app.get_scaled_width(80)),dp(app.get_scaled_height(40)),dp(0),dp(app.get_scaled_height(40)))
                 orientation: 'horizontal'
                 
                 Button:
@@ -512,7 +512,7 @@ Builder.load_string("""
                 size_hint: (None, None)
                 size: (dp(80.0/800.0)*app.width,dp(80.0/480.0)*app.height)
                 orientation: 'horizontal'
-                padding:[app.get_scaled_width(29), app.get_scaled_height(29), app.get_scaled_width(29), app.get_scaled_height(29)]
+                padding:(dp(app.get_scaled_width(29)),dp(app.get_scaled_height(29)),dp(app.get_scaled_width(29)),dp(app.get_scaled_height(29)))
                 Button:
                     font_size: str(get_scaled_width(15)) + 'sp'
                     disabled: False

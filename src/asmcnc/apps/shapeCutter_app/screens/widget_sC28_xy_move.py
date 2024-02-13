@@ -30,7 +30,7 @@ Builder.load_string(
         size: self.parent.size
         pos: self.parent.pos      
         orientation: 'vertical'
-        padding:[app.get_scaled_width(10), app.get_scaled_height(10)]
+        padding:(dp(app.get_scaled_width(10)),dp(app.get_scaled_height(10)))
         spacing:0.0208333333333*app.height
         
         GridLayout:
@@ -43,7 +43,7 @@ Builder.load_string(
 
             # go x datum
             BoxLayout:
-                padding:[app.get_scaled_width(10), app.get_scaled_height(10)]
+                padding:(dp(app.get_scaled_width(10)),dp(app.get_scaled_height(10)))
                 size: self.parent.size
                 pos: self.parent.pos                 
                 Button:
@@ -77,7 +77,7 @@ Builder.load_string(
                     root.buttonJogXY('X+')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -89,7 +89,7 @@ Builder.load_string(
 
             # go y datum
             BoxLayout:
-                padding:[app.get_scaled_width(10), app.get_scaled_height(10)]
+                padding:(dp(app.get_scaled_width(10)),dp(app.get_scaled_height(10)))
                 size: self.parent.size
                 pos: self.parent.pos                 
                 Button:
@@ -121,7 +121,7 @@ Builder.load_string(
                     root.buttonJogXY('Y+')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -139,7 +139,7 @@ Builder.load_string(
                     root.jogModeCycled()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -160,7 +160,7 @@ Builder.load_string(
                     root.buttonJogXY('Y-')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos  
                     Image:
@@ -172,7 +172,7 @@ Builder.load_string(
 
             # set x datum
             BoxLayout:
-                padding:[app.get_scaled_width(10), app.get_scaled_height(10)]
+                padding:(dp(app.get_scaled_width(10)),dp(app.get_scaled_height(10)))
                 size: self.parent.size
                 pos: self.parent.pos                 
                 Button:
@@ -206,7 +206,7 @@ Builder.load_string(
                     root.buttonJogXY('X-')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
@@ -218,7 +218,7 @@ Builder.load_string(
 
             # set y datum
             BoxLayout:
-                padding:[app.get_scaled_width(10), app.get_scaled_height(10)]
+                padding:(dp(app.get_scaled_width(10)),dp(app.get_scaled_height(10)))
                 size: self.parent.size
                 pos: self.parent.pos
                 Button:
@@ -230,7 +230,7 @@ Builder.load_string(
                         root.set_y_datum()
                         self.background_color = hex('#F44336FF')
                     BoxLayout:
-                        padding: 0
+                        padding:dp(0)
                         size: self.parent.size
                         pos: self.parent.pos  
                         Image:
@@ -253,7 +253,7 @@ Builder.load_string(
                     root.set_standby_to_pos()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
@@ -270,7 +270,7 @@ Builder.load_string(
                     on_press: root.set_jog_speeds()
                     background_color: 1, 1, 1, 0 
                     BoxLayout:
-                        padding:[app.get_scaled_width(10), app.get_scaled_height(10)]
+                        padding:(dp(app.get_scaled_width(10)),dp(app.get_scaled_height(10)))
                         size: self.parent.size
                         pos: self.parent.pos      
                         Image:
@@ -289,7 +289,7 @@ Builder.load_string(
                     root.set_workzone_to_pos_xy()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:

@@ -46,14 +46,14 @@ Builder.load_string(
                     halign: 'left'
                     valign: 'middle'
                     text_size: self.size
-                    padding:[app.get_scaled_width(50), 0]
+                    padding:(dp(app.get_scaled_width(50)),dp(0))
 
                 BoxLayout:
                     orientation: 'horizontal'
                     spacing:app.get_scaled_width(25)
 
                     BoxLayout:
-                        padding:[app.get_scaled_width(15), app.get_scaled_height(15), 0, app.get_scaled_height(15)]
+                        padding:(dp(app.get_scaled_width(15)),dp(app.get_scaled_height(15)),dp(0),dp(app.get_scaled_height(15)))
                         Button:
                             font_size: str(get_scaled_width(15)) + 'sp'
                             background_color: [0,0,0,0]
@@ -85,12 +85,12 @@ Builder.load_string(
             BoxLayout:
                 orientation: 'horizontal'
                 size_hint_y: 3
-                padding:[app.get_scaled_width(100), 0]
+                padding:(dp(app.get_scaled_width(100)),dp(0))
                 spacing:app.get_scaled_width(30)
 
                 BoxLayout:
                     size_hint_x: 2.5
-                    padding:[0, app.get_scaled_height(1)]
+                    padding:(dp(0),dp(app.get_scaled_height(1)))
                     canvas:
                         Color:
                             rgba: 1,1,1,1
@@ -125,7 +125,7 @@ Builder.load_string(
 
             BoxLayout:
                 orientation: 'horizontal'
-                padding:[app.get_scaled_width(70), app.get_scaled_height(10), 0, app.get_scaled_height(10)]
+                padding:(dp(app.get_scaled_width(70)),dp(app.get_scaled_height(10)),dp(0),dp(app.get_scaled_height(10)))
                 spacing:app.get_scaled_width(200)
 
                 Button:

@@ -27,7 +27,7 @@ Builder.load_string(
     color: 0,0,0,1
     halign: 'left'
     markup: 'True'
-    font_size: 0.0225*app.width
+    font_size:dp(0.0225*app.width)
     font_name: 'KRFont'
 
 <BetaTestingScreen>
@@ -51,11 +51,11 @@ Builder.load_string(
                 pos: self.pos
 
         BoxLayout:
-            padding: 0
+            padding:dp(0)
             spacing:0.0208333333333*app.height
             orientation: "vertical"
             BoxLayout:
-                padding: 0
+                padding:dp(0)
                 spacing: 0
                 canvas:
                     Color:
@@ -69,7 +69,7 @@ Builder.load_string(
                     width: dp(app.get_scaled_width(800))
                     text: "Beta Testing"
                     color: hex('#f9f9f9ff')
-                    font_size: 0.0375*app.width
+                    font_size:dp(0.0375*app.width)
                     halign: "center"
                     valign: "bottom"
                     markup: True
@@ -78,7 +78,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 width: dp(app.get_scaled_width(800))
                 height: dp(app.get_scaled_height(320))
-                padding: 0
+                padding:dp(0)
                 spacing:0.0125*app.width
                 orientation: 'horizontal'
 
@@ -86,7 +86,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(app.get_scaled_width(600))
                     height: dp(app.get_scaled_height(320))
-                    padding:[app.get_scaled_width(40), app.get_scaled_height(20)]
+                    padding:(dp(app.get_scaled_width(40)),dp(app.get_scaled_height(20)))
                     spacing:0.0416666666667*app.height
                     orientation: 'vertical'
 
@@ -94,13 +94,13 @@ Builder.load_string(
                         pos: self.parent.pos
                         cols: 2
                         rows: 0
-                        padding: 0
+                        padding:dp(0)
                         size_hint_y: 0.6
 
                         Label
                             text: 'Run developer branch:'
                             color: [0,0,0,1]
-                            font_size: 0.025*app.width
+                            font_size:dp(0.025*app.width)
                             halign: "left"
                             markup: True
                             text_size: self.size
@@ -109,7 +109,7 @@ Builder.load_string(
                             id: user_branch
                             text: 'branch'
                             multiline: False
-                            font_size: 0.025*app.width
+                            font_size:dp(0.025*app.width)
 
                     Button:
                         font_size: str(get_scaled_width(15)) + 'sp'
@@ -121,12 +121,12 @@ Builder.load_string(
                         pos: self.parent.pos
                         cols: 2
                         rows: 0
-                        padding: 0
+                        padding:dp(0)
 
                         Label:
                             text: 'Latest beta version:'
                             color: [0,0,0,1]
-                            font_size: 0.025*app.width
+                            font_size:dp(0.025*app.width)
                             markup: True
                             halign: "left"
 
@@ -134,7 +134,7 @@ Builder.load_string(
                             id: beta_version
                             text: 'beta_version_no'
                             color: [0,0,0,1]
-                            font_size: 0.025*app.width
+                            font_size:dp(0.025*app.width)
                             markup: True
                             halign: "left"
 
@@ -148,7 +148,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(app.get_scaled_width(190))
                     height: dp(app.get_scaled_height(320))
-                    padding: 0
+                    padding:dp(0)
                     spacing: 0
                     orientation: 'vertical'
 
@@ -174,7 +174,7 @@ Builder.load_string(
                         width: dp(app.get_scaled_width(192.5))
                         height: dp(app.get_scaled_height(120))
                         orientation: 'horizontal'
-                        padding:[app.get_scaled_width(20), app.get_scaled_height(30)]
+                        padding:(dp(app.get_scaled_width(20)),dp(app.get_scaled_height(30)))
                         ToggleButton:
                             font_size: str(get_scaled_width(15)) + 'sp'
                             id: usb_toggle
@@ -190,7 +190,7 @@ Builder.load_string(
                         size_hint: (None,None)
                         width: dp(app.get_scaled_width(192.5))
                         height: dp(app.get_scaled_height(120))
-                        padding:[app.get_scaled_width(81.75), app.get_scaled_height(45)]
+                        padding:(dp(app.get_scaled_width(81.75)),dp(app.get_scaled_height(45)))
                         spacing: 0
 
                         Button:
@@ -203,7 +203,7 @@ Builder.load_string(
                             pos: self.parent.pos
                             on_press: root.refresh_latest_software_version()
                             BoxLayout:
-                                padding: 0
+                                padding:dp(0)
                                 size: self.parent.size
                                 pos: self.parent.pos
                                 Image:
@@ -217,7 +217,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 width: dp(app.get_scaled_width(800))
                 height: dp(app.get_scaled_height(80))
-                padding: 0
+                padding:dp(0)
                 spacing:0.0125*app.width
                 orientation: 'horizontal'
 
@@ -225,14 +225,14 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(app.get_scaled_width(80))
                     height: dp(app.get_scaled_height(80))
-                    padding: 0
+                    padding:dp(0)
                     spacing: 0
 
                     BoxLayout: 
                         size_hint: (None, None)
                         height: dp(app.get_scaled_height(80))
                         width: dp(app.get_scaled_width(80))
-                        padding:[app.get_scaled_width(10), app.get_scaled_height(10), app.get_scaled_width(10), app.get_scaled_height(10)]
+                        padding:(dp(app.get_scaled_width(10)),dp(app.get_scaled_height(10)),dp(app.get_scaled_width(10)),dp(app.get_scaled_height(10)))
                         Button:
                             font_size: str(get_scaled_width(15)) + 'sp'
                             size_hint: (None,None)
@@ -243,7 +243,7 @@ Builder.load_string(
                             pos: self.parent.pos
                             on_press: root.go_back()
                             BoxLayout:
-                                padding: 0
+                                padding:dp(0)
                                 size: self.parent.size
                                 pos: self.parent.pos
                                 Image:
@@ -257,7 +257,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(app.get_scaled_width(620))
                     height: dp(app.get_scaled_height(80))
-                    padding:[app.get_scaled_width(10), app.get_scaled_height(10)]
+                    padding:(dp(app.get_scaled_width(10)),dp(app.get_scaled_height(10)))
                     spacing: 0
                     orientation: 'vertical'
 
@@ -265,14 +265,14 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(app.get_scaled_width(80))
                     height: dp(app.get_scaled_height(80))
-                    padding: 0
+                    padding:dp(0)
                     spacing: 0
 
                     BoxLayout: 
                         size_hint: (None, None)
                         height: dp(app.get_scaled_height(80))
                         width: dp(app.get_scaled_width(80))
-                        padding:[app.get_scaled_width(19), app.get_scaled_height(10), app.get_scaled_width(19), app.get_scaled_height(10)]
+                        padding:(dp(app.get_scaled_width(19)),dp(app.get_scaled_height(10)),dp(app.get_scaled_width(19)),dp(app.get_scaled_height(10)))
                         Button:
                             font_size: str(get_scaled_width(15)) + 'sp'
                             size_hint: (None,None)
@@ -283,7 +283,7 @@ Builder.load_string(
                             pos: self.parent.pos
                             on_press: root.exit_app()
                             BoxLayout:
-                                padding: 0
+                                padding:dp(0)
                                 size: self.parent.size
                                 pos: self.parent.pos
                                 Image:

@@ -31,14 +31,14 @@ Builder.load_string(
 
     BoxLayout: 
         spacing: 0
-        padding:[app.get_scaled_width(20), app.get_scaled_height(40)]
+        padding:(dp(app.get_scaled_width(20)),dp(app.get_scaled_height(40)))
         orientation: 'vertical'
 
         # Cancel button
         BoxLayout:
             size_hint: (None,None)
             height: dp(app.get_scaled_height(20))
-            padding:[app.get_scaled_width(20), 0, app.get_scaled_width(20), 0]
+            padding:(dp(app.get_scaled_width(20)),dp(0),dp(app.get_scaled_width(20)),dp(0))
             spacing:0.85*app.width
             orientation: 'horizontal'
             pos: self.parent.pos
@@ -56,7 +56,7 @@ Builder.load_string(
                 opacity: 1
                 on_press: root.cancel()
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:

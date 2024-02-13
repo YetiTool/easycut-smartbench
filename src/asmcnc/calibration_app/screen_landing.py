@@ -37,7 +37,7 @@ Builder.load_string(
 
         BoxLayout:
             orientation: 'horizontal'
-            padding:[app.get_scaled_width(90), app.get_scaled_height(50), app.get_scaled_width(90), app.get_scaled_height(50)]
+            padding:(dp(app.get_scaled_width(90)),dp(app.get_scaled_height(50)),dp(app.get_scaled_width(90)),dp(app.get_scaled_height(50)))
             spacing: 0
             size_hint_x: 1
 
@@ -71,7 +71,7 @@ Builder.load_string(
                     
                 BoxLayout:
                     orientation: 'horizontal'
-                    padding:[0, 0]
+                    padding:(dp(0),dp(0))
                     spacing:0.025*app.width
                 
                     Button:
@@ -88,7 +88,7 @@ Builder.load_string(
                             root.skip_to_lobby()
                             
                         BoxLayout:
-                            padding:[app.get_scaled_width(5), app.get_scaled_height(5)]
+                            padding:(dp(app.get_scaled_width(5)),dp(app.get_scaled_height(5)))
                             size: self.parent.size
                             pos: self.parent.pos
                             
@@ -112,7 +112,7 @@ Builder.load_string(
                             root.next_screen()
                             
                         BoxLayout:
-                            padding:[app.get_scaled_width(5), app.get_scaled_height(5)]
+                            padding:(dp(app.get_scaled_width(5)),dp(app.get_scaled_height(5)))
                             size: self.parent.size
                             pos: self.parent.pos
                             
@@ -124,7 +124,7 @@ Builder.load_string(
 
         BoxLayout:
             size_hint_x: 0.1
-            padding:[0, 0, 0, app.get_scaled_height(400)]
+            padding:(dp(0),dp(0),dp(0),dp(app.get_scaled_height(400)))
 
             Button:
                 font_size: str(get_scaled_width(15)) + 'sp'
@@ -136,7 +136,7 @@ Builder.load_string(
                 opacity: 1
                 on_press: root.skip_to_lobby()
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:

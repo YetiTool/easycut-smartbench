@@ -63,19 +63,19 @@ Builder.load_string(
     spindle_overload_label:spindle_overload_label
     
     BoxLayout:
-        padding: 0
+        padding:dp(0)
         spacing: 0
         orientation: "vertical"
 
         BoxLayout:
             size_hint_y: 0.92
-            padding: 0
+            padding:dp(0)
             spacing:0.0125*app.width
             orientation: "horizontal"
 
             BoxLayout:
                 size_hint_x: 0.9
-                padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
+                padding:(dp(app.get_scaled_width(20)),dp(app.get_scaled_height(20)))
                 spacing:0.025*app.width
                 orientation: "horizontal"
 
@@ -93,7 +93,7 @@ Builder.load_string(
 
                     BoxLayout:
                         size_hint_y: 0.3
-                        padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
+                        padding:(dp(app.get_scaled_width(20)),dp(app.get_scaled_height(20)))
                         canvas:
                             Color:
                                 rgba: hex('#FFFFFFFF')
@@ -102,7 +102,7 @@ Builder.load_string(
                                 pos: self.pos
                         BoxLayout:
                             orientation: 'horizontal'
-                            padding: 0
+                            padding:dp(0)
                             spacing:0.0125*app.width
                             Button:
                                 font_size: str(get_scaled_width(15)) + 'sp'
@@ -112,7 +112,7 @@ Builder.load_string(
                                 on_press:
                                     root.return_to_app()
                                 BoxLayout:
-                                    padding: 0
+                                    padding:dp(0)
                                     size: self.parent.size
                                     pos: self.parent.pos
                                     Image:
@@ -144,7 +144,7 @@ Builder.load_string(
                                     root.start_or_pause_button_press()
 
                                 BoxLayout:
-                                    padding: 0
+                                    padding:dp(0)
                                     size: self.parent.size
                                     pos: self.parent.pos
                                     Image:
@@ -159,12 +159,12 @@ Builder.load_string(
                         id: override_and_progress_container
                         orientation: 'horizontal'
                         size_hint_y: 0.7
-                        padding:[app.get_scaled_width(0), app.get_scaled_height(0)]
+                        padding:(dp(app.get_scaled_width(0)),dp(app.get_scaled_height(0)))
                         spacing:0.0416666666667*app.height
 
                         BoxLayout:
                             orientation: 'vertical'
-                            padding:[0, 0, 0, app.get_scaled_height(5)]
+                            padding:(dp(0),dp(0),dp(0),dp(app.get_scaled_height(5)))
                             spacing:0.0208333333333*app.height
                             size_hint_x: 0.2
                             canvas:
@@ -177,7 +177,7 @@ Builder.load_string(
                             BoxLayout:
                                 size_hint_y: 1.8
                                 orientation: 'vertical'
-                                padding:[app.get_scaled_width(0), app.get_scaled_height(0)]
+                                padding:(dp(app.get_scaled_width(0)),dp(app.get_scaled_height(0)))
                                 spacing:0.0*app.height
                                 canvas:
                                     Color:
@@ -197,7 +197,7 @@ Builder.load_string(
 
                             BoxLayout:
                                 id: feed_override_container
-                                padding: 0
+                                padding:dp(0)
                                 size_hint_y: 9
                                 canvas:
                                     Color:
@@ -210,7 +210,7 @@ Builder.load_string(
                         BoxLayout:
                             id: speed_override_container
                             orientation: 'vertical'
-                            padding:[0, 0, 0, app.get_scaled_height(5)]
+                            padding:(dp(0),dp(0),dp(0),dp(app.get_scaled_height(5)))
                             spacing:0.0208333333333*app.height
                             size_hint_x: 0.2
                             canvas:
@@ -223,7 +223,7 @@ Builder.load_string(
                             BoxLayout:
                                 size_hint_y: 1.8
                                 orientation: 'vertical'
-                                padding:[app.get_scaled_width(0), app.get_scaled_height(0)]
+                                padding:(dp(app.get_scaled_width(0)),dp(app.get_scaled_height(0)))
                                 spacing:0.0*app.height
                                 canvas:
                                     Color:
@@ -243,7 +243,7 @@ Builder.load_string(
 
                             BoxLayout:
                                 id: speed_override_widget_container
-                                padding: 0
+                                padding:dp(0)
                                 size_hint_y: 9
                                 canvas:
                                     Color:
@@ -273,7 +273,7 @@ Builder.load_string(
                                 id: job_progress_container
                                 size_hint_y: 2.5
                                 orientation: 'vertical'
-                                padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
+                                padding:(dp(app.get_scaled_width(20)),dp(app.get_scaled_height(20)))
                                 spacing:0.0*app.height
 
                                 canvas:
@@ -330,7 +330,7 @@ Builder.load_string(
                     id: spindle_widgets
                     orientation: 'vertical'
                     size_hint_x: 0.15
-                    padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
+                    padding:(dp(app.get_scaled_width(20)),dp(app.get_scaled_height(20)))
                     spacing:0.0416666666667*app.height
 
                     canvas:

@@ -24,7 +24,7 @@ Builder.load_string("""
                 source: "./asmcnc/apps/shapeCutter_app/img/landing_background.png"
 
         BoxLayout:
-            padding: 0
+            padding:dp(0)
             spacing: 0
             orientation: "vertical"       
                 
@@ -33,7 +33,7 @@ Builder.load_string("""
                 height: dp(90)
                 width: dp(800)
                 text: "Feedback"
-                font_size: 30
+                font_size:dp(30)
                 halign: "center"
                 valign: "bottom"
                 markup: True
@@ -43,7 +43,7 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(800)
                 height: dp(140)
-                padding: 0
+                padding:dp(0)
                 spacing: 0
                 Label:
                     size_hint: (None,None)
@@ -53,14 +53,14 @@ Builder.load_string("""
                     valign: "middle"
                     text: "Was your job successful?"
                     color: 0,0,0,1
-                    font_size: 26
+                    font_size:dp(26)
                     markup: True
 
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(800)
                 height: dp(170)
-                padding: (180,0,180,30)
+                padding:(dp(180),dp(0),dp(180),dp(30))
                 spacing: 0
                 orientation: 'horizontal'
                 pos: self.parent.pos                
@@ -69,7 +69,7 @@ Builder.load_string("""
                     size_hint: (None,None)
                     width: dp(220)
                     height: dp(171)
-                    padding: (28,0,20,0)
+                    padding:(dp(28),dp(0),dp(20),dp(0))
                     pos: self.parent.pos
                     
                     # thumbs up button
@@ -82,7 +82,7 @@ Builder.load_string("""
                         pos: self.parent.pos
                         on_press: root.thumbs_up()
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -95,7 +95,7 @@ Builder.load_string("""
                     size_hint: (None,None)
                     width: dp(220)
                     height: dp(171)
-                    padding: (20,0,28,0)
+                    padding:(dp(20),dp(0),dp(28),dp(0))
                     pos: self.parent.pos
                     
                     # thumbs down button
@@ -108,7 +108,7 @@ Builder.load_string("""
                         pos: self.parent.pos
                         on_press: root.thumbs_down()
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -121,7 +121,7 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(800)
                 height: dp(80)
-                padding: (740,0,0,20)
+                padding:(dp(740),dp(0),dp(0),dp(20))
                 spacing: 0
                 orientation: 'horizontal'
                 pos: self.parent.pos

@@ -43,11 +43,11 @@ Builder.load_string(
                 size: self.size
                 pos: self.pos
         BoxLayout:
-            padding: 0
+            padding:dp(0)
             spacing: 0
             orientation: "vertical"
             BoxLayout:
-                padding: 0
+                padding:dp(0)
                 spacing: 0
                 canvas:
                     Color:
@@ -73,7 +73,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 width: dp(app.get_scaled_width(800))
                 height: dp(app.get_scaled_height(420))
-                padding:[0, app.get_scaled_height(10)]
+                padding:(dp(0),dp(app.get_scaled_height(10)))
                 spacing: 0
                 orientation: 'vertical'
                 
@@ -82,7 +82,7 @@ Builder.load_string(
                     size_hint_y: None
                     height: dp(app.get_scaled_height(130))
                     orientation: 'horizontal'
-                    padding:[app.get_scaled_width(20), 0, app.get_scaled_width(20), app.get_scaled_height(10)]
+                    padding:(dp(app.get_scaled_width(20)),dp(0),dp(app.get_scaled_width(20)),dp(app.get_scaled_height(10)))
 
                     BoxLayout:
                         orientation: 'vertical'
@@ -116,7 +116,7 @@ Builder.load_string(
 
                             TextInput:
                                 id: parts_completed_input
-                                padding:[app.get_scaled_width(4), app.get_scaled_height(2)]
+                                padding:(dp(app.get_scaled_width(4)),dp(app.get_scaled_height(2)))
                                 size_hint_x: None
                                 width: dp(app.get_scaled_width(50))
                                 color: hex('#333333ff')
@@ -148,7 +148,7 @@ Builder.load_string(
                             size_hint_y: None
                             height: dp(app.get_scaled_height(41))
                             orientation: 'horizontal'
-                            padding:[0, app.get_scaled_height(11), 0, 0]
+                            padding:(dp(0),dp(app.get_scaled_height(11)),dp(0),dp(0))
 
                             Label:
                                 id: batch_number_label
@@ -165,7 +165,7 @@ Builder.load_string(
                                 size_hint_x: 0.55
                                 TextInput:
                                     id: batch_number_input
-                                    padding:[app.get_scaled_width(4), app.get_scaled_height(2)]
+                                    padding:(dp(app.get_scaled_width(4)),dp(app.get_scaled_height(2)))
                                     color: hex('#333333ff')
                                     # foreground_color: hex('#333333ff')
                                     text_size: self.size
@@ -193,7 +193,7 @@ Builder.load_string(
                             id: post_production_notes
                             size_hint_y: None
                             height: dp(app.get_scaled_height(56))
-                            padding:[app.get_scaled_width(4), app.get_scaled_height(2)]
+                            padding:(dp(app.get_scaled_width(4)),dp(app.get_scaled_height(2)))
                             text: ""
                             color: hex('#333333ff')
                             # foreground_color: hex('#333333ff')
@@ -225,11 +225,11 @@ Builder.load_string(
                     width: dp(app.get_scaled_width(800))
                     orientation: 'vertical'
                     spacing: 0
-                    padding:[0, 0]
+                    padding:(dp(0),dp(0))
 
                     Label: 
                         id: event_details_label
-                        padding:[app.get_scaled_width(20), 0]
+                        padding:(dp(app.get_scaled_width(20)),dp(0))
                         color: hex('#333333ff') #grey
                         text_size: self.size
                         halign: "left"
@@ -239,7 +239,7 @@ Builder.load_string(
 
                     # Buttons
                     BoxLayout: 
-                        padding:[app.get_scaled_width(10), 0, app.get_scaled_width(10), app.get_scaled_height(10)]
+                        padding:(dp(app.get_scaled_width(10)),dp(0),dp(app.get_scaled_width(10)),dp(app.get_scaled_height(10)))
                         size_hint: (None, None)
                         height: dp(app.get_scaled_height(89))
                         width: dp(app.get_scaled_width(800))
@@ -248,7 +248,7 @@ Builder.load_string(
                             size_hint: (None, None)
                             height: dp(app.get_scaled_height(79))
                             width: dp(app.get_scaled_width(244.5))
-                            padding:[0, 0, app.get_scaled_width(184.5), 0]
+                            padding:(dp(0),dp(0),dp(app.get_scaled_width(184.5)),dp(0))
 
                         BoxLayout: 
                             size_hint: (None, None)
@@ -276,7 +276,7 @@ Builder.load_string(
                             size_hint: (None, None)
                             height: dp(app.get_scaled_height(79))
                             width: dp(app.get_scaled_width(244.5))
-                            padding:[app.get_scaled_width(193.5), 0, 0, 0]
+                            padding:(dp(app.get_scaled_width(193.5)),dp(0),dp(0),dp(0))
  
 """
 )

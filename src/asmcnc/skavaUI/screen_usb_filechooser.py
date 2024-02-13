@@ -42,7 +42,7 @@ Builder.load_string(
 
 
     BoxLayout:
-        padding: 0
+        padding:dp(0)
         spacing: 0
         size: root.size
         pos: root.pos
@@ -63,7 +63,7 @@ Builder.load_string(
             valign: 'middle'
             halign: 'left'
             text_size: self.size
-            padding:[app.get_scaled_width(10), 0]
+            padding:(dp(app.get_scaled_width(10)),dp(0))
 
         Label:
             font_size: str(get_scaled_width(15)) + 'sp'
@@ -87,7 +87,7 @@ Builder.load_string(
             size_hint_y: 5
 
             FileChooser:
-                padding:[0, app.get_scaled_height(10)]
+                padding:(dp(0),dp(app.get_scaled_height(10)))
                 id: filechooser_usb
                 show_hidden: False
                 filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
@@ -110,7 +110,7 @@ Builder.load_string(
                     size_hint_y: None
                     height: self.texture_size[1]
                     text_size: self.width, None
-                    padding:[app.get_scaled_width(10), app.get_scaled_height(10)]
+                    padding:(dp(app.get_scaled_width(10)),dp(app.get_scaled_height(10)))
                     markup: True
                
         BoxLayout:
@@ -124,7 +124,7 @@ Builder.load_string(
                 on_press: root.switch_view()
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding:[app.get_scaled_width(25), app.get_scaled_height(25)]
+                    padding:(dp(app.get_scaled_width(25)),dp(app.get_scaled_height(25)))
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -142,7 +142,7 @@ Builder.load_string(
                 on_press: root.switch_sort()
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding:[app.get_scaled_width(25), app.get_scaled_height(25)]
+                    padding:(dp(app.get_scaled_width(25)),dp(app.get_scaled_height(25)))
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -164,7 +164,7 @@ Builder.load_string(
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding:[app.get_scaled_width(25), app.get_scaled_height(25)]
+                    padding:(dp(app.get_scaled_width(25)),dp(app.get_scaled_height(25)))
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -186,7 +186,7 @@ Builder.load_string(
                     root.quit_to_local()
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding:[app.get_scaled_width(25), app.get_scaled_height(25)]
+                    padding:(dp(app.get_scaled_width(25)),dp(app.get_scaled_height(25)))
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -208,7 +208,7 @@ Builder.load_string(
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding:[app.get_scaled_width(25), app.get_scaled_height(25)]
+                    padding:(dp(app.get_scaled_width(25)),dp(app.get_scaled_height(25)))
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:

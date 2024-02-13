@@ -69,11 +69,11 @@ Builder.load_string(
                 pos: self.pos
 
         BoxLayout:
-            padding:[app.get_scaled_width(10), app.get_scaled_height(10)]
+            padding:(dp(app.get_scaled_width(10)),dp(app.get_scaled_height(10)))
             spacing:0.0208333333333*app.height
             orientation: "vertical"
             BoxLayout:
-                padding: 0
+                padding:dp(0)
                 spacing: 0
                 canvas:
                     Color:
@@ -87,7 +87,7 @@ Builder.load_string(
                     width: dp(app.get_scaled_width(780))
                     text: "Developer"
                     color: [0,0,0,1]
-                    font_size: 0.0375*app.width
+                    font_size:dp(0.0375*app.width)
                     halign: "center"
                     valign: "bottom"
                     markup: True
@@ -96,7 +96,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 width: dp(app.get_scaled_width(780))
                 height: dp(app.get_scaled_height(240))
-                padding: 0
+                padding:dp(0)
                 spacing:0.0125*app.width
                 orientation: 'horizontal'
 
@@ -104,7 +104,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(app.get_scaled_width(577.5))
                     height: dp(app.get_scaled_height(240))
-                    padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
+                    padding:(dp(app.get_scaled_width(20)),dp(app.get_scaled_height(20)))
                     spacing:0.0416666666667*app.height
                     orientation: 'vertical'
                     canvas:
@@ -189,7 +189,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(app.get_scaled_width(192.5))
                     height: dp(app.get_scaled_height(240))
-                    padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
+                    padding:(dp(app.get_scaled_width(20)),dp(app.get_scaled_height(20)))
                     spacing: 0
                     orientation: 'vertical'
                     canvas:
@@ -215,7 +215,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 width: dp(app.get_scaled_width(780))
                 height: dp(app.get_scaled_height(130))
-                padding: 0
+                padding:dp(0)
                 spacing:0.0125*app.width
                 orientation: 'horizontal'
                 canvas:
@@ -229,14 +229,14 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(app.get_scaled_width(192.5))
                     height: dp(app.get_scaled_height(130))
-                    padding: 0
+                    padding:dp(0)
                     spacing: 0
 
                     BoxLayout: 
                         size_hint: (None, None)
                         height: dp(app.get_scaled_height(130))
                         width: dp(app.get_scaled_width(192.5))
-                        padding:[app.get_scaled_width(52.25), app.get_scaled_height(31), app.get_scaled_width(52.25), app.get_scaled_height(31)]
+                        padding:(dp(app.get_scaled_width(52.25)),dp(app.get_scaled_height(31)),dp(app.get_scaled_width(52.25)),dp(app.get_scaled_height(31)))
                         Button:
                             font_size: str(get_scaled_width(15)) + 'sp'
                             size_hint: (None,None)
@@ -247,7 +247,7 @@ Builder.load_string(
                             pos: self.parent.pos
                             on_press: root.go_back()
                             BoxLayout:
-                                padding: 0
+                                padding:dp(0)
                                 size: self.parent.size
                                 pos: self.parent.pos
                                 Image:
@@ -261,7 +261,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(app.get_scaled_width(385))
                     height: dp(app.get_scaled_height(130))
-                    padding:[app.get_scaled_width(10), app.get_scaled_height(10)]
+                    padding:(dp(app.get_scaled_width(10)),dp(app.get_scaled_height(10)))
                     spacing: 0
                     orientation: 'vertical'
 
@@ -272,7 +272,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(app.get_scaled_width(192.5))
                     height: dp(app.get_scaled_height(130))
-                    padding: 0
+                    padding:dp(0)
                     spacing: 0    
 
 
@@ -280,7 +280,7 @@ Builder.load_string(
                         size_hint: (None, None)
                         height: dp(app.get_scaled_height(130))
                         width: dp(app.get_scaled_width(192.5))
-                        padding:[app.get_scaled_width(40.25), app.get_scaled_height(9), app.get_scaled_width(40.25), app.get_scaled_height(9)]
+                        padding:(dp(app.get_scaled_width(40.25)),dp(app.get_scaled_height(9)),dp(app.get_scaled_width(40.25)),dp(app.get_scaled_height(9)))
                         Button:
                             font_size: str(get_scaled_width(15)) + 'sp'
                             size_hint: (None,None)
@@ -291,7 +291,7 @@ Builder.load_string(
                             pos: self.parent.pos
                             on_press: root.exit_app()
                             BoxLayout:
-                                padding: 0
+                                padding:dp(0)
                                 size: self.parent.size
                                 pos: self.parent.pos
                                 Image:

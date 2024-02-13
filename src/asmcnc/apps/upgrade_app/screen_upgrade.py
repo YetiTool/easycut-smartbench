@@ -37,7 +37,7 @@ Builder.load_string(
                     pos: self.pos
 
             BoxLayout:
-                padding:[app.get_scaled_width(60), 0, 0, 0]
+                padding:(dp(app.get_scaled_width(60)),dp(0),dp(0),dp(0))
 
                 Label:
                     id: title_label
@@ -49,7 +49,7 @@ Builder.load_string(
 
             BoxLayout:
                 size_hint_x: 0.08
-                padding:[app.get_scaled_width(5), app.get_scaled_height(5)]
+                padding:(dp(app.get_scaled_width(5)),dp(app.get_scaled_height(5)))
 
                 Button:
                     font_size: str(get_scaled_width(15)) + 'sp'
@@ -61,7 +61,7 @@ Builder.load_string(
                     opacity: 1
                     on_press: root.quit_to_lobby()
                     BoxLayout:
-                        padding: 0
+                        padding:dp(0)
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:
@@ -74,7 +74,7 @@ Builder.load_string(
         BoxLayout:
             orientation: 'vertical'
             size_hint_y: 7
-            padding:[app.get_scaled_width(10), app.get_scaled_height(10)]
+            padding:(dp(app.get_scaled_width(10)),dp(app.get_scaled_height(10)))
 
             canvas: 
                 Color:
@@ -96,7 +96,7 @@ Builder.load_string(
                     text_size: self.size
 
                 BoxLayout:
-                    padding:[app.get_scaled_width(200), 0, app.get_scaled_width(200), app.get_scaled_height(20)]
+                    padding:(dp(app.get_scaled_width(200)),dp(0),dp(app.get_scaled_width(200)),dp(app.get_scaled_height(20)))
 
                     TextInput:
                         id: upgrade_code_input
@@ -116,7 +116,7 @@ Builder.load_string(
                     Label:
                         id: error_label
                         size_hint_y: 0
-                        height: 0
+                        height:dp(0)
                         font_size: dp(app.get_scaled_width(23))
                         color: 1,0,0,1
                         halign: 'center'
@@ -150,7 +150,7 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint_y: 0
-                    height: 0
+                    height:dp(0)
 
 """
 )

@@ -16,7 +16,8 @@ def is_screen_big():
 def get_scaled_width(width):
     """
     Returns the scaled width of the given width, relative to the current console screen size
-    :param width: The width in pixels, based on a 800x480 screen
+    :dp(param width)
+: The width in pixels, based on a 800x480 screen
     :return: The scaled width
     """
     if width is None:
@@ -29,7 +30,8 @@ def get_scaled_width(width):
 def get_scaled_height(height):
     """
     Returns the scaled height of the given height, relative to the current console screen size
-    :param height: The height in pixels, based on a 800x480 screen
+    :dp(param height)
+: The height in pixels, based on a 800x480 screen
     :return: The scaled height
     """
     if height is None:

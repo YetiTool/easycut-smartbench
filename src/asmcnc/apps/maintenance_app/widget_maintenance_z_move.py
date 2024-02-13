@@ -21,7 +21,7 @@ Builder.load_string(
 
         size: self.parent.size
         pos: self.parent.pos      
-        padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
+        padding:(dp(app.get_scaled_width(20)),dp(app.get_scaled_height(20)))
         spacing:0.025*app.width
         orientation: 'horizontal'
         
@@ -48,7 +48,7 @@ Builder.load_string(
                     root.jog_z('Z+') 
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -70,7 +70,7 @@ Builder.load_string(
                     root.jog_z('Z-') 
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -86,7 +86,7 @@ Builder.load_string(
                 background_color: hex('#F4433600')
                 on_press: root.get_info()
                 BoxLayout:
-                    padding:[app.get_scaled_width(7.5), app.get_scaled_height(20), app.get_scaled_width(7.5), app.get_scaled_height(20)]
+                    padding:(dp(app.get_scaled_width(7.5)),dp(app.get_scaled_height(20)),dp(app.get_scaled_width(7.5)),dp(app.get_scaled_height(20)))
                     size_hint: (None,None)
                     height: dp(app.get_scaled_height(100))
                     width: dp(app.get_scaled_width(100))

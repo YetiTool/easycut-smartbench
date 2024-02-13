@@ -37,7 +37,7 @@ Builder.load_string("""
                 cols: 1
                 rows: 1
 
-                padding: [200, 0]
+                padding:(dp(200),dp(0))
 
                 TextInput:
                     id: serial_no_input

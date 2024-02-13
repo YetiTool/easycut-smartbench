@@ -61,7 +61,7 @@ Builder.load_string(
 
     BoxLayout:
         orientation: 'vertical'
-        padding: 0
+        padding:dp(0)
         spacing: 0
         size_hint: (None, None)
         height: dp(app.get_scaled_height(480))
@@ -69,7 +69,7 @@ Builder.load_string(
 
         # Door label
         BoxLayout: 
-            padding:[app.get_scaled_width(15), 0, 0, 0]
+            padding:(dp(app.get_scaled_width(15)),dp(0),dp(0),dp(0))
             spacing: 0
             size_hint: (None, None)
             height: dp(app.get_scaled_height(50))
@@ -88,7 +88,7 @@ Builder.load_string(
                 pos: self.parent.pos
 
         BoxLayout: 
-            padding:[app.get_scaled_width(10), 0, app.get_scaled_width(10), 0]
+            padding:(dp(app.get_scaled_width(10)),dp(0),dp(app.get_scaled_width(10)),dp(0))
             spacing: 0
             size_hint: (None, None)
             height: dp(app.get_scaled_height(5))
@@ -103,7 +103,7 @@ Builder.load_string(
         
         # Alarm image and text
         BoxLayout: 
-            padding: 0
+            padding:dp(0)
             spacing: 0
             size_hint: (None, None)
             height: dp(app.get_scaled_height(295))
@@ -111,7 +111,7 @@ Builder.load_string(
             orientation: 'vertical'
 
             BoxLayout: 
-                padding: 0
+                padding:dp(0)
                 spacing: 0
                 size_hint: (None, None)
                 height: dp(app.get_scaled_height(245))
@@ -119,7 +119,7 @@ Builder.load_string(
                 orientation: 'vertical'
 
             FloatLayout: 
-                padding: 0
+                padding:dp(0)
                 spacing: 0
                 size_hint: (None, None)
                 height: dp(app.get_scaled_height(50))
@@ -166,7 +166,7 @@ Builder.load_string(
             size_hint: (None, None)
             height: dp(app.get_scaled_height(130))
             width: dp(app.get_scaled_width(800))
-            padding:[0, 0, 0, app.get_scaled_height(10)]
+            padding:(dp(0),dp(0),dp(0),dp(app.get_scaled_height(10)))
    
 
             Button:

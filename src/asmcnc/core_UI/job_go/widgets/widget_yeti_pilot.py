@@ -19,7 +19,7 @@ Builder.load_string(
         orientation: 'horizontal'
         size: self.parent.size
         pos: self.parent.pos
-        padding:[app.get_scaled_width(10), app.get_scaled_height(8), app.get_scaled_width(10), app.get_scaled_height(8)]
+        padding:(dp(app.get_scaled_width(10)),dp(app.get_scaled_height(8)),dp(app.get_scaled_width(10)),dp(app.get_scaled_height(8)))
 
         
         BoxLayout:
@@ -39,7 +39,7 @@ Builder.load_string(
             BoxLayout: 
                 id: bl
                 size_hint_y: 0.5
-                padding:[app.get_scaled_width(14.1), 0]
+                padding:(dp(app.get_scaled_width(14.1)),dp(0))
 
                 ToggleButton:
                     font_size: str(get_scaled_width(15)) + 'sp'
@@ -61,12 +61,12 @@ Builder.load_string(
                             allow_stretch: False
 
         BoxLayout:
-            padding:[0, 0]
+            padding:(dp(0),dp(0))
             size_hint_x: 0.025
             
             BoxLayout:
                 size_hint_x: None
-                width: 0.0025*app.width
+                width:dp(0.0025*app.width)
                 canvas:
                     Color:
                         rgba: hex('#ccccccff')
@@ -77,7 +77,7 @@ Builder.load_string(
         BoxLayout:
             orientation: 'vertical'
             size_hint_x: 0.6
-            padding:[app.get_scaled_width(2), 0, app.get_scaled_width(2), 0]
+            padding:(dp(app.get_scaled_width(2)),dp(0),dp(app.get_scaled_width(2)),dp(0))
             spacing: 0
             Label: 
                 id: profile_label
@@ -102,7 +102,7 @@ Builder.load_string(
 
         BoxLayout: 
             size_hint_x: 0.1
-            padding:[0, 0, app.get_scaled_width(10), 0]
+            padding:(dp(0),dp(0),dp(app.get_scaled_width(10)),dp(0))
             Button:
                 font_size: str(get_scaled_width(15)) + 'sp'
                 id: yp_cog_button

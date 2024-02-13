@@ -61,13 +61,13 @@ Builder.load_string(
     on_touch_down:root.on_touch()
 
     BoxLayout:
-        padding: 0
+        padding:dp(0)
         spacing:0.0208333333333*app.height
         orientation: "vertical"
 
         BoxLayout:
             size_hint_y: 0.9
-            padding: 0
+            padding:dp(0)
             spacing:0.0125*app.width
             orientation: "horizontal"
 
@@ -80,15 +80,15 @@ Builder.load_string(
                     pos_hint: {'center_x': .5, 'center_y': .5}
                     do_default_tab: False
                     tab_pos: 'left_top'
-                    tab_height: 0.1875*app.height
-                    tab_width: 0.1125*app.width
+                    tab_height:dp(0.1875*app.height)
+                    tab_width:dp(0.1125*app.width)
 
                     TabbedPanelItem:
                         background_normal: 'asmcnc/skavaUI/img/tab_set_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_set_up.png'
                         on_press: root.m.laser_off()
                         BoxLayout:
-                            padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
+                            padding:(dp(app.get_scaled_width(20)),dp(app.get_scaled_height(20)))
                             spacing:0.025*app.width
                             canvas:
                                 Color:
@@ -108,7 +108,7 @@ Builder.load_string(
                         on_press: root.m.laser_on()
                         BoxLayout:
                             orientation: 'horizontal'
-                            padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
+                            padding:(dp(app.get_scaled_width(20)),dp(app.get_scaled_height(20)))
                             spacing:0.025*app.width
                             canvas:
                                 Color:
@@ -149,7 +149,7 @@ Builder.load_string(
                         on_press: root.m.laser_on()
                         BoxLayout:
                             orientation: 'vertical'
-                            padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
+                            padding:(dp(app.get_scaled_width(20)),dp(app.get_scaled_height(20)))
                             spacing:0.0416666666667*app.height
                             canvas:
                                 Color:
@@ -160,7 +160,7 @@ Builder.load_string(
 
                             BoxLayout:
                                 size_hint_y: 5
-                                padding:[app.get_scaled_width(10), app.get_scaled_height(10)]
+                                padding:(dp(app.get_scaled_width(10)),dp(app.get_scaled_height(10)))
                                 canvas:
                                     Color:
                                         rgba: 1,1,1,1
@@ -181,7 +181,7 @@ Builder.load_string(
                         id: home_tab
                         BoxLayout:
                             orientation: 'vertical'
-                            padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
+                            padding:(dp(app.get_scaled_width(20)),dp(app.get_scaled_height(20)))
                             spacing:0.0416666666667*app.height
                             id: job_container
                             canvas:
@@ -193,7 +193,7 @@ Builder.load_string(
 
                             BoxLayout:
                                 size_hint_y: 1
-                                padding:[app.get_scaled_width(10), app.get_scaled_height(10)]
+                                padding:(dp(app.get_scaled_width(10)),dp(app.get_scaled_height(10)))
                                 spacing:0.0125*app.width
                                 orientation: 'horizontal'
                                 canvas:
@@ -210,7 +210,7 @@ Builder.load_string(
                                     on_press:
                                         root.manager.current = 'local_filechooser'
                                     BoxLayout:
-                                        padding: 0
+                                        padding:dp(0)
                                         size: self.parent.size
                                         pos: self.parent.pos
                                         Image:
@@ -228,7 +228,7 @@ Builder.load_string(
                                     on_press:
                                         root.manager.current = 'recovery_decision'
                                     BoxLayout:
-                                        padding: 0
+                                        padding:dp(0)
                                         size: self.parent.size
                                         pos: self.parent.pos
                                         Image:
@@ -251,7 +251,7 @@ Builder.load_string(
 
                             BoxLayout:
                                 size_hint_y: 3
-                                padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
+                                padding:(dp(app.get_scaled_width(20)),dp(app.get_scaled_height(20)))
                                 orientation: 'horizontal'
                                 canvas:
                                     Color:

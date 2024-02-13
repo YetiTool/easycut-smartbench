@@ -46,7 +46,7 @@ Builder.load_string(
             size: self.size
 
     BoxLayout:
-        padding:[app.get_scaled_width(1), app.get_scaled_height(1)]
+        padding:(dp(app.get_scaled_width(1)),dp(app.get_scaled_height(1)))
         spacing:0.0075*app.width
         orientation: "horizontal"
         size: self.parent.size

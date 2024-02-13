@@ -23,7 +23,7 @@ Builder.load_string(
              
     BoxLayout:
         orientation: 'horizontal'
-        padding:[app.get_scaled_width(80), app.get_scaled_height(30)]
+        padding:(dp(app.get_scaled_width(80)),dp(app.get_scaled_height(30)))
         spacing: 0
         size_hint_x: 1
         BoxLayout:
@@ -72,7 +72,7 @@ Builder.load_string(
                         root.next_screen()
     
                     BoxLayout:
-                        padding:[app.get_scaled_width(5), app.get_scaled_height(5)]
+                        padding:(dp(app.get_scaled_width(5)),dp(app.get_scaled_height(5)))
                         size: self.parent.size
                         pos: self.parent.pos
                         

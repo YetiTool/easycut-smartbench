@@ -13,7 +13,7 @@ Builder.load_string(
 
     BoxLayout: 
         orientation: "horizontal"
-        padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
+        padding:(dp(app.get_scaled_width(20)),dp(app.get_scaled_height(20)))
 
         BoxLayout: 
             orientation: "vertical"
@@ -44,7 +44,7 @@ Builder.load_string(
 
         BoxLayout: 
             size_hint_x: 0.12
-            padding:[0, 0, 0, app.get_scaled_height(50)]
+            padding:(dp(0),dp(0),dp(0),dp(app.get_scaled_height(50)))
             spacing: 0
             orientation: 'vertical'
 
@@ -56,7 +56,7 @@ Builder.load_string(
 
             BoxLayout: 
                 size_hint_y: 0.1
-                padding:[app.get_scaled_width(10), 0, 0, 0]
+                padding:(dp(app.get_scaled_width(10)),dp(0),dp(0),dp(0))
 
                 ToggleButton:
                     font_size: str(get_scaled_width(15)) + 'sp'

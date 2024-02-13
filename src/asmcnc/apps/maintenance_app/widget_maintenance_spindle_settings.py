@@ -56,7 +56,7 @@ Builder.load_string(
         BoxLayout:
             size_hint_y: 0.3
             orientation: 'horizontal'
-            padding:[app.get_scaled_width(5), app.get_scaled_height(5)]
+            padding:(dp(app.get_scaled_width(5)),dp(app.get_scaled_height(5)))
 
             canvas:
                 Color:
@@ -75,7 +75,7 @@ Builder.load_string(
                 allow_stretch: True
 
             BoxLayout:
-                padding:[app.get_scaled_width(5), app.get_scaled_height(5)]
+                padding:(dp(app.get_scaled_width(5)),dp(app.get_scaled_height(5)))
 
                 Spinner:
                     id: spindle_brand
@@ -106,7 +106,7 @@ Builder.load_string(
                 BoxLayout:
                     size_hint_y: 2
                     orientation: 'vertical'
-                    padding:[app.get_scaled_width(5), app.get_scaled_height(5)]
+                    padding:(dp(app.get_scaled_width(5)),dp(app.get_scaled_height(5)))
 
                     canvas:
                         Color:
@@ -129,7 +129,7 @@ Builder.load_string(
                         orientation: 'horizontal'
 
                         BoxLayout:
-                            padding:[app.get_scaled_width(13), app.get_scaled_height(13)]
+                            padding:(dp(app.get_scaled_width(13)),dp(app.get_scaled_height(13)))
 
                             Image:
                                 id: spindle_image
@@ -163,7 +163,7 @@ Builder.load_string(
                         orientation: 'horizontal'
 
                         BoxLayout:
-                            padding:[app.get_scaled_width(5), app.get_scaled_height(5)]
+                            padding:(dp(app.get_scaled_width(5)),dp(app.get_scaled_height(5)))
 
                             Image:
                                 id: countdown_image
@@ -198,7 +198,7 @@ Builder.load_string(
 
                     BoxLayout:
                         orientation: 'horizontal'
-                        padding:[app.get_scaled_width(5), app.get_scaled_height(5)]
+                        padding:(dp(app.get_scaled_width(5)),dp(app.get_scaled_height(5)))
 
                         canvas:
                             Color:
@@ -216,7 +216,7 @@ Builder.load_string(
                             allow_stretch: True
 
                         BoxLayout:
-                            padding:[app.get_scaled_width(10), app.get_scaled_height(10), 0, app.get_scaled_height(10)]
+                            padding:(dp(app.get_scaled_width(10)),dp(app.get_scaled_height(10)),dp(0),dp(app.get_scaled_height(10)))
 
                             BoxLayout:
                                 size_hint: (None,None)
@@ -244,7 +244,7 @@ Builder.load_string(
                         id: spindle_data_container
                         size_hint_x: 0.75
                         orientation: 'horizontal'
-                        padding:[app.get_scaled_width(5), app.get_scaled_height(5)]
+                        padding:(dp(app.get_scaled_width(5)),dp(app.get_scaled_height(5)))
 
                         canvas:
                             Color:

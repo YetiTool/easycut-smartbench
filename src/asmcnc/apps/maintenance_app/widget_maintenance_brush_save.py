@@ -19,7 +19,7 @@ Builder.load_string(
         orientation: 'vertical'
 
         BoxLayout:
-            padding:[app.get_scaled_width(50), app.get_scaled_height(30)]
+            padding:(dp(app.get_scaled_width(50)),dp(app.get_scaled_height(30)))
             Button:
                 font_size: str(get_scaled_width(15)) + 'sp'
                 on_press: root.get_info()
@@ -36,7 +36,7 @@ Builder.load_string(
 
         BoxLayout:
             size_hint_y: 1.2
-            padding:[app.get_scaled_width(20), app.get_scaled_height(10)]
+            padding:(dp(app.get_scaled_width(20)),dp(app.get_scaled_height(10)))
             Button:
                 font_size: str(get_scaled_width(15)) + 'sp'
                 on_press: root.save()

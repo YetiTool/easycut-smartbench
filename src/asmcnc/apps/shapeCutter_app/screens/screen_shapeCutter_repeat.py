@@ -23,7 +23,7 @@ Builder.load_string(
                 source: "./asmcnc/apps/shapeCutter_app/img/landing_background.png"
 
         BoxLayout:
-            padding: 0
+            padding:dp(0)
             spacing: 0
             orientation: "vertical"       
                 
@@ -32,7 +32,7 @@ Builder.load_string(
                 height: dp(app.get_scaled_height(90))
                 width: dp(app.get_scaled_width(800))
                 text: "Would you like to do this again?"
-                font_size: 0.0375*app.width
+                font_size:dp(0.0375*app.width)
                 halign: "center"
                 valign: "bottom"
                 markup: True
@@ -42,7 +42,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 width: dp(app.get_scaled_width(800))
                 height: dp(app.get_scaled_height(140))
-                padding: 0
+                padding:dp(0)
                 spacing: 0
                 Label:
                     size_hint: (None,None)
@@ -52,14 +52,14 @@ Builder.load_string(
                     valign: "middle"
                     text: ""
                     color: 0,0,0,1
-                    font_size: 0.0325*app.width
+                    font_size:dp(0.0325*app.width)
                     markup: True
 
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(app.get_scaled_width(800))
                 height: dp(app.get_scaled_height(170))
-                padding:[app.get_scaled_width(100), 0, app.get_scaled_width(100), app.get_scaled_height(30)]
+                padding:(dp(app.get_scaled_width(100)),dp(0),dp(app.get_scaled_width(100)),dp(app.get_scaled_height(30)))
                 spacing: 0
                 orientation: 'horizontal'
                 pos: self.parent.pos                
@@ -68,7 +68,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(app.get_scaled_width(200))
                     height: dp(app.get_scaled_height(171))
-                    padding:[app.get_scaled_width(16), 0, app.get_scaled_width(16), 0]
+                    padding:(dp(app.get_scaled_width(16)),dp(0),dp(app.get_scaled_width(16)),dp(0))
                     pos: self.parent.pos
                     
                     # Repeat
@@ -82,7 +82,7 @@ Builder.load_string(
                         pos: self.parent.pos
                         on_press: root.repeat()
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -95,7 +95,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(app.get_scaled_width(200))
                     height: dp(app.get_scaled_height(171))
-                    padding:[app.get_scaled_width(16), 0, app.get_scaled_width(16), 0]
+                    padding:(dp(app.get_scaled_width(16)),dp(0),dp(app.get_scaled_width(16)),dp(0))
                     pos: self.parent.pos
                     
                     # New
@@ -109,7 +109,7 @@ Builder.load_string(
                         pos: self.parent.pos
                         on_press: root.new_cut()
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -122,7 +122,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(app.get_scaled_width(200))
                     height: dp(app.get_scaled_height(171))
-                    padding:[app.get_scaled_width(16), 0, app.get_scaled_width(16), 0]
+                    padding:(dp(app.get_scaled_width(16)),dp(0),dp(app.get_scaled_width(16)),dp(0))
                     pos: self.parent.pos
                     
                     # Next
@@ -136,7 +136,7 @@ Builder.load_string(
                         pos: self.parent.pos
                         on_press: root.exit()
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -149,7 +149,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 width: dp(app.get_scaled_width(800))
                 height: dp(app.get_scaled_height(80))
-                padding:[app.get_scaled_width(740), 0, 0, app.get_scaled_height(20)]
+                padding:(dp(app.get_scaled_width(740)),dp(0),dp(0),dp(app.get_scaled_height(20)))
                 spacing: 0
                 orientation: 'horizontal'
                 pos: self.parent.pos

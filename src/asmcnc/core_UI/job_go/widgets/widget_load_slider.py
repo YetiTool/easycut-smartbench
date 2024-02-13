@@ -29,7 +29,7 @@ Builder.load_string(
         orientation: 'vertical'
         size: self.parent.size
         pos: self.parent.pos
-        padding: 0
+        padding:dp(0)
         Label:
             id: load_label
             markup: True
@@ -42,7 +42,7 @@ Builder.load_string(
         BoxLayout:
             orientation: 'horizontal'
             size_hint_y: 0.2
-            padding:[app.get_scaled_width(15), 0]
+            padding:(dp(app.get_scaled_width(15)),dp(0))
 
             Label: 
                 id: min_label
@@ -74,7 +74,7 @@ Builder.load_string(
             size_hint_y: 0.5
             orientation: 'horizontal'
             spacing:0.00625*app.width
-            padding:[app.get_scaled_width(5), app.get_scaled_height(15), app.get_scaled_width(5), app.get_scaled_height(15)]
+            padding:(dp(app.get_scaled_width(5)),dp(app.get_scaled_height(15)),dp(app.get_scaled_width(5)),dp(app.get_scaled_height(15)))
             # buttons made in init
 
                 
