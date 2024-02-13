@@ -17,6 +17,7 @@ Builder.load_string("""
     y_datum_label:y_datum_label
 
     config_name_label:config_name_label
+    machine_state_label:machine_state_label
 
     BoxLayout:
         size: self.parent.size
@@ -177,11 +178,21 @@ Builder.load_string("""
                 disabled_foreground_color: (0,0,0,1)
                 disabled: True
 
+            Label:
+                id: machine_state_label
+                font_size: dp(20)
+                size: self.texture_size[0], dp(40)
+                size_hint: (None, None)
+                pos: self.parent.pos[0] + self.parent.size[0] - self.texture_size[0] - dp(5), self.parent.size[1] - self.height + dp(10)
+                text: 'Test'
+                color: 0,0,0,1
+
 """)
 
 
 class DrywallShapeDisplay(Widget):
 
+    GRBL_REPORT_INTERVAL = 0.1
     image_filepath = "./asmcnc/apps/drywall_cutter_app/img/"
 
     def __init__(self, **kwargs):
@@ -198,6 +209,7 @@ class DrywallShapeDisplay(Widget):
         self.y_input.bind(text=self.y_input_change) # Square/rectangle y length
 
         Clock.schedule_interval(self.poll_position, 0.1)
+        Clock.schedule_interval(self.poll_machine_state, self.GRBL_REPORT_INTERVAL)
 
     def select_shape(self, shape, rotation, swap_lengths=False):
         image_source = self.image_filepath + shape
@@ -325,3 +337,6 @@ class DrywallShapeDisplay(Widget):
 
         if self.dwt_config.active_config.datum_position.y != current_y:
             self.dwt_config.active_config.datum_position.y = current_y
+
+    def poll_machine_state(self, dt):
+        self.machine_state_label.text = self.m.state()
