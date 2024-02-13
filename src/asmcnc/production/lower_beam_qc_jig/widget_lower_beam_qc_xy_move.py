@@ -27,7 +27,7 @@ Builder.load_string("""
         size: self.parent.size
         pos: self.parent.pos      
         orientation: 'vertical'
-        padding: 10
+        padding:dp(10)
         spacing: 10
 
         GridLayout:
@@ -39,7 +39,7 @@ Builder.load_string("""
     
 
             BoxLayout:
-                padding: 10
+                padding:dp(10)
                 size: self.parent.size
                 pos: self.parent.pos                               
 
@@ -53,7 +53,7 @@ Builder.load_string("""
                     root.buttonJogXY('X+')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -64,7 +64,7 @@ Builder.load_string("""
                         allow_stretch: True                                    
 
             BoxLayout:
-                padding: 10
+                padding:dp(10)
                 size: self.parent.size
                 pos: self.parent.pos                 
                             
@@ -78,7 +78,7 @@ Builder.load_string("""
                     root.buttonJogXY('Y+')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -95,7 +95,7 @@ Builder.load_string("""
                     root.jogModeCycled()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -115,7 +115,7 @@ Builder.load_string("""
                     root.buttonJogXY('Y-')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos  
                     Image:
@@ -126,7 +126,7 @@ Builder.load_string("""
                         allow_stretch: True                                    
 
             BoxLayout:
-                padding: 10
+                padding:dp(10)
                 size: self.parent.size
                 pos: self.parent.pos  
 
@@ -142,7 +142,7 @@ Builder.load_string("""
                     root.buttonJogXY('X-')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
@@ -153,7 +153,7 @@ Builder.load_string("""
                         allow_stretch: True                                    
 
             BoxLayout:
-                padding: 10
+                padding:dp(10)
                 size: self.parent.size
                 pos: self.parent.pos 
 """)

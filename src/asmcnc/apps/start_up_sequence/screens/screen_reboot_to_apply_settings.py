@@ -29,13 +29,13 @@ Builder.load_string(
 				size: self.size
 				pos: self.pos
 		BoxLayout:
-			padding: 0
+			padding:dp(0)
 			spacing: 0
 			orientation: "vertical"
 
 			# HEADER
 			BoxLayout:
-				padding: 0
+				padding:dp(0)
 				spacing: 0
 				canvas:
 					Color:
@@ -65,7 +65,7 @@ Builder.load_string(
 					orientation: 'vertical'
 					width: dp(app.get_scaled_width(800))
 					height: dp(app.get_scaled_height(200))
-					padding:[app.get_scaled_width(20), 0]
+					padding:(dp(app.get_scaled_width(20)),dp(0))
 					size_hint: (None,None)
 					Label:
 						id: success_label
@@ -77,7 +77,7 @@ Builder.load_string(
 						color: hex('#333333ff')
 			# FOOTER
 			BoxLayout: 
-				padding:[app.get_scaled_width(10), 0, app.get_scaled_width(10), app.get_scaled_height(10)]
+				padding:(dp(app.get_scaled_width(10)),dp(0),dp(app.get_scaled_width(10)),dp(app.get_scaled_height(10)))
 				size_hint: (None, None)
 				height: dp(app.get_scaled_height(122))
 				width: dp(app.get_scaled_width(800))
@@ -86,7 +86,7 @@ Builder.load_string(
 					size_hint: (None, None)
 					height: dp(app.get_scaled_height(122))
 					width: dp(app.get_scaled_width(244.5))
-					padding:[0, 0, app.get_scaled_width(184.5), 0]
+					padding:(dp(0),dp(0),dp(app.get_scaled_width(184.5)),dp(0))
 					Button:
 					    font_size: str(get_scaled_width(15)) + 'sp'
 						size_hint: (None,None)
@@ -97,7 +97,7 @@ Builder.load_string(
 						pos: self.parent.pos
 						on_press: root.prev_screen()
 						BoxLayout:
-							padding: 0
+							padding:dp(0)
 							size: self.parent.size
 							pos: self.parent.pos
 							Image:
@@ -111,7 +111,7 @@ Builder.load_string(
 					size_hint: (None, None)
 					height: dp(app.get_scaled_height(122))
 					width: dp(app.get_scaled_width(291))
-					padding:[0, 0, 0, app.get_scaled_height(32)]
+					padding:(dp(0),dp(0),dp(0),dp(app.get_scaled_height(32)))
 					Button:
 						id: next_button
 						background_normal: "./asmcnc/skavaUI/img/next.png"
@@ -131,7 +131,7 @@ Builder.load_string(
 					size_hint: (None, None)
 					height: dp(app.get_scaled_height(122))
 					width: dp(app.get_scaled_width(244.5))
-					padding:[app.get_scaled_width(193.5), 0, 0, 0]
+					padding:(dp(app.get_scaled_width(193.5)),dp(0),dp(0),dp(0))
 """
 )
 

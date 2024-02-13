@@ -38,7 +38,7 @@ Builder.load_string(
             orientation: 'vertical'
             BoxLayout: 
                 orientation: 'vertical'
-                padding:[app.get_scaled_width(20), app.get_scaled_height(10)]
+                padding:(dp(app.get_scaled_width(20)),dp(app.get_scaled_height(10)))
                 Label:
                     id: description_label
                     font_size: str(get_scaled_width(16)) + 'sp'
@@ -50,7 +50,7 @@ Builder.load_string(
                     size: self.size
             # Buttons
             BoxLayout: 
-                padding:[app.get_scaled_width(10), 0, app.get_scaled_width(10), app.get_scaled_height(10)]
+                padding:(dp(app.get_scaled_width(10)),dp(0),dp(app.get_scaled_width(10)),dp(app.get_scaled_height(10)))
                 size_hint: (None, None)
                 height: dp(app.get_scaled_height(132))
                 width: dp(app.get_scaled_width(800))
@@ -59,7 +59,7 @@ Builder.load_string(
                     size_hint: (None, None)
                     height: dp(app.get_scaled_height(132))
                     width: dp(app.get_scaled_width(244.5))
-                    padding:[0, 0, app.get_scaled_width(184.5), 0]
+                    padding:(dp(0),dp(0),dp(app.get_scaled_width(184.5)),dp(0))
                     Button:
                         font_size: str(get_scaled_width(15)) + 'sp'
                         size_hint: (None,None)
@@ -70,7 +70,7 @@ Builder.load_string(
                         pos: self.parent.pos
                         on_press: root.prev_screen()
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -83,7 +83,7 @@ Builder.load_string(
                     size_hint: (None, None)
                     height: dp(app.get_scaled_height(132))
                     width: dp(app.get_scaled_width(291))
-                    padding:[0, 0, 0, app.get_scaled_height(52)]
+                    padding:(dp(0),dp(0),dp(0),dp(app.get_scaled_height(52)))
                     Button:
                         id: next_button
                         background_normal: "./asmcnc/skavaUI/img/next.png"
@@ -103,7 +103,7 @@ Builder.load_string(
                     size_hint: (None, None)
                     height: dp(app.get_scaled_height(132))
                     width: dp(app.get_scaled_width(244.5))
-                    padding:[app.get_scaled_width(193.5), 0, 0, 0]
+                    padding:(dp(app.get_scaled_width(193.5)),dp(0),dp(0),dp(0))
     FloatLayout:
         Image:
             id: camera_img
@@ -111,7 +111,7 @@ Builder.load_string(
             y: 321.60 / 480 * app.height
             size_hint: None, None
             height: dp(100.0/480.0)*app.height
-            width: 0.15*app.width
+            width:dp(0.15*app.width)
             allow_stretch: True
             opacity: 1
     # FloatLayout:
@@ -120,8 +120,8 @@ Builder.load_string(
  #            x: 680
  #            y: 238.6
  #            size_hint: None, None
- #            height: 63
- #            width: 100
+ #            height:dp(63)
+ #            width:dp(100)
  #            allow_stretch: True
 """
 )

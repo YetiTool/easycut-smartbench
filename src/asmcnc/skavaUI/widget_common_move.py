@@ -33,7 +33,7 @@ Builder.load_string(
         
         BoxLayout:
             spacing: 0
-            padding: 0
+            padding:dp(0)
             size_hint_y: 1
             orientation: 'vertical'
             canvas:
@@ -49,7 +49,7 @@ Builder.load_string(
                 on_press: root.set_jog_speeds()
                 background_color: 1, 1, 1, 0 
                 BoxLayout:
-                    padding:[app.get_scaled_width(10), app.get_scaled_height(10)]
+                    padding:(dp(app.get_scaled_width(10)),dp(app.get_scaled_height(10)))
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
@@ -62,7 +62,7 @@ Builder.load_string(
             
         BoxLayout:
             spacing: 0
-            padding: 0
+            padding:dp(0)
             size_hint_y: 2
             orientation: 'vertical'
             canvas:
@@ -78,7 +78,7 @@ Builder.load_string(
                 on_press: root.set_vacuum()
                 background_color: 1, 1, 1, 0 
                 BoxLayout:
-                    padding:[app.get_scaled_width(10), app.get_scaled_height(10)]
+                    padding:(dp(app.get_scaled_width(10)),dp(app.get_scaled_height(10)))
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
@@ -96,7 +96,7 @@ Builder.load_string(
                 on_press: root.set_spindle()
                 background_color: 1, 1, 1, 0 
                 BoxLayout:
-                    padding:[app.get_scaled_width(10), app.get_scaled_height(10)]
+                    padding:(dp(app.get_scaled_width(10)),dp(app.get_scaled_height(10)))
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:

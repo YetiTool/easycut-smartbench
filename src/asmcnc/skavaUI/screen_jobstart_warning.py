@@ -46,12 +46,12 @@ Builder.load_string(
                 pos: self.pos
 
         BoxLayout:
-            padding: 0
+            padding:dp(0)
             orientation: "vertical"
             spacing:0.0208333333333*app.height
 
             BoxLayout:
-                padding: 0
+                padding:dp(0)
                 spacing: 0
                 canvas:
                     Color:
@@ -66,7 +66,7 @@ Builder.load_string(
                     width: dp(app.get_scaled_width(800))
                     text: "Safety Warning"
                     color: hex('#f9f9f9ff')
-                    font_size: 0.0375*app.width
+                    font_size:dp(0.0375*app.width)
                     halign: "center"
                     valign: "bottom"
                     markup: True
@@ -76,7 +76,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 width: dp(app.get_scaled_width(800))
                 height: dp(app.get_scaled_height(320))
-                padding:[app.get_scaled_width(20), app.get_scaled_height(10), app.get_scaled_width(20), 0]
+                padding:(dp(app.get_scaled_width(20)),dp(app.get_scaled_height(10)),dp(app.get_scaled_width(20)),dp(0))
                 spacing: 0
                 orientation: 'vertical'
              
@@ -85,7 +85,7 @@ Builder.load_string(
                     spacing:0.0125*app.width
                     size_hint_y: 1.22
                     BoxLayout:
-                        padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
+                        padding:(dp(app.get_scaled_width(20)),dp(app.get_scaled_height(20)))
                         size_hint_x: 0.2
                         Image:
                             keep_ratio: True
@@ -95,7 +95,7 @@ Builder.load_string(
                     BoxLayout:
                         orientation: 'vertical'
                         size_hint_x: 0.8
-                        padding:[0, 0, app.get_scaled_width(20), 0]
+                        padding:(dp(0),dp(0),dp(app.get_scaled_width(20)),dp(0))
                         Label:
                             id: risk_of_fire
                             size_hint_y: 0.2
@@ -131,7 +131,7 @@ Builder.load_string(
                         size_hint_x: 0.75
 
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size_hint_x: 0.27
                             Image:
                                 keep_ratio: True
@@ -180,7 +180,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 width: dp(app.get_scaled_width(800))
                 height: dp(app.get_scaled_height(80))
-                padding:[app.get_scaled_width(250), 0, app.get_scaled_width(250), app.get_scaled_height(10)]
+                padding:(dp(app.get_scaled_width(250)),dp(0),dp(app.get_scaled_width(250)),dp(app.get_scaled_height(10)))
                 orientation: 'horizontal'
 
                 Button:

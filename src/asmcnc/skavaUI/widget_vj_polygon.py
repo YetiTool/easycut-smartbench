@@ -17,7 +17,7 @@ Builder.load_string("""
     rad_textinput2 : rad_textinput
 
     BoxLayout:
-        padding: 20
+        padding:dp(20)
         spacing: 20
         size: root.size
         pos: root.pos
@@ -28,7 +28,7 @@ Builder.load_string("""
             orientation: 'horizontal'
             size: self.parent.size
             pos: self.parent.pos
-            padding: 15
+            padding:dp(15)
 
             canvas.before:
                 Color: 
@@ -40,36 +40,36 @@ Builder.load_string("""
             Label:
                 text: 'Bit dia:'
                 size_hint_x:1
-                font_size:20
+                font_size:dp(20)
                 color: 0,0,0,.8
             TextInput:
                 id: bit_dia_textinput
                 size_hint_x: 1
-                font_size:24
+                font_size:dp(24)
                 multiline: False
 
             Label:
                 text: 'Depth:'
                 size_hint_x: 1
-                font_size:20
+                font_size:dp(20)
                 color: 0,0,0,.8
             TextInput:
                 id: depth_textinput
                 size_hint_x: 1
-                font_size:24
+                font_size:dp(24)
                 multiline: False
 
             Label:
                 #id: sides_textinput_
                 text: 'Sides:'
                 size_hint_x: 1
-                font_size:20
+                font_size:dp(20)
                 color: 0,0,0,.8
             TextInput:
                 id: sides_textinput
                 text: "3"
                 size_hint_x: 1
-                font_size:24
+                font_size:dp(24)
                 multiline: False
                 on_touch_up: self.select_all()
                 on_text: root.on_sides_textinput()
@@ -77,13 +77,13 @@ Builder.load_string("""
             Label:
                 text: 'Rad:'
                 size_hint_x: 1
-                font_size:20
+                font_size:dp(20)
                 color: 0,0,0,.8
             TextInput:
                 id: rad_textinput
                 text: "80"
                 size_hint_x: 1
-                font_size:24
+                font_size:dp(24)
                 multiline: False
                 on_touch_up: self.select_all()
                 on_text: root.on_sides_textinput()
@@ -91,12 +91,12 @@ Builder.load_string("""
 #             Label:
 #                 text: 'B:'
 #                 size_hint_x: 1
-#                 font_size:20
+#                 font_size:dp(20)
 #                 color: 0,0,0,.8
 #             TextInput:
 #                 id: b_textinput
 #                 size_hint_x: 1
-#                 font_size:24
+#                 font_size:dp(24)
 #                 multiline: False
         
         BoxLayout:
@@ -104,14 +104,14 @@ Builder.load_string("""
             orientation: 'horizontal'
             size: self.parent.size
             pos: self.parent.pos
-            padding: 0
+            padding:dp(0)
             spacing: 20
             
             BoxLayout:
                 size_hint_x: 6
                 size: self.parent.size
                 pos: self.parent.pos
-                padding: 20
+                padding:dp(20)
 
                 canvas:
                     Color: 
@@ -124,7 +124,7 @@ Builder.load_string("""
                     Line:
                         points: root.points
                         close: True
-                        width: 5
+                        width:dp(5)
 
             StackLayout:
                 #size_hint_x: 1
@@ -151,7 +151,7 @@ Builder.load_string("""
                         self.background_color = hex('#FFFFFFFF')
                         root.on_ok()
                     BoxLayout:
-                        padding: 20
+                        padding:dp(20)
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:
@@ -176,7 +176,7 @@ Builder.load_string("""
                         root.sm.current = 'lobby'
                         self.background_color = hex('#FFFFFFFF')
                     BoxLayout:
-                        padding: 20
+                        padding:dp(20)
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:
@@ -200,7 +200,7 @@ Builder.load_string("""
                         root.sm.current = 'template'
                         self.background_color = hex('#FFFFFFFF')
                     BoxLayout:
-                        padding: 10
+                        padding:dp(10)
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:
@@ -223,7 +223,7 @@ Builder.load_string("""
                         root.sm.current = 'template'
                         self.background_color = hex('#FFFFFFFF')
                     BoxLayout:
-                        padding: 10
+                        padding:dp(10)
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:

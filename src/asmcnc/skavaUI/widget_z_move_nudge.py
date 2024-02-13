@@ -37,7 +37,7 @@ Builder.load_string("""
                     root.jog_z('Z+')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:

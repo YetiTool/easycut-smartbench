@@ -28,7 +28,7 @@ Builder.load_string(
              
     BoxLayout:
         orientation: 'horizontal'
-        padding:[app.get_scaled_width(70), app.get_scaled_height(70)]
+        padding:(dp(app.get_scaled_width(70)),dp(app.get_scaled_height(70)))
         spacing:0.145833333333*app.height
         size_hint_x: 1
 

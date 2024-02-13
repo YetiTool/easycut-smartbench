@@ -36,7 +36,7 @@ Builder.load_string(
     color: hex('#333333ff')
     halign: 'center'
     markup: 'True'
-    font_size: 0.0175*app.width
+    font_size:dp(0.0175*app.width)
     background_color: 0,0,0,0
     text_size : self.width, None
     canvas.before:
@@ -53,7 +53,7 @@ Builder.load_string(
     size: self.size
     color: hex('#333333ff')
     background_color: 0,0,0,0
-    font_size: 0.0175*app.width
+    font_size:dp(0.0175*app.width)
     text_size : self.width, None
     halign: 'center'
     canvas.before:
@@ -81,7 +81,7 @@ Builder.load_string(
     background_color: 0,0,0,0
     background_normal: ''
     BoxLayout:
-        padding: 0
+        padding:dp(0)
         size: self.parent.size
         pos: self.parent.pos
         Image:

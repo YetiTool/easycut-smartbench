@@ -18,7 +18,7 @@ Builder.load_string(
 
     release_notes: release_notes
     BoxLayout:
-        padding:[0, app.get_scaled_height(15), 0, 0]
+        padding:(dp(0),dp(app.get_scaled_height(15)),dp(0),dp(0))
         RstDocument:
             id: release_notes
             base_font_size: app.get_scaled_width(30)
@@ -42,7 +42,7 @@ Builder.load_string(
 
     BoxLayout:
         orientation: 'vertical'
-        padding:[0, app.get_scaled_height(5), 0, 0]
+        padding:(dp(0),dp(app.get_scaled_height(5)),dp(0),dp(0))
 
         BoxLayout:
             size_hint_y: 0.4
@@ -50,7 +50,7 @@ Builder.load_string(
             BoxLayout:
                 size_hint_y: 0.6
                 orientation: 'horizontal'
-                padding:[app.get_scaled_width(15), 0]
+                padding:(dp(app.get_scaled_width(15)),dp(0))
                 spacing:app.get_scaled_width(10)
                 Image:
                     size_hint_x: 0.06
@@ -67,14 +67,14 @@ Builder.load_string(
             Label:
                 id: please_read_label
                 size_hint_y: 0.4
-                padding:[app.get_scaled_width(15), 0]
+                padding:(dp(app.get_scaled_width(15)),dp(0))
                 color: hex('#333333')
                 font_size: str(get_scaled_width(18)) + 'sp'
                 text_size: self.size
                 size: self.texture_size
 
         BoxLayout:
-            padding:[app.get_scaled_width(15), app.get_scaled_height(2), app.get_scaled_width(15), 0]
+            padding:(dp(app.get_scaled_width(15)),dp(app.get_scaled_height(2)),dp(app.get_scaled_width(15)),dp(0))
             spacing:app.get_scaled_width(15)
 
             ScrollReleaseNotes:
@@ -98,7 +98,7 @@ Builder.load_string(
                     halign: "left"
 
         BoxLayout:
-            padding:[app.get_scaled_width(250), app.get_scaled_height(2), app.get_scaled_width(250), app.get_scaled_height(2)]
+            padding:(dp(app.get_scaled_width(250)),dp(app.get_scaled_height(2)),dp(app.get_scaled_width(250)),dp(app.get_scaled_height(2)))
             size_hint_y: 0.25
 
             Button:

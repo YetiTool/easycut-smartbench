@@ -25,14 +25,14 @@ Builder.load_string(
 			pos: self.pos
 	BoxLayout:
 		orientation: 'vertical'
-		padding: 0
+		padding:dp(0)
 		spacing: 0
 		size_hint: (None, None)
 		height: dp(app.get_scaled_height(480))
 		width: dp(app.get_scaled_width(800))
 		# Alarm header
 		BoxLayout: 
-			padding:[app.get_scaled_width(15), 0, app.get_scaled_width(15), 0]
+			padding:(dp(app.get_scaled_width(15)),dp(0),dp(app.get_scaled_width(15)),dp(0))
 			spacing: 0
 			size_hint: (None, None)
 			height: dp(app.get_scaled_height(50))
@@ -50,7 +50,7 @@ Builder.load_string(
 				text_size: self.size
 		# Red underline
 		BoxLayout: 
-			padding:[app.get_scaled_width(10), 0, app.get_scaled_width(10), 0]
+			padding:(dp(app.get_scaled_width(10)),dp(0),dp(app.get_scaled_width(10)),dp(0))
 			spacing: 0
 			size_hint: (None, None)
 			height: dp(app.get_scaled_height(5))
@@ -64,7 +64,7 @@ Builder.load_string(
 				allow_stretch: True
 		# Image and text
 		BoxLayout: 
-			padding:[0, app.get_scaled_height(35), 0, 0]
+			padding:(dp(0),dp(app.get_scaled_height(35)),dp(0),dp(0))
 			spacing: 0
 			size_hint: (None, None)
 			height: dp(app.get_scaled_height(283))
@@ -72,7 +72,7 @@ Builder.load_string(
 			orientation: 'vertical'
 			BoxLayout: 
 				id: icon_container
-				padding:[app.get_scaled_width(335), 0, 0, 0]
+				padding:(dp(app.get_scaled_width(335)),dp(0),dp(0),dp(0))
 				size_hint: (None, None)
 				height: dp(app.get_scaled_height(130))
 				width: dp(app.get_scaled_width(800))       
@@ -88,7 +88,7 @@ Builder.load_string(
 					width: dp(app.get_scaled_width(130))
 			BoxLayout:
 				id: description container
-				padding:[app.get_scaled_width(30), 0, app.get_scaled_width(30), 0]
+				padding:(dp(app.get_scaled_width(30)),dp(0),dp(app.get_scaled_width(30)),dp(0))
 				spacing: 0
 				size_hint: (None, None)
 				height: dp(app.get_scaled_height(118))
@@ -104,7 +104,7 @@ Builder.load_string(
 					size: self.parent.size
 		# Buttons
 		BoxLayout: 
-			padding:[app.get_scaled_width(10), 0, app.get_scaled_width(10), app.get_scaled_height(10)]
+			padding:(dp(app.get_scaled_width(10)),dp(0),dp(app.get_scaled_width(10)),dp(app.get_scaled_height(10)))
 			size_hint: (None, None)
 			height: dp(app.get_scaled_height(142))
 			width: dp(app.get_scaled_width(800))
@@ -113,7 +113,7 @@ Builder.load_string(
 				size_hint: (None, None)
 				height: dp(app.get_scaled_height(132))
 				width: dp(app.get_scaled_width(244.5))
-				padding:[0, 0, app.get_scaled_width(184.5), 0]
+				padding:(dp(0),dp(0),dp(app.get_scaled_width(184.5)),dp(0))
 				Button:
 				    font_size: str(get_scaled_width(15)) + 'sp'
 					size_hint: (None,None)
@@ -124,7 +124,7 @@ Builder.load_string(
 					pos: self.parent.pos
 					on_press: root.prev_screen()
 					BoxLayout:
-						padding: 0
+						padding:dp(0)
 						size: self.parent.size
 						pos: self.parent.pos
 						Image:
@@ -137,7 +137,7 @@ Builder.load_string(
 				size_hint: (None, None)
 				height: dp(app.get_scaled_height(132))
 				width: dp(app.get_scaled_width(291))
-				padding:[0, 0, 0, app.get_scaled_height(52)]
+				padding:(dp(0),dp(0),dp(0),dp(app.get_scaled_height(52)))
 				Button:
 					id: next_button
 					background_normal: "./asmcnc/skavaUI/img/next.png"
@@ -158,7 +158,7 @@ Builder.load_string(
 				size_hint: (None, None)
 				height: dp(app.get_scaled_height(132))
 				width: dp(app.get_scaled_width(244.5))
-				padding:[app.get_scaled_width(193.5), 0, 0, 0]
+				padding:(dp(app.get_scaled_width(193.5)),dp(0),dp(0),dp(0))
 				Button:
 				    font_size: str(get_scaled_width(15)) + 'sp'
 					size_hint: (None,None)
@@ -169,7 +169,7 @@ Builder.load_string(
 					pos: self.parent.pos
 					on_press: root.next_screen()
 					BoxLayout:
-						padding: 0
+						padding:dp(0)
 						size: self.parent.size
 						pos: self.parent.pos
 						Image:

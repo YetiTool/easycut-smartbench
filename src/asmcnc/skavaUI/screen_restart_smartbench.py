@@ -43,7 +43,7 @@ Builder.load_string("""
             background_color: 0,0,0,0
             on_press: root.switch_screen()
             BoxLayout:
-                padding: 0
+                padding:dp(0)
                 size: self.parent.size
                 pos: self.parent.pos
                 Image:

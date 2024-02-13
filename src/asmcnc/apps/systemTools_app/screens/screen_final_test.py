@@ -33,7 +33,7 @@ Builder.load_string(
     on_touch_down: root.on_touch()
 
     BoxLayout:
-        padding: 0
+        padding:dp(0)
         spacing: 0
         orientation: "vertical"
         canvas:
@@ -44,7 +44,7 @@ Builder.load_string(
                 pos: self.pos
         BoxLayout:
             size_hint_y: 0.92
-            padding: 0
+            padding:dp(0)
             spacing: 0
             orientation: "horizontal"
 
@@ -105,7 +105,7 @@ Builder.load_string(
 
             BoxLayout:
                 height: self.parent.height
-                padding: 0
+                padding:dp(0)
                 spacing: 0
                 orientation: "vertical"
                 size_hint_x: 0.33

@@ -140,7 +140,7 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint_y: 4
-                    padding:[0, app.get_scaled_height(10)]
+                    padding:(dp(0),dp(app.get_scaled_height(10)))
 
                     BoxLayout:
                         id: move_container

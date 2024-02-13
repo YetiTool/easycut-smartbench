@@ -30,7 +30,7 @@ Builder.load_string("""
         size: self.parent.size
         pos: self.parent.pos      
 
-        padding: 0
+        padding:dp(0)
         spacing: 0.0208333333333333*app.height
         orientation: "vertical"
 
@@ -39,7 +39,7 @@ Builder.load_string("""
             background_color: hex('#F4433600')
             on_press: root.quit_to_lobby()
             BoxLayout:
-                padding: 0
+                padding:dp(0)
                 size: self.parent.size
                 pos: self.parent.pos
                 Image:
@@ -62,7 +62,7 @@ Builder.load_string("""
                 background_color: hex('#F4433600')
                 on_press: root.home()
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -78,7 +78,7 @@ Builder.load_string("""
             background_color: hex('#F4433600')
             on_press: root.reset()
             BoxLayout:
-                padding: 0
+                padding:dp(0)
                 size: self.parent.size
                 pos: self.parent.pos
                 Image:
@@ -94,7 +94,7 @@ Builder.load_string("""
             on_press:
                 root.proceed_to_go_screen()
             BoxLayout:
-                padding: 0
+                padding:dp(0)
                 size: self.parent.size
                 pos: self.parent.pos
                 Image:
@@ -109,7 +109,7 @@ Builder.load_string("""
             background_color: hex('#F4433600')
             on_press: root.stop()
             BoxLayout:
-                padding: 0
+                padding:dp(0)
                 size: self.parent.size
                 pos: self.parent.pos
                 Image:

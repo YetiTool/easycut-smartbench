@@ -56,7 +56,7 @@ Builder.load_string(
             size_hint: (None, None)
             height: dp(app.get_scaled_height(160))
             width: dp(app.get_scaled_width(800))
-            padding:[app.get_scaled_width(30), app.get_scaled_height(30), app.get_scaled_width(30), app.get_scaled_height(30)]
+            padding:(dp(app.get_scaled_width(30)),dp(app.get_scaled_height(30)),dp(app.get_scaled_width(30)),dp(app.get_scaled_height(30)))
             spacing:0.0375*app.width
             orientation: 'horizontal'
 
@@ -65,7 +65,7 @@ Builder.load_string(
                 size_hint: (None, None)
                 height: dp(app.get_scaled_height(112))
                 width: dp(app.get_scaled_width(598))
-                padding:[0, 0, 0, app.get_scaled_height(12)]
+                padding:(dp(0),dp(0),dp(0),dp(app.get_scaled_height(12)))
                 BoxLayout: 
                     size_hint: (None, None)
                     height: dp(app.get_scaled_height(100))
@@ -91,7 +91,7 @@ Builder.load_string(
                             Label:
                                 id: current_version_label
                                 color: 0,0,0,1
-                                font_size: 0.025*app.width
+                                font_size:dp(0.025*app.width)
                                 markup: True
                                 valign: "bottom"
                                 text_size: self.size
@@ -99,7 +99,7 @@ Builder.load_string(
                             Label:
                                 id: sw_version_label
                                 color: 0,0,0,1
-                                font_size: 0.02875*app.width
+                                font_size:dp(0.02875*app.width)
                                 markup: True
                                 text_size: self.size
 
@@ -107,7 +107,7 @@ Builder.load_string(
                                 id: find_release_notes_label
                                 size_hint_y: 1.1
                                 color: 0,0,0,1
-                                font_size: 0.01625*app.width
+                                font_size:dp(0.01625*app.width)
                                 markup: True
                                 valign: "middle"
                                 text_size: self.size
@@ -117,14 +117,14 @@ Builder.load_string(
                         height: dp(app.get_scaled_height(100))
                         width: dp(app.get_scaled_width(223))
                         orientation: "horizontal"
-                        padding:[0, 0, app.get_scaled_width(30), 0]
+                        padding:(dp(0),dp(0),dp(app.get_scaled_width(30)),dp(0))
 
                         BoxLayout: 
                             size_hint: (None, None) 
                             orientation: "vertical"
                             height: dp(app.get_scaled_height(100))
                             width: dp(app.get_scaled_width(49))
-                            padding:[app.get_scaled_width(5), app.get_scaled_height(35), app.get_scaled_width(5), app.get_scaled_height(35)]
+                            padding:(dp(app.get_scaled_width(5)),dp(app.get_scaled_height(35)),dp(app.get_scaled_width(5)),dp(app.get_scaled_height(35)))
                             Button:
                                 id: refresh_button
                                 font_size: str(get_scaled_width(15)) + 'sp'
@@ -136,7 +136,7 @@ Builder.load_string(
                                 pos: self.parent.pos
                                 on_press: root.refresh_latest_software_version()
                                 BoxLayout:
-                                    padding: 0
+                                    padding:dp(0)
                                     size: self.parent.size
                                     pos: self.parent.pos
                                     Image:
@@ -149,7 +149,7 @@ Builder.load_string(
                         Label: 
                             id: latest_software_version_label
                             color: 0,0,0,1
-                            font_size: 0.0225*app.width
+                            font_size:dp(0.0225*app.width)
                             markup: True
                             halign: "center"
                             valign: "center"
@@ -173,7 +173,7 @@ Builder.load_string(
                     pos: self.parent.pos
                     on_press: root.quit_to_lobby()
                     BoxLayout:
-                        padding: 0
+                        padding:dp(0)
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:
@@ -188,7 +188,7 @@ Builder.load_string(
             size_hint: (None, None)
             height: dp(app.get_scaled_height(320))
             width: dp(app.get_scaled_width(800))
-            padding:[app.get_scaled_width(30), 0, app.get_scaled_width(30), app.get_scaled_height(30)]
+            padding:(dp(app.get_scaled_width(30)),dp(0),dp(app.get_scaled_width(30)),dp(app.get_scaled_height(30)))
             spacing:0.0375*app.width
             orientation: 'horizontal'
             
@@ -197,7 +197,7 @@ Builder.load_string(
                 height: dp(app.get_scaled_height(290))
                 width: dp(app.get_scaled_width(355))    
                 orientation: "vertical"  
-                padding:[app.get_scaled_width(30), app.get_scaled_height(30), app.get_scaled_width(30), app.get_scaled_height(30)]
+                padding:(dp(app.get_scaled_width(30)),dp(app.get_scaled_height(30)),dp(app.get_scaled_width(30)),dp(app.get_scaled_height(30)))
                 spacing: 0
                 canvas:
                     Color:
@@ -210,11 +210,11 @@ Builder.load_string(
                     size_hint: (None, None)
                     height: dp(app.get_scaled_height(20))
                     width: dp(app.get_scaled_width(295))
-                    # padding: [0,5,0,0]
+                    # padding:(dp(0),dp(5),dp(0),dp(0))
                     Label: 
                         id: update_using_wifi_label
                         color: 0,0,0,1
-                        font_size: 0.0225*app.width
+                        font_size:dp(0.0225*app.width)
                         markup: True
                         halign: "left"
                         valign: "middle"
@@ -226,11 +226,11 @@ Builder.load_string(
                     size_hint: (None, None)
                     height: dp(app.get_scaled_height(100))
                     width: dp(app.get_scaled_width(295))
-                    # padding: [0,5,0,0]
+                    # padding:(dp(0),dp(5),dp(0),dp(0))
                     Label:
                         id: update_using_wifi_instructions_label
                         color: 0,0,0,1
-                        font_size: 0.02*app.width
+                        font_size:dp(0.02*app.width)
                         markup: True
                         halign: "left"
                         valign: "top"
@@ -246,7 +246,7 @@ Builder.load_string(
                         size_hint: (None, None)
                         height: dp(app.get_scaled_height(110))
                         width: dp(app.get_scaled_width(145))
-                        padding:[app.get_scaled_width(20), app.get_scaled_height(25), app.get_scaled_width(20), app.get_scaled_height(25)]
+                        padding:(dp(app.get_scaled_width(20)),dp(app.get_scaled_height(25)),dp(app.get_scaled_width(20)),dp(app.get_scaled_height(25)))
                         Image:
                             id: wifi_image
                             source: root.wifi_on
@@ -280,7 +280,7 @@ Builder.load_string(
                 height: dp(app.get_scaled_height(290))
                 width: dp(app.get_scaled_width(355))
                 orientation: "vertical"  
-                padding:[app.get_scaled_width(30), app.get_scaled_height(30), app.get_scaled_width(30), app.get_scaled_height(30)]
+                padding:(dp(app.get_scaled_width(30)),dp(app.get_scaled_height(30)),dp(app.get_scaled_width(30)),dp(app.get_scaled_height(30)))
                 spacing: 0  
                 canvas:
                     Color:
@@ -296,7 +296,7 @@ Builder.load_string(
                     Label:
                         id: update_using_usb_label
                         color: 0,0,0,1
-                        font_size: 0.0225*app.width
+                        font_size:dp(0.0225*app.width)
                         markup: True
                         halign: "left"
                         valign: "middle"
@@ -311,7 +311,7 @@ Builder.load_string(
                     Label:
                         id: update_using_usb_instructions_label
                         color: 0,0,0,1
-                        font_size: 0.02*app.width
+                        font_size:dp(0.02*app.width)
                         markup: True
                         halign: "left"
                         valign: "top"
@@ -328,7 +328,7 @@ Builder.load_string(
                         size_hint: (None, None)
                         height: dp(app.get_scaled_height(110))
                         width: dp(app.get_scaled_width(145))
-                        padding:[0, app.get_scaled_height(26.5), app.get_scaled_width(32), app.get_scaled_height(26.5)]
+                        padding:(dp(0),dp(app.get_scaled_height(26.5)),dp(app.get_scaled_width(32)),dp(app.get_scaled_height(26.5)))
                         Image:
                             id: usb_image
                             source: root.usb_off

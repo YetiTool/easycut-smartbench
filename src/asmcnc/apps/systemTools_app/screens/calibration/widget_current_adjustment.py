@@ -20,7 +20,7 @@ Builder.load_string("""
             on_press: root.current_up()
             background_color: 1, 1, 1, 0 
             BoxLayout:
-                padding: 2
+                padding:dp(2)
                 size: self.parent.size
                 pos: self.parent.pos      
                 Image:
@@ -45,7 +45,7 @@ Builder.load_string("""
             on_press: root.current_down()
             background_color: 1, 1, 1, 0 
             BoxLayout:
-                padding: 2
+                padding:dp(2)
                 size: self.parent.size
                 pos: self.parent.pos      
                 Image:

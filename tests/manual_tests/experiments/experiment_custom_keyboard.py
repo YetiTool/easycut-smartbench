@@ -34,7 +34,7 @@ Builder.load_string("""
     text_size: self.size
     valign: "top"
     halign: "center"
-    padding: [0,20]
+    padding:(dp(0),dp(20))
 
 
 <BasicScreen>:

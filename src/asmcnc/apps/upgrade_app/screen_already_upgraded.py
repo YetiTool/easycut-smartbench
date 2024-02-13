@@ -51,7 +51,7 @@ Builder.load_string(
 
             BoxLayout:
                 size_hint_y: 0.25
-                padding:[app.get_scaled_width(175), 0, app.get_scaled_width(175), app.get_scaled_height(110)]
+                padding:(dp(app.get_scaled_width(175)),dp(0),dp(app.get_scaled_width(175)),dp(app.get_scaled_height(110)))
 
                 Button:
                     id: continue_button

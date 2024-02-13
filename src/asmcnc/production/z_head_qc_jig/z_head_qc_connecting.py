@@ -21,7 +21,7 @@ Builder.load_string("""
              
     BoxLayout:
         orientation: 'horizontal'
-        padding: 70
+        padding:dp(70)
         spacing: 70
         size_hint_x: 1
 

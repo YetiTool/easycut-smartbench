@@ -26,7 +26,7 @@ Builder.load_string(
                 source: "./asmcnc/apps/shapeCutter_app/img/landing_background.png"
 
         BoxLayout:
-            padding: 0
+            padding:dp(0)
             spacing: 0
             orientation: "vertical"       
                 
@@ -35,7 +35,7 @@ Builder.load_string(
                 height: dp(app.get_scaled_height(90))
                 width: dp(app.get_scaled_width(800))
                 text: "Welcome to Shape Cutter"
-                font_size: 0.0375*app.width
+                font_size:dp(0.0375*app.width)
                 halign: "center"
                 valign: "bottom"
                 markup: True
@@ -45,7 +45,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 width: dp(app.get_scaled_width(800))
                 height: dp(app.get_scaled_height(140))
-                padding: 0
+                padding:dp(0)
                 spacing: 0
                 Label:
                     size_hint: (None,None)
@@ -55,14 +55,14 @@ Builder.load_string(
                     valign: "middle"
                     text: "Select a shape to cut..."
                     color: 0,0,0,1
-                    font_size: 0.0325*app.width
+                    font_size:dp(0.0325*app.width)
                     markup: True
 
             BoxLayout:
                 size_hint: (None,None)
                 width: dp(app.get_scaled_width(800))
                 height: dp(app.get_scaled_height(170))
-                padding:[app.get_scaled_width(180), 0, app.get_scaled_width(180), app.get_scaled_height(30)]
+                padding:(dp(app.get_scaled_width(180)),dp(0),dp(app.get_scaled_width(180)),dp(app.get_scaled_height(30)))
                 spacing: 0
                 orientation: 'horizontal'
                 pos: self.parent.pos                
@@ -71,7 +71,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(app.get_scaled_width(220))
                     height: dp(app.get_scaled_height(170))
-                    padding:[app.get_scaled_width(25), 0, app.get_scaled_width(25), 0]
+                    padding:(dp(app.get_scaled_width(25)),dp(0),dp(app.get_scaled_width(25)),dp(0))
                     pos: self.parent.pos
                     
                     # Circle button
@@ -85,7 +85,7 @@ Builder.load_string(
                         pos: self.parent.pos
                         on_press: root.cut_circle()
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -98,7 +98,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     width: dp(app.get_scaled_width(220))
                     height: dp(app.get_scaled_height(170))
-                    padding:[app.get_scaled_width(27), 0, app.get_scaled_width(27), 0]
+                    padding:(dp(app.get_scaled_width(27)),dp(0),dp(app.get_scaled_width(27)),dp(0))
                     pos: self.parent.pos
                     
                     # rectangle button
@@ -112,7 +112,7 @@ Builder.load_string(
                         pos: self.parent.pos
                         on_press: root.cut_rectangle()
                         BoxLayout:
-                            padding: 0
+                            padding:dp(0)
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
@@ -126,7 +126,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 width: dp(app.get_scaled_width(800))
                 height: dp(app.get_scaled_height(80))
-                padding:[app.get_scaled_width(20), 0, 0, app.get_scaled_height(20)]
+                padding:(dp(app.get_scaled_width(20)),dp(0),dp(0),dp(app.get_scaled_height(20)))
                 spacing:0.85*app.width
                 orientation: 'horizontal'
                 pos: self.parent.pos
@@ -140,7 +140,7 @@ Builder.load_string(
                     opacity: 1
                     on_press: root.get_info()
                     BoxLayout:
-                        padding: 0
+                        padding:dp(0)
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:
@@ -159,7 +159,7 @@ Builder.load_string(
                     opacity: 1
                     on_press: root.exit()
                     BoxLayout:
-                        padding: 0
+                        padding:dp(0)
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:

@@ -75,15 +75,15 @@ class BasicPopup(Popup):
     title: string to be used as the title
     main_string: string to be used as main text
     popup_type: type of popup (enum) see PopupType class above
-    main_label_padding: padding of main label
-    main_layout_padding: padding of main layout
+    main_label_padding:dp(padding of main label)
+    main_layout_padding:dp(padding of main layout)
     main_layout_spacing: spacing of main layout
     main_label_size_delta: how much to reduce the width of the main label by compared to the popup width
     main_label_h_align: horizontal alignment of main label
-    button_layout_padding: padding of button layout
+    button_layout_padding:dp(padding of button layout)
     button_layout_spacing: spacing of button layout
-    popup_width: width of popup, default 300
-    popup_height: height of popup, default 350
+    popup_width:(dp(idth of popup),dp(default 30))
+    popup_height:(dp(eight of popup),dp(default 35))
     popup_image: image to be used in popup, default None (uses popup_type's image)
     popup_image_size_hint: size hint of popup image, default None
     button_one_text: text to be used in button one, default "Ok"

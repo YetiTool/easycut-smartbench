@@ -20,7 +20,7 @@ Builder.load_string(
         height: dp(app.get_scaled_height(70))
         width: dp(app.get_scaled_width(150))
         pos: self.parent.pos
-        padding:[0, 0, 0, 0]
+        padding:(dp(0),dp(0),dp(0),dp(0))
         
         GridLayout:
             cols: 2
@@ -47,7 +47,7 @@ Builder.load_string(
                 pos: self.parent.pos
                 height: dp(app.get_scaled_height(70))
                 width: dp(app.get_scaled_width(55))
-                padding:[app.get_scaled_width(5), app.get_scaled_height(5)]
+                padding:(dp(app.get_scaled_width(5)),dp(app.get_scaled_height(5)))
                 Image:
                     id: laser_image
                     source: "./asmcnc/apps/maintenance_app/img/laser_on.png"

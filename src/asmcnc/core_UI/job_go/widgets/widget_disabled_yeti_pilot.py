@@ -24,20 +24,20 @@ Builder.load_string(
         orientation: 'horizontal'
         size: self.parent.size
         pos: self.parent.pos
-        padding:[app.get_scaled_width(10), app.get_scaled_height(8), app.get_scaled_width(10), app.get_scaled_height(8)]
+        padding:(dp(app.get_scaled_width(10)),dp(app.get_scaled_height(8)),dp(app.get_scaled_width(10)),dp(app.get_scaled_height(8)))
 
         BoxLayout:
             id: text_container
             size_hint_x: 0.85
             orientation: 'vertical'
-            padding:[app.get_scaled_width(2), 0, app.get_scaled_width(2), 0]
+            padding:(dp(app.get_scaled_width(2)),dp(0),dp(app.get_scaled_width(2)),dp(0))
             spacing: 0
 
             ScrollView:
                 do_scroll_x: False
                 do_scroll_y: True
                 scroll_y: 1
-                bar_width: 0.005*app.width
+                bar_width:dp(0.005*app.width)
                 bar_inactive_color: [.7, .7, .7, .7]
 
                 Label:
@@ -67,7 +67,7 @@ Builder.load_string(
                     root.run_spindle_health_check()
 
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:

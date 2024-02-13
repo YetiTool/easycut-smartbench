@@ -44,7 +44,7 @@ Builder.load_string(
                     pos: self.pos
 
             BoxLayout:
-                padding:[app.get_scaled_width(15), app.get_scaled_height(15), 0, app.get_scaled_height(15)]
+                padding:(dp(app.get_scaled_width(15)),dp(app.get_scaled_height(15)),dp(0),dp(app.get_scaled_height(15)))
 
                 BoxLayout:
                     orientation: 'vertical'
@@ -66,7 +66,7 @@ Builder.load_string(
                                 font_size: dp(app.get_scaled_width(25))
 
                             BoxLayout:
-                                padding:[0, app.get_scaled_height(4), 0, 0]
+                                padding:(dp(0),dp(app.get_scaled_height(4)),dp(0),dp(0))
                                 canvas:
                                     Color:
                                         rgba: 1,1,1,1
@@ -86,7 +86,7 @@ Builder.load_string(
                         BoxLayout:
                             orientation: 'vertical'
                             size_hint_y: 2
-                            padding:[app.get_scaled_width(50), 0]
+                            padding:(dp(app.get_scaled_width(50)),dp(0))
                             spacing:app.get_scaled_height(10)
 
                             Button:
@@ -99,7 +99,7 @@ Builder.load_string(
                                     self.background_color = hex('#F4433600')
                                     root.stop_scrolling_up()
                                 BoxLayout:
-                                    padding: 0
+                                    padding:dp(0)
                                     size: self.parent.size
                                     pos: self.parent.pos
                                     Image:
@@ -119,7 +119,7 @@ Builder.load_string(
                                     root.stop_scrolling_down()
                                     self.background_color = hex('#F4433600')
                                 BoxLayout:
-                                    padding: 0
+                                    padding:dp(0)
                                     size: self.parent.size
                                     pos: self.parent.pos
                                     Image:
@@ -143,7 +143,7 @@ Builder.load_string(
 
             BoxLayout:
                 size_hint_x: 2
-                padding:[0, app.get_scaled_height(15)]
+                padding:(dp(0),dp(app.get_scaled_height(15)))
 
                 BoxLayout:
                     orientation: 'vertical'
@@ -153,7 +153,7 @@ Builder.load_string(
                         id: gcode_container
                         orientation: 'vertical'
                         size_hint_y: 3.5
-                        padding:[app.get_scaled_width(12), app.get_scaled_height(12), app.get_scaled_width(12), 0]
+                        padding:(dp(app.get_scaled_width(12)),dp(app.get_scaled_height(12)),dp(app.get_scaled_width(12)),dp(0))
                         canvas:
                             Color:
                                 rgba: 1,1,1,1
@@ -193,7 +193,7 @@ Builder.load_string(
 
                     BoxLayout:
                         orientation: 'vertical'
-                        padding:[app.get_scaled_width(12), app.get_scaled_height(12)]
+                        padding:(dp(app.get_scaled_width(12)),dp(app.get_scaled_height(12)))
                         spacing:app.get_scaled_height(7)
                         canvas:
                             Color:
@@ -239,7 +239,7 @@ Builder.load_string(
                     spacing:app.get_scaled_width(25)
 
                     BoxLayout:
-                        padding:[app.get_scaled_width(15), app.get_scaled_height(15), 0, app.get_scaled_height(15)]
+                        padding:(dp(app.get_scaled_width(15)),dp(app.get_scaled_height(15)),dp(0),dp(app.get_scaled_height(15)))
                         Button:
                             font_size: str(get_scaled_width(15)) + 'sp'
                             background_color: [0,0,0,0]
@@ -271,7 +271,7 @@ Builder.load_string(
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_y: 4
-                    padding:[0, 0, app.get_scaled_width(15), app.get_scaled_height(15)]
+                    padding:(dp(0),dp(0),dp(app.get_scaled_width(15)),dp(app.get_scaled_height(15)))
                     spacing:app.get_scaled_height(15)
 
                     BoxLayout:
@@ -286,7 +286,7 @@ Builder.load_string(
 
                     BoxLayout:
 
-                        padding:[0, app.get_scaled_height(1)]
+                        padding:(dp(0),dp(app.get_scaled_height(1)))
 
                         Button:
                             font_size: str(get_scaled_width(15)) + 'sp'

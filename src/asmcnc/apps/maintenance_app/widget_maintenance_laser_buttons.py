@@ -27,7 +27,7 @@ Builder.load_string(
         size: self.parent.size
         pos: self.parent.pos
         orientation: 'vertical'
-        padding:[app.get_scaled_width(10), app.get_scaled_height(10)]
+        padding:(dp(app.get_scaled_width(10)),dp(app.get_scaled_height(10)))
         spacing:0.0208333333333*app.height
         
         GridLayout:
@@ -51,7 +51,7 @@ Builder.load_string(
                     center: self.parent.center
                     pos: self.parent.pos
                     BoxLayout:
-                        padding:[app.get_scaled_width(10), app.get_scaled_height(10)]
+                        padding:(dp(app.get_scaled_width(10)),dp(app.get_scaled_height(10)))
                         size: self.parent.size
                         pos: self.parent.pos      
                         Image:
@@ -76,7 +76,7 @@ Builder.load_string(
                     center: self.parent.center
                     pos: self.parent.pos
                     BoxLayout:
-                        padding:[app.get_scaled_width(10), app.get_scaled_height(10)]
+                        padding:(dp(app.get_scaled_width(10)),dp(app.get_scaled_height(10)))
                         size: self.parent.size
                         pos: self.parent.pos      
                         Image:
@@ -101,7 +101,7 @@ Builder.load_string(
                     pos: self.parent.pos
                     on_press: root.reset_button_press()
                     BoxLayout:
-                        padding: 0
+                        padding:dp(0)
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:
@@ -126,7 +126,7 @@ Builder.load_string(
                     on_press: root.save_button_press()
                     disabled: True
                     BoxLayout:
-                        padding: 0
+                        padding:dp(0)
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:

@@ -22,7 +22,7 @@ Builder.load_string("""
     BoxLayout:
         size: self.parent.size
         pos: self.parent.pos   
-        padding: 0
+        padding:dp(0)
         spacing: 20
         orientation: "horizontal"
 
@@ -30,7 +30,7 @@ Builder.load_string("""
             size_hint_x: 2 
             size: self.parent.size
             pos: self.parent.pos   
-            padding: 5
+            padding:dp(5)
             spacing: 5
             orientation: "horizontal"
             canvas:
@@ -45,7 +45,7 @@ Builder.load_string("""
                 size_hint_x: 1 
                 markup: True
                 color: hex('#ff9800ff')
-                font_size: 20.0 / 800 * app.width
+                font_size:dp(20.0 / 800 * app.width)
 
             Button:
                 background_color: hex('#F4433600')
@@ -55,7 +55,7 @@ Builder.load_string("""
                     root.set_standby_to_pos()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -73,7 +73,7 @@ Builder.load_string("""
                     root.set_workzone_to_pos_xy()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -88,7 +88,7 @@ Builder.load_string("""
             size_hint_x: 2 
             size: self.parent.size
             pos: self.parent.pos   
-#             padding: 5
+#             padding:dp(5)
 #             spacing: 5
 #             orientation: "horizontal"
 #             canvas:
@@ -103,7 +103,7 @@ Builder.load_string("""
             size_hint_x: 2 
             size: self.parent.size
             pos: self.parent.pos   
-            padding: 5
+            padding:dp(5)
             spacing: 5
             orientation: "horizontal"
             canvas:
@@ -117,7 +117,7 @@ Builder.load_string("""
                 size_hint_x: 1 
                 markup: True
                 color: hex('#4caf50ff')
-                font_size: 20.0 / 800 * app.width    
+                font_size:dp(20.0 / 800 * app.width)
             Button:
                 background_color: hex('#F4433600')
                 on_release: 
@@ -126,7 +126,7 @@ Builder.load_string("""
                     root.go_to_standby()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -143,7 +143,7 @@ Builder.load_string("""
                     root.go_to_jobstart_xy()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
