@@ -373,15 +373,6 @@ class YetiPilot(object):
                     str(profile.material_type) == material_type:
                 return profile
 
-    def get_spindle_speed_correction(self, target_rpm):
-        # is_230v = self.m.spindle_voltage == 230
-
-        # if is_230v:
-        #     return target_rpm - self.spindle_230v_correction_factor
-
-        # return (target_rpm - 12916) / 0.514
-        return target_rpm
-
     def use_profile(self, profile):
         if self.active_profile != profile:
             self.m.speed_override_reset()
@@ -397,7 +388,6 @@ class YetiPilot(object):
         for parameter in profile.parameters:
             setattr(self, parameter["Name"], parameter["Value"])
 
-        self.target_spindle_speed = self.get_spindle_speed_correction(self.target_spindle_speed)
 
     # USE THESE FUNCTIONS FOR BASIC PROFILE DROPDOWNS
     def get_available_cutter_diameters(self):
