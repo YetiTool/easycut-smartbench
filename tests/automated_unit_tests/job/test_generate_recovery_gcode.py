@@ -1324,6 +1324,7 @@ def test_r_handling(jd):
     jd.job_recovery_selected_line = 3
     success, message = jd.generate_recovery_gcode()
     assert success
+    # Output should not include the R
     assert jd.job_recovery_gcode == [
         "G0 X2.0 Y0",
         'G0 Z-6.0',
