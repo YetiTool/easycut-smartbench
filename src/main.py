@@ -170,6 +170,9 @@ class SkavaUI(App):
     def get_scaled_height(self, val):
         return scaling_utils.get_scaled_height(val)
 
+    def get_scaled_sp(self, val):
+        return scaling_utils.get_scaled_sp(val)
+
 
     def build(self):
 
