@@ -1,5 +1,8 @@
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
+from kivy.clock import Clock
+
+from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 <XYMoveDrywall>
@@ -179,6 +182,7 @@ class XYMoveDrywall(Widget):
         super(XYMoveDrywall, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
+        self.l = kwargs['localization']
 
         self.set_jog_speeds()
 
@@ -266,3 +270,12 @@ class XYMoveDrywall(Widget):
 
     def probe_z(self):
         self.m.probe_z(fast_probe=True)
+        # Change this to scaled popup after master is merged into this branch
+        self.wait_popup = popup_info.PopupWait(self.sm, self.l)
+        Clock.schedule_once(self.poll_probe_completion, 0.5)
+
+    def poll_probe_completion(self, dt):
+        if self.m.fast_probing:
+            Clock.schedule_once(self.poll_probe_completion, 0.5)
+        else:
+            self.wait_popup.popup.dismiss()
