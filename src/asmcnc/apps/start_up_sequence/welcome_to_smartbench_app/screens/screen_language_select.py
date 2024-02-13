@@ -41,8 +41,8 @@ Builder.load_string(
 	next_button : next_button
 
 	BoxLayout:
-		height: dp(1.66666666667*app.height)
-		width: dp(0.6*app.width)
+		height: dp(app.get_scaled_height(800))
+		width: dp(app.get_scaled_width(480))
 		canvas.before:
 			Color: 
 				rgba: hex('#e5e5e5ff')
@@ -68,12 +68,12 @@ Builder.load_string(
 				Label:
 					id: header_label
 					size_hint: (None,None)
-					height: dp(0.125*app.height)
-					width: dp(1.0*app.width)
+					height: dp(app.get_scaled_height(60))
+					width: dp(app.get_scaled_width(800))
 					text: "Welcome to SmartBench"
 					color: hex('#f9f9f9ff')
 					# color: hex('#333333ff') #grey
-					font_size: dp(0.0375*app.width)
+					font_size: dp(app.get_scaled_width(30))
 					halign: "center"
 					valign: "bottom"
 					markup: True
@@ -81,10 +81,10 @@ Builder.load_string(
 			# BODY
 			BoxLayout:
 				size_hint: (None,None)
-				width: dp(1.0*app.width)
-				height: dp(0.620833333333*app.height)
-				padding:[dp(0.0375)*app.width, dp(0.0208333333333)*app.height]
-				spacing:dp(0.0208333333333)*app.height
+				width: dp(app.get_scaled_width(800))
+				height: dp(app.get_scaled_height(298))
+				padding:[app.get_scaled_width(30), app.get_scaled_height(10)]
+				spacing:app.get_scaled_height(10)
 				orientation: 'vertical'
 
 	            GridLayout:
@@ -109,7 +109,7 @@ Builder.load_string(
 	                Label: 
 	                	id: row_1_col_1
 	                	valign: "middle"
-						font_size: str(0.025*app.width) + 'sp'
+						font_size: str(get_scaled_width(20)) + 'sp'
 						text_size: self.size
 						markup: True
 						halign: "left"
@@ -128,7 +128,7 @@ Builder.load_string(
 	                Label: 
 	                	id: row_1_col_2
 	                	valign: "middle"
-						font_size: str(0.025*app.width) + 'sp'
+						font_size: str(get_scaled_width(20)) + 'sp'
 						text_size: self.size
 						markup: True
 						halign: "left"
@@ -147,7 +147,7 @@ Builder.load_string(
 	                Label: 
 	                	id: row_1_col_3
 	                	valign: "middle"
-						font_size: str(0.025*app.width) + 'sp'
+						font_size: str(get_scaled_width(20)) + 'sp'
 						text_size: self.size
 						markup: True
 						halign: "left"
@@ -168,7 +168,7 @@ Builder.load_string(
 	                Label: 
 	                	id: row_2_col_1
 	                	valign: "middle"
-						font_size: str(0.025*app.width) + 'sp'
+						font_size: str(get_scaled_width(20)) + 'sp'
 						text_size: self.size
 						markup: True
 						halign: "left"
@@ -187,7 +187,7 @@ Builder.load_string(
 	                Label: 
 	                	id: row_2_col_2
 	                	valign: "middle"
-						font_size: str(0.025*app.width) + 'sp'
+						font_size: str(get_scaled_width(20)) + 'sp'
 						text_size: self.size
 						markup: True
 						halign: "left"
@@ -206,7 +206,7 @@ Builder.load_string(
 	                Label: 
 	                	id: row_2_col_3
 	                	valign: "middle"
-						font_size: str(0.025*app.width) + 'sp'
+						font_size: str(get_scaled_width(20)) + 'sp'
 						text_size: self.size
 						markup: True
 						halign: "left"
@@ -227,7 +227,7 @@ Builder.load_string(
 	                Label: 
 	                	id: row_3_col_1
 	                	valign: "middle"
-						font_size: str(0.025*app.width) + 'sp'
+						font_size: str(get_scaled_width(20)) + 'sp'
 						text_size: self.size
 						markup: True
 						halign: "left"
@@ -245,7 +245,7 @@ Builder.load_string(
 	                Label: 
 	                	id: row_3_col_2
 	                	valign: "middle"
-						font_size: str(0.025*app.width) + 'sp'
+						font_size: str(get_scaled_width(20)) + 'sp'
 						text_size: self.size
 						markup: True
 						halign: "left"
@@ -277,33 +277,33 @@ Builder.load_string(
 
 			# FOOTER
 			BoxLayout: 
-				padding:[dp(0.0125)*app.width, 0, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+				padding:[app.get_scaled_width(10), 0, app.get_scaled_width(10), app.get_scaled_height(10)]
 				size_hint: (None, None)
-				height: dp(0.254166666667*app.height)
-				width: dp(1.0*app.width)
+				height: dp(app.get_scaled_height(122))
+				width: dp(app.get_scaled_width(800))
 				orientation: 'horizontal'
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(0.254166666667*app.height)
-					width: dp(0.305625*app.width)
-					padding:[0, 0, dp(0.230625)*app.width, 0]
+					height: dp(app.get_scaled_height(122))
+					width: dp(app.get_scaled_width(244.5))
+					padding:[0, 0, app.get_scaled_width(184.5), 0]
 
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(0.254166666667*app.height)
-					width: dp(0.36375*app.width)
-					padding:[0, 0, 0, dp(0.0666666666667)*app.height]
+					height: dp(app.get_scaled_height(122))
+					width: dp(app.get_scaled_width(291))
+					padding:[0, 0, 0, app.get_scaled_height(32)]
 					Button:
 						id: next_button
 						background_normal: "./asmcnc/skavaUI/img/next.png"
 						background_down: "./asmcnc/skavaUI/img/next.png"
 						border: [dp(14.5)]*4
 						size_hint: (None,None)
-						width: dp(0.36375*app.width)
-						height: dp(0.164583333333*app.height)
+						width: dp(app.get_scaled_width(291))
+						height: dp(app.get_scaled_height(79))
 						on_press: root.next_screen()
 						text: 'Next...'
-						font_size: str(0.0375*app.width) + 'sp'
+						font_size: str(get_scaled_width(30)) + 'sp'
 						color: hex('#f9f9f9ff')
 						markup: True
 						center: self.parent.center
@@ -312,9 +312,9 @@ Builder.load_string(
 						disabled: True
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(0.254166666667*app.height)
-					width: dp(0.305625*app.width)
-					padding:[dp(0.241875)*app.width, 0, 0, 0]
+					height: dp(app.get_scaled_height(122))
+					width: dp(app.get_scaled_width(244.5))
+					padding:[app.get_scaled_width(193.5), 0, 0, 0]
 
 
 

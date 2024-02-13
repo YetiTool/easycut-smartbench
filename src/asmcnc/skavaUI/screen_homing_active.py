@@ -29,11 +29,11 @@ Builder.load_string(
 
     BoxLayout: 
         spacing: 0
-        padding:[dp(0.05)*app.width, dp(0.0833333333333)*app.height]
+        padding:[app.get_scaled_width(40), app.get_scaled_height(40)]
         orientation: 'vertical'
 
         Label:
-            font_size: str(0.01875 * app.width) + 'sp'
+            font_size: str(get_scaled_width(15)) + 'sp'
             size_hint_y: 1
 
         BoxLayout:
@@ -42,7 +42,7 @@ Builder.load_string(
             size_hint_y: 1.5
 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: str(get_scaled_width(15)) + 'sp'
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_press: root.windows_cheat_to_procede()
@@ -58,7 +58,7 @@ Builder.load_string(
                 id: homing_label
                 size_hint_x: 1.1
                 markup: True
-                font_size: str(0.0375*app.width) + 'px' 
+                font_size: str(get_scaled_width(30)) + 'px' 
                 valign: 'middle'
                 halign: 'center'
                 size:self.texture_size
@@ -66,7 +66,7 @@ Builder.load_string(
                 color: hex('#333333ff')
                         
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: str(get_scaled_width(15)) + 'sp'
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_press: root.stop_button_press()
@@ -79,7 +79,7 @@ Builder.load_string(
                         allow_stretch: True 
                         
         Label:
-            font_size: str(0.01875 * app.width) + 'sp'
+            font_size: str(get_scaled_width(15)) + 'sp'
             size_hint_y: 1                
 
 """

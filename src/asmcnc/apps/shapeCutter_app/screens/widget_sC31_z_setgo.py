@@ -40,12 +40,12 @@ Builder.load_string(
                     pos: self.pos 
 
             ToggleButton:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: str(get_scaled_width(15)) + 'sp'
                 id: speed_toggle
                 on_press: root.set_jog_speeds()
                 background_color: 1, 1, 1, 0 
                 BoxLayout:
-                    padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                    padding:[app.get_scaled_width(10), app.get_scaled_height(10)]
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
@@ -57,7 +57,7 @@ Builder.load_string(
                         allow_stretch: True  
 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: str(get_scaled_width(15)) + 'sp'
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 
@@ -77,7 +77,7 @@ Builder.load_string(
                         allow_stretch: True
 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: str(get_scaled_width(15)) + 'sp'
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 

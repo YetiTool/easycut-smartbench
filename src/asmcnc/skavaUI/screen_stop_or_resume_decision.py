@@ -33,14 +33,14 @@ Builder.load_string(
 
     BoxLayout: 
         spacing: 0
-        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+        padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
         orientation: 'vertical'
 
 
         BoxLayout:
             orientation: 'vertical'
             spacing:0.0*app.height
-            padding:[0, 0, 0, dp(0.0208333333333)*app.height]
+            padding:[0, 0, 0, app.get_scaled_height(10)]
             size_hint_y: 5
             
 
@@ -48,7 +48,7 @@ Builder.load_string(
                 id: pause_reason_label
                 size_hint_y: 0.6
                 markup: True
-                font_size: str(0.0375*app.width) + 'px' 
+                font_size: str(get_scaled_width(30)) + 'px' 
                 valign: 'center'
                 halign: 'center'
                 size:self.texture_size
@@ -59,7 +59,7 @@ Builder.load_string(
                 id: pause_description_label
                 size_hint_y: 2.4
                 markup: True
-                font_size: str(0.0225*app.width) + 'px' 
+                font_size: str(get_scaled_width(18)) + 'px' 
                 valign: 'center'
                 halign: 'center'
                 size:self.texture_size
@@ -72,7 +72,7 @@ Builder.load_string(
             size_hint_y: 3
 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: str(get_scaled_width(15)) + 'sp'
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_press: root.cancel_job()
@@ -85,7 +85,7 @@ Builder.load_string(
                         allow_stretch: True 
                         
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: str(get_scaled_width(15)) + 'sp'
                 size_hint_x: 0.3
                 background_color: hex('#FFFFFF00')
                 on_press: root.popup_help()
@@ -98,7 +98,7 @@ Builder.load_string(
                         allow_stretch: True 
                         
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: str(get_scaled_width(15)) + 'sp'
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_press: root.resume_job()

@@ -31,7 +31,7 @@ Builder.load_string(
              
     BoxLayout:
         orientation: 'horizontal'
-        padding:[dp(0.075)*app.width, dp(0.125)*app.height]
+        padding:[app.get_scaled_width(60), app.get_scaled_height(60)]
         spacing:0.0625*app.height
         size_hint_x: 1
 
@@ -44,7 +44,7 @@ Builder.load_string(
                 id: title_label
                 size_hint_y: 1
                 text_size: self.size
-                font_size: str(0.03625*app.width) + 'sp'
+                font_size: str(get_scaled_width(29)) + 'sp'
                 markup: True
                 halign: 'left'
                 vallign: 'top'
@@ -53,7 +53,7 @@ Builder.load_string(
                 id: cannot_start_job
                 size_hint_y: 1
                 text_size: self.size
-                font_size: str(0.0275*app.width) + 'sp'
+                font_size: str(get_scaled_width(22)) + 'sp'
                 halign: 'left'
                 valign: 'middle'
                 text: 'Cannot start job.'
@@ -61,7 +61,7 @@ Builder.load_string(
                 
             Label:
                 size_hint_y: 1
-                font_size: str(0.0275*app.width) + 'sp'
+                font_size: str(get_scaled_width(22)) + 'sp'
                 text_size: self.size
                 halign: 'left'
                 valign: 'middle'
@@ -70,10 +70,10 @@ Builder.load_string(
                 
             BoxLayout:
                 orientation: 'horizontal'
-                padding:[dp(0.1625)*app.width, 0]
+                padding:[app.get_scaled_width(130), 0]
             
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     size_hint_y:0.9
                     id: getout_button
                     size: self.texture_size
@@ -89,13 +89,13 @@ Builder.load_string(
                         root.button_release()
                         
                     BoxLayout:
-                        padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                        padding:[app.get_scaled_width(5), app.get_scaled_height(5)]
                         size: self.parent.size
                         pos: self.parent.pos
                         
                         Label:
                             id: return_label
-                            font_size: str(0.025*app.width) + 'sp'
+                            font_size: str(get_scaled_width(20)) + 'sp'
                         
   
             

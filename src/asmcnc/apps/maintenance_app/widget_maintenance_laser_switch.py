@@ -17,8 +17,8 @@ Builder.load_string(
     BoxLayout:
     
         size_hint: (None,None)
-        height: dp(0.145833333333*app.height)
-        width: dp(0.1875*app.width)
+        height: dp(app.get_scaled_height(70))
+        width: dp(app.get_scaled_width(150))
         pos: self.parent.pos
         padding:[0, 0, 0, 0]
         
@@ -27,14 +27,14 @@ Builder.load_string(
             rows: 1
             spacing:0.0125*app.width
             size_hint: (None,None)
-            height: dp(0.145833333333*app.height)
-            width: dp(0.21875*app.width)
+            height: dp(app.get_scaled_height(70))
+            width: dp(app.get_scaled_width(175))
 
             BoxLayout: 
                 size_hint: (None, None)
                 pos: self.parent.pos
-                height: dp(0.145833333333*app.height)
-                width: dp(0.10625*app.width)
+                height: dp(app.get_scaled_height(70))
+                width: dp(app.get_scaled_width(85))
                 Switch:
                     id: laser_switch
                     background_color: [0,0,0,0]
@@ -45,9 +45,9 @@ Builder.load_string(
             BoxLayout: 
                 size_hint: (None, None)
                 pos: self.parent.pos
-                height: dp(0.145833333333*app.height)
-                width: dp(0.06875*app.width)
-                padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                height: dp(app.get_scaled_height(70))
+                width: dp(app.get_scaled_width(55))
+                padding:[app.get_scaled_width(5), app.get_scaled_height(5)]
                 Image:
                     id: laser_image
                     source: "./asmcnc/apps/maintenance_app/img/laser_on.png"

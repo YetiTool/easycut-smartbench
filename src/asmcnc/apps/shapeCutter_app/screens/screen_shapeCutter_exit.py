@@ -15,8 +15,8 @@ Builder.load_string(
 <ShapeCutterExitScreenClass>:
     
     BoxLayout:
-        height: dp(1.66666666667*app.height)
-        width: dp(0.6*app.width)
+        height: dp(app.get_scaled_height(800))
+        width: dp(app.get_scaled_width(480))
         canvas:
             Rectangle: 
                 pos: self.pos
@@ -30,8 +30,8 @@ Builder.load_string(
                 
             Label:
                 size_hint: (None,None)
-                height: dp(0.1875*app.height)
-                width: dp(1.0*app.width)
+                height: dp(app.get_scaled_height(90))
+                width: dp(app.get_scaled_width(800))
                 text: "Leaving Shape Cutter..."
                 font_size: 0.0375*app.width
                 halign: "center"
@@ -41,14 +41,14 @@ Builder.load_string(
                     
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.0*app.width)
-                height: dp(0.8125*app.height)
-                padding:[0, dp(0.229166666667)*app.height, 0, dp(0.229166666667)*app.height]
+                width: dp(app.get_scaled_width(800))
+                height: dp(app.get_scaled_height(390))
+                padding:[0, app.get_scaled_height(110), 0, app.get_scaled_height(110)]
                 spacing: 0
                 Label:
                     size_hint: (None,None)
-                    height: dp(0.354166666667*app.height)
-                    width: dp(1.0*app.width)
+                    height: dp(app.get_scaled_height(170))
+                    width: dp(app.get_scaled_width(800))
                     halign: "center"
                     valign: "middle"
                     text: "Bye!"

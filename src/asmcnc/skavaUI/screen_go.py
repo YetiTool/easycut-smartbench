@@ -75,7 +75,7 @@ Builder.load_string(
 
             BoxLayout:
                 size_hint_x: 0.9
-                padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
                 spacing:0.025*app.width
                 orientation: "horizontal"
 
@@ -93,7 +93,7 @@ Builder.load_string(
 
                     BoxLayout:
                         size_hint_y: 0.3
-                        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                        padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
                         canvas:
                             Color:
                                 rgba: hex('#FFFFFFFF')
@@ -105,7 +105,7 @@ Builder.load_string(
                             padding: 0
                             spacing:0.0125*app.width
                             Button:
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: str(get_scaled_width(15)) + 'sp'
                                 id: btn_back
                                 size_hint_x: 1
                                 background_color: hex('#F4433600')
@@ -126,7 +126,7 @@ Builder.load_string(
                             Label:
                                 size_hint_x: 5
                                 text_size: self.size
-                                font_size: str(0.025*app.width) + 'sp'
+                                font_size: str(get_scaled_width(20)) + 'sp'
                                 markup: True
                                 halign: 'center'
                                 valign: 'middle'
@@ -134,7 +134,7 @@ Builder.load_string(
                                 color: hex('#333333ff')
                                 
                             Button:
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: str(get_scaled_width(15)) + 'sp'
                                 id: stop_start
                                 size_hint_x: 1
                                 disabled: False
@@ -159,12 +159,12 @@ Builder.load_string(
                         id: override_and_progress_container
                         orientation: 'horizontal'
                         size_hint_y: 0.7
-                        padding:[dp(0.0)*app.width, dp(0.0)*app.height]
+                        padding:[app.get_scaled_width(0), app.get_scaled_height(0)]
                         spacing:0.0416666666667*app.height
 
                         BoxLayout:
                             orientation: 'vertical'
-                            padding:[0, 0, 0, dp(0.0104166666667)*app.height]
+                            padding:[0, 0, 0, app.get_scaled_height(5)]
                             spacing:0.0208333333333*app.height
                             size_hint_x: 0.2
                             canvas:
@@ -177,7 +177,7 @@ Builder.load_string(
                             BoxLayout:
                                 size_hint_y: 1.8
                                 orientation: 'vertical'
-                                padding:[dp(0.0)*app.width, dp(0.0)*app.height]
+                                padding:[app.get_scaled_width(0), app.get_scaled_height(0)]
                                 spacing:0.0*app.height
                                 canvas:
                                     Color:
@@ -188,7 +188,7 @@ Builder.load_string(
                                 Label:
                                     id: feed_label
                                     markup: True
-                                    font_size: str(0.02*app.width) + 'px' 
+                                    font_size: str(get_scaled_width(16)) + 'px' 
                                     valign: 'middle'
                                     halign: 'center'
                                     size:self.texture_size
@@ -210,7 +210,7 @@ Builder.load_string(
                         BoxLayout:
                             id: speed_override_container
                             orientation: 'vertical'
-                            padding:[0, 0, 0, dp(0.0104166666667)*app.height]
+                            padding:[0, 0, 0, app.get_scaled_height(5)]
                             spacing:0.0208333333333*app.height
                             size_hint_x: 0.2
                             canvas:
@@ -223,7 +223,7 @@ Builder.load_string(
                             BoxLayout:
                                 size_hint_y: 1.8
                                 orientation: 'vertical'
-                                padding:[dp(0.0)*app.width, dp(0.0)*app.height]
+                                padding:[app.get_scaled_width(0), app.get_scaled_height(0)]
                                 spacing:0.0*app.height
                                 canvas:
                                     Color:
@@ -234,7 +234,7 @@ Builder.load_string(
                                 Label:
                                     id: spindle_label
                                     markup: True
-                                    font_size: str(0.02*app.width) + 'px' 
+                                    font_size: str(get_scaled_width(16)) + 'px' 
                                     valign: 'middle'
                                     halign: 'center'
                                     size:self.texture_size
@@ -273,7 +273,7 @@ Builder.load_string(
                                 id: job_progress_container
                                 size_hint_y: 2.5
                                 orientation: 'vertical'
-                                padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                                padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
                                 spacing:0.0*app.height
 
                                 canvas:
@@ -288,7 +288,7 @@ Builder.load_string(
                                     size_hint_y: 1
                                     # text: '[color=808080]File lines streamed:[/color]'
                                     markup: True                           
-                                    font_size: str(0.02*app.width) + 'px'
+                                    font_size: str(get_scaled_width(16)) + 'px'
                                     valign: 'middle'
                                     halign: 'left'
                                     size:self.texture_size
@@ -300,7 +300,7 @@ Builder.load_string(
                                     color: hex('#333333ff')
                                     text: '0 %'
                                     markup: True                           
-                                    font_size: str(0.125*app.width) + 'px' 
+                                    font_size: str(get_scaled_width(100)) + 'px' 
                                     valign: 'middle'
                                     halign: 'left'
                                     size:self.texture_size
@@ -309,7 +309,7 @@ Builder.load_string(
                                     id: job_time_label
                                     size_hint_y: 0.9
                                     markup: True                           
-                                    font_size: str(0.02*app.width) + 'px' 
+                                    font_size: str(get_scaled_width(16)) + 'px' 
                                     valign: 'middle'
                                     halign: 'left'
                                     size:self.texture_size
@@ -319,7 +319,7 @@ Builder.load_string(
                                     size_hint_y: 1.1
                                     id: run_time_label
                                     markup: True                           
-                                    font_size: str(0.0225*app.width) + 'px'
+                                    font_size: str(get_scaled_width(18)) + 'px'
                                     valign: 'middle'
                                     halign: 'left'
                                     size:self.texture_size
@@ -330,7 +330,7 @@ Builder.load_string(
                     id: spindle_widgets
                     orientation: 'vertical'
                     size_hint_x: 0.15
-                    padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                    padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
                     spacing:0.0416666666667*app.height
 
                     canvas:
@@ -355,12 +355,12 @@ Builder.load_string(
                         Label:
                             id: spindle_overload_label
                             halign: 'center'
-                            font_size: str(0.02*app.width) + 'px' 
+                            font_size: str(get_scaled_width(16)) + 'px' 
                             text: '[color=808080]Spindle\\noverload:[/color]'
                             markup: True
                         
                         Label:
-                            font_size: str(0.04*app.width) + 'px' 
+                            font_size: str(get_scaled_width(32)) + 'px' 
                             id: overload_status_label
                             halign: 'center'
                             text: '[color=333333]0 %[/color]'

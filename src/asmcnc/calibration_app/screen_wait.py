@@ -24,7 +24,7 @@ Builder.load_string(
              
     BoxLayout:
         orientation: 'horizontal'
-        padding:[dp(0.1125)*app.width, dp(0.104166666667)*app.height]
+        padding:[app.get_scaled_width(90), app.get_scaled_height(50)]
         spacing: 0
         size_hint_x: 1
 
@@ -34,7 +34,7 @@ Builder.load_string(
 
             Label:
                 text_size: self.size
-                font_size: str(0.025*app.width) + 'sp'
+                font_size: str(get_scaled_width(20)) + 'sp'
                 halign: 'center'
                 valign: 'middle'
                 text: '[color=455A64]Moving to the next measurement point...[/color]'

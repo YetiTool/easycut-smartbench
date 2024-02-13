@@ -106,36 +106,36 @@ Builder.load_string(
                     size_hint_x: 0.7
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'Back'
                         on_press: root.back_to_fac_settings()
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         id: home_button
                         text: 'Home'
                         on_press: root.home()
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         id: x0y0_jog_button
                         text: 'X0Y0'
                         on_press: root.zero_x_and_y()
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         id: x7y0_jog_button
                         text: 'X-700Y0'
                         on_press: root.mid_x_and_zero_y()
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         id: z0_jog_button
                         text: 'Z0'
                         on_press: root.zero_Z()
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: 'STOP'
                     background_color: [1,0,0,1]
                     on_press: root.stop()
@@ -150,7 +150,7 @@ Builder.load_string(
                     cols: 2
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         id: unweighted_test_button
                         text: 'Run XYZ 0kg'
                         on_press: root.run_unweighted_test()
@@ -167,7 +167,7 @@ Builder.load_string(
                     cols: 2
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         id: x_load_button
                         text: 'Run X (7.5kg)'
                         on_press: root.run_x_procedure(None)
@@ -184,7 +184,7 @@ Builder.load_string(
                     cols: 2
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         id: y_load_button
                         text: 'Run Y (7.5kg)'
                         on_press: root.run_y_procedure(None)
@@ -201,11 +201,11 @@ Builder.load_string(
                     cols: 2
 
                     Label:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: ''
 
                     Label:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: ''
 
                     # Button:
@@ -222,7 +222,7 @@ Builder.load_string(
                     #     allow_stretch: True
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     id: data_send_button
                     text: 'Send data to database'
                     on_press: root.send_all_data()
@@ -232,7 +232,7 @@ Builder.load_string(
                     cols: 2
 
                     Label:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         id: data_send_label
                         text: 'Sent data?'
                     
@@ -249,11 +249,11 @@ Builder.load_string(
                 size_hint_y: 0.1
 
                 Label:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: 'Unweighted'
 
                 Label:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: 'Weighted'
 
             BoxLayout:
@@ -268,7 +268,7 @@ Builder.load_string(
                     ## Y axis
 
                     Label:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'Y+: '
                         halign: 'right'
                         markup: True
@@ -277,7 +277,7 @@ Builder.load_string(
 
                     Label:
                         id: y_peak_posve
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'yyy'
                         halign: 'left'
                         markup: True
@@ -286,7 +286,7 @@ Builder.load_string(
 
                     Label:
                         id: y_axis_fw_range
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'yyy - yyy'
                         markup: True
                         valign: 'middle'
@@ -294,7 +294,7 @@ Builder.load_string(
                         halign: 'center'
 
                     Label:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'Y-: '
                         halign: 'right'
                         markup: True
@@ -303,7 +303,7 @@ Builder.load_string(
 
                     Label:
                         id: y_peak_negve
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'yyy'
                         halign: 'left'
                         markup: True
@@ -313,7 +313,7 @@ Builder.load_string(
 
                     Label:
                         id: y_axis_bw_range
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'yyy - yyy'
                         markup: True
                         valign: 'middle'
@@ -332,7 +332,7 @@ Builder.load_string(
                     ## Y1 axis
 
                     Label:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'Y1+:'
                         halign: 'right'
                         markup: True
@@ -341,7 +341,7 @@ Builder.load_string(
 
                     Label:
                         id: y1_peak_posve
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'yyy'
                         halign: 'left'
                         markup: True
@@ -350,7 +350,7 @@ Builder.load_string(
 
                     Label:
                         id: y1_fw_range
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'yyy - yyy'
                         markup: True
                         valign: 'middle'
@@ -358,7 +358,7 @@ Builder.load_string(
                         halign: 'center'
 
                     Label:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'Y1-:'
                         halign: 'right'
                         markup: True
@@ -367,7 +367,7 @@ Builder.load_string(
 
                     Label:
                         id: y1_peak_negve
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'yyy'
                         halign: 'left'
                         markup: True
@@ -376,7 +376,7 @@ Builder.load_string(
 
                     Label:
                         id: y1_bw_range
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'yyy - yyy'
                         markup: True
                         valign: 'middle'
@@ -394,7 +394,7 @@ Builder.load_string(
                     ## Y2 axis
 
                     Label:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'Y2+:'
                         halign: 'right'
                         markup: True
@@ -403,7 +403,7 @@ Builder.load_string(
 
                     Label:
                         id: y2_peak_posve
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'yyy'
                         halign: 'left'
                         markup: True
@@ -412,7 +412,7 @@ Builder.load_string(
 
                     Label:
                         id: y2_fw_range
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'yyy - yyy'
                         markup: True
                         valign: 'middle'
@@ -420,7 +420,7 @@ Builder.load_string(
                         halign: 'center'
 
                     Label:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'Y2-:'
                         halign: 'right'
                         markup: True
@@ -429,7 +429,7 @@ Builder.load_string(
 
                     Label:
                         id: y2_peak_negve
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'yyy'
                         halign: 'left'
                         markup: True
@@ -438,7 +438,7 @@ Builder.load_string(
 
                     Label:
                         id: y2_bw_range
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'yyy - yyy'
                         markup: True
                         valign: 'middle'
@@ -456,7 +456,7 @@ Builder.load_string(
                     ## X axis
 
                     Label:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'X+:'
                         halign: 'right'
                         markup: True
@@ -465,7 +465,7 @@ Builder.load_string(
 
                     Label:
                         id: x_peak_posve
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'xxx'
                         halign: 'left'
                         markup: True
@@ -474,7 +474,7 @@ Builder.load_string(
 
                     Label:
                         id: x_fw_range
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'xxx - xxx'
                         markup: True
                         valign: 'middle'
@@ -482,7 +482,7 @@ Builder.load_string(
                         halign: 'center'
 
                     Label:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'X-:'
                         halign: 'right'
                         markup: True
@@ -491,7 +491,7 @@ Builder.load_string(
 
                     Label:
                         id: x_peak_negve
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'xxx'
                         halign: 'left'
                         markup: True
@@ -500,7 +500,7 @@ Builder.load_string(
 
                     Label:
                         id: x_bw_range
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'xxx - xxx'
                         markup: True
                         valign: 'middle'
@@ -519,7 +519,7 @@ Builder.load_string(
                     ## Z axis
 
                     Label:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'Z-:'
                         halign: 'right'
                         markup: True
@@ -528,7 +528,7 @@ Builder.load_string(
 
                     Label:
                         id: z_peak_negve
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'zzz'
                         halign: 'left'
                         markup: True
@@ -537,7 +537,7 @@ Builder.load_string(
 
                     Label:
                         id: z_fw_range
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'zzz - zzz'
                         markup: True
                         valign: 'middle'
@@ -545,7 +545,7 @@ Builder.load_string(
                         halign: 'center'
 
                     Label:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'Z+:'
                         halign: 'right'
                         markup: True
@@ -554,7 +554,7 @@ Builder.load_string(
 
                     Label:
                         id: z_peak_posve
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'zzz'
                         halign: 'left'
                         markup: True
@@ -563,7 +563,7 @@ Builder.load_string(
 
                     Label:
                         id: z_bw_range
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'zzz - zzz'
                         markup: True
                         valign: 'middle'
@@ -587,7 +587,7 @@ Builder.load_string(
                     ## Y axis
 
                     Label:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'Y+:'
                         halign: 'right'
                         markup: True
@@ -596,7 +596,7 @@ Builder.load_string(
 
                     Label:
                         id: y_peak_posve_weighted
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'yyy'
                         halign: 'left'
                         markup: True
@@ -605,7 +605,7 @@ Builder.load_string(
 
                     Label:
                         id: y_axis_fw_range_weighted
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'yyy - yyy'
                         markup: True
                         valign: 'middle'
@@ -613,7 +613,7 @@ Builder.load_string(
                         halign: 'center'
 
                     Label:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'Y-:'
                         halign: 'right'
                         markup: True
@@ -622,7 +622,7 @@ Builder.load_string(
 
                     Label:
                         id: y_peak_negve_weighted
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'yyy'
                         halign: 'left'
                         markup: True
@@ -631,7 +631,7 @@ Builder.load_string(
 
                     Label:
                         id: y_axis_bw_range_weighted
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'yyy - yyy'
                         markup: True
                         valign: 'middle'
@@ -649,7 +649,7 @@ Builder.load_string(
                     ## Y1 axis
 
                     Label:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'Y1+:'
                         halign: 'right'
                         markup: True
@@ -658,7 +658,7 @@ Builder.load_string(
 
                     Label:
                         id: y1_peak_posve_weighted
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'yyy'
                         halign: 'left'
                         markup: True
@@ -667,7 +667,7 @@ Builder.load_string(
 
                     Label:
                         id: y1_fw_range_weighted
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'yyy - yyy'
                         markup: True
                         valign: 'middle'
@@ -675,7 +675,7 @@ Builder.load_string(
                         halign: 'center'
 
                     Label:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'Y1-:'
                         halign: 'right'
                         markup: True
@@ -684,7 +684,7 @@ Builder.load_string(
 
                     Label:
                         id: y1_peak_negve_weighted
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'yyy'
                         halign: 'left'
                         markup: True
@@ -693,7 +693,7 @@ Builder.load_string(
 
                     Label:
                         id: y1_bw_range_weighted
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'yyy - yyy'
                         markup: True
                         valign: 'middle'
@@ -711,7 +711,7 @@ Builder.load_string(
                     ## Y2 axis
 
                     Label:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'Y2+:'
                         halign: 'right'
                         markup: True
@@ -720,7 +720,7 @@ Builder.load_string(
 
                     Label:
                         id: y2_peak_posve_weighted
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'yyy'
                         halign: 'left'
                         markup: True
@@ -729,7 +729,7 @@ Builder.load_string(
 
                     Label:
                         id: y2_fw_range_weighted
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'yyy - yyy'
                         markup: True
                         valign: 'middle'
@@ -737,7 +737,7 @@ Builder.load_string(
                         halign: 'center'
 
                     Label:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'Y2-:'
                         halign: 'right'
                         markup: True
@@ -746,7 +746,7 @@ Builder.load_string(
 
                     Label:
                         id: y2_peak_negve_weighted
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'yyy'
                         halign: 'left'
                         markup: True
@@ -755,7 +755,7 @@ Builder.load_string(
 
                     Label:
                         id: y2_bw_range_weighted
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'yyy - yyy'
                         markup: True
                         valign: 'middle'
@@ -773,7 +773,7 @@ Builder.load_string(
                     ## X axis
 
                     Label:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'X+:'
                         halign: 'right'
                         markup: True
@@ -782,7 +782,7 @@ Builder.load_string(
 
                     Label:
                         id: x_peak_posve_weighted
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'xxx'
                         halign: 'left'
                         markup: True
@@ -791,7 +791,7 @@ Builder.load_string(
 
                     Label:
                         id: x_fw_range_weighted
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'xxx - xxx'
                         markup: True
                         valign: 'middle'
@@ -799,7 +799,7 @@ Builder.load_string(
                         halign: 'center'
 
                     Label:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'X-:'
                         halign: 'right'
                         markup: True
@@ -808,7 +808,7 @@ Builder.load_string(
 
                     Label:
                         id: x_peak_negve_weighted
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'xxx'
                         halign: 'left'
                         markup: True
@@ -817,7 +817,7 @@ Builder.load_string(
 
                     Label:
                         id: x_bw_range_weighted
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'xxx - xxx'
                         markup: True
                         valign: 'middle'
@@ -836,15 +836,15 @@ Builder.load_string(
                     ## Z axis
 
                     Label: 
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: ''
 
                     Label: 
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: ''
 
                     Label: 
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: ''
 
                     # Label:
@@ -871,19 +871,19 @@ Builder.load_string(
                     #     halign: 'center'
 
                     Label: 
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: ''
 
                     Label: 
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: ''
 
                     Label: 
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: ''
 
                     Label: 
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: ''
 
                     # Label:

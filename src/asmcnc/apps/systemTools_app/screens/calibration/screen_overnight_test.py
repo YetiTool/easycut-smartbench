@@ -100,41 +100,41 @@ Builder.load_string(
 
                     Button:
                         id: back_button
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'Back'
                         on_press: root.back_to_fac_settings()
 
                     Button:
                         id: home_button
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'Home'
                         on_press: root.home()
                         background_color: [0,0,1,1]
 
                     Button:
                         id: overnight_test_button
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'START'
                         on_press: root.start_full_overnight_test()
                         background_color: [0,1,0,1]
 
                     Button:
                         id: cal_and_post_button
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'CAL+POST'
                         background_color: [0,1,1,1]
                         on_press: root.start_cal_and_post_cal()
 
                     Button:
                         id: stop_button
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: 'STOP'
                         background_color: [1,0,0,1]
                         on_press: root.stop()
                         background_normal: ''
 
                 Label: 
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: "Overnight test stages"
                     markup: True
                     text_size: self.size
@@ -150,7 +150,7 @@ Builder.load_string(
 
                         Button:
                             id: six_hour_wear_in_button
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: '6 hour wear-in'
                             size_hint_x: 0.7
                             on_press: root.start_six_hour_wear_in()
@@ -173,7 +173,7 @@ Builder.load_string(
 
                         Button:
                             id: recalibration_button
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 're-calibration'
                             size_hint_x: 0.7
                             on_press: root.start_recalibration()
@@ -194,7 +194,7 @@ Builder.load_string(
 
                         Button:
                             id: fully_calibrated_run_button
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'post-calibration run'
                             size_hint_x: 0.7
                             on_press: root.start_fully_calibrated_final_run()
@@ -212,7 +212,7 @@ Builder.load_string(
                                 allow_stretch: True
 
                 Label: 
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: "Data sends"
                     markup: True
                     text_size: self.size
@@ -228,7 +228,7 @@ Builder.load_string(
 
                         Button:
                             id: retry_six_hour_wear_in_data_send
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'Retry'
                             size_hint_x: 0.7
                             on_press: root.send_six_hour_wear_in_data()
@@ -250,7 +250,7 @@ Builder.load_string(
 
                         Button:
                             id: retry_recalibration_data_send
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'Retry'
                             size_hint_x: 0.7
                             on_press: root.send_recalibration_data()
@@ -271,7 +271,7 @@ Builder.load_string(
 
                         Button:
                             id: retry_fully_calibrated_run_data_send
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'Retry'
                             size_hint_x: 0.7
                             on_press: root.send_fully_calibrated_final_run_data()
@@ -293,7 +293,7 @@ Builder.load_string(
                 size_hint_y: 0.5
 
                 Label: 
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: 'Peak testing'
                     size_hint_y: 0.11
 
@@ -310,7 +310,7 @@ Builder.load_string(
                         spacing:[0.00625*app.width, 0]
 
                         Label:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'Y+:  '
                             halign: 'right'
                             markup: True
@@ -319,7 +319,7 @@ Builder.load_string(
 
                         Label:
                             id: y_wear_in_peak_pos
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'yyy'
                             halign: 'left'
                             markup: True
@@ -327,7 +327,7 @@ Builder.load_string(
                             text_size: self.size
 
                         Label:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'Y-:  '
                             halign: 'right'
                             markup: True
@@ -336,7 +336,7 @@ Builder.load_string(
 
                         Label:
                             id: y_wear_in_peak_neg
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'yyy'
                             halign: 'left'
                             markup: True
@@ -352,7 +352,7 @@ Builder.load_string(
                             allow_stretch: True
 
                         Label:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'Y1+:  '
                             halign: 'right'
                             markup: True
@@ -361,7 +361,7 @@ Builder.load_string(
 
                         Label:
                             id: y1_wear_in_peak_pos
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'yyy'
                             halign: 'left'
                             markup: True
@@ -369,7 +369,7 @@ Builder.load_string(
                             text_size: self.size
 
                         Label:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'Y1-:  '
                             halign: 'right'
                             markup: True
@@ -378,7 +378,7 @@ Builder.load_string(
 
                         Label:
                             id: y1_wear_in_peak_neg
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'yyy'
                             halign: 'left'
                             markup: True
@@ -395,7 +395,7 @@ Builder.load_string(
 
 
                         Label:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'Y2+:  '
                             halign: 'right'
                             markup: True
@@ -404,7 +404,7 @@ Builder.load_string(
 
                         Label:
                             id: y2_wear_in_peak_pos
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'yyy'
                             halign: 'left'
                             markup: True
@@ -412,7 +412,7 @@ Builder.load_string(
                             text_size: self.size
 
                         Label:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'Y2-:  '
                             halign: 'right'
                             markup: True
@@ -421,7 +421,7 @@ Builder.load_string(
 
                         Label:
                             id: y2_wear_in_peak_neg
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'yyy'
                             halign: 'left'
                             markup: True
@@ -437,7 +437,7 @@ Builder.load_string(
                             allow_stretch: True
 
                         Label:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'X+:  '
                             halign: 'right'
                             markup: True
@@ -446,7 +446,7 @@ Builder.load_string(
 
                         Label:
                             id: x_wear_in_peak_pos
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'xxx'
                             halign: 'left'
                             markup: True
@@ -454,7 +454,7 @@ Builder.load_string(
                             text_size: self.size
 
                         Label:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'X-:  '
                             halign: 'right'
                             markup: True
@@ -463,7 +463,7 @@ Builder.load_string(
 
                         Label:
                             id: x_wear_in_peak_neg
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'xxx'
                             halign: 'left'
                             markup: True
@@ -480,7 +480,7 @@ Builder.load_string(
                             allow_stretch: True
 
                         Label:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'Z-:  '
                             halign: 'right'
                             markup: True
@@ -489,7 +489,7 @@ Builder.load_string(
 
                         Label:
                             id: z_wear_in_peak_neg
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'zzz'
                             halign: 'left'
                             markup: True
@@ -497,7 +497,7 @@ Builder.load_string(
                             text_size: self.size
 
                         Label:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'Z+:  '
                             halign: 'right'
                             markup: True
@@ -506,7 +506,7 @@ Builder.load_string(
 
                         Label:
                             id: z_wear_in_peak_pos
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'zzz'
                             halign: 'left'
                             markup: True
@@ -537,7 +537,7 @@ Builder.load_string(
                         spacing:[0.00625*app.width, 0]
 
                         Label:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'Y+:  '
                             halign: 'right'
                             markup: True
@@ -546,7 +546,7 @@ Builder.load_string(
 
                         Label:
                             id: y_fully_calibrated_peak_pos
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'yyy'
                             halign: 'left'
                             markup: True
@@ -554,7 +554,7 @@ Builder.load_string(
                             text_size: self.size
 
                         Label:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'Y-:  '
                             halign: 'right'
                             markup: True
@@ -563,7 +563,7 @@ Builder.load_string(
 
                         Label:
                             id: y_fully_calibrated_peak_neg
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'yyy'
                             halign: 'left'
                             markup: True
@@ -580,7 +580,7 @@ Builder.load_string(
 
 
                         Label:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'Y1+:  '
                             halign: 'right'
                             markup: True
@@ -589,7 +589,7 @@ Builder.load_string(
 
                         Label:
                             id: y1_fully_calibrated_peak_pos
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'yyy'
                             halign: 'left'
                             markup: True
@@ -598,7 +598,7 @@ Builder.load_string(
 
 
                         Label:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'Y1-:  '
                             halign: 'right'
                             markup: True
@@ -607,7 +607,7 @@ Builder.load_string(
 
                         Label:
                             id: y1_fully_calibrated_peak_neg
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'yyy'
                             halign: 'left'
                             markup: True
@@ -624,7 +624,7 @@ Builder.load_string(
 
 
                         Label:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'Y2+:  '
                             halign: 'right'
                             markup: True
@@ -633,7 +633,7 @@ Builder.load_string(
 
                         Label:
                             id: y2_fully_calibrated_peak_pos
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'yyy'
                             halign: 'left'
                             markup: True
@@ -641,7 +641,7 @@ Builder.load_string(
                             text_size: self.size
 
                         Label:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'Y2-:  '
                             halign: 'right'
                             markup: True
@@ -650,7 +650,7 @@ Builder.load_string(
 
                         Label:
                             id: y2_fully_calibrated_peak_neg
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'yyy'
                             halign: 'left'
                             markup: True
@@ -666,7 +666,7 @@ Builder.load_string(
                             allow_stretch: True
 
                         Label:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'X+:  '
                             halign: 'right'
                             markup: True
@@ -675,7 +675,7 @@ Builder.load_string(
 
                         Label:
                             id: x_fully_calibrated_peak_pos
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'xxx'
                             halign: 'left'
                             markup: True
@@ -683,7 +683,7 @@ Builder.load_string(
                             text_size: self.size
 
                         Label:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'X-:  '
                             halign: 'right'
                             markup: True
@@ -692,7 +692,7 @@ Builder.load_string(
 
                         Label:
                             id: x_fully_calibrated_peak_neg
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'xxx'
                             halign: 'left'
                             markup: True
@@ -708,7 +708,7 @@ Builder.load_string(
                             allow_stretch: True
 
                         Label:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'Z-:  '
                             halign: 'right'
                             markup: True
@@ -717,7 +717,7 @@ Builder.load_string(
 
                         Label:
                             id: z_fully_calibrated_peak_neg
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'zzz'
                             halign: 'left'
                             markup: True
@@ -725,7 +725,7 @@ Builder.load_string(
                             text_size: self.size
 
                         Label:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'Z+:  '
                             halign: 'right'
                             markup: True
@@ -734,7 +734,7 @@ Builder.load_string(
 
                         Label:
                             id: z_fully_calibrated_peak_pos
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: 'zzz'
                             halign: 'left'
                             markup: True

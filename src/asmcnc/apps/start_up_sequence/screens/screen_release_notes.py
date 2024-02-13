@@ -18,10 +18,10 @@ Builder.load_string(
 
     release_notes: release_notes
     BoxLayout:
-        padding:[0, dp(0.03125)*app.height, 0, 0]
+        padding:[0, app.get_scaled_height(15), 0, 0]
         RstDocument:
             id: release_notes
-            base_font_size: dp(0.0375)*app.width
+            base_font_size: app.get_scaled_width(30)
             underline_color: 'e5e5e5'
             colors: root.color_dict
 
@@ -42,7 +42,7 @@ Builder.load_string(
 
     BoxLayout:
         orientation: 'vertical'
-        padding:[0, dp(0.0104166666667)*app.height, 0, 0]
+        padding:[0, app.get_scaled_height(5), 0, 0]
 
         BoxLayout:
             size_hint_y: 0.4
@@ -50,15 +50,15 @@ Builder.load_string(
             BoxLayout:
                 size_hint_y: 0.6
                 orientation: 'horizontal'
-                padding:[dp(0.01875)*app.width, 0]
-                spacing:dp(0.0125)*app.width
+                padding:[app.get_scaled_width(15), 0]
+                spacing:app.get_scaled_width(10)
                 Image:
                     size_hint_x: 0.06
                     source: "./asmcnc/skavaUI/img/green_tick.png"
                     allow_stretch: True
                 Label:
                     id: version_number_label
-                    font_size: str(0.0375*app.width) + 'sp'
+                    font_size: str(get_scaled_width(30)) + 'sp'
                     color: hex('#333333')
                     text_size: self.size
                     size: self.texture_size
@@ -67,15 +67,15 @@ Builder.load_string(
             Label:
                 id: please_read_label
                 size_hint_y: 0.4
-                padding:[dp(0.01875)*app.width, 0]
+                padding:[app.get_scaled_width(15), 0]
                 color: hex('#333333')
-                font_size: str(0.0225*app.width) + 'sp'
+                font_size: str(get_scaled_width(18)) + 'sp'
                 text_size: self.size
                 size: self.texture_size
 
         BoxLayout:
-            padding:[dp(0.01875)*app.width, dp(0.00416666666667)*app.height, dp(0.025)*app.width, 0]
-            spacing:dp(0.01875)*app.width
+            padding:[app.get_scaled_width(15), app.get_scaled_height(2), app.get_scaled_width(15), 0]
+            spacing:app.get_scaled_width(15)
 
             ScrollReleaseNotes:
                 id: scroll_release_notes
@@ -90,7 +90,7 @@ Builder.load_string(
                     id: url_label
                     size_hint_y: 0.6
                     color: hex('#333333')
-                    font_size: str(0.01625*app.width) + 'sp'
+                    font_size: str(get_scaled_width(13)) + 'sp'
                     height: self.texture_size[1]
                     text_size: self.size
                     markup: True
@@ -98,13 +98,13 @@ Builder.load_string(
                     halign: "left"
 
         BoxLayout:
-            padding:[dp(0.3125)*app.width, dp(0.00416666666667)*app.height, dp(0.3125)*app.width, dp(0.0208333333333)*app.height]
+            padding:[app.get_scaled_width(250), app.get_scaled_height(2), app.get_scaled_width(250), app.get_scaled_height(2)]
             size_hint_y: 0.25
 
             Button:
                 id: next_button
                 # text: 'Next...'
-                font_size: str(0.0375*app.width) + 'sp'
+                font_size: str(get_scaled_width(30)) + 'sp'
                 background_normal: "./asmcnc/skavaUI/img/next.png"
                 on_press: root.next_screen()
                 color: hex('f9f9f9ff')

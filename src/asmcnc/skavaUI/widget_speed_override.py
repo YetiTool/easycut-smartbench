@@ -28,12 +28,12 @@ Builder.load_string(
         orientation: "vertical"
         
         Button:
-            font_size: str(0.01875 * app.width) + 'sp'
+            font_size: str(get_scaled_width(15)) + 'sp'
             id: up_5
             on_press: root.speed_up()
             background_color: 1, 1, 1, 0 
             BoxLayout:
-                padding:[dp(0.0025)*app.width, dp(0.00416666666667)*app.height]
+                padding:[app.get_scaled_width(2), app.get_scaled_height(2)]
                 size: self.parent.size
                 pos: self.parent.pos      
                 Image:
@@ -48,7 +48,7 @@ Builder.load_string(
             size: self.parent.size
             pos: self.parent.pos  
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: str(get_scaled_width(15)) + 'sp'
                 id: norm_button
                 on_press: root.speed_norm()
                 background_color: 1, 1, 1, 0 
@@ -60,19 +60,19 @@ Builder.load_string(
                 size: self.parent.size
                 allow_stretch: True  
             Label:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: str(get_scaled_width(15)) + 'sp'
                 id: speed_rate_label
                 pos_hint: {'center_x':0.5, 'center_y': .5}
                 size: self.parent.size
                 text: "100%"           
         
         Button:
-            font_size: str(0.01875 * app.width) + 'sp'
+            font_size: str(get_scaled_width(15)) + 'sp'
             id: down_5
             on_press: root.speed_down()
             background_color: 1, 1, 1, 0 
             BoxLayout:
-                padding:[dp(0.0025)*app.width, dp(0.00416666666667)*app.height]
+                padding:[app.get_scaled_width(2), app.get_scaled_height(2)]
                 size: self.parent.size
                 pos: self.parent.pos      
                 Image:
@@ -86,7 +86,7 @@ Builder.load_string(
             id: spindle_rpm
             size_hint_y: 0.22
             text: '0'
-            font_size: str(0.02*app.width) + 'px' 
+            font_size: str(get_scaled_width(16)) + 'px' 
             valign: 'middle'
             halign: 'center'
             size:self.texture_size
@@ -95,7 +95,7 @@ Builder.load_string(
         Label:
             size_hint_y: 0.15
             text: 'RPM'
-            font_size: str(0.015*app.width) + 'px' 
+            font_size: str(get_scaled_width(12)) + 'px' 
             valign: 'middle'
             halign: 'center'
             size:self.texture_size

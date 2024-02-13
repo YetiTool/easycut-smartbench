@@ -21,7 +21,7 @@ Builder.load_string(
 
         size: self.parent.size
         pos: self.parent.pos      
-        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+        padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
         spacing:0.025*app.width
         orientation: 'horizontal'
         
@@ -38,7 +38,7 @@ Builder.load_string(
             orientation: "vertical"
             
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: str(get_scaled_width(15)) + 'sp'
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release:
@@ -60,7 +60,7 @@ Builder.load_string(
                         allow_stretch: True   
 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: str(get_scaled_width(15)) + 'sp'
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 
@@ -82,14 +82,14 @@ Builder.load_string(
                         allow_stretch: True   
                         
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: str(get_scaled_width(15)) + 'sp'
                 background_color: hex('#F4433600')
                 on_press: root.get_info()
                 BoxLayout:
-                    padding:[dp(0.009375)*app.width, dp(0.0416666666667)*app.height, dp(0.040625)*app.width, dp(0.0416666666667)*app.height]
+                    padding:[app.get_scaled_width(7.5), app.get_scaled_height(20), app.get_scaled_width(7.5), app.get_scaled_height(20)]
                     size_hint: (None,None)
-                    height: dp(0.208333333333*app.height)
-                    width: dp(0.125*app.width)
+                    height: dp(app.get_scaled_height(100))
+                    width: dp(app.get_scaled_width(100))
                     pos: self.parent.pos
                     Image:
                         source: "./asmcnc/apps/shapeCutter_app/img/info_icon.png"

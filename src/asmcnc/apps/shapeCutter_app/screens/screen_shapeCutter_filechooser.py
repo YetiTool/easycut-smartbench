@@ -58,13 +58,13 @@ Builder.load_string(
             height: dp(100.0/480.0)*app.height
 
             ToggleButton:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: str(get_scaled_width(15)) + 'sp'
                 id: toggle_view_button
                 size_hint_x: 1
                 on_press: root.switch_view()
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding:[dp(0.03125)*app.width, dp(0.0520833333333)*app.height]
+                    padding:[app.get_scaled_width(25), app.get_scaled_height(25)]
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -76,7 +76,7 @@ Builder.load_string(
                         allow_stretch: True
 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: str(get_scaled_width(15)) + 'sp'
                 disabled: False
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
@@ -86,7 +86,7 @@ Builder.load_string(
                     root.refresh_filechooser() 
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding:[dp(0.03125)*app.width, dp(0.0520833333333)*app.height]
+                    padding:[app.get_scaled_width(25), app.get_scaled_height(25)]
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -97,7 +97,7 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: str(get_scaled_width(15)) + 'sp'
                 id: delete_selected_button
                 disabled: True
                 size_hint_x: 1
@@ -109,7 +109,7 @@ Builder.load_string(
                     # root.delete_selected(filechooser_sc_params.selection[0])
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding:[dp(0.03125)*app.width, dp(0.0520833333333)*app.height]
+                    padding:[app.get_scaled_width(25), app.get_scaled_height(25)]
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -120,7 +120,7 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: str(get_scaled_width(15)) + 'sp'
                 id: delete_all_button
                 disabled: False
                 size_hint_x: 1
@@ -131,7 +131,7 @@ Builder.load_string(
                     root.delete_popup(file_selection = 'all')
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding:[dp(0.03125)*app.width, dp(0.0520833333333)*app.height]
+                    padding:[app.get_scaled_width(25), app.get_scaled_height(25)]
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -142,7 +142,7 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: str(get_scaled_width(15)) + 'sp'
                 disabled: False
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
@@ -152,7 +152,7 @@ Builder.load_string(
                     root.quit_to_home()
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding:[dp(0.03125)*app.width, dp(0.0520833333333)*app.height]
+                    padding:[app.get_scaled_width(25), app.get_scaled_height(25)]
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -163,7 +163,7 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: str(get_scaled_width(15)) + 'sp'
                 id: load_button
                 disabled: True
                 size_hint_x: 1
@@ -173,7 +173,7 @@ Builder.load_string(
                     root.return_to_SC17(filechooser_sc_params.selection[0])
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding:[dp(0.03125)*app.width, dp(0.0520833333333)*app.height]
+                    padding:[app.get_scaled_width(25), app.get_scaled_height(25)]
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:

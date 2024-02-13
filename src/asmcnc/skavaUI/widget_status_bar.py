@@ -46,7 +46,7 @@ Builder.load_string(
             size: self.size
 
     BoxLayout:
-        padding:[dp(0.00125)*app.width, dp(0.00208333333333)*app.height]
+        padding:[app.get_scaled_width(1), app.get_scaled_height(1)]
         spacing:0.0075*app.width
         orientation: "horizontal"
         size: self.parent.size
@@ -69,7 +69,7 @@ Builder.load_string(
             size: self.parent.width, self.parent.height
             allow_stretch: True
         Label:
-            font_size: str(0.01875 * app.width) + 'sp'
+            font_size: str(get_scaled_width(15)) + 'sp'
             size_hint_x: 0.2
             id: ip_status_label
             text_size: self.size
@@ -81,7 +81,7 @@ Builder.load_string(
 #             size_hint_x: 0.1
 
         Label:
-            font_size: str(0.01875 * app.width) + 'sp'
+            font_size: str(get_scaled_width(15)) + 'sp'
             size_hint_x: 0.1
             id: grbl_xm_label
             text: 'mX:\\n-9999.99'
@@ -90,7 +90,7 @@ Builder.load_string(
             valign: 'middle'
             markup: True
         Label:
-            font_size: str(0.01875 * app.width) + 'sp'
+            font_size: str(get_scaled_width(15)) + 'sp'
             size_hint_x: 0.1
             id: grbl_ym_label
             text: 'mY:\\n-9999.99'
@@ -99,7 +99,7 @@ Builder.load_string(
             valign: 'middle'
             markup: True
         Label:
-            font_size: str(0.01875 * app.width) + 'sp'
+            font_size: str(get_scaled_width(15)) + 'sp'
             size_hint_x: 0.1
             id: grbl_zm_label
             text: 'mZ:\\n-9999.99'
@@ -110,7 +110,7 @@ Builder.load_string(
 
 
         Label:
-            font_size: str(0.01875 * app.width) + 'sp'
+            font_size: str(get_scaled_width(15)) + 'sp'
             size_hint_x: 0.1
             id: grbl_xw_label
             text: 'wX:\\n-9999.99'
@@ -118,7 +118,7 @@ Builder.load_string(
             halign: 'left'
             valign: 'middle'
         Label:
-            font_size: str(0.01875 * app.width) + 'sp'
+            font_size: str(get_scaled_width(15)) + 'sp'
             size_hint_x: 0.1
             id: grbl_yw_label
             text: 'wY:\\n-9999.99'
@@ -126,7 +126,7 @@ Builder.load_string(
             halign: 'left'
             valign: 'middle'
         Label:
-            font_size: str(0.01875 * app.width) + 'sp'
+            font_size: str(get_scaled_width(15)) + 'sp'
             size_hint_x: 0.1
             id: grbl_zw_label
             text: 'wZ:\\n-9999.99'
@@ -135,7 +135,7 @@ Builder.load_string(
             valign: 'middle'
 
         Label:
-            font_size: str(0.01875 * app.width) + 'sp'
+            font_size: str(get_scaled_width(15)) + 'sp'
             size_hint_x: 0.1
             id: grbl_status_label
             text: 'Status'

@@ -57,12 +57,12 @@ Builder.load_string(
                 size_hint_x: 0.165
 
                 Button: 
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: 'Home'
                     on_press: root.home()
 
                 Button: 
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: 'Y-Home, X-mid'
                     on_press: root.y_home_x_mid()
 
@@ -74,31 +74,31 @@ Builder.load_string(
                         hint_text: "Y"
                         valign: 'middle'
                         halign: 'center'
-                        font_size: str(0.03*app.width) + 'sp'
+                        font_size: str(get_scaled_width(24)) + 'sp'
                         text_size: self.size
                         markup: True
                         multiline: False
                         input_filter: 'int'
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: "Set"
                         on_press: root.set_y_steps()
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     id: y_pos_label
                     text: "G91 G0 Y1636.6"
                     on_press: root.Y_plus()
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     id: y_neg_label
                     text: "G91 G0 Y-1636.6"
                     on_press: root.Y_minus()
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: "Factory Settings"
                     on_press: root.go_back()
 
@@ -119,19 +119,19 @@ Builder.load_string(
 
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         id: x_pos_label
                         text: "G91 G0 X1150.3"
                         on_press: root.X_plus()
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         id: x_neg_label
                         text: "G91 G0 X-1150.3"
                         on_press: root.X_minus()
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         text: "G91 G0 X575.0"
                         on_press: root.X_575()
 
@@ -143,14 +143,14 @@ Builder.load_string(
                             hint_text: "X"
                             valign: 'middle'
                             halign: 'center'
-                            font_size: str(0.03*app.width) + 'sp'
+                            font_size: str(get_scaled_width(24)) + 'sp'
                             text_size: self.size
                             markup: True
                             multiline: False
                             input_filter: 'int'
 
                         Button:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             text: "Set"
                             on_press: root.set_x_steps()
 

@@ -19,7 +19,7 @@ Builder.load_string(
         orientation: 'horizontal'
         size: self.parent.size
         pos: self.parent.pos
-        padding:[dp(0.0125)*app.width, dp(0.0166666666667)*app.height, dp(0.0125)*app.width, dp(0.0166666666667)*app.height]
+        padding:[app.get_scaled_width(10), app.get_scaled_height(8), app.get_scaled_width(10), app.get_scaled_height(8)]
 
         
         BoxLayout:
@@ -33,16 +33,16 @@ Builder.load_string(
                 markup: True
                 halign: 'center'
                 text_size: self.size
-                font_size: str(0.025*app.width) + 'sp'
+                font_size: str(get_scaled_width(20)) + 'sp'
                 valign: "bottom"
 
             BoxLayout: 
                 id: bl
                 size_hint_y: 0.5
-                padding:[dp(0.017620614025)*app.width, 0]
+                padding:[app.get_scaled_width(14.1), 0]
 
                 ToggleButton:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     id: switch
                     size_hint: (None, None)
                     size: (dp(64.0/800)*app.width, dp(29.0/480)*app.height)
@@ -77,7 +77,7 @@ Builder.load_string(
         BoxLayout:
             orientation: 'vertical'
             size_hint_x: 0.6
-            padding:[dp(0.0025)*app.width, 0, dp(0.00625)*app.width, 0]
+            padding:[app.get_scaled_width(2), 0, app.get_scaled_width(2), 0]
             spacing: 0
             Label: 
                 id: profile_label
@@ -87,7 +87,7 @@ Builder.load_string(
                 halign: 'left'
                 text_size: self.size
                 bold: True
-                font_size: str(0.0225*app.width) + 'sp'
+                font_size: str(get_scaled_width(18)) + 'sp'
                 valign: "bottom"
 
             Label:
@@ -97,14 +97,14 @@ Builder.load_string(
                 markup: True
                 halign: 'left'
                 text_size: self.size
-                font_size: str(0.0175*app.width) + 'sp'
+                font_size: str(get_scaled_width(14)) + 'sp'
                 valign: "middle"
 
         BoxLayout: 
             size_hint_x: 0.1
-            padding:[0, 0, dp(0.0125)*app.width, 0]
+            padding:[0, 0, app.get_scaled_width(10), 0]
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: str(get_scaled_width(15)) + 'sp'
                 id: yp_cog_button
                 background_normal: ''
                 on_press: root.open_yp_settings()

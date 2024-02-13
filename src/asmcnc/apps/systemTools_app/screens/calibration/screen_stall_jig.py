@@ -65,14 +65,14 @@ Builder.load_string(
 
                 Button:
                     id: back_button
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     size_hint_y: 1
                     text: "<< Back"
                     on_press: root.back_to_fac_settings()
 
                 Button: 
                     id: run_button
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     size_hint_y: 1
                     background_normal: ""
                     background_color: root.pass_green
@@ -81,7 +81,7 @@ Builder.load_string(
 
                 Button:
                     id: result_label
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     size_hint_y: 1
                     background_normal: ""
                     background_down: ""
@@ -89,7 +89,7 @@ Builder.load_string(
 
                 Button: 
                     id: reset_test_button
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     size_hint_y: 1
                     text: "RESET CURRENT SUB-TEST"
                     on_press: root.reset_current_sub_test()
@@ -100,7 +100,7 @@ Builder.load_string(
 
                     Button:
                         id: send_data_button 
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         size_hint_x: 2
                         disabled: True
                         text: "SEND DATA"
@@ -108,13 +108,13 @@ Builder.load_string(
 
                     ToggleButton: 
                         id: unlock_button
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         size_hint_x: 1
                         text: "unlock"
                         on_press: root.enable_data_send()
                 Label:
                     id: test_status_label
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     size_hint_y: 1
 
             BoxLayout: 
@@ -140,7 +140,7 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint_y: 4
-                    padding:[0, dp(0.0208333333333)*app.height]
+                    padding:[0, app.get_scaled_height(10)]
 
                     BoxLayout:
                         id: move_container
@@ -151,7 +151,7 @@ Builder.load_string(
 
                     Button:
                         id: home_button
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         size_hint_x: 0.5
                         text: "HOME"
                         background_normal: ""
@@ -160,7 +160,7 @@ Builder.load_string(
 
                     Button:
                         id: grbl_reset_button
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         size_hint_x: 0.5
                         text: "GRBL RESET"
                         on_press: root.grbl_reset()

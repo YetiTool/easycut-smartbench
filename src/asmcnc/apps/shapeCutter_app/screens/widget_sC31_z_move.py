@@ -22,7 +22,7 @@ Builder.load_string(
 
         size: self.parent.size
         pos: self.parent.pos      
-        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+        padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
         spacing:0.0125*app.width
         orientation: 'horizontal'
         
@@ -40,7 +40,7 @@ Builder.load_string(
             orientation: "vertical"
             
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: str(get_scaled_width(15)) + 'sp'
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release:
@@ -61,7 +61,7 @@ Builder.load_string(
                         allow_stretch: True   
 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: str(get_scaled_width(15)) + 'sp'
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 
@@ -83,7 +83,7 @@ Builder.load_string(
                         allow_stretch: True   
                         
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: str(get_scaled_width(15)) + 'sp'
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 

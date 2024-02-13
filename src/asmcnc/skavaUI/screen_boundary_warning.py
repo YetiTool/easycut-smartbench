@@ -44,7 +44,7 @@ Builder.load_string(
             size: self.texture_size
             text_size: self.size
             color: hex('#333333ff')
-            font_size: str(0.045*app.width) + 'sp'
+            font_size: str(get_scaled_width(36)) + 'sp'
 
         BoxLayout:
             orientation: 'horizontal'
@@ -56,14 +56,14 @@ Builder.load_string(
                 orientation: 'vertical'
                 size_hint_x: 1
                 spacing: 0
-                padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
 
                 Label:
                     size_hint_y: 3
                     size: self.texture_size
                     text_size: self.size
                     color: hex('#333333ff')
-                    font_size: str(0.025*app.width) + 'sp'
+                    font_size: str(get_scaled_width(20)) + 'sp'
                     halign: 'center'
                     valign: 'middle'
                     text: root.check_outcome
@@ -72,7 +72,7 @@ Builder.load_string(
                 BoxLayout:
                     orientation: 'horizontal'
                     size_hint_y: 1
-                    padding:[dp(0.030625)*app.width, 0]
+                    padding:[app.get_scaled_width(24.5), 0]
 
                     Button:
                         id: quit_button
@@ -82,9 +82,9 @@ Builder.load_string(
                         background_down: "./asmcnc/skavaUI/img/next.png"
                         border: [dp(14.5)]*4
                         size_hint: (None,None)
-                        width: dp(0.36375*app.width)
-                        height: dp(0.164583333333*app.height)
-                        font_size: str(0.035*app.width) + 'sp'
+                        width: dp(app.get_scaled_width(291))
+                        height: dp(app.get_scaled_height(79))
+                        font_size: str(get_scaled_width(28)) + 'sp'
                         color: hex('#f9f9f9ff')
                         markup: True
                         center: self.parent.center
@@ -94,7 +94,7 @@ Builder.load_string(
                 size_hint_x: 1
                 orientation: 'vertical'
                 spacing:0.0104166666667*app.height
-                padding:[0, 0, dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                padding:[0, 0, app.get_scaled_width(20), app.get_scaled_height(20)]
                                 
                 ScrollView:
                     size_hint: 1, 1
@@ -106,7 +106,7 @@ Builder.load_string(
                     RstDocument:
                         text: root.display_output
                         background_color: hex('#E5E5E5FF')
-                        base_font_size: str(31.0/800.0*app.width) + 'sp'
+                        base_font_size: str(get_scaled_width(24800)) + 'sp'
 
                 BoxLayout:
                     orientation: 'horizontal'
