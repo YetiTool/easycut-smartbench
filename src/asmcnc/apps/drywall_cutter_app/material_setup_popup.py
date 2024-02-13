@@ -31,7 +31,7 @@ Builder.load_string("""
     
     auto_dismiss: False
     size_hint: (None,None)
-    size: (577, 301)
+    size: (dp(app.get_scaled_width(577)), dp(app.get_scaled_height(301)))
     title: ''
     separator_height: 0
     background: './asmcnc/apps/drywall_cutter_app/img/cutting_depths_popup.png'
@@ -41,21 +41,21 @@ Builder.load_string("""
     FloatLayout:
         id: float_layout
         size_hint: (None, None)
-        size: (577, 301)
+        size: (dp(app.get_scaled_width(577)), dp(app.get_scaled_height(301)))
         pos_hint: {'y': -0.05}
                 
         Label:
             id: title_label
             pos_hint: {'x': -0.39, 'y': 0.45}
             text: 'Cutting depths'
-            font_size: '20sp'
+            font_size: app.get_scaled_sp('20sp')
             color: hex('#F9F9F9')
         
         Label:
             id: Z0
             pos_hint: {'x': 0.0375, 'y': 0.21}
             text: 'Z0'
-            font_size: '20sp'
+            font_size: app.get_scaled_sp('20sp')
             color: hex('#333333')
             
         Image:
@@ -70,9 +70,9 @@ Builder.load_string("""
             id: material_thickness_label
             pos_hint: {'x': -0.42, 'y': 0.23}
             text: ''
-            font_size: '16sp'
+            font_size: app.get_scaled_sp('16sp')
             color: hex('#333333')
-            text_size: (75, None)
+            text_size: (dp(app.get_scaled_width(75)), None)
             
         Image:
             id: material_thickness_dims
@@ -89,7 +89,7 @@ Builder.load_string("""
             halign: 'center'
             size_hint: (.12, .1)
             text_size: self.size
-            font_size: '16sp'
+            font_size: app.get_scaled_sp('16sp')
             markup: True
             multiline: False
             text: ''
@@ -99,9 +99,9 @@ Builder.load_string("""
             id: bottom_offset_label
             pos_hint: {'x': -0.42, 'y': -0.075}
             text: ''
-            font_size: '16sp'
+            font_size: app.get_scaled_sp('16sp')
             color: hex('#333333')
-            text_size: (75, None)
+            text_size: (dp(app.get_scaled_width(75)), None)
             
         Image:
             id: bottom_offset_graphic
@@ -118,7 +118,7 @@ Builder.load_string("""
             halign: 'center'
             size_hint: (.12, .1)
             text_size: self.size
-            font_size: '16sp'
+            font_size: app.get_scaled_sp('16sp')
             markup: True
             multiline: False
             text: ''
@@ -136,9 +136,9 @@ Builder.load_string("""
             id: total_cut_depth_label
             pos_hint: {'x': -0.42, 'y': -0.275}
             text: ''
-            font_size: '16sp'
+            font_size: app.get_scaled_sp('16sp')
             color: hex('#333333')
-            text_size: (75, None)
+            text_size: (dp(app.get_scaled_width(75)), None)
             
         TextInput:
             id: total_cut_depth
@@ -147,7 +147,7 @@ Builder.load_string("""
             halign: 'center'
             size_hint: (.12, .1)
             text_size: self.size
-            font_size: '16sp'
+            font_size: app.get_scaled_sp('16sp')
             markup: True
             multiline: False
             text: ''
@@ -182,19 +182,19 @@ Builder.load_string("""
             id: cut_depth_warning
             pos_hint: {'x': -0.335, 'y': -0.4}
             text: ''
-            font_size: '14sp'
+            font_size: app.get_scaled_sp('14sp')
             markup: True
             color: hex('#FF0000')
-            text_size: (175, None)
+            text_size: (dp(app.get_scaled_width(175)), None)
         
         Label:
             id: pass_depth_warning
             pos_hint: {'x': 0.2525, 'y': -0.1}
             text: ''
-            font_size: '14sp'
+            font_size: app.get_scaled_sp('14sp')
             markup: True
             color: hex('#FF0000')
-            text_size: (150, None) 
+            text_size: (dp(app.get_scaled_width(150)), None) 
         
         GridLayout:
             rows: 2
@@ -202,16 +202,16 @@ Builder.load_string("""
             pos_hint: {'x': 0.6, 'y': -0.2}
             row_force_default: True
             col_force_default: True
-            row_default_height: 50
-            col_default_width: 100
+            row_default_height: dp(app.get_scaled_height(50))
+            col_default_width: dp(app.get_scaled_width(100))
             
             
             Label:
                 id: auto_pass_label
                 text: ''
-                font_size: '16sp'
+                font_size: app.get_scaled_sp('16sp')
                 color: hex('#333333')
-                text_size: (75, None)
+                text_size: (dp(app.get_scaled_width(75)), None)
             CheckBox:
                 id: auto_pass_checkbox
                 size_hint: (0.3,1)
@@ -222,9 +222,9 @@ Builder.load_string("""
             Label:
                 id: depth_per_pass_label
                 text: ''
-                font_size: '16sp'
+                font_size: app.get_scaled_sp('16sp')
                 color: hex('#333333')
-                text_size: (75, None)
+                text_size: (dp(app.get_scaled_width(75)), None)
                 
             TextInput:
                 id: depth_per_pass
@@ -232,7 +232,7 @@ Builder.load_string("""
                 halign: 'center'
                 size_hint: (0, 0)
                 text_size: self.size
-                font_size: '16sp'
+                font_size: app.get_scaled_sp('16sp')
                 markup: True
                 multiline: False
                 text: ''
@@ -243,15 +243,15 @@ Builder.load_string("""
             orientation: 'horizontal'
             pos_hint: {'x': 0.625, 'y': 0.075}
             size_hint: (None, None)
-            size: (189,23)
-            spacing: 0.025*app.width
+            size: (dp(app.get_scaled_width(189)),dp(app.get_scaled_height(23)))
+            spacing: dp(app.get_scaled_width(20))
 
             Button:
                 id: cancel_button
                 on_press: root.cancel()
                 size_hint: (None,None)
-                width: dp(83)
-                height: dp(23)
+                width: dp(app.get_scaled_width(83))
+                height: dp(app.get_scaled_height(23))
                 background_color: [0,0,0,0]
                 BoxLayout:
                     padding: 0
@@ -268,8 +268,8 @@ Builder.load_string("""
                 id: confirm_button
                 on_press: root.confirm()
                 size_hint: (None,None)
-                width: dp(86)
-                height: dp(23)
+                width: dp(app.get_scaled_width(86))
+                height: dp(app.get_scaled_height(23))
                 background_color: [0,0,0,0]
                 BoxLayout:
                     padding: 0
@@ -328,6 +328,30 @@ class CuttingDepthsPopup(Popup):
     def on_open(self):
         self.load_active_config()
 
+    def get_material_thickness(self):
+        try:
+            return float(self.material_thickness.text)
+        except:
+            return 0
+
+    def get_bottom_offset(self):
+        try:
+            return float(self.bottom_offset.text)
+        except:
+            return 0
+
+    def get_depth_per_pass(self):
+        try:
+            return float(self.depth_per_pass.text)
+        except:
+            return 0
+
+    def get_total_cut_depth(self):
+        try:
+            return float(self.total_cut_depth.text)
+        except:
+            return 0
+
     def load_active_config(self):
         self.material_thickness.text = str(self.dwt_config.active_config.cutting_depths.material_thickness)
         self.bottom_offset.text = str(self.dwt_config.active_config.cutting_depths.bottom_offset)
@@ -366,58 +390,53 @@ class CuttingDepthsPopup(Popup):
             self.depth_per_pass.text = ''
 
     def update_graphic_position(self):
-        try:
-            upper_limit = 0.225  # Value at which the cutter sits at the top of the material
-            lower_limit = -0.035  # Value at which the cutter sits at the bottom surface of the material
-            range = upper_limit - lower_limit
-            bottom_offset = 0 if self.bottom_offset.text == '' or self.bottom_offset.text == '-' else float(self.bottom_offset.text)
-            material_thickness = 0 if self.material_thickness.text == '' or self.material_thickness.text == '-' else float(self.material_thickness.text)
-            ratio = 0 if material_thickness == 0 else bottom_offset / material_thickness
-            cutter_y = lower_limit - (range * ratio)
-            self.cutter_graphic.pos_hint['y'] = cutter_y
-            self.total_cut_depth_arrow.pos_hint['y'] = cutter_y
-            self.float_layout.do_layout()
-            self.cutter_layout.do_layout()
-        except:
-            pass
+        upper_limit = 0.225  # Value at which the cutter sits at the top of the material
+        lower_limit = -0.035  # Value at which the cutter sits at the bottom surface of the material
+        range = upper_limit - lower_limit
+        bottom_offset = self.get_bottom_offset()
+        material_thickness = self.get_material_thickness()
+        ratio = 0 if material_thickness == 0 else bottom_offset / material_thickness
+        cutter_y = lower_limit - (range * ratio)
+        self.cutter_graphic.pos_hint['y'] = cutter_y
+        self.total_cut_depth_arrow.pos_hint['y'] = cutter_y
+        self.float_layout.do_layout()
+        self.cutter_layout.do_layout()
 
     def update_text(self, instance, value):
         cutter_max_depth_total = self.dwt_config.active_cutter.max_depth_total
         # Calculate total cut depth and handle inputs
         if instance == self.material_thickness or instance == self.bottom_offset:
+            # Update warning label text
+            if self.soft_limit_total_cut_depth < cutter_max_depth_total:
+                max_cut_depth = self.soft_limit_total_cut_depth
+                self.cut_depth_warning.text = self.cut_depth_warning_soft_limit
+            else:
+                max_cut_depth = cutter_max_depth_total
+                self.cut_depth_warning.text = self.cut_depth_warning_cutter_max
+
+            material_thickness = self.get_material_thickness()
+            bottom_offset = self.get_bottom_offset()
+
+            # Make sure material thickness is never negative
+            if material_thickness < 0:
+                self.material_thickness.text = '0'
+                material_thickness = 0
+
+            # Make sure bottom offset is never bigger than material thickness
+            if abs(bottom_offset) > material_thickness:
+                if bottom_offset < 0:
+                    if self.material_thickness.text == '':
+                        self.bottom_offset.text = ''
+                        bottom_offset = material_thickness
+                    else:
+                        self.bottom_offset.text = '-' + self.material_thickness.text
+                        bottom_offset = -material_thickness
+
+            self.total_cut_depth.text = str(material_thickness + bottom_offset)
+            self.update_graphic_position()
+            self.calculate_depth_per_pass(self.depth_per_pass, self.auto_pass_checkbox.active)
+
             try:
-                # Update warning label text
-                if self.soft_limit_total_cut_depth < cutter_max_depth_total:
-                    max_cut_depth = self.soft_limit_total_cut_depth
-                    self.cut_depth_warning.text = self.cut_depth_warning_soft_limit
-                else:
-                    max_cut_depth = cutter_max_depth_total
-                    self.cut_depth_warning.text = self.cut_depth_warning_cutter_max
-
-                material_thickness = 0 if self.material_thickness.text == '' or self.material_thickness.text == '-' else float(
-                    self.material_thickness.text)
-                bottom_offset = 0 if self.bottom_offset.text == '' or self.bottom_offset.text == '-' else float(
-                    self.bottom_offset.text)
-
-                # Make sure material thickness is never negative
-                if material_thickness < 0:
-                    self.material_thickness.text = '0'
-                    material_thickness = 0
-
-                # Make sure bottom offset is never bigger than material thickness
-                if abs(bottom_offset) > material_thickness:
-                    if bottom_offset < 0:
-                        if self.material_thickness.text == '':
-                            self.bottom_offset.text = ''
-                            bottom_offset = material_thickness
-                        else:
-                            self.bottom_offset.text = '-' + self.material_thickness.text
-                            bottom_offset = -material_thickness
-
-                self.total_cut_depth.text = str(material_thickness + bottom_offset)
-                self.update_graphic_position()
-                self.calculate_depth_per_pass(self.depth_per_pass, self.auto_pass_checkbox.active)
-
                 if float(self.total_cut_depth.text) > max_cut_depth:
                     self.float_layout.add_widget(self.cut_depth_warning)
                 elif float(self.total_cut_depth.text) <= 0:
@@ -425,10 +444,11 @@ class CuttingDepthsPopup(Popup):
                     self.float_layout.add_widget(self.cut_depth_warning)
                 else:
                     self.float_layout.remove_widget(self.cut_depth_warning)
-
-                self.disable_confirm_button()
             except:
                 pass
+
+            self.disable_confirm_button()
+
 
     def disable_confirm_button(self):
         children = self.float_layout.children
@@ -444,56 +464,50 @@ class CuttingDepthsPopup(Popup):
         upper_limit = 0.0825  # Value at which the line sits at the top of the material
         lower_limit = -0.175  # Value at which the line sits at the bottom surface of the material
         line_range = upper_limit - lower_limit
-        material_thickness = 0 if self.material_thickness.text == '' or self.material_thickness.text == '-' else float(
-            self.material_thickness.text)
-        depth_per_pass = 0 if self.depth_per_pass.text == '' or self.depth_per_pass.text == '-' else float(
-            self.depth_per_pass.text)
+        material_thickness = self.get_material_thickness()
+        depth_per_pass = self.get_depth_per_pass()
         ratio = 0 if material_thickness == 0 else depth_per_pass / material_thickness
         singular_cut = 0 if self.depth_per_pass.text == "" else round(ratio * line_range, 4)
         for pass_line in self.pass_depth_lines:
             self.cutter_layout.remove_widget(pass_line)
         if self.total_cut_depth.text != "0.0":
             for i in range(0, int(number_of_passes)):
-                img = Image()
-
-                self.cutter_layout.add_widget(img)
-
-                img.source = "./asmcnc/apps/drywall_cutter_app/img/pass_depth_line.png"
-
-                line_depth = upper_limit - (singular_cut * (i+1))
+                line_depth = upper_limit - (singular_cut * (i + 1))
                 cutter_limit = lower_limit - (-0.035 - self.cutter_graphic.pos_hint['y'])
                 if line_depth < cutter_limit:
                     line_depth = cutter_limit
 
-                img.pos_hint = {'center_x': 0.45, 'y': line_depth}
-                img.allow_stretch = True
+                img = Image(source="./asmcnc/apps/drywall_cutter_app/img/pass_depth_line.png",
+                            allow_stretch=True,
+                            pos_hint={'center_x': 0.45, 'y': line_depth})
 
+                self.cutter_layout.add_widget(img)
                 self.pass_depth_lines.append(img)
         self.cutter_layout.do_layout()
 
     def calculate_depth_per_pass(self, *args):
         max_cut_depth_per_pass = self.dwt_config.active_cutter.max_depth_per_pass
         if self.auto_pass_checkbox.active:
+
+            depth_per_pass = max_cut_depth_per_pass
+            number_of_passes = 0 if depth_per_pass == 0 else math.ceil(float(self.get_total_cut_depth()) / depth_per_pass)
+
+            if depth_per_pass > max_cut_depth_per_pass:
+                self.depth_per_pass.text = str(max_cut_depth_per_pass)
+            else:
+                self.depth_per_pass.text = str(round(depth_per_pass, 1))
             try:
-                depth_per_pass = max_cut_depth_per_pass
-                number_of_passes = 0 if depth_per_pass == 0 else math.ceil(float(self.total_cut_depth.text) / depth_per_pass)
-
-                if depth_per_pass > max_cut_depth_per_pass:
-                    self.depth_per_pass.text = str(max_cut_depth_per_pass)
-                else:
-                    self.depth_per_pass.text = str(round(depth_per_pass, 1))
-
                 if depth_per_pass <= 0:
                     self.pass_depth_warning.text = self.pass_depth_warning_zero
                     self.float_layout.add_widget(self.pass_depth_warning)
                 else:
                     self.float_layout.remove_widget(self.pass_depth_warning)
-                self.disable_confirm_button()
-                self.generate_pass_depth_lines(number_of_passes)
             except:
                 pass
+            self.disable_confirm_button()
+            self.generate_pass_depth_lines(number_of_passes)
         else:
-            depth_per_pass = 0 if self.depth_per_pass.text == "" or self.depth_per_pass.text == "-" else float(self.depth_per_pass.text)
+            depth_per_pass = self.get_depth_per_pass()
             try:
                 if depth_per_pass > max_cut_depth_per_pass:
                     self.pass_depth_warning.text = self.pass_depth_warning_cutter_max
@@ -503,19 +517,17 @@ class CuttingDepthsPopup(Popup):
                     self.float_layout.add_widget(self.pass_depth_warning)
                 else:
                     self.float_layout.remove_widget(self.pass_depth_warning)
-                self.disable_confirm_button()
-                number_of_passes = 0 if depth_per_pass == 0 else math.ceil(float(self.total_cut_depth.text) / depth_per_pass)
-                self.generate_pass_depth_lines(number_of_passes)
             except:
                 pass
+            self.disable_confirm_button()
+            number_of_passes = 0 if depth_per_pass == 0 else math.ceil(float(self.get_total_cut_depth()) / depth_per_pass)
+            self.generate_pass_depth_lines(number_of_passes)
+
 
     def confirm(self):
-        material_thickness = 0.0 if self.material_thickness.text == '' or self.material_thickness.text == '-' else float(
-            self.material_thickness.text)
-        bottom_offset = 0.0 if self.bottom_offset.text == '' or self.bottom_offset.text == '-' else float(
-            self.bottom_offset.text)
-        depth_per_pass = 0.0 if self.depth_per_pass.text == '' or self.depth_per_pass.text == '-' else float(
-            self.depth_per_pass.text)
+        material_thickness = self.get_material_thickness()
+        bottom_offset = self.get_bottom_offset()
+        depth_per_pass = self.get_depth_per_pass()
 
         self.dwt_config.active_config.cutting_depths.material_thickness = material_thickness
         self.dwt_config.active_config.cutting_depths.bottom_offset = bottom_offset
@@ -527,14 +539,10 @@ class CuttingDepthsPopup(Popup):
         self.dismiss()
 
     def validate_inputs(self):
-        material_thickness = 0 if self.material_thickness.text == '' or self.material_thickness.text == '-' else float(
-            self.material_thickness.text)
-        bottom_offset = 0 if self.bottom_offset.text == '' or self.bottom_offset.text == '-' else float(
-            self.bottom_offset.text)
-        total_cut_depth = 0 if self.total_cut_depth.text == '' or self.total_cut_depth.text == '-' else float(
-            self.total_cut_depth.text)
-        depth_per_pass = 0 if self.depth_per_pass.text == '' or self.depth_per_pass.text == '-' else float(
-            self.depth_per_pass.text)
+        material_thickness = self.get_material_thickness()
+        bottom_offset = self.get_bottom_offset()
+        total_cut_depth = self.get_total_cut_depth()
+        depth_per_pass = self.get_depth_per_pass()
         auto_pass_checkbox = self.auto_pass_checkbox.active
         max_cut_depth_per_pass = self.dwt_config.active_cutter.max_depth_per_pass
 
