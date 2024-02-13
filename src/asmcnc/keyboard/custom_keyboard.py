@@ -5,6 +5,7 @@ from kivy.uix.vkeyboard import VKeyboard
 import traceback
 from kivy.clock import Clock
 from asmcnc.core_UI import scaling_utils
+import os
 
 try:
     import hgtk
@@ -27,10 +28,12 @@ class Keyboard(VKeyboard):
 
         self.text_instance = None
 
-        self.kr_layout = "./asmcnc/keyboard/layouts/kr.json"
-        self.numeric_layout = "./asmcnc/keyboard/layouts/numeric.json"
+        dirname = os.path.dirname(__file__)
+
+        self.kr_layout = os.path.join(dirname, "layouts/kr.json")
+        self.numeric_layout = os.path.join(dirname, "layouts/numeric.json")
         self.qwerty_layout = "data/keyboards/qwerty.json"
-        self.qwertyKR_layout = "./asmcnc/keyboard/layouts/qwertyKR.json"
+        self.qwertyKR_layout = os.path.join(dirname, "layouts/qwertyKR.json")
         self.font_size = scaling_utils.get_scaled_width(20)
 
         try:
@@ -139,19 +142,19 @@ class Keyboard(VKeyboard):
             self.background = "atlas://data/images/defaulttheme/vkeyboard_background"
 
         if self.layout == self.numeric_layout:
-            self.width = Window.width / 3
+            self.width = scaling_utils.Width / 3
         else:
-            self.width = Window.width
+            self.width = scaling_utils.Width
 
         # Make sure keyboard never goes off-screen and becomes unusable/unreachable
-        if self.pos[0] + self.width > Window.width:
-            self.pos = (Window.width - self.width, self.pos[1])
+        if self.pos[0] + self.width > scaling_utils.Width:
+            self.pos = (scaling_utils.Width - self.width, self.pos[1])
         if self.pos[1] < 0:
             self.pos = (self.pos[0], 0)
         if self.pos[0] < 0:
             self.pos = (0, self.pos[1])
-        if self.pos[1] + self.height > Window.height:
-            self.pos = (self.pos[0], Window.height - self.height)
+        if self.pos[1] + self.height > scaling_utils.Height:
+            self.pos = (self.pos[0], scaling_utils.Height - self.height)
 
     # On focus behaviour is bound to all text inputs
     def on_focus_raise_keyboard(self,instance,value):
