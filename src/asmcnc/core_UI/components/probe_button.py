@@ -15,7 +15,6 @@ class ProbeButton(Button):
         # When the probe_z_coord is updated, close the popup
         self.router_machine.bind(probe_z_coord=self.close_popup)
 
-
     def open_popup(self, *args):
         print("Opening popup")
         self.router_machine.probe_z()
