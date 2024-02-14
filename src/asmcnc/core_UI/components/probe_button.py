@@ -2,7 +2,7 @@ from kivy.uix.button import Button
 
 
 class ProbeButton(Button):
-    # background_color = (244. / 255, 43. / 255, 36. / 255, 1)
+    size_hint_y = 1
     background_normal = "./asmcnc/skavaUI/img/z_probe.png"
 
     def __init__(self, router_machine):
@@ -10,9 +10,12 @@ class ProbeButton(Button):
 
         self.router_machine = router_machine
 
+        # When the button is pressed, open the popup
+        self.bind(on_press=self.open_popup)
+
         # When the probe_z_coord is updated, close the popup
         self.router_machine.bind(probe_z_coord=self.close_popup)
-        self.bind(on_press=self.open_popup)
+
 
     def open_popup(self, *args):
         print("Opening popup")
