@@ -27,24 +27,6 @@ class ExportingScreenManager(ScreenManager):
             with open(os.path.join(SCREEN_FOLDER, screen.name + '.json'), 'w') as f:
                 json.dump(j_obj, f, indent=4)
 
-    # def add_widget(self, screen, **kwargs):
-    #     super(ExportingScreenManager, self).add_widget(screen)
-    #     screen.on_enter = lambda *args: None
-    #     screen.on_pre_enter = lambda *args: None
-    #     screen.on_pre_leave = lambda *args: None
-    #     screen.on_leave = lambda *args: None
-    #     self.current = screen.name
-    #
-    #     j_obj = OrderedDict([
-    #         ("name", screen.name),
-    #         ("children", [])
-    #     ])
-    #
-    #     self.export_children(screen.children, j_obj["children"])
-    #
-    #     with open(os.path.join(SCREEN_FOLDER, screen.name + '.json'), 'w') as f:
-    #         json.dump(j_obj, f, indent=4)
-
     def export_children(self, children, j_obj_children):
         for child in children:
             child_data = OrderedDict([
@@ -52,6 +34,9 @@ class ExportingScreenManager(ScreenManager):
                 ("id", child.id),
                 ("pos", child.pos),
                 ("size", child.size),
+                ("padding", child.padding if hasattr(child, "padding") else None),
+                ("spacing", child.spacing if hasattr(child, "spacing") else None),
+                ("font_size", child.font_size if hasattr(child, "font_size") else None),
                 ("children", [])
             ])
             self.export_children(child.children, child_data["children"])
