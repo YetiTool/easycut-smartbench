@@ -2,7 +2,6 @@ from kivy.uix.button import Button
 
 
 class ProbeButton(Button):
-    size_hint_y = 1
     background_normal = "./asmcnc/skavaUI/img/z_probe.png"
 
     def __init__(self, router_machine):
