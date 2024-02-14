@@ -30,6 +30,7 @@ from kivy.uix.boxlayout import BoxLayout
 
 from asmcnc.core_UI import scaling_utils
 from asmcnc.core_UI.popup_manager import PopupManager
+from exporting_screen_manager import ExportingScreenManager
 
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
 
@@ -176,7 +177,7 @@ class SkavaUI(App):
         log("Starting App:")
 
         # Establish screens
-        sm = ScreenManager(transition=NoTransition())
+        sm = ExportingScreenManager(transition=NoTransition())
 
 
         # Localization/language object
