@@ -77,6 +77,9 @@ class Localization(object):
 
     kivy_markup_regex = re.compile('\[.*?\]')
 
+    ORIGINAL_PRODUCT_NAME = "SmartBench"
+    PRODUCT_NAME = "Smart CNC"
+
     def __init__(self):
 
         if os.path.exists(self.persistent_language_path):
@@ -86,13 +89,20 @@ class Localization(object):
 
     # Getters/formatters
     def get_str(self, string):
-        return str(self.dictionary.get(str(string), str(string)))
+        return self._get(string)
 
     def get_bold(self, string):
-        return ('[b]' + str(self.dictionary.get(str(string), str(string))) + '[/b]')
+        return "[b]{0}[/b]".format(self._get(string))
 
     def get_italic(self, string):
-        return ('[i]' + str(self.dictionary.get(str(string), str(string))) + '[/i]')
+        return "[i]{0}[/i]".format(self._get(string))
+
+    def _get(self, string):
+        string = self.dictionary.get(str(string), str(string))
+
+        if self.ORIGINAL_PRODUCT_NAME in string and self.ORIGINAL_PRODUCT_NAME != self.PRODUCT_NAME:
+            string = string.replace(self.ORIGINAL_PRODUCT_NAME, self.PRODUCT_NAME)
+        return string
 
     def get_localized_days(self, string):
 
