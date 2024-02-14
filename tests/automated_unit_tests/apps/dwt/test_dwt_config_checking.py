@@ -38,7 +38,7 @@ class TestDWTConfigChecking(unittest.TestCase):
                 "l": 30
             },
             "shape_type": "rectangle",
-            "cutter_type": "test_cutter.json",
+            "cutter_type": "tool_6mm.json",
             "units": "mm",
             "rotation": "horizontal",
             "datum_position": {

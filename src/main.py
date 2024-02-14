@@ -279,6 +279,8 @@ class SkavaUI(App):
         sm.add_widget(recovery_decision_screen)
         sm.add_widget(homing_decision_screen)
 
+        Clock.schedule_once(lambda dt: sm.dump_all_screens(), 10)
+
         # Setting the first screen:        
         # sm.current is set at the end of start_services in serial_connection 
         # This ensures kivy has fully loaded and initial kivy schedule calls are safely made before screen is presented
