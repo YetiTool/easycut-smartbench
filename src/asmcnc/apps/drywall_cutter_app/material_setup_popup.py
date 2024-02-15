@@ -328,29 +328,11 @@ class CuttingDepthsPopup(Popup):
     def on_open(self):
         self.load_active_config()
 
-    def get_material_thickness(self):
+    def get_safe_float(self, val):
         try:
-            return float(self.material_thickness.text)
+            return float(val)
         except:
-            return 0
-
-    def get_bottom_offset(self):
-        try:
-            return float(self.bottom_offset.text)
-        except:
-            return 0
-
-    def get_depth_per_pass(self):
-        try:
-            return float(self.depth_per_pass.text)
-        except:
-            return 0
-
-    def get_total_cut_depth(self):
-        try:
-            return float(self.total_cut_depth.text)
-        except:
-            return 0
+            return 0.0
 
     def load_active_config(self):
         self.material_thickness.text = str(self.dwt_config.active_config.cutting_depths.material_thickness)
@@ -393,8 +375,8 @@ class CuttingDepthsPopup(Popup):
         upper_limit = 0.225  # Value at which the cutter sits at the top of the material
         lower_limit = -0.035  # Value at which the cutter sits at the bottom surface of the material
         range = upper_limit - lower_limit
-        bottom_offset = self.get_bottom_offset()
-        material_thickness = self.get_material_thickness()
+        bottom_offset = self.get_safe_float(self.bottom_offset.text)
+        material_thickness = self.get_safe_float(self.material_thickness.text)
         ratio = 0 if material_thickness == 0 else bottom_offset / material_thickness
         cutter_y = lower_limit - (range * ratio)
         self.cutter_graphic.pos_hint['y'] = cutter_y
@@ -414,8 +396,8 @@ class CuttingDepthsPopup(Popup):
                 max_cut_depth = cutter_max_depth_total
                 self.cut_depth_warning.text = self.cut_depth_warning_cutter_max
 
-            material_thickness = self.get_material_thickness()
-            bottom_offset = self.get_bottom_offset()
+            material_thickness = self.get_safe_float(self.material_thickness.text)
+            bottom_offset = self.get_safe_float(self.bottom_offset.text)
 
             # Make sure material thickness is never negative
             if material_thickness < 0:
@@ -464,8 +446,8 @@ class CuttingDepthsPopup(Popup):
         upper_limit = 0.0825  # Value at which the line sits at the top of the material
         lower_limit = -0.175  # Value at which the line sits at the bottom surface of the material
         line_range = upper_limit - lower_limit
-        material_thickness = self.get_material_thickness()
-        depth_per_pass = self.get_depth_per_pass()
+        material_thickness = self.get_safe_float(self.material_thickness.text)
+        depth_per_pass = self.get_safe_float(self.depth_per_pass.text)
         ratio = 0 if material_thickness == 0 else depth_per_pass / material_thickness
         singular_cut = 0 if self.depth_per_pass.text == "" else round(ratio * line_range, 4)
         for pass_line in self.pass_depth_lines:
@@ -490,7 +472,7 @@ class CuttingDepthsPopup(Popup):
         if self.auto_pass_checkbox.active:
 
             depth_per_pass = max_cut_depth_per_pass
-            number_of_passes = 0 if depth_per_pass == 0 else math.ceil(float(self.get_total_cut_depth()) / depth_per_pass)
+            number_of_passes = 0 if depth_per_pass == 0 else math.ceil(self.get_safe_float(self.total_cut_depth.text) / depth_per_pass)
 
             if depth_per_pass > max_cut_depth_per_pass:
                 self.depth_per_pass.text = str(max_cut_depth_per_pass)
@@ -507,7 +489,7 @@ class CuttingDepthsPopup(Popup):
             self.disable_confirm_button()
             self.generate_pass_depth_lines(number_of_passes)
         else:
-            depth_per_pass = self.get_depth_per_pass()
+            depth_per_pass = self.get_safe_float(self.depth_per_pass.text)
             try:
                 if depth_per_pass > max_cut_depth_per_pass:
                     self.pass_depth_warning.text = self.pass_depth_warning_cutter_max
@@ -520,14 +502,14 @@ class CuttingDepthsPopup(Popup):
             except:
                 pass
             self.disable_confirm_button()
-            number_of_passes = 0 if depth_per_pass == 0 else math.ceil(float(self.get_total_cut_depth()) / depth_per_pass)
+            number_of_passes = 0 if depth_per_pass == 0 else math.ceil(self.get_safe_float(self.total_cut_depth.text) / depth_per_pass)
             self.generate_pass_depth_lines(number_of_passes)
 
 
     def confirm(self):
-        material_thickness = self.get_material_thickness()
-        bottom_offset = self.get_bottom_offset()
-        depth_per_pass = self.get_depth_per_pass()
+        material_thickness = self.get_safe_float(self.material_thickness.text)
+        bottom_offset = self.get_safe_float(self.bottom_offset.text)
+        depth_per_pass = self.get_safe_float(self.depth_per_pass.text)
 
         self.dwt_config.active_config.cutting_depths.material_thickness = material_thickness
         self.dwt_config.active_config.cutting_depths.bottom_offset = bottom_offset
@@ -539,10 +521,10 @@ class CuttingDepthsPopup(Popup):
         self.dismiss()
 
     def validate_inputs(self):
-        material_thickness = self.get_material_thickness()
-        bottom_offset = self.get_bottom_offset()
-        total_cut_depth = self.get_total_cut_depth()
-        depth_per_pass = self.get_depth_per_pass()
+        material_thickness = self.get_safe_float(self.material_thickness.text)
+        bottom_offset = self.get_safe_float(self.bottom_offset.text)
+        total_cut_depth = self.get_safe_float(self.total_cut_depth.text)
+        depth_per_pass = self.get_safe_float(self.depth_per_pass.text)
         auto_pass_checkbox = self.auto_pass_checkbox.active
         max_cut_depth_per_pass = self.dwt_config.active_cutter.max_depth_per_pass
 
