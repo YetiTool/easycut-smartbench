@@ -598,7 +598,7 @@ class ShapeCutter24ScreenClass(Screen):
                   main_string=info,
                   popup_width=500,
                   popup_height=400,
-                  main_label_size_delta=140).open()
+                  main_label_size_delta=40).open()
 
     def go_back(self):
         self.shapecutter_sm.previous_screen()
