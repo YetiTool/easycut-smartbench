@@ -7,6 +7,8 @@ from datetime import datetime
 from kivy.core.text import LabelBase
 from kivy.lang import Builder
 
+from asmcnc.comms import model_detector
+
 kr_font_path = '/asmcnc/keyboard/fonts/KRFont.ttf'
 kr_font_bold_path = '/asmcnc/keyboard/fonts/KRFont-Bold.ttf'
 
@@ -79,13 +81,16 @@ class Localization(object):
     kivy_markup_regex = re.compile(r"\[.*?\]")
 
     ORIGINAL_PRODUCT_NAME = "SmartBench"
-    PRODUCT_NAME = "Smart CNC"
+    PRODUCT_NAME = "SmartBench"
 
     def __init__(self):
         if os.path.exists(self.persistent_language_path):
             self.read_in_language_name()
 
         self.load_from_dictionary()
+
+        if model_detector.is_machine_drywall():
+            self.PRODUCT_NAME = "Smart CNC"
 
     # Getters/formatters
     def get_str(self, string):
