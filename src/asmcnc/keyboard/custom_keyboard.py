@@ -30,10 +30,10 @@ class Keyboard(VKeyboard):
 
         dirname = os.path.dirname(__file__)
 
-        self.kr_layout = os.path.join(dirname, "layouts/kr.json")
-        self.numeric_layout = os.path.join(dirname, "layouts/numeric.json")
+        self.kr_layout = os.path.join(dirname, "layouts", "kr.json")
+        self.numeric_layout = os.path.join(dirname, "layouts", "numeric.json")
         self.qwerty_layout = "data/keyboards/qwerty.json"
-        self.qwertyKR_layout = os.path.join(dirname, "layouts/qwertyKR.json")
+        self.qwertyKR_layout = os.path.join(dirname, "layouts", "qwertyKR.json")
         self.font_size = scaling_utils.get_scaled_width(20)
 
         try:
