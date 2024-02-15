@@ -20,7 +20,6 @@ Builder.load_string(
     contact_us_at_support : contact_us_at_support
     prev_screen_button : prev_screen_button
     next_button : next_button
-    body_container:body_container
 
     BoxLayout: 
         size_hint: (None,None)
@@ -64,7 +63,6 @@ Builder.load_string(
                     
             # BODY
             BoxLayout:
-                id: body_container
                 size_hint: (None,None)
                 width: dp(1.0*app.width)
                 height: dp(0.620833333333*app.height)
@@ -254,11 +252,6 @@ class WarrantyScreen1(Screen):
 
     def prev_screen(self):
         self.start_seq.prev_in_sequence()
-
-    def on_pre_enter(self, *args):
-        if self.MACHINE_IS_DWT:
-            for child in self.body_container.children:
-                self.body_container.remove_widget(child)
 
     def update_strings(self):
         self.title_label.text = self.l.get_str("SmartBench Warranty Registration")
