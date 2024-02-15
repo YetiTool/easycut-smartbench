@@ -11,7 +11,7 @@ try:
 except:
     pass
 
-from asmcnc.comms import serial_connection  # @UnresolvedImport
+from asmcnc.comms import serial_connection  
 from asmcnc.comms.yeti_grbl_protocol import protocol
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.comms import motors
