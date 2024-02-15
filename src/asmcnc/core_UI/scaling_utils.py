@@ -1,7 +1,7 @@
 from kivy.core.window import Window
 
 Width = Window.width if Window.width in [1280, 800] else 800
-Height = Window.height - 32 if Window.height == 800 else Window.height if Window.height in [768, 480] else 480
+Height = Window.height - 32 if Window.height == 800 else 480
 
 
 def is_screen_big():
