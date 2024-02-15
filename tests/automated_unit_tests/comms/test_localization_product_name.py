@@ -1,4 +1,4 @@
-from asmcnc.comms import model_detector
+from asmcnc.comms import model_manager
 from automated_unit_tests.unit_test_base import UnitTestBase
 
 
