@@ -155,7 +155,6 @@ def log(message):
 
 # load scaled kv
 Builder.load_file('scaled_kv.kv')
-model_manager.set_machine_drywall(False)
 
 
 class SkavaUI(App):
