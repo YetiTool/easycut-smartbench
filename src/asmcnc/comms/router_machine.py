@@ -1043,12 +1043,13 @@ class RouterMachine(object):
 
 # HW/FW ADJUSTMENTS
 
-    def correct_rpm_for_120(self, target_rpm):
+    def correct_rpm_for_120(self, target_rpm, revert = False):
         """
         Compensates for the desparity in set and actual spindle RPM for a 120V spindle.
 
         Args:
             target_rpm (int): The target RPM to be corrected.
+            revert (bool, optional): If True, the corrected RPM will be reverted back to the original requested RPM. Defaults to False.
 
         Returns:
             int: The corrected RPM value.
@@ -1057,6 +1058,9 @@ class RouterMachine(object):
         # For conversion maths see https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/edit#gid=1507195715
 
         if 10000 <= target_rpm <= 25000:
+
+            if revert:
+                return int(round(0.6739 * target_rpm + 8658)) # Revert the corrected RPM back to the original requested RPM
         
             compensated_RPM = int(round((target_rpm - 8658) / 0.6739))
 
@@ -1072,12 +1076,13 @@ class RouterMachine(object):
             log("Requested RPM {} outside of range for 120V spindle (10000 - 25000)".format(target_rpm))
             return 0
 
-    def correct_rpm_for_230(self, target_rpm):
+    def correct_rpm_for_230(self, target_rpm, revert = False):
         """
         Compensates for the desparity in set and actual spindle RPM for a 230V spindle.
 
         Args:
             target_rpm (int): The target RPM to be corrected.
+            revert (bool, optional): If True, the corrected RPM will be reverted back to the original requested RPM. Defaults to False.
 
         Returns:
             int: The corrected RPM value.
@@ -1085,6 +1090,9 @@ class RouterMachine(object):
         # For conversion maths see https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/edit#gid=1507195715
 
         if 4000 <= target_rpm <= 25000:
+
+            if revert:
+                return int(round(0.95915 * target_rpm + 1886)) # Revert the corrected RPM back to the original requested RPM
         
             compensated_RPM = int(round((target_rpm - 1886) / 0.95915))
 
@@ -1100,7 +1108,7 @@ class RouterMachine(object):
             log("Requested RPM {} outside of range for 230V spindle (4000 - 25000)".format(target_rpm))
             return 0
         
-    def correct_rpm(self, requested_rpm, spindle_voltage = None):
+    def correct_rpm(self, requested_rpm, spindle_voltage = None, revert = False):
         """
         Compensates for the desparity in set and actual spindle RPM for a spindle.
 
@@ -1109,6 +1117,7 @@ class RouterMachine(object):
         Args:
             requested_rpm (float): The RPM value to be corrected.
             voltage (int, optional): The spindle voltage. Defaults to spindle_voltage.
+            revert (bool, optional): If True, the corrected RPM will be reverted back to the original requested RPM. Defaults to False.
 
         Returns:
             float: The corrected RPM value.
@@ -1121,18 +1130,21 @@ class RouterMachine(object):
             spindle_voltage = self.spindle_voltage # Use spindle voltage set by user in maintenance app
 
         if spindle_voltage in [110, 120]:            
-            rpm_to_set = self.correct_rpm_for_120(requested_rpm)                
+            rpm_to_set = self.correct_rpm_for_120(requested_rpm, revert)                
         
         elif spindle_voltage in [230, 240]:
-            rpm_to_set = self.correct_rpm_for_230(requested_rpm)
+            rpm_to_set = self.correct_rpm_for_230(requested_rpm, revert)
         
         else:
             raise ValueError('Spindle voltage: {} not recognised'.format(spindle_voltage))
         
-        log("Requested RPM: "+ str(requested_rpm) + " Compensated RPM: " + str(rpm_to_set) + " Voltage: " + str(spindle_voltage))
+        if revert:
+            log("Requested RPM: "+ str(requested_rpm) + " Reverted RPM: " + str(rpm_to_set) + " Voltage: " + str(spindle_voltage))
+        else:
+            log("Requested RPM: "+ str(requested_rpm) + " Compensated RPM: " + str(rpm_to_set) + " Voltage: " + str(spindle_voltage))
 
         return rpm_to_set
-        
+
     def turn_on_spindle(self, rpm=None):
         """
         This method sends the command 'M3' to the Z Head to turn on the spindle at a given speed.
@@ -1162,6 +1174,34 @@ class RouterMachine(object):
             None
         """
         self.s.write_command('M5')
+
+    def minimum_spindle_speed(self, spindle_voltage = None):
+        """
+        Returns the minimum spindle speed for a given spindle voltage.
+
+        For use outside of router_machine.py
+
+        Args:
+            spindle_voltage (int, optional): The spindle voltage. Defaults to spindle_voltage.
+
+        Returns:
+            int: The minimum spindle speed.
+        """
+
+        if spindle_voltage is None:
+            spindle_voltage = self.spindle_voltage # Use spindle voltage set by user in maintenance app
+        
+        if spindle_voltage in [110, 120]:
+            return 10000 # Defined by Mafell spindle HW
+        
+        elif spindle_voltage in [230, 240]:
+            return 4000 # Defined by Mafell spindle HW
+        
+        else:
+            raise ValueError('Spindle voltage: {} not recognised'.format(spindle_voltage))
+        
+    def maximum_spindle_speed(self):
+        return 25000
 
 # START UP SEQUENCES
 
