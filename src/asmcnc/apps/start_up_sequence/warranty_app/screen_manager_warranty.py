@@ -31,7 +31,12 @@ class ScreenManagerWarranty(object):
         "warranty_5": screen_warranty_registration_5.WarrantyScreen5
     }
 
+    MACHINE_IS_DWT = True
+
     def load_warranty_app(self):
+        if self.MACHINE_IS_DWT:
+            self.warranty_screens.pop("warranty_1")
+
         for name, cls in self.warranty_screens.items():
             if not self.sm.has_screen(name):
                 screen = cls(name=name, start_sequence=self.start_seq, machine=self.m, localization=self.l,
