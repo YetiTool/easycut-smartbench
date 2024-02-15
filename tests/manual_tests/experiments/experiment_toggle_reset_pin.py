@@ -32,13 +32,13 @@ from asmcnc.comms import localization
 from kivy.lang import Builder
 
 # COMMS IMPORTS
-from asmcnc.comms import router_machine  # @UnresolvedImport
+from asmcnc.comms import router_machine  
 from asmcnc.comms import server_connection
 from asmcnc.comms import smartbench_flurry_database_connection
 
 # NB: router_machine imports serial_connection
-from asmcnc.apps import app_manager # @UnresolvedImport
-from settings import settings_manager # @UnresolvedImport
+from asmcnc.apps import app_manager 
+from settings import settings_manager 
 from asmcnc.comms import localization
 from asmcnc.job import job_data
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
