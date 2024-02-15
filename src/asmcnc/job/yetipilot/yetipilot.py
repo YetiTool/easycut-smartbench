@@ -145,7 +145,7 @@ class YetiPilot(object):
     def get_speed_adjustment_percentage(self):
         last_gcode_rpm = self.jd.grbl_mode_tracker[0][2]
         target_rpm = self.target_spindle_speed
-        spindle_minimum_rpm = 10000
+        spindle_minimum_rpm = self.m.minimum_spindle_speed()
 
         if abs(last_gcode_rpm - target_rpm) > 100:
             target_speed_multiplier = ((target_rpm-spindle_minimum_rpm)/(last_gcode_rpm-spindle_minimum_rpm)) * 0.9 + 0.1

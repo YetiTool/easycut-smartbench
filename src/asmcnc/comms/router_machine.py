@@ -1175,6 +1175,34 @@ class RouterMachine(object):
         """
         self.s.write_command('M5')
 
+    def minimum_spindle_speed(self, spindle_voltage = None):
+        """
+        Returns the minimum spindle speed for a given spindle voltage.
+
+        For use outside of router_machine.py
+
+        Args:
+            spindle_voltage (int, optional): The spindle voltage. Defaults to spindle_voltage.
+
+        Returns:
+            int: The minimum spindle speed.
+        """
+
+        if spindle_voltage is None:
+            spindle_voltage = self.spindle_voltage # Use spindle voltage set by user in maintenance app
+        
+        if spindle_voltage in [110, 120]:
+            return 10000 # Defined by Mafell spindle HW
+        
+        elif spindle_voltage in [230, 240]:
+            return 4000 # Defined by Mafell spindle HW
+        
+        else:
+            raise ValueError('Spindle voltage: {} not recognised'.format(spindle_voltage))
+        
+    def maximum_spindle_speed(self):
+        return 25000
+
 # START UP SEQUENCES
 
     # BOOT UP SEQUENCE
