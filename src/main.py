@@ -54,7 +54,7 @@ from kivy.core.window import Window
 
 
 # COMMS IMPORTS
-from asmcnc.comms import router_machine  # @UnresolvedImport
+from asmcnc.comms import router_machine, model_manager  # @UnresolvedImport
 from asmcnc.comms import server_connection
 from asmcnc.comms import smartbench_flurry_database_connection
 
@@ -155,6 +155,7 @@ def log(message):
 
 # load scaled kv
 Builder.load_file('scaled_kv.kv')
+model_manager.set_machine_drywall(True)
 
 
 class SkavaUI(App):
