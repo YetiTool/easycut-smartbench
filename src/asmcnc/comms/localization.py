@@ -83,7 +83,7 @@ class Localization(object):
 
         self.load_from_dictionary()
 
-        if model_detector.is_machine_drywall():
+        if model_manager.is_machine_drywall():
             self.PRODUCT_NAME = "SmartCNC"
 
     # Getters/formatters
