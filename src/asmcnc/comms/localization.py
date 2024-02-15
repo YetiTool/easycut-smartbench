@@ -9,24 +9,18 @@ from kivy.lang import Builder
 
 from asmcnc.comms import model_detector
 
-kr_font_path = '/asmcnc/keyboard/fonts/KRFont.ttf'
-kr_font_bold_path = '/asmcnc/keyboard/fonts/KRFont-Bold.ttf'
+asmcnc_path = os.path.dirname(os.path.dirname(__file__))
+fonts_path = os.path.join(asmcnc_path, "keyboard", "fonts")
+kr_font_path = os.path.join(fonts_path, 'KRFont.ttf')
+kr_font_bold_path = os.path.join(fonts_path, 'KRFont-Bold.ttf')
 
-try:
-    LabelBase.register(name='KRFont',
-                       fn_regular="." + kr_font_path,
-                       fn_bold="." + kr_font_bold_path)
+LabelBase.register(name='KRFont',
+                   fn_regular=kr_font_path,
+                   fn_bold=kr_font_bold_path)
 
-    LabelBase.register(name='KRFont-Bold',
-                       fn_regular="." + kr_font_bold_path)
+LabelBase.register(name='KRFont-Bold',
+                   fn_regular=kr_font_bold_path)
 
-except:
-    LabelBase.register(name='KRFont',
-                       fn_regular="./src" + kr_font_path,
-                       fn_bold="./src" + kr_font_bold_path)
-
-    LabelBase.register(name='KRFont-Bold',
-                       fn_regular="./src" + kr_font_bold_path)
 
 builder_font_string = """
 <Widget>:
@@ -68,7 +62,7 @@ class Localization(object):
 
     # use this for just getting user language, and if it's empty just assume english
     persistent_language_path = './sb_values/user_language.txt'
-    complete_foreign_dictionary_path = './asmcnc/comms/foreign_dictionary.txt'
+    complete_foreign_dictionary_path = os.path.join(asmcnc_path, "comms", "foreign_dictionary.txt")
 
     default_lang = 'English (GB)'
     lang = default_lang
