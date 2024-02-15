@@ -90,7 +90,7 @@ class Localization(object):
         self.load_from_dictionary()
 
         if model_detector.is_machine_drywall():
-            self.PRODUCT_NAME = "Smart CNC"
+            self.PRODUCT_NAME = "SmartCNC"
 
     # Getters/formatters
     def get_str(self, string):
