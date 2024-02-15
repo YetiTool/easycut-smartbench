@@ -88,15 +88,15 @@ class Localization(object):
 
     # Getters/formatters
     def get_str(self, string):
-        return self._get(string)
+        return self.__get(string)
 
     def get_bold(self, string):
-        return "[b]{0}[/b]".format(self._get(string))
+        return "[b]{0}[/b]".format(self.__get(string))
 
     def get_italic(self, string):
-        return "[i]{0}[/i]".format(self._get(string))
+        return "[i]{0}[/i]".format(self.__get(string))
 
-    def _get(self, string):
+    def __get(self, string):
         string = self.dictionary.get(str(string), str(string))
 
         # If the original product name is in the string, replace it with the new product name (if it's different)
