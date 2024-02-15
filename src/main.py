@@ -17,14 +17,12 @@ www.yetitool.com
 # except:
 # 	print("Could not import hanging_threads")
 
-import time
-import sys, os
-from datetime import datetime
+import os
 import os.path
-from os import path
+import sys
+from datetime import datetime
 
 from kivy.config import Config
-from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 
@@ -47,20 +45,19 @@ Config.set('graphics', 'maxfps', '60')
 Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
 Config.write()
 
-import kivy
 from kivy.app import App
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
+from kivy.uix.screenmanager import ScreenManager, NoTransition
 from kivy.core.window import Window
 
 
 # COMMS IMPORTS
-from asmcnc.comms import router_machine  
+from asmcnc.comms import router_machine
 from asmcnc.comms import server_connection
 from asmcnc.comms import smartbench_flurry_database_connection
 
 # NB: router_machine imports serial_connection
-from asmcnc.apps import app_manager 
-from settings import settings_manager 
+from asmcnc.apps import app_manager
+from settings import settings_manager
 
 # Languages and keyboard
 from asmcnc.comms import localization
@@ -71,37 +68,35 @@ from asmcnc.job import job_data
 from asmcnc.job.yetipilot.yetipilot import YetiPilot
 
 # SKAVAUI IMPORTS (LEGACY)
-from asmcnc.skavaUI import screen_home 
-from asmcnc.skavaUI import screen_local_filechooser 
-from asmcnc.skavaUI import screen_usb_filechooser 
-from asmcnc.skavaUI import screen_go 
+from asmcnc.skavaUI import screen_home
+from asmcnc.skavaUI import screen_local_filechooser
+from asmcnc.skavaUI import screen_usb_filechooser
+from asmcnc.skavaUI import screen_go
 from asmcnc.skavaUI import screen_jobstart_warning
-from asmcnc.skavaUI import screen_lobby 
-from asmcnc.skavaUI import screen_file_loading 
-from asmcnc.skavaUI import screen_check_job 
-from asmcnc.skavaUI import screen_error 
-from asmcnc.skavaUI import screen_serial_failure 
-from asmcnc.skavaUI import screen_mstate_warning 
-from asmcnc.skavaUI import screen_boundary_warning 
-from asmcnc.skavaUI import screen_rebooting 
-from asmcnc.skavaUI import screen_job_feedback 
-from asmcnc.skavaUI import screen_job_incomplete 
-from asmcnc.skavaUI import screen_powercycle_alert 
-from asmcnc.skavaUI import screen_door 
-from asmcnc.skavaUI import screen_squaring_manual_vs_square 
-from asmcnc.skavaUI import screen_homing_prepare 
-from asmcnc.skavaUI import screen_homing_active 
-from asmcnc.skavaUI import screen_squaring_active 
-from asmcnc.skavaUI import screen_spindle_shutdown 
+from asmcnc.skavaUI import screen_lobby
+from asmcnc.skavaUI import screen_file_loading
+from asmcnc.skavaUI import screen_check_job
+from asmcnc.skavaUI import screen_error
+from asmcnc.skavaUI import screen_serial_failure
+from asmcnc.skavaUI import screen_mstate_warning
+from asmcnc.skavaUI import screen_boundary_warning
+from asmcnc.skavaUI import screen_rebooting
+from asmcnc.skavaUI import screen_job_feedback
+from asmcnc.skavaUI import screen_job_incomplete
+from asmcnc.skavaUI import screen_door
+from asmcnc.skavaUI import screen_squaring_manual_vs_square
+from asmcnc.skavaUI import screen_homing_prepare
+from asmcnc.skavaUI import screen_homing_active
+from asmcnc.skavaUI import screen_squaring_active
+from asmcnc.skavaUI import screen_spindle_shutdown
 from asmcnc.skavaUI import screen_spindle_cooldown
-from asmcnc.skavaUI import screen_stop_or_resume_decision 
-from asmcnc.skavaUI import screen_lift_z_on_pause_decision 
-from asmcnc.skavaUI import screen_tool_selection 
-from asmcnc.skavaUI import screen_restart_smartbench 
-from asmcnc.skavaUI import screen_job_recovery 
-from asmcnc.skavaUI import screen_nudge 
-from asmcnc.skavaUI import screen_recovery_decision 
-from asmcnc.skavaUI import screen_homing_decision 
+from asmcnc.skavaUI import screen_stop_or_resume_decision
+from asmcnc.skavaUI import screen_lift_z_on_pause_decision
+from asmcnc.skavaUI import screen_tool_selection
+from asmcnc.skavaUI import screen_job_recovery
+from asmcnc.skavaUI import screen_nudge
+from asmcnc.skavaUI import screen_recovery_decision
+from asmcnc.skavaUI import screen_homing_decision
 
 # developer testing
 Cmport = 'COM3'
