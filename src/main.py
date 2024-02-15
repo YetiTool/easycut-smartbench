@@ -17,14 +17,12 @@ www.yetitool.com
 # except:
 # 	print("Could not import hanging_threads")
 
-import time
-import sys, os
-from datetime import datetime
+import os
 import os.path
-from os import path
+import sys
+from datetime import datetime
 
 from kivy.config import Config
-from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 
@@ -47,14 +45,13 @@ Config.set('graphics', 'maxfps', '60')
 Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
 Config.write()
 
-import kivy
 from kivy.app import App
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
+from kivy.uix.screenmanager import ScreenManager, NoTransition
 from kivy.core.window import Window
 
 
 # COMMS IMPORTS
-from asmcnc.comms import router_machine, model_manager  # @UnresolvedImport
+from asmcnc.comms import router_machine  # @UnresolvedImport
 from asmcnc.comms import server_connection
 from asmcnc.comms import smartbench_flurry_database_connection
 
@@ -86,7 +83,6 @@ from asmcnc.skavaUI import screen_boundary_warning # @UnresolvedImport
 from asmcnc.skavaUI import screen_rebooting # @UnresolvedImport
 from asmcnc.skavaUI import screen_job_feedback # @UnresolvedImport
 from asmcnc.skavaUI import screen_job_incomplete # @UnresolvedImport
-from asmcnc.skavaUI import screen_powercycle_alert # @UnresolvedImport
 from asmcnc.skavaUI import screen_door # @UnresolvedImport
 from asmcnc.skavaUI import screen_squaring_manual_vs_square # @UnresolvedImport
 from asmcnc.skavaUI import screen_homing_prepare # @UnresolvedImport
@@ -97,7 +93,6 @@ from asmcnc.skavaUI import screen_spindle_cooldown
 from asmcnc.skavaUI import screen_stop_or_resume_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
 from asmcnc.skavaUI import screen_tool_selection # @UnresolvedImport
-from asmcnc.skavaUI import screen_restart_smartbench # @UnresolvedImport
 from asmcnc.skavaUI import screen_job_recovery # @UnresolvedImport
 from asmcnc.skavaUI import screen_nudge # @UnresolvedImport
 from asmcnc.skavaUI import screen_recovery_decision # @UnresolvedImport
