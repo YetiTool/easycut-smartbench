@@ -12,6 +12,7 @@ from datetime import datetime, timedelta
 from os import listdir
 from kivy.clock import Clock
 from kivy.properties import StringProperty
+from kivy.event import EventDispatcher
 
 import re
 from functools import partial
@@ -30,7 +31,7 @@ def log(message):
     print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
-class SerialConnection(object):
+class SerialConnection(EventDispatcher):
     STATUS_INTERVAL = 0.1  # How often to poll general status to update UI (0.04 = 25Hz = smooth animation)
 
     s = None  # Serial comms object

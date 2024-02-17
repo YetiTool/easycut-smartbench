@@ -339,4 +339,4 @@ class DrywallShapeDisplay(Widget):
             self.dwt_config.active_config.datum_position.y = current_y
 
     def display_machine_state(self, obj, value):
-        self.machine_state_label.text = value.name
+        self.machine_state_label.text = value
