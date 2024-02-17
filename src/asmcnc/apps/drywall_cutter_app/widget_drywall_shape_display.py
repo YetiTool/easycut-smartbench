@@ -306,8 +306,8 @@ class DrywallShapeDisplay(Widget):
         self.dwt_config.on_parameter_change('canvas_shape_dims.y', float(value or 0))
 
     def rotation_required(self):
-        if "rectangle" in self.shape_dims_image.source:
-            if "vertical" in self.shape_dims_image.source:
+        if self.dwt_config.active_config.shape_type.lower() == "rectangle":
+            if self.dwt_config.active_config.rotation == "vertical":
                 return float(self.x_input.text or 0) < float(self.y_input.text or 0)
             else:
                 return float(self.x_input.text or 0) > float(self.y_input.text or 0)
