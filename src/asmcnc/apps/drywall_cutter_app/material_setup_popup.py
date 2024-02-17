@@ -2,6 +2,7 @@ from kivy.uix.popup import Popup
 from kivy.lang import Builder
 import math
 from kivy.uix.image import Image
+from kivy.clock import Clock
 
 Builder.load_string("""
 <CuttingDepthsPopup>:
@@ -305,6 +306,7 @@ class CuttingDepthsPopup(Popup):
         self.text_inputs = [self.material_thickness, self.bottom_offset, self.total_cut_depth, self.depth_per_pass]
         self.kb.setup_text_inputs(self.text_inputs)
         for text_input in self.text_inputs:
+            text_input.bind(focus=self.text_on_focus)
             text_input.bind(text=self.update_text)
         self.depth_per_pass.bind(text=self.calculate_depth_per_pass)
 
@@ -327,6 +329,10 @@ class CuttingDepthsPopup(Popup):
 
     def on_open(self):
         self.load_active_config()
+
+    def text_on_focus(self, instance, value):
+        if value:
+            Clock.schedule_once(lambda dt: instance.select_all(), 0.05)
 
     def get_safe_float(self, val):
         try:
