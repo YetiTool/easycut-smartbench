@@ -5,6 +5,7 @@ from kivy.lang import Builder
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen
+from kivy.clock import Clock
 
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
@@ -12,6 +13,7 @@ from asmcnc.apps.drywall_cutter_app import widget_drywall_shape_display
 from asmcnc.apps.drywall_cutter_app.config import config_loader
 from asmcnc.apps.drywall_cutter_app import screen_config_filechooser
 from asmcnc.apps.drywall_cutter_app import screen_config_filesaver
+from asmcnc.apps.drywall_cutter_app import material_setup_popup
 
 
 class ImageButton(ButtonBehavior, Image):
@@ -149,6 +151,8 @@ class DrywallCutterScreen(Screen):
     line_cut_options = ['inside', 'on', 'outside']
     rotation = 'horizontal'
 
+    pulse_poll = None
+
     def __init__(self, **kwargs):
         self.dwt_config = config_loader.DWTConfig(self)
         self.tool_options = self.dwt_config.get_available_cutter_names()
@@ -158,11 +162,13 @@ class DrywallCutterScreen(Screen):
         self.sm = kwargs['screen_manager']
         self.m = kwargs['machine']
         self.l = kwargs['localization']
+        self.kb = kwargs['keyboard']
 
         # XY move widget
-        self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm)
+        self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.xy_move_container.add_widget(self.xy_move_widget)
 
+        self.materials_popup = material_setup_popup.CuttingDepthsPopup(self.l, self.kb, self.dwt_config)
         self.drywall_shape_display_widget = widget_drywall_shape_display.DrywallShapeDisplay(machine=self.m,
                                                                                              screen_manager=self.sm,
                                                                                              dwt_config=self.dwt_config)
@@ -171,6 +177,13 @@ class DrywallCutterScreen(Screen):
         self.shape_selection.text = 'circle'
 
         self.select_tool()
+
+    def on_pre_enter(self):
+        self.pulse_poll = Clock.schedule_interval(self.xy_move_widget.check_zh_at_datum, 0.04)
+
+    def on_pre_leave(self):
+        if self.pulse_poll:
+            Clock.unschedule(self.pulse_poll)
 
     def home(self):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
@@ -225,7 +238,7 @@ class DrywallCutterScreen(Screen):
         self.dwt_config.on_parameter_change('toolpath_offset', self.cut_offset_selection.text)
 
     def material_setup(self):
-        pass
+        self.materials_popup.open()
 
     def stop(self):
         popup_info.PopupStop(self.m, self.sm, self.l)
