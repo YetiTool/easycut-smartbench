@@ -119,7 +119,10 @@ class Keyboard(VKeyboard):
                 if keycode == "escape":
                     self.text_instance.focus = False
                 if keycode == "backspace":
-                    self.text_instance.do_backspace()
+                    if self.text_instance.selection_text:
+                        self.text_instance.delete_selection()
+                    else:
+                        self.text_instance.do_backspace()
 
                 if keycode == "layout":
                     self.layout = self.numeric_layout if self.layout == self.previous_layout else self.previous_layout
@@ -141,6 +144,8 @@ class Keyboard(VKeyboard):
                     if self.pos[1] + self.height > Window.height:
                         self.pos = (self.pos[0], Window.height - self.height)
                 return
+            if self.text_instance.selection_text:
+                self.text_instance.delete_selection()
             self.text_instance.insert_text(internal)
 
     def set_keyboard_background(self):
