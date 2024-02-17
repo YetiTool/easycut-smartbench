@@ -22,9 +22,6 @@ class Keyboard(VKeyboard):
         reload(sys)
         sys.setdefaultencoding('utf-8')
 
-        self.bind(layout=self.set_keyboard_background)
-        self.bind(do_translation=self.set_keyboard_background)
-
         self.text_instance = None
 
         self.kr_layout = "./asmcnc/keyboard/layouts/kr.json"
@@ -50,6 +47,8 @@ class Keyboard(VKeyboard):
         self.height = int(Window.height / 2.1)
         self.pos = (Window.width - self.width, 0)
         self.on_key_up = self.key_up
+        self.set_keyboard_background()
+
 
     def generic_for_loop_alternative(self, func, list_of_items, i=0, end_func=0):
 
@@ -124,10 +123,27 @@ class Keyboard(VKeyboard):
 
                 if keycode == "layout":
                     self.layout = self.numeric_layout if self.layout == self.previous_layout else self.previous_layout
+
+                    if self.layout == self.numeric_layout:
+                        self.width = Window.width/3
+                    else:
+                        self.width = Window.width
+
+                    self.set_keyboard_background()
+
+                    # Make sure keyboard never goes off-screen and becomes unusable/unreachable
+                    if self.pos[0] + self.width > Window.width:
+                        self.pos = (Window.width-self.width, self.pos[1])
+                    if self.pos[1] < 0:
+                        self.pos = (self.pos[0], 0)
+                    if self.pos[0] < 0:
+                        self.pos = (0, self.pos[1])
+                    if self.pos[1] + self.height > Window.height:
+                        self.pos = (self.pos[0], Window.height - self.height)
                 return
             self.text_instance.insert_text(internal)
 
-    def set_keyboard_background(self, instance, value):
+    def set_keyboard_background(self):
         if self.do_translation == (True,True) and sys.platform != 'darwin':
             self.margin_hint = [.15, .05, .06, .05]  # Set the margin between the keyboard background and the keys
             if self.layout == self.numeric_layout:
@@ -138,21 +154,6 @@ class Keyboard(VKeyboard):
             self.margin_hint = [.05, .06, .05, .06]  # Default margin
             self.background = "atlas://data/images/defaulttheme/vkeyboard_background"
 
-        if self.layout == self.numeric_layout:
-            self.width = Window.width / 3
-        else:
-            self.width = Window.width
-
-        # Make sure keyboard never goes off-screen and becomes unusable/unreachable
-        if self.pos[0] + self.width > Window.width:
-            self.pos = (Window.width - self.width, self.pos[1])
-        if self.pos[1] < 0:
-            self.pos = (self.pos[0], 0)
-        if self.pos[0] < 0:
-            self.pos = (0, self.pos[1])
-        if self.pos[1] + self.height > Window.height:
-            self.pos = (self.pos[0], Window.height - self.height)
-
     # On focus behaviour is bound to all text inputs
     def on_focus_raise_keyboard(self,instance,value):
         if value:
@@ -160,11 +161,6 @@ class Keyboard(VKeyboard):
                 instance.get_focus_previous().focus = False
             except:
                 pass
-            # input_filter can be either None, ‘int’ (string), or ‘float’ (string), or a callable.
-            if (instance.input_filter != None):
-                self.layout = self.numeric_layout
-            else:
-                self.layout = self.previous_layout
             instance.focus = True
             self.text_instance = instance
             self.raise_keyboard_if_none_exists()

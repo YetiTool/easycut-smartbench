@@ -19,8 +19,6 @@ class ImageButton(ButtonBehavior, Image):
     pass
 
 
-from engine import GCodeEngine
-
 Builder.load_string("""
 <DrywallCutterScreen>:
     tool_selection:tool_selection
@@ -163,8 +161,6 @@ class DrywallCutterScreen(Screen):
         self.l = kwargs['localization']
         self.kb = kwargs['keyboard']
 
-        self.engine = GCodeEngine()
-
         # XY move widget
         self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.xy_move_container.add_widget(self.xy_move_widget)
@@ -252,17 +248,7 @@ class DrywallCutterScreen(Screen):
         self.sm.current = 'config_filesaver'
 
     def run(self):
-        config = self.dwt_config.active_config
-        cutter = self.dwt_config.active_cutter
-        # Create an instance of the GCodeEngine class
-        gcode_engine = GCodeEngine()
-
-        # Set any required data attributes in the GCodeEngine instance
-        gcode_engine.active_config = config
-        gcode_engine.active_cutter = cutter
-
-        # Call the GCode generation method
-        gcode_engine.engine_run()
+        pass
 
     def open_filechooser(self):
         if not self.sm.has_screen('config_filechooser'):
