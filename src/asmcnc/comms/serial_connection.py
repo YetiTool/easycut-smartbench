@@ -5,7 +5,7 @@ Module to manage all serial comms between pi (EasyCut s/w) and realtime arduino 
 '''
 
 from kivy.config import Config
-from __builtin__ import True
+
 
 import serial, sys, time, string, threading, serial.tools.list_ports
 from datetime import datetime, timedelta
@@ -184,7 +184,7 @@ class SerialConnection(object):
                 for comport in port_list:
 
                     print("Windows port to try: ")
-                    print comport
+                    print(comport)
 
                     SmartBench_port = self.is_port_SmartBench(comport)
                     if SmartBench_port: break
@@ -200,7 +200,7 @@ class SerialConnection(object):
                 if line.startswith('tty.usbmodem'):  # look for...
 
                     print("Mac port to try: ")  # for debugging
-                    print line
+                    print(line)
 
                     SmartBench_port = self.is_port_SmartBench('/dev/' + str(line))
                     if SmartBench_port: break
@@ -908,7 +908,7 @@ class SerialConnection(object):
 
     def process_grbl_push(self, message):
 
-        if self.VERBOSE_ALL_PUSH_MESSAGES: print message
+        if self.VERBOSE_ALL_PUSH_MESSAGES: print(message)
 
         # If it's a status message, e.g. <Idle|MPos:-1218.001,-2438.002,-2.000|Bf:35,255|FS:0,0>
         if message.startswith('<'):
@@ -1772,7 +1772,7 @@ class SerialConnection(object):
         if reset_grbl_after_cancel or self._reset_grbl_after_stream:
             self._reset_grbl_after_stream = False
             self.m._grbl_soft_reset()
-            print "GRBL Reset after sequential stream cancelled"
+            print("GRBL Reset after sequential stream cancelled")
         self.is_sequential_streaming = False
 
     def is_buffer_clear(self):
@@ -1808,6 +1808,10 @@ class SerialConnection(object):
 
         except:
             log("FAILED to display on CONSOLE: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
+
+        # Catch and correct all instances of the spindle speed command "M3 S{RPM}"
+        if 'S' in serialCommand.upper():
+            serialCommand = self.compensate_spindle_speed_command(serialCommand)
 
         # Finally issue the command        
         if self.s:
@@ -1874,3 +1878,31 @@ class SerialConnection(object):
 
         self.write_protocol_buffer.append([serialCommand, altDisplayText])
         return serialCommand
+
+    # Function for correcting spindle speed
+
+    def compensate_spindle_speed_command(self, spindle_speed_line):
+        """
+        Modifies the spindle speed command by correcting the RPM value and replacing it in the command line.
+        Correcting in this case refers to compensating for the conversion that happens from Z Head -> spindle
+
+        Args:
+            spindle_speed_line (str): The original spindle speed command line.
+
+        Returns:
+            str: The modified spindle speed command line with the corrected RPM value.
+        """
+        match = re.search(r'S(\d+(\.\d+)?)', spindle_speed_line.upper()) ## search for spnidle speed definition in the line
+        if match:
+            spindle_speed = float(match.group(1))
+
+        try:
+            corrected_spindle_speed = self.m.correct_rpm(spindle_speed)
+            new_line = re.sub(r'(S\d+(\.\d+)?)', "S" + str(corrected_spindle_speed), spindle_speed_line.upper())
+            log("Modified spindle command: " + new_line)
+            return new_line
+
+        except:
+            log("Spindle speed command could not be modified")
+
+        return spindle_speed_line

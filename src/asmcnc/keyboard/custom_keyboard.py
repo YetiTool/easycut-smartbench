@@ -4,6 +4,7 @@ from kivy.core.window import Window
 from kivy.uix.vkeyboard import VKeyboard
 import traceback
 from kivy.clock import Clock
+from asmcnc.core_UI import scaling_utils
 
 try:
     import hgtk
@@ -30,6 +31,7 @@ class Keyboard(VKeyboard):
         self.numeric_layout = "./asmcnc/keyboard/layouts/numeric.json"
         self.qwerty_layout = "data/keyboards/qwerty.json"
         self.qwertyKR_layout = "./asmcnc/keyboard/layouts/qwertyKR.json"
+        self.font_size = scaling_utils.get_scaled_width(20)
 
         try:
             if self.l.lang == self.l.ko:

@@ -16,6 +16,8 @@ Builder.load_string("""
     x_datum_label:x_datum_label
     y_datum_label:y_datum_label
 
+    config_name_label:config_name_label
+
     BoxLayout:
         size: self.parent.size
         pos: self.parent.pos
@@ -163,6 +165,18 @@ Builder.load_string("""
                 text: 'Y:'
                 color: 0,0,0,1
 
+            # TextInput instead of Label, as there is no way to left align a Label in a FloatLayout
+            TextInput:
+                id: config_name_label
+                font_size: dp(20)
+                size: self.parent.width, dp(40)
+                size_hint: (None, None)
+                pos: self.parent.pos[0], self.parent.size[1] - self.height + dp(7)
+                multiline: False
+                background_color: (0,0,0,0)
+                disabled_foreground_color: (0,0,0,1)
+                disabled: True
+
 """)
 
 
@@ -245,6 +259,8 @@ class DrywallShapeDisplay(Widget):
         if shape == 'geberit':
             self.place_widget(self.x_datum_label, (360, 19))
             self.place_widget(self.y_datum_label, (390, 77))
+
+        self.dwt_config.on_parameter_change('rotation', rotation)
 
     def enable_input(self, text_input, pos):
         text_input.parent.pos = pos
