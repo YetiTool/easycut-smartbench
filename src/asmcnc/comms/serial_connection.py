@@ -11,6 +11,7 @@ import serial, sys, time, string, threading, serial.tools.list_ports
 from datetime import datetime, timedelta
 from os import listdir
 from kivy.clock import Clock
+from kivy.properties import StringProperty
 
 import re
 from functools import partial
@@ -765,7 +766,7 @@ class SerialConnection(object):
 
     # PUSH MESSAGE HANDLING
 
-    m_state = 'Unknown'
+    m_state = StringProperty('Unknown')
 
     # Machine co-ordinates
     m_x = '0.0'

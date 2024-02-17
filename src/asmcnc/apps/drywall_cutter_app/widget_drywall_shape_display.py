@@ -192,7 +192,6 @@ Builder.load_string("""
 
 class DrywallShapeDisplay(Widget):
 
-    GRBL_REPORT_INTERVAL = 0.1
     image_filepath = "./asmcnc/apps/drywall_cutter_app/img/"
 
     def __init__(self, **kwargs):
@@ -208,8 +207,9 @@ class DrywallShapeDisplay(Widget):
         self.x_input.bind(text=self.x_input_change) # Square/rectangle x length
         self.y_input.bind(text=self.y_input_change) # Square/rectangle y length
 
+        self.m.s.bind(m_state=self.display_machine_state)
+
         Clock.schedule_interval(self.poll_position, 0.1)
-        Clock.schedule_interval(self.poll_machine_state, self.GRBL_REPORT_INTERVAL)
 
     def select_shape(self, shape, rotation, swap_lengths=False):
         image_source = self.image_filepath + shape
@@ -338,5 +338,5 @@ class DrywallShapeDisplay(Widget):
         if self.dwt_config.active_config.datum_position.y != current_y:
             self.dwt_config.active_config.datum_position.y = current_y
 
-    def poll_machine_state(self, dt):
-        self.machine_state_label.text = self.m.state()
+    def display_machine_state(self, obj, value):
+        self.machine_state_label.text = value.name
