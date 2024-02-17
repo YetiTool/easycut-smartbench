@@ -1,0 +1,9 @@
+.. _top:
+
+Console Migration, and making other stuff look pretty…
+==================================================================
+We have added a new feature for easy console migration, especially helpful for those upgrading to the NEW Console XL!
+You will also see some minor visual improvements to the YetiPilot pop-up.
+**Find full release notes on our website, by scanning the QR code on the right.**
+
+.. _bottom:

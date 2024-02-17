@@ -268,7 +268,7 @@ class UpdateTestingScreen(Screen):
 
         full_cmd = cmd
 
-        print full_cmd 
+        print(full_cmd)
 
         proc = subprocess.Popen(full_cmd,
             cwd = dir_path,
@@ -282,7 +282,7 @@ class UpdateTestingScreen(Screen):
         while True:
             line = proc.stdout.readline()
             stdout_buffer.append(line)
-            print line,
+            print(line),
             if line == '' and proc.poll() != None:
                 break
         # return ''.join(stdout_buffer)

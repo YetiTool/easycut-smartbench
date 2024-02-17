@@ -16,6 +16,9 @@ Builder.load_string("""
     x_datum_label:x_datum_label
     y_datum_label:y_datum_label
 
+    config_name_label:config_name_label
+    machine_state_label:machine_state_label
+
     BoxLayout:
         size: self.parent.size
         pos: self.parent.pos
@@ -163,6 +166,27 @@ Builder.load_string("""
                 text: 'Y:'
                 color: 0,0,0,1
 
+            # TextInput instead of Label, as there is no way to left align a Label in a FloatLayout
+            TextInput:
+                id: config_name_label
+                font_size: dp(20)
+                size: self.parent.width, dp(40)
+                size_hint: (None, None)
+                pos: self.parent.pos[0], self.parent.size[1] - self.height + dp(7)
+                multiline: False
+                background_color: (0,0,0,0)
+                disabled_foreground_color: (0,0,0,1)
+                disabled: True
+
+            Label:
+                id: machine_state_label
+                font_size: dp(20)
+                size: self.texture_size[0], dp(40)
+                size_hint: (None, None)
+                pos: self.parent.pos[0] + self.parent.size[0] - self.texture_size[0] - dp(5), self.parent.size[1] - self.height + dp(10)
+                text: 'Test'
+                color: 0,0,0,1
+
 """)
 
 
@@ -184,6 +208,8 @@ class DrywallShapeDisplay(Widget):
         self.r_input.bind(text=self.r_input_change) # Radius of corners
         self.x_input.bind(text=self.x_input_change) # Square/rectangle x length
         self.y_input.bind(text=self.y_input_change) # Square/rectangle y length
+
+        self.m.s.bind(m_state=self.display_machine_state)
 
         Clock.schedule_interval(self.poll_position, 0.1)
 
@@ -304,7 +330,7 @@ class DrywallShapeDisplay(Widget):
         if not self.swapping_lengths:
             if self.rotation_required():
                 self.sm.get_screen('drywall_cutter').rotate_shape(swap_lengths=False)
-            if self.rectangle_with_equal_sides():
+            if self.rectangle_with_equal_sides() and False: # DISABLE
                 toolpath = self.sm.get_screen('drywall_cutter').cut_offset_selection.text
                 self.sm.get_screen('drywall_cutter').shape_selection.text = 'square'
                 self.sm.get_screen('drywall_cutter').cut_offset_selection.text = toolpath
@@ -319,20 +345,18 @@ class DrywallShapeDisplay(Widget):
             return False
         
     def rectangle_with_equal_sides(self):
-        if "rectangle" in self.shape_dims_image.source:
+        if self.dwt_config.active_config.shape_type.lower() == "rectangle":
             if self.x_input.text and self.y_input.text:
                 if float(self.x_input.text) == float(self.y_input.text):
                     return True
         return False
 
     def poll_position(self, dt):
-        current_x = round(abs(self.m.mpos_x()), 2)
-        current_y = round(abs(self.m.mpos_y()), 2)
+        # Maths from Ed, documented here https://docs.google.com/spreadsheets/d/1X37CWF8bsXeC0dY-HsbwBu_QR6N510V-5aPTnxwIR6I/edit#gid=677510108
+        current_x = round(self.m.x_wco() + (self.m.get_dollar_setting(130) - self.m.limit_switch_safety_distance) - self.m.laser_offset_tool_clearance_to_access_edge_of_sheet, 2)
+        current_y = round(self.m.y_wco() + (self.m.get_dollar_setting(131) - self.m.limit_switch_safety_distance) - (self.m.get_dollar_setting(27) - self.m.limit_switch_safety_distance), 2)
         self.x_datum_label.text = 'X: ' + str(current_x)
         self.y_datum_label.text = 'Y: ' + str(current_y)
 
-        if self.dwt_config.active_config.datum_position.x != current_x:
-            self.dwt_config.active_config.datum_position.x = current_x
-
-        if self.dwt_config.active_config.datum_position.y != current_y:
-            self.dwt_config.active_config.datum_position.y = current_y
+    def display_machine_state(self, obj, value):
+        self.machine_state_label.text = value

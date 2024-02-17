@@ -14,7 +14,7 @@ import json
 import kivy
 from chardet import detect
 from kivy.lang import Builder
-from kivy.properties import ObjectProperty, StringProperty  # @UnresolvedImport
+from kivy.properties import ObjectProperty, StringProperty  
 from kivy.uix.screenmanager import Screen
 
 from asmcnc.comms import usb_storage
@@ -81,7 +81,6 @@ Builder.load_string("""
                     id: filechooser
                     rootpath: './asmcnc/apps/drywall_cutter_app/config/configurations/'
                     show_hidden: False
-                    filters: ['*.json']
                     on_selection: root.refresh_filechooser()
                     sort_func: root.sort_by_date_reverse
                     FileChooserIconLayout
@@ -350,7 +349,7 @@ class ConfigFileChooser(Screen):
 
             if not os.path.exists(configs_dir + '.gitignore'):
                 file = open(configs_dir + '.gitignore', "w+")
-                file.write('*.json')
+                file.write('*')
                 file.close()
 
     def on_enter(self):
@@ -478,7 +477,7 @@ class ConfigFileChooser(Screen):
                 self.filechooser.selection = []
 
             except:
-                print "attempt to delete folder, or undeletable file"
+                print("attempt to delete folder, or undeletable file")
 
             self.refresh_filechooser()
 
@@ -494,7 +493,7 @@ class ConfigFileChooser(Screen):
                         self.refresh_filechooser()
 
                 except:
-                    print "attempt to delete folder, or undeletable file"
+                    print("attempt to delete folder, or undeletable file")
 
         self.filechooser.selection = []
         self.refresh_filechooser()
