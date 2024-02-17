@@ -17,6 +17,7 @@ Builder.load_string("""
     y_datum_label:y_datum_label
 
     config_name_label:config_name_label
+    machine_state_label:machine_state_label
 
     BoxLayout:
         size: self.parent.size
@@ -177,6 +178,15 @@ Builder.load_string("""
                 disabled_foreground_color: (0,0,0,1)
                 disabled: True
 
+            Label:
+                id: machine_state_label
+                font_size: dp(20)
+                size: self.texture_size[0], dp(40)
+                size_hint: (None, None)
+                pos: self.parent.pos[0] + self.parent.size[0] - self.texture_size[0] - dp(5), self.parent.size[1] - self.height + dp(10)
+                text: 'Test'
+                color: 0,0,0,1
+
 """)
 
 
@@ -198,6 +208,8 @@ class DrywallShapeDisplay(Widget):
         self.r_input.bind(text=self.r_input_change) # Radius of corners
         self.x_input.bind(text=self.x_input_change) # Square/rectangle x length
         self.y_input.bind(text=self.y_input_change) # Square/rectangle y length
+
+        self.m.s.bind(m_state=self.display_machine_state)
 
         Clock.schedule_interval(self.poll_position, 0.1)
 
@@ -338,3 +350,6 @@ class DrywallShapeDisplay(Widget):
         current_y = round(self.m.y_wco() + (self.m.get_dollar_setting(131) - self.m.limit_switch_safety_distance) - (self.m.get_dollar_setting(27) - self.m.limit_switch_safety_distance), 2)
         self.x_datum_label.text = 'X: ' + str(current_x)
         self.y_datum_label.text = 'Y: ' + str(current_y)
+
+    def display_machine_state(self, obj, value):
+        self.machine_state_label.text = value
