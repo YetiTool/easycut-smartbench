@@ -5,6 +5,7 @@ from kivy.lang import Builder
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen
+from kivy.clock import Clock
 
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
@@ -150,6 +151,8 @@ class DrywallCutterScreen(Screen):
     line_cut_options = ['inside', 'on', 'outside']
     rotation = 'horizontal'
 
+    pulse_poll = None
+
     def __init__(self, **kwargs):
         self.dwt_config = config_loader.DWTConfig(self)
         self.tool_options = self.dwt_config.get_available_cutter_names()
@@ -162,7 +165,7 @@ class DrywallCutterScreen(Screen):
         self.kb = kwargs['keyboard']
 
         # XY move widget
-        self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm)
+        self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.xy_move_container.add_widget(self.xy_move_widget)
 
         self.materials_popup = material_setup_popup.CuttingDepthsPopup(self.l, self.kb, self.dwt_config)
@@ -174,6 +177,13 @@ class DrywallCutterScreen(Screen):
         self.shape_selection.text = 'circle'
 
         self.select_tool()
+
+    def on_pre_enter(self):
+        self.pulse_poll = Clock.schedule_interval(self.xy_move_widget.check_zh_at_datum, 0.04)
+
+    def on_pre_leave(self):
+        if self.pulse_poll:
+            Clock.unschedule(self.pulse_poll)
 
     def home(self):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
