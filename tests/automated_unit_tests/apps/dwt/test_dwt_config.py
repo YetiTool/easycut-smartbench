@@ -65,7 +65,7 @@ def test_save_config():
 def test_load_cutter():
     dwt_config = config_loader.DWTConfig()
 
-    dwt_config.load_cutter('test_cutter.json')
+    dwt_config.load_cutter('tool_6mm.json')
 
     assert dwt_config.active_cutter.cutter_description == 'unique_label'
 
@@ -92,6 +92,6 @@ def test_get_available_cutter_names():
     dwt_config = config_loader.DWTConfig()
 
     assert dwt_config.get_available_cutter_names() == {
-        'unique_label': 'test_cutter.json',
+        'unique_label': 'tool_6mm.json',
         'cutter 2': 'test_cutter2.json'
     }
