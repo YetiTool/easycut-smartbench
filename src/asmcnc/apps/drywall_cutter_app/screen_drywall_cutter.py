@@ -174,12 +174,10 @@ class DrywallCutterScreen(Screen):
                                                                                              dwt_config=self.dwt_config)
         self.shape_display_container.add_widget(self.drywall_shape_display_widget)
 
-    def on_pre_enter(self):
-        self.apply_active_config()
-
         self.select_tool()
 
     def on_pre_enter(self):
+        self.apply_active_config()
         self.pulse_poll = Clock.schedule_interval(self.xy_move_widget.check_zh_at_datum, 0.04)
 
     def on_pre_leave(self):
