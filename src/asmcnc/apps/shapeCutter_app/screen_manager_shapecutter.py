@@ -57,6 +57,7 @@ from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_tutorial
 from asmcnc.apps.shapeCutter_app.screens import screen_shapeCutter_filechooser
 
 from asmcnc.apps.shapeCutter_app.screens import popup_machine
+from asmcnc.core_UI.popups import WarningPopup
 
 # import shape cutter managing object
 class ScreenManagerShapeCutter(object):
@@ -1105,7 +1106,17 @@ class ScreenManagerShapeCutter(object):
         if self.m.state().startswith("Idle"):
             self.landing()
         else: 
-            popup_machine.PopupMachineError(self)
+            description = self.l.get_str("Machine is not Idle.") + "\n\n" \
+                        + self.l.get_str("Please check that SmartBench is clear, and then use the Pro app to RESET SmartBench before using Shape Cutter.")
+            WarningPopup(sm=self, m=self.m, l=self.l,
+                         main_string=description,
+                         popup_width=400,
+                         popup_height=380,
+                         main_label_size_delta=40,
+                         button_layout_padding=[50,25,50,0],
+                         main_label_h_align='left',
+                         main_layout_padding=[50,20,50,20],
+                         main_label_padding=[20,20]).open()
     
     def destroy_nearly_all_screens(self):
         self.destroy_screen('sCtutorial') 

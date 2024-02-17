@@ -9,9 +9,6 @@ sys.path.append('./src')
 
 from asmcnc.apps.drywall_cutter_app.config import config_loader
 
-config_loader.configurations_dir = 'src/asmcnc/apps/drywall_cutter_app/config/configurations'
-config_loader.cutters_dir = 'src/asmcnc/apps/drywall_cutter_app/config/cutters'
-
 
 """
 RUN WITH
@@ -41,7 +38,7 @@ class TestDWTConfigChecking(unittest.TestCase):
                 "l": 30
             },
             "shape_type": "rectangle",
-            "cutter_type": "test_cutter.json",
+            "cutter_type": "tool_6mm.json",
             "units": "mm",
             "rotation": "horizontal",
             "datum_position": {

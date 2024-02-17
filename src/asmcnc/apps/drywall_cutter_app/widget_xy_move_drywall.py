@@ -2,7 +2,6 @@ import sys, textwrap
 
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
-from kivy.clock import Clock
 
 from asmcnc.skavaUI import popup_info
 
@@ -232,8 +231,6 @@ class XYMoveDrywall(Widget):
         self.l=kwargs['localization']
 
         self.set_jog_speeds()
-
-        Clock.schedule_interval(self.check_zh_at_datum, 0.04)
 
     jogMode = 'free'
     jog_mode_button_press_counter = 0
