@@ -49,9 +49,9 @@ class Keyboard(VKeyboard):
         self.previous_layout = self.layout
 
         self.do_translation = True
-        self.width = Window.width
-        self.height = int(Window.height / 2.1)
-        self.pos = (Window.width - self.width, 0)
+        self.width = scaling_utils.Width
+        self.height = int(scaling_utils.Height / 2.1)
+        self.pos = (scaling_utils.Width - self.width, 0)
         self.on_key_up = self.key_up
 
     def generic_for_loop_alternative(self, func, list_of_items, i=0, end_func=0):
