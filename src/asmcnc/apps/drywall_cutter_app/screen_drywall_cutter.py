@@ -174,11 +174,10 @@ class DrywallCutterScreen(Screen):
                                                                                              dwt_config=self.dwt_config)
         self.shape_display_container.add_widget(self.drywall_shape_display_widget)
 
-        self.shape_selection.text = 'circle'
-
         self.select_tool()
 
     def on_pre_enter(self):
+        self.apply_active_config()
         self.pulse_poll = Clock.schedule_interval(self.xy_move_widget.check_zh_at_datum, 0.04)
 
     def on_pre_leave(self):
@@ -281,6 +280,12 @@ class DrywallCutterScreen(Screen):
         file_name = config.rsplit(os.sep, 1)[-1]
         self.drywall_shape_display_widget.config_name_label.text = file_name
 
+        # Set datum when loading a new config
+        self.m.set_datum(x=self.dwt_config.active_config.datum_position.x, y=self.dwt_config.active_config.datum_position.y, relative=True)
+
+        self.apply_active_config()
+
+    def apply_active_config(self):
         toolpath_offset = self.dwt_config.active_config.toolpath_offset
         self.shape_selection.text = self.dwt_config.active_config.shape_type
         self.select_shape()

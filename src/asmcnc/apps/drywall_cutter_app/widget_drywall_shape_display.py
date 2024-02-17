@@ -214,6 +214,7 @@ class DrywallShapeDisplay(Widget):
         Clock.schedule_interval(self.poll_position, 0.1)
 
     def select_shape(self, shape, rotation, swap_lengths=False):
+        shape = shape.lower() # in case it's a test config with a capital letter
         image_source = self.image_filepath + shape
         if shape in ['rectangle', 'line']:
             image_source += "_" + rotation
@@ -303,21 +304,27 @@ class DrywallShapeDisplay(Widget):
             self.shape_toolpath_image.opacity = 1
 
     def d_input_change(self, instance, value):
-        self.dwt_config.on_parameter_change('canvas_shape_dims.d', float(value or 0))
+        # On startup it seems to call these functions and set everything to 0, so check that drywall app is open
+        if self.sm.current == 'drywall_cutter':
+            self.dwt_config.on_parameter_change('canvas_shape_dims.d', float(value or 0))
 
     def l_input_change(self, instance, value):
-        self.dwt_config.on_parameter_change('canvas_shape_dims.l', float(value or 0))
+        if self.sm.current == 'drywall_cutter':
+            self.dwt_config.on_parameter_change('canvas_shape_dims.l', float(value or 0))
 
     def r_input_change(self, instance, value):
-        self.dwt_config.on_parameter_change('canvas_shape_dims.r', float(value or 0))
+        if self.sm.current == 'drywall_cutter':
+            self.dwt_config.on_parameter_change('canvas_shape_dims.r', float(value or 0))
 
     def x_input_change(self, instance, value):
-        self.do_rectangle_checks()
-        self.dwt_config.on_parameter_change('canvas_shape_dims.x', float(value or 0))
+        if self.sm.current == 'drywall_cutter':
+            self.do_rectangle_checks()
+            self.dwt_config.on_parameter_change('canvas_shape_dims.x', float(value or 0))
 
     def y_input_change(self, instance, value):
-        self.do_rectangle_checks()
-        self.dwt_config.on_parameter_change('canvas_shape_dims.y', float(value or 0))
+        if self.sm.current == 'drywall_cutter':
+            self.do_rectangle_checks()
+            self.dwt_config.on_parameter_change('canvas_shape_dims.y', float(value or 0))
 
     def do_rectangle_checks(self):
         if not self.swapping_lengths:
@@ -340,7 +347,7 @@ class DrywallShapeDisplay(Widget):
     def rectangle_with_equal_sides(self):
         if self.dwt_config.active_config.shape_type.lower() == "rectangle":
             if self.x_input.text and self.y_input.text:
-                if self.x_input.text == self.y_input.text:
+                if float(self.x_input.text) == float(self.y_input.text):
                     return True
         return False
 
