@@ -332,7 +332,7 @@ class CuttingDepthsPopup(Popup):
 
     def text_on_focus(self, instance, value):
         if value:
-            Clock.schedule_once(lambda dt: instance.select_all(), 0.05)
+            Clock.schedule_once(lambda dt: instance.select_all())
 
     def get_safe_float(self, val):
         try:
