@@ -1,7 +1,7 @@
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 
-from asmcnc.core_UI.components.probe_button import ProbeButton
+from asmcnc.core_UI.components.buttons.probe_button import ProbeButton
 
 Builder.load_string("""
 <XYMoveDrywall>
@@ -155,7 +155,8 @@ Builder.load_string("""
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
                             allow_stretch: True
-""")
+"""
+)
 
 
 class XYMoveDrywall(Widget):
@@ -165,9 +166,10 @@ class XYMoveDrywall(Widget):
         super(XYMoveDrywall, self).__init__(**kwargs)
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
+        self.l=kwargs['localization']
 
         self.set_jog_speeds()
-        self.probe_button_container.add_widget(ProbeButton(self.m))
+        self.probe_button_container.add_widget(ProbeButton(self.m, self.sm, self.l))
 
     jogMode = 'free'
     jog_mode_button_press_counter = 0

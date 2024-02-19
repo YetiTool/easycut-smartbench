@@ -335,7 +335,7 @@ class HomeScreen(Screen):
         self.xy_move_container.add_widget(self.xy_move_widget)
         self.common_move_container.add_widget(self.common_move_widget)
         self.z_move_container.add_widget(
-            widget_z_move.ZMove(machine=self.m, screen_manager=self.sm, job=self.jd)
+            widget_z_move.ZMove(machine=self.m, screen_manager=self.sm, job=self.jd, localization=self.l)
         )
 
         # Settings tab
@@ -364,6 +364,9 @@ class HomeScreen(Screen):
             Clock.schedule_once(lambda dt: self.m.laser_on(), 0.2)
         else:
             Clock.schedule_once(lambda dt: self.m.set_led_colour("GREEN"), 0.2)
+        
+        self.sm.return_to_screen = "home" # Set the return screen for the probing screen
+
         if self.jd.job_gcode != []:
             self.gcode_summary_widget.display_summary()
 

@@ -160,7 +160,7 @@ class DrywallCutterScreen(Screen):
         self.l = kwargs['localization']
 
         # XY move widget
-        self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm)
+        self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm, localization=self.l)
         self.xy_move_container.add_widget(self.xy_move_widget)
 
         self.drywall_shape_display_widget = widget_drywall_shape_display.DrywallShapeDisplay(machine=self.m,
@@ -171,6 +171,9 @@ class DrywallCutterScreen(Screen):
         self.shape_selection.text = 'circle'
 
         self.select_tool()
+
+    def on_enter(self, *args):
+        self.sm.return_to_screen = 'drywall_cutter'
 
     def home(self):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
