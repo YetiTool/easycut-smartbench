@@ -4,7 +4,7 @@ import sys
 sys.path.append('./src')
 
 from asmcnc.apps.systemTools_app import screen_manager_systemtools
-from asmcnc.comms.localization import Localization
+from asmcnc.comms.localisation import Localization
 from src.asmcnc.apps.systemTools_app.screen_manager_systemtools import ScreenManagerSystemTools
 # from src.asmcnc.apps.systemTools_app import screen_manager_systemtools
 from src.asmcnc.apps.systemTools_app.screens.screen_support_menu import SupportMenuScreen

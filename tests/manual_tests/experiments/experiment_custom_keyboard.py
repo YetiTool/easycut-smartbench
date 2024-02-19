@@ -17,7 +17,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.core.window import Window
 
-from asmcnc.comms import localization
+from asmcnc.comms import localisation
 from asmcnc.keyboard import custom_keyboard
 
 try: 

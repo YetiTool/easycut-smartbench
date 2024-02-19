@@ -18,7 +18,7 @@ except:
 
 
 from asmcnc.comms import serial_connection
-from asmcnc.comms import localization
+from asmcnc.comms import localisation
 from asmcnc.job import job_data
 
 '''

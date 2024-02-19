@@ -60,7 +60,7 @@ from asmcnc.apps import app_manager
 from settings import settings_manager
 
 # Languages and keyboard
-from asmcnc.comms import localization
+from asmcnc.comms import localisation
 from asmcnc.keyboard import custom_keyboard
 
 # JOB DATA IMPORT

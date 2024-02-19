@@ -20,7 +20,7 @@ sys.path.append('./src')
 
 try:
     from asmcnc.comms import serial_connection
-    from asmcnc.comms import localization
+    from asmcnc.comms import localisation
 
 except: 
     pass

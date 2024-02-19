@@ -10,7 +10,7 @@ except:
     print("Can't import mocking packages, are you on a dev machine?")
 
 from asmcnc.job import job_data
-from asmcnc.comms import localization
+from asmcnc.comms import localisation
 from datetime import datetime
 
 from kivy.clock import Clock

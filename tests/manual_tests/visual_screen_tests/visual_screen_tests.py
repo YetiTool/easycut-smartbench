@@ -43,7 +43,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
-from asmcnc.comms import localization
+from asmcnc.comms import localisation
 from asmcnc.keyboard import custom_keyboard
 from asmcnc.comms import router_machine
 from settings import settings_manager

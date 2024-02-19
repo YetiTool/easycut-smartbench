@@ -29,7 +29,7 @@ from asmcnc.comms import server_connection
 from asmcnc.apps.app_manager import AppManagerClass
 from settings.settings_manager import Settings
 from asmcnc.job.job_data import JobData
-from asmcnc.comms.localization import Localization
+from asmcnc.comms.localisation import Localization
 from asmcnc.keyboard.custom_keyboard import Keyboard
 from kivy.clock import Clock
 from asmcnc.comms import smartbench_flurry_database_connection

@@ -28,7 +28,7 @@ import kivy
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
-from asmcnc.comms import localization
+from asmcnc.comms import localisation
 from kivy.lang import Builder
 
 # COMMS IMPORTS
@@ -39,7 +39,7 @@ from asmcnc.comms import smartbench_flurry_database_connection
 # NB: router_machine imports serial_connection
 from asmcnc.apps import app_manager 
 from settings import settings_manager 
-from asmcnc.comms import localization
+from asmcnc.comms import localisation
 from asmcnc.job import job_data
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar

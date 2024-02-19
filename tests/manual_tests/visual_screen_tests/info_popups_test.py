@@ -14,7 +14,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.clock import Clock
 from asmcnc.skavaUI import popup_info
-from asmcnc.comms import localization
+from asmcnc.comms import localisation
 
 from kivy.config import Config
 

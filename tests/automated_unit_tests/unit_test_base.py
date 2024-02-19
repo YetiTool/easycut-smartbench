@@ -12,7 +12,7 @@ I think this is a hacky way of doing it, but it works for now.
 
 sys.path.append('./src')
 
-from asmcnc.comms.localization import Localization
+from asmcnc.comms.localisation import Localization
 from asmcnc.comms.router_machine import RouterMachine
 from asmcnc.comms.serial_connection import SerialConnection
 from asmcnc.comms.yeti_grbl_protocol.protocol import protocol_v2

@@ -19,7 +19,7 @@ except:
 
 
 from asmcnc.comms import router_machine
-from asmcnc.comms import localization
+from asmcnc.comms import localisation
 
 '''
 ######################################

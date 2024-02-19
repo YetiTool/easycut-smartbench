@@ -20,7 +20,7 @@ except:
     print("Can't import mocking packages, are you on a dev machine?")
 
 from asmcnc.comms import router_machine
-from asmcnc.comms import localization
+from asmcnc.comms import localisation
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 
 from kivy.clock import Clock

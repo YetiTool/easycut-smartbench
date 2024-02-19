@@ -13,7 +13,7 @@ import kivy
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
-from asmcnc.comms import localization
+from asmcnc.comms import localisation
 
 try: 
     from mock import Mock, MagicMock

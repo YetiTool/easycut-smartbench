@@ -20,7 +20,7 @@ except:
 
 from asmcnc.comms import serial_connection
 from asmcnc.comms import router_machine
-from asmcnc.comms import localization
+from asmcnc.comms import localisation
 from datetime import datetime
 from asmcnc.production.database.payload_publisher import DataPublisher
 from asmcnc.production.database.calibration_database import CalibrationDatabase

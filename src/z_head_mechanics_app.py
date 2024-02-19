@@ -5,7 +5,7 @@ from kivy.clock import Clock
 from settings.settings_manager import Settings
 from asmcnc.job.job_data import JobData
 from asmcnc.comms.router_machine import RouterMachine
-from asmcnc.comms.localization import Localization
+from asmcnc.comms.localisation import Localization
 from asmcnc.keyboard.custom_keyboard import Keyboard
 from asmcnc.comms import smartbench_flurry_database_connection
 
