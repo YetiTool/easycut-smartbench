@@ -100,7 +100,6 @@ Builder.load_string(
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
-                        source: "./asmcnc/skavaUI/img/z_jog_down.png"
                         source: "./asmcnc/skavaUI/img/xy_arrow_down.png"
                         center_x: self.parent.center_x
                         y: self.parent.y
@@ -108,9 +107,8 @@ Builder.load_string(
                         allow_stretch: True   
                         
             BoxLayout:
-                padding:dp(10)
-                size: self.parent.size
-                pos: self.parent.pos                 
+                padding: 0, dp(10)
+                size_hint_y: 1              
                 id: probe_button_container
                         
             Button:
