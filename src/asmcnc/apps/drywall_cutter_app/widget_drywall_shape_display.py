@@ -65,6 +65,15 @@ Builder.load_string("""
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
 
+            Label:
+                text: 'D'
+                font_size: dp(25)
+                pos: d_input.pos[0] - self.width, d_input.pos[1] + dp(3)
+                opacity: d_input.opacity
+                color: 0,0,0,1
+                size: self.texture_size
+                size_hint: (None, None)
+
             BoxLayout:
                 size: dp(70), dp(40)
                 size_hint: (None, None)
@@ -85,6 +94,15 @@ Builder.load_string("""
                     size: self.parent.size
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
+
+            Label:
+                text: 'L'
+                font_size: dp(25)
+                pos: l_input.pos[0] - self.width, l_input.pos[1] + dp(3)
+                opacity: l_input.opacity
+                color: 0,0,0,1
+                size: self.texture_size
+                size_hint: (None, None)
 
             BoxLayout:
                 size: dp(70), dp(40)
@@ -107,6 +125,15 @@ Builder.load_string("""
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
 
+            Label:
+                text: 'R'
+                font_size: dp(25)
+                pos: r_input.pos[0] - self.width, r_input.pos[1] + dp(3)
+                opacity: r_input.opacity
+                color: 0,0,0,1
+                size: self.texture_size
+                size_hint: (None, None)
+
             BoxLayout:
                 size: dp(70), dp(40)
                 size_hint: (None, None)
@@ -128,6 +155,15 @@ Builder.load_string("""
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
 
+            Label:
+                text: 'X'
+                font_size: dp(25)
+                pos: x_input.pos[0] - self.width, x_input.pos[1] + dp(3)
+                opacity: x_input.opacity
+                color: 0,0,0,1
+                size: self.texture_size
+                size_hint: (None, None)
+
             BoxLayout:
                 size: dp(70), dp(40)
                 size_hint: (None, None)
@@ -148,6 +184,15 @@ Builder.load_string("""
                     size: self.parent.size
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
+
+            Label:
+                text: 'Y'
+                font_size: dp(25)
+                pos: y_input.pos[0] - self.width, y_input.pos[1] + dp(3)
+                opacity: y_input.opacity
+                color: 0,0,0,1
+                size: self.texture_size
+                size_hint: (None, None)
 
             Label:
                 id: x_datum_label
