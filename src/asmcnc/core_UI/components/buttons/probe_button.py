@@ -4,6 +4,17 @@ from kivy.uix.image import Image
 
 
 class ProbeButton(Button):
+    """
+    A custom button widget used for probing functionality.
+
+    When pressed, it opens the probing screen.
+
+    Args:
+        router_machine (RouterMachine): An instance of the RouterMachine class.
+        screen_manager (ScreenManager): An instance of the ScreenManager class.
+        localization (Localization): An instance of the Localization class.
+    """
+
     background_normal = ""
     background_down = ""
     background_color = (0, 0, 0, 0)
@@ -18,8 +29,8 @@ class ProbeButton(Button):
         self.image = Image(source="./asmcnc/skavaUI/img/z_probe.png", size = self.size, pos = self.pos, allow_stretch = True)
         self.add_widget(self.image)
 
-        self.bind(size = self.update_image_size)
-        self.bind(pos = self.update_image_pos)
+        self.bind(size=self.update_image_size)
+        self.bind(pos=self.update_image_pos)
 
         # When the button is pressed, open the popup
         self.bind(on_press=self.open_screen)
