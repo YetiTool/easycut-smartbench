@@ -7,7 +7,7 @@ class TestLocalizationProductName(UnitTestBase):
         super(TestLocalizationProductName, self).setUp()
 
     def test_get_str(self):
-        # Patch model_detector.is_machine_drywall to return False
+        # Patch model_manager.is_machine_drywall to return False
         model_manager.is_machine_drywall = lambda: False
 
         # Create the localization module
@@ -21,7 +21,7 @@ class TestLocalizationProductName(UnitTestBase):
         # Test that the get_str method returns the value from the dictionary
         self.assertEqual(self._localization_module.get_str("SmartBench"), "SmartBench")
 
-        # Patch model_detector.is_machine_drywall to return True
+        # Patch model_manager.is_machine_drywall to return True
         model_manager.is_machine_drywall = lambda: True
 
         # Recreate the localization module (to update the PRODUCT_NAME)
