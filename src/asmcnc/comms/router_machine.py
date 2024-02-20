@@ -2075,15 +2075,15 @@ class RouterMachine(object):
         
             self.led_colour_status = colour_name 
     
-            if colour_name == 'RED':        self.s.write_command("*LFF0000")
-            elif (colour_name == 'GREEN'and self.is_machine_homed):    self.s.write_command("*L11FF00")
-            elif (colour_name == 'GREEN'and not self.is_machine_homed):    self.s.write_command("*LFFFF00")
-            elif colour_name == 'BLUE':     self.s.write_command("*L1100FF")
+            if colour_name == 'RED':        self.s.write_command("*LFFFFFF")
+            elif (colour_name == 'GREEN'and self.is_machine_homed):    self.s.write_command("*LFFFFFF")
+            elif (colour_name == 'GREEN'and not self.is_machine_homed):    self.s.write_command("*LFFFFFF")
+            elif colour_name == 'BLUE':     self.s.write_command("*LFFFFFF")
             elif colour_name == 'WHITE':    self.s.write_command("*LFFFFFF")
-            elif colour_name == 'YELLOW':   self.s.write_command("*LFFFF00")
-            elif colour_name == 'ORANGE':   self.s.write_command("*LFF8000")
-            elif colour_name == 'MAGENTA':  self.s.write_command("*LFF00FF")
-            elif colour_name == 'OFF':      self.s.write_command("*L110000")
+            elif colour_name == 'YELLOW':   self.s.write_command("*LFFFFFF")
+            elif colour_name == 'ORANGE':   self.s.write_command("*LFFFFFF")
+            elif colour_name == 'MAGENTA':  self.s.write_command("*LFFFFFF")
+            elif colour_name == 'OFF':      self.s.write_command("*LFFFFFF")
          
         else: print ("LED Colour denied because streaming: " + colour_name + "\n")
 
