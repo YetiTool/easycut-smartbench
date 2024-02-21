@@ -3,6 +3,12 @@ from kivy.lang import Builder
 import math
 from kivy.uix.image import Image
 from kivy.clock import Clock
+from kivy.uix.textinput import TextInput
+
+
+class FloatInput(TextInput):
+    pass
+
 
 Builder.load_string("""
 <CuttingDepthsPopup>:
@@ -110,7 +116,7 @@ Builder.load_string("""
             size: self.parent.size
             allow_stretch: True
         
-        TextInput:
+        FloatInput:
             id: bottom_offset
             pos_hint: {'x': 0.165, 'y': 0.37}
             padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
