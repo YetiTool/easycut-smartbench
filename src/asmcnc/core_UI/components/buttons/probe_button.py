@@ -38,8 +38,8 @@ class ProbeButton(Button):
         # When the probe_z_coord is updated, close the popup
         self.m.bind(probe_z_coord=self.close_screen)
 
-        self.probing_screen = ProbingScreen(screen_manager=self.sm, machine=self.m, localization=self.l)
         if not self.sm.has_screen('probing'):
+            self.probing_screen = ProbingScreen(name = 'probing', screen_manager = self.sm, machine = self.m, localization = self.l)
             self.sm.add_widget(self.probing_screen)
 
     def update_image_size(self, instance, value):
@@ -50,8 +50,6 @@ class ProbeButton(Button):
 
     def open_screen(self, *args):
         print("Opening probing screen")
-        if not self.sm.has_screen('probing'):
-            self.sm.add_widget(self.probing_screen)
         self.sm.current = 'probing'
 
     def close_screen(self, *args):
