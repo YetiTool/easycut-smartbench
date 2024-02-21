@@ -2,8 +2,7 @@ from kivy.uix.popup import Popup
 from kivy.lang import Builder
 import math
 from kivy.uix.image import Image
-from kivy.clock import Clock
-from asmcnc.core_UI.components import FloatInput
+from asmcnc.core_UI.components import FloatInput  # Required for the builder string
 
 Builder.load_string("""
 <CuttingDepthsPopup>:
@@ -296,8 +295,6 @@ class CuttingDepthsPopup(Popup):
         self.kb = keyboard
         self.dwt_config = dwt_config
 
-        self.previous_text_input_focused = None
-
         self.pass_depth_lines = []
 
         self.float_layout.remove_widget(self.cut_depth_warning)
@@ -358,7 +355,6 @@ class CuttingDepthsPopup(Popup):
         for text_input in self.text_inputs:
             if not text_input.collide_point(touch.x, touch.y):
                 text_input.focus = False
-                self.previous_text_input_focused = None
             if text_input.text != '':
                 try:
                     text_input.text = str(float(text_input.text))
