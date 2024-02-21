@@ -3,6 +3,7 @@ from kivy.lang import Builder
 import math
 from kivy.uix.image import Image
 from kivy.clock import Clock
+from asmcnc.core_UI.components import FloatInput
 
 Builder.load_string("""
 <CuttingDepthsPopup>:
@@ -81,7 +82,7 @@ Builder.load_string("""
             size: self.parent.size
             allow_stretch: True
             
-        TextInput:
+        FloatInput:
             id: material_thickness
             pos_hint: {'x': 0.165, 'y': 0.68}
             padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
@@ -110,7 +111,7 @@ Builder.load_string("""
             size: self.parent.size
             allow_stretch: True
         
-        TextInput:
+        FloatInput:
             id: bottom_offset
             pos_hint: {'x': 0.165, 'y': 0.37}
             padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
@@ -139,7 +140,7 @@ Builder.load_string("""
             color: hex('#333333')
             text_size: (dp(app.get_scaled_width(75)), None)
             
-        TextInput:
+        FloatInput:
             id: total_cut_depth
             pos_hint: {'x': 0.165, 'y': 0.165}
             padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
@@ -225,7 +226,7 @@ Builder.load_string("""
                 color: hex('#333333')
                 text_size: (dp(app.get_scaled_width(75)), None)
                 
-            TextInput:
+            FloatInput:
                 id: depth_per_pass
                 padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
                 halign: 'center'
@@ -330,11 +331,6 @@ class CuttingDepthsPopup(Popup):
 
     def on_open(self):
         self.load_active_config()
-
-    def text_on_focus(self, instance, value):
-        if value and self.previous_text_input_focused != instance:
-            self.previous_text_input_focused = instance
-            Clock.schedule_once(lambda dt: instance.select_all())
 
     def get_safe_float(self, val):
         try:
