@@ -37,6 +37,8 @@ Builder.load_string("""
     title: ''
     separator_height: 0
     background: './asmcnc/apps/drywall_cutter_app/img/cutting_depths_popup.png'
+    
+    on_touch_down: root.on_touch(args[1])
 
     FloatLayout:
         id: float_layout
@@ -294,7 +296,6 @@ class CuttingDepthsPopup(Popup):
         self.kb = keyboard
         self.dwt_config = dwt_config
 
-        self.bind(on_touch_down=self.on_touch)
         self.previous_text_input_focused = None
 
         self.pass_depth_lines = []
@@ -308,7 +309,6 @@ class CuttingDepthsPopup(Popup):
         self.text_inputs = [self.material_thickness, self.bottom_offset, self.total_cut_depth, self.depth_per_pass]
         self.kb.setup_text_inputs(self.text_inputs)
         for text_input in self.text_inputs:
-            text_input.bind(focus=self.text_on_focus)
             text_input.bind(text=self.update_text)
         self.depth_per_pass.bind(text=self.calculate_depth_per_pass)
 
@@ -354,7 +354,7 @@ class CuttingDepthsPopup(Popup):
         self.pass_depth_warning.text = self.pass_depth_warning_cutter_max
         self.cut_depth_warning.text = self.cut_depth_warning_soft_limit
 
-    def on_touch(self, instance, touch):
+    def on_touch(self, touch):
         for text_input in self.text_inputs:
             if not text_input.collide_point(touch.x, touch.y):
                 text_input.focus = False

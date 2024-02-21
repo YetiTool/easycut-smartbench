@@ -4,8 +4,8 @@ from kivy.clock import Clock
 
 class FloatInput(TextInput):
 
-    def __init__(self):
-        super(FloatInput, self).__init__()
+    def __init__(self, **kwargs):
+        super(FloatInput, self).__init__(**kwargs)
         self.bind(focus=self.text_on_focus)
 
     def text_on_focus(self, instance, value):
