@@ -112,7 +112,7 @@ class ProbingScreen(Screen):
         machine_state = self.m.state()
         if machine_state.lower() != "run":
             # Machine is no longer probing
-            self.exit()
+            self.sm.remove_widget(self)
 
     def stop_button_press(self):
         log("Probing cancelled by user")
