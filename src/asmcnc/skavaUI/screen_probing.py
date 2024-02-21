@@ -3,9 +3,6 @@
 Created Feb 2024
 
 @author: Benji
-
-Imoportant note:
-sm.return_to_screen must be set to the screen that the user should return to after the probing is done
 """
 import sys
 from datetime import datetime
@@ -101,8 +98,21 @@ class ProbingScreen(Screen):
         
         self.update_strings()
 
+    def update_strings(self):
+        self.probing_label.text = self.l.get_str("Probing") + "..."
+
     def on_enter(self):
         self.m.probe_z()
+        Clock.schedule_once(lambda dt: self.probing_clock(), 0.5) # Wait before checking if probing
+    
+    def probing_clock(self):
+        self.confirm_probing_event = Clock.schedule_interval(lambda dt: self.confirm_probing(), 0.5)
+
+    def confirm_probing(self):
+        machine_state = self.m.state()
+        if machine_state.lower() != "run":
+            # Machine is no longer probing
+            self.exit()
 
     def stop_button_press(self):
         log("Probing cancelled by user")
@@ -113,8 +123,6 @@ class ProbingScreen(Screen):
         self.m._grbl_feed_hold()
         Clock.schedule_once(lambda dt: self.m._grbl_soft_reset(), 0.5) # Wait before reseting to avoid alarm
 
-    def update_strings(self):
-        self.probing_label.text = self.l.get_str("Probing") + "..."
-
     def exit(self):
+        Clock.unschedule(self.confirm_probing_event)
         self.sm.current = self.sm.return_to_screen
