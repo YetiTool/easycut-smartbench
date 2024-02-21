@@ -36,8 +36,6 @@ Builder.load_string("""
     title: ''
     separator_height: 0
     background: './asmcnc/apps/drywall_cutter_app/img/cutting_depths_popup.png'
-    
-    on_touch_down: root.on_touch()
 
     FloatLayout:
         id: float_layout
@@ -295,6 +293,9 @@ class CuttingDepthsPopup(Popup):
         self.kb = keyboard
         self.dwt_config = dwt_config
 
+        self.bind(on_touch_down=self.on_touch)
+        self.previous_text_input_focused = None
+
         self.pass_depth_lines = []
 
         self.float_layout.remove_widget(self.cut_depth_warning)
@@ -331,7 +332,8 @@ class CuttingDepthsPopup(Popup):
         self.load_active_config()
 
     def text_on_focus(self, instance, value):
-        if value:
+        if value and self.previous_text_input_focused != instance:
+            self.previous_text_input_focused = instance
             Clock.schedule_once(lambda dt: instance.select_all())
 
     def get_safe_float(self, val):
@@ -356,9 +358,11 @@ class CuttingDepthsPopup(Popup):
         self.pass_depth_warning.text = self.pass_depth_warning_cutter_max
         self.cut_depth_warning.text = self.cut_depth_warning_soft_limit
 
-    def on_touch(self):
+    def on_touch(self, instance, touch):
         for text_input in self.text_inputs:
-            text_input.focus = False
+            if not text_input.collide_point(touch.x, touch.y):
+                text_input.focus = False
+                self.previous_text_input_focused = None
             if text_input.text != '':
                 try:
                     text_input.text = str(float(text_input.text))
