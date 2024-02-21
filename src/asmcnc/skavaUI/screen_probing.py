@@ -101,6 +101,9 @@ class ProbingScreen(Screen):
     def update_strings(self):
         self.probing_label.text = self.l.get_str("Probing") + "..."
 
+    def on_pre_enter(self):
+        self.prev_screen = self.sm.current
+
     def on_enter(self):
         self.m.probe_z()
         Clock.schedule_once(lambda dt: self.probing_clock(), 0.5) # Wait before checking if probing
@@ -112,7 +115,7 @@ class ProbingScreen(Screen):
         machine_state = self.m.state()
         if machine_state.lower() != "run":
             # Machine is no longer probing
-            self.sm.remove_widget(self)
+            self.sm.return_to_screen = self.prev_screen
 
     def stop_button_press(self):
         log("Probing cancelled by user")
