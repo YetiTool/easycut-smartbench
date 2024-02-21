@@ -247,6 +247,7 @@ class DrywallShapeDisplay(Widget):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
         self.dwt_config = kwargs['dwt_config']
+        self.kb = kwargs['kb']
 
         self.d_input.bind(text=self.d_input_change) # Diameter of circle
         self.l_input.bind(text=self.l_input_change) # Length of line
@@ -254,9 +255,19 @@ class DrywallShapeDisplay(Widget):
         self.x_input.bind(text=self.x_input_change) # Square/rectangle x length
         self.y_input.bind(text=self.y_input_change) # Square/rectangle y length
 
+        self.text_inputs = [self.d_input, self.l_input, self.r_input, self.x_input, self.y_input]
+        self.kb.setup_text_inputs(self.text_inputs)
+
+        self.bind(on_touch_down=self.on_touch)
+
         self.m.s.bind(m_state=self.display_machine_state)
 
         Clock.schedule_interval(self.poll_position, 0.1)
+
+    def on_touch(self, instance, touch):
+        for text_input in self.text_inputs:
+            if not text_input.collide_point(touch.x, touch.y):
+                text_input.focus = False
 
     def select_shape(self, shape, rotation, swap_lengths=False):
         shape = shape.lower() # in case it's a test config with a capital letter
