@@ -102,8 +102,10 @@ class ProbingScreen(Screen):
         self.probing_label.text = self.l.get_str("Probing") + "..."
 
     def on_pre_enter(self):
-        self.prev_screen = self.sm.current
-
+        if "alarm" in self.sm.current:
+            self.sm.current = self.prev_screen
+        self.prev_screen = self.sm.current 
+        
     def on_enter(self):
         self.m.probe_z()
         Clock.schedule_once(lambda dt: self.probing_clock(), 0.5) # Wait before checking if probing
