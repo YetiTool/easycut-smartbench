@@ -867,7 +867,7 @@ class SpindleSafetyPopup(BasicPopup):
         **kwargs
     ):
         self.l = kwargs["l"]
-        # TODO: Localize this string
+
         main_string = self.l.get_str("This will start the spindle at 12,000 rpm! Please make sure:") + "\n"
         main_string += self.l.get_str("- The spindle is clamped properly") + "\n"
         main_string += self.l.get_str("- The spindle is plugged in") + "\n"
