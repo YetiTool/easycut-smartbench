@@ -113,6 +113,7 @@ class ProbingScreen(Screen):
 
             if self.m.state().lower() == "alarm":
                 self.m._grbl_soft_reset()
+                self.exit()
                 
             if not stop_command_sent:
                 self.m.turn_off_spindle()
