@@ -97,11 +97,9 @@ class ProbingScreen(Screen):
         self.l = kwargs["localization"]
 
         self.debug = False
-        
-        self.update_strings()
 
-    def update_strings(self):
-        self.probing_label.text = self.l.get_str("Probing") + "..."      
+    def update_text(self, string):
+        self.probing_label.text = self.l.get_str(string) + "..."      
 
     def on_enter(self):
 
@@ -110,7 +108,9 @@ class ProbingScreen(Screen):
 
         self.not_probing = False
         self.alarm_triggered = False
-        delay_time = 0.1
+        delay_time = 0
+
+        self.update_text("Please wait")
 
         if self.m.is_spindle_on():
             # Spindle is on, need to turn it off
@@ -125,17 +125,15 @@ class ProbingScreen(Screen):
             delay_time = 3
 
         # Probe once machine is ready
-        log("****Scheduling probe for " + str(delay_time) + " seconds from now")
         Clock.schedule_once(lambda dt: self.probe(), delay_time)
         
         # Start watchdog 1 sec after probe requested to give machine time to respond before interigating
         Clock.schedule_once(lambda dt: self.watchdog_clock(), delay_time + 1)
 
     def probe(self):
-        log("****Probing requested, checking machine state before probing")
         if self.m.state().lower() == "idle":
-            log("****Probing Z*****")
             self.m.probe_z()
+            self.update_text("Probing")
         else:
             log("Machine state not idle, cannot probe")
             # Watchdog should handle exiting the screen
