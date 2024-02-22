@@ -95,6 +95,8 @@ class ProbingScreen(Screen):
         self.sm = kwargs["screen_manager"]
         self.m = kwargs["machine"]
         self.l = kwargs["localization"]
+
+        self.debug = False
         
         self.update_strings()
 
@@ -107,8 +109,10 @@ class ProbingScreen(Screen):
         self.not_probing = False
         self.alarm_triggered = False
         
-        Clock.schedule_once(lambda dt: self.watchdog_clock(), 1) # Delay before starting watchdog
-        Clock.schedule_interval(lambda dt: self.debug_log(), 1) # Debug
+        Clock.schedule_once(lambda dt: self.watchdog_clock(), 0.5) # Delay before starting watchdog
+        
+        if self.debug:
+            Clock.schedule_interval(lambda dt: self.debug_log(), 1)
     
     def watchdog_clock(self):
         self.watchdog_event = Clock.schedule_interval(lambda dt: self.watchdog(), 0.1)
