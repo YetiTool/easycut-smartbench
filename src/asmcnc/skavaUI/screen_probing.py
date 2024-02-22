@@ -114,11 +114,13 @@ class ProbingScreen(Screen):
 
         if self.m.is_spindle_on():
             # Spindle is on, need to turn it off
+            log("Spindle is on, turning off")
             self.m.turn_spindle_off()
             delay_time = 2
 
         if self.m.state().lower() == "run":
             # Machine is running, need to stop it
+            log("Machine is running, pausing")
             self.m._grbl_feed_hold()
             delay_time = 3
 
@@ -130,6 +132,7 @@ class ProbingScreen(Screen):
 
     def probe(self):
         if self.m.state.lower() == "idle":
+            log("****Probing Z*****")
             self.m.probe_z()
         else:
             log("Machine state not idle, cannot probe")
