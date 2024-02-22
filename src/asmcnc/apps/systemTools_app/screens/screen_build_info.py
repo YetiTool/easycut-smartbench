@@ -618,7 +618,7 @@ class BuildInfoScreen(Screen):
         self.latest_sw_version = self.set.latest_sw_version
         self.latest_platform_version = self.set.latest_platform_version
         self.hw_version_label.text = self.m.s.hw_version
-        self.zh_version_label.text = str(self.m.z_head_version())
+        self.zh_version_label.text = str(self.m.get_product_code().value)
         try:
             self.machine_serial_number_label.text = (
                 "YS6" + str(self.m.serial_number())[0:4]

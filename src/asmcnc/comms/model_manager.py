@@ -1,5 +1,7 @@
 import os
 
+from src.asmcnc.comms.router_machine import ProductCodes
+
 ROOT_DIR = os.path.dirname(os.path.dirname(os.getcwd()))
 DWT_FILE_PATH = os.path.join(ROOT_DIR, "dwt.txt")
 
@@ -19,26 +21,29 @@ def is_machine_drywall():
     return os.path.exists(DWT_FILE_PATH)
 
 
-def set_machine_drywall(is_drywall):
+def set_machine_type(pc):
+    # type: (ProductCodes) ->  None
     # (bool) -> None
     """
     Creates the dwt.txt file.
     """
-    if is_drywall:
+    if pc is ProductCodes.DRYWALLTEC:
         if not os.path.exists(DWT_FILE_PATH):
             open(DWT_FILE_PATH, "w").close()
     else:
         if os.path.exists(DWT_FILE_PATH):
             os.remove(DWT_FILE_PATH)
 
-    __set_splash_screen()
+    __set_splash_screen(pc)
 
 
-def __set_splash_screen():
-    # () -> None
+def __set_splash_screen(pc):
+    # type: (ProductCodes) ->  None
     """
     Sets the plymouth splash screen to the appropriate one.
     """
-    new_splash = DWT_SPLASH_PATH if is_machine_drywall() else YETI_SPLASH_PATH
-    os.system("sudo cp {} {}".format(new_splash, PLYMOUTH_SPLASH_FILE_PATH))
+    if pc is ProductCodes.DRYWALLTEC:
+        os.system("sudo cp {} {}".format(DWT_SPLASH_PATH, PLYMOUTH_SPLASH_FILE_PATH))
+    else:
+        os.system("sudo cp {} {}".format(YETI_SPLASH_PATH, PLYMOUTH_SPLASH_FILE_PATH))
 
