@@ -199,7 +199,7 @@ class SerialConnection(EventDispatcher):
 
             filesForDevice = listdir('/dev/')  # put all device files into list[]
             for line in filesForDevice:
-                if line.startswith('tty.usbmodem'):  # look for...
+                if line.startswith('tty.usbmodem') or line.startswith('tty.usbserial'):  # look for...
 
                     print("Mac port to try: ")  # for debugging
                     print(line)
