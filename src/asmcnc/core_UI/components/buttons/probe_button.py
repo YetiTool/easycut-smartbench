@@ -50,7 +50,6 @@ class ProbeButton(Button):
 
     def open_screen(self, *args):
         print("Opening probing screen")
-        self.return_screen = self.sm.current # Store screen where button present (for returning to it after probing)
         self.sm.current = 'probing'
 
     def close_screen(self, *args):
