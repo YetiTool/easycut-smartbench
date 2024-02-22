@@ -3,12 +3,13 @@ from kivy.clock import Clock
 
 
 class FloatInput(TextInput):
+    """TextInput field with automatic content selection when focused. Text is validated to float when unfocused."""
 
     def __init__(self, **kwargs):
         super(FloatInput, self).__init__(**kwargs)
-        self.bind(focus=self.on_focus)
 
     def on_focus(self, instance, value):
+        """Selects all text when focused. text validation is done when unfocused."""
         if value:
             Clock.schedule_once(lambda dt: instance.select_all())
         else:
