@@ -116,7 +116,7 @@ class ProbingScreen(Screen):
             # Spindle is on, need to turn it off
             log("Spindle is on, turning off")
             self.m.turn_off_spindle()
-            delay_time = 2
+            delay_time = 8
 
         if self.m.state().lower() == "run" or self.m.state().lower() == "jog":
             # Machine is running, need to stop it
