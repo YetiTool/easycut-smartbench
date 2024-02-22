@@ -110,12 +110,12 @@ class ProbingScreen(Screen):
 
         self.not_probing = False
         self.alarm_triggered = False
-        delay_time = 0
+        delay_time = 0.1
 
         if self.m.is_spindle_on():
             # Spindle is on, need to turn it off
             log("Spindle is on, turning off")
-            self.m.turn_spindle_off()
+            self.m.turn_off_spindle()
             delay_time = 2
 
         if self.m.state().lower() == "run":
@@ -126,14 +126,14 @@ class ProbingScreen(Screen):
 
         # Probe once machine is ready
         log("****Scheduling probe for " + str(delay_time) + " seconds from now")
-        Clock.schedule_once(lambda dt: self.probe, delay_time)
+        Clock.schedule_once(lambda dt: self.probe(), delay_time)
         
         # Start watchdog 1 sec after probe requested to give machine time to respond before interigating
         Clock.schedule_once(lambda dt: self.watchdog_clock(), delay_time + 1)
 
     def probe(self):
         log("****Probing requested, checking machine state before probing")
-        if self.m.state.lower() == "idle":
+        if self.m.state().lower() == "idle":
             log("****Probing Z*****")
             self.m.probe_z()
         else:
