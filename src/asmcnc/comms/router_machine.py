@@ -1165,6 +1165,15 @@ class RouterMachine(EventDispatcher):
         """
         self.s.write_command('M5')
 
+    def is_spindle_on(self):
+        """
+        This method checks if the spindle is currently on.
+
+        Returns:
+            bool: True if the spindle is on, False if the spindle is off.
+        """
+        return int(self.s.spindle_speed) > 0
+
 # START UP SEQUENCES
 
     # BOOT UP SEQUENCE
