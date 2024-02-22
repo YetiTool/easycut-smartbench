@@ -99,25 +99,40 @@ class ProbingScreen(Screen):
         self.update_strings()
 
     def update_strings(self):
-        self.probing_label.text = self.l.get_str("Probing") + "..."
+        self.probing_label.text = self.l.get_str("Probing") + "..."      
 
-    def on_pre_enter(self):
-        if "alarm" in self.sm.current:
-            self.sm.current = self.prev_screen
-        self.prev_screen = self.sm.current 
-        
     def on_enter(self):
         self.m.probe_z()
-        Clock.schedule_once(lambda dt: self.probing_clock(), 0.5) # Wait before checking if probing
-    
-    def probing_clock(self):
-        self.confirm_probing_event = Clock.schedule_interval(lambda dt: self.confirm_probing(), 0.5)
 
-    def confirm_probing(self):
-        machine_state = self.m.state()
-        if machine_state.lower() != "run":
-            # Machine is no longer probing
-            self.sm.return_to_screen = self.prev_screen
+        self.not_probing = False
+        self.alarm_triggered = False
+        
+        Clock.schedule_once(lambda dt: self.watchdog_clock(), 1) # Delay before starting watchdog
+        Clock.schedule_interval(lambda dt: self.debug_log(), 1) # Debug
+    
+    def watchdog_clock(self):
+        self.watchdog_event = Clock.schedule_interval(lambda dt: self.watchdog(), 0.1)
+
+    def watchdog(self):
+        machine_state = self.m.state().lower()
+        screen = self.sm.current.lower()
+        not_probing = self.not_probing
+        alarm_triggered = self.alarm_triggered
+
+        if machine_state != "run":
+            # Machine isn't or is no longer probing
+            not_probing = True
+        if "alarm" in machine_state or "alarm" in screen:
+            # Alarm occured
+            alarm_triggered = True
+
+        if screen != 'probing':
+            Clock.unschedule(self.watchdog_event) # Stop watchdog if screen closed
+        
+        if screen == 'probing' and (not_probing or alarm_triggered):
+            log("Probing screen exited due to alarm or incorrect machine state")
+            self.cancel_probing() # Just in case
+            self.exit()
 
     def stop_button_press(self):
         log("Probing cancelled by user")
@@ -129,5 +144,12 @@ class ProbingScreen(Screen):
         Clock.schedule_once(lambda dt: self.m._grbl_soft_reset(), 0.5) # Wait before reseting to avoid alarm
 
     def exit(self):
-        Clock.unschedule(self.confirm_probing_event)
+        # Should only be called if sm.current == 'probing'
+        if self.sm.current != 'probing':
+            log("Probing screen exited but current screen may not be as expected")
+        Clock.unschedule(self.watchdog_event)
         self.sm.current = self.sm.return_to_screen
+
+    def debug_log(self):
+        log(("Current screen: " + self.sm.current, "Machine state: " + self.m.state(), "Not probing: " + str(self.not_probing), "Alarm triggered: " + str(self.alarm_triggered), "Watchdog scheduled: " + str(self.watchdog_event.is_triggered)))
+
