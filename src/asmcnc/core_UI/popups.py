@@ -866,14 +866,13 @@ class SpindleSafetyPopup(BasicPopup):
         main_label_size_hint_y=2,
         **kwargs
     ):
+        self.l = kwargs["l"]
         # TODO: Localize this string
-        main_string = """
-        This will start the spindle! Please make sure:\n
-        - the spindle is clamped properly\n
-        - the spindle is plugged in\n
-        - the dust shoe plug is inserted\n
-        - the cutter is free to move
-        """
+        main_string = self.l.get_str("This will start the spindle at 12,000 rpm! Please make sure:") + "\n"
+        main_string += self.l.get_str("- The spindle is clamped properly") + "\n"
+        main_string += self.l.get_str("- The spindle is plugged in") + "\n"
+        main_string += self.l.get_str("- The dust shoe plug is inserted") + "\n"
+        main_string += self.l.get_str("- The cutter is free to move")
         super(SpindleSafetyPopup, self).__init__(
             main_string=main_string,
             popup_type=PopupType.INFO,
