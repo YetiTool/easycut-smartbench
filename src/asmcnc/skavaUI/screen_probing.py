@@ -109,7 +109,11 @@ class ProbingScreen(Screen):
         decel_time = 0
 
         while(self.m.is_spindle_on() or self.m.state().lower() != "idle"):
-            log("Spindle is on" if self.m.is_spindle_on() else "Machine state: " + self.m.state())
+            log("Spindle is on" if self.m.is_spindle_on() else "Invalid machine state: " + self.m.state())
+
+            if self.m.state().lower() == "alarm":
+                self.m._grbl_soft_reset()
+                
             if not stop_command_sent:
                 self.m.turn_off_spindle()
                 self.cancel_probing() # Stops all movement and resets grbl
