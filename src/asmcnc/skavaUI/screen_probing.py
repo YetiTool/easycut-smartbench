@@ -105,34 +105,35 @@ class ProbingScreen(Screen):
 
     def on_enter(self):
 
-        stop_command_sent = False
-        decel_time = 0
-
-        while(self.m.is_spindle_on() or self.m.state().lower() != "idle"):
-            log("Spindle is on" if self.m.is_spindle_on() else "Invalid machine state: " + self.m.state())
-
-            if self.m.state().lower() == "alarm":
-                self.m._grbl_soft_reset()
-                self.exit()
-                
-            if not stop_command_sent:
-                self.m.turn_off_spindle()
-                self.cancel_probing() # Stops all movement and resets grbl
-                stop_command_sent = True
-                decel_time = 1
-
-        self.probe()        
-
-        self.not_probing = False
-        self.alarm_triggered = False
-        
-        Clock.schedule_once(lambda dt: self.watchdog_clock(), 1 + decel_time) # Delay before starting watchdog
-
         if self.debug:
             Clock.schedule_interval(lambda dt: self.debug_log(), 1)
 
+        self.not_probing = False
+        self.alarm_triggered = False
+        delay_time = 0
+
+        if self.m.is_spindle_on():
+            # Spindle is on, need to turn it off
+            self.m.turn_spindle_off()
+            delay_time = 2
+
+        if self.m.state().lower() == "run":
+            # Machine is running, need to stop it
+            self.m._grbl_feed_hold()
+            delay_time = 3
+
+        # Probe once machine is ready
+        Clock.schedule_once(lambda dt: self.probe, delay_time)
+        
+        # Start watchdog 1 sec after probe requested to give machine time to respond before interigating
+        Clock.schedule_once(lambda dt: self.watchdog_clock(), delay_time + 1)
+
     def probe(self):
-        self.m.probe_z()
+        if self.m.state.lower() == "idle":
+            self.m.probe_z()
+        else:
+            log("Machine state not idle, cannot probe")
+            # Watchdog should handle exiting the screen
     
     def watchdog_clock(self):
         self.watchdog_event = Clock.schedule_interval(lambda dt: self.watchdog(), 0.1)
@@ -165,7 +166,7 @@ class ProbingScreen(Screen):
 
     def cancel_probing(self):
         self.m._grbl_feed_hold()
-        Clock.schedule_once(lambda dt: self.m._grbl_soft_reset(), 2) # Wait before reseting to avoid alarm
+        Clock.schedule_once(lambda dt: self.m._grbl_soft_reset(), 0.5) # Wait before reseting to avoid alarm
 
     def exit(self):
         # Should only be called if sm.current == 'probing'
