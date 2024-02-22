@@ -118,7 +118,7 @@ class ProbingScreen(Screen):
             self.m.turn_off_spindle()
             delay_time = 2
 
-        if self.m.state().lower() == "run":
+        if self.m.state().lower() == "run" or self.m.state().lower() == "jog":
             # Machine is running, need to stop it
             log("Machine is running, pausing")
             self.m._grbl_feed_hold()
