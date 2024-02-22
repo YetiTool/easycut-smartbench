@@ -96,7 +96,7 @@ class ProbingScreen(Screen):
         self.m = kwargs["machine"]
         self.l = kwargs["localization"]
 
-        self.debug = True
+        self.debug = False
         
         self.update_strings()
 
@@ -125,12 +125,14 @@ class ProbingScreen(Screen):
             delay_time = 3
 
         # Probe once machine is ready
+        log("****Scheduling probe for " + str(delay_time) + " seconds from now")
         Clock.schedule_once(lambda dt: self.probe, delay_time)
         
         # Start watchdog 1 sec after probe requested to give machine time to respond before interigating
         Clock.schedule_once(lambda dt: self.watchdog_clock(), delay_time + 1)
 
     def probe(self):
+        log("****Probing requested, checking machine state before probing")
         if self.m.state.lower() == "idle":
             log("****Probing Z*****")
             self.m.probe_z()
