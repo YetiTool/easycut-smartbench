@@ -37,8 +37,6 @@ Builder.load_string("""
     separator_height: 0
     background: './asmcnc/apps/drywall_cutter_app/img/cutting_depths_popup.png'
     
-    on_touch_down: root.on_touch(args[1])
-
     FloatLayout:
         id: float_layout
         size_hint: (None, None)
@@ -350,18 +348,6 @@ class CuttingDepthsPopup(Popup):
         self.depth_per_pass_label.text = self.l.get_str("Depth per pass")
         self.pass_depth_warning.text = self.pass_depth_warning_cutter_max
         self.cut_depth_warning.text = self.cut_depth_warning_soft_limit
-
-    def on_touch(self, touch):
-        for text_input in self.text_inputs:
-            if not text_input.collide_point(touch.x, touch.y):
-                text_input.focus = False
-            if text_input.text != '':
-                try:
-                    text_input.text = str(float(text_input.text))
-                except:
-                    pass
-            else:
-                text_input.text = str(float(0))
 
     def on_checkbox_active(self):
         if self.auto_pass_checkbox.active:
