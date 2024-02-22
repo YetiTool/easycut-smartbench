@@ -108,7 +108,7 @@ class ProbingScreen(Screen):
 
         self.not_probing = False
         self.alarm_triggered = False
-        delay_time = 0
+        delay_time = [0]
 
         self.update_text("Please wait")
 
@@ -116,16 +116,16 @@ class ProbingScreen(Screen):
             # Spindle is on, need to turn it off
             log("Spindle is on, turning off")
             self.m.turn_off_spindle()
-            delay_time = 8
+            delay_time.append(8)
 
         if self.m.state().lower() == "run" or self.m.state().lower() == "jog":
             # Machine is running, need to stop it
             log("Machine is running, pausing")
-            self.m._grbl_feed_hold()
-            delay_time = 3
+            self.cancel_probing() # Pause machine and reset
+            delay_time.append(3)
 
         # Probe once machine is ready
-        Clock.schedule_once(lambda dt: self.probe(), delay_time)
+        Clock.schedule_once(lambda dt: self.probe(), max(delay_time))
         
         # Start watchdog 1 sec after probe requested to give machine time to respond before interigating
         Clock.schedule_once(lambda dt: self.watchdog_clock(), delay_time + 1)
