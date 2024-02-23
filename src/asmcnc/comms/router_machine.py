@@ -43,9 +43,7 @@ class ProductCodes(Enum):
 
 
 class RouterMachine(object):
-
-    DEBUG_PRODUCT_CODE = ProductCodes.PRECISION_PRO_PLUS
-# SETUP
+    # SETUP
     
     s = None # serial object
 
@@ -1611,16 +1609,15 @@ class RouterMachine(object):
 
 # SETTINGS GETTERS
     def serial_number(self): 
-        try: self.s.setting_50
-        except: return 0
-        else: return self.s.setting_50
+        try:
+            self.s.setting_50
+        except:
+            return 0
+        else:
+            return self.s.setting_50
 
     def get_product_code(self):
         """takes the last two digits of $50 and converts them to a ProductCode."""
-        try:
-            return self.DEBUG_PRODUCT_CODE
-        except:
-            pass
         try:
             self.s.setting_50
         except:
@@ -1634,7 +1631,6 @@ class RouterMachine(object):
         except: return 0
         else: return self.s.fw_version
 
-    dwt_path =  "../../dwt.txt"
 
     def bench_is_dwt(self):
         return self.get_product_code() is ProductCodes.DRYWALLTEC

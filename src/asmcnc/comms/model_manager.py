@@ -1,49 +1,93 @@
+import json
 import os
+import threading
+from hashlib import md5
+
+from kivy._event import EventDispatcher
 
 from src.asmcnc.comms.router_machine import ProductCodes
 
-ROOT_DIR = os.path.dirname(os.path.dirname(os.getcwd()))
-DWT_FILE_PATH = os.path.join(ROOT_DIR, "dwt.txt")
-
-PLYMOUTH_SPLASH_FILE_PATH = "/usr/share/plymouth/debian-logo.png"
-
-SKAVA_UI_IMAGES_PATH = os.path.join(os.getcwd(), "asmcnc", "skavaUI", "img")
-YETI_SPLASH_PATH = os.path.join(SKAVA_UI_IMAGES_PATH, "yeti_splash_screen.png")
-DWT_SPLASH_PATH = os.path.join(SKAVA_UI_IMAGES_PATH, "dwt_splash_screen.png")
 
 
-def is_machine_drywall():
-    # () -> bool
-    """
-    Checks for the existence of the dwt.txt file.
-    :return: True if the file exists, False otherwise.
-    """
-    return os.path.exists(DWT_FILE_PATH)
+class ModelManagerSingleton(EventDispatcher):
+    _instance = None
+    _lock = threading.Lock()
 
+    # File paths:
+    ROOT_DIR = os.path.dirname(os.path.dirname(os.getcwd()))
+    DWT_FILE_PATH = os.path.join(ROOT_DIR, "dwt.txt")
+    PC_FILE_PATH = os.path.join(os.path.dirname(os.getcwd()), "src", "sb_values", "model_info.json")
 
-def set_machine_type(pc):
-    # type: (ProductCodes) ->  None
-    # (bool) -> None
-    """
-    Creates the dwt.txt file.
-    """
-    if pc is ProductCodes.DRYWALLTEC:
-        if not os.path.exists(DWT_FILE_PATH):
-            open(DWT_FILE_PATH, "w").close()
-    else:
-        if os.path.exists(DWT_FILE_PATH):
-            os.remove(DWT_FILE_PATH)
+    PLYMOUTH_SPLASH_FILE_PATH = "/usr/share/plymouth/debian-logo.png"
+    SKAVA_UI_IMAGES_PATH = os.path.join(os.getcwd(), "asmcnc", "skavaUI", "img")
+    YETI_SPLASH_PATH = os.path.join(SKAVA_UI_IMAGES_PATH, "yeti_splash_screen.png")
+    DWT_SPLASH_PATH = os.path.join(SKAVA_UI_IMAGES_PATH, "dwt_splash_screen.png")
 
-    __set_splash_screen(pc)
+    def __new__(cls):
+        with cls._lock:
+            if cls._instance is None:
+                print("Creating new instance of ModelManagerSingleton")
+                cls._instance = super(ModelManagerSingleton, cls).__new__(cls)
+                cls._instance.product_code = ProductCodes.UNKNOWN
+                cls._instance.set_machine_type(cls._instance.load_saved_product_code())
+            return cls._instance
 
+    def is_machine_drywall(self):
+        # () -> bool
+        """
+        Checks for the existence of the dwt.txt file.
+        :return: True if the file exists, False otherwise.
+        """
+        return self.product_code is ProductCodes.DRYWALLTEC
 
-def __set_splash_screen(pc):
-    # type: (ProductCodes) ->  None
-    """
-    Sets the plymouth splash screen to the appropriate one.
-    """
-    if pc is ProductCodes.DRYWALLTEC:
-        os.system("sudo cp {} {}".format(DWT_SPLASH_PATH, PLYMOUTH_SPLASH_FILE_PATH))
-    else:
-        os.system("sudo cp {} {}".format(YETI_SPLASH_PATH, PLYMOUTH_SPLASH_FILE_PATH))
+    def set_machine_type(self, pc, save=False):
+        # type: (ProductCodes, bool) ->  None
+        # (bool) -> None
+        """
+        Creates the dwt.txt file.
+        """
+        if self.product_code == pc:
+            return
+        self.product_code = pc
+        if save:
+            self.save_product_code(pc)
+
+        if pc is ProductCodes.DRYWALLTEC:
+            if not os.path.exists(self.DWT_FILE_PATH):
+                open(self.DWT_FILE_PATH, "w").close()
+        else:
+            if os.path.exists(self.DWT_FILE_PATH):
+                os.remove(self.DWT_FILE_PATH)
+
+        self.__set_splash_screen(pc)
+
+    def __set_splash_screen(self, pc):
+        # type: (ProductCodes) ->  None
+        """
+        Sets the plymouth splash screen to the appropriate one.
+        """
+        if pc is ProductCodes.DRYWALLTEC:
+            os.system("sudo cp {} {}".format(self.DWT_SPLASH_PATH, self.PLYMOUTH_SPLASH_FILE_PATH))
+        else:
+            os.system("sudo cp {} {}".format(self.YETI_SPLASH_PATH, self.PLYMOUTH_SPLASH_FILE_PATH))
+
+    def load_saved_product_code(self):
+        """Returns the saved product code or UNKNOWN if nothing was saved yet."""
+        if not os.path.exists(self.PC_FILE_PATH):
+            return ProductCodes.UNKNOWN
+        else:
+            with open(self.PC_FILE_PATH, 'r') as f:
+                d = json.load(f)
+            for pc in ProductCodes:
+                if md5(str(pc.value)).hexdigest() == d['product_code']:
+                    return pc
+
+    def save_product_code(self, pc):
+        # type: (ProductCodes) -> None
+        hashed_pc = md5(str(pc.value)).hexdigest()
+        d = {'product_code': hashed_pc}
+
+        with open(self.PC_FILE_PATH, 'w') as f:
+            json.dump(d, f)
+
 

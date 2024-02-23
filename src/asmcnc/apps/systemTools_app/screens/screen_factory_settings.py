@@ -31,7 +31,7 @@ from asmcnc.apps.systemTools_app.screens.calibration import screen_set_threshold
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 from asmcnc.production.database.calibration_database import CalibrationDatabase
 
-from src.asmcnc.comms import model_manager
+from src.asmcnc.comms.model_manager import ModelManagerSingleton
 from src.asmcnc.comms.router_machine import ProductCodes
 
 Builder.load_string(
@@ -604,6 +604,7 @@ class FactorySettingsScreen(Screen):
         self.l = kwargs["localization"]
         self.kb = kwargs["keyboard"]
         self.usb_stick = kwargs["usb_stick"]
+        self.model_manager = ModelManagerSingleton()
         self.software_version_label.text = self.set.sw_version
         self.platform_version_label.text = self.set.platform_version
         self.latest_software_version.text = self.set.latest_sw_version
@@ -782,7 +783,7 @@ class FactorySettingsScreen(Screen):
                 + str(self.product_number_input.text)
             )
             # Do specific tasks for setting up the machine model (e.g. splash screen)
-            model_manager.set_machine_type(ProductCodes(int(self.product_number_input.text)))
+            self.model_manager.set_machine_type(ProductCodes(int(self.product_number_input.text)), True)
             self.m.write_dollar_setting(50, full_serial_number)
             self.machine_serial.text = "updating..."
 
