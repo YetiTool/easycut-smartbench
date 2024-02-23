@@ -112,6 +112,11 @@ class ProbingScreen(Screen):
 
         self.update_text("Please wait")
 
+        if self.m.reason_for_machine_pause == "Resuming":
+            # In this scenario, the user has hit resume after stop bar was pressed
+            self.update_text("Resuming")
+            self.m.reason_for_machine_pause = None
+
         if self.m.is_spindle_on():
             # Spindle is on, need to turn it off
             log("Spindle is on, turning off")
