@@ -19,6 +19,8 @@ from asmcnc.apps.start_up_sequence.data_consent_app import screen_manager_data_c
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupSSHToggleFailed
 from asmcnc.core_UI import scaling_utils as utils
 
+from src.asmcnc.comms.model_manager import ModelManagerSingleton
+
 Builder.load_string(
     """
 
@@ -618,7 +620,7 @@ class BuildInfoScreen(Screen):
         self.latest_sw_version = self.set.latest_sw_version
         self.latest_platform_version = self.set.latest_platform_version
         self.hw_version_label.text = self.m.s.hw_version
-        self.zh_version_label.text = str(self.m.z_head_version())
+        self.zh_version_label.text = str(self.m.get_product_code().value)
         try:
             self.machine_serial_number_label.text = (
                 "YS6" + str(self.m.serial_number())[0:4]
@@ -689,7 +691,7 @@ class BuildInfoScreen(Screen):
                 "CNC Router", ""
             )
         else:
-            self.smartbench_model.text = "SmartBench CNC Router"
+            self.smartbench_model.text = ModelManagerSingleton().product_code.name
 
     def choose_language(self):
         chosen_lang = self.language_button.text

@@ -7,7 +7,7 @@ from datetime import datetime
 from kivy.core.text import LabelBase
 from kivy.lang import Builder
 
-from asmcnc.comms import model_manager
+from src.asmcnc.comms.model_manager import ModelManagerSingleton
 
 asmcnc_path = os.path.dirname(os.path.dirname(__file__))
 fonts_path = os.path.join(asmcnc_path, "keyboard", "fonts")
@@ -82,8 +82,8 @@ class Localization(object):
             self.read_in_language_name()
 
         self.load_from_dictionary()
-
-        if model_manager.is_machine_drywall():
+        self.model_manager = ModelManagerSingleton()
+        if self.model_manager.is_machine_drywall():
             self.PRODUCT_NAME = "SmartCNC"
 
     # Getters/formatters

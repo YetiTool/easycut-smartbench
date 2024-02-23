@@ -28,6 +28,7 @@ from kivy.uix.boxlayout import BoxLayout
 
 from asmcnc.core_UI import scaling_utils
 from asmcnc.core_UI.popup_manager import PopupManager
+from src.asmcnc.comms.model_manager import ModelManagerSingleton
 
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
 
@@ -191,6 +192,9 @@ class SkavaUI(App):
 
         # Initialise 'm'achine object
         m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
+
+        # initialise ModelManagerSingleton with serial for setting_50 update
+        ModelManagerSingleton(m.s)
 
         # Initialise yetipilot
         yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd, localization=l)

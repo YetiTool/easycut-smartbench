@@ -3,6 +3,7 @@ Created on 31 Jan 2018
 @author: Ed
 This module defines the machine's properties (e.g. travel), services (e.g. serial comms) and functions (e.g. move left)
 '''
+from enum import Enum
 
 import logging, threading, re, traceback
 
@@ -31,9 +32,18 @@ def log(message):
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
 
 
-class RouterMachine(object):
+class ProductCodes(Enum):
+    DRYWALLTEC = 06
+    PRECISION_PRO_X = 05
+    PRECISION_PRO_PLUS = 04
+    PRECISION_PRO = 03
+    STANDARD = 02
+    FIRST_VERSION = 01
+    UNKNOWN = 00
 
-# SETUP
+
+class RouterMachine(object):
+    # SETUP
     
     s = None # serial object
 
@@ -1599,46 +1609,50 @@ class RouterMachine(object):
 
 # SETTINGS GETTERS
     def serial_number(self): 
-        try: self.s.setting_50
-        except: return 0
-        else: return self.s.setting_50
+        return self.s.setting_50
 
-    def z_head_version(self):
-        try: self.s.setting_50
-        except: return 0
-        else: return str(self.s.setting_50)[-2] + str(self.s.setting_50)[-1]
+    def get_product_code(self):
+        """takes the last two digits of $50 and converts them to a ProductCode."""
+        if self.s.setting_50 == 0.0:
+            return ProductCodes.UNKNOWN
+        else:
+            pc = str(self.s.setting_50)[-2] + str(self.s.setting_50)[-1]
+            return ProductCodes(int(pc))
 
     def firmware_version(self):
         try: self.s.fw_version
         except: return 0
         else: return self.s.fw_version
 
-    dwt_path =  "../../dwt.txt"
 
     def bench_is_dwt(self):
-        return path.isfile(self.dwt_path)
+        return self.get_product_code() is ProductCodes.DRYWALLTEC
 
-    def smartbench_model(self):  # recommend refactoring models into an enum, relying on strings is error-prone
-        if self.bench_is_dwt():
+    def smartbench_model(self):
+        # recommend refactoring models into an enum, relying on strings is error-prone
+        pc = self.get_product_code()
+        if pc is ProductCodes.DRYWALLTEC:
             return "DRYWALLTEC SmartCNC"
-        elif self.bench_is_short():
-            return "SmartBench Mini V1.3 PrecisionPro"
-        elif self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Smartbench model'):
-            return "SmartBench V1.3 PrecisionPro CNC Router"
-        elif self.is_machines_fw_version_equal_to_or_greater_than_version('1.4.0', 'Smartbench model'):
-            return "SmartBench V1.2 PrecisionPro CNC Router"
-        else:
-            zh_ver = self.z_head_version()
-
-            if zh_ver == "03":
+        elif pc == ProductCodes.PRECISION_PRO_X:
+            return "SmartBench V1.3 PrecisionPro X"
+        elif pc is ProductCodes.PRECISION_PRO_PLUS:
+            return "SmartBench V1.3 PrecisionPro Plus"
+        elif pc is ProductCodes.PRECISION_PRO:
+            if self.bench_is_short():
+                return "SmartBench Mini V1.3 PrecisionPro"
+            elif self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Smartbench model'):
+                return "SmartBench V1.3 PrecisionPro CNC Router"
+            elif self.is_machines_fw_version_equal_to_or_greater_than_version('1.4.0', 'Smartbench model'):
+                return "SmartBench V1.2 PrecisionPro CNC Router"
+            else:
                 return "SmartBench V1.2 Precision CNC Router"
-            elif zh_ver == "02":
-                return "SmartBench V1.2 Standard CNC Router"
-            elif zh_ver == "01":
-                if self.is_machines_hw_version_equal_to_or_greater_than_version(5, 'Smartbench model'):
-                    return "SmartBench V1.1 CNC Router"
-                else:
-                    return "SmartBench V1.0 CNC Router"
+        elif pc is ProductCodes.STANDARD:
+            return "SmartBench V1.2 Standard CNC Router"
+        elif pc is ProductCodes.FIRST_VERSION:
+            if self.is_machines_hw_version_equal_to_or_greater_than_version(5, 'Smartbench model'):
+                return "SmartBench V1.1 CNC Router"
+            else:
+                return "SmartBench V1.0 CNC Router"
 
         log("SmartBench model detection failed")
         return "SmartBench model detection failed"
