@@ -136,7 +136,7 @@ class ProbingScreen(Screen):
             self.m.probe_z()
             self.update_text("Probing")
         else:
-            log("Machine state not idle, cannot probe")
+            log("Machine state is {}, not idle. Cannot probe".format(self.m.state()))
             # Watchdog should handle exiting the screen
     
     def watchdog_clock(self):
@@ -155,8 +155,14 @@ class ProbingScreen(Screen):
             # Alarm occured
             alarm_triggered = True
 
+        if self.m.reason_for_machine_pause == "Resuming":
+            # In this scenario, the user has hit resume after stop bar was pressed
+            self.update_text("Probing") # Screen won't be aware that the machine has resumed probing
+            self.m.reason_for_machine_pause = None
+
+        # Stop watchdog if screen closed
         if screen != 'probing':
-            Clock.unschedule(self.watchdog_event) # Stop watchdog if screen closed
+            Clock.unschedule(self.watchdog_event)
         
         if screen == 'probing' and (not_probing or alarm_triggered):
             log("Probing screen exited due to alarm or incorrect machine state: " + str(machine_state))
