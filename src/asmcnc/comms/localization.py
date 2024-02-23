@@ -82,8 +82,8 @@ class Localization(object):
             self.read_in_language_name()
 
         self.load_from_dictionary()
-
-        if ModelManagerSingleton().is_machine_drywall():
+        self.model_manager = ModelManagerSingleton()
+        if self.model_manager.is_machine_drywall():
             self.PRODUCT_NAME = "SmartCNC"
 
     # Getters/formatters

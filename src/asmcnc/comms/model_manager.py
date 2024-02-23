@@ -12,6 +12,7 @@ from src.asmcnc.comms.router_machine import ProductCodes
 class ModelManagerSingleton(EventDispatcher):
     _instance = None
     _initialized = False
+    product_code = ProductCodes.UNKNOWN
     _lock = threading.Lock()
 
     # File paths:
@@ -43,7 +44,6 @@ class ModelManagerSingleton(EventDispatcher):
             return
         self._initialized = True
         # Do init here:
-        self.product_code = ProductCodes.UNKNOWN
         self.set_machine_type(self.load_saved_product_code())
 
     def on_setting_50(self, instance, value):
