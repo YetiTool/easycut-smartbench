@@ -182,7 +182,10 @@ class ProbingScreen(Screen):
         # Should only be called if sm.current == 'probing'
         if self.sm.current != 'probing':
             log("Probing screen exited but current screen may not be as expected")
-        Clock.unschedule(self.watchdog_event)
+        # If watchdog is scheduled, stop it
+        if hasattr(self, "watchdog_event"):
+            if self.watchdog_event.is_triggered:
+                Clock.unschedule(self.watchdog_event)
         self.sm.current = self.sm.return_to_screen
 
     def debug_log(self):
