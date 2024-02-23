@@ -2,6 +2,7 @@ from kivy.uix.popup import Popup
 from kivy.lang import Builder
 import math
 from kivy.uix.image import Image
+from asmcnc.core_UI.components import FloatInput  # Required for the builder string
 
 Builder.load_string("""
 <CuttingDepthsPopup>:
@@ -36,8 +37,6 @@ Builder.load_string("""
     separator_height: 0
     background: './asmcnc/apps/drywall_cutter_app/img/cutting_depths_popup.png'
     
-    on_touch_down: root.on_touch()
-
     FloatLayout:
         id: float_layout
         size_hint: (None, None)
@@ -82,7 +81,7 @@ Builder.load_string("""
             size: self.parent.size
             allow_stretch: True
             
-        TextInput:
+        FloatInput:
             id: material_thickness
             pos_hint: {'x': 0.165, 'y': 0.68}
             padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
@@ -111,7 +110,7 @@ Builder.load_string("""
             size: self.parent.size
             allow_stretch: True
         
-        TextInput:
+        FloatInput:
             id: bottom_offset
             pos_hint: {'x': 0.165, 'y': 0.37}
             padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
@@ -140,7 +139,7 @@ Builder.load_string("""
             color: hex('#333333')
             text_size: (dp(app.get_scaled_width(75)), None)
             
-        TextInput:
+        FloatInput:
             id: total_cut_depth
             pos_hint: {'x': 0.165, 'y': 0.165}
             padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
@@ -226,7 +225,7 @@ Builder.load_string("""
                 color: hex('#333333')
                 text_size: (dp(app.get_scaled_width(75)), None)
                 
-            TextInput:
+            FloatInput:
                 id: depth_per_pass
                 padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
                 halign: 'center'
@@ -349,17 +348,6 @@ class CuttingDepthsPopup(Popup):
         self.depth_per_pass_label.text = self.l.get_str("Depth per pass")
         self.pass_depth_warning.text = self.pass_depth_warning_cutter_max
         self.cut_depth_warning.text = self.cut_depth_warning_soft_limit
-
-    def on_touch(self):
-        for text_input in self.text_inputs:
-            text_input.focus = False
-            if text_input.text != '':
-                try:
-                    text_input.text = str(float(text_input.text))
-                except:
-                    pass
-            else:
-                text_input.text = str(float(0))
 
     def on_checkbox_active(self):
         if self.auto_pass_checkbox.active:
