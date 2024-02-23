@@ -1,4 +1,4 @@
-from asmcnc.comms import model_manager
+from asmcnc.comms.model_manager import ModelManagerSingleton
 from automated_unit_tests.unit_test_base import UnitTestBase
 
 
@@ -8,7 +8,7 @@ class TestLocalizationProductName(UnitTestBase):
 
     def test_get_str(self):
         # Patch model_manager.is_machine_drywall to return False
-        model_manager.is_machine_drywall = lambda: False
+        ModelManagerSingleton().is_machine_drywall = lambda: False
 
         # Create the localization module
         self._localization_module = self._create_localization_module()
@@ -22,7 +22,7 @@ class TestLocalizationProductName(UnitTestBase):
         self.assertEqual(self._localization_module.get_str("SmartBench"), "SmartBench")
 
         # Patch model_manager.is_machine_drywall to return True
-        model_manager.is_machine_drywall = lambda: True
+        ModelManagerSingleton().is_machine_drywall = lambda: True
 
         # Recreate the localization module (to update the PRODUCT_NAME)
         self._localization_module = self._create_localization_module()
