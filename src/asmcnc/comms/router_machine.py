@@ -1609,18 +1609,11 @@ class RouterMachine(object):
 
 # SETTINGS GETTERS
     def serial_number(self): 
-        try:
-            self.s.setting_50
-        except:
-            return 0
-        else:
-            return self.s.setting_50
+        return self.s.setting_50
 
     def get_product_code(self):
         """takes the last two digits of $50 and converts them to a ProductCode."""
-        try:
-            self.s.setting_50
-        except:
+        if self.s.setting_50 == 0.0:
             return ProductCodes.UNKNOWN
         else:
             pc = str(self.s.setting_50)[-2] + str(self.s.setting_50)[-1]

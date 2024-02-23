@@ -11,7 +11,7 @@ import serial, sys, time, string, threading, serial.tools.list_ports
 from datetime import datetime, timedelta
 from os import listdir
 from kivy.clock import Clock
-from kivy.properties import StringProperty
+from kivy.properties import StringProperty, NumericProperty
 from kivy.event import EventDispatcher
 
 import re
@@ -32,6 +32,7 @@ def log(message):
 
 
 class SerialConnection(EventDispatcher):
+    setting_50 = NumericProperty(0.0)
     STATUS_INTERVAL = 0.1  # How often to poll general status to update UI (0.04 = 25Hz = smooth animation)
 
     s = None  # Serial comms object

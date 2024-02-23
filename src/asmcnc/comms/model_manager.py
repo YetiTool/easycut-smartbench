@@ -11,6 +11,7 @@ from src.asmcnc.comms.router_machine import ProductCodes
 
 class ModelManagerSingleton(EventDispatcher):
     _instance = None
+    _initialized = False
     _lock = threading.Lock()
 
     # File paths:
@@ -23,14 +24,38 @@ class ModelManagerSingleton(EventDispatcher):
     YETI_SPLASH_PATH = os.path.join(SKAVA_UI_IMAGES_PATH, "yeti_splash_screen.png")
     DWT_SPLASH_PATH = os.path.join(SKAVA_UI_IMAGES_PATH, "dwt_splash_screen.png")
 
-    def __new__(cls):
+    def __new__(cls, machine=None):
         with cls._lock:
             if cls._instance is None:
                 print("Creating new instance of ModelManagerSingleton")
                 cls._instance = super(ModelManagerSingleton, cls).__new__(cls)
-                cls._instance.product_code = ProductCodes.UNKNOWN
-                cls._instance.set_machine_type(cls._instance.load_saved_product_code())
             return cls._instance
+
+    def __init__(self, machine=None):
+        # Always check for call with machine object:
+        if machine is not None:
+            self.machine = machine
+            # we only need the update when we have no file yet.
+            if not os.path.exists(self.PC_FILE_PATH):
+                self.machine.bind(setting_50=self.on_setting_50)
+
+        if self._initialized:
+            return
+        self._initialized = True
+        # Do init here:
+        self.product_code = ProductCodes.UNKNOWN
+        self.set_machine_type(self.load_saved_product_code())
+
+    def on_setting_50(self, instance, value):
+        """is called when the serial number ($50) is first read.
+        value should be XXXX.YY where YY is the product code."""
+        try:
+            pc_value = int(str(value).split('.')[1])
+            self.set_machine_type(ProductCodes(pc_value), True)
+        except:
+            # this should only happen when then machine has no serial number yet (first boot)
+            # so we do nothing. ;)
+            pass
 
     def is_machine_drywall(self):
         # () -> bool
