@@ -69,20 +69,14 @@ class ModelManagerSingleton(EventDispatcher):
         # type: (ProductCodes, bool) ->  None
         # (bool) -> None
         """
-        Creates the dwt.txt file.
+        Sets the console to a specific product code. See ProductCodes for more info.
+        Takes care of additional needed changes like splash screen.
         """
         if self.product_code == pc:
             return
         self.product_code = pc
         if save:
             self.save_product_code(pc)
-
-        if pc is ProductCodes.DRYWALLTEC:
-            if not os.path.exists(self.DWT_FILE_PATH):
-                open(self.DWT_FILE_PATH, "w").close()
-        else:
-            if os.path.exists(self.DWT_FILE_PATH):
-                os.remove(self.DWT_FILE_PATH)
 
         self.__set_splash_screen(pc)
 
