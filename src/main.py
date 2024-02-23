@@ -194,7 +194,7 @@ class SkavaUI(App):
         m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
 
         # initialise ModelManagerSingleton with serial for setting_50 update
-        ModelManagerSingleton(m.s)
+        ModelManagerSingleton(m)
 
         # Initialise yetipilot
         yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd, localization=l)
