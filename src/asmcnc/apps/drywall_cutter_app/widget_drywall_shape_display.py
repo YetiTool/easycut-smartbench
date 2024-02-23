@@ -1,6 +1,7 @@
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
+from asmcnc.core_UI.components import FloatInput  # Required for the builder string
 
 Builder.load_string("""
 <DrywallShapeDisplay>
@@ -55,7 +56,7 @@ Builder.load_string("""
                         pos: self.x + 5, self.y + 5
                         size: self.width - 10, self.height - 10
 
-                TextInput:
+                FloatInput:
                     id: d_input
                     font_size: dp(25)
                     halign: 'center'
@@ -85,7 +86,7 @@ Builder.load_string("""
                         pos: self.x + 5, self.y + 5
                         size: self.width - 10, self.height - 10
 
-                TextInput:
+                FloatInput:
                     id: l_input
                     font_size: dp(25)
                     halign: 'center'
@@ -115,7 +116,7 @@ Builder.load_string("""
                         pos: self.x + 5, self.y + 5
                         size: self.width - 10, self.height - 10
 
-                TextInput:
+                FloatInput:
                     id: r_input
                     font_size: dp(25)
                     halign: 'center'
@@ -145,7 +146,7 @@ Builder.load_string("""
                         pos: self.x + 5, self.y + 5
                         size: self.width - 10, self.height - 10
 
-                TextInput:
+                FloatInput:
                     id: x_input
                     font_size: dp(25)
                     halign: 'center'
@@ -175,7 +176,7 @@ Builder.load_string("""
                         pos: self.x + 5, self.y + 5
                         size: self.width - 10, self.height - 10
 
-                TextInput:
+                FloatInput:
                     id: y_input
                     font_size: dp(25)
                     halign: 'center'
@@ -258,16 +259,9 @@ class DrywallShapeDisplay(Widget):
         self.text_inputs = [self.d_input, self.l_input, self.r_input, self.x_input, self.y_input]
         self.kb.setup_text_inputs(self.text_inputs)
 
-        self.bind(on_touch_down=self.on_touch)
-
         self.m.s.bind(m_state=self.display_machine_state)
 
         Clock.schedule_interval(self.poll_position, 0.1)
-
-    def on_touch(self, instance, touch):
-        for text_input in self.text_inputs:
-            if not text_input.collide_point(touch.x, touch.y):
-                text_input.focus = False
 
     def select_shape(self, shape, rotation, swap_lengths=False):
         shape = shape.lower() # in case it's a test config with a capital letter
