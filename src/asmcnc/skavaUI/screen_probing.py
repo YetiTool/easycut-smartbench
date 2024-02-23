@@ -102,7 +102,6 @@ class ProbingScreen(Screen):
         self.probing_label.text = self.l.get_str(string) + "..."      
 
     def on_enter(self):
-
         if self.debug:
             Clock.schedule_interval(lambda dt: self.debug_log(), 1)
 
