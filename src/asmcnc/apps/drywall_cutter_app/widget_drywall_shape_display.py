@@ -16,6 +16,9 @@ Builder.load_string("""
     x_datum_label:x_datum_label
     y_datum_label:y_datum_label
 
+    config_name_label:config_name_label
+    machine_state_label:machine_state_label
+
     BoxLayout:
         size: self.parent.size
         pos: self.parent.pos
@@ -62,6 +65,15 @@ Builder.load_string("""
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
 
+            Label:
+                text: 'D'
+                font_size: dp(25)
+                pos: d_input.pos[0] - self.width, d_input.pos[1] + dp(3)
+                opacity: d_input.opacity
+                color: 0,0,0,1
+                size: self.texture_size
+                size_hint: (None, None)
+
             BoxLayout:
                 size: dp(70), dp(40)
                 size_hint: (None, None)
@@ -82,6 +94,15 @@ Builder.load_string("""
                     size: self.parent.size
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
+
+            Label:
+                text: 'L'
+                font_size: dp(25)
+                pos: l_input.pos[0] - self.width, l_input.pos[1] + dp(3)
+                opacity: l_input.opacity
+                color: 0,0,0,1
+                size: self.texture_size
+                size_hint: (None, None)
 
             BoxLayout:
                 size: dp(70), dp(40)
@@ -104,6 +125,15 @@ Builder.load_string("""
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
 
+            Label:
+                text: 'R'
+                font_size: dp(25)
+                pos: r_input.pos[0] - self.width, r_input.pos[1] + dp(3)
+                opacity: r_input.opacity
+                color: 0,0,0,1
+                size: self.texture_size
+                size_hint: (None, None)
+
             BoxLayout:
                 size: dp(70), dp(40)
                 size_hint: (None, None)
@@ -124,6 +154,15 @@ Builder.load_string("""
                     size: self.parent.size
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
+
+            Label:
+                text: 'X'
+                font_size: dp(25)
+                pos: x_input.pos[0] - self.width, x_input.pos[1] + dp(3)
+                opacity: x_input.opacity
+                color: 0,0,0,1
+                size: self.texture_size
+                size_hint: (None, None)
 
             BoxLayout:
                 size: dp(70), dp(40)
@@ -147,6 +186,15 @@ Builder.load_string("""
                     background_color: (0,0,0,0)
 
             Label:
+                text: 'Y'
+                font_size: dp(25)
+                pos: y_input.pos[0] - self.width, y_input.pos[1] + dp(3)
+                opacity: y_input.opacity
+                color: 0,0,0,1
+                size: self.texture_size
+                size_hint: (None, None)
+
+            Label:
                 id: x_datum_label
                 font_size: dp(25)
                 size: dp(150), dp(40)
@@ -163,12 +211,35 @@ Builder.load_string("""
                 text: 'Y:'
                 color: 0,0,0,1
 
+            # TextInput instead of Label, as there is no way to left align a Label in a FloatLayout
+            TextInput:
+                id: config_name_label
+                font_size: dp(20)
+                size: self.parent.width, dp(40)
+                size_hint: (None, None)
+                pos: self.parent.pos[0], self.parent.size[1] - self.height + dp(7)
+                multiline: False
+                background_color: (0,0,0,0)
+                disabled_foreground_color: (0,0,0,1)
+                disabled: True
+
+            Label:
+                id: machine_state_label
+                font_size: dp(20)
+                size: self.texture_size[0], dp(40)
+                size_hint: (None, None)
+                pos: self.parent.pos[0] + self.parent.size[0] - self.texture_size[0] - dp(5), self.parent.size[1] - self.height + dp(10)
+                text: 'Test'
+                color: 0,0,0,1
+
 """)
 
 
 class DrywallShapeDisplay(Widget):
 
     image_filepath = "./asmcnc/apps/drywall_cutter_app/img/"
+
+    swapping_lengths = False
 
     def __init__(self, **kwargs):
         super(DrywallShapeDisplay, self).__init__(**kwargs)
@@ -183,9 +254,12 @@ class DrywallShapeDisplay(Widget):
         self.x_input.bind(text=self.x_input_change) # Square/rectangle x length
         self.y_input.bind(text=self.y_input_change) # Square/rectangle y length
 
+        self.m.s.bind(m_state=self.display_machine_state)
+
         Clock.schedule_interval(self.poll_position, 0.1)
 
     def select_shape(self, shape, rotation, swap_lengths=False):
+        shape = shape.lower() # in case it's a test config with a capital letter
         image_source = self.image_filepath + shape
         if shape in ['rectangle', 'line']:
             image_source += "_" + rotation
@@ -193,10 +267,12 @@ class DrywallShapeDisplay(Widget):
         self.shape_dims_image.opacity = 1
 
         if swap_lengths:
+            self.swapping_lengths = True
             x = self.x_input.text
             y = self.y_input.text
             self.x_input.text = y
             self.y_input.text = x
+            self.swapping_lengths = False
 
         if shape == 'circle':
             self.enable_input(self.d_input, (468, 310))
@@ -273,41 +349,59 @@ class DrywallShapeDisplay(Widget):
             self.shape_toolpath_image.opacity = 1
 
     def d_input_change(self, instance, value):
-        self.dwt_config.on_parameter_change('canvas_shape_dims.d', float(value or 0))
+        # On startup it seems to call these functions and set everything to 0, so check that drywall app is open
+        if self.sm.current == 'drywall_cutter':
+            self.dwt_config.on_parameter_change('canvas_shape_dims.d', float(value or 0))
 
     def l_input_change(self, instance, value):
-        self.dwt_config.on_parameter_change('canvas_shape_dims.l', float(value or 0))
+        if self.sm.current == 'drywall_cutter':
+            self.dwt_config.on_parameter_change('canvas_shape_dims.l', float(value or 0))
 
     def r_input_change(self, instance, value):
-        self.dwt_config.on_parameter_change('canvas_shape_dims.r', float(value or 0))
+        if self.sm.current == 'drywall_cutter':
+            self.dwt_config.on_parameter_change('canvas_shape_dims.r', float(value or 0))
 
     def x_input_change(self, instance, value):
-        if self.rotation_required():
-            self.sm.get_screen('drywall_cutter').rotate_shape(swap_lengths=False)
-        self.dwt_config.on_parameter_change('canvas_shape_dims.x', float(value or 0))
+        if self.sm.current == 'drywall_cutter':
+            self.do_rectangle_checks()
+            self.dwt_config.on_parameter_change('canvas_shape_dims.x', float(value or 0))
 
     def y_input_change(self, instance, value):
-        if self.rotation_required():
-            self.sm.get_screen('drywall_cutter').rotate_shape(swap_lengths=False)
-        self.dwt_config.on_parameter_change('canvas_shape_dims.y', float(value or 0))
+        if self.sm.current == 'drywall_cutter':
+            self.do_rectangle_checks()
+            self.dwt_config.on_parameter_change('canvas_shape_dims.y', float(value or 0))
+
+    def do_rectangle_checks(self):
+        if not self.swapping_lengths:
+            if self.rotation_required():
+                self.sm.get_screen('drywall_cutter').rotate_shape(swap_lengths=False)
+            if self.rectangle_with_equal_sides() and False: # DISABLE
+                toolpath = self.sm.get_screen('drywall_cutter').cut_offset_selection.text
+                self.sm.get_screen('drywall_cutter').shape_selection.text = 'square'
+                self.sm.get_screen('drywall_cutter').cut_offset_selection.text = toolpath
 
     def rotation_required(self):
-        if "rectangle" in self.shape_dims_image.source:
-            if "vertical" in self.shape_dims_image.source:
+        if self.dwt_config.active_config.shape_type.lower() == "rectangle":
+            if self.dwt_config.active_config.rotation == "vertical":
                 return float(self.x_input.text or 0) < float(self.y_input.text or 0)
             else:
                 return float(self.x_input.text or 0) > float(self.y_input.text or 0)
         else:
             return False
+        
+    def rectangle_with_equal_sides(self):
+        if self.dwt_config.active_config.shape_type.lower() == "rectangle":
+            if self.x_input.text and self.y_input.text:
+                if float(self.x_input.text) == float(self.y_input.text):
+                    return True
+        return False
 
     def poll_position(self, dt):
-        current_x = round(abs(self.m.mpos_x()), 2)
-        current_y = round(abs(self.m.mpos_y()), 2)
+        # Maths from Ed, documented here https://docs.google.com/spreadsheets/d/1X37CWF8bsXeC0dY-HsbwBu_QR6N510V-5aPTnxwIR6I/edit#gid=677510108
+        current_x = round(self.m.x_wco() + (self.m.get_dollar_setting(130) - self.m.limit_switch_safety_distance) - self.m.laser_offset_tool_clearance_to_access_edge_of_sheet, 2)
+        current_y = round(self.m.y_wco() + (self.m.get_dollar_setting(131) - self.m.limit_switch_safety_distance) - (self.m.get_dollar_setting(27) - self.m.limit_switch_safety_distance), 2)
         self.x_datum_label.text = 'X: ' + str(current_x)
         self.y_datum_label.text = 'Y: ' + str(current_y)
 
-        if self.dwt_config.active_config.datum_position.x != current_x:
-            self.dwt_config.active_config.datum_position.x = current_x
-
-        if self.dwt_config.active_config.datum_position.y != current_y:
-            self.dwt_config.active_config.datum_position.y = current_y
+    def display_machine_state(self, obj, value):
+        self.machine_state_label.text = value

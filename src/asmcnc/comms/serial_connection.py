@@ -11,6 +11,8 @@ import serial, sys, time, string, threading, serial.tools.list_ports
 from datetime import datetime, timedelta
 from os import listdir
 from kivy.clock import Clock
+from kivy.properties import StringProperty, NumericProperty
+from kivy.event import EventDispatcher
 
 import re
 from functools import partial
@@ -29,7 +31,8 @@ def log(message):
     print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
-class SerialConnection(object):
+class SerialConnection(EventDispatcher):
+    setting_50 = NumericProperty(0.0)
     STATUS_INTERVAL = 0.1  # How often to poll general status to update UI (0.04 = 25Hz = smooth animation)
 
     s = None  # Serial comms object
@@ -197,7 +200,7 @@ class SerialConnection(object):
 
             filesForDevice = listdir('/dev/')  # put all device files into list[]
             for line in filesForDevice:
-                if line.startswith('tty.usbmodem'):  # look for...
+                if line.startswith('tty.usbmodem') or line.startswith('tty.usbserial'):  # look for...
 
                     print("Mac port to try: ")  # for debugging
                     print(line)
@@ -765,7 +768,7 @@ class SerialConnection(object):
 
     # PUSH MESSAGE HANDLING
 
-    m_state = 'Unknown'
+    m_state = StringProperty('Unknown')
 
     # Machine co-ordinates
     m_x = '0.0'
@@ -1809,6 +1812,10 @@ class SerialConnection(object):
         except:
             log("FAILED to display on CONSOLE: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
 
+        # Catch and correct all instances of the spindle speed command "M3 S{RPM}"
+        if 'S' in serialCommand.upper():
+            serialCommand = self.compensate_spindle_speed_command(serialCommand)
+
         # Finally issue the command        
         if self.s:
             try:
@@ -1874,3 +1881,31 @@ class SerialConnection(object):
 
         self.write_protocol_buffer.append([serialCommand, altDisplayText])
         return serialCommand
+
+    # Function for correcting spindle speed
+
+    def compensate_spindle_speed_command(self, spindle_speed_line):
+        """
+        Modifies the spindle speed command by correcting the RPM value and replacing it in the command line.
+        Correcting in this case refers to compensating for the conversion that happens from Z Head -> spindle
+
+        Args:
+            spindle_speed_line (str): The original spindle speed command line.
+
+        Returns:
+            str: The modified spindle speed command line with the corrected RPM value.
+        """
+        match = re.search(r'S(\d+(\.\d+)?)', spindle_speed_line.upper()) ## search for spnidle speed definition in the line
+        if match:
+            spindle_speed = float(match.group(1))
+
+        try:
+            corrected_spindle_speed = self.m.correct_rpm(spindle_speed)
+            new_line = re.sub(r'(S\d+(\.\d+)?)', "S" + str(corrected_spindle_speed), spindle_speed_line.upper())
+            log("Modified spindle command: " + new_line)
+            return new_line
+
+        except:
+            log("Spindle speed command could not be modified")
+
+        return spindle_speed_line
