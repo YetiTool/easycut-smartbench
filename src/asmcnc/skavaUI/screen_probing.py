@@ -122,8 +122,8 @@ class ProbingScreen(Screen):
             # Machine is running, need to stop it
             log("Machine is running, pausing")
             self.m._grbl_feed_hold()
-            Clock.schedule_once(lambda dt: self.m._grbl_soft_reset(), 3) # Wait before reseting to avoid alarm
-            delay_time.append(3)
+            Clock.schedule_once(lambda dt: self.m._grbl_soft_reset(), 3.5) # Wait before reseting to avoid alarm
+            delay_time.append(4)
 
         # Probe once machine is ready
         Clock.schedule_once(lambda dt: self.probe(), max(delay_time))
