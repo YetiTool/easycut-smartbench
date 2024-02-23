@@ -114,7 +114,8 @@ class ProbingScreen(Screen):
 
         if self.m.reason_for_machine_pause == "Resuming":
             # In this scenario, the user has hit resume after stop bar was pressed
-            self.update_text("Resuming")
+            # Screen is not aware that the machine has resumed probing
+            self.update_text("Probing")
             self.m.reason_for_machine_pause = None
 
         if self.m.is_spindle_on():
@@ -159,11 +160,6 @@ class ProbingScreen(Screen):
         if "alarm" in machine_state or "alarm" in screen:
             # Alarm occured
             alarm_triggered = True
-
-        if self.m.reason_for_machine_pause == "Resuming":
-            # In this scenario, the user has hit resume after stop bar was pressed
-            self.update_text("Probing") # Screen won't be aware that the machine has resumed probing
-            self.m.reason_for_machine_pause = None
 
         # Stop watchdog if screen closed
         if screen != 'probing':
