@@ -19,7 +19,7 @@ from asmcnc.apps.start_up_sequence.data_consent_app import screen_manager_data_c
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupSSHToggleFailed
 from asmcnc.core_UI import scaling_utils as utils
 
-from src.asmcnc.comms.model_manager import ModelManagerSingleton
+from asmcnc.comms.model_manager import ModelManagerSingleton
 
 Builder.load_string(
     """
