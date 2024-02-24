@@ -1,6 +1,7 @@
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
+from asmcnc.core_UI.components import FloatInput  # Required for the builder string
 
 Builder.load_string("""
 <DrywallShapeDisplay>
@@ -55,7 +56,7 @@ Builder.load_string("""
                         pos: self.x + 5, self.y + 5
                         size: self.width - 10, self.height - 10
 
-                TextInput:
+                FloatInput:
                     id: d_input
                     font_size: dp(25)
                     halign: 'center'
@@ -85,7 +86,7 @@ Builder.load_string("""
                         pos: self.x + 5, self.y + 5
                         size: self.width - 10, self.height - 10
 
-                TextInput:
+                FloatInput:
                     id: l_input
                     font_size: dp(25)
                     halign: 'center'
@@ -115,7 +116,7 @@ Builder.load_string("""
                         pos: self.x + 5, self.y + 5
                         size: self.width - 10, self.height - 10
 
-                TextInput:
+                FloatInput:
                     id: r_input
                     font_size: dp(25)
                     halign: 'center'
@@ -145,7 +146,7 @@ Builder.load_string("""
                         pos: self.x + 5, self.y + 5
                         size: self.width - 10, self.height - 10
 
-                TextInput:
+                FloatInput:
                     id: x_input
                     font_size: dp(25)
                     halign: 'center'
@@ -175,7 +176,7 @@ Builder.load_string("""
                         pos: self.x + 5, self.y + 5
                         size: self.width - 10, self.height - 10
 
-                TextInput:
+                FloatInput:
                     id: y_input
                     font_size: dp(25)
                     halign: 'center'
@@ -247,12 +248,16 @@ class DrywallShapeDisplay(Widget):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
         self.dwt_config = kwargs['dwt_config']
+        self.kb = kwargs['kb']
 
         self.d_input.bind(text=self.d_input_change) # Diameter of circle
         self.l_input.bind(text=self.l_input_change) # Length of line
         self.r_input.bind(text=self.r_input_change) # Radius of corners
         self.x_input.bind(text=self.x_input_change) # Square/rectangle x length
         self.y_input.bind(text=self.y_input_change) # Square/rectangle y length
+
+        self.text_inputs = [self.d_input, self.l_input, self.r_input, self.x_input, self.y_input]
+        self.kb.setup_text_inputs(self.text_inputs)
 
         self.m.s.bind(m_state=self.display_machine_state)
 

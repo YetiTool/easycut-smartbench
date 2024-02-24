@@ -171,7 +171,8 @@ class DrywallCutterScreen(Screen):
         self.materials_popup = material_setup_popup.CuttingDepthsPopup(self.l, self.kb, self.dwt_config)
         self.drywall_shape_display_widget = widget_drywall_shape_display.DrywallShapeDisplay(machine=self.m,
                                                                                              screen_manager=self.sm,
-                                                                                             dwt_config=self.dwt_config)
+                                                                                             dwt_config=self.dwt_config,
+                                                                                             kb=self.kb)
         self.shape_display_container.add_widget(self.drywall_shape_display_widget)
 
         self.select_tool()
