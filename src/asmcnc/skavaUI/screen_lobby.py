@@ -23,7 +23,7 @@ from asmcnc.skavaUI import popup_info
 from asmcnc.core_UI.popups import BasicPopup, PopupType
 from kivy.core.window import Window
 
-from src.asmcnc.comms.model_manager import ModelManagerSingleton
+from asmcnc.comms.model_manager import ModelManagerSingleton
 
 Builder.load_string("""
 

@@ -6,7 +6,7 @@ from hashlib import md5
 from kivy._event import EventDispatcher
 from kivy.clock import Clock
 
-from src.asmcnc.comms.router_machine import ProductCodes
+from asmcnc.comms.router_machine import ProductCodes
 
 
 
