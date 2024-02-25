@@ -60,7 +60,6 @@ Builder.load_string("""
                     id: d_input
                     font_size: dp(25)
                     halign: 'center'
-                    input_filter: 'int'
                     multiline: False
                     size: self.parent.size
                     pos: self.parent.pos
@@ -90,7 +89,6 @@ Builder.load_string("""
                     id: l_input
                     font_size: dp(25)
                     halign: 'center'
-                    input_filter: 'int'
                     multiline: False
                     size: self.parent.size
                     pos: self.parent.pos
@@ -120,7 +118,6 @@ Builder.load_string("""
                     id: r_input
                     font_size: dp(25)
                     halign: 'center'
-                    input_filter: 'int'
                     multiline: False
                     size: self.parent.size
                     pos: self.parent.pos
@@ -150,7 +147,6 @@ Builder.load_string("""
                     id: x_input
                     font_size: dp(25)
                     halign: 'center'
-                    input_filter: 'int'
                     multiline: False
                     size: self.parent.size
                     pos: self.parent.pos
@@ -180,7 +176,6 @@ Builder.load_string("""
                     id: y_input
                     font_size: dp(25)
                     halign: 'center'
-                    input_filter: 'int'
                     multiline: False
                     size: self.parent.size
                     pos: self.parent.pos
@@ -250,11 +245,11 @@ class DrywallShapeDisplay(Widget):
         self.dwt_config = kwargs['dwt_config']
         self.kb = kwargs['kb']
 
-        self.d_input.bind(text=self.d_input_change) # Diameter of circle
-        self.l_input.bind(text=self.l_input_change) # Length of line
-        self.r_input.bind(text=self.r_input_change) # Radius of corners
-        self.x_input.bind(text=self.x_input_change) # Square/rectangle x length
-        self.y_input.bind(text=self.y_input_change) # Square/rectangle y length
+        self.d_input.bind(focus=lambda instance, value: self.text_input_change(instance, value, 'd')) # Diameter of circle
+        self.l_input.bind(focus=lambda instance, value: self.text_input_change(instance, value, 'l')) # Length of line
+        self.r_input.bind(focus=lambda instance, value: self.text_input_change(instance, value, 'r')) # Radius of corners
+        self.x_input.bind(focus=lambda instance, value: self.text_input_change(instance, value, 'x')) # Square/rectangle x length
+        self.y_input.bind(focus=lambda instance, value: self.text_input_change(instance, value, 'y')) # Square/rectangle y length
 
         self.text_inputs = [self.d_input, self.l_input, self.r_input, self.x_input, self.y_input]
         self.kb.setup_text_inputs(self.text_inputs)
@@ -353,28 +348,10 @@ class DrywallShapeDisplay(Widget):
                 self.shape_toolpath_image.source = self.image_filepath + shape + "_" + toolpath + "_toolpath.png"
             self.shape_toolpath_image.opacity = 1
 
-    def d_input_change(self, instance, value):
+    def text_input_change(self, instance, value, input_letter):
         # On startup it seems to call these functions and set everything to 0, so check that drywall app is open
         if self.sm.current == 'drywall_cutter':
-            self.dwt_config.on_parameter_change('canvas_shape_dims.d', float(value or 0))
-
-    def l_input_change(self, instance, value):
-        if self.sm.current == 'drywall_cutter':
-            self.dwt_config.on_parameter_change('canvas_shape_dims.l', float(value or 0))
-
-    def r_input_change(self, instance, value):
-        if self.sm.current == 'drywall_cutter':
-            self.dwt_config.on_parameter_change('canvas_shape_dims.r', float(value or 0))
-
-    def x_input_change(self, instance, value):
-        if self.sm.current == 'drywall_cutter':
-            self.do_rectangle_checks()
-            self.dwt_config.on_parameter_change('canvas_shape_dims.x', float(value or 0))
-
-    def y_input_change(self, instance, value):
-        if self.sm.current == 'drywall_cutter':
-            self.do_rectangle_checks()
-            self.dwt_config.on_parameter_change('canvas_shape_dims.y', float(value or 0))
+            self.dwt_config.on_parameter_change('canvas_shape_dims.' + input_letter, float(instance.text or 0))
 
     def do_rectangle_checks(self):
         if not self.swapping_lengths:
