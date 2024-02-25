@@ -2,6 +2,7 @@ from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 from asmcnc.core_UI.components import FloatInput  # Required for the builder string
+import re
 
 Builder.load_string("""
 <DrywallShapeDisplay>
@@ -245,11 +246,11 @@ class DrywallShapeDisplay(Widget):
         self.dwt_config = kwargs['dwt_config']
         self.kb = kwargs['kb']
 
-        self.d_input.bind(focus=lambda instance, value: self.text_input_change(instance, value, 'd')) # Diameter of circle
-        self.l_input.bind(focus=lambda instance, value: self.text_input_change(instance, value, 'l')) # Length of line
-        self.r_input.bind(focus=lambda instance, value: self.text_input_change(instance, value, 'r')) # Radius of corners
-        self.x_input.bind(focus=lambda instance, value: self.text_input_change(instance, value, 'x')) # Square/rectangle x length
-        self.y_input.bind(focus=lambda instance, value: self.text_input_change(instance, value, 'y')) # Square/rectangle y length
+        self.d_input.bind(focus=lambda instance, _: self.text_input_change(instance, 'd')) # Diameter of circle
+        self.l_input.bind(focus=lambda instance, _: self.text_input_change(instance, 'l')) # Length of line
+        self.r_input.bind(focus=lambda instance, _: self.text_input_change(instance, 'r')) # Radius of corners
+        self.x_input.bind(focus=lambda instance, _: self.text_input_change(instance, 'x')) # Square/rectangle x length
+        self.y_input.bind(focus=lambda instance, _: self.text_input_change(instance, 'y')) # Square/rectangle y length
 
         self.text_inputs = [self.d_input, self.l_input, self.r_input, self.x_input, self.y_input]
         self.kb.setup_text_inputs(self.text_inputs)
@@ -348,9 +349,11 @@ class DrywallShapeDisplay(Widget):
                 self.shape_toolpath_image.source = self.image_filepath + shape + "_" + toolpath + "_toolpath.png"
             self.shape_toolpath_image.opacity = 1
 
-    def text_input_change(self, instance, value, input_letter):
-        # On startup it seems to call these functions and set everything to 0, so check that drywall app is open
-        if self.sm.current == 'drywall_cutter':
+    def text_input_change(self, instance, input_letter):
+        # On startup it seems to call this function and set everything to 0, so check that drywall app is open
+        # Also check that the input matches a valid positive float, to allow user to correct mistakes
+        if self.sm.current == 'drywall_cutter' and re.match(r'^\d*\.\d+$', instance.text):
+            self.do_rectangle_checks()
             self.dwt_config.on_parameter_change('canvas_shape_dims.' + input_letter, float(instance.text or 0))
 
     def do_rectangle_checks(self):
