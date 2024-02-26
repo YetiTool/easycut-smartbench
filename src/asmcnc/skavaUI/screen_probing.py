@@ -142,7 +142,7 @@ class ProbingScreen(Screen):
             Clock.schedule_once(lambda dt: self.watchdog_clock(), max(delay_time) + 1)
         elif not self.watchdog_event.is_triggered:
             # Watchdog not scheduled, schedule it in 1 sec
-            Clock.schedule_once(lambda dt: self.watchdog_clock(), 1)
+            Clock.schedule_once(lambda dt: self.watchdog_clock(), max(delay_time) + 1)
 
         if self.alarm_triggered:
             log("Probing screen exited due to alarm")
