@@ -31,8 +31,8 @@ from asmcnc.apps.systemTools_app.screens.calibration import screen_set_threshold
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 from asmcnc.production.database.calibration_database import CalibrationDatabase
 
-from src.asmcnc.comms.model_manager import ModelManagerSingleton
-from src.asmcnc.comms.router_machine import ProductCodes
+from asmcnc.comms.model_manager import ModelManagerSingleton
+from asmcnc.comms.router_machine import ProductCodes
 
 Builder.load_string(
     """
