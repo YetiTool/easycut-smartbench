@@ -134,7 +134,6 @@ class ProbingScreen(Screen):
         Clock.schedule_once(lambda dt: self.probe(), max(delay_time))
         
         # Start watchdog 1 sec after probe requested to give machine time to respond before interigating
-        log("Has watchdog been scheduled? " + str(hasattr(self, "watchdog_event")))
         if not hasattr(self, "watchdog_event"):
             Clock.schedule_once(lambda dt: self.watchdog_clock(), max(delay_time) + 1)
 
@@ -152,27 +151,25 @@ class ProbingScreen(Screen):
     def watchdog(self):
         machine_state = self.m.state().lower()
         screen = self.sm.current.lower()
-        not_probing = self.not_probing
-        alarm_triggered = self.alarm_triggered
 
         if machine_state != "run":
             # Machine isn't or is no longer probing
-            not_probing = True
+            self.not_probing = True
         if "alarm" in machine_state or "alarm" in screen:
             # Alarm occured
-            alarm_triggered = True
+            self.alarm_triggered = True
 
         # Stop watchdog if screen closed
         if screen != 'probing':
             Clock.unschedule(self.watchdog_event)
         
-        if screen == 'probing' and (not_probing or alarm_triggered):
+        if screen == 'probing' and (self.not_probing or self.alarm_triggered):
             log("Probing screen exited due to alarm or incorrect machine state: " + str(machine_state))
             self.cancel_probing() # Just in case
             self.exit()
 
         if self.debug:
-            log(("Watchdog:\nMachine state: " + machine_state, "Not probing: " + str(not_probing), "Alarm triggered: " + str(alarm_triggered)))
+            log(("Watchdog:\nMachine state: " + machine_state, "Not probing: " + str(self.not_probing), "Alarm triggered: " + str(self.alarm_triggered)))
 
     def stop_button_press(self):
         log("Probing cancelled by user")
