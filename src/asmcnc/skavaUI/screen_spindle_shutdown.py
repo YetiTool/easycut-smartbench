@@ -112,6 +112,7 @@ class SpindleShutdownScreen(Screen):
 
     def on_enter(self):
         log("Pausing job...")
+        self.m.raise_z_axis_for_collet_access()
         if self.reason_for_pause == "spindle_overload":
             # Job paused due to overload, send event
             self.db.send_event(

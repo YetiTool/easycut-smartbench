@@ -46,7 +46,6 @@ class Axis(Enum):
     Z = 'Z'
 
 
-
 class RouterMachine(object):
     # SETUP
 
