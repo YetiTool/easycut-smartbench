@@ -42,7 +42,7 @@ Builder.load_string("""
                 font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
-                on_press: root.windows_cheat_to_procede()
+                on_press: root.probe_button_press()
                 BoxLayout:
                     size: self.parent.size
                     pos: self.parent.pos
@@ -187,6 +187,9 @@ class ProbingScreen(Screen):
         if self.variable_debug:
             log(("Watchdog:\nMachine state: " + machine_state, "Not probing: " + str(self.not_probing), "Alarm triggered: " + str(self.alarm_triggered)))
 
+    def probe_button_press(self):
+        pass
+    
     def stop_button_press(self):
         if self.function_debug:
             log("**** stop_button_press called")
