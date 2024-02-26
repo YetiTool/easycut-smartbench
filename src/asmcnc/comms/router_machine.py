@@ -183,6 +183,7 @@ class RouterMachine(object):
         self.TMC_motor[TMC_Z] = motors.motor_class(TMC_Z)
 
     Z_AXIS_ACCESSIBLE_ABS_HEIGHT = -5
+    Z_PROBE_SAFE_PULL_OFF = 1
 
     def raise_z_axis_for_collet_access(self):
         """
@@ -191,6 +192,13 @@ class RouterMachine(object):
         """
         self.jog_absolute_single_axis(Axis.Z.value, target=self.Z_AXIS_ACCESSIBLE_ABS_HEIGHT,
                                       speed=self.Z_MAX_FEED_RATE)
+
+    def raise_z_axis_to_safe_height_after_probing(self):
+        """
+        Raise Z to a height that is slightly above the probe coordinate so the machine clears the stock
+        :return: none
+        """
+        self.jog_relative(Axis.Z.value, self.Z_PROBE_SAFE_PULL_OFF, self.Z_MAX_FEED_RATE)
 
     # CREATE/DESTROY SERIAL CONNECTION (for cycle app)
     def reconnect_serial_connection(self):
@@ -2219,19 +2227,26 @@ class RouterMachine(object):
             # On detection "probe_z_detection_event" is called (for a single immediate EEPROM write command)....
             # ... followed by a delayed call to "probe_z_post_operation" for any post-write actions.
 
-
     def probe_z_detection_event(self, z_machine_coord_when_probed):
-
+        """
+        This function is called by the serial module when the probe detection is detected.
+        :param z_machine_coord_when_probed: the machine's Z coordinate when the probe is detected
+        :return: None
+        """
         self.s.write_command('G90 G1 G53 Z' + z_machine_coord_when_probed)
         self.s.write_command('G4 P0.5')
         self.s.write_command('G10 L20 P1 Z' + str(self.z_touch_plate_thickness))
         self.s.write_command('G4 P0.5')
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.5)
-        self.raise_z_axis_for_collet_access()
 
+        # Ensure that it doesn't go down to -5 if the probe was detected higher than that
+        if z_machine_coord_when_probed < self.Z_AXIS_ACCESSIBLE_ABS_HEIGHT:
+            self.raise_z_axis_for_collet_access()
+        else:
+            # Raise z axis by 1mm to ensure it's clear of the probe plate
+            self.raise_z_axis_to_safe_height_after_probing()
 
-
-# LIGHTING
+    # LIGHTING
 
     led_colour_status = "none"
 
