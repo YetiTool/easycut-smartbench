@@ -135,7 +135,7 @@ class ProbingScreen(Screen):
             delay_time.append(4)
 
         # Probe once machine is ready
-        Clock.schedule_once(lambda dt: self.probe(), max(delay_time))
+        self.probing_event =  Clock.schedule_once(lambda dt: self.probe(), max(delay_time))
         
         if not hasattr(self, "watchdog_event"):
             # Start watchdog 1 sec after probe requested to give machine time to respond before interigating
@@ -197,6 +197,7 @@ class ProbingScreen(Screen):
     def cancel_probing(self):
         if self.function_debug:
             log("**** cancel_probing called")
+        Clock.unschedule(self.probing_event)
         self.m._grbl_feed_hold()
         Clock.schedule_once(lambda dt: self.m._grbl_soft_reset(), 0.5) # Wait before reseting to avoid alarm
 
