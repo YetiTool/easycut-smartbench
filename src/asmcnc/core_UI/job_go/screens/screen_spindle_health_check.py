@@ -247,5 +247,5 @@ class SpindleHealthCheckActiveScreen(Screen):
 
         self.m._grbl_soft_reset()
         self.m.resume_from_a_soft_door()
-        Clock.schedule_once(lambda dt: self.m.zUp(), 1)
+        Clock.schedule_once(lambda dt: self.m.raise_z_axis_for_collet_access(), 1)
         Clock.schedule_once(lambda dt: start_test(), 1)

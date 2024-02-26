@@ -503,7 +503,7 @@ class SerialConnection(EventDispatcher):
 
         if self.m_state != "Check":
             self.m.set_led_colour('GREEN')
-            self.m.zUp()
+            self.m.raise_z_axis_for_collet_access()
 
         self.FLUSH_FLAG = True
         self.NOT_SKELETON_STUFF = True
@@ -700,7 +700,7 @@ class SerialConnection(EventDispatcher):
             self.FLUSH_FLAG = True
 
             # Move head up        
-            Clock.schedule_once(lambda dt: self.m.zUp(), 0.5)
+            Clock.schedule_once(lambda dt: self.m.raise_z_axis_for_collet_access(), 0.5)
             Clock.schedule_once(lambda dt: self.m.vac_off(), 1)
 
             # Update time for maintenance reminders

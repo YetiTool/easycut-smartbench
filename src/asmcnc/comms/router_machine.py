@@ -42,6 +42,13 @@ class ProductCodes(Enum):
     UNKNOWN = 00
 
 
+class Axis(Enum):
+    X = 'X'
+    Y = 'Y'
+    Z = 'Z'
+
+
+
 class RouterMachine(object):
     # SETUP
     
@@ -57,8 +64,7 @@ class RouterMachine(object):
     limit_switch_safety_distance = 1.0
 
     # put commonly used speed and pos values here (or any values that need to be easy to find :))
-    z_max_feed = 750
-    z_post_homing_raise_abs = -5.0
+    Z_MAX_FEED_RATE = 750
 
     is_machine_completed_the_initial_squaring_decision = False
     is_machine_homed = False # status on powerup
@@ -178,6 +184,16 @@ class RouterMachine(object):
         self.TMC_motor[TMC_Y1] = motors.motor_class(TMC_Y1)
         self.TMC_motor[TMC_Y2] = motors.motor_class(TMC_Y2)
         self.TMC_motor[TMC_Z] = motors.motor_class(TMC_Z)
+
+    Z_AXIS_ACCESSIBLE_ABS_HEIGHT = -5
+
+    def raise_z_axis_for_collet_access(self):
+        """
+        Raise Z to a height that the user can access the spindle collet
+        :return: None
+        """
+        self.jog_absolute_single_axis(Axis.Z, target=self.Z_AXIS_ACCESSIBLE_ABS_HEIGHT,
+                                      speed=self.Z_MAX_FEED_RATE)
 
     # CREATE/DESTROY SERIAL CONNECTION (for cycle app)
     def reconnect_serial_connection(self):
@@ -1841,7 +1857,7 @@ class RouterMachine(object):
         else:
             cooldown_rpm = self.spindle_cooldown_rpm
             self.s.write_command('M3 S' + str(cooldown_rpm))
-        self.zUp()
+        self.raise_z_for_collect_access()
 
     def laser_on(self):
         if self.is_laser_enabled == True: 
@@ -1876,9 +1892,6 @@ class RouterMachine(object):
     
     def go_to_jobstart_z(self):
         self.s.write_command('G0 G54 Z0')
-        
-    def zUp(self):
-        self.s.write_command('G0 G53 Z-' + str(self.s.setting_27))
 
     def vac_on(self):
         self.s.write_command('AE')
@@ -2068,10 +2081,6 @@ class RouterMachine(object):
         log("Move to laser offset")
         self.jog_absolute_single_axis('X', float(self.x_min_jog_abs_limit) + 5 - self.laser_offset_x_value, 3000)
 
-    def raise_z_axis_for_collet_access(self, dt=0):
-        log("Raise Z axis to allow access to spindle motor clamping nut")
-        self.jog_absolute_single_axis('Z', self.z_post_homing_raise_abs, self.z_max_feed)
-
     # final component is always complete homing sequence
     def complete_homing_sequence(self, dt=0):
         self.set_led_colour("GREEN")
@@ -2117,7 +2126,7 @@ class RouterMachine(object):
             self.calibrate_all_three_axes,                      # 4
             self.enable_stall_detection,                        # 5
             self.move_to_accommodate_laser_offset,              # 6
-            self.raise_z_axis_for_collet_access,                # 7
+            self.raise_z_for_collect_access,                    # 7
             self.complete_homing_sequence                       # 8
 
             ]
@@ -2221,7 +2230,7 @@ class RouterMachine(object):
         self.s.write_command('G10 L20 P1 Z' + str(self.z_touch_plate_thickness))
         self.s.write_command('G4 P0.5') 
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.5)
-        self.zUp()    
+        self.raise_z_axis_for_collet_access()
 
 
 
