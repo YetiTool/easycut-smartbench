@@ -122,7 +122,7 @@ class SpindleShutdownScreen(Screen):
         self.m._grbl_resume()
 
         # bind changes to m_state to raise Z axis when idle
-        self.m.s.bind(m_state=self.__raise_z_when_idle())
+        self.m.s.bind(m_state=self.__raise_z_when_idle)
 
         if self.reason_for_pause == "spindle_overload":
             # Job paused due to overload, send event
