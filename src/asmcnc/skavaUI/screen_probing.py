@@ -138,8 +138,8 @@ class ProbingScreen(Screen):
             # Start watchdog 1 sec after probe requested to give machine time to respond before interigating
             Clock.schedule_once(lambda dt: self.watchdog_clock(), max(delay_time) + 1)
         elif not self.watchdog_event.is_triggered:
-            # Watchdog not scheduled, schedule it immediately
-            self.watchdog_clock()
+            # Watchdog not scheduled, schedule it in 1 sec
+            Clock.schedule_once(lambda dt: self.watchdog_clock(), 1)
 
         if self.alarm_triggered:
             log("Probing screen exited due to alarm")
@@ -160,12 +160,11 @@ class ProbingScreen(Screen):
         machine_state = self.m.state().lower()
         screen = self.sm.current.lower()
 
-        if machine_state != "run":
-            # Machine isn't or is no longer probing
-            self.not_probing = True
-        if "alarm" in machine_state or "alarm" in screen:
-            # Alarm occured
-            self.alarm_triggered = True
+        # Machine isn't or is no longer probing
+        self.not_probing =  machine_state != "run"
+            
+        # Alarm occured
+        self.alarm_triggered = "alarm" in machine_state or "alarm" in screen            
 
         # Stop watchdog if screen closed
         if screen != 'probing':
