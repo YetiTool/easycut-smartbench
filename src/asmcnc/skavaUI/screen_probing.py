@@ -141,8 +141,8 @@ class ProbingScreen(Screen):
             # Watchdog not scheduled, schedule it immediately
             self.watchdog_clock()
 
-        if self.not_probing or self.alarm_triggered:
-            log("Probing screen exited due to alarm or incorrect machine state: " + str(self.m.state()))
+        if self.alarm_triggered:
+            log("Probing screen exited due to alarm")
             self.exit()
 
     def probe(self):
