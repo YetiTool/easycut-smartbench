@@ -171,7 +171,7 @@ class ProbingScreen(Screen):
             Clock.unschedule(self.watchdog_event)
         else:
             # Ensure LEDs are white whenver probing screen open
-            self.m.set_LED_colour("WHITE")
+            self.m.set_led_colour("WHITE")
         
         if screen == 'probing' and (self.not_probing or self.alarm_triggered):
             log("Probing screen exited due to alarm or incorrect machine state: " + str(machine_state))
