@@ -96,7 +96,7 @@ class ProbingScreen(Screen):
         self.m = kwargs["machine"]
         self.l = kwargs["localization"]
 
-        self.debug = False
+        self.debug = True
 
     def update_text(self, string):
         self.probing_label.text = self.l.get_str(string) + "..."      
@@ -169,6 +169,9 @@ class ProbingScreen(Screen):
             log("Probing screen exited due to alarm or incorrect machine state: " + str(machine_state))
             self.cancel_probing() # Just in case
             self.exit()
+
+        if self.debug:
+            log(("Watchdog:\nMachine state: " + machine_state, "Not probing: " + str(not_probing), "Alarm triggered: " + str(alarm_triggered)))
 
     def stop_button_press(self):
         log("Probing cancelled by user")
