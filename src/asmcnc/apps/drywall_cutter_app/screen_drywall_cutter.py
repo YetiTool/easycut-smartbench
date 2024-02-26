@@ -230,6 +230,11 @@ class DrywallCutterScreen(Screen):
         self.drywall_shape_display_widget.select_shape(self.shape_selection.text, self.rotation,
                                                        swap_lengths=swap_lengths)
         self.select_toolpath()
+        # Need to manually set parameters after internally swapping x and y, because inputs are bound to on_focus
+        self.drywall_shape_display_widget.swapping_lengths = True
+        self.drywall_shape_display_widget.text_input_change(self.drywall_shape_display_widget.x_input)
+        self.drywall_shape_display_widget.text_input_change(self.drywall_shape_display_widget.y_input)
+        self.drywall_shape_display_widget.swapping_lengths = False
 
     def select_toolpath(self):
         self.drywall_shape_display_widget.select_toolpath(self.shape_selection.text, self.cut_offset_selection.text,
@@ -288,8 +293,12 @@ class DrywallCutterScreen(Screen):
 
     def apply_active_config(self):
         toolpath_offset = self.dwt_config.active_config.toolpath_offset
+        rotation = self.dwt_config.active_config.rotation
         self.shape_selection.text = self.dwt_config.active_config.shape_type
         self.select_shape()
+
+        if rotation == 'vertical':
+            self.rotate_shape(swap_lengths=False)
 
         self.cut_offset_selection.text = toolpath_offset
         self.select_toolpath()
@@ -297,7 +306,6 @@ class DrywallCutterScreen(Screen):
         self.drywall_shape_display_widget.d_input.text = str(self.dwt_config.active_config.canvas_shape_dims.d)
         self.drywall_shape_display_widget.l_input.text = str(self.dwt_config.active_config.canvas_shape_dims.l)
         self.drywall_shape_display_widget.r_input.text = str(self.dwt_config.active_config.canvas_shape_dims.r)
-        # Shape rotation is automatically set when these inputs are changed
         self.drywall_shape_display_widget.x_input.text = str(self.dwt_config.active_config.canvas_shape_dims.x)
         self.drywall_shape_display_widget.y_input.text = str(self.dwt_config.active_config.canvas_shape_dims.y)
 
