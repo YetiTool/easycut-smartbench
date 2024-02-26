@@ -138,6 +138,10 @@ class ProbingScreen(Screen):
         if not hasattr(self, "watchdog_event"):
             Clock.schedule_once(lambda dt: self.watchdog_clock(), max(delay_time) + 1)
 
+        if self.not_probing or self.alarm_triggered:
+            log("Probing screen exited due to alarm or incorrect machine state: " + str(self.m.state()))
+            self.exit()
+
     def probe(self):
         if self.m.state().lower() == "idle":
             self.m.probe_z()
