@@ -134,9 +134,12 @@ class ProbingScreen(Screen):
         # Probe once machine is ready
         Clock.schedule_once(lambda dt: self.probe(), max(delay_time))
         
-        # Start watchdog 1 sec after probe requested to give machine time to respond before interigating
         if not hasattr(self, "watchdog_event"):
+            # Start watchdog 1 sec after probe requested to give machine time to respond before interigating
             Clock.schedule_once(lambda dt: self.watchdog_clock(), max(delay_time) + 1)
+        elif not self.watchdog_event.is_triggered:
+            # Watchdog not scheduled, schedule it immediately
+            self.watchdog_clock()
 
         if self.not_probing or self.alarm_triggered:
             log("Probing screen exited due to alarm or incorrect machine state: " + str(self.m.state()))
