@@ -1857,7 +1857,7 @@ class RouterMachine(object):
         else:
             cooldown_rpm = self.spindle_cooldown_rpm
             self.s.write_command('M3 S' + str(cooldown_rpm))
-        self.raise_z_for_collect_access()
+        self.raise_z_axis_for_collet_access()
 
     def laser_on(self):
         if self.is_laser_enabled == True: 
@@ -2126,7 +2126,7 @@ class RouterMachine(object):
             self.calibrate_all_three_axes,                      # 4
             self.enable_stall_detection,                        # 5
             self.move_to_accommodate_laser_offset,              # 6
-            self.raise_z_for_collect_access,                    # 7
+            self.raise_z_axis_for_collet_access,                # 7
             self.complete_homing_sequence                       # 8
 
             ]
