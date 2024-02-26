@@ -53,6 +53,7 @@ Builder.load_string("""
                 size: dp(100), dp(50)
                 size_hint: (None, None)
                 pos: self.parent.pos[0] + self.parent.size[0] - self.size[0], self.parent.pos[1] - dp(3)
+                on_active: root.toggle_units()
 
             Label:
                 font_size: dp(18)
@@ -411,6 +412,9 @@ class DrywallShapeDisplay(Widget):
                 if float(self.x_input.text) == float(self.y_input.text):
                     return True
         return False
+
+    def toggle_units(self):
+        self.dwt_config.on_parameter_change('units', 'mm' if not self.unit_switch.active else 'Inch')
 
     def poll_position(self, dt):
         # Maths from Ed, documented here https://docs.google.com/spreadsheets/d/1X37CWF8bsXeC0dY-HsbwBu_QR6N510V-5aPTnxwIR6I/edit#gid=677510108
