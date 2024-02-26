@@ -232,8 +232,8 @@ class DrywallCutterScreen(Screen):
         self.select_toolpath()
         # Need to manually set parameters after internally swapping x and y, because inputs are bound to on_focus
         self.drywall_shape_display_widget.swapping_lengths = True
-        self.drywall_shape_display_widget.text_input_change(self.drywall_shape_display_widget.x_input, 'x')
-        self.drywall_shape_display_widget.text_input_change(self.drywall_shape_display_widget.y_input, 'y')
+        self.drywall_shape_display_widget.text_input_change(self.drywall_shape_display_widget.x_input)
+        self.drywall_shape_display_widget.text_input_change(self.drywall_shape_display_widget.y_input)
         self.drywall_shape_display_widget.swapping_lengths = False
 
     def select_toolpath(self):
