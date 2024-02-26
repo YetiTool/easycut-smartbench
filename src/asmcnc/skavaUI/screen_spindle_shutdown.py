@@ -110,10 +110,20 @@ class SpindleShutdownScreen(Screen):
     def on_pre_enter(self):
         self.update_strings()
 
+    def __raise_z_when_idle(self, *args):
+        if self.m.m_state.lower() == "idle":
+            self.m.raise_z_axis_for_collet_access()
+            self.m.unbind(m_state=self.__raise_z_when_idle())
+
     def on_enter(self):
         log("Pausing job...")
-        self.m._grbl_resume()  # resume so I can move the Z axis, refactor from protected method ideally
-        Clock.schedule_once(lambda dt: self.m.raise_z_axis_for_collet_access(), 0.5)
+
+        # resume so I can move the Z axis, refactor from protected method ideally
+        self.m._grbl_resume()
+
+        # bind changes to m_state to raise Z axis when idle
+        self.m.bind(m_state=self.__raise_z_when_idle())
+
         if self.reason_for_pause == "spindle_overload":
             # Job paused due to overload, send event
             self.db.send_event(
