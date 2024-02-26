@@ -96,6 +96,9 @@ class ProbingScreen(Screen):
         self.m = kwargs["machine"]
         self.l = kwargs["localization"]
 
+        self.not_probing = False
+        self.alarm_triggered = False
+
         self.debug = True
 
     def update_text(self, string):
@@ -105,8 +108,6 @@ class ProbingScreen(Screen):
         if self.debug:
             Clock.schedule_interval(lambda dt: self.debug_log(), 1)
 
-        self.not_probing = False
-        self.alarm_triggered = False
         delay_time = [0]
 
         self.update_text("Please wait")
@@ -189,6 +190,10 @@ class ProbingScreen(Screen):
             if self.watchdog_event.is_triggered:
                 Clock.unschedule(self.watchdog_event)
         self.sm.current = self.sm.return_to_screen
+
+        # Reset flags
+        self.not_probing = False
+        self.alarm_triggered = False
 
     def debug_log(self):
         log(("Current screen: " + self.sm.current, "Machine state: " + self.m.state(), "Not probing: " + str(self.not_probing), "Alarm triggered: " + str(self.alarm_triggered), "Watchdog scheduled: " + str(self.watchdog_event.is_triggered)if hasattr(self, "watchdog_event") else "No watchdog event") )
