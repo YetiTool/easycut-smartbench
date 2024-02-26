@@ -49,10 +49,8 @@ class ProbeButton(Button):
         self.image.pos = value
 
     def open_screen(self, *args):
-        print("Opening probing screen")
         self.sm.current = 'probing'
 
     def close_screen(self, *args):
-        print("Closing probing screen")
         self.sm.current = self.sm.return_to_screen
 

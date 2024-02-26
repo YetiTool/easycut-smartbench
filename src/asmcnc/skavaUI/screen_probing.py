@@ -100,7 +100,7 @@ class ProbingScreen(Screen):
         self.alarm_triggered = False
 
         self.variable_debug = False
-        self.function_debug = True
+        self.function_debug = False
 
     def update_text(self, string):
         self.probing_label.text = self.l.get_str(string) + "..."      
