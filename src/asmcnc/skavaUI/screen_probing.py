@@ -134,6 +134,7 @@ class ProbingScreen(Screen):
         Clock.schedule_once(lambda dt: self.probe(), max(delay_time))
         
         # Start watchdog 1 sec after probe requested to give machine time to respond before interigating
+        log("Has watchdog been scheduled? " + str(hasattr(self, "watchdog_event")))
         if not hasattr(self, "watchdog_event"):
             Clock.schedule_once(lambda dt: self.watchdog_clock(), max(delay_time) + 1)
 
