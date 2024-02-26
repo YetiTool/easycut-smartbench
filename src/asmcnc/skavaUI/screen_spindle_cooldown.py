@@ -20,10 +20,10 @@ Builder.load_string(
 
     BoxLayout: 
         spacing: 0
-        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+        padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
         orientation: 'vertical'
         size_hint: (None, None)
-        height: dp(1.0)*app.height
+        height: app.get_scaled_height(480)
         width: 1.0*app.width
         canvas:
             Color: 
@@ -49,7 +49,7 @@ Builder.load_string(
                 # text: 'Cooling down spindle...'
                 color: [0,0,0,1]
                 markup: True
-                font_size: str(0.0375*app.width) + 'px' 
+                font_size: str(get_scaled_width(30)) + 'px' 
                 valign: 'middle'
                 halign: 'center'
                 size:self.texture_size
@@ -57,7 +57,7 @@ Builder.load_string(
 
             BoxLayout: 
                 spacing: 0
-                padding:[dp(0.125)*app.width, 0, dp(0.125)*app.width, dp(0.270833333333)*app.height]
+                padding:[app.get_scaled_width(100), 0, app.get_scaled_width(100), app.get_scaled_height(130)]
                 orientation: 'horizontal'          
                 size_hint: (None, None)
                 height: dp(251.0/480.0)*app.height
@@ -67,7 +67,7 @@ Builder.load_string(
 
                 BoxLayout: 
                     spacing: 0
-                    padding:[dp(0.01)*app.width, 0, dp(0.07125)*app.width, 0]
+                    padding:[app.get_scaled_width(8), 0, app.get_scaled_width(8), 0]
                     orientation: 'horizontal'          
                     size_hint: (None, None)
                     height: dp(121.0/480.0)*app.height
@@ -80,8 +80,8 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
                         size_hint: (None, None)
-                        height: dp(0.252083333333*app.height)
-                        width: dp(0.14375*app.width) 
+                        height: dp(app.get_scaled_height(121))
+                        width: dp(app.get_scaled_width(115)) 
 
                 BoxLayout: 
                     spacing: 0
@@ -93,7 +93,7 @@ Builder.load_string(
                     Label:
                         id: countdown
                         markup: True
-                        font_size: str(0.125*app.width) + 'px' 
+                        font_size: str(get_scaled_width(100)) + 'px' 
                         valign: 'middle'
                         halign: 'center'
                         size:self.texture_size
@@ -103,7 +103,7 @@ Builder.load_string(
 
                 BoxLayout: 
                     spacing: 0
-                    padding:[dp(0.0875)*app.width, 0, dp(0.0125)*app.width, dp(0.00625)*app.height]
+                    padding:[app.get_scaled_width(70), 0, app.get_scaled_width(70), app.get_scaled_height(3)]
                     orientation: 'horizontal'          
                     size_hint: (None, None)
                     height: dp(121.0/480.0)*app.height
@@ -116,8 +116,8 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
                         size_hint: (None, None)
-                        height: dp(0.245833333333*app.height)
-                        width: dp(0.125*app.width) 
+                        height: dp(app.get_scaled_height(118))
+                        width: dp(app.get_scaled_width(100)) 
 
 
 """

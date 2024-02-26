@@ -31,17 +31,17 @@ Builder.load_string(
         BoxLayout:
             size_hint_y: 5
             orientation: 'vertical'
-            padding:[dp(0.0375)*app.width, dp(0.0625)*app.height]
-            spacing:dp(0.0625)*app.height
+            padding:[app.get_scaled_width(30), app.get_scaled_height(30)]
+            spacing:app.get_scaled_height(30)
 
             GridLayout:
                 size_hint_y: 1.5
                 cols: 7
                 rows: 3
-                spacing:dp(0.0125)*app.width
+                spacing:app.get_scaled_width(10)
 
                 Label:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: 'X:'
 
                 TextInput:
@@ -51,30 +51,30 @@ Builder.load_string(
                     multiline: False
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: 'Set'
                     on_press: root.set_threshold('X', x_threshold_input.text)
 
                 Label:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: 'Stored:'
 
                 Label:
                     id: x_stored_threshold
-                    font_size: str(0.01875 * app.width) + 'sp'                    
+                    font_size: str(get_scaled_width(15)) + 'sp'                    
                     text: '?'
 
                 Label:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: 'Set:'
 
                 Label:
                     id: x_set_threshold
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: ''
 
                 Label:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: 'Y:'
 
                 TextInput:
@@ -84,30 +84,30 @@ Builder.load_string(
                     multiline: False
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: 'Set'
                     on_press: root.set_threshold('Y', y_threshold_input.text)
 
                 Label:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: 'Stored:'
 
                 Label:
                     id: y_stored_threshold
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: '?'
 
                 Label:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: 'Set:'
 
                 Label:
                     id: y_set_threshold
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: ''
 
                 Label:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: 'Z:'
 
                 TextInput:
@@ -117,38 +117,38 @@ Builder.load_string(
                     multiline: False
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: 'Set'
                     on_press: root.set_threshold('Z', z_threshold_input.text)
 
                 Label:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: 'Stored:'
 
                 Label:
                     id: z_stored_threshold
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: '?'
 
                 Label:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: 'Set:'
 
                 Label:
                     id: z_set_threshold
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: ''
 
             BoxLayout:
                 orientation: 'vertical'
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: 'Store params'
                     on_press: root.store_parameters()
 
         Button:
-            font_size: str(0.01875 * app.width) + 'sp'
+            font_size: str(get_scaled_width(15)) + 'sp'
             text: 'Factory settings'
             on_press: root.back_to_fac_settings()
 

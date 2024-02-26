@@ -27,7 +27,7 @@ Builder.load_string(
         size: self.parent.size
         pos: self.parent.pos
         orientation: 'vertical'
-        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+        padding:[app.get_scaled_width(10), app.get_scaled_height(10)]
         spacing:0.0208333333333*app.height
         
         GridLayout:
@@ -41,17 +41,17 @@ Builder.load_string(
                 size: self.parent.size
                 pos: self.parent.pos 
                 ToggleButton:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     id: vacuum_toggle
                     on_press: root.set_vacuum()
                     size_hint: (None,None)
-                    height: dp(0.25*app.height)
-                    width: dp(0.15*app.width)
+                    height: dp(app.get_scaled_height(120))
+                    width: dp(app.get_scaled_width(120))
                     background_color: [0,0,0,0]
                     center: self.parent.center
                     pos: self.parent.pos
                     BoxLayout:
-                        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                        padding:[app.get_scaled_width(10), app.get_scaled_height(10)]
                         size: self.parent.size
                         pos: self.parent.pos      
                         Image:
@@ -66,17 +66,17 @@ Builder.load_string(
                 size: self.parent.size
                 pos: self.parent.pos 
                 ToggleButton:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     id: spindle_toggle
                     on_press: root.set_spindle()
                     size_hint: (None,None)
-                    height: dp(0.25*app.height)
-                    width: dp(0.15*app.width)
+                    height: dp(app.get_scaled_height(120))
+                    width: dp(app.get_scaled_width(120))
                     background_color: [0,0,0,0]
                     center: self.parent.center
                     pos: self.parent.pos
                     BoxLayout:
-                        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                        padding:[app.get_scaled_width(10), app.get_scaled_height(10)]
                         size: self.parent.size
                         pos: self.parent.pos      
                         Image:
@@ -91,11 +91,11 @@ Builder.load_string(
                 size: self.parent.size
                 pos: self.parent.pos 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     id: reset_button
                     size_hint: (None,None)
-                    height: dp(0.28125*app.height)
-                    width: dp(0.165*app.width)
+                    height: dp(app.get_scaled_height(135))
+                    width: dp(app.get_scaled_width(132))
                     background_color: [0,0,0,0]
                     center: self.parent.center
                     pos: self.parent.pos
@@ -115,11 +115,11 @@ Builder.load_string(
                 size: self.parent.size
                 pos: self.parent.pos 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     id: save_button
                     size_hint: (None,None)
-                    height: dp(0.28125*app.height)
-                    width: dp(0.165*app.width)
+                    height: dp(app.get_scaled_height(135))
+                    width: dp(app.get_scaled_width(132))
                     background_color: [0,0,0,0]
                     center: self.parent.center
                     pos: self.parent.pos

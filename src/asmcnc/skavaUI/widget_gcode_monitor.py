@@ -28,7 +28,7 @@ Builder.load_string(
             pos: self.pos
     
     Label:
-        font_size: str(0.01875 * app.width) + 'sp'
+        font_size: str(get_scaled_width(15)) + 'sp'
         size_hint_y: None
         height: self.texture_size[1]
         text_size: self.width, None
@@ -49,7 +49,7 @@ Builder.load_string(
         size_hint_y: None
         height: self.texture_size[1]
         text_size: self.width, None
-        font_size: str(0.015*app.width) + 'sp'
+        font_size: str(get_scaled_width(12)) + 'sp'
         text: root.text
         max_lines: 3
 
@@ -74,7 +74,7 @@ Builder.load_string(
         size: self.parent.size
         pos: self.parent.pos
         orientation: "vertical"
-        padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+        padding:[app.get_scaled_width(5), app.get_scaled_height(5)]
         spacing:0.0104166666667*app.height
         
         canvas:
@@ -106,11 +106,11 @@ Builder.load_string(
                         id:gCodeInput
                         multiline: False
                         text: ''
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         on_text_validate: root.send_gcode_textinput()
                     
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         id: enter_button
                         text: "Enter"
                         on_press: root.send_gcode_textinput()
@@ -128,7 +128,7 @@ Builder.load_string(
                 size_hint_x: 0.24
         
                 ToggleButton:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     id: hide_ok_button
                     state: root.hide_received_ok
                     markup: True
@@ -139,37 +139,37 @@ Builder.load_string(
 # FOR USER
                     
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     id: settings_button
                     text: "Settings"
                     on_press: root.send_gcode_preset("$$")
                     size_hint_y:0.1
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     id: params_button
                     text: "Params"
                     on_press: root.send_gcode_preset("$#")
                     size_hint_y:0.1
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     id: state_button
                     text: "State"
                     on_press: root.send_gcode_preset("$G")
                     size_hint_y:0.1
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     id: build_button
                     text: "Build"
                     size_hint_y:0.1
                     on_press: root.send_gcode_preset("$I")
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     id: check_button
                     text: "Check $C"
                     on_press: root.toggle_check_mode()
                     size_hint_y:0.1
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     id: help_button
                     text: "Help"
                     on_press: root.send_gcode_preset("$")
@@ -181,7 +181,7 @@ Builder.load_string(
 ######### END ############
  
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     id: clear_button
                     text: "Clear"
                     on_press: root.clear_monitor()
@@ -189,7 +189,7 @@ Builder.load_string(
                     background_color: 1, .8, 0, 1
         
         BoxLayout:
-            padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+            padding:[app.get_scaled_width(5), app.get_scaled_height(5)]
             spacing: 0
             orientation: 'horizontal'
             size_hint_y: 0.09
@@ -203,7 +203,7 @@ Builder.load_string(
                     
                       
             Label:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: str(get_scaled_width(15)) + 'sp'
                 id: status_label
                 text: 'Status'
                 text_size: self.size

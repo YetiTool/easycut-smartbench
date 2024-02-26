@@ -31,7 +31,7 @@ Builder.load_string(
 
     background_normal: ''
     background_color: [1,1,1,1]
-    height: dp(0.0833333333333*app.height)
+    height: dp(app.get_scaled_height(40))
     color: 0,0,0,1
     halign: 'left'
     markup: 'True'
@@ -74,8 +74,8 @@ Builder.load_string(
     on_touch_down: root.on_touch()
 
     BoxLayout:
-        height: dp(1.66666666667*app.height)
-        width: dp(0.6*app.width)
+        height: dp(app.get_scaled_height(800))
+        width: dp(app.get_scaled_width(480))
         canvas.before:
             Color: 
                 rgba: hex('#e5e5e5ff')
@@ -99,8 +99,8 @@ Builder.load_string(
                 Label:
                     id: header
                     size_hint: (None,None)
-                    height: dp(0.125*app.height)
-                    width: dp(1.0*app.width)
+                    height: dp(app.get_scaled_height(60))
+                    width: dp(app.get_scaled_width(800))
                     text: "System Information"
                     color: hex('#f9f9f9ff')
                     # color: hex('#333333ff') #grey
@@ -112,21 +112,21 @@ Builder.load_string(
                     
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(0.975*app.width)
-                height: dp(0.666666666667*app.height)
-                padding:[dp(0.025)*app.width, 0]
+                width: dp(app.get_scaled_width(780))
+                height: dp(app.get_scaled_height(320))
+                padding:[app.get_scaled_width(20), 0]
                 spacing: 0
                 orientation: 'horizontal'
 
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint: (None, None)
-                    height: dp(0.729166666667*app.height)
-                    width: dp(0.6875*app.width)
-                    padding:[0, dp(0.0416666666667)*app.height, 0, 0]
+                    height: dp(app.get_scaled_height(350))
+                    width: dp(app.get_scaled_width(550))
+                    padding:[0, app.get_scaled_height(20), 0, 0]
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         id: smartbench_name
                         background_color: hex('#e5e5e5ff')
                         background_normal: ""
@@ -135,19 +135,19 @@ Builder.load_string(
                         on_press: root.open_rename()
                         focus_next: smartbench_name_input
                         size_hint_y: None
-                        height: dp(0.0833333333333*app.height)
+                        height: dp(app.get_scaled_height(40))
 
                         BoxLayout:
                             pos: self.parent.pos
                             size: self.parent.size
                             orientation: 'horizontal'
-                            spacing:dp(0.025)*app.width
-                            padding:[0, dp(0.00625)*app.height]
+                            spacing:app.get_scaled_width(20)
+                            padding:[0, app.get_scaled_height(3)]
 
                             BoxLayout:
                                 size_hint_y: None
-                                height: dp(0.0708333333333*app.height)
-                                padding:[dp(0.005)*app.width, 0]
+                                height: dp(app.get_scaled_height(34))
+                                padding:[app.get_scaled_width(4), 0]
                                 canvas:
                                     Color:
                                         rgba: hex('#f9f9f9ff')
@@ -170,13 +170,13 @@ Builder.load_string(
 
                             BoxLayout: 
                                 size_hint_x: None
-                                width: dp(0.0375*app.width)
+                                width: dp(app.get_scaled_width(30))
                                 Image:
                                     source: "./asmcnc/apps/systemTools_app/img/tiny_pencil.png"
                                     allow_stretch: True
 
                     TextInput:
-                        padding:[dp(0.005)*app.width, dp(0.00416666666667)*app.height]
+                        padding:[app.get_scaled_width(4), app.get_scaled_height(2)]
                         id: smartbench_name_input
                         text: 'My SmartBench'
                         color: hex('#333333ff')
@@ -186,9 +186,9 @@ Builder.load_string(
                         markup: True
                         font_size: 0.03*app.width
                         size_hint_y: None
-                        height: dp(0.0*app.height)
+                        height: dp(app.get_scaled_height(0))
                         size_hint_x: None
-                        width: dp(0.625*app.width)
+                        width: dp(app.get_scaled_width(500))
                         opacity: 0
                         on_text_validate: root.save_new_name()
                         # unfocus_on_touch: True
@@ -196,15 +196,15 @@ Builder.load_string(
                         multiline: False
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         id: smartbench_location
                         size_hint_x: None
-                        width: dp(0.625*app.width)
+                        width: dp(app.get_scaled_width(500))
                         background_color: hex('#e5e5e5ff')
                         background_normal: ""
                         background_down: ""
                         size_hint_y: None
-                        height: dp(0.0625*app.height)
+                        height: dp(app.get_scaled_height(30))
                         opacity: 1
                         on_press: root.open_rename_location()
                         focus_next: smartbench_location_input
@@ -213,13 +213,13 @@ Builder.load_string(
                             pos: self.parent.pos
                             size: self.parent.size
                             orientation: 'horizontal'
-                            spacing:dp(0.025)*app.width
-                            padding:[0, dp(0.00208333333333)*app.height]
+                            spacing:app.get_scaled_width(20)
+                            padding:[0, app.get_scaled_height(1)]
 
                             BoxLayout:
                                 size_hint_y: None
-                                height: dp(0.0583333333333*app.height)
-                                padding:[dp(0.005)*app.width, 0]
+                                height: dp(app.get_scaled_height(28))
+                                padding:[app.get_scaled_width(4), 0]
                                 canvas:
                                     Color:
                                         rgba: hex('#f9f9f9ff')
@@ -239,13 +239,13 @@ Builder.load_string(
 
                             BoxLayout: 
                                 size_hint_x: None
-                                width: dp(0.03*app.width)
+                                width: dp(app.get_scaled_width(24))
                                 Image:
                                     source: "./asmcnc/apps/systemTools_app/img/tiny_pencil.png"
                                     allow_stretch: True
 
                     TextInput:
-                        padding:[dp(0.005)*app.width, dp(0.00416666666667)*app.height]
+                        padding:[app.get_scaled_width(4), app.get_scaled_height(2)]
                         id: smartbench_location_input
                         text: 'SmartBench location'
                         color: hex('#333333ff')
@@ -255,9 +255,9 @@ Builder.load_string(
                         markup: True
                         font_size: 0.025*app.width
                         size_hint_y: None
-                        height: dp(0.0*app.height)
+                        height: dp(app.get_scaled_height(0))
                         size_hint_x: None
-                        width: dp(0.625*app.width)
+                        width: dp(app.get_scaled_width(500))
                         opacity: 0
                         on_text_validate: root.save_new_location()
                         # unfocus_on_touch: True
@@ -272,8 +272,8 @@ Builder.load_string(
                         cols: 2
                         rows: 9
                         size_hint: (None, None)
-                        height: dp(0.520833333333*app.height)
-                        width: dp(0.6875*app.width)
+                        height: dp(app.get_scaled_height(250))
+                        width: dp(app.get_scaled_width(550))
                         cols_minimum: {0: dp(230), 1: dp(320)}
 
                         Label:
@@ -430,18 +430,18 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.2625*app.width)
-                    height: dp(0.583333333333*app.height)
+                    width: dp(app.get_scaled_width(210))
+                    height: dp(app.get_scaled_height(280))
                     padding: 0
                     spacing:0.0416666666667*app.height
                     orientation: 'vertical'
 
                     Spinner:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         id: language_button
                         size_hint: (None,None)
-                        height: dp(0.0729166666667*app.height)
-                        width: dp(0.225*app.width)
+                        height: dp(app.get_scaled_height(35))
+                        width: dp(app.get_scaled_width(180))
                         background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
                         background_down: ""
                         border: [dp(7.5)]*4
@@ -454,11 +454,11 @@ Builder.load_string(
                         on_text: root.choose_language()
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         id: data_and_wifi_button
                         size_hint: (None,None)
-                        height: dp(0.0729166666667*app.height)
-                        width: dp(0.225*app.width)
+                        height: dp(app.get_scaled_height(35))
+                        width: dp(app.get_scaled_width(180))
                         background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
                         background_down: "./asmcnc/apps/systemTools_app/img/word_button.png"
                         border: [dp(7.5)]*4
@@ -469,11 +469,11 @@ Builder.load_string(
                         markup: True
                         
                     ToggleButton:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         id: toggle_ssh_button
                         size_hint: (None,None)
-                        height: dp(0.0729166666667*app.height)
-                        width: dp(0.225*app.width)
+                        height: dp(app.get_scaled_height(35))
+                        width: dp(app.get_scaled_width(180))
                         background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
                         background_down: "./asmcnc/apps/systemTools_app/img/word_button.png"
                         border: [dp(7.5)]*4
@@ -484,11 +484,11 @@ Builder.load_string(
                         markup: True
 
                     ToggleButton:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: str(get_scaled_width(15)) + 'sp'
                         id: advanced_button
                         size_hint: (None,None)
-                        height: dp(0.0729166666667*app.height)
-                        width: dp(0.225*app.width)
+                        height: dp(app.get_scaled_height(35))
+                        width: dp(app.get_scaled_width(180))
                         background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
                         background_down: "./asmcnc/apps/systemTools_app/img/word_button.png"
                         border: [dp(7.5)]*4
@@ -500,12 +500,12 @@ Builder.load_string(
 
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(0.166666666667*app.height)
-                        width: dp(0.2625*app.width)
+                        height: dp(app.get_scaled_height(80))
+                        width: dp(app.get_scaled_width(210))
                         padding:[0, 0]
 
                         Label: 
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             id: show_more_info
                             text: ''
                             opacity: 0
@@ -513,29 +513,29 @@ Builder.load_string(
 
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.0*app.width)
-                height: dp(0.166666666667*app.height)
+                width: dp(app.get_scaled_width(800))
+                height: dp(app.get_scaled_height(80))
                 padding: 0
                 spacing:0.0125*app.width
                 orientation: 'horizontal'
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.1*app.width)
-                    height: dp(0.166666666667*app.height)
+                    width: dp(app.get_scaled_width(80))
+                    height: dp(app.get_scaled_height(80))
                     padding: 0
                     spacing: 0
 
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(0.166666666667*app.height)
-                        width: dp(0.1*app.width)
-                        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                        height: dp(app.get_scaled_height(80))
+                        width: dp(app.get_scaled_width(80))
+                        padding:[app.get_scaled_width(10), app.get_scaled_height(10), app.get_scaled_width(10), app.get_scaled_height(10)]
                         Button:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             size_hint: (None,None)
-                            height: dp(0.108333333333*app.height)
-                            width: dp(0.075*app.width)
+                            height: dp(app.get_scaled_height(52))
+                            width: dp(app.get_scaled_width(60))
                             background_color: hex('#F4433600')
                             center: self.parent.center
                             pos: self.parent.pos
@@ -553,29 +553,29 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.775*app.width)
-                    height: dp(0.166666666667*app.height)
-                    padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                    width: dp(app.get_scaled_width(620))
+                    height: dp(app.get_scaled_height(80))
+                    padding:[app.get_scaled_width(10), app.get_scaled_height(10)]
                     spacing: 0
                     orientation: 'vertical'
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.1*app.width)
-                    height: dp(0.166666666667*app.height)
+                    width: dp(app.get_scaled_width(80))
+                    height: dp(app.get_scaled_height(80))
                     padding: 0
                     spacing: 0
 
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(0.166666666667*app.height)
-                        width: dp(0.1*app.width)
-                        padding:[dp(0.02375)*app.width, dp(0.0208333333333)*app.height, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                        height: dp(app.get_scaled_height(80))
+                        width: dp(app.get_scaled_width(80))
+                        padding:[app.get_scaled_width(19), app.get_scaled_height(10), app.get_scaled_width(19), app.get_scaled_height(10)]
                         Button:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: str(get_scaled_width(15)) + 'sp'
                             size_hint: (None,None)
-                            height: dp(0.125*app.height)
-                            width: dp(0.06375*app.width)
+                            height: dp(app.get_scaled_height(60))
+                            width: dp(app.get_scaled_width(51))
                             background_color: hex('#F4433600')
                             center: self.parent.center
                             pos: self.parent.pos

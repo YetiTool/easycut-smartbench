@@ -88,7 +88,7 @@ Builder.load_string(
                         background_down: 'asmcnc/skavaUI/img/tab_set_up.png'
                         on_press: root.m.laser_off()
                         BoxLayout:
-                            padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                            padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
                             spacing:0.025*app.width
                             canvas:
                                 Color:
@@ -108,7 +108,7 @@ Builder.load_string(
                         on_press: root.m.laser_on()
                         BoxLayout:
                             orientation: 'horizontal'
-                            padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                            padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
                             spacing:0.025*app.width
                             canvas:
                                 Color:
@@ -149,7 +149,7 @@ Builder.load_string(
                         on_press: root.m.laser_on()
                         BoxLayout:
                             orientation: 'vertical'
-                            padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                            padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
                             spacing:0.0416666666667*app.height
                             canvas:
                                 Color:
@@ -160,7 +160,7 @@ Builder.load_string(
 
                             BoxLayout:
                                 size_hint_y: 5
-                                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                                padding:[app.get_scaled_width(10), app.get_scaled_height(10)]
                                 canvas:
                                     Color:
                                         rgba: 1,1,1,1
@@ -181,7 +181,7 @@ Builder.load_string(
                         id: home_tab
                         BoxLayout:
                             orientation: 'vertical'
-                            padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                            padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
                             spacing:0.0416666666667*app.height
                             id: job_container
                             canvas:
@@ -193,7 +193,7 @@ Builder.load_string(
 
                             BoxLayout:
                                 size_hint_y: 1
-                                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                                padding:[app.get_scaled_width(10), app.get_scaled_height(10)]
                                 spacing:0.0125*app.width
                                 orientation: 'horizontal'
                                 canvas:
@@ -204,7 +204,7 @@ Builder.load_string(
                                         pos: self.pos
 
                                 Button:
-                                    font_size: str(0.01875 * app.width) + 'sp'
+                                    font_size: str(get_scaled_width(15)) + 'sp'
                                     size_hint_x: 1
                                     background_color: hex('#F4433600')
                                     on_press:
@@ -221,7 +221,7 @@ Builder.load_string(
                                             allow_stretch: True
 
                                 Button:
-                                    font_size: str(0.01875 * app.width) + 'sp'
+                                    font_size: str(get_scaled_width(15)) + 'sp'
                                     id: job_recovery_button
                                     size_hint_x: 1
                                     background_color: hex('#F4433600')
@@ -243,7 +243,7 @@ Builder.load_string(
                                     id: file_data_label
                                     size_hint_x: 4
                                     text_size: self.size
-                                    font_size: str(0.025*app.width) + 'sp'
+                                    font_size: str(get_scaled_width(20)) + 'sp'
                                     markup: True
                                     text: '[color=333333]Load a file...[/color]'
                                     halign: 'center'
@@ -251,7 +251,7 @@ Builder.load_string(
 
                             BoxLayout:
                                 size_hint_y: 3
-                                padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                                padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
                                 orientation: 'horizontal'
                                 canvas:
                                     Color:

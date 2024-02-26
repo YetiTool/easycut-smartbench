@@ -68,8 +68,8 @@ Builder.load_string(
     TabbedPanel:
         id: tab_panel
         size_hint: (None,None)
-        height: dp(1.0*app.height)
-        width: dp(1.005*app.width)
+        height: dp(app.get_scaled_height(480))
+        width: dp(app.get_scaled_width(804))
         pos: (0, 0)
         padding:[dp(-0.0025)*app.width, dp(-0.00416666666667)*app.height, dp(-0.0025)*app.width, 0]
         spacing:[0, dp(-0.00833333333333)*app.height]
@@ -89,10 +89,10 @@ Builder.load_string(
 
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.005*app.width)
-                height: dp(0.8125*app.height)
+                width: dp(app.get_scaled_width(804))
+                height: dp(app.get_scaled_height(390))
                 orientation: "horizontal" 
-                padding:[dp(0.015)*app.width, dp(0.0208333333333)*app.height, dp(0.015)*app.width, dp(0.0416666666667)*app.height]
+                padding:[app.get_scaled_width(12), app.get_scaled_height(10), app.get_scaled_width(12), app.get_scaled_height(10)]
                 spacing:0.0125*app.width
                 canvas:
                     Color:
@@ -103,15 +103,15 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint: (None,None)
-                    height: dp(0.75*app.height)
-                    width: dp(0.35*app.width)
+                    height: dp(app.get_scaled_height(360))
+                    width: dp(app.get_scaled_width(280))
                     spacing:0.0208333333333*app.height
                     orientation: "vertical"
                     id: left_panel
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(0.145833333333*app.height)
-                        width: dp(0.35*app.width)
+                        height: dp(app.get_scaled_height(70))
+                        width: dp(app.get_scaled_width(280))
                         id: title
                         canvas:
                             Color:
@@ -121,15 +121,15 @@ Builder.load_string(
                                 pos: self.pos
                         BoxLayout: 
                             size_hint: (None, None)
-                            height: dp(0.145833333333*app.height)
-                            width: dp(0.35*app.width)
-                            padding:[dp(0.025)*app.width, 0, dp(0.025)*app.width, 0]
+                            height: dp(app.get_scaled_height(70))
+                            width: dp(app.get_scaled_width(280))
+                            padding:[app.get_scaled_width(20), 0, app.get_scaled_width(20), 0]
                             orientation: 'horizontal'
 
                             Label: 
                                 id: laser_datum_label
                                 color: 0,0,0,1
-                                font_size: dp(0.0325*app.width)
+                                font_size: dp(app.get_scaled_width(26))
                                 markup: True
                                 halign: "left"
                                 valign: "middle"
@@ -140,14 +140,14 @@ Builder.load_string(
 
                             BoxLayout:
                                 size_hint: (None,None)
-                                height: dp(0.145833333333*app.height)
-                                width: dp(0.1875*app.width)
+                                height: dp(app.get_scaled_height(70))
+                                width: dp(app.get_scaled_width(150))
                                 id: switch_container
 
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(0.583333333333*app.height)
-                        width: dp(0.35*app.width)
+                        height: dp(app.get_scaled_height(280))
+                        width: dp(app.get_scaled_width(280))
                         id: laser_button_container
                         canvas:
                             Color:
@@ -158,16 +158,16 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint: (None,None)
-                    height: dp(0.75*app.height)
-                    width: dp(0.3375*app.width)
+                    height: dp(app.get_scaled_height(360))
+                    width: dp(app.get_scaled_width(270))
                     spacing:0.0208333333333*app.height
                     orientation: "vertical"
                     id: middle_panel
 
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(0.75*app.height)
-                        width: dp(0.3375*app.width)
+                        height: dp(app.get_scaled_height(360))
+                        width: dp(app.get_scaled_width(270))
                         id: xy_move_container
                         canvas:
                             Color:
@@ -178,8 +178,8 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint: (None,None)
-                    height: dp(0.75*app.height)
-                    width: dp(0.2625*app.width)
+                    height: dp(app.get_scaled_height(360))
+                    width: dp(app.get_scaled_width(210))
                     id: z_move_container
                     canvas:
                         Color:
@@ -197,10 +197,10 @@ Builder.load_string(
             background_down: 'asmcnc/apps/maintenance_app/img/brush_monitor_tab_grey.png'
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.005*app.width)
-                height: dp(0.8125*app.height)
+                width: dp(app.get_scaled_width(804))
+                height: dp(app.get_scaled_height(390))
                 orientation: "vertical" 
-                padding:[dp(0.0275)*app.width, dp(0.0416666666667)*app.height, dp(0.0275)*app.width, dp(0.0416666666667)*app.height]
+                padding:[app.get_scaled_width(22), app.get_scaled_height(20), app.get_scaled_width(22), app.get_scaled_height(20)]
                 spacing:0.0416666666667*app.height
                 canvas:
                     Color:
@@ -211,16 +211,16 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.95*app.width)
-                    height: dp(0.520833333333*app.height)
+                    width: dp(app.get_scaled_width(760))
+                    height: dp(app.get_scaled_height(250))
                     orientation: "horizontal" 
                     padding: 0
                     spacing:0.025*app.width
 
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(0.520833333333*app.height)
-                        width: dp(0.35*app.width)
+                        height: dp(app.get_scaled_height(250))
+                        width: dp(app.get_scaled_width(280))
                         id: brush_use_container
                         canvas:
                             Color:
@@ -231,8 +231,8 @@ Builder.load_string(
 
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(0.520833333333*app.height)
-                        width: dp(0.35*app.width)
+                        height: dp(app.get_scaled_height(250))
+                        width: dp(app.get_scaled_width(280))
                         id: brush_life_container
                         canvas:
                             Color:
@@ -243,8 +243,8 @@ Builder.load_string(
 
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(0.520833333333*app.height)
-                        width: dp(0.2*app.width)
+                        height: dp(app.get_scaled_height(250))
+                        width: dp(app.get_scaled_width(160))
                         id: brush_save_container
                         canvas:
                             Color:
@@ -255,8 +255,8 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint: (None,None)
-                    height: dp(0.166666666667*app.height)
-                    width: dp(0.95*app.width)
+                    height: dp(app.get_scaled_height(80))
+                    width: dp(app.get_scaled_width(760))
                     id: monitor_strip
                     canvas:
                         Color:
@@ -266,14 +266,14 @@ Builder.load_string(
                             pos: self.pos
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(0.166666666667*app.height)
-                        width: dp(0.95*app.width)
-                        padding:[dp(0.0125)*app.width, dp(0.0104166666667)*app.height, dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                        height: dp(app.get_scaled_height(80))
+                        width: dp(app.get_scaled_width(760))
+                        padding:[app.get_scaled_width(10), app.get_scaled_height(5), app.get_scaled_width(10), app.get_scaled_height(5)]
                         orientation: 'horizontal'
                         Label: 
                             id: brush_monitor_label
                             color: 0,0,0,1
-                            font_size: dp(0.0275*app.width)
+                            font_size: dp(app.get_scaled_width(22))
                             markup: True
                             halign: "left"
                             valign: "middle"
@@ -283,8 +283,8 @@ Builder.load_string(
 
                         BoxLayout:
                             size_hint: (None,None)
-                            height: dp(0.145833333333*app.height)
-                            width: dp(0.75*app.width)
+                            height: dp(app.get_scaled_height(70))
+                            width: dp(app.get_scaled_width(600))
                             id: brush_monitor_container
 
         # Spindle cooldown settings
@@ -296,10 +296,10 @@ Builder.load_string(
 
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.005*app.width)
-                height: dp(0.8125*app.height)
+                width: dp(app.get_scaled_width(804))
+                height: dp(app.get_scaled_height(390))
                 orientation: "vertical" 
-                padding:[dp(0.0275)*app.width, dp(0.0416666666667)*app.height, dp(0.0275)*app.width, dp(0.0416666666667)*app.height]
+                padding:[app.get_scaled_width(22), app.get_scaled_height(20), app.get_scaled_width(22), app.get_scaled_height(20)]
                 spacing:0.0416666666667*app.height
                 canvas:
                     Color:
@@ -310,16 +310,16 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.95*app.width)
-                    height: dp(0.729166666667*app.height)
+                    width: dp(app.get_scaled_width(760))
+                    height: dp(app.get_scaled_height(350))
                     orientation: "horizontal" 
                     padding: dp(0)
-                    spacing:dp(0.025)*app.width
+                    spacing:app.get_scaled_width(20)
 
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(0.729166666667*app.height)
-                        width: dp(0.95*app.width)
+                        height: dp(app.get_scaled_height(350))
+                        width: dp(app.get_scaled_width(760))
                         id: spindle_settings_container
 
         # Z Misc settings (probe plate and time since lead screw lubrication)
@@ -330,10 +330,10 @@ Builder.load_string(
 
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.005*app.width)
-                height: dp(0.8125*app.height)
+                width: dp(app.get_scaled_width(804))
+                height: dp(app.get_scaled_height(390))
                 orientation: "horizontal" 
-                padding:[dp(0.0275)*app.width, dp(0.0416666666667)*app.height, dp(0.0275)*app.width, dp(0.0416666666667)*app.height]
+                padding:[app.get_scaled_width(22), app.get_scaled_height(20), app.get_scaled_width(22), app.get_scaled_height(20)]
                 spacing:0.025*app.width
                 canvas:
                     Color:
@@ -344,16 +344,16 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.725*app.width)
-                    height: dp(0.729166666667*app.height)
+                    width: dp(app.get_scaled_width(580))
+                    height: dp(app.get_scaled_height(350))
                     orientation: "vertical" 
                     padding: dp(0)
-                    spacing:dp(0.0416666666667)*app.height
+                    spacing:app.get_scaled_height(20)
 
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(0.270833333333*app.height)
-                        width: dp(0.725*app.width)
+                        height: dp(app.get_scaled_height(130))
+                        width: dp(app.get_scaled_width(580))
                         id: touchplate_offset_container
                         canvas:
                             Color:
@@ -364,8 +364,8 @@ Builder.load_string(
 
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(0.416666666667*app.height)
-                        width: dp(0.725*app.width)
+                        height: dp(app.get_scaled_height(200))
+                        width: dp(app.get_scaled_width(580))
                         id: z_lubrication_reminder_container
                         canvas:
                             Color:
@@ -376,8 +376,8 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint: (None,None)
-                    height: dp(0.729166666667*app.height)
-                    width: dp(0.2*app.width)
+                    height: dp(app.get_scaled_height(350))
+                    width: dp(app.get_scaled_width(160))
                     id: z_misc_save_container
                     canvas:
                         Color:
@@ -398,10 +398,10 @@ Builder.load_string(
 
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.005*app.width)
-                height: dp(0.8125*app.height)
+                width: dp(app.get_scaled_width(804))
+                height: dp(app.get_scaled_height(390))
                 orientation: "vertical" 
-                padding:[dp(0.0275)*app.width, dp(0.0416666666667)*app.height, dp(0.0275)*app.width, dp(0.0416666666667)*app.height]
+                padding:[app.get_scaled_width(22), app.get_scaled_height(20), app.get_scaled_width(22), app.get_scaled_height(20)]
                 spacing:0.0416666666667*app.height
                 canvas:
                     Color:
@@ -412,8 +412,8 @@ Builder.load_string(
 
                 BoxLayout: 
                     id: spindle_health_check_container
-                    height: dp(0.729166666667*app.height)
-                    width: dp(0.95*app.width)
+                    height: dp(app.get_scaled_height(350))
+                    width: dp(app.get_scaled_width(760))
                     canvas:
                         Color:
                             rgba: 1,1,1,1
@@ -425,10 +425,10 @@ Builder.load_string(
         size_hint: (None,None)
         pos: (dp(710.0/800.0)*app.width, dp(390.0/480.0)*app.height + (4 if app.height == 768 else 0))
         Button:
-            font_size: str(0.01875 * app.width) + 'sp'
+            font_size: str(get_scaled_width(15)) + 'sp'
             size_hint: (None,None)
-            height: dp(0.1875*app.height)
-            width: dp(0.1125*app.width)
+            height: dp(app.get_scaled_height(90))
+            width: dp(app.get_scaled_width(90))
             background_color: [0,0,0,0]
             center: self.parent.center
             pos: self.parent.pos

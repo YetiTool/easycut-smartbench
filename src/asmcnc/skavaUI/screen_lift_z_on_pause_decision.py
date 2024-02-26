@@ -34,14 +34,14 @@ Builder.load_string(
 
     BoxLayout: 
         spacing: 0
-        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+        padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
         orientation: 'vertical'
 
         Label:
             id: header_label
             size_hint_y: 3
             markup: True
-            font_size: str(0.0375*app.width) + 'px' 
+            font_size: str(get_scaled_width(30)) + 'px' 
             valign: 'center'
             halign: 'center'
             size:self.texture_size
@@ -50,7 +50,7 @@ Builder.load_string(
     
         BoxLayout:
             orientation: 'horizontal'
-            padding:[dp(0.025)*app.width, 0, dp(0.025)*app.width, 0]
+            padding:[app.get_scaled_width(20), 0, app.get_scaled_width(20), 0]
             spacing:0.05*app.width
             size_hint_y: 3
 
@@ -66,10 +66,10 @@ Builder.load_string(
                 background_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                 background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                 border: [dp(30)]*4
-                padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
                         
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: str(get_scaled_width(15)) + 'sp'
                 size_hint_x: 0.3
                 background_color: hex('#FFFFFF00')
                 on_press: root.popup_help()
@@ -93,10 +93,10 @@ Builder.load_string(
                 background_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                 background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                 border: [dp(30)]*4
-                padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
                         
         Label:
-            font_size: str(0.01875 * app.width) + 'sp'
+            font_size: str(get_scaled_width(15)) + 'sp'
             size_hint_y: .5                
 
 """

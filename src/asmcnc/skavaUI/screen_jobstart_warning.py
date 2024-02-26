@@ -36,8 +36,8 @@ Builder.load_string(
     confirm_button : confirm_button
 
     BoxLayout:
-        height: dp(1.0*app.height)
-        width: dp(1.0*app.width)
+        height: dp(app.get_scaled_height(480))
+        width: dp(app.get_scaled_width(800))
         canvas.before:
             Color: 
                 rgba: hex('#E5E5E5FF')
@@ -62,8 +62,8 @@ Builder.load_string(
                 Label:
                     id: header_label
                     size_hint: (None,None)
-                    height: dp(0.125*app.height)
-                    width: dp(1.0*app.width)
+                    height: dp(app.get_scaled_height(60))
+                    width: dp(app.get_scaled_width(800))
                     text: "Safety Warning"
                     color: hex('#f9f9f9ff')
                     font_size: 0.0375*app.width
@@ -74,9 +74,9 @@ Builder.load_string(
                     
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.0*app.width)
-                height: dp(0.666666666667*app.height)
-                padding:[dp(0.025)*app.width, dp(0.0208333333333)*app.height, dp(0.025)*app.width, 0]
+                width: dp(app.get_scaled_width(800))
+                height: dp(app.get_scaled_height(320))
+                padding:[app.get_scaled_width(20), app.get_scaled_height(10), app.get_scaled_width(20), 0]
                 spacing: 0
                 orientation: 'vertical'
              
@@ -85,7 +85,7 @@ Builder.load_string(
                     spacing:0.0125*app.width
                     size_hint_y: 1.22
                     BoxLayout:
-                        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                        padding:[app.get_scaled_width(20), app.get_scaled_height(20)]
                         size_hint_x: 0.2
                         Image:
                             keep_ratio: True
@@ -95,13 +95,13 @@ Builder.load_string(
                     BoxLayout:
                         orientation: 'vertical'
                         size_hint_x: 0.8
-                        padding:[0, 0, dp(0.025)*app.width, 0]
+                        padding:[0, 0, app.get_scaled_width(20), 0]
                         Label:
                             id: risk_of_fire
                             size_hint_y: 0.2
                             markup: True
                             halign: 'left'
-                            font_size: str(0.04*app.width) + 'sp' 
+                            font_size: str(get_scaled_width(32)) + 'sp' 
                             markup: True
                             valign: 'top'
                             size:self.texture_size
@@ -118,7 +118,7 @@ Builder.load_string(
                             text_size: self.size
                             color: hex('#333333FF')
                             markup: True
-                            font_size: str(0.025*app.width) + 'sp' 
+                            font_size: str(get_scaled_width(20)) + 'sp' 
 
                 BoxLayout:
                     orientation: 'horizontal'
@@ -144,7 +144,7 @@ Builder.load_string(
                                 id: never_unattended
                                 markup: True
                                 halign: 'left'
-                                font_size: str(0.04*app.width) + 'sp' 
+                                font_size: str(get_scaled_width(32)) + 'sp' 
                                 markup: True
                                 size:self.size
                                 valign: 'middle'
@@ -167,7 +167,7 @@ Builder.load_string(
                             size_hint_y: 0.18
                             markup: True
                             halign: 'center'
-                            font_size: str(0.0275*app.width) + 'sp' 
+                            font_size: str(get_scaled_width(22)) + 'sp' 
                             markup: True
                             size:self.size
                             valign: 'middle'
@@ -178,9 +178,9 @@ Builder.load_string(
 
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.0*app.width)
-                height: dp(0.166666666667*app.height)
-                padding:[dp(0.3125)*app.width, 0, dp(0.3125)*app.width, dp(0.0208333333333)*app.height]
+                width: dp(app.get_scaled_width(800))
+                height: dp(app.get_scaled_height(80))
+                padding:[app.get_scaled_width(250), 0, app.get_scaled_width(250), app.get_scaled_height(10)]
                 orientation: 'horizontal'
 
                 Button:
@@ -190,9 +190,9 @@ Builder.load_string(
                     background_normal: "./asmcnc/skavaUI/img/next.png"
                     background_down: "./asmcnc/skavaUI/img/next.png"
                     border: [dp(14.5)]*4
-                    width: dp(0.36375*app.width)
-                    height: dp(0.164583333333*app.height)
-                    font_size: str(0.035*app.width) + 'sp'
+                    width: dp(app.get_scaled_width(291))
+                    height: dp(app.get_scaled_height(79))
+                    font_size: str(get_scaled_width(28)) + 'sp'
                     color: hex('#f9f9f9ff')
                     markup: True
                     center: self.parent.center

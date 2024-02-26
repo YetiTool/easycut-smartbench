@@ -27,13 +27,13 @@ Builder.load_string(
 
             Label: 
                 id: plot_title
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: str(get_scaled_width(15)) + 'sp'
 
             Image:
                 id: load_graph
                 size_hint: None, None
-                height: dp(0.739583333333*app.height)
-                width: dp(0.875*app.width)
+                height: dp(app.get_scaled_height(355))
+                width: dp(app.get_scaled_width(700))
                 x: dp(5)
                 y: dp(5)
                 allow_stretch: True
@@ -42,30 +42,30 @@ Builder.load_string(
         BoxLayout: 
             orientation: "vertical"
             size_hint_x: None
-            width: dp(0.125*app.width)
+            width: dp(app.get_scaled_width(100))
             
             GridLayout: 
                 size_hint_y: None
-                height: dp(0.208333333333*app.height)
+                height: dp(app.get_scaled_height(100))
                 cols: 2
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: "BACK"
                     on_press: root.back_to_fac_settings()
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: "Start"
                     on_press: root.start_measurement()
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: "Stop"
                     on_press: root.stop_measurement()
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: "Clear"
                     on_press: root.clear_measurement()
 
@@ -73,67 +73,67 @@ Builder.load_string(
                 cols: 2
 
                 Label:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: "y axis"
 
                 Label:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: "x axis"
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: "t"
                     on_press: root.set_index("X", self)
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: "SG X"
                     on_press: root.set_index("Y", self)
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: "F"
                     on_press: root.set_index("X", self)
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: "SG Y"
                     on_press: root.set_index("Y", self)
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: "x pos"
                     on_press: root.set_index("X", self)
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: "SG Z"
                     on_press: root.set_index("Y", self)
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: "y pos"
                     on_press: root.set_index("X", self)
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: "SG Y1"
                     on_press: root.set_index("Y", self)
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: "z pos"
                     on_press: root.set_index("X", self)
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: str(get_scaled_width(15)) + 'sp'
                     text: "SG Y2"
                     on_press: root.set_index("Y", self)
 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: str(get_scaled_width(15)) + 'sp'
                 size_hint_y: None
-                height: dp(0.0833333333333*app.height)
+                height: dp(app.get_scaled_height(40))
                 text: "PLOT"
                 on_press: root.display_results()
 
