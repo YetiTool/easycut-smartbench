@@ -111,7 +111,7 @@ class SpindleShutdownScreen(Screen):
         self.update_strings()
 
     def __raise_z_when_idle(self, *args):
-        if self.m.m_state.lower() == "idle":
+        if self.m.s.m_state.lower() == "idle":
             self.m.raise_z_axis_for_collet_access()
             self.m.unbind(m_state=self.__raise_z_when_idle())
 
@@ -122,7 +122,7 @@ class SpindleShutdownScreen(Screen):
         self.m._grbl_resume()
 
         # bind changes to m_state to raise Z axis when idle
-        self.m.bind(m_state=self.__raise_z_when_idle())
+        self.m.s.bind(m_state=self.__raise_z_when_idle())
 
         if self.reason_for_pause == "spindle_overload":
             # Job paused due to overload, send event
