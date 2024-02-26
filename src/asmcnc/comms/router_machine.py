@@ -1412,6 +1412,10 @@ class RouterMachine(object):
         self.resume_from_alarm()
         Clock.schedule_once(lambda dt: self.set_pause(False),0.4)
 
+    def resume_to_idle_while_paused(self):
+        self.reason_for_machine_pause = "Resuming"
+        self._grbl_resume()
+
     def reset_after_sequential_stream(self):
         self._stop_all_streaming()
         self._grbl_soft_reset()

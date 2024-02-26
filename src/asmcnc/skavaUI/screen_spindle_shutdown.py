@@ -119,7 +119,7 @@ class SpindleShutdownScreen(Screen):
         log("Pausing job...")
 
         # resume so I can move the Z axis, refactor from protected method ideally
-        self.m._grbl_resume()
+        self.m.resume_to_idle_while_paused()
 
         # bind changes to m_state to raise Z axis when idle
         self.m.s.bind(m_state=self.__raise_z_when_idle)
