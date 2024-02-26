@@ -10,6 +10,8 @@ Builder.load_string("""
     shape_dims_image:shape_dims_image
     shape_toolpath_image:shape_toolpath_image
 
+    unit_switch:unit_switch
+
     d_input:d_input
     l_input:l_input
     r_input:r_input
@@ -45,6 +47,20 @@ Builder.load_string("""
                 opacity: 0
                 size: self.parent.size
                 pos: self.parent.pos
+
+            Switch:
+                id: unit_switch
+                size: dp(100), dp(50)
+                size_hint: (None, None)
+                pos: self.parent.pos[0] + self.parent.size[0] - self.size[0], self.parent.pos[1] - dp(3)
+
+            Label:
+                font_size: dp(18)
+                size: self.texture_size
+                size_hint: (None, None)
+                pos: unit_switch.pos[0] + dp(14) + (dp(40) * unit_switch.active), unit_switch.pos[1] + dp(12)
+                text: 'mm' if not unit_switch.active else 'Inch'
+                color: 1,1,1,1
 
             BoxLayout:
                 size: dp(70), dp(40)
@@ -199,6 +215,13 @@ Builder.load_string("""
                 text: 'X:'
                 color: 0,0,0,1
                 halign: 'left'
+
+                canvas.before:
+                    Color:
+                        rgba: hex('#F9F9F988')
+                    Rectangle:
+                        pos: self.x + 15, self.y + 5
+                        size: self.texture_size
 
             Label:
                 id: y_datum_label
