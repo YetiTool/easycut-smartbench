@@ -104,7 +104,7 @@ class CommonMove(Widget):
             on_press=self.set_spindle,
         )
         self.spindle_blinker = BlinkingWidget()
-        self.spindle_button.bind(size=self.update_spindle_button, pos=self.update_spindle_button)
+        self.spindle_blinker.bind(size=self.update_spindle_button, pos=self.update_spindle_button)
         self.spindle_blinker.add_widget(self.spindle_button)
         self.vacuum_spindle_container.add_widget(self.spindle_blinker)
 
