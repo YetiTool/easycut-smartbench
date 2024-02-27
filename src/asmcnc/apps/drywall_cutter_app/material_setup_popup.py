@@ -356,14 +356,11 @@ class CuttingDepthsPopup(Popup):
     def on_checkbox_active(self):
         if self.auto_pass_checkbox.active:
             self.depth_per_pass.disabled = True
-            self.depth_per_pass.text = self.depth_per_pass.hint_text
-            self.depth_per_pass.hint_text = ''
+            self.depth_per_pass.text = str(self.dwt_config.active_cutter.max_depth_per_pass)
         else:
             self.depth_per_pass.disabled = False
             self.depth_per_pass.hint_text = self.depth_per_pass.text
-            self.depth_per_pass.text = ''
-        self.update_text()
-
+            
     def update_graphic_position(self):
         upper_limit = 0.225  # Value at which the cutter sits at the top of the material
         lower_limit = -0.035  # Value at which the cutter sits at the bottom surface of the material

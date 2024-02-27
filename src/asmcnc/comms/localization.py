@@ -7,7 +7,7 @@ from datetime import datetime
 from kivy.core.text import LabelBase
 from kivy.lang import Builder
 
-from src.asmcnc.comms.model_manager import ModelManagerSingleton
+from asmcnc.comms.model_manager import ModelManagerSingleton
 
 asmcnc_path = os.path.dirname(os.path.dirname(__file__))
 fonts_path = os.path.join(asmcnc_path, "keyboard", "fonts")

@@ -28,7 +28,7 @@ from kivy.uix.boxlayout import BoxLayout
 
 from asmcnc.core_UI import scaling_utils
 from asmcnc.core_UI.popup_manager import PopupManager
-from src.asmcnc.comms.model_manager import ModelManagerSingleton
+from asmcnc.comms.model_manager import ModelManagerSingleton
 
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
 
