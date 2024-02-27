@@ -2,13 +2,11 @@
 Created on 1 Feb 2018
 @author: Ed
 """
-import kivy
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty
 from kivy.uix.widget import Widget
-from kivy.base import runTouchApp
+
+from asmcnc.core_UI.components.images.blinking_image import BlinkingWidget
+
 
 Builder.load_string(
     """
@@ -89,8 +87,7 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True  
 
-
-            BlinkingWidget
+            <BlinkingWidget>:
                 ToggleButton:
                     font_size: str(0.01875 * app.width) + 'sp'
                     id: spindle_toggle
