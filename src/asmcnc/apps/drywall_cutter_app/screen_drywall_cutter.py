@@ -15,6 +15,8 @@ from asmcnc.apps.drywall_cutter_app import screen_config_filechooser
 from asmcnc.apps.drywall_cutter_app import screen_config_filesaver
 from asmcnc.apps.drywall_cutter_app import material_setup_popup
 
+from asmcnc.core_UI import scaling_utils
+
 
 class ImageButton(ButtonBehavior, Image):
     pass
@@ -180,10 +182,12 @@ class DrywallCutterScreen(Screen):
     def on_pre_enter(self):
         self.apply_active_config()
         self.pulse_poll = Clock.schedule_interval(self.xy_move_widget.check_zh_at_datum, 0.04)
+        self.kb.set_numeric_pos((scaling_utils.get_scaled_width(565), scaling_utils.get_scaled_height(85)))
 
     def on_pre_leave(self):
         if self.pulse_poll:
             Clock.unschedule(self.pulse_poll)
+        self.kb.set_numeric_pos(None)
 
     def home(self):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
