@@ -87,7 +87,7 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True  
 
-            <BlinkingWidget>:
+            BlinkingWidget:
                 ToggleButton:
                     font_size: str(0.01875 * app.width) + 'sp'
                     id: spindle_toggle
