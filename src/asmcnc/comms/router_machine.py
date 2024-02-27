@@ -2054,12 +2054,15 @@ class RouterMachine(object):
         if self.state() == 'Idle':
             self.set_led_colour("WHITE")
             self.s.expecting_probe_result = True
-            probeZTarget =  -(self.grbl_z_max_travel) - self.mpos_z() + 0.1 # 0.1 added to prevent rounding error triggering soft limit
+            probe_z_target =  -(self.grbl_z_max_travel) - self.mpos_z() + 0.1 # 0.1 added to prevent rounding error triggering soft limit
             probe_speed = self.z_probe_speed_fast if fast_probe else self.z_probe_speed
             self.fast_probing = fast_probe
-            if fast_probe:
-                self.s.write_command('G0 G53 Z-60')
-            self.s.write_command('G91 G38.2 Z' + str(probeZTarget) + ' F' + str(probe_speed))
+            fast_travel_distance = 60  # mm to go fast and not probing yet
+            min_probing_distance = 30  # have at least 30mm safety margin for probing
+            if fast_probe and abs(probe_z_target) > fast_travel_distance + min_probing_distance:
+                self.s.write_command('G0 G53 Z-' + str(fast_travel_distance))
+                probe_z_target += fast_travel_distance # adjust max travel for the 60mm traveled in G0
+            self.s.write_command('G91 G38.2 Z' + str(probe_z_target) + ' F' + str(probe_speed))
             self.s.write_command('G90')
             # Serial module then looks for probe detection
             # On detection "probe_z_detection_event" is called (for a single immediate EEPROM write command)....
