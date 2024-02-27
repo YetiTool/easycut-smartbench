@@ -17,8 +17,8 @@ class ModelManagerSingleton(EventDispatcher):
     _lock = threading.Lock()
 
     # File paths:
-    PC_FILE_PATH = os.path.join(os.path.dirname(os.getcwd()), "src", "sb_values", "model_info.json")
-    PC_MIGRATION_PATH = os.path.join(os.path.dirname(os.getcwd()), "src", "asmcnc", "comms", "product_code_migration")
+    PC_FILE_PATH = os.path.join(os.getcwd(), "sb_values", "model_info.json")
+    PC_MIGRATION_PATH = os.path.join(os.getcwd(), "asmcnc", "comms", "product_code_migration")
     MIGRATION_FILE_PATH = os.path.join(PC_MIGRATION_PATH, "migration.json")
     MIGRATION_RAW_FILE_PATH = os.path.join(PC_MIGRATION_PATH, "migration_raw.json")
 
