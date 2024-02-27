@@ -37,14 +37,14 @@ class BlinkingWidget(Widget):
         super(BlinkingWidget, self).__init__(**kwargs)
 
         self.animation = (
-            Animation(bg_color=(1, 0, 0, 1), duration=0.5)
+            Animation(bg_color=(1, 0, 0, 0.8), duration=0.5)
             + Animation(bg_color=(1, 0, 0, 0), duration=0.5)
         )
         self.animation.repeat = True
 
         self.bind(blinking=self.on_blinking)
 
-    def on_blinking(self, instance, value):
+    def on_blinking(self, *args):
         if self.blinking:
             self.animation.start(self)
         else:
