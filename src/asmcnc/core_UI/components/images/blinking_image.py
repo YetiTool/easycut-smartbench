@@ -54,9 +54,6 @@ class BlinkingWidget(Widget):
 
 if __name__ == '__main__':
     box_layout = BoxLayout()
-    # image = Image(
-    #     source="/Users/archiejarvis/PycharmProjects/easycut/easycut-smartbench/src/asmcnc/skavaUI/img/spindle_on.png",
-    #     )
 
     def on_press(*args):
         setattr(blinking_widget, "blinking", not blinking_widget.blinking)

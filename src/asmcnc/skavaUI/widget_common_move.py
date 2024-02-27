@@ -19,7 +19,7 @@ Builder.load_string(
     speed_toggle:speed_toggle
     vacuum_image:vacuum_image
     vacuum_toggle:vacuum_toggle
-    blinking_spindle_image_container:blinking_spindle_image_container
+    vacuum_spindle_container:vacuum_spindle_container
 
     BoxLayout:
         size: self.parent.size
@@ -63,6 +63,7 @@ Builder.load_string(
             padding:dp(0)
             size_hint_y: 2
             orientation: 'vertical'
+            id: vacuum_spindle_container
             canvas:
                 Color: 
                     rgba: 1,1,1,1
@@ -86,9 +87,6 @@ Builder.load_string(
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
                         allow_stretch: True  
-
-            BoxLayout:
-                id: blinking_spindle_image_container
 """
 )
 
@@ -107,7 +105,7 @@ class CommonMove(Widget):
         )
         self.spindle_blinker = BlinkingWidget(size=self.spindle_button.size, size_hint=(None, None))
         self.spindle_blinker.add_widget(self.spindle_button)
-        self.blinking_spindle_image_container.add_widget(self.spindle_blinker)
+        self.vacuum_spindle_container.add_widget(self.spindle_blinker)
 
     fast_x_speed = 6000
     fast_y_speed = 6000
