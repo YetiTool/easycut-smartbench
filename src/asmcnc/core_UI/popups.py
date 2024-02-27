@@ -13,7 +13,7 @@ from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 
 from asmcnc.core_UI import scaling_utils as utils
-from asmcnc.core_UI.utils.hold_button import HoldButton, WarningHoldButton
+from asmcnc.core_UI.utils.hold_button import WarningHoldButton
 
 """
 Popup type enum

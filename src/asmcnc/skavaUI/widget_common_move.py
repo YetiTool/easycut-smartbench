@@ -90,22 +90,23 @@ Builder.load_string(
                         allow_stretch: True  
 
 
-            ToggleButton:
-                font_size: str(0.01875 * app.width) + 'sp'
-                id: spindle_toggle
-                on_press: root.set_spindle()
-                background_color: 1, 1, 1, 0 
-                BoxLayout:
-                    padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
-                    size: self.parent.size
-                    pos: self.parent.pos      
-                    Image:
-                        id: spindle_image
-                        source: "./asmcnc/skavaUI/img/spindle_off.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True  
+            BlinkingWidget
+                ToggleButton:
+                    font_size: str(0.01875 * app.width) + 'sp'
+                    id: spindle_toggle
+                    on_press: root.set_spindle()
+                    background_color: 1, 1, 1, 0 
+                    BoxLayout:
+                        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                        size: self.parent.size
+                        pos: self.parent.pos      
+                        Image:
+                            id: spindle_image
+                            source: "./asmcnc/skavaUI/img/spindle_off.png"
+                            center_x: self.parent.center_x
+                            y: self.parent.y
+                            size: self.parent.width, self.parent.height
+                            allow_stretch: True  
         
          
         
