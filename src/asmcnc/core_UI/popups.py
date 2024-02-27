@@ -869,10 +869,10 @@ class SpindleSafetyPopup(BasicPopup):
         self.l = kwargs["l"]
 
         main_string = self.l.get_str("This will start the spindle at 12,000 rpm! Please make sure:")
-        main_string += "\n" + "\n"
-        main_string += " - " + self.l.get_str("The spindle is clamped properly") + "\n"
-        main_string += " - " + self.l.get_str("The spindle is plugged in") + "\n"
-        main_string += " - " + self.l.get_str("The dust shoe plug is inserted") + "\n"
+        main_string += "\n\n"
+        main_string += " - " + self.l.get_str("The spindle is clamped properly") + "\n\n"
+        main_string += " - " + self.l.get_str("The spindle is plugged in") + "\n\n"
+        main_string += " - " + self.l.get_str("The dust shoe plug is inserted") + "\n\n"
         main_string += " - " + self.l.get_str("The cutter is free to move")
 
         super(SpindleSafetyPopup, self).__init__(
