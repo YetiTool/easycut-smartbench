@@ -4,6 +4,7 @@ from kivy.base import runTouchApp
 from kivy.lang import Builder
 from kivy.properties import BooleanProperty, ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
 from kivy.uix.image import Image
 from kivy.uix.widget import Widget
 
@@ -44,19 +45,29 @@ class BlinkingWidget(Widget):
         self.bind(blinking=self.on_blinking)
 
     def on_blinking(self, instance, value):
-        if value:
+        if self.blinking:
             self.animation.start(self)
         else:
-            self.animation.stop(self)
+            self.animation.cancel(self)
+            self.bg_color = [1, 0, 0, 0]
 
 
 if __name__ == '__main__':
     box_layout = BoxLayout()
-    image = Image(
-        source="/Users/archiejarvis/PycharmProjects/easycut/easycut-smartbench/src/asmcnc/skavaUI/img/spindle_on.png",
-        )
-    blinking_widget = BlinkingWidget(size=image.texture_size, size_hint=(None, None))
-    blinking_widget.add_widget(image)
+    # image = Image(
+    #     source="/Users/archiejarvis/PycharmProjects/easycut/easycut-smartbench/src/asmcnc/skavaUI/img/spindle_on.png",
+    #     )
+
+    def on_press(*args):
+        setattr(blinking_widget, "blinking", not blinking_widget.blinking)
+
+    button = Button(
+        background_normal="/Users/archiejarvis/PycharmProjects/easycut/easycut-smartbench/src/asmcnc/skavaUI/img/spindle_off.png",
+        background_down="/Users/archiejarvis/PycharmProjects/easycut/easycut-smartbench/src/asmcnc/skavaUI/img/spindle_off.png",
+        on_press=on_press)
+
+    blinking_widget = BlinkingWidget(size=button.size, size_hint=(None, None))
+    blinking_widget.add_widget(button)
 
     box_layout.add_widget(blinking_widget)
 

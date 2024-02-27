@@ -3,6 +3,7 @@ Created on 1 Feb 2018
 @author: Ed
 """
 from kivy.lang import Builder
+from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 
 from asmcnc.core_UI.components.images.blinking_image import BlinkingWidget
@@ -18,8 +19,7 @@ Builder.load_string(
     speed_toggle:speed_toggle
     vacuum_image:vacuum_image
     vacuum_toggle:vacuum_toggle
-    spindle_button:spindle_button
-    spindle_blinker:spindle_blinker
+    blinking_spindle_image_container:blinking_spindle_image_container
 
     BoxLayout:
         size: self.parent.size
@@ -87,14 +87,8 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True  
 
-            BlinkingWidget:
-                id: spindle_blinker
-                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
-                Button:
-                    id: spindle_button
-                    background_normal: "./asmcnc/skavaUI/img/spindle_off.png"
-                    background_down: "./asmcnc/skavaUI/img/spindle_off.png"
-                    on_press: root.set_spindle()
+            BoxLayout:
+                id: blinking_spindle_image_container
 """
 )
 
@@ -105,6 +99,15 @@ class CommonMove(Widget):
         self.m = kwargs["machine"]
         self.sm = kwargs["screen_manager"]
         self.set_jog_speeds()
+
+        self.spindle_button = Button(
+            background_normal="./asmcnc/skavaUI/img/spindle_off.png",
+            background_down="./asmcnc/skavaUI/img/spindle_off.png",
+            on_press=self.set_spindle,
+        )
+        self.spindle_blinker = BlinkingWidget(size=self.spindle_button.size, size_hint=(None, None))
+        self.spindle_blinker.add_widget(self.spindle_button)
+        self.blinking_spindle_image_container.add_widget(self.spindle_blinker)
 
     fast_x_speed = 6000
     fast_y_speed = 6000
@@ -132,12 +135,12 @@ class CommonMove(Widget):
 
     def set_spindle(self, *args):
         def button_two_callback():
-            self.spindle_imagebutton.background_normal = "./asmcnc/skavaUI/img/spindle_on.png"
+            self.spindle_button.background_normal = "./asmcnc/skavaUI/img/spindle_on.png"
             self.m.spindle_on()
             self.spindle_blinker.blinking = True
 
         if self.spindle_blinker.blinking:
-            self.spindle_image.background_normal = "./asmcnc/skavaUI/img/spindle_off.png"
+            self.spindle_button.background_normal = "./asmcnc/skavaUI/img/spindle_off.png"
             self.m.spindle_off()
             self.spindle_blinker.blinking = False
         else:
