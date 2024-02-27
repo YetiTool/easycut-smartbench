@@ -20,6 +20,7 @@ Builder.load_string(
     vacuum_toggle:vacuum_toggle
     spindle_image:spindle_image
     spindle_toggle:spindle_toggle
+    spindle_blinker:spindle_blinker
 
     BoxLayout:
         size: self.parent.size
@@ -88,6 +89,7 @@ Builder.load_string(
                         allow_stretch: True  
 
             BlinkingWidget:
+                id: spindle_blinker
                 ToggleButton:
                     font_size: str(0.01875 * app.width) + 'sp'
                     id: spindle_toggle
@@ -144,11 +146,13 @@ class CommonMove(Widget):
 
     def set_spindle(self):
         def button_two_callback():
-            self.spindle_image.source = "./asmcnc/skavaUI/img/blinking_spindle.gif"
+            self.spindle_image.source = "./asmcnc/skavaUI/img/spindle_on.png"
             self.m.spindle_on()
+            self.spindle_blinker.blinking = True
 
         if self.spindle_toggle.state == "normal":
             self.spindle_image.source = "./asmcnc/skavaUI/img/spindle_off.png"
             self.m.spindle_off()
+            self.spindle_blinker.blinking = False
         else:
             self.sm.pm.show_spindle_safety_popup(None, button_two_callback)

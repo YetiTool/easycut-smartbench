@@ -42,7 +42,6 @@ class BlinkingWidget(Widget):
         self.animation.repeat = True
 
         self.bind(blinking=self.on_blinking)
-        self.blinking = True
 
     def on_blinking(self, instance, value):
         if value:
