@@ -102,7 +102,6 @@ Builder.load_string(
                         Image:
                             id: spindle_image
                             source: "./asmcnc/skavaUI/img/spindle_off.png"
-                            center_x: self.parent.center_x
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
                             allow_stretch: True  
@@ -119,6 +118,8 @@ class CommonMove(Widget):
         self.m = kwargs["machine"]
         self.sm = kwargs["screen_manager"]
         self.set_jog_speeds()
+        self.spindle_blinker.size = self.spindle_image.texture_size
+        self.spindle_blinker.size_hint = (None, None)
 
     fast_x_speed = 6000
     fast_y_speed = 6000
