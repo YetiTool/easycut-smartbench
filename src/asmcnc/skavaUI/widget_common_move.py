@@ -110,7 +110,8 @@ class CommonMove(Widget):
         self.vacuum_spindle_container.add_widget(self.spindle_blinker)
 
     def update_spindle_button(self, *args):
-        self.spindle_button.pos = self.spindle_blinker.pos
+        self.spindle_button.center_x = self.spindle_blinker.center_x
+        self.spindle_button.y = self.spindle_blinker.y
         self.spindle_button.size = self.spindle_blinker.size
 
     fast_x_speed = 6000
