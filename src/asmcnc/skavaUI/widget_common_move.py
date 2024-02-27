@@ -18,8 +18,7 @@ Builder.load_string(
     speed_toggle:speed_toggle
     vacuum_image:vacuum_image
     vacuum_toggle:vacuum_toggle
-    spindle_image:spindle_image
-    spindle_toggle:spindle_toggle
+    spindle_button:spindle_button
     spindle_blinker:spindle_blinker
 
     BoxLayout:
@@ -90,24 +89,12 @@ Builder.load_string(
 
             BlinkingWidget:
                 id: spindle_blinker
-                ToggleButton:
-                    font_size: str(0.01875 * app.width) + 'sp'
-                    id: spindle_toggle
+                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                Button:
+                    id: spindle_button
+                    background_normal: "./asmcnc/skavaUI/img/spindle_off.png"
+                    background_down: "./asmcnc/skavaUI/img/spindle_off.png"
                     on_press: root.set_spindle()
-                    background_color: 1, 1, 1, 0 
-                    BoxLayout:
-                        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
-                        size: self.parent.size
-                        pos: self.parent.pos      
-                        Image:
-                            id: spindle_image
-                            source: "./asmcnc/skavaUI/img/spindle_off.png"
-                            y: self.parent.y
-                            size: self.parent.width, self.parent.height
-                            allow_stretch: True  
-        
-         
-        
 """
 )
 
@@ -118,8 +105,6 @@ class CommonMove(Widget):
         self.m = kwargs["machine"]
         self.sm = kwargs["screen_manager"]
         self.set_jog_speeds()
-        self.spindle_blinker.size = self.spindle_image.texture_size
-        self.spindle_blinker.size_hint = (None, None)
 
     fast_x_speed = 6000
     fast_y_speed = 6000
@@ -145,14 +130,14 @@ class CommonMove(Widget):
             self.vacuum_image.source = "./asmcnc/skavaUI/img/vac_on.png"
             self.m.vac_on()
 
-    def set_spindle(self):
+    def set_spindle(self, *args):
         def button_two_callback():
-            self.spindle_image.source = "./asmcnc/skavaUI/img/spindle_on.png"
+            self.spindle_imagebutton.background_normal = "./asmcnc/skavaUI/img/spindle_on.png"
             self.m.spindle_on()
             self.spindle_blinker.blinking = True
 
-        if self.spindle_toggle.state == "normal":
-            self.spindle_image.source = "./asmcnc/skavaUI/img/spindle_off.png"
+        if self.spindle_blinker.blinking:
+            self.spindle_image.background_normal = "./asmcnc/skavaUI/img/spindle_off.png"
             self.m.spindle_off()
             self.spindle_blinker.blinking = False
         else:
