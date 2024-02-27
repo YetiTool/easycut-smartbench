@@ -14,7 +14,7 @@ import json
 import kivy
 from chardet import detect
 from kivy.lang import Builder
-from kivy.properties import ObjectProperty, StringProperty  # @UnresolvedImport
+from kivy.properties import ObjectProperty, StringProperty  
 from kivy.uix.screenmanager import Screen
 
 from asmcnc.comms import usb_storage
@@ -75,7 +75,6 @@ Builder.load_string("""
                     id: filechooser
                     rootpath: './asmcnc/apps/drywall_cutter_app/config/configurations/'
                     show_hidden: False
-                    filters: ['*.json']
                     on_selection: root.refresh_filechooser()
                     sort_func: root.sort_by_date_reverse
                     FileChooserIconLayout
@@ -318,7 +317,7 @@ class ConfigFileSaver(Screen):
 
             if not os.path.exists(configs_dir + '.gitignore'):
                 file = open(configs_dir + '.gitignore', "w+")
-                file.write('*.json')
+                file.write('*')
                 file.close()
 
     def on_enter(self):
@@ -404,9 +403,16 @@ class ConfigFileSaver(Screen):
         return result
 
     def save_config_and_return_to_dwt(self):
-        self.callback(self.file_selected_label.text)
+        if self.validate_file_name(self.file_selected_label.text):
+            self.callback(self.file_selected_label.text)
 
-        self.sm.current = 'drywall_cutter'
+            self.sm.current = 'drywall_cutter'
+        else:
+            popup_info.PopupInfo(screen_manager=self.sm, localization=self.l, popup_width=500,
+                                 description=self.l.get_str("File names must be between 1 and 40 characters long."))
+
+    def validate_file_name(self, file_name):
+        return 0 < len(file_name) <= 40
 
     def quit_to_home(self):
         if not self.is_filechooser_scrolling:
