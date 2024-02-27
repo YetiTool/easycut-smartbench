@@ -1814,7 +1814,8 @@ class SerialConnection(EventDispatcher):
 
         # Catch and correct all instances of the spindle speed command "M3 S{RPM}"
         if 'S' in serialCommand.upper():
-            serialCommand = self.compensate_spindle_speed_command(serialCommand)
+            # serialCommand = self.compensate_spindle_speed_command(serialCommand)
+            pass
 
         # Finally issue the command        
         if self.s:
