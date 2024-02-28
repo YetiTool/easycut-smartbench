@@ -112,7 +112,6 @@ class CommonMove(Widget):
 
     def update_spindle_button(self, *args):
         self.spindle_button.pos = self.spindle_blinker.pos
-        self.spindle_button.size = self.spindle_blinker.size
 
     fast_x_speed = 6000
     fast_y_speed = 6000
