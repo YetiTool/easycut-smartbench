@@ -23,7 +23,7 @@ Builder.load_string("""
 """)
 
 YELLOW = [240. / 255, 1, 0, 1]
-TRANSPARENT = [0, 0, 0, 0]
+TRANSPARENT_YELLOW = [240.0 / 255, 1, 0, 0]
 
 
 class BlinkingWidget(Widget):
@@ -33,14 +33,14 @@ class BlinkingWidget(Widget):
     """
 
     blinking = BooleanProperty(False)
-    bg_color = ObjectProperty(TRANSPARENT)
+    bg_color = ObjectProperty(TRANSPARENT_YELLOW)
 
     def __init__(self, **kwargs):
         super(BlinkingWidget, self).__init__(**kwargs)
 
         self.animation = (
                 Animation(bg_color=YELLOW, duration=0.5)
-                + Animation(bg_color=TRANSPARENT, duration=0.5)
+                + Animation(bg_color=TRANSPARENT_YELLOW, duration=0.5)
         )
         self.animation.repeat = True
 
@@ -51,7 +51,7 @@ class BlinkingWidget(Widget):
             self.animation.start(self)
         else:
             self.animation.cancel(self)
-            self.bg_color = TRANSPARENT
+            self.bg_color = TRANSPARENT_YELLOW
 
 
 if __name__ == '__main__':
