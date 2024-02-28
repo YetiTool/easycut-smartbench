@@ -9,7 +9,6 @@ from kivy.clock import Clock
 from asmcnc.comms.router_machine import ProductCodes
 
 
-
 class ModelManagerSingleton(EventDispatcher):
     _instance = None
     _initialized = False
@@ -26,6 +25,9 @@ class ModelManagerSingleton(EventDispatcher):
     SKAVA_UI_IMAGES_PATH = os.path.join(os.getcwd(), "asmcnc", "skavaUI", "img")
     YETI_SPLASH_PATH = os.path.join(SKAVA_UI_IMAGES_PATH, "yeti_splash_screen.png")
     DWT_SPLASH_PATH = os.path.join(SKAVA_UI_IMAGES_PATH, "dwt_splash_screen.png")
+
+    SMARTBENCH_DEFAULT_NAME = "My SmartBench"
+    SMARTCNC_DEFAULT_NAME = "My SmartCNC"
 
     def __new__(cls, machine=None):
         with cls._lock:
@@ -69,6 +71,7 @@ class ModelManagerSingleton(EventDispatcher):
             pc_value = int(str(value).split('.')[1])
             self.fix_wrong_product_code(serial_number, pc_value)
             self.set_machine_type(ProductCodes(pc_value), True)
+            self.__set_default_machine_name()
         except:
             # this should only happen when then machine has no serial number yet (first boot)
             # so we do nothing. ;)
@@ -91,7 +94,6 @@ class ModelManagerSingleton(EventDispatcher):
             print('Old Pro X detected. Fixed SN to: {}'.format(full_sn))
             Clock.schedule_once(lambda dt: self.machine.write_dollar_setting(50, full_sn), 1)
             return ProductCodes.PRECISION_PRO_X
-
 
     def is_machine_drywall(self):
         # () -> bool
@@ -145,4 +147,15 @@ class ModelManagerSingleton(EventDispatcher):
         with open(self.PC_FILE_PATH, 'w') as f:
             json.dump(d, f)
 
+    def __set_default_machine_name(self):
+        # type: () -> None
+        """
+        Sets the default machine name to the relevant name.
+        Only called when the serial number is first read.
 
+        SmartBench -> My SmartBench
+        DryWallTec SmartCNC -> My SmartCNC
+        """
+        default_name = self.SMARTCNC_DEFAULT_NAME if self.is_machine_drywall() else self.SMARTBENCH_DEFAULT_NAME
+
+        self.machine.write_device_label(default_name)
