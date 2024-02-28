@@ -6,7 +6,7 @@ ApIs Screen for the Shape Cutter App
 """
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import ObjectProperty # @UnresolvedImport
+from kivy.properties import ObjectProperty 
 
 Builder.load_string(
     """

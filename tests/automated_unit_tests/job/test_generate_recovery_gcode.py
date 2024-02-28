@@ -1312,3 +1312,23 @@ def test_random_gibberish(jd):
     success, message = jd.generate_recovery_gcode()
     assert not success
     assert message == 'This job cannot be recovered! Please check your job for errors.'
+
+def test_r_handling(jd):
+    jd.job_gcode = [
+        "G0 X0 Y2.0",
+        "G1 Z-6.0 F400",
+        "G3 X2.0 Y0 R2.0 F8000",
+        "G1 X23.0 Y0"
+    ]
+
+    jd.job_recovery_selected_line = 3
+    success, message = jd.generate_recovery_gcode()
+    assert success
+    # Output should not include the R
+    assert jd.job_recovery_gcode == [
+        "G0 X2.0 Y0",
+        'G0 Z-6.0',
+        'G1 F8000',
+        'G1 X23.0 Y0'
+    ]
+    assert jd.job_recovery_offset == 0

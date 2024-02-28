@@ -10,7 +10,7 @@ import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty  # @UnresolvedImport
+from kivy.properties import ObjectProperty, ListProperty, NumericProperty  
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 
@@ -22,6 +22,8 @@ from asmcnc.core_UI import scaling_utils
 from asmcnc.skavaUI import popup_info
 from asmcnc.core_UI.popups import BasicPopup, PopupType
 from kivy.core.window import Window
+
+from asmcnc.comms.model_manager import ModelManagerSingleton
 
 Builder.load_string("""
 
@@ -550,12 +552,13 @@ class LobbyScreen(Screen):
         self.m = kwargs['machine']
         self.am = kwargs['app_manager']
         self.l = kwargs['localization']
+        self.model_manager = ModelManagerSingleton()
         self.show_desired_apps()
         self.update_strings()
 
     def show_desired_apps(self):
         # If it's a SmartCNC machine, then show the drywalltec app instead of shapecutter
-        if "DRYWALLTEC" in self.m.smartbench_model():
+        if self.model_manager.is_machine_drywall():
             self.remove_everything_but(self.drywall_app_container)
             self.put_drywall_app_first()
         # Check that window.height is valid & being read in - otherwise will default to SC
