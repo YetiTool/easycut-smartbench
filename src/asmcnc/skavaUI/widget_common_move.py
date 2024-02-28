@@ -3,10 +3,12 @@ Created on 1 Feb 2018
 @author: Ed
 """
 from kivy.lang import Builder
+from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 
+from asmcnc.core_UI import scaling_utils
 from asmcnc.core_UI.components.images.blinking_image import BlinkingWidget
 
 
@@ -99,12 +101,14 @@ class CommonMove(Widget):
         self.sm = kwargs["screen_manager"]
         self.set_jog_speeds()
 
-        self.spindle_button_padding_container = BoxLayout(padding=[20])
+        self.spindle_button_padding_container = BoxLayout(padding=[dp(5)])
         self.spindle_button = Button(
             background_normal="./asmcnc/skavaUI/img/spindle_off.png",
             background_down="./asmcnc/skavaUI/img/spindle_off.png",
             on_press=self.set_spindle,
             allow_stretch=True,
+            size=(dp(scaling_utils.get_scaled_width(70)), dp(scaling_utils.get_scaled_height(70))),
+            size_hint=(None, None),
         )
         self.spindle_blinker = BlinkingWidget()
         self.spindle_blinker.bind(pos=self.update_spindle_button, size=self.update_spindle_button)
