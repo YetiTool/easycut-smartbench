@@ -1,13 +1,17 @@
 from kivy.core.window import Window
-
-from asmcnc.comms.model_manager import ModelManagerSingleton
-
 """
 Created on nov 2020
 @author: Ollie
 """
+from kivy.app import App
 from kivy.lang import Builder
-from kivy.uix.screenmanager import Screen
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.tabbedpanel import TabbedPanel
+from kivy.uix.textinput import TextInput
+from asmcnc.skavaUI import widget_status_bar
+from kivy.properties import StringProperty, ObjectProperty
+from kivy.uix.gridlayout import GridLayout
+import sys, os
 from asmcnc.apps.start_up_sequence.warranty_app.screens import popup_warranty
 
 Builder.load_string(
@@ -22,8 +26,6 @@ Builder.load_string(
 	contact_us_at_support : contact_us_at_support
 	prev_screen_button : prev_screen_button
 	next_button : next_button
-	body_container:body_container
-	factory_settings_button:factory_settings_button
 
 
 	BoxLayout: 
@@ -69,7 +71,6 @@ Builder.load_string(
 				   
 			# BODY
 			BoxLayout:
-			    id: body_container
 				size_hint: (None,None)
 				width: dp(1.0*app.width)
 				height: dp(0.620833333333*app.height)
@@ -77,7 +78,6 @@ Builder.load_string(
 
 
 				Button:
-				    id: factory_settings_button
 				    font_size: str(0.01875 * app.width) + 'sp'
 					size_hint_x: None
 					width: dp(0.065*app.width)
@@ -254,13 +254,7 @@ class WarrantyScreen1(Screen):
         self.start_seq = kwargs["start_sequence"]
         self.m = kwargs["machine"]
         self.l = kwargs["localization"]
-        self.model_manager = ModelManagerSingleton()
         self.update_strings()
-
-        if self.model_manager.is_machine_drywall():
-            for child in self.body_container.children:
-                if child.id != "factory_settings_button":
-                    self.body_container.remove_widget(child)
 
     def next_screen(self):
         self.start_seq.next_in_sequence()
