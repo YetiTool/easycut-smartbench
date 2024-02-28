@@ -113,7 +113,7 @@ class SpindleShutdownScreen(Screen):
     def __raise_z_when_idle(self, *args):
         if self.m.s.m_state.lower() == "idle":
             self.m.raise_z_axis_for_collet_access()
-            self.m.s.unbind(m_state=self.__raise_z_when_idle())
+            self.m.s.unbind(m_state=self.__raise_z_when_idle)
 
     def on_enter(self):
         log("Pausing job...")
