@@ -3,6 +3,7 @@ Created on 1 Feb 2018
 @author: Ed
 """
 from kivy.lang import Builder
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 
@@ -98,6 +99,7 @@ class CommonMove(Widget):
         self.sm = kwargs["screen_manager"]
         self.set_jog_speeds()
 
+        self.spindle_button_padding_container = BoxLayout(padding=[20])
         self.spindle_button = Button(
             background_normal="./asmcnc/skavaUI/img/spindle_off.png",
             background_down="./asmcnc/skavaUI/img/spindle_off.png",
@@ -107,7 +109,8 @@ class CommonMove(Widget):
         self.spindle_blinker = BlinkingWidget()
         self.spindle_blinker.bind(pos=self.update_spindle_button, size=self.update_spindle_button)
         self.spindle_blinker.add_widget(self.spindle_button)
-        self.vacuum_spindle_container.add_widget(self.spindle_blinker)
+        self.spindle_button_padding_container.add(self.spindle_blinker)
+        self.vacuum_spindle_container.add_widget(self.spindle_button_padding_container)
 
     def update_spindle_button(self, *args):
         self.spindle_button.center = self.spindle_blinker.center
