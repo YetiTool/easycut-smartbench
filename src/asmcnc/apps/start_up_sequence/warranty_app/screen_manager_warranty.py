@@ -67,9 +67,11 @@ class ScreenManagerWarranty(object):
         self.start_seq.add_screen_to_sequence('warranty_4')
         self.start_seq.add_screen_to_sequence('warranty_5')
 
-        if hasattr(self.sm.get_screen(self.start_seq.screen_sequence[0]), 'prev_screen_button'):
-            self.start_seq.screen_sequence[0].prev_screen_button.opacity = 0
-            self.start_seq.screen_sequence[0].prev_screen_button.disabled = True
+        first_screen = self.sm.get_screen(self.start_seq.screen_sequence[0])
+
+        if hasattr(first_screen, 'prev_screen_button'):
+            first_screen.prev_screen_button.opacity = 0
+            first_screen.prev_screen_button.disabled = True
 
 
     def open_warranty_app(self):
