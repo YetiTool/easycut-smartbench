@@ -5,7 +5,6 @@ from kivy.lang import Builder
 from kivy.properties import BooleanProperty, ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
-from kivy.uix.image import Image
 from kivy.uix.widget import Widget
 
 Logger.setLevel("DEBUG")
@@ -23,6 +22,9 @@ Builder.load_string("""
             size: self.size
 """)
 
+YELLOW = [240. / 255, 1, 0, 1]
+TRANSPARENT = [0, 0, 0, 0]
+
 
 class BlinkingWidget(Widget):
     """
@@ -31,14 +33,14 @@ class BlinkingWidget(Widget):
     """
 
     blinking = BooleanProperty(False)
-    bg_color = ObjectProperty([1, 0, 0, 0])
+    bg_color = ObjectProperty(TRANSPARENT)
 
     def __init__(self, **kwargs):
         super(BlinkingWidget, self).__init__(**kwargs)
 
         self.animation = (
-            Animation(bg_color=(1, 0, 0, 0.8), duration=0.5)
-            + Animation(bg_color=(1, 0, 0, 0), duration=0.5)
+                Animation(bg_color=YELLOW, duration=0.5)
+                + Animation(bg_color=TRANSPARENT, duration=0.5)
         )
         self.animation.repeat = True
 
@@ -49,14 +51,16 @@ class BlinkingWidget(Widget):
             self.animation.start(self)
         else:
             self.animation.cancel(self)
-            self.bg_color = [1, 0, 0, 0]
+            self.bg_color = TRANSPARENT
 
 
 if __name__ == '__main__':
     box_layout = BoxLayout()
 
+
     def on_press(*args):
         setattr(blinking_widget, "blinking", not blinking_widget.blinking)
+
 
     button = Button(
         background_normal="/Users/archiejarvis/PycharmProjects/easycut/easycut-smartbench/src/asmcnc/skavaUI/img/spindle_off.png",
