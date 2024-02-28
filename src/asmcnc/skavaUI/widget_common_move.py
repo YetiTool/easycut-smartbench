@@ -109,7 +109,7 @@ class CommonMove(Widget):
         self.spindle_blinker = BlinkingWidget()
         self.spindle_blinker.bind(pos=self.update_spindle_button, size=self.update_spindle_button)
         self.spindle_blinker.add_widget(self.spindle_button)
-        self.spindle_button_padding_container.add(self.spindle_blinker)
+        self.spindle_button_padding_container.add_widget(self.spindle_blinker)
         self.vacuum_spindle_container.add_widget(self.spindle_button_padding_container)
 
     def update_spindle_button(self, *args):
