@@ -101,7 +101,7 @@ class CommonMove(Widget):
         self.sm = kwargs["screen_manager"]
         self.set_jog_speeds()
 
-        self.spindle_button_padding_container = BoxLayout(padding=[dp(5)])
+        self.spindle_button_padding_container = BoxLayout(padding=[dp(10)])
         self.spindle_button = Button(
             background_normal="./asmcnc/skavaUI/img/spindle_off.png",
             background_down="./asmcnc/skavaUI/img/spindle_off.png",
