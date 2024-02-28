@@ -9,6 +9,8 @@ import traceback
 
 from enum import Enum
 
+from asmcnc.comms.serial_connection import MachineState
+
 try:
     import pigpio
 except:
@@ -1358,7 +1360,7 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.set_led_colour('GREEN'),0.1)
 
     def soft_stop(self):
-        self.set_pause(True)
+        self.pause()
         self._grbl_door()
 
     def stop_from_quick_command_reset(self):
@@ -1393,6 +1395,23 @@ class RouterMachine(object):
                 self.s.stream_pause_start_time = 0
 
         Clock.schedule_once(lambda dt: record_pause_time(prev_state, pauseBool), 0.2)
+
+    def pause(self, reason=None):
+        self.is_machine_paused = True
+
+        if reason:
+            self.reason_for_machine_pause = reason
+
+        def store_pause_time(dt):
+            self.s.stream_pause_start_time = time.time()
+
+        Clock.schedule_once(store_pause_time, 0.2)
+
+        def when_idle(*args):
+            if self.s.m_state == MachineState.IDLE:
+                self.raise_z_axis_for_collet_access()
+
+        self.s.bind(m_state=when_idle)
 
     def stop_from_soft_stop_cancel(self):
         self.resume_from_alarm()
