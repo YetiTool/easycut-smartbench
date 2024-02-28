@@ -103,6 +103,7 @@ class CommonMove(Widget):
             background_down="./asmcnc/skavaUI/img/spindle_off.png",
             on_press=self.set_spindle,
             pos_hint={"center_x": 0.5, "center_y": 0.5},
+            allow_stretch=True,
         )
         self.spindle_blinker = BlinkingWidget()
         self.spindle_blinker.bind(pos=self.update_spindle_button, size=self.update_spindle_button)
