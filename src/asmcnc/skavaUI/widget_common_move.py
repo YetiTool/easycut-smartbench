@@ -105,12 +105,13 @@ class CommonMove(Widget):
             pos_hint={"center_x": 0.5, "center_y": 0.5},
         )
         self.spindle_blinker = BlinkingWidget()
-        self.spindle_blinker.bind(pos=self.update_spindle_button)
+        self.spindle_blinker.bind(pos=self.update_spindle_button, size=self.update_spindle_button)
         self.spindle_blinker.add_widget(self.spindle_button)
         self.vacuum_spindle_container.add_widget(self.spindle_blinker)
 
     def update_spindle_button(self, *args):
         self.spindle_button.pos = self.spindle_blinker.pos
+        self.spindle_button.size = self.spindle_blinker.size
 
     fast_x_speed = 6000
     fast_y_speed = 6000
