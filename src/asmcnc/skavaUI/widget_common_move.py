@@ -109,7 +109,7 @@ class CommonMove(Widget):
             size=(dp(scaling_utils.get_scaled_width(100)), dp(scaling_utils.get_scaled_height(102))),
             size_hint=(None, None),
         )
-        self.spindle_blinker = BlinkingWidget(padding=)
+        self.spindle_blinker = BlinkingWidget()
         self.spindle_blinker.bind(pos=self.update_spindle_button, size=self.update_spindle_button)
         self.spindle_blinker.add_widget(self.spindle_button)
         self.spindle_button_padding_container.add_widget(self.spindle_blinker)
