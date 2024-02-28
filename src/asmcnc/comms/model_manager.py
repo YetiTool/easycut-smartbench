@@ -27,7 +27,14 @@ class ModelManagerSingleton(EventDispatcher):
     DWT_SPLASH_PATH = os.path.join(SKAVA_UI_IMAGES_PATH, "dwt_splash_screen.png")
 
     SMARTBENCH_DEFAULT_NAME = "My SmartBench"
-    SMARTCNC_DEFAULT_NAME = "My SmartCNC"
+    SMARTBENCH_DEFAULT_LOCATION = "SmartBench location"
+
+    MODEL_NAME_LOCATIONS = {
+        ProductCodes.DRYWALLTEC: {
+            'name': 'SmartCNC',
+            'location': 'SmartCNC location'
+        },
+    }
 
     def __new__(cls, machine=None):
         with cls._lock:
@@ -147,15 +154,20 @@ class ModelManagerSingleton(EventDispatcher):
         with open(self.PC_FILE_PATH, 'w') as f:
             json.dump(d, f)
 
-    def __set_default_machine_name(self):
+    def __set_default_machine_fields(self):
         # type: () -> None
         """
-        Sets the default machine name to the relevant name.
+        Sets the default machine name and location to the relevant strings.
+        Either gets the value from the dictionary or uses the default values.
+
         Only called when the serial number is first read.
-
-        SmartBench -> My SmartBench
-        DryWallTec SmartCNC -> My SmartCNC
         """
-        default_name = self.SMARTCNC_DEFAULT_NAME if self.is_machine_drywall() else self.SMARTBENCH_DEFAULT_NAME
+        default = {
+            'name': self.SMARTBENCH_DEFAULT_NAME,
+            'location': self.SMARTBENCH_DEFAULT_LOCATION
+        }
 
-        self.machine.write_device_label(default_name)
+        name_location = self.MODEL_NAME_LOCATIONS.get(self.product_code, default)
+
+        self.machine.write_device_label(name_location['name'])
+        self.machine.write_device_location(name_location['location'])
