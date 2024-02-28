@@ -1410,6 +1410,7 @@ class RouterMachine(object):
         def when_idle(*args):
             if self.s.m_state == MachineState.IDLE:
                 self.raise_z_axis_for_collet_access()
+                self.s.unbind(m_state=when_idle)
 
         self.s.bind(m_state=when_idle)
 
