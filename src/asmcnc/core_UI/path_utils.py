@@ -26,7 +26,6 @@ Usage:
     print(skava_ui_img_path)
 """
 
-
 def get_path(target_dir):
     """
     Returns the path to the target directory or file (first instance found only).
@@ -85,7 +84,6 @@ def get_image_path(image_name):
         str: The full path of the image.
     """
     return os.path.join(skava_ui_img_path, image_name)
-
     
 # Common paths
 easycut_path = get_path("easycut-smartbench") # easycut-smartbench
