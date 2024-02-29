@@ -1,5 +1,31 @@
 import os
 
+"""
+Utility functions for getting paths to directories and files.
+
+Functions:
+    get_path(target_dir)
+    get_image_path(image_name)
+
+Variables:
+    easycut_path
+    tests_path
+    asmcnc_path
+    skava_ui_img_path
+
+Usage:
+    from asmcnc.core_UI import path_utils
+    
+    path = get_path("easycut-smartbench")
+    image_path = get_image_path("image.png")
+    
+    print(easycut_path)
+    print(tests_path)
+    print(asmcnc_path)
+    print(skava_ui_img_path)
+"""
+
+
 def get_path(target_dir):
     """
     Returns the path to the target directory.
