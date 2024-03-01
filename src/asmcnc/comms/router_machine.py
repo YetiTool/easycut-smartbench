@@ -1371,7 +1371,14 @@ class RouterMachine(object):
 
     def stop_for_a_stream_pause(self, reason_for_pause=None):
         self.set_pause(True, reason_for_pause=reason_for_pause)
-        self._grbl_door() # send a soft-door command
+        self.raise_z_axis_for_collet_access()
+
+        def when_idle(*args):
+            if self.s.m_state == MachineState.IDLE:
+                self._grbl_door()
+
+        self.s.bind(m_state=when_idle)
+
 
     def resume_after_a_stream_pause(self):
         self.reason_for_machine_pause = "Resuming"
@@ -1406,13 +1413,6 @@ class RouterMachine(object):
             self.s.stream_pause_start_time = time.time()
 
         Clock.schedule_once(store_pause_time, 0.2)
-
-        def when_idle(*args):
-            if self.s.m_state == MachineState.IDLE:
-                self.raise_z_axis_for_collet_access()
-                self.s.unbind(m_state=when_idle)
-
-        self.s.bind(m_state=when_idle)
 
     def stop_from_soft_stop_cancel(self):
         self.resume_from_alarm()
