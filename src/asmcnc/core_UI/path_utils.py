@@ -64,13 +64,18 @@ def search_tree(root, target):
     Returns:
     str: The path of the target file or folder if found, None otherwise.
     """
+    search_results = []
+
     for foldername, _, filenames in os.walk(root):
         if target in foldername:
-            return foldername
+            search_results.append(foldername)
         elif target in filenames:
-            return os.path.join(foldername, target)
-    print("Error: '{}' not found in the path '{}'.".format(target, root))    
-    return None
+            search_results.append(os.path.join(foldername, target))
+
+    if not search_results:
+        print("Error: '{}' not found in the path '{}'.".format(target, root))    
+        return None
+    return search_results[0] if len(search_results) == 1 else search_results
 
 def get_image_path(image_name):
     """
