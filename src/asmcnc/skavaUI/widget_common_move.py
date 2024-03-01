@@ -143,6 +143,7 @@ class CommonMove(Widget):
             self.m.vac_on()
 
     def set_spindle(self, *args):
+        print(self.spindle_button.size)
         def button_two_callback():
             self.spindle_button.background_normal = "./asmcnc/skavaUI/img/spindle_on.png"
             self.m.spindle_on()
