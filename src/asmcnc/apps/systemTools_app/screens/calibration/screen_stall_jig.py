@@ -623,10 +623,10 @@ class StallJigScreen(Screen):
     def grey_out_given_grid_button_if_yellow(self, button_object):
         if button_object.background_color != self.highlight_yellow:
             return
-        button_object.background_normal = "atlas://data/widgets/defaulttheme/button"
+        button_object.background_normal = "atlas://data/images/defaulttheme/button"
         button_object.background_color = [1, 1, 1, 1]
         button_object.background_disabled_normal = (
-            "atlas://data/widgets/defaulttheme/button_disabled"
+            "atlas://data/images/defaulttheme/button_disabled"
         )
     
     ## FUNCTION THAT IS BOUND TO EACH GRID BUTTON TO CHOOSE TESTS

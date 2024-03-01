@@ -152,7 +152,7 @@ class Keyboard(VKeyboard):
                 self.background = "./asmcnc/keyboard/widgets/background_" + str(Window.width) + ".png"
         else:
             self.margin_hint = [.05, .06, .05, .06]  # Default margin
-            self.background = "atlas://data/widgets/defaulttheme/vkeyboard_background"
+            self.background = "atlas://data/images/defaulttheme/vkeyboard_background"
 
     # On focus behaviour is bound to all text inputs
     def on_focus_raise_keyboard(self,instance,value):
