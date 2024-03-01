@@ -147,9 +147,9 @@ class Keyboard(VKeyboard):
         if self.do_translation == (True,True) and sys.platform != 'darwin':
             self.margin_hint = [.15, .05, .06, .05]  # Set the margin between the keyboard background and the keys
             if self.layout == self.numeric_layout:
-                self.background = "./asmcnc/keyboard/widgets/numeric_background_" + str(Window.width) + ".png"
+                self.background = "./asmcnc/keyboard/images/numeric_background_" + str(Window.width) + ".png"
             else:
-                self.background = "./asmcnc/keyboard/widgets/background_" + str(Window.width) + ".png"
+                self.background = "./asmcnc/keyboard/images/background_" + str(Window.width) + ".png"
         else:
             self.margin_hint = [.05, .06, .05, .06]  # Default margin
             self.background = "atlas://data/images/defaulttheme/vkeyboard_background"
