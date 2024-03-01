@@ -107,8 +107,7 @@ class CommonMove(Widget):
             on_press=self.set_spindle,
             allow_stretch=True,
         )
-        self.spindle_blinker = BlinkingWidget(padding=(dp(scaling_utils.get_scaled_width(10)),
-                                                       dp(scaling_utils.get_scaled_height(10))))
+        self.spindle_blinker = BlinkingWidget()
         self.spindle_blinker.bind(pos=self.update_spindle_button, size=self.update_spindle_button)
         self.spindle_blinker.add_widget(self.spindle_button)
         self.spindle_button_padding_container.add_widget(self.spindle_blinker)
