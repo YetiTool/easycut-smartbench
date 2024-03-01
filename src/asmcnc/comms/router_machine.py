@@ -1371,14 +1371,9 @@ class RouterMachine(object):
 
     def stop_for_a_stream_pause(self, reason_for_pause=None):
         self.set_pause(True, reason_for_pause=reason_for_pause)
-        self.raise_z_axis_for_collet_access()
-
-        def when_idle(*args):
-            if self.s.m_state == MachineState.IDLE:
-                self._grbl_door()
-
-        self.s.bind(m_state=when_idle)
-
+        self._grbl_door()
+        Clock.schedule_once(lambda dt: self._grbl_resume(), 0.5)
+        Clock.schedule_once(lambda dt: self.raise_z_axis_for_collet_access(), 1)
 
     def resume_after_a_stream_pause(self):
         self.reason_for_machine_pause = "Resuming"
