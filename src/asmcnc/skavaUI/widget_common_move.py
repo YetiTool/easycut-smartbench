@@ -13,8 +13,6 @@ from asmcnc.core_UI.components.images.blinking_image import BlinkingWidget
 
 Builder.load_string(
     """
-
-
 <CommonMove>
 
     speed_image:speed_image
@@ -99,6 +97,10 @@ class CommonMove(Widget):
         self.m = kwargs["machine"]
         self.sm = kwargs["screen_manager"]
         self.set_jog_speeds()
+        self.add_spindle_button()
+
+    def add_spindle_button(self):
+        size_hint = (1 if scaling_utils.is_screen_big() else 0.5, 1 if scaling_utils.is_screen_big() else 0.5)
 
         self.spindle_button_padding_container = BoxLayout(padding=[dp(10)])
         self.spindle_button = Button(
@@ -106,6 +108,7 @@ class CommonMove(Widget):
             background_down="./asmcnc/skavaUI/img/spindle_off.png",
             on_press=self.set_spindle,
             allow_stretch=True,
+            size_hint=size_hint
         )
         self.spindle_blinker = BlinkingWidget()
         self.spindle_blinker.bind(pos=self.update_spindle_button, size=self.update_spindle_button)
