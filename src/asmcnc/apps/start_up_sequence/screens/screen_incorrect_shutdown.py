@@ -42,20 +42,20 @@ Builder.load_string("""
             Label:
                 id: title_label
                 size_hint_y: 1
-                font_size: '30sp'
+                font_size: app.get_scaled_sp('30sp')
                 markup: True
         
         # Main info section in the middle
         BoxLayout:
             size_hint: (1, 0.6)
             orientation: 'vertical'
-            padding: [10,10,10,0]
+            padding: app.get_scaled_tuple([10,10,10,0])
             
             # Power off section
             BoxLayout: 
                 orientation: 'horizontal'
                 size_hint: (1,0.4)
-                spacing: 20
+                spacing: app.get_scaled_width(20)
                 
                 Image:
                     size_hint: (0.2,1)
@@ -69,7 +69,7 @@ Builder.load_string("""
                     Label:
                         id: heading
                         size_hint_y: 1
-                        font_size: '25sp'
+                        font_size: app.get_scaled_sp('25sp')
                         valign: 'middle'
                         halign: 'left'
                         text_size: self.parent.size
@@ -79,7 +79,7 @@ Builder.load_string("""
                     Label:
                         id: subheading
                         #size_hint_y: 1
-                        font_size: '17sp'
+                        font_size: app.get_scaled_sp('17sp')
                         valign: 'middle'
                         text_size: self.parent.size
                         markup: True
@@ -88,7 +88,7 @@ Builder.load_string("""
             # Correct shutdown steps section
             BoxLayout:
                 orientation: 'horizontal'   
-                spacing: 20
+                spacing: app.get_scaled_width(20)
                 padding: [0,0,0,0]
                 
                 Image:
@@ -101,7 +101,7 @@ Builder.load_string("""
                 BoxLayout:
                     Label:
                         id: correct_shutdown_steps
-                        font_size: '20sp'
+                        font_size: app.get_scaled_sp('20sp')
                         valign: 'middle'
                         text_size: self.parent.size
                         markup: True
@@ -112,7 +112,7 @@ Builder.load_string("""
             BoxLayout:
                 orientation: 'horizontal'
                 size_hint: (1,0.4)
-                spacing: 20
+                spacing: app.get_scaled_width(20)
                 padding: [0,0,0,0]
    
                 Image:
@@ -120,14 +120,14 @@ Builder.load_string("""
                     source: "./asmcnc/skavaUI/img/popup_error_visual.png"
                     center_x: self.parent.center_x
                     allow_stretch: True
-                    size: 20,20
+                    size: app.get_scaled_tuple([20,20])
                     pos_hint: {'center_x': 0.5}          
                 
                 BoxLayout:
                     Label:
                         id: emergency_shutdown_warning
                         size_hint_y: 1
-                        font_size: '25sp'
+                        font_size: app.get_scaled_sp('25sp')
                         valign: 'middle'
                         text_size: self.parent.size
                         markup: True
@@ -145,7 +145,7 @@ Builder.load_string("""
                 on_press: root.next()
                 background_normal: "./asmcnc/skavaUI/img/next.png"
                 background_down: "./asmcnc/skavaUI/img/next.png"
-                font_size: '28sp'
+                font_size: app.get_scaled_sp('28sp')
                 
                 
 """)
