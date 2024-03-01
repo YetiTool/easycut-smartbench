@@ -82,8 +82,8 @@ class BasicPopup(Popup):
     main_label_h_align: horizontal alignment of main label
     button_layout_padding: padding of button layout
     button_layout_spacing: spacing of button layout
-    popup_width: width of popup, default 30
-    popup_height: height of popup, default 35
+    popup_width: width of popup, default 300
+    popup_height: height of popup, default 350
     popup_image: image to be used in popup, default None (uses popup_type's image)
     popup_image_size_hint: size hint of popup image, default None
     button_one_text: text to be used in button one, default "Ok"
