@@ -3,8 +3,7 @@ Created on 31 Jan 2018
 @author: Ed
 This module defines the machine's properties (e.g. travel), services (e.g. serial comms) and functions (e.g. move left)
 '''
-from kivy.event import EventDispatcher
-from kivy.properties import NumericProperty
+from enum import Enum
 
 import logging, threading, re, traceback
 
@@ -13,7 +12,7 @@ try:
 except:
     pass
 
-from asmcnc.comms import serial_connection  # @UnresolvedImport
+from asmcnc.comms import serial_connection  
 from asmcnc.comms.yeti_grbl_protocol import protocol
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.comms import motors
@@ -33,10 +32,19 @@ def log(message):
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
 
 
-class RouterMachine(EventDispatcher):
+class ProductCodes(Enum):
+    DRYWALLTEC = 06
+    PRECISION_PRO_X = 05
+    PRECISION_PRO_PLUS = 04
+    PRECISION_PRO = 03
+    STANDARD = 02
+    FIRST_VERSION = 01
+    UNKNOWN = 00
 
-# SETUP
 
+class RouterMachine(object):
+    # SETUP
+    
     s = None # serial object
 
     # This block of variables reflecting grbl settings (when '$$' is issued, serial reads settings and syncs these params)
@@ -93,6 +101,8 @@ class RouterMachine(EventDispatcher):
     z_lift_after_probing = 20.0
     z_probe_speed = 60
     z_touch_plate_thickness = 1.53
+    z_probe_speed_fast = 400
+    fast_probing = False
 
     ## CALIBRATION SETTINGS
     time_since_calibration_seconds = 0
@@ -108,6 +118,8 @@ class RouterMachine(EventDispatcher):
 
     is_laser_on = False
     is_laser_enabled = False
+
+    laser_offset_tool_clearance_to_access_edge_of_sheet = 5
 
     ## STYLUS SETTINGS
     is_stylus_enabled = True
@@ -1045,12 +1057,13 @@ class RouterMachine(EventDispatcher):
 
 # HW/FW ADJUSTMENTS
 
-    def correct_rpm_for_120(self, target_rpm):
+    def correct_rpm_for_120(self, target_rpm, revert = False):
         """
         Compensates for the desparity in set and actual spindle RPM for a 120V spindle.
 
         Args:
             target_rpm (int): The target RPM to be corrected.
+            revert (bool, optional): If True, the corrected RPM will be reverted back to the original requested RPM. Defaults to False.
 
         Returns:
             int: The corrected RPM value.
@@ -1060,6 +1073,9 @@ class RouterMachine(EventDispatcher):
 
         if 10000 <= target_rpm <= 25000:
 
+            if revert:
+                return int(round(0.6739 * target_rpm + 8658)) # Revert the corrected RPM back to the original requested RPM
+        
             compensated_RPM = int(round((target_rpm - 8658) / 0.6739))
 
             if compensated_RPM < 0:
@@ -1074,12 +1090,13 @@ class RouterMachine(EventDispatcher):
             log("Requested RPM {} outside of range for 120V spindle (10000 - 25000)".format(target_rpm))
             return 0
 
-    def correct_rpm_for_230(self, target_rpm):
+    def correct_rpm_for_230(self, target_rpm, revert = False):
         """
         Compensates for the desparity in set and actual spindle RPM for a 230V spindle.
 
         Args:
             target_rpm (int): The target RPM to be corrected.
+            revert (bool, optional): If True, the corrected RPM will be reverted back to the original requested RPM. Defaults to False.
 
         Returns:
             int: The corrected RPM value.
@@ -1088,6 +1105,9 @@ class RouterMachine(EventDispatcher):
 
         if 4000 <= target_rpm <= 25000:
 
+            if revert:
+                return int(round(0.95915 * target_rpm + 1886)) # Revert the corrected RPM back to the original requested RPM
+        
             compensated_RPM = int(round((target_rpm - 1886) / 0.95915))
 
             if compensated_RPM < 0:
@@ -1101,8 +1121,8 @@ class RouterMachine(EventDispatcher):
         else:
             log("Requested RPM {} outside of range for 230V spindle (4000 - 25000)".format(target_rpm))
             return 0
-
-    def correct_rpm(self, requested_rpm, spindle_voltage = None):
+        
+    def correct_rpm(self, requested_rpm, spindle_voltage = None, revert = False):
         """
         Compensates for the desparity in set and actual spindle RPM for a spindle.
 
@@ -1111,6 +1131,7 @@ class RouterMachine(EventDispatcher):
         Args:
             requested_rpm (float): The RPM value to be corrected.
             voltage (int, optional): The spindle voltage. Defaults to spindle_voltage.
+            revert (bool, optional): If True, the corrected RPM will be reverted back to the original requested RPM. Defaults to False.
 
         Returns:
             float: The corrected RPM value.
@@ -1122,16 +1143,19 @@ class RouterMachine(EventDispatcher):
         if spindle_voltage is None:
             spindle_voltage = self.spindle_voltage # Use spindle voltage set by user in maintenance app
 
-        if spindle_voltage in [110, 120]:
-            rpm_to_set = self.correct_rpm_for_120(requested_rpm)
-
+        if spindle_voltage in [110, 120]:            
+            rpm_to_set = self.correct_rpm_for_120(requested_rpm, revert)                
+        
         elif spindle_voltage in [230, 240]:
-            rpm_to_set = self.correct_rpm_for_230(requested_rpm)
-
+            rpm_to_set = self.correct_rpm_for_230(requested_rpm, revert)
+        
         else:
             raise ValueError('Spindle voltage: {} not recognised'.format(spindle_voltage))
-
-        log("Requested RPM: "+ str(requested_rpm) + " Compensated RPM: " + str(rpm_to_set) + " Voltage: " + str(spindle_voltage))
+        
+        if revert:
+            log("Requested RPM: "+ str(requested_rpm) + " Reverted RPM: " + str(rpm_to_set) + " Voltage: " + str(spindle_voltage))
+        else:
+            log("Requested RPM: "+ str(requested_rpm) + " Compensated RPM: " + str(rpm_to_set) + " Voltage: " + str(spindle_voltage))
 
         return rpm_to_set
 
@@ -1165,14 +1189,33 @@ class RouterMachine(EventDispatcher):
         """
         self.s.write_command('M5')
 
-    def is_spindle_on(self):
+    def minimum_spindle_speed(self, spindle_voltage = None):
         """
-        This method checks if the spindle is currently on.
+        Returns the minimum spindle speed for a given spindle voltage.
+
+        For use outside of router_machine.py
+
+        Args:
+            spindle_voltage (int, optional): The spindle voltage. Defaults to spindle_voltage.
 
         Returns:
-            bool: True if the spindle is on, False if the spindle is off.
+            int: The minimum spindle speed.
         """
-        return int(self.s.spindle_speed) > 0
+
+        if spindle_voltage is None:
+            spindle_voltage = self.spindle_voltage # Use spindle voltage set by user in maintenance app
+        
+        if spindle_voltage in [110, 120]:
+            return 10000 # Defined by Mafell spindle HW
+        
+        elif spindle_voltage in [230, 240]:
+            return 4000 # Defined by Mafell spindle HW
+        
+        else:
+            raise ValueError('Spindle voltage: {} not recognised'.format(spindle_voltage))
+        
+    def maximum_spindle_speed(self):
+        return 25000
 
 # START UP SEQUENCES
 
@@ -1567,47 +1610,51 @@ class RouterMachine(EventDispatcher):
 
 
 # SETTINGS GETTERS
-    def serial_number(self):
-        try: self.s.setting_50
-        except: return 0
-        else: return self.s.setting_50
+    def serial_number(self): 
+        return self.s.setting_50
 
-    def z_head_version(self):
-        try: self.s.setting_50
-        except: return 0
-        else: return str(self.s.setting_50)[-2] + str(self.s.setting_50)[-1]
+    def get_product_code(self):
+        """takes the last two digits of $50 and converts them to a ProductCode."""
+        if self.s.setting_50 == 0.0:
+            return ProductCodes.UNKNOWN
+        else:
+            pc = str(self.s.setting_50)[-2] + str(self.s.setting_50)[-1]
+            return ProductCodes(int(pc))
 
     def firmware_version(self):
         try: self.s.fw_version
         except: return 0
         else: return self.s.fw_version
 
-    dwt_path =  "../../dwt.txt"
 
     def bench_is_dwt(self):
-        return path.isfile(self.dwt_path)
+        return self.get_product_code() is ProductCodes.DRYWALLTEC
 
-    def smartbench_model(self):  # recommend refactoring models into an enum, relying on strings is error-prone
-        if self.bench_is_dwt():
+    def smartbench_model(self):
+        # recommend refactoring models into an enum, relying on strings is error-prone
+        pc = self.get_product_code()
+        if pc is ProductCodes.DRYWALLTEC:
             return "DRYWALLTEC SmartCNC"
-        elif self.bench_is_short():
-            return "SmartBench Mini V1.3 PrecisionPro"
-        elif self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Smartbench model'):
-            return "SmartBench V1.3 PrecisionPro CNC Router"
-        elif self.is_machines_fw_version_equal_to_or_greater_than_version('1.4.0', 'Smartbench model'):
-            return "SmartBench V1.2 PrecisionPro CNC Router"
-        else:
-            zh_ver = self.z_head_version()
-
-            if zh_ver == "03":
+        elif pc == ProductCodes.PRECISION_PRO_X:
+            return "SmartBench V1.3 PrecisionPro X"
+        elif pc is ProductCodes.PRECISION_PRO_PLUS:
+            return "SmartBench V1.3 PrecisionPro Plus"
+        elif pc is ProductCodes.PRECISION_PRO:
+            if self.bench_is_short():
+                return "SmartBench Mini V1.3 PrecisionPro"
+            elif self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Smartbench model'):
+                return "SmartBench V1.3 PrecisionPro CNC Router"
+            elif self.is_machines_fw_version_equal_to_or_greater_than_version('1.4.0', 'Smartbench model'):
+                return "SmartBench V1.2 PrecisionPro CNC Router"
+            else:
                 return "SmartBench V1.2 Precision CNC Router"
-            elif zh_ver == "02":
-                return "SmartBench V1.2 Standard CNC Router"
-            elif zh_ver == "01":
-                if self.is_machines_hw_version_equal_to_or_greater_than_version(5, 'Smartbench model'):
-                    return "SmartBench V1.1 CNC Router"
-                else:
-                    return "SmartBench V1.0 CNC Router"
+        elif pc is ProductCodes.STANDARD:
+            return "SmartBench V1.2 Standard CNC Router"
+        elif pc is ProductCodes.FIRST_VERSION:
+            if self.is_machines_hw_version_equal_to_or_greater_than_version(5, 'Smartbench model'):
+                return "SmartBench V1.1 CNC Router"
+            else:
+                return "SmartBench V1.0 CNC Router"
 
         log("SmartBench model detection failed")
         return "SmartBench model detection failed"
@@ -1850,6 +1897,11 @@ class RouterMachine(EventDispatcher):
         self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
         self.s.write_command('G4 P0.1')
         self.s.write_command('G0 G54 Y0')
+ 
+    def go_xy_datum(self):
+        self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
+        self.s.write_command('G4 P0.1')
+        self.s.write_command('G0 G54 X0 Y0')
 
     def jog_spindle_to_laser_datum(self, axis):
 
@@ -2151,13 +2203,20 @@ class RouterMachine(EventDispatcher):
 
     # Home the Z axis by moving the cutter down until it touches the probe.
     # On touching, electrical contact is made, detected, and WPos Z0 set, factoring in probe plate thickness.
-    def probe_z(self):
+    def probe_z(self, fast_probe=False):
 
         if self.state() == 'Idle':
             self.set_led_colour("WHITE")
             self.s.expecting_probe_result = True
-            probeZTarget =  -(self.grbl_z_max_travel) - self.mpos_z() + 0.1 # 0.1 added to prevent rounding error triggering soft limit
-            self.s.write_command('G91 G38.2 Z' + str(probeZTarget) + ' F' + str(self.z_probe_speed))
+            probe_z_target =  -(self.grbl_z_max_travel) - self.mpos_z() + 0.1 # 0.1 added to prevent rounding error triggering soft limit
+            probe_speed = self.z_probe_speed_fast if fast_probe else self.z_probe_speed
+            self.fast_probing = fast_probe
+            fast_travel_distance = 60  # mm to go fast and not probing yet
+            min_probing_distance = 30  # have at least 30mm safety margin for probing
+            if fast_probe and abs(probe_z_target) > fast_travel_distance + min_probing_distance:
+                self.s.write_command('G0 G53 Z-' + str(fast_travel_distance))
+                probe_z_target += fast_travel_distance # adjust max travel for the 60mm traveled in G0
+            self.s.write_command('G91 G38.2 Z' + str(probe_z_target) + ' F' + str(probe_speed))
             self.s.write_command('G90')
             # Serial module then looks for probe detection
             # On detection "probe_z_detection_event" is called (for a single immediate EEPROM write command)....
@@ -2173,7 +2232,11 @@ class RouterMachine(EventDispatcher):
         self.s.write_command('G10 L20 P1 Z' + str(self.z_touch_plate_thickness))
         self.s.write_command('G4 P0.5')
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.5)
-        self.zUp()
+        if self.fast_probing:
+            self.jog_relative('Z', 5, 750)
+            self.fast_probing = False
+        else:
+            self.zUp()
 
 
 

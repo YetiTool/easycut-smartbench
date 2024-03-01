@@ -2,7 +2,7 @@ from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivy.base import runTouchApp
-from kivy.properties import ObjectProperty # @UnresolvedImport
+from kivy.properties import ObjectProperty 
 from kivy.clock import Clock
 from kivy.graphics import *
 from kivy.utils import *

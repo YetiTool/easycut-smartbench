@@ -51,6 +51,30 @@ def test_initial_failure(m):
     m.bench_is_dwt = Mock(return_value=False)
     assert (m.smartbench_model() == "SmartBench model detection failed")
 
+def test_drywalltec_smartcnc(m):
+    m.bench_is_dwt = Mock(return_value=False)
+    m.grbl_y_max_travel = 2500
+    # m.s.hw_version = 19
+    # m.s.fw_version = '1.1.2'
+    m.s.setting_50 = 0.04
+    assert (m.smartbench_model() == "DRYWALLTEC SmartCNC")
+
+def test_precision_pro_x(m):
+    m.bench_is_dwt = Mock(return_value=False)
+    m.grbl_y_max_travel = 2500
+    # m.s.hw_version = 19
+    # m.s.fw_version = '1.1.2'
+    m.s.setting_50 = 0.05
+    assert (m.smartbench_model() == "SmartBench V1.3 PrecisionPro X")
+
+def test_precision_pro_plus(m):
+    m.bench_is_dwt = Mock(return_value=False)
+    m.grbl_y_max_travel = 2500
+    # m.s.hw_version = 19
+    # m.s.fw_version = '1.1.2'
+    m.s.setting_50 = 0.04
+    assert (m.smartbench_model() == "SmartBench V1.3 PrecisionPro Plus")
+
 
 def test_mini_v1_3_precision_pro(m):
     m.bench_is_dwt = Mock(return_value=False)

@@ -31,6 +31,9 @@ from asmcnc.apps.systemTools_app.screens.calibration import screen_set_threshold
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 from asmcnc.production.database.calibration_database import CalibrationDatabase
 
+from asmcnc.comms.model_manager import ModelManagerSingleton
+from asmcnc.comms.router_machine import ProductCodes
+
 Builder.load_string(
     """
 
@@ -577,6 +580,9 @@ class FactorySettingsScreen(Screen):
     latest_machine_model_values = [
         "SmartBench V1.3 PrecisionPro CNC Router",
         "SmartBench Mini V1.3 PrecisionPro",
+        "SmartBench Mini V1.3 PrecisionPro Plus",
+        "SmartBench Mini V1.3 PrecisionPro X",
+        "DRYWALLTEC SmartCNC",
     ]
     old_machine_model_values = [
         "SmartBench V1.0 CNC Router",
@@ -598,6 +604,7 @@ class FactorySettingsScreen(Screen):
         self.l = kwargs["localization"]
         self.kb = kwargs["keyboard"]
         self.usb_stick = kwargs["usb_stick"]
+        self.model_manager = ModelManagerSingleton()
         self.software_version_label.text = self.set.sw_version
         self.platform_version_label.text = self.set.platform_version
         self.latest_software_version.text = self.set.latest_sw_version
@@ -740,12 +747,8 @@ class FactorySettingsScreen(Screen):
             )
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False
-        elif not (
-            str(self.product_number_input.text) == "01"
-            or str(self.product_number_input.text) == "02"
-            or str(self.product_number_input.text) == "03"
-        ):
-            warning_message = "Product code should 01, 02, or 03."
+        elif int(self.product_number_input.text) not in [pc.value for pc in ProductCodes]:
+            warning_message = "Product code should be 01 to 06."
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False
         elif len(str(self.serial_prefix.text)) != 3:
@@ -779,6 +782,8 @@ class FactorySettingsScreen(Screen):
                 + "."
                 + str(self.product_number_input.text)
             )
+            # Do specific tasks for setting up the machine model (e.g. splash screen)
+            self.model_manager.set_machine_type(ProductCodes(int(self.product_number_input.text)), True)
             self.m.write_dollar_setting(50, full_serial_number)
             self.machine_serial.text = "updating..."
 
@@ -992,7 +997,15 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
             or self.smartbench_model.text == "SmartBench V1.2 Precision CNC Router"
         ):
             self.product_number_input.text = "02"
+        elif "DRYWALLTEC SmartCNC" in self.smartbench_model.text:
+            self.product_number_input.text = "06"
+        elif "PrecisionPro X" in self.smartbench_model.text:
+            self.product_number_input.text = "05"
+        elif "PrecisionPro Plus" in self.smartbench_model.text:
+            self.product_number_input.text = "04"
         elif "PrecisionPro" in self.smartbench_model.text:
+            self.product_number_input.text = "03"
+        elif "Precision/Standard" in self.smartbench_model.text:
             self.product_number_input.text = "03"
         else:
             self.product_number_input.text = "01"
