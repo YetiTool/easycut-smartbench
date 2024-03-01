@@ -9,7 +9,7 @@ from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 
 from asmcnc.core_UI import scaling_utils
-from asmcnc.core_UI.components.images.blinking_image import BlinkingWidget
+from asmcnc.core_UI.components.widgets.blinking_widget import BlinkingWidget
 
 Builder.load_string(
     """

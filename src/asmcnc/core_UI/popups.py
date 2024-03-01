@@ -66,10 +66,10 @@ class BasicPopup(Popup):
     title_color = ObjectProperty([0, 0, 0, 1])
     title_size = ObjectProperty(str(utils.get_scaled_width(20)) + "sp")
     button_one_background_normal = StringProperty(
-        "atlas://data/images/defaulttheme/button"
+        "atlas://data/widgets/defaulttheme/button"
     )
     button_two_background_normal = StringProperty(
-        "atlas://data/images/defaulttheme/button"
+        "atlas://data/widgets/defaulttheme/button"
     )
     """
     title: string to be used as the title

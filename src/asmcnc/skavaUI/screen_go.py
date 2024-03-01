@@ -683,7 +683,7 @@ class GoScreen(Screen):
     ### COMMON SCREEN PREP METHOD
     def reset_go_screen_prior_to_job_start(self):
         print("RESET GO SCREEN FIRES")
-        # Update images
+        # Update widgets
         self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/go.png"
         # Show back button
         self.btn_back_img.source = "./asmcnc/skavaUI/img/back.png"

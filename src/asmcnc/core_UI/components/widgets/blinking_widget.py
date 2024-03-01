@@ -1,16 +1,8 @@
-from kivy import Logger
 from kivy.animation import Animation
-from kivy.base import runTouchApp
 from kivy.lang import Builder
 from kivy.properties import BooleanProperty, ObjectProperty
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 
-Logger.setLevel("DEBUG")
-
-# Couldn't update the canvas instruction in code, as I need to use Color but also need to set it
-# to my list property, so I needed to use builder string
 
 Builder.load_string("""
 <BlinkingWidget>:
@@ -52,24 +44,3 @@ class BlinkingWidget(Widget):
         else:
             self.animation.cancel(self)
             self.bg_color = TRANSPARENT_YELLOW
-
-
-if __name__ == '__main__':
-    box_layout = BoxLayout()
-
-
-    def on_press(*args):
-        setattr(blinking_widget, "blinking", not blinking_widget.blinking)
-
-
-    button = Button(
-        background_normal="/Users/archiejarvis/PycharmProjects/easycut/easycut-smartbench/src/asmcnc/skavaUI/img/spindle_off.png",
-        background_down="/Users/archiejarvis/PycharmProjects/easycut/easycut-smartbench/src/asmcnc/skavaUI/img/spindle_off.png",
-        on_press=on_press)
-
-    blinking_widget = BlinkingWidget(size=button.size, size_hint=(None, None))
-    blinking_widget.add_widget(button)
-
-    box_layout.add_widget(blinking_widget)
-
-    runTouchApp(box_layout)
