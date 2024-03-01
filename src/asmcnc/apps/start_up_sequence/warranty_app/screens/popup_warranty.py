@@ -7,7 +7,7 @@ import kivy
 from kivy.lang import Builder
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.popup import Popup
-from kivy.properties import StringProperty  # @UnresolvedImport
+from kivy.properties import StringProperty  
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.widget import Widget
 from kivy.uix.label import Label
@@ -51,7 +51,6 @@ class QuitToConsoleWarranty(Widget):
         
         popup = Popup(title='Warning!',
                       title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -102,7 +101,6 @@ class PopupFactorySettingsPassword(Widget):
         
         popup = Popup(title='Warning!',
                       title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),

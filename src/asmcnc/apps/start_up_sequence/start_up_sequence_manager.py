@@ -30,7 +30,7 @@ class StartUpSequence(object):
 	incorrect_shutdown_screen = None
 	safety_screen = None
 
-	def __init__(self, app_manager, screen_manager, machine, settings, localization, job, database, config_check, version):
+	def __init__(self, app_manager, screen_manager, machine, settings, localization, keyboard, job, database, config_check, version):
 
 		self.am = app_manager
 		self.sm = screen_manager
@@ -38,6 +38,7 @@ class StartUpSequence(object):
 		self.set = settings
 		self.jd = job
 		self.l = localization
+		self.kb = keyboard
 		self.db = database
 		self.cc = config_check
 		self.v = version
@@ -156,7 +157,7 @@ class StartUpSequence(object):
 
 	def prep_warranty_app(self):
 		if not self.warranty_sm:
-			self.warranty_sm = screen_manager_warranty.ScreenManagerWarranty(self, self.sm, self.m, self.l)
+			self.warranty_sm = screen_manager_warranty.ScreenManagerWarranty(self, self.sm, self.m, self.l, self.kb)
 
 	def prep_user_pro_plus_safety(self):
 		if not self.pro_plus_safety_screen:
@@ -221,13 +222,13 @@ class StartUpSequence(object):
 
 			try:
 				self.sm.remove_widget(self.sm.get_screen(screen_name))
-				print (screen_name + ' deleted')
+				print(screen_name + ' deleted')
 
 			except: pass
 
 
 	def __del__(self):
-		print 'End of startup sequence'
+		print('End of startup sequence')
 
 
 

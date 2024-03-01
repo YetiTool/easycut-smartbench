@@ -17,79 +17,93 @@ www.yetitool.com
 # except:
 # 	print("Could not import hanging_threads")
 
-import time
-import sys, os
-from datetime import datetime
+import os
 import os.path
-from os import path
+import sys
+from datetime import datetime
 
 from kivy.config import Config
-from kivy.clock import Clock
+from kivy.lang import Builder
+from kivy.uix.boxlayout import BoxLayout
+
+from asmcnc.core_UI import scaling_utils
+from asmcnc.core_UI.popup_manager import PopupManager
+from asmcnc.comms.model_manager import ModelManagerSingleton
+
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
-Config.set('graphics', 'width', '800')
-Config.set('graphics', 'height', '480')
+
+if sys.platform.startswith("linux"):
+    # get screen resolution as "1280x800" or "800x480"
+    resolution = os.popen(""" fbset | grep -oP 'mode "\K[^"]+' """).read().strip()
+    width, height = resolution.split("x")
+    Config.set('graphics', 'width', width)
+    Config.set('graphics', 'height', height)
+else:
+    Config.set('graphics', 'width', '800')
+    Config.set('graphics', 'height', '480')
+
 Config.set('graphics', 'maxfps', '60')
 Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
 Config.write()
 
-import kivy
 from kivy.app import App
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
+from kivy.uix.screenmanager import ScreenManager, NoTransition
 from kivy.core.window import Window
 
 
 # COMMS IMPORTS
-from asmcnc.comms import router_machine  # @UnresolvedImport
+from asmcnc.comms import router_machine
 from asmcnc.comms import server_connection
 from asmcnc.comms import smartbench_flurry_database_connection
 
 # NB: router_machine imports serial_connection
-from asmcnc.apps import app_manager # @UnresolvedImport
-from settings import settings_manager # @UnresolvedImport
+from asmcnc.apps import app_manager
+from settings import settings_manager
+
+# Languages and keyboard
 from asmcnc.comms import localization
+from asmcnc.keyboard import custom_keyboard
 
 # JOB DATA IMPORT
 from asmcnc.job import job_data
 from asmcnc.job.yetipilot.yetipilot import YetiPilot
 
 # SKAVAUI IMPORTS (LEGACY)
-from asmcnc.skavaUI import screen_home # @UnresolvedImport
-from asmcnc.skavaUI import screen_local_filechooser # @UnresolvedImport
-from asmcnc.skavaUI import screen_usb_filechooser # @UnresolvedImport
-from asmcnc.skavaUI import screen_go # @UnresolvedImport
+from asmcnc.skavaUI import screen_home
+from asmcnc.skavaUI import screen_local_filechooser
+from asmcnc.skavaUI import screen_usb_filechooser
+from asmcnc.skavaUI import screen_go
 from asmcnc.skavaUI import screen_jobstart_warning
-from asmcnc.skavaUI import screen_lobby # @UnresolvedImport
-from asmcnc.skavaUI import screen_file_loading # @UnresolvedImport
-from asmcnc.skavaUI import screen_check_job # @UnresolvedImport
-from asmcnc.skavaUI import screen_error # @UnresolvedImport
-from asmcnc.skavaUI import screen_serial_failure # @UnresolvedImport
-from asmcnc.skavaUI import screen_mstate_warning # @UnresolvedImport
-from asmcnc.skavaUI import screen_boundary_warning # @UnresolvedImport
-from asmcnc.skavaUI import screen_rebooting # @UnresolvedImport
-from asmcnc.skavaUI import screen_job_feedback # @UnresolvedImport
-from asmcnc.skavaUI import screen_job_incomplete # @UnresolvedImport
-from asmcnc.skavaUI import screen_powercycle_alert # @UnresolvedImport
-from asmcnc.skavaUI import screen_door # @UnresolvedImport
-from asmcnc.skavaUI import screen_squaring_manual_vs_square # @UnresolvedImport
-from asmcnc.skavaUI import screen_homing_prepare # @UnresolvedImport
-from asmcnc.skavaUI import screen_homing_active # @UnresolvedImport
-from asmcnc.skavaUI import screen_squaring_active # @UnresolvedImport
-from asmcnc.skavaUI import screen_spindle_shutdown # @UnresolvedImport
+from asmcnc.skavaUI import screen_lobby
+from asmcnc.skavaUI import screen_file_loading
+from asmcnc.skavaUI import screen_check_job
+from asmcnc.skavaUI import screen_error
+from asmcnc.skavaUI import screen_serial_failure
+from asmcnc.skavaUI import screen_mstate_warning
+from asmcnc.skavaUI import screen_boundary_warning
+from asmcnc.skavaUI import screen_rebooting
+from asmcnc.skavaUI import screen_job_feedback
+from asmcnc.skavaUI import screen_job_incomplete
+from asmcnc.skavaUI import screen_door
+from asmcnc.skavaUI import screen_squaring_manual_vs_square
+from asmcnc.skavaUI import screen_homing_prepare
+from asmcnc.skavaUI import screen_homing_active
+from asmcnc.skavaUI import screen_squaring_active
+from asmcnc.skavaUI import screen_spindle_shutdown
 from asmcnc.skavaUI import screen_spindle_cooldown
-from asmcnc.skavaUI import screen_stop_or_resume_decision # @UnresolvedImport
-from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
-from asmcnc.skavaUI import screen_tool_selection # @UnresolvedImport
-from asmcnc.skavaUI import screen_restart_smartbench # @UnresolvedImport
-from asmcnc.skavaUI import screen_job_recovery # @UnresolvedImport
-from asmcnc.skavaUI import screen_nudge # @UnresolvedImport
-from asmcnc.skavaUI import screen_recovery_decision # @UnresolvedImport
-from asmcnc.skavaUI import screen_homing_decision # @UnresolvedImport
+from asmcnc.skavaUI import screen_stop_or_resume_decision
+from asmcnc.skavaUI import screen_lift_z_on_pause_decision
+from asmcnc.skavaUI import screen_tool_selection
+from asmcnc.skavaUI import screen_job_recovery
+from asmcnc.skavaUI import screen_nudge
+from asmcnc.skavaUI import screen_recovery_decision
+from asmcnc.skavaUI import screen_homing_decision
 
 # developer testing
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v2.6.2'
+initial_version = 'v2.8.1'
 
 config_flag = False
         
@@ -135,9 +149,26 @@ def log(message):
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 
+# load scaled kv
+Builder.load_file('scaled_kv.kv')
+
+
 class SkavaUI(App):
 
     test_no = 0
+
+    width = Window.width
+    height = Window.height if Window.height == 480 else Window.height - 32
+
+    def get_scaled_width(self, val):
+        return scaling_utils.get_scaled_width(val)
+
+    def get_scaled_height(self, val):
+        return scaling_utils.get_scaled_height(val)
+
+    def get_scaled_sp(self, val):
+        return scaling_utils.get_scaled_sp(val)
+
 
     def build(self):
 
@@ -146,8 +177,12 @@ class SkavaUI(App):
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
 
+
         # Localization/language object
         l = localization.Localization()
+
+        # Keyboard object
+        kb = custom_keyboard.Keyboard(localization=l)
 
         # Initialise settings object
         sett = settings_manager.Settings(sm)
@@ -158,6 +193,9 @@ class SkavaUI(App):
         # Initialise 'm'achine object
         m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
 
+        # initialise ModelManagerSingleton with machine for setting_50 update
+        ModelManagerSingleton(m)
+
         # Initialise yetipilot
         yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd, localization=l)
 
@@ -165,7 +203,7 @@ class SkavaUI(App):
         db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
 
         # App manager object
-        am = app_manager.AppManagerClass(sm, m, sett, l, jd, db, config_flag, initial_version)
+        am = app_manager.AppManagerClass(sm, m, sett, l, kb, jd, db, config_flag, initial_version)
 
         # Alarm screens are set up in serial comms, need access to the db object
         m.s.alarm.db = db
@@ -175,10 +213,14 @@ class SkavaUI(App):
 
         # Server connection object
         sc = server_connection.ServerConnection(sett)
-        
+
+        # Popup manager
+        pm = PopupManager(sm, m, l)
+        sm.pm = pm  # store in screen manager for access by screens
+
         # initialise the screens (legacy)
         lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager = sm, machine = m, app_manager = am, localization = l)
-        home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
+        home_screen = screen_home.HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l, keyboard = kb)
         local_filechooser = screen_local_filechooser.LocalFileChooser(name='local_filechooser', screen_manager = sm, job = jd, localization = l)
         usb_filechooser = screen_usb_filechooser.USBFileChooser(name='usb_filechooser', screen_manager = sm, job = jd, localization = l)
         go_screen = screen_go.GoScreen(name='go', screen_manager = sm, machine = m, job = jd, app_manager = am, database=db, localization = l, yetipilot=yp)
@@ -190,8 +232,8 @@ class SkavaUI(App):
         mstate_screen = screen_mstate_warning.WarningMState(name = 'mstate', screen_manager = sm, machine =m, localization = l)
         boundary_warning_screen = screen_boundary_warning.BoundaryWarningScreen(name='boundary',screen_manager = sm, machine = m, localization = l)
         rebooting_screen = screen_rebooting.RebootingScreen(name = 'rebooting', screen_manager = sm, localization = l)
-        job_feedback_screen = screen_job_feedback.JobFeedbackScreen(name = 'job_feedback', screen_manager = sm, machine =m, database = db, job = jd, localization = l)
-        job_incomplete_screen = screen_job_incomplete.JobIncompleteScreen(name = 'job_incomplete', screen_manager = sm, machine =m, database = db, job = jd, localization = l)
+        job_feedback_screen = screen_job_feedback.JobFeedbackScreen(name = 'job_feedback', screen_manager = sm, machine =m, database = db, job = jd, localization = l, keyboard = kb)
+        job_incomplete_screen = screen_job_incomplete.JobIncompleteScreen(name = 'job_incomplete', screen_manager = sm, machine =m, database = db, job = jd, localization = l, keyboard = kb)
         door_screen = screen_door.DoorScreen(name = 'door', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
         squaring_decision_screen = screen_squaring_manual_vs_square.SquaringScreenDecisionManualVsSquare(name = 'squaring_decision', screen_manager = sm, machine =m, localization = l)
         prepare_to_home_screen = screen_homing_prepare.HomingScreenPrepare(name = 'prepare_to_home', screen_manager = sm, machine =m, localization = l)
@@ -202,7 +244,7 @@ class SkavaUI(App):
         stop_or_resume_decision_screen = screen_stop_or_resume_decision.StopOrResumeDecisionScreen(name = 'stop_or_resume_job_decision', screen_manager = sm, machine =m, job = jd, database = db, localization = l)
         lift_z_on_pause_decision_screen = screen_lift_z_on_pause_decision.LiftZOnPauseDecisionScreen(name = 'lift_z_on_pause_or_not', screen_manager = sm, machine =m, localization = l)
         tool_selection_screen = screen_tool_selection.ToolSelectionScreen(name = 'tool_selection', screen_manager = sm, machine =m, localization = l)
-        job_recovery_screen = screen_job_recovery.JobRecoveryScreen(name = 'job_recovery', screen_manager = sm, machine = m, job = jd, localization = l)
+        job_recovery_screen = screen_job_recovery.JobRecoveryScreen(name = 'job_recovery', screen_manager = sm, machine = m, job = jd, localization = l, keyboard = kb)
         nudge_screen = screen_nudge.NudgeScreen(name = 'nudge', screen_manager = sm, machine = m, job = jd, localization = l)
         recovery_decision_screen = screen_recovery_decision.RecoveryDecisionScreen(name = 'recovery_decision', screen_manager = sm, machine = m, job = jd, localization = l)
         homing_decision_screen = screen_homing_decision.HomingDecisionScreen(name = 'homing_decision', screen_manager = sm, machine = m, localization = l)
@@ -246,24 +288,22 @@ class SkavaUI(App):
 
 
         ## LOCALIZATION TESTING -----------------------------------------------------------
-
-        # test_languages = ["English (GB)", "Deutsch (DE)",  "Français (FR)", "Italiano (IT)", "Suomalainen (FI)", "Polski (PL)", "Dansk (DK)"]
-
+        
         # def test_cycle(dt):
-        #     if self.test_no < len(test_languages):
-        #         lang = test_languages[self.test_no]
+        #     if self.test_no < len(l.approved_languages):
+        #         lang = l.approved_languages[self.test_no]
         #         l.load_in_new_language(lang)
         #         print("New lang: " + str(lang))
         #         try:
         #             sm.get_screen(str(sm.current)).update_strings()
-        #         except: 
+        #         except:
         #             print(str(sm.current) + " has no update strings function")
-
+        
         #         self.test_no = self.test_no + 1
-        #     else: 
+        #     else:
         #         self.test_no = 0
-
-        # Clock.schedule_interval(test_cycle, 5)
+        
+        # Clock.schedule_interval(test_cycle, 20)
 
 
 
@@ -286,6 +326,13 @@ class SkavaUI(App):
         # Clock.schedule_once(start_loop, 10)
 
         ## -----------------------------------------------------------------------------------
+        if self.height == 768:
+            root = BoxLayout(orientation='vertical', size_hint=(None, None), size=(self.width, self.height + 32))
+            sm.size_hint = (None, None)
+            sm.size = (self.width, self.height)
+            root.add_widget(sm)
+            return root
+
         return sm
 
 if __name__ == '__main__':
