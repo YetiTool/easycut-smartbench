@@ -107,7 +107,7 @@ class CommonMove(Widget):
             on_press=self.set_spindle,
             allow_stretch=True,
             size_hint=(None, None),
-            size=(dp(scaling_utils.get_scaled_width(100)), dp(scaling_utils.get_scaled_height(100)))
+            size=(dp(scaling_utils.get_scaled_width(70)), dp(scaling_utils.get_scaled_height(70)))
         )
         self.spindle_blinker = BlinkingWidget()
         self.spindle_blinker.bind(pos=self.update_spindle_button, size=self.update_spindle_button)
@@ -143,7 +143,6 @@ class CommonMove(Widget):
             self.m.vac_on()
 
     def set_spindle(self, *args):
-        print(self.spindle_button.size)
         def button_two_callback():
             self.spindle_button.background_normal = "./asmcnc/skavaUI/img/spindle_on.png"
             self.m.spindle_on()
