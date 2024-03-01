@@ -120,6 +120,8 @@ class CommonMove(Widget):
         self.sm = kwargs["screen_manager"]
         self.set_jog_speeds()
 
+        print("Spindle image size: ", str(self.spindle_image.size))
+
     fast_x_speed = 6000
     fast_y_speed = 6000
     fast_z_speed = 750
