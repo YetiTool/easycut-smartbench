@@ -76,19 +76,6 @@ def search_tree(root, target):
         print("Error: '{}' not found in the path '{}'.".format(target, root))    
         return None
     return search_results[0] if len(search_results) == 1 else search_results
-
-def get_image_path(image_name):
-    """
-    Returns the full path of an image given its name.
-    Only works for images in the skavaUI/img directory.
-
-    Args:
-        image_name (str): The name of the image.
-
-    Returns:
-        str: The full path of the image.
-    """
-    return os.path.join(skava_ui_img_path, image_name)
     
 # Common paths
 easycut_path = get_path("easycut-smartbench") # easycut-smartbench
