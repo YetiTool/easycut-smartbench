@@ -15,4 +15,5 @@ def cancel_shutdown():
 
 def reboot():
     if sys.platform != 'win32' and sys.platform != 'darwin':
+        os.system('sudo sed -i "s/correct_shutdown=False/correct_shutdown=True/" config.txt')
         os.system("sudo reboot")
