@@ -26,6 +26,7 @@ from asmcnc.skavaUI import popup_info
 from asmcnc.production.z_head_qc_jig import popup_z_head_qc
 
 from asmcnc.skavaUI import widget_status_bar
+from asmcnc.core_UI import console_utils
 
 Builder.load_string("""
 <ZHeadQCWarrantyAfterApr21>:
@@ -786,8 +787,7 @@ class ZHeadQCWarrantyAfterApr21(Screen):
         self.consoleStatusText.text = self.sm.get_screen('home').gcode_monitor_widget.consoleStatusText.text
 
     def do_reboot(self):
-        if sys.platform != 'win32' and sys.platform != 'darwin':
-            os.system("sudo reboot")
+        console_utils.reboot()
 
     def back_to_choice(self):
         self.sm.current = 'qcWC'

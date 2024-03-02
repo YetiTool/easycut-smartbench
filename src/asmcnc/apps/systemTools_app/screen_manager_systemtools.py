@@ -7,6 +7,7 @@ from asmcnc.skavaUI import popup_info, screen_diagnostics
 from asmcnc.apps.systemTools_app.screens import popup_system, screen_system_menu, screen_build_info, screen_beta_testing, \
 screen_grbl_settings, screen_factory_settings, screen_update_testing, screen_developer_temp, screen_final_test, screen_support_menu
 from threading import Lock
+from asmcnc.core_UI import console_utils
 from asmcnc.core_UI.popup_manager import PopupManager
 class ScreenManagerSystemTools(object):
 
@@ -78,7 +79,7 @@ class ScreenManagerSystemTools(object):
             try: 
                 os.system('python -m pip uninstall pika -y')
                 os.system('python -m pip install pika==1.2.0')
-                os.system('sudo reboot')
+                console_utils.reboot()
                 wait_popup.popup.dismiss()
 
             except:

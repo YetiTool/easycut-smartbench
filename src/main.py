@@ -26,7 +26,7 @@ from kivy.config import Config
 from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 
-from asmcnc.core_UI import scaling_utils
+from asmcnc.core_UI import scaling_utils, console_utils
 from asmcnc.core_UI.popup_manager import PopupManager
 from asmcnc.comms.model_manager import ModelManagerSingleton
 
@@ -138,7 +138,8 @@ def check_ansible_status():
     # if this comes out empty, run ansible and reboot
     if not ansible_from_easycut:
         # when the playbook fails, it stops the other commands from running as well
-        os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh && sudo systemctl restart ansible.service && sudo reboot")
+        os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh && sudo systemctl restart ansible.service")
+        console_utils.reboot()
 
     
 ## Easycut config

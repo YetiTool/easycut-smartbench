@@ -11,6 +11,7 @@ import sys
 from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
+from asmcnc.core_UI import console_utils
 
 Builder.load_string(
     """
@@ -64,5 +65,4 @@ class RebootingScreen(Screen):
         Clock.schedule_once(self.reboot, 1)
 
     def reboot(self, dt):
-        if sys.platform != "win32" and sys.platform != "darwin":
-            os.system("sudo reboot")
+        console_utils.reboot()
