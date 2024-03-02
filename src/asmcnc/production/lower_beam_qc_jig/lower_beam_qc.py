@@ -10,6 +10,7 @@ from kivy.uix.button import  Button
 from asmcnc.skavaUI import widget_status_bar, popup_info
 from asmcnc.production.lower_beam_qc_jig.widget_lower_beam_qc_xy_move import LowerBeamQCXYMove
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
+from asmcnc.core_UI import console_utils
 
 import sys, os
 
@@ -330,8 +331,7 @@ class LowerBeamQC(Screen):
 		self.m.s.write_command('$21 = 1')
 
 	def shutdown_console(self):
-		if sys.platform != 'win32' and sys.platform != 'darwin':
-			os.system('sudo shutdown -h now')
+		console_utils.shutdown()
 
 	def switch_screen(self):
 		self.sm.current = 'qcWarranty'

@@ -34,6 +34,8 @@ from asmcnc.production.database.calibration_database import CalibrationDatabase
 from asmcnc.comms.model_manager import ModelManagerSingleton
 from asmcnc.comms.router_machine import ProductCodes
 
+from asmcnc.core_UI import console_utils
+
 Builder.load_string(
     """
 
@@ -911,7 +913,7 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
         sys.exit()
 
     def shutdown_console(self, dt):
-        os.system("sudo shutdown -h now")
+        console_utils.shutdown()
 
     def full_console_update(self):
         try:

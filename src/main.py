@@ -169,6 +169,9 @@ class SkavaUI(App):
     def get_scaled_sp(self, val):
         return scaling_utils.get_scaled_sp(val)
 
+    def get_scaled_tuple(self, tup, orientation="horizontal"):
+        return scaling_utils.get_scaled_tuple(tup, orientation)
+
 
     def build(self):
 

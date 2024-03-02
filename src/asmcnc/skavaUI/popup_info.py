@@ -22,6 +22,7 @@ from kivy.clock import Clock
 from kivy.uix.checkbox import CheckBox
 from datetime import datetime
 from kivy.graphics import Color, Rectangle
+from asmcnc.core_UI import console_utils
 
 def log(message):
     timestamp = datetime.now()
@@ -1104,11 +1105,10 @@ class PopupShutdown(Widget):
         cancel_string = self.l.get_bold('Cancel')
 
         def cancel_shutdown(*args):
-            os.system('sudo shutdown -c')
+            console_utils.cancel_shutdown()
 
         def shutdown_now(*args):
-            os.system('sudo sed -i "s/correct_shutdown=False/correct_shutdown=True/" config.txt')
-            os.system('sudo shutdown -h now')
+            console_utils.shutdown()
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1.5, text_size=(480, None), halign='center', valign='middle', text=description,
