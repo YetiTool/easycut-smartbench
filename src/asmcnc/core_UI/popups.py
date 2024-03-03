@@ -13,6 +13,7 @@ from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 
 from asmcnc.core_UI import scaling_utils as utils
+from asmcnc.core_UI.utils.hold_button import WarningHoldButton
 
 """
 Popup type enum
@@ -70,7 +71,6 @@ class BasicPopup(Popup):
     button_two_background_normal = StringProperty(
         "atlas://data/images/defaulttheme/button"
     )
-
     """
     title: string to be used as the title
     main_string: string to be used as main text
@@ -822,8 +822,6 @@ class DownloadSettingsToUsbPopup(BasicPopup):
         def button_one_callback(*args):
             self.sm.download_settings_to_usb(*args)
 
-
-
         super(DownloadSettingsToUsbPopup, self).__init__(
             main_string=main_string,
             popup_type=PopupType.INFO,
@@ -844,3 +842,79 @@ class DownloadSettingsToUsbPopup(BasicPopup):
             button_layout_size_hint_y= 1,
             **kwargs
         )
+
+
+class SpindleSafetyPopup(BasicPopup):
+    def __init__(
+        self,
+        popup_width=600,
+        popup_height=450,
+        button_one_text="Cancel",
+        button_one_callback=None,
+        button_one_background_color=(230 / 255., 74 / 255., 25 / 255., 1.),
+        button_two_text=None,
+        button_two_callback=None,
+        button_two_background_color=None,
+        title="Information",
+        main_label_padding=(0, 10),
+        main_layout_padding=(10, 10, 10, 10),
+        main_layout_spacing=10,
+        main_label_size_delta=10,
+        button_layout_padding=(0, 5, 0, 5),
+        button_layout_spacing=15,
+        main_label_h_align="center",
+        main_label_size_hint_y=2,
+        **kwargs
+    ):
+        self.l = kwargs["l"]
+
+        main_string = self.l.get_str("This will start the spindle at 12,000 rpm! Please make sure:")
+        main_string += "\n\n"
+        main_string += " - " + self.l.get_str("The spindle is clamped properly") + "\n\n"
+        main_string += " - " + self.l.get_str("The spindle is plugged in") + "\n\n"
+        main_string += " - " + self.l.get_str("The dust shoe plug is inserted") + "\n\n"
+        main_string += " - " + self.l.get_str("The cutter is free to move")
+
+        super(SpindleSafetyPopup, self).__init__(
+            main_string=main_string,
+            popup_type=PopupType.INFO,
+            main_label_padding=main_label_padding,
+            main_layout_padding=main_layout_padding,
+            main_layout_spacing=main_layout_spacing,
+            main_label_size_delta=main_label_size_delta,
+            button_layout_padding=button_layout_padding,
+            button_layout_spacing=button_layout_spacing,
+            main_label_h_align=main_label_h_align,
+            popup_width=popup_width,
+            popup_height=popup_height,
+            button_one_text=button_one_text,
+            button_one_callback=button_one_callback,
+            button_one_background_color=button_one_background_color,
+            button_two_text=button_two_text,
+            button_two_callback=button_two_callback,
+            button_two_background_color=button_two_background_color,
+            title=title,
+            main_label_size_hint_y=main_label_size_hint_y,
+            button_layout_size_hint_y=1,
+            **kwargs
+        )
+
+    def build_buttons(self):
+        return [
+            Button(
+                text=self.l.get_str(self.button_one_text),
+                on_release=lambda x: self.on_button_pressed(self.button_one_callback),
+                font_size=utils.get_scaled_sp("15sp"),
+                background_normal=self.button_one_background_normal,
+                background_color=self.button_one_background_color,
+                markup=True,
+            ),
+            WarningHoldButton(
+                text=self.l.get_str("Press for 1s to start spindle"),
+                hold_time=1,
+                callback=lambda: self.on_button_pressed(self.button_two_callback),
+                font_size=utils.get_scaled_sp("15sp"),
+                color=(0, 0, 0, 1),
+                markup=True
+            )
+        ]
