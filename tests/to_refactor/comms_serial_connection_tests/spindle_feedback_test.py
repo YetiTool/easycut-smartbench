@@ -2,14 +2,14 @@
 Created on 25 Jan 2022
 @author: Letty
 '''
+from tests.automated_unit_tests.test_base import UnitTestBase
 
-try: 
+try:
     import unittest
     from mock import Mock, MagicMock
     from serial_mock.mock import MockSerial, DummySerial
     from serial_mock.decorators import serial_query
-
-except: 
+except:
     print("Can't import mocking packages, are you on a dev machine?")
 
 from time import sleep
@@ -29,6 +29,7 @@ except:
 # IMPORTANT!!
 # Run from easycut-smartbench folder, with 
 # python -m test.comms_serial_connection_tests.spindle_feedback_test
+# OUTDATED
 
 
 ##########################################################
@@ -51,7 +52,7 @@ except:
 
 ##########################################################
 
-class SpindleFeedbackTest(unittest.TestCase):
+class SpindleFeedbackTest(UnitTestBase):
 
     status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822>"
 
@@ -113,7 +114,7 @@ class SpindleFeedbackTest(unittest.TestCase):
                 str(digital_spindle_kill_time) + "," + \
                 str(digital_spindle_mains_voltage) + ">"
 
-            print self.status
+            print(self.status)
 
 
         # Need to construct mock PCB after the status, otherwise it'll run something else:
@@ -123,6 +124,7 @@ class SpindleFeedbackTest(unittest.TestCase):
         sleep(0.01)
 
     def setUp(self):
+        super(SpindleFeedbackTest, self).setUp()
         # If the set_up method raises an exception while the test is running, 
         # the framework will consider the test to have suffered an error, 
         # and the runTest (or test_X_Name) method will not be executed.
@@ -136,7 +138,7 @@ class SpindleFeedbackTest(unittest.TestCase):
         self.serial_module = serial_connection.SerialConnection(self.m, self.sm, self.sett, self.l, self.jd)
 
     def tearDown(self):
-      self.serial_module.__del__()
+        self.serial_module.__del__()
 
 
     def test_does_serial_think_its_connected(self):

@@ -1,11 +1,11 @@
+from kivy.core.window import Window
 import os, sys
-
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
-
 from asmcnc.skavaUI import popup_info
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <RecoveryDecisionScreen>:
 
@@ -28,14 +28,15 @@ Builder.load_string("""
 
         BoxLayout:
             size_hint_y: 0.75
-            padding: [dp(716), dp(0), dp(0), dp(0)]
+            padding:[dp(0.895)*app.width, 0, 0, 0]
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 background_color: [0,0,0,0]
                 on_press: root.back_to_home()
                 BoxLayout:
                     size: self.parent.size
-                    pos: self.parent.pos
+                    pos: self.parent.pos[0], self.parent.pos[1] + dp(1)
                     Image:
                         source: "./asmcnc/apps/shapeCutter_app/img/exit_cross.png"
                         center_x: self.parent.center_x
@@ -52,12 +53,12 @@ Builder.load_string("""
                 text: "[b]Last job:[/b]"
                 color: hex('#333333ff')
                 markup: True
-                font_size: dp(30)
+                font_size: dp(0.0375*app.width)
 
             Label:
                 id: job_name_label
                 color: hex('#333333ff')
-                font_size: dp(25)
+                font_size: dp(0.03125*app.width)
                 text_size: self.size
                 halign: "center"
                 valign: "middle"
@@ -66,18 +67,18 @@ Builder.load_string("""
             Label:
                 id: completion_label
                 color: hex('#333333ff')
-                font_size: dp(30)
+                font_size: dp(0.0375*app.width)
 
         BoxLayout:
             orientation: 'horizontal'
             size_hint_y: 2.23
-            padding: dp(50), dp(30)
-            spacing: dp(50)
+            padding:[dp(0.0625)*app.width, dp(0.0625)*app.height]
+            spacing:dp(0.0625)*app.width
 
             Button:
                 id: repeat_job_button
                 text: "Repeat job from the beginning"
-                font_size: dp(30)
+                font_size: dp(0.0375*app.width)
                 valign: "middle"
                 halign: "center"
                 text_size: self.size[0] - dp(50), self.size[1]
@@ -88,7 +89,7 @@ Builder.load_string("""
             Button:
                 id: recover_job_button
                 text: "Recover job"
-                font_size: dp(30)
+                font_size: dp(0.0375*app.width)
                 valign: "middle"
                 halign: "center"
                 text_size: self.size[0] - dp(50), self.size[1]
@@ -96,54 +97,72 @@ Builder.load_string("""
                 background_normal: "./asmcnc/skavaUI/img/blank_orange_button.png"
                 background_down: "./asmcnc/skavaUI/img/blank_orange_button.png"
 
-""")
+"""
+)
 
 
 class RecoveryDecisionScreen(Screen):
-
     def __init__(self, **kwargs):
-
         super(RecoveryDecisionScreen, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-        self.jd=kwargs['job']
-        self.l=kwargs['localization']
-
+        self.sm = kwargs["screen_manager"]
+        self.m = kwargs["machine"]
+        self.jd = kwargs["job"]
+        self.l = kwargs["localization"]
         self.update_strings()
 
     def on_pre_enter(self):
+        self.update_completion_label_and_button_colours()
+
+    def update_completion_label_and_button_colours(self):
         # Check if job recovery (or job redo) is available
         if self.jd.job_recovery_cancel_line == None:
-            self.job_name_label.text = ''
+            self.job_name_label.text = ""
             self.completion_label.text = self.l.get_str("No file available!")
-
-            self.repeat_job_button.background_normal = "./asmcnc/skavaUI/img/blank_grey_button.png"
-            self.repeat_job_button.background_down = "./asmcnc/skavaUI/img/blank_grey_button.png"
-
-            self.recover_job_button.background_normal = "./asmcnc/skavaUI/img/blank_grey_button.png"
-            self.recover_job_button.background_down = "./asmcnc/skavaUI/img/blank_grey_button.png"
-
+            self.repeat_job_button.background_normal = (
+                "./asmcnc/skavaUI/img/blank_grey_button.png"
+            )
+            self.repeat_job_button.background_down = (
+                "./asmcnc/skavaUI/img/blank_grey_button.png"
+            )
+            self.recover_job_button.background_normal = (
+                "./asmcnc/skavaUI/img/blank_grey_button.png"
+            )
+            self.recover_job_button.background_down = (
+                "./asmcnc/skavaUI/img/blank_grey_button.png"
+            )
         else:
-            if sys.platform == 'win32':
+            if sys.platform == "win32":
                 job_name = self.jd.job_recovery_filepath.split("\\")[-1]
             else:
                 job_name = self.jd.job_recovery_filepath.split("/")[-1]
-
             self.job_name_label.text = job_name
-
-            self.repeat_job_button.background_normal = "./asmcnc/skavaUI/img/blank_green_button.png"
-            self.repeat_job_button.background_down = "./asmcnc/skavaUI/img/blank_green_button.png"
-
+            self.repeat_job_button.background_normal = (
+                "./asmcnc/skavaUI/img/blank_green_button.png"
+            )
+            self.repeat_job_button.background_down = (
+                "./asmcnc/skavaUI/img/blank_green_button.png"
+            )
             # Cancel on line -1 represents last job completing successfully
             if self.jd.job_recovery_cancel_line == -1:
-                self.completion_label.text = self.l.get_str("SmartBench completed the last job 100%")
-                self.recover_job_button.background_normal = "./asmcnc/skavaUI/img/blank_grey_button.png"
-                self.recover_job_button.background_down = "./asmcnc/skavaUI/img/blank_grey_button.png"
+                self.completion_label.text = self.l.get_str(
+                    "SmartBench completed the last job 100%"
+                )
+                self.recover_job_button.background_normal = (
+                    "./asmcnc/skavaUI/img/blank_grey_button.png"
+                )
+                self.recover_job_button.background_down = (
+                    "./asmcnc/skavaUI/img/blank_grey_button.png"
+                )
             else:
-                self.completion_label.text = self.l.get_str("SmartBench did not finish the last job")
-                self.recover_job_button.background_normal = "./asmcnc/skavaUI/img/blank_orange_button.png"
-                self.recover_job_button.background_down = "./asmcnc/skavaUI/img/blank_orange_button.png"
-
+                self.completion_label.text = self.l.get_str(
+                    "SmartBench did not finish the last job"
+                )
+                self.recover_job_button.background_normal = (
+                    "./asmcnc/skavaUI/img/blank_orange_button.png"
+                )
+                self.recover_job_button.background_down = (
+                    "./asmcnc/skavaUI/img/blank_orange_button.png"
+                )
         self.update_font_size(self.completion_label)
 
     def go_to_recovery(self):
@@ -159,40 +178,41 @@ class RecoveryDecisionScreen(Screen):
                     self.jd.reset_values()
                     self.jd.job_recovery_from_beginning = True
                     self.jd.set_job_filename(self.jd.job_recovery_filepath)
-
                     if recovering:
-                        self.sm.get_screen('loading').continuing_to_recovery = True
+                        self.sm.get_screen("loading").continuing_to_recovery = True
                     else:
-                        self.sm.get_screen('loading').skip_check_decision = True
-
-                    self.sm.current = 'loading'
-
+                        self.sm.get_screen("loading").skip_check_decision = True
+                    self.sm.current = "loading"
                 else:
-                    self.sm.get_screen('home').z_datum_reminder_flag = True
+                    self.sm.get_screen("home").z_datum_reminder_flag = True
                     self.jd.reset_recovery()
-
                     if recovering:
-                        self.sm.get_screen('homing_decision').return_to_screen = 'job_recovery'
-                        self.sm.get_screen('homing_decision').cancel_to_screen = 'job_recovery'
-                        self.sm.current = 'homing_decision'
+                        self.sm.get_screen(
+                            "homing_decision"
+                        ).return_to_screen = "job_recovery"
+                        self.sm.get_screen(
+                            "homing_decision"
+                        ).cancel_to_screen = "job_recovery"
+                        self.sm.current = "homing_decision"
                     else:
                         self.jd.job_recovery_from_beginning = True
                         self.back_to_home()
-
-            else: 
-                error_message = self.l.get_str('File selected does not exist!')
+            else:
+                error_message = self.l.get_str("File selected does not exist!")
                 popup_info.PopupError(self.sm, self.l, error_message)
 
     def back_to_home(self):
-        self.sm.current = 'home'
+        self.sm.current = "home"
 
     def update_strings(self):
-        self.job_name_header.text = self.l.get_bold('Last job:')
-        self.repeat_job_button.text = self.l.get_str('Repeat job from the beginning')
-        self.recover_job_button.text = self.l.get_str('Recover job')
+        self.job_name_header.text = self.l.get_bold("Last job:")
+        self.repeat_job_button.text = self.l.get_str("Repeat job from the beginning")
+        self.recover_job_button.text = self.l.get_str("Recover job")
+        self.update_completion_label_and_button_colours()
 
     def update_font_size(self, value):
-        if len(value.text) > 50:
-            value.font_size = 28
-        else: 
-            value.font_size = 30
+        text_length = self.l.get_text_length(value.text)
+        if text_length > 50:
+            value.font_size = 0.035 * Window.width
+        else:
+            value.font_size = 0.0375 * Window.width

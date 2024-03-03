@@ -9,7 +9,7 @@ import os
 from kivy.lang import Builder
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.popup import Popup
-from kivy.properties import StringProperty  # @UnresolvedImport
+from kivy.properties import StringProperty  
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.widget import Widget
 from kivy.uix.textinput import TextInput
@@ -69,7 +69,6 @@ class PopupWelcome(Widget):
         popup = Popup(title=title_string,
                       #                       title_color=[0.141, 0.596, 0.957, 1],
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -170,7 +169,6 @@ class PopupDatum(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -229,7 +227,6 @@ class PopupPark(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -290,7 +287,6 @@ class PopupStop(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -359,7 +355,6 @@ class PopupUSBInfo(Widget):
 
         self.popup = Popup(title=title_string,
                            title_color=[0, 0, 0, 1],
-                           title_font='Roboto-Bold',
                            title_size='20sp',
                            content=layout_plan,
                            size_hint=(None, None),
@@ -413,7 +408,6 @@ class PopupUSBError(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -459,7 +453,6 @@ class PopupInfo(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -503,7 +496,6 @@ class PopupMiniInfo(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -556,7 +548,6 @@ class PopupSoftwareUpdateSuccess(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -621,7 +612,6 @@ class PopupSoftwareUpdateWarning(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -677,7 +667,6 @@ class PopupSoftwareRepair(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -724,7 +713,6 @@ class PopupError(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -768,7 +756,6 @@ class PopupWarning(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -814,7 +801,6 @@ class PopupWait(Widget):
 
         self.popup = Popup(title=title_string,
                            title_color=[0, 0, 0, 1],
-                           title_font='Roboto-Bold',
                            title_size='20sp',
                            content=layout_plan,
                            size_hint=(None, None),
@@ -879,7 +865,6 @@ class PopupDeleteFile(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -969,7 +954,6 @@ class PopupReminder(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='22sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -1027,7 +1011,6 @@ class PopupConfirmJobCancel(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -1084,7 +1067,6 @@ class PopupHomingWarning(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -1149,7 +1131,6 @@ class PopupShutdown(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -1198,7 +1179,6 @@ class PopupScrollableInfo(Widget):
         
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -1242,7 +1222,6 @@ class PopupQRInfo(Widget):
 
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
-                      title_font='Roboto-Bold',
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),

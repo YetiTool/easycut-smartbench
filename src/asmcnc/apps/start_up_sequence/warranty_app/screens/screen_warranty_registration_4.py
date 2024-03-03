@@ -1,13 +1,14 @@
-'''
+"""
 Created on nov 2020
 @author: Ollie
-'''
-
+"""
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from asmcnc.skavaUI import widget_status_bar
-Builder.load_string("""
+
+Builder.load_string(
+    """
 
 <WarrantyScreen4>:
 				
@@ -17,8 +18,8 @@ Builder.load_string("""
 
 	BoxLayout: 
 		size_hint: (None,None)
-		width: dp(800)
-		height: dp(480)
+		width: dp(1.0*app.width)
+		height: dp(1.0*app.height)
 		orientation: 'vertical'
 
 		canvas:
@@ -46,12 +47,12 @@ Builder.load_string("""
 				Label:
 					id: title_label
 					size_hint: (None,None)
-					height: dp(60)
-					width: dp(800)
+					height: dp(0.125*app.height)
+					width: dp(1.0*app.width)
 					text: "SmartBench Warranty Registration"
 					color: hex('#f9f9f9ff')
 					# color: hex('#333333ff') #grey
-					font_size: dp(30)
+					font_size: dp(0.0375*app.width)
 					halign: "center"
 					valign: "bottom"
 					markup: True
@@ -59,40 +60,39 @@ Builder.load_string("""
 			# BODY
 			BoxLayout:
 				size_hint: (None,None)
-				width: dp(800)
-				height: dp(298)
+				width: dp(1.0*app.width)
+				height: dp(0.620833333333*app.height)
 				orientation: 'vertical'
 
 				BoxLayout:
 					orientation: 'vertical'
-					width: dp(800)
-					height: dp(200)
-					padding: [dp(20), 0]
+					width: dp(1.0*app.width)
+					height: dp(0.416666666667*app.height)
+					padding:[dp(0.025)*app.width, 0]
 					size_hint: (None,None)
 
 					Label:
 						id: success_label
-						font_size: '30sp'
+						font_size: str(0.0375*app.width) + 'sp'
 						text_size: self.size
 						valign: 'top'
 						halign: 'center'
 						markup: 'true'
-						bold: True
 						color: hex('#333333ff')
 
 
 			# FOOTER
 			BoxLayout: 
-				padding: [10,0,10,10]
+				padding:[dp(0.0125)*app.width, 0, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
 				size_hint: (None, None)
-				height: dp(122)
-				width: dp(800)
+				height: dp(0.254166666667*app.height)
+				width: dp(1.0*app.width)
 				orientation: 'horizontal'
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(122)
-					width: dp(244.5)
-					padding: [0, 0, 184.5, 0]
+					height: dp(0.254166666667*app.height)
+					width: dp(0.305625*app.width)
+					padding:[0, 0, dp(0.230625)*app.width, 0]
 					# Button:
 					#     size_hint: (None,None)
 					#     height: dp(52)
@@ -114,49 +114,51 @@ Builder.load_string("""
 
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(122)
-					width: dp(291)
-					padding: [0,0,0,32]
+					height: dp(0.254166666667*app.height)
+					width: dp(0.36375*app.width)
+					padding:[0, 0, 0, dp(0.0666666666667)*app.height]
 					Button:
 						id: next_button
 						background_normal: "./asmcnc/skavaUI/img/next.png"
 						background_down: "./asmcnc/skavaUI/img/next.png"
 						border: [dp(14.5)]*4
 						size_hint: (None,None)
-						width: dp(291)
-						height: dp(79)
+						width: dp(0.36375*app.width)
+						height: dp(0.164583333333*app.height)
 						on_press: root.next_screen()
 						text: 'Next...'
-						font_size: '30sp'
+						font_size: str(0.0375*app.width) + 'sp'
 						color: hex('#f9f9f9ff')
 						markup: True
 						center: self.parent.center
 						pos: self.parent.pos
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(122)
-					width: dp(244.5)
-					padding: [193.5, 0, 0, 0]
+					height: dp(0.254166666667*app.height)
+					width: dp(0.305625*app.width)
+					padding:[dp(0.241875)*app.width, 0, 0, 0]
 
-""")
+"""
+)
+
 
 class WarrantyScreen4(Screen):
+    def __init__(self, **kwargs):
+        super(WarrantyScreen4, self).__init__(**kwargs)
+        self.start_seq = kwargs["start_sequence"]
+        self.m = kwargs["machine"]
+        self.l = kwargs["localization"]
+        self.update_strings()
 
-	def __init__(self, **kwargs):
-		super(WarrantyScreen4, self).__init__(**kwargs)
-		self.start_seq=kwargs['start_sequence']
-		self.m=kwargs['machine']
-		self.l=kwargs['localization']
+    def next_screen(self):
+        self.start_seq.next_in_sequence()
 
-		self.update_strings()
+    def prev_screen(self):
+        self.start_seq.prev_in_sequence()
 
-	def next_screen(self):
-		self.start_seq.next_in_sequence()
-
-	def prev_screen(self):
-		self.start_seq.prev_in_sequence()
-
-	def update_strings(self):
-		self.title_label.text = self.l.get_str("SmartBench Warranty Registration")
-		self.success_label.text = self.l.get_str("You have successfully completed your warranty registration.")
-		self.next_button.text = self.l.get_str("Next") + "..."
+    def update_strings(self):
+        self.title_label.text = self.l.get_str("SmartBench Warranty Registration")
+        self.success_label.text = self.l.get_bold(
+            "You have successfully completed your warranty registration."
+        )
+        self.next_button.text = self.l.get_str("Next") + "..."

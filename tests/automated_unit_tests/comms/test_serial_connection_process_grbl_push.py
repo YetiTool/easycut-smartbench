@@ -4,6 +4,7 @@ Created on 17 Aug 2022
 '''
 
 import sys
+from tests import test_utils
 sys.path.append('./src')
 
 try: 
@@ -22,10 +23,11 @@ from asmcnc.comms import localization
 '''
 ######################################
 RUN FROM easycut-smartbench FOLDER WITH: 
-python -m pytest --show-capture=no --disable-pytest-warnings tests/automated_unit_tests/comms/test_serial_connection_process_grbl_push.py
+python -m pytest tests/automated_unit_tests/comms/test_serial_connection_process_grbl_push.py
 To run individual tests add < -k 'test_name_here' >, where test_name_here can be a partial string (that will then match as many tests as it's in)
 ######################################
 '''
+test_utils.create_app()
 
 @pytest.fixture
 def sc():
