@@ -181,7 +181,7 @@ Builder.load_string("""
                     halign: 'center'
                     background_color: hex('#9E32F1FF')
                     background_normal: ''
-                    on_press: root.go_to_manual_move()
+                    on_press: root.reset_grbl()
 
             Button:
                 id: stop_button
@@ -421,3 +421,6 @@ class ZHeadMechanics(Screen):
 
     def go_to_manual_move(self):
         self.sm.current = 'manual_move'
+
+    def reset_grbl(self):
+        self.m._grbl_soft_reset()
