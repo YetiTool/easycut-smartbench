@@ -4,6 +4,7 @@ from kivy.lang import Builder
 from kivy.uix.widget import Widget
 
 from asmcnc.skavaUI import popup_info
+from asmcnc.core_UI.components.buttons import probe_button
 
 Builder.load_string("""
 <XYMoveDrywall>
@@ -214,7 +215,7 @@ class XYMoveDrywall(Widget):
         self.l=kwargs['localization']
 
         self.set_jog_speeds()
-        self.probe_button_container.add_widget(ProbeButton(self.m, self.sm, self.l))
+        self.ids.probe_button_container.add_widget(probe_button.ProbeButton(self.m, self.sm, self.l, fast_probe=True))
 
     jogMode = 'free'
     jog_mode_button_press_counter = 0

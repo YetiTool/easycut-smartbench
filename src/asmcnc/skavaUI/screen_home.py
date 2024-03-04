@@ -364,8 +364,6 @@ class HomeScreen(Screen):
             Clock.schedule_once(lambda dt: self.m.laser_on(), 0.2)
         else:
             Clock.schedule_once(lambda dt: self.m.set_led_colour("GREEN"), 0.2)
-        
-        self.sm.return_to_screen = "home" # Set the return screen for the probing screen
 
         if self.jd.job_gcode != []:
             self.gcode_summary_widget.display_summary()

@@ -21,12 +21,15 @@ class ProbeButton(Button):
     background_down = ""
     background_color = (0, 0, 0, 0)
 
-    def __init__(self, router_machine, screen_manager, localization):
+    def __init__(self, router_machine, screen_manager, localization, fast_probe = False):
         super(ProbeButton, self).__init__()
 
         self.sm = screen_manager
         self.m = router_machine
         self.l = localization
+        self.fp = fast_probe
+
+        self.return_screen = None
         
         self.image = Image(source=pu.get_path("z_probe.png"), size = self.size, pos = self.pos, allow_stretch = True)
         self.add_widget(self.image)
@@ -34,15 +37,8 @@ class ProbeButton(Button):
         self.bind(size=self.update_image_size)
         self.bind(pos=self.update_image_pos)
 
-        # When the button is pressed, open the popup
         self.bind(on_press=self.open_screen)
-
-        # When the probe_z_coord is updated, close the popup
-        self.m.bind(probe_z_coord=self.close_screen)
-
-        self.probing_screen = ProbingScreen(name = 'probing', screen_manager = self.sm, machine = self.m, localization = self.l)
-        if not self.sm.has_screen('probing'):
-            self.sm.add_widget(self.probing_screen)
+        # self.m.bind(probe_z_coord=self.close_screen)
 
     def update_image_size(self, instance, value):
         self.image.size = value
@@ -51,8 +47,13 @@ class ProbeButton(Button):
         self.image.pos = value
 
     def open_screen(self, *args):
+        self.return_screen = self.sm.current
+        self.probing_screen = ProbingScreen(name = 'probing', screen_manager = self.sm, machine = self.m, localization = self.l, fast_probe = self.fp)
+        self.probing_screen.parent_button = self
+        self.sm.add_widget(self.probing_screen)
         self.sm.current = 'probing'
 
     def close_screen(self, *args):
-        self.sm.current = self.sm.return_to_screen
-
+        self.sm.current = self.return_screen
+        if hasattr(self, 'probing_screen'):
+            self.sm.remove_widget(self.probing_screen)

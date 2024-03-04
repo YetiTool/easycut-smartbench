@@ -18,6 +18,8 @@ from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.comms import motors
 
 from kivy.clock import Clock
+from kivy.properties import NumericProperty
+from kivy.event import EventDispatcher
 import sys, os, time
 from datetime import datetime
 import os.path
@@ -42,7 +44,7 @@ class ProductCodes(Enum):
     UNKNOWN = 00
 
 
-class RouterMachine(object):
+class RouterMachine(EventDispatcher):
     # SETUP
     
     s = None # serial object
@@ -1216,6 +1218,10 @@ class RouterMachine(object):
         
     def maximum_spindle_speed(self):
         return 25000
+    
+    def is_spindle_on(self):
+        return float(self.s.spindle_speed) > 0
+    
 
 # START UP SEQUENCES
 

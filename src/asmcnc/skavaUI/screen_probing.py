@@ -88,13 +88,14 @@ def log(message):
 
 
 class ProbingScreen(Screen):
-    button_reference = None
+    parent_button = None
 
     def __init__(self, **kwargs):
         super(ProbingScreen, self).__init__(**kwargs)
         self.sm = kwargs["screen_manager"]
         self.m = kwargs["machine"]
         self.l = kwargs["localization"]
+        self.fp = kwargs["fast_probe"]
 
         self.not_probing = False
         self.alarm_triggered = False
@@ -103,7 +104,7 @@ class ProbingScreen(Screen):
         self.function_debug = False
 
     def update_text(self, string):
-        self.probing_label.text = self.l.get_str(string) + "..."      
+        self.probing_label.text = self.l.get_str(string) + "..."
 
     def on_enter(self):
         if self.function_debug:
@@ -123,13 +124,13 @@ class ProbingScreen(Screen):
 
         if self.m.is_spindle_on():
             # Spindle is on, need to turn it off
-            log("Spindle is on, turning off")
+            log("Spindle is on, turning off before probing")
             self.m.turn_off_spindle()
             delay_time.append(8)
 
         if self.m.state().lower() == "run" or self.m.state().lower() == "jog":
             # Machine is running, need to stop it
-            log("Machine is running, pausing")
+            log("Machine is running, pausing before probing")
             self.m._grbl_feed_hold()
             Clock.schedule_once(lambda dt: self.m._grbl_soft_reset(), 3.5) # Wait before reseting to avoid alarm
             delay_time.append(4)
@@ -152,7 +153,7 @@ class ProbingScreen(Screen):
         if self.function_debug:
             log ("**** probing called")
         if self.m.state().lower() == "idle":
-            self.m.probe_z()
+            self.m.probe_z(self.fp)
             self.update_text("Probing")
         else:
             log("Machine state is {}, not idle. Cannot probe".format(self.m.state()))
@@ -167,21 +168,19 @@ class ProbingScreen(Screen):
         if self.function_debug:
             log("**** watchdog called")
         machine_state = self.m.state().lower()
-        screen = self.sm.current.lower()
+        screen = self.sm.current
+        screen = str(screen).lower()
 
-        # Machine isn't or is no longer probing
         self.not_probing =  machine_state != "run"
-            
-        # Alarm occured
         self.alarm_triggered = "alarm" in machine_state or "alarm" in screen            
 
-        # Stop watchdog if screen closed
         if screen != 'probing':
             Clock.unschedule(self.watchdog_event)
         
-        if screen == 'probing' and (self.not_probing or self.alarm_triggered):
-            log("Probing screen exited due to alarm or incorrect machine state: " + str(machine_state))
-            self.cancel_probing() # Just in case
+        if screen == 'probing' and self.alarm_triggered:
+            log("Probing screen exited due to alarm")
+            self.exit()
+        if screen == 'probing' and self.not_probing:
             self.exit()
 
         if self.variable_debug:
@@ -214,12 +213,13 @@ class ProbingScreen(Screen):
         if hasattr(self, "watchdog_event"):
             if self.watchdog_event.is_triggered:
                 Clock.unschedule(self.watchdog_event)
-        self.sm.current = self.sm.return_to_screen
 
         # Reset flags
         self.not_probing = False
         self.alarm_triggered = False
 
+        # Call parent button's close_screen method
+        self.parent_button.close_screen()
+        
     def debug_log(self):
         log(("Current screen: " + self.sm.current, "Machine state: " + self.m.state(), "Not probing: " + str(self.not_probing), "Alarm triggered: " + str(self.alarm_triggered), "Watchdog scheduled: " + str(self.watchdog_event.is_triggered)if hasattr(self, "watchdog_event") else "No watchdog event") )
-
