@@ -4,6 +4,7 @@ from kivy.lang import Builder
 from kivy.uix.widget import Widget
 
 from asmcnc.skavaUI import popup_info
+from asmcnc.core_UI.components.buttons import probe_button
 
 Builder.load_string("""
 <XYMoveDrywall>
@@ -28,7 +29,7 @@ Builder.load_string("""
             height: self.width
     
             BoxLayout:
-                padding: 10
+                padding:dp(10)
                 size: self.parent.size
                 pos: self.parent.pos
                 Button:
@@ -59,7 +60,7 @@ Builder.load_string("""
                     root.buttonJogXY('X+')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -70,7 +71,7 @@ Builder.load_string("""
                         allow_stretch: True
     
             BoxLayout:
-                padding: 10
+                padding:dp(10)
                 size: self.parent.size
                 pos: self.parent.pos
                 Button:
@@ -100,7 +101,7 @@ Builder.load_string("""
                     root.buttonJogXY('Y+')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -117,7 +118,7 @@ Builder.load_string("""
                     root.jogModeCycled()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -137,7 +138,7 @@ Builder.load_string("""
                     root.buttonJogXY('Y-')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos  
                     Image:
@@ -150,24 +151,7 @@ Builder.load_string("""
                 padding: 15
                 size: self.parent.size
                 pos: self.parent.pos                 
-                Button:
-                    size_hint_y: 1
-                    background_color: hex('#F4433600')
-                    on_release: 
-                        self.background_color = hex('#F4433600')
-                    on_press: 
-                        root.probe_z()
-                        self.background_color = hex('#F44336FF')
-                    BoxLayout:
-                        padding: 0
-                        size: self.parent.size
-                        pos: self.parent.pos
-                        Image:
-                            source: "./asmcnc/skavaUI/img/z_probe.png"
-                            center_x: self.parent.center_x
-                            y: self.parent.y
-                            size: self.parent.width, self.parent.height
-                            allow_stretch: True
+                id: probe_button_container
             Button:
                 background_color: hex('#F4433600')
                 always_release: True
@@ -180,7 +164,7 @@ Builder.load_string("""
                     root.buttonJogXY('X-')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -190,7 +174,7 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
             BoxLayout:
-                padding: 10
+                padding:dp(10)
                 size: self.parent.size
                 pos: self.parent.pos
                 ToggleButton:
@@ -231,6 +215,7 @@ class XYMoveDrywall(Widget):
         self.l=kwargs['localization']
 
         self.set_jog_speeds()
+        self.ids.probe_button_container.add_widget(probe_button.ProbeButton(self.m, self.sm, self.l, fast_probe=True))
 
     jogMode = 'free'
     jog_mode_button_press_counter = 0

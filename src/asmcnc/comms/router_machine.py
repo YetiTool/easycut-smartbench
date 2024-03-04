@@ -23,6 +23,9 @@ from asmcnc.comms import motors
 from asmcnc.skavaUI import popup_info
 
 from kivy.clock import Clock
+from kivy.properties import NumericProperty
+from kivy.event import EventDispatcher
+import sys, os, time
 import os, time
 from datetime import datetime
 
@@ -48,7 +51,7 @@ class Axis(Enum):
     Z = 'Z'
 
 
-class RouterMachine(object):
+class RouterMachine(EventDispatcher):
     # SETUP
     
     s = None # serial object
@@ -1240,6 +1243,10 @@ class RouterMachine(object):
     def maximum_spindle_speed(self):
         return 25000
 
+    def is_spindle_on(self):
+        return float(self.s.spindle_speed) > 0
+
+
 # START UP SEQUENCES
 
     # BOOT UP SEQUENCE
@@ -2238,12 +2245,16 @@ class RouterMachine(object):
             # On detection "probe_z_detection_event" is called (for a single immediate EEPROM write command)....
             # ... followed by a delayed call to "probe_z_post_operation" for any post-write actions.
 
+
+    probe_z_coord = NumericProperty()
+
     def probe_z_detection_event(self, z_machine_coord_when_probed):
         """
         This function is called by the serial module when the probe detection is detected.
         :param z_machine_coord_when_probed: the machine's Z coordinate when the probe is detected
         :return: None
         """
+        self.probe_z_coord = z_machine_coord_when_probed
         self.s.write_command('G90 G1 G53 Z' + z_machine_coord_when_probed)
         self.s.write_command('G4 P0.5')
         self.s.write_command('G10 L20 P1 Z' + str(self.z_touch_plate_thickness))
