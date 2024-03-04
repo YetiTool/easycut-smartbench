@@ -423,4 +423,4 @@ class ZHeadMechanics(Screen):
         self.sm.current = 'manual_move'
 
     def reset_grbl(self):
-        self.m._grbl_soft_reset()
+        self.m.stop_from_quick_command_reset()
