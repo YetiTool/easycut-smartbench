@@ -27,6 +27,8 @@ class Keyboard(VKeyboard):
         self.bind(do_translation=self.set_keyboard_background)
 
         self.text_instance = None
+        self.custom_numeric_pos = None
+        self.custom_qwerty_pos = None
 
         dirname = os.path.dirname(__file__)
 
@@ -146,10 +148,7 @@ class Keyboard(VKeyboard):
             self.margin_hint = [.05, .06, .05, .06]  # Default margin
             self.background = "atlas://data/images/defaulttheme/vkeyboard_background"
 
-        if self.layout == self.numeric_layout:
-            self.width = scaling_utils.Width / 3
-        else:
-            self.width = scaling_utils.Width
+        self.setup_layout()
 
         # Make sure keyboard never goes off-screen and becomes unusable/unreachable
         if self.pos[0] + self.width > scaling_utils.Width:
@@ -160,6 +159,23 @@ class Keyboard(VKeyboard):
             self.pos = (0, self.pos[1])
         if self.pos[1] + self.height > scaling_utils.Height:
             self.pos = (self.pos[0], scaling_utils.Height - self.height)
+
+    def setup_layout(self):
+        if self.layout == self.numeric_layout:
+            self.width = scaling_utils.Width / 3.4
+            if self.custom_numeric_pos:
+                self.pos = self.custom_numeric_pos
+        else:
+            self.width = scaling_utils.Width
+            if self.custom_qwerty_pos:
+                self.pos = self.custom_qwerty_pos
+
+    # Set custom positions for the keyboard
+    def set_numeric_pos(self, pos):
+        self.custom_numeric_pos = pos
+
+    def set_qwerty_pos(self, pos):
+        self.custom_qwerty_pos = pos
 
     # On focus behaviour is bound to all text inputs
     def on_focus_raise_keyboard(self,instance,value):
@@ -175,6 +191,7 @@ class Keyboard(VKeyboard):
                 self.layout = self.previous_layout
             instance.focus = True
             self.text_instance = instance
+            self.setup_layout()
             self.raise_keyboard_if_none_exists()
         else:
             self.lower_keyboard_if_not_focused()

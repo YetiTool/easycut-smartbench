@@ -16,6 +16,7 @@ Builder.load_string(
 	your_serial_number_label : your_serial_number_label
 	serial_number_label : serial_number_label
 	next_button : next_button
+	prev_screen_button:prev_screen_button
 
 	BoxLayout: 
 		size_hint: (None,None)
@@ -104,6 +105,7 @@ Builder.load_string(
 					width: dp(0.305625*app.width)
 					padding:[0, 0, dp(0.230625)*app.width, 0]
 					Button:
+					    id: prev_screen_button
 					    font_size: str(0.01875 * app.width) + 'sp'
 						size_hint: (None,None)
 						height: dp(0.108333333333*app.height)
