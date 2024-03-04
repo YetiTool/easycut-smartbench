@@ -172,6 +172,17 @@ Builder.load_string("""
                     background_normal: ''
                     on_press: root.go_to_manual_move()
 
+                Button:
+                    text: 'Reset GRBL'
+                    bold: True
+                    font_size: dp(20)
+                    text_size: self.size
+                    valign: 'middle'
+                    halign: 'center'
+                    background_color: hex('#9E32F1FF')
+                    background_normal: ''
+                    on_press: root.go_to_manual_move()
+
             Button:
                 id: stop_button
                 text: 'STOP'
