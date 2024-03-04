@@ -431,7 +431,7 @@ class SpindleSettingsWidget(Widget):
     def raise_z_then_get_data(self):
         if self.m.state().startswith("Idle"):
             self.wait_popup.open()
-            self.m.zUp()
+            self.m.raise_z_axis_for_collet_access()
             Clock.schedule_once(self.get_spindle_data, 0.4)
         else:
             self.sm.pm.show_error_popup("Please ensure machine is idle before continuing.")

@@ -3,31 +3,32 @@ Created on 31 Jan 2018
 @author: Ed
 This module defines the machine's properties (e.g. travel), services (e.g. serial comms) and functions (e.g. move left)
 '''
+import re
+import threading
+import traceback
+
 from enum import Enum
 
-import logging, threading, re, traceback
+from asmcnc.comms.serial_connection import MachineState
 
 try:
     import pigpio
 except:
     pass
 
-from asmcnc.comms import serial_connection  
+from asmcnc.comms import serial_connection
 from asmcnc.comms.yeti_grbl_protocol import protocol
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.comms import motors
+from asmcnc.skavaUI import popup_info
 
 from kivy.clock import Clock
 from kivy.properties import NumericProperty
 from kivy.event import EventDispatcher
 import sys, os, time
+import os, time
 from datetime import datetime
-import os.path
-from os import path
 
-
-
-from asmcnc.skavaUI import popup_info
 
 def log(message):
     timestamp = datetime.now()
@@ -42,6 +43,12 @@ class ProductCodes(Enum):
     STANDARD = 02
     FIRST_VERSION = 01
     UNKNOWN = 00
+
+
+class Axis(Enum):
+    X = 'X'
+    Y = 'Y'
+    Z = 'Z'
 
 
 class RouterMachine(EventDispatcher):
@@ -59,8 +66,7 @@ class RouterMachine(EventDispatcher):
     limit_switch_safety_distance = 1.0
 
     # put commonly used speed and pos values here (or any values that need to be easy to find :))
-    z_max_feed = 750
-    z_post_homing_raise_abs = -5.0
+    Z_MAX_FEED_RATE = 750
 
     is_machine_completed_the_initial_squaring_decision = False
     is_machine_homed = False # status on powerup
@@ -183,6 +189,24 @@ class RouterMachine(EventDispatcher):
         self.TMC_motor[TMC_Y2] = motors.motor_class(TMC_Y2)
         self.TMC_motor[TMC_Z] = motors.motor_class(TMC_Z)
 
+    Z_AXIS_ACCESSIBLE_ABS_HEIGHT = -5
+    Z_PROBE_SAFE_PULL_OFF = 1
+
+    def raise_z_axis_for_collet_access(self):
+        """
+        Raise Z to a height that the user can access the spindle collet
+        :return: None
+        """
+        self.jog_absolute_single_axis(Axis.Z.value, target=self.Z_AXIS_ACCESSIBLE_ABS_HEIGHT,
+                                      speed=self.Z_MAX_FEED_RATE)
+
+    def raise_z_axis_to_safe_height_after_probing(self):
+        """
+        Raise Z to a height that is slightly above the probe coordinate so the machine clears the stock
+        :return: none
+        """
+        self.jog_relative(Axis.Z.value, self.Z_PROBE_SAFE_PULL_OFF, self.Z_MAX_FEED_RATE)
+
     # CREATE/DESTROY SERIAL CONNECTION (for cycle app)
     def reconnect_serial_connection(self):
         self.starting_serial_connection = True
@@ -202,41 +226,41 @@ class RouterMachine(EventDispatcher):
     def check_presence_of_sb_values_files(self):
 
         # check folder exists
-        if not path.exists(self.smartbench_values_dir):
+        if not os.path.exists(self.smartbench_values_dir):
             log("Creating sb_values dir...")
             os.mkdir(self.smartbench_values_dir)
 
-        if not path.exists(self.set_up_options_file_path):
+        if not os.path.exists(self.set_up_options_file_path):
             log("Creating set up options file...")
             file = open(self.set_up_options_file_path, "w+")
             file.write(str(self.trigger_setup))
             file.close()
 
-        if not path.exists(self.z_touch_plate_thickness_file_path):
+        if not os.path.exists(self.z_touch_plate_thickness_file_path):
             log("Creating z touch plate thickness file...")
             file = open(self.z_touch_plate_thickness_file_path, "w+")
             file.write(str(self.z_touch_plate_thickness))
             file.close()
 
-        if not path.exists(self.z_head_laser_offset_file_path):
+        if not os.path.exists(self.z_head_laser_offset_file_path):
             log("Creating z head laser offset file...")
             file = open(self.z_head_laser_offset_file_path, "w+")
             file.write('False' + "\n" + "0" + "\n" + "0")
             file.close()
 
-        if not path.exists(self.spindle_brush_values_file_path):
+        if not os.path.exists(self.spindle_brush_values_file_path):
             log("Creating spindle brush values file...")
             file = open(self.spindle_brush_values_file_path, "w+")
             file.write(str(self.spindle_brush_use_seconds) + "\n" + str(self.spindle_brush_lifetime_seconds))
             file.close()
 
-        if not path.exists(self.spindle_cooldown_rpm_override_file_path):
+        if not os.path.exists(self.spindle_cooldown_rpm_override_file_path):
             log("Creating spindle cooldown_rpm override settings file...")
             file = open(self.spindle_cooldown_rpm_override_file_path, "w+")
             file.write(str(self.spindle_cooldown_rpm_override))
             file.close()
 
-        if not path.exists(self.spindle_cooldown_settings_file_path):
+        if not os.path.exists(self.spindle_cooldown_settings_file_path):
             log("Creating spindle cooldown settings file...")
             file = open(self.spindle_cooldown_settings_file_path, "w+")
             file.write(
@@ -248,42 +272,42 @@ class RouterMachine(EventDispatcher):
                 )
             file.close()
 
-        if not path.exists(self.stylus_settings_file_path):
+        if not os.path.exists(self.stylus_settings_file_path):
             log("Creating stylus settings file...")
             file = open(self.stylus_settings_file_path, "w+")
             file.write(str(self.is_stylus_enabled))
             file.close()
 
-        if not path.exists(self.calibration_settings_file_path):
+        if not os.path.exists(self.calibration_settings_file_path):
             log('Creating calibration settings file...')
             file = open(self.calibration_settings_file_path, 'w+')
             file.write(str(self.time_since_calibration_seconds) + "\n" + str(self.time_to_remind_user_to_calibrate_seconds))
             file.close()
 
-        if not path.exists(self.z_head_maintenance_settings_file_path):
+        if not os.path.exists(self.z_head_maintenance_settings_file_path):
             log('Creating z head maintenance settings file...')
             file = open(self.z_head_maintenance_settings_file_path, 'w+')
             file.write(str(self.time_since_z_head_lubricated_seconds))
             file.close()
 
-        if not path.exists(self.spindle_health_check_file_path):
+        if not os.path.exists(self.spindle_health_check_file_path):
             log("Creating spindle health check settings file...")
             file = open(self.spindle_health_check_file_path, "w+")
             file.write(str(self.is_spindle_health_check_enabled_as_default))
             file.close()
 
-        if not path.exists(self.device_label_file_path):
+        if not os.path.exists(self.device_label_file_path):
             log('Creating device label settings file...')
             file = open(self.device_label_file_path, 'w+')
             file.write(str(self.device_label))
             file.close()
 
-        if not path.exists(self.device_location_file_path):
+        if not os.path.exists(self.device_location_file_path):
             log('Creating device location settings file...')
             file = open(self.device_location_file_path, 'w+')
             file.write(str(self.device_location))
 
-        if not path.exists(self.persistent_language_path):
+        if not os.path.exists(self.persistent_language_path):
             log("Creating language settings file")
             file = open(self.persistent_language_path, 'w+')
             file.write('English (GB)')
@@ -305,7 +329,7 @@ class RouterMachine(EventDispatcher):
 
 
     def look_at(self, f):
-        return path.isfile(f)
+        return os.path.isfile(f)
 
     ## SET UP OPTIONS
     def read_set_up_options(self):
@@ -1077,7 +1101,7 @@ class RouterMachine(EventDispatcher):
 
             if revert:
                 return int(round(0.6739 * target_rpm + 8658)) # Revert the corrected RPM back to the original requested RPM
-        
+
             compensated_RPM = int(round((target_rpm - 8658) / 0.6739))
 
             if compensated_RPM < 0:
@@ -1109,7 +1133,7 @@ class RouterMachine(EventDispatcher):
 
             if revert:
                 return int(round(0.95915 * target_rpm + 1886)) # Revert the corrected RPM back to the original requested RPM
-        
+
             compensated_RPM = int(round((target_rpm - 1886) / 0.95915))
 
             if compensated_RPM < 0:
@@ -1123,7 +1147,7 @@ class RouterMachine(EventDispatcher):
         else:
             log("Requested RPM {} outside of range for 230V spindle (4000 - 25000)".format(target_rpm))
             return 0
-        
+
     def correct_rpm(self, requested_rpm, spindle_voltage = None, revert = False):
         """
         Compensates for the desparity in set and actual spindle RPM for a spindle.
@@ -1145,15 +1169,15 @@ class RouterMachine(EventDispatcher):
         if spindle_voltage is None:
             spindle_voltage = self.spindle_voltage # Use spindle voltage set by user in maintenance app
 
-        if spindle_voltage in [110, 120]:            
-            rpm_to_set = self.correct_rpm_for_120(requested_rpm, revert)                
-        
+        if spindle_voltage in [110, 120]:
+            rpm_to_set = self.correct_rpm_for_120(requested_rpm, revert)
+
         elif spindle_voltage in [230, 240]:
             rpm_to_set = self.correct_rpm_for_230(requested_rpm, revert)
-        
+
         else:
             raise ValueError('Spindle voltage: {} not recognised'.format(spindle_voltage))
-        
+
         if revert:
             log("Requested RPM: "+ str(requested_rpm) + " Reverted RPM: " + str(rpm_to_set) + " Voltage: " + str(spindle_voltage))
         else:
@@ -1206,22 +1230,22 @@ class RouterMachine(EventDispatcher):
 
         if spindle_voltage is None:
             spindle_voltage = self.spindle_voltage # Use spindle voltage set by user in maintenance app
-        
+
         if spindle_voltage in [110, 120]:
             return 10000 # Defined by Mafell spindle HW
-        
+
         elif spindle_voltage in [230, 240]:
             return 4000 # Defined by Mafell spindle HW
-        
+
         else:
             raise ValueError('Spindle voltage: {} not recognised'.format(spindle_voltage))
-        
+
     def maximum_spindle_speed(self):
         return 25000
-    
+
     def is_spindle_on(self):
         return float(self.s.spindle_speed) > 0
-    
+
 
 # START UP SEQUENCES
 
@@ -1356,7 +1380,7 @@ class RouterMachine(EventDispatcher):
 
     def stop_for_a_stream_pause(self, reason_for_pause=None):
         self.set_pause(True, reason_for_pause=reason_for_pause)
-        self._grbl_door() # send a soft-door command
+        self._grbl_door()
 
     def resume_after_a_stream_pause(self):
         self.reason_for_machine_pause = "Resuming"
@@ -1616,7 +1640,7 @@ class RouterMachine(EventDispatcher):
 
 
 # SETTINGS GETTERS
-    def serial_number(self): 
+    def serial_number(self):
         return self.s.setting_50
 
     def get_product_code(self):
@@ -1849,7 +1873,7 @@ class RouterMachine(EventDispatcher):
         else:
             cooldown_rpm = self.spindle_cooldown_rpm
             self.s.write_command('M3 S' + str(cooldown_rpm))
-        self.zUp()
+        self.raise_z_axis_for_collet_access()
 
     def laser_on(self):
         if self.is_laser_enabled == True:
@@ -1885,9 +1909,6 @@ class RouterMachine(EventDispatcher):
     def go_to_jobstart_z(self):
         self.s.write_command('G0 G54 Z0')
 
-    def zUp(self):
-        self.s.write_command('G0 G53 Z-' + str(self.s.setting_27))
-
     def vac_on(self):
         self.s.write_command('AE')
 
@@ -1903,7 +1924,7 @@ class RouterMachine(EventDispatcher):
         self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
         self.s.write_command('G4 P0.1')
         self.s.write_command('G0 G54 Y0')
- 
+
     def go_xy_datum(self):
         self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
         self.s.write_command('G4 P0.1')
@@ -2076,10 +2097,6 @@ class RouterMachine(EventDispatcher):
         log("Move to laser offset")
         self.jog_absolute_single_axis('X', float(self.x_min_jog_abs_limit) + 5 - self.laser_offset_x_value, 3000)
 
-    def raise_z_axis_for_collet_access(self, dt=0):
-        log("Raise Z axis to allow access to spindle motor clamping nut")
-        self.jog_absolute_single_axis('Z', self.z_post_homing_raise_abs, self.z_max_feed)
-
     # final component is always complete homing sequence
     def complete_homing_sequence(self, dt=0):
         self.set_led_colour("GREEN")
@@ -2232,21 +2249,30 @@ class RouterMachine(EventDispatcher):
     probe_z_coord = NumericProperty()
 
     def probe_z_detection_event(self, z_machine_coord_when_probed):
+        """
+        This function is called by the serial module when the probe detection is detected.
+        :param z_machine_coord_when_probed: the machine's Z coordinate when the probe is detected
+        :return: None
+        """
         self.probe_z_coord = z_machine_coord_when_probed
         self.s.write_command('G90 G1 G53 Z' + z_machine_coord_when_probed)
         self.s.write_command('G4 P0.5')
         self.s.write_command('G10 L20 P1 Z' + str(self.z_touch_plate_thickness))
         self.s.write_command('G4 P0.5')
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.5)
+
         if self.fast_probing:
             self.jog_relative('Z', 5, 750)
             self.fast_probing = False
         else:
-            self.zUp()
+            # Ensure that it doesn't go down to -5 if the probe was detected higher than that
+            if float(z_machine_coord_when_probed) < self.Z_AXIS_ACCESSIBLE_ABS_HEIGHT:
+                self.raise_z_axis_for_collet_access()
+            else:
+                # Raise z axis by 1mm to ensure it's clear of the probe plate
+                self.raise_z_axis_to_safe_height_after_probing()
 
-
-
-# LIGHTING
+    # LIGHTING
 
     led_colour_status = "none"
 

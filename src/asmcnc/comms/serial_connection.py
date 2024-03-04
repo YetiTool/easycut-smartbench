@@ -3,20 +3,21 @@ Created on 31 Jan 2018
 @author: Ed
 Module to manage all serial comms between pi (EasyCut s/w) and realtime arduino chip (GRBL f/w)
 '''
-
-from kivy.config import Config
-
-
-import serial, sys, time, string, threading, serial.tools.list_ports
-from datetime import datetime, timedelta
-from os import listdir
-from kivy.clock import Clock
-from kivy.properties import StringProperty, NumericProperty
-from kivy.event import EventDispatcher
-
 import re
+from datetime import datetime, timedelta
 from functools import partial
-from serial.serialutil import SerialException
+from os import listdir
+
+import serial
+import serial.tools.list_ports
+import string
+import sys
+import threading
+import time
+from enum import Enum
+from kivy.clock import Clock
+from kivy.event import EventDispatcher
+from kivy.properties import StringProperty, NumericProperty
 
 # Import managers for GRBL Notification screens (e.g. alarm, error, etc.)
 from asmcnc.core_UI.sequence_alarm import alarm_manager
@@ -29,6 +30,16 @@ GRBL_SCANNER_MIN_DELAY = 0.01  # Delay between checking for response from grbl. 
 def log(message):
     timestamp = datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
+
+
+class MachineState(Enum):
+    IDLE = 'Idle'
+    RUN = 'Run'
+    HOLD = 'Hold'
+    JOG = 'Jog'
+    HOME = 'Home'
+    CHECK = 'Check'
+    DOOR_0 = 'Door:0'
 
 
 class SerialConnection(EventDispatcher):
@@ -503,7 +514,7 @@ class SerialConnection(EventDispatcher):
 
         if self.m_state != "Check":
             self.m.set_led_colour('GREEN')
-            self.m.zUp()
+            self.m.raise_z_axis_for_collet_access()
 
         self.FLUSH_FLAG = True
         self.NOT_SKELETON_STUFF = True
@@ -700,7 +711,7 @@ class SerialConnection(EventDispatcher):
             self.FLUSH_FLAG = True
 
             # Move head up        
-            Clock.schedule_once(lambda dt: self.m.zUp(), 0.5)
+            Clock.schedule_once(lambda dt: self.m.raise_z_axis_for_collet_access(), 0.5)
             Clock.schedule_once(lambda dt: self.m.vac_off(), 1)
 
             # Update time for maintenance reminders
