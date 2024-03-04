@@ -144,10 +144,11 @@ Builder.load_string("""
                     on_press: root.home()
 
             BoxLayout:
-                padding: [dp(0), dp(50)]
+                orientation: 'vertical'
 
                 BoxLayout:
                     id: z_move_container
+                    size_hint_y: 0.65
 
                     canvas:
                         Color:
@@ -155,6 +156,20 @@ Builder.load_string("""
                         RoundedRectangle:
                             size: self.size
                             pos: self.pos
+
+                BoxLayout: 
+                    orientation: 'horizontal'
+                    id: reset_buttons
+                    size_hint_y: 0.1
+
+                    Button:
+                        text: "SOFT RESET"
+                        on_press: root.grbl_reset()
+
+                    Button:
+                        text: "PCB RESET"
+                        on_press: root.pcb_reset()
+
 
 """)
 
@@ -193,6 +208,11 @@ class ZHeadMechanicsManualMove(Screen):
     def de_energise_motor(self):
         self.m.send_command_to_motor("DISABLE MOTOR DRIVERS", motor=TMC_Z, command=SET_MOTOR_ENERGIZED, value=0)
 
+    def grbl_reset(self):
+        self.m.resume_from_alarm()
+
+    def pcb_reset(self):
+        self.m.hard_reset_pcb_sequence()
 
     def home(self):
         self.m.is_machine_completed_the_initial_squaring_decision = True
