@@ -28,9 +28,7 @@ class ProbeButton(Button):
         self.m = router_machine
         self.l = localization
         
-        z_probe_img_dir = pu.get_image_path("z_probe_big")
-
-        self.image = Image(source=z_probe_img_dir, size = self.size, pos = self.pos, allow_stretch = True)
+        self.image = Image(source=pu.get_path("z_probe.png"), size = self.size, pos = self.pos, allow_stretch = True)
         self.add_widget(self.image)
 
         self.bind(size=self.update_image_size)
