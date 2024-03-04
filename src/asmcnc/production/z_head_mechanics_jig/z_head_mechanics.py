@@ -153,7 +153,7 @@ Builder.load_string("""
                 Button:
                     text: 'Serial Monitor'
                     bold: True
-                    font_size: dp(20)
+                    font_size: dp(16)
                     text_size: self.size
                     valign: 'middle'
                     halign: 'center'
@@ -164,7 +164,7 @@ Builder.load_string("""
                 Button:
                     text: 'Manual Move'
                     bold: True
-                    font_size: dp(20)
+                    font_size: dp(16)
                     text_size: self.size
                     valign: 'middle'
                     halign: 'center'
@@ -175,7 +175,7 @@ Builder.load_string("""
                 Button:
                     text: 'Reset GRBL'
                     bold: True
-                    font_size: dp(20)
+                    font_size: dp(16)
                     text_size: self.size
                     valign: 'middle'
                     halign: 'center'
