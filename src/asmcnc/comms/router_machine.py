@@ -2244,7 +2244,7 @@ class RouterMachine(object):
         print("PROBE: %s" % z_machine_coord_when_probed)
 
         # Ensure that it doesn't go down to -5 if the probe was detected higher than that
-        if z_machine_coord_when_probed < self.Z_AXIS_ACCESSIBLE_ABS_HEIGHT:
+        if z_machine_coord_when_probed < float(self.Z_AXIS_ACCESSIBLE_ABS_HEIGHT):
             self.raise_z_axis_for_collet_access()
         else:
             # Raise z axis by 1mm to ensure it's clear of the probe plate
