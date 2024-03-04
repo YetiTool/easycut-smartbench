@@ -1360,7 +1360,7 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.set_led_colour('GREEN'),0.1)
 
     def soft_stop(self):
-        self.pause()
+        self.set_pause(True)
         self._grbl_door()
 
     def stop_from_quick_command_reset(self):
@@ -1372,8 +1372,6 @@ class RouterMachine(object):
     def stop_for_a_stream_pause(self, reason_for_pause=None):
         self.set_pause(True, reason_for_pause=reason_for_pause)
         self._grbl_door()
-        Clock.schedule_once(lambda dt: self.resume_to_idle_while_paused(), 0.5)
-        Clock.schedule_once(lambda dt: self.raise_z_axis_for_collet_access(), 1.5)
 
     def resume_after_a_stream_pause(self):
         self.reason_for_machine_pause = "Resuming"
@@ -1398,17 +1396,6 @@ class RouterMachine(object):
 
         Clock.schedule_once(lambda dt: record_pause_time(prev_state, pauseBool), 0.2)
 
-    def pause(self, reason=None):
-        self.is_machine_paused = True
-
-        if reason:
-            self.reason_for_machine_pause = reason
-
-        def store_pause_time(dt):
-            self.s.stream_pause_start_time = time.time()
-
-        Clock.schedule_once(store_pause_time, 0.2)
-
     def stop_from_soft_stop_cancel(self):
         self.resume_from_alarm()
         Clock.schedule_once(lambda dt: self.set_pause(False),0.6)
@@ -1426,10 +1413,6 @@ class RouterMachine(object):
     def cancel_after_a_hard_door(self):
         self.resume_from_alarm()
         Clock.schedule_once(lambda dt: self.set_pause(False),0.4)
-
-    def resume_to_idle_while_paused(self):
-        self.reason_for_machine_pause = "Resuming"
-        self._grbl_resume()
 
     def reset_after_sequential_stream(self):
         self._stop_all_streaming()
@@ -2257,6 +2240,8 @@ class RouterMachine(object):
         self.s.write_command('G10 L20 P1 Z' + str(self.z_touch_plate_thickness))
         self.s.write_command('G4 P0.5')
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.5)
+
+        print("PROBE: %s" % z_machine_coord_when_probed)
 
         # Ensure that it doesn't go down to -5 if the probe was detected higher than that
         if z_machine_coord_when_probed < self.Z_AXIS_ACCESSIBLE_ABS_HEIGHT:

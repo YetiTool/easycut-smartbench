@@ -1125,7 +1125,7 @@ class SerialConnection(EventDispatcher):
                         self.m._grbl_door()
                         self.sm.get_screen('door').db.send_event(2, 'Power loss',
                                                                  'Connection loss: Check power and WiFi', 0)
-                        self.m.pause()
+                        self.m.set_pause(True)
                         log("Power loss or DC power supply")
                         self.power_loss_detected = True
                         Clock.schedule_once(lambda dt: self.m.resume_from_a_soft_door(), 1)
@@ -1134,7 +1134,7 @@ class SerialConnection(EventDispatcher):
                     if part.startswith("Door:3"):
                         pass
                     else:
-                        self.m.pause()  # sets flag is_machine_paused so this stub only gets called once
+                        self.m.set_pause(True)  # sets flag is_machine_paused so this stub only gets called once
                         if self.sm.current != 'door':
                             log("Hard " + self.m_state)
                             self.sm.get_screen('door').return_to_screen = self.sm.current
