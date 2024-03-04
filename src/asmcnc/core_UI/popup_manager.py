@@ -15,7 +15,7 @@ from asmcnc.core_UI.popups import (
     WaitPopup,
     WarningPopup,
     UploadSettingsFromUsbPopup,
-    DownloadSettingsToUsbPopup
+    DownloadSettingsToUsbPopup, SpindleSafetyPopup
 )
 
 
@@ -34,6 +34,7 @@ class PopupManager:
     wait_popup = None
     upload_settings_from_usb = None
     download_settings_to_usb = None
+    spindle_safety_popup = None
 
     def __init__(self, sm, m, l):
         self.sm = sm
@@ -75,6 +76,16 @@ class PopupManager:
         self.upload_settings_from_usb = UploadSettingsFromUsbPopup(sm=self.sm, m=self.m, l=self.l, main_string="")
 
         self.download_settings_to_usb = DownloadSettingsToUsbPopup(sm=self.sm, m=self.m, l=self.l, main_string="")
+
+        self.spindle_safety_popup = SpindleSafetyPopup(sm=self.sm, m=self.m, l=self.l)
+
+    def show_spindle_safety_popup(self, button_one_callback, button_two_callback):
+        self.spindle_safety_popup.button_one_callback = button_one_callback
+        self.spindle_safety_popup.button_two_callback = button_two_callback
+        self.spindle_safety_popup.open()
+
+    def hide_spindle_safety_popup(self):
+        self.spindle_safety_popup.dismiss()
 
     def show_error_popup(
         self,
