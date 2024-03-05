@@ -14,7 +14,7 @@ class SpindleButton(ButtonBase, BlinkingWidget):
     """A custom button widget used for spindle functionality."""
 
     background_normal = SPINDLE_OFF_IMAGE
-    background_down = SPINDLE_ON_IMAGE
+    background_down = SPINDLE_OFF_IMAGE
 
     border = (0, 0, 0, 0)
     allow_stretch = True
@@ -58,18 +58,7 @@ class SpindleButton(ButtonBase, BlinkingWidget):
         :param value: the new value of the spindle_on property from SerialConnection
         :return: None
         """
-        self.__set_spindle_image(value)
-        self.blinking = value
+        self.background_normal = SPINDLE_ON_IMAGE if value else SPINDLE_OFF_IMAGE
+        self.background_down = SPINDLE_ON_IMAGE if value else SPINDLE_OFF_IMAGE
 
-    def __set_spindle_image(self, value):
-        """
-        Sets the button image based on the spindle state.
-        :param value: the new value of the spindle_on property from SerialConnection
-        :return: None
-        """
-        if value:
-            self.background_normal = SPINDLE_ON_IMAGE
-            self.background_down = SPINDLE_OFF_IMAGE
-        else:
-            self.background_normal = SPINDLE_OFF_IMAGE
-            self.background_down = SPINDLE_ON_IMAGE
+        self.blinking = value
