@@ -1,6 +1,7 @@
 import os
 
-from kivy.properties import BooleanProperty
+from kivy.clock import Clock
+from kivy.properties import BooleanProperty, StringProperty
 
 from asmcnc.core_UI import path_utils
 from asmcnc.core_UI.components.buttons.button_base import ImageButtonBase
@@ -15,7 +16,7 @@ SPINDLE_OFF_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "spindle_off.png")
 class SpindleButton(ImageButtonBase, BlinkingWidget):
     """A custom button widget used for spindle functionality."""
 
-    source = SPINDLE_OFF_IMAGE
+    source = StringProperty(SPINDLE_OFF_IMAGE)
     allow_stretch = BooleanProperty(True)
 
     def __init__(self, router_machine, serial_connection, screen_manager, **kwargs):
@@ -48,8 +49,13 @@ class SpindleButton(ImageButtonBase, BlinkingWidget):
         :param value: the new value of the spindle_on property from SerialConnection
         :return: None
         """
-        print(self.source)
-        self.source = SPINDLE_ON_IMAGE if value else SPINDLE_OFF_IMAGE
-        print(self.source)
+        Clock.schedule_once(lambda dt: self.__update_spindle_image(value))
         self.blinking = value
 
+    def __update_spindle_image(self, value):
+        """
+        Updates the spindle image based on the spindle_on property of the SerialConnection.
+
+        :return: None
+        """
+        self.source = SPINDLE_ON_IMAGE if value else SPINDLE_OFF_IMAGE
