@@ -46,6 +46,12 @@ class SpindleButton(ButtonBase, BlinkingWidget):
         return super(SpindleButton, self).on_touch_down(touch)
 
     def __handle_touch_down(self):
+        """
+        Handles what happens when the button is pressed.
+        If the spindle is off, it shows the safety popup.
+        If the spindle is on, it turns it off.
+        :return:
+        """
         if not self.serial_connection.spindle_on:
             self.screen_manager.pm.show_spindle_safety_popup(None, self.router_machine.turn_on_spindle)
         else:
