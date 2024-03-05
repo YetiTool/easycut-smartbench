@@ -1,9 +1,7 @@
 import os
 
-from kivy.uix.behaviors import ButtonBehavior
-from kivy.uix.image import Image
-
 from asmcnc.core_UI import path_utils
+from asmcnc.core_UI.components.buttons.button_base import ButtonBase
 from asmcnc.core_UI.components.widgets.blinking_widget import BlinkingWidget
 
 SKAVA_UI_PATH = path_utils.get_path("skavaUI")[0]
@@ -12,14 +10,12 @@ SPINDLE_ON_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "spindle_on.png")
 SPINDLE_OFF_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "spindle_off.png")
 
 
-class SpindleButton(Image, BlinkingWidget, ButtonBehavior):
+class SpindleButton(ButtonBase, BlinkingWidget):
     """A custom button widget used for spindle functionality."""
 
-    background_normal = ""
-    background_down = ""
-    background_color = (0, 0, 0, 0)
+    background_normal = SPINDLE_OFF_IMAGE
+    background_down = SPINDLE_OFF_IMAGE
     border = (0, 0, 0, 0)
-    source = SPINDLE_OFF_IMAGE
 
     def __init__(self, router_machine, serial_connection, screen_manager, **kwargs):
         super(SpindleButton, self).__init__(**kwargs)
@@ -51,6 +47,6 @@ class SpindleButton(Image, BlinkingWidget, ButtonBehavior):
         :param value: the new value of the spindle_on property from SerialConnection
         :return: None
         """
-        self.source = SPINDLE_ON_IMAGE if value else SPINDLE_OFF_IMAGE
-
+        self.background_normal = SPINDLE_ON_IMAGE if value else SPINDLE_OFF_IMAGE
         self.blinking = value
+
