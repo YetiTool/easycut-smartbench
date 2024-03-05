@@ -50,18 +50,10 @@ Builder.load_string("""
 
             Switch:
                 id: unit_switch
-                size: dp(100), dp(50)
+                size: dp(83), dp(32)
                 size_hint: (None, None)
-                pos: self.parent.pos[0] + self.parent.size[0] - self.size[0], self.parent.pos[1] - dp(3)
+                pos: self.parent.pos[0] + self.parent.size[0] - self.size[0] - dp(3), self.parent.pos[1] + dp(3)
                 on_active: root.toggle_units()
-
-            Label:
-                font_size: dp(18)
-                size: self.texture_size
-                size_hint: (None, None)
-                pos: unit_switch.pos[0] + dp(14) + (dp(40) * unit_switch.active), unit_switch.pos[1] + dp(12)
-                text: 'mm' if not unit_switch.active else 'Inch'
-                color: 1,1,1,1
 
             BoxLayout:
                 size: dp(70), dp(40)
@@ -287,6 +279,9 @@ class DrywallShapeDisplay(Widget):
             self.y_input:'y'
         }
 
+        # Show custom switch image
+        self.unit_switch.canvas.children[5].source = "./asmcnc/apps/drywall_cutter_app/img/unit_toggle.png"
+
         self.m.s.bind(m_state=self.display_machine_state)
 
         Clock.schedule_interval(self.poll_position, 0.1)
@@ -414,7 +409,7 @@ class DrywallShapeDisplay(Widget):
         return False
 
     def toggle_units(self):
-        self.dwt_config.on_parameter_change('units', 'mm' if not self.unit_switch.active else 'Inch')
+        self.dwt_config.on_parameter_change('units', 'mm' if self.unit_switch.active else 'inch')
 
     def poll_position(self, dt):
         # Maths from Ed, documented here https://docs.google.com/spreadsheets/d/1X37CWF8bsXeC0dY-HsbwBu_QR6N510V-5aPTnxwIR6I/edit#gid=677510108
