@@ -2,6 +2,7 @@
 Created on 1 Feb 2018
 @author: Ed
 """
+from kivy.graphics import RoundedRectangle, Color
 from kivy.lang import Builder
 from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
@@ -105,6 +106,10 @@ class CommonMove(Widget):
 
     def add_spindle_button(self):
         self.spindle_button_padding_container = BoxLayout(padding=[dp(10)])
+        with self.spindle_button_padding_container.canvas.before:
+            self.spindle_button_padding_container.canvas.before.add(Color(1, 1, 1, 1))
+            self.spindle_button_padding_container.canvas.before.add(RoundedRectangle(size=self.spindle_button_padding_container.size,
+                                                                                      pos=self.spindle_button_padding_container.pos))
         self.spindle_button = SpindleButton(self.m, self.m.s, self.sm,
                                             size_hint=(None, None),
                                             size=(scaling_utils.get_scaled_dp_width(71),
