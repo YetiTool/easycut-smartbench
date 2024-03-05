@@ -1,7 +1,7 @@
 import os
 
 from asmcnc.core_UI import path_utils
-from asmcnc.core_UI.components.buttons.button_base import ButtonBase
+from asmcnc.core_UI.components.buttons.button_base import ImageButtonBase
 from asmcnc.core_UI.components.widgets.blinking_widget import BlinkingWidget
 
 SKAVA_UI_PATH = path_utils.get_path("skavaUI")[0]
@@ -10,12 +10,11 @@ SPINDLE_ON_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "spindle_on.png")
 SPINDLE_OFF_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "spindle_off.png")
 
 
-class SpindleButton(ButtonBase, BlinkingWidget):
+class SpindleButton(ImageButtonBase, BlinkingWidget):
     """A custom button widget used for spindle functionality."""
 
-    background_normal = SPINDLE_OFF_IMAGE
-    background_down = SPINDLE_OFF_IMAGE
-    border = (0, 0, 0, 0)
+    source = SPINDLE_OFF_IMAGE
+    allow_stretch = True
 
     def __init__(self, router_machine, serial_connection, screen_manager, **kwargs):
         super(SpindleButton, self).__init__(**kwargs)
@@ -49,4 +48,5 @@ class SpindleButton(ButtonBase, BlinkingWidget):
         """
         self.background_normal = SPINDLE_ON_IMAGE if value else SPINDLE_OFF_IMAGE
         self.blinking = value
+        self.do_layout()
 
