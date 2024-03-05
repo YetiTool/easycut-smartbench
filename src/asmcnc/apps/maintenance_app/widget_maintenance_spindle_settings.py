@@ -440,7 +440,7 @@ class SpindleSettingsWidget(Widget):
         if not self.m.smartbench_is_busy():
             self.wait_popup.dismiss()
             self.wait_popup.open()
-            self.m.s.write_command("M3 S0")
+            self.m.power_on_spindle()
             Clock.schedule_once(self.get_spindle_info, 0.3)
         else:
             Clock.schedule_once(self.get_spindle_data, 0.4)
@@ -464,7 +464,7 @@ class SpindleSettingsWidget(Widget):
             Clock.schedule_once(self.check_spindle_info, 0.3)
 
     def read_restore_info(self):
-        self.m.s.write_command("M5")
+        self.m.turn_off_spindle()
         self.wait_popup.dismiss()
         if (
                 self.m.s.digital_spindle_ld_qdA != -999

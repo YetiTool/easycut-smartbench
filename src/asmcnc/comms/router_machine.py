@@ -23,7 +23,7 @@ from asmcnc.comms import motors
 from asmcnc.skavaUI import popup_info
 
 from kivy.clock import Clock
-from kivy.properties import NumericProperty
+from kivy.properties import NumericProperty, BooleanProperty
 from kivy.event import EventDispatcher
 import sys, os, time
 import os, time
@@ -1185,35 +1185,32 @@ class RouterMachine(EventDispatcher):
 
         return rpm_to_set
 
-    def turn_on_spindle(self, rpm=None):
+    def power_on_spindle(self):
+        """
+        Turns on the spindle at 0 RPM. Used to read spindle data.
+
+        :return: None
+        """
+        self.turn_on_spindle(rpm=0)
+
+    def turn_on_spindle(self, rpm=12000):
         """
         This method sends the command 'M3' to the Z Head to turn on the spindle at a given speed.
 
-        No RPM compensation occurs in this command as this is captured and handled by compensate_spindle_speed_command() in the SerialConnection object 
+        No RPM compensation occurs in this command as this is captured and handled by compensate_spindle_speed_command() in the SerialConnection object
 
-        For use outside of router_machine.py
-
-        Args:
-            rpm (int, optional): The desired RPM (Rotations Per Minute) of the spindle. Defaults to None, which will be same as last set value (handled by GRBL).
-
-        Returns:
-            None
+        :param rpm: The RPM to turn the spindle on at. Defaults to 12,000.
+        :return: None
         """
-
-        if rpm: # If a value is given, turn the spindle on at that speed
-            self.s.write_command('M3 S' + str(rpm))
-
-        else: # If no value is given, turn the spindle on at the last set value (handled by GRBL)
-            self.s.write_command('M3')
+        self.s.write_command("M3 S" + str(rpm))
 
     def turn_off_spindle(self):
         """
         This method sends the command 'M5' to the Z Head to turn off the spindle.
 
-        Returns:
-            None
+        :return: None
         """
-        self.s.write_command('M5')
+        self.s.write_command("M5")
 
     def minimum_spindle_speed(self, spindle_voltage = None):
         """
@@ -1860,19 +1857,9 @@ class RouterMachine(EventDispatcher):
     def quit_jog(self):
         self.s.write_realtime('\x85', altDisplayText = 'Quit jog')
 
-    def spindle_on(self):
-        self.s.write_command('M3 S12000')
-
-    def spindle_off(self):
-        self.s.write_command('M5')
-
     def cooldown_zUp_and_spindle_on(self):
         self.s.write_command('AE')
-        if self.spindle_voltage == 230:
-            self.s.write_command('M3 S' + str(self.spindle_cooldown_rpm))
-        else:
-            cooldown_rpm = self.spindle_cooldown_rpm
-            self.s.write_command('M3 S' + str(cooldown_rpm))
+        self.turn_on_spindle(self.spindle_cooldown_rpm)
         self.raise_z_axis_for_collet_access()
 
     def laser_on(self):

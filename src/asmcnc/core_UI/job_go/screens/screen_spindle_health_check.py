@@ -130,6 +130,7 @@ class SpindleHealthCheckActiveScreen(Screen):
     max_seconds = 6
     seconds = 6
     update_timer_event = None
+    health_check_rpm = 24000
 
     def __init__(self, **kwargs):
         super(SpindleHealthCheckActiveScreen, self).__init__(**kwargs)
@@ -232,7 +233,7 @@ class SpindleHealthCheckActiveScreen(Screen):
             pass_test(round_up_to_ten(average_load_w))
 
         def stop_test():
-            self.m.s.write_command("M5")
+            self.m.turn_off_spindle()
             self.m.s.spindle_health_check = False
 
         def start_test():
@@ -241,7 +242,7 @@ class SpindleHealthCheckActiveScreen(Screen):
                 return
             self.start_timer()
             self.m.s.spindle_health_check = True
-            self.m.s.write_command("M3 S24000")
+            self.m.turn_on_spindle(self.health_check_rpm)
             Clock.schedule_once(lambda dt: stop_test(), 6)
             Clock.schedule_once(lambda dt: check_average(), 6)
 

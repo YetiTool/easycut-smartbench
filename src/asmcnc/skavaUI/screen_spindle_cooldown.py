@@ -155,7 +155,7 @@ class SpindleCooldownScreen(Screen):
             self.countdown.text = str(self.seconds)
 
     def on_leave(self):
-        self.m.spindle_off()
+        self.m.turn_off_spindle()
         self.m.vac_off()
         if self.update_timer_event != None:
             Clock.unschedule(self.update_timer_event)

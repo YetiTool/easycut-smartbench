@@ -419,9 +419,9 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
 
     def set_spindle(self):
         if self.spindle_toggle.state == 'normal': 
-            self.m.spindle_off()
+            self.m.turn_off_spindle()
         else: 
-            self.m.spindle_on()
+            self.m.turn_on_spindle()
 
     def set_laser(self):
         if self.laser_toggle.state == 'normal': 

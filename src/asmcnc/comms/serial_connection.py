@@ -17,7 +17,7 @@ import time
 from enum import Enum
 from kivy.clock import Clock
 from kivy.event import EventDispatcher
-from kivy.properties import StringProperty, NumericProperty
+from kivy.properties import StringProperty, NumericProperty, BooleanProperty
 
 # Import managers for GRBL Notification screens (e.g. alarm, error, etc.)
 from asmcnc.core_UI.sequence_alarm import alarm_manager
@@ -73,8 +73,11 @@ class SerialConnection(EventDispatcher):
     # Need to disable grbl scanner before closing serial connection, or else causes problems (at least in windows)
     grbl_scanner_running = False
 
-    def __init__(self, machine, screen_manager, settings_manager, localization, job):
+    # This flag is set by the serial connection when it sends M3/M5
+    spindle_on = BooleanProperty(False)
 
+    def __init__(self, machine, screen_manager, settings_manager, localization, job, *args, **kwargs):
+        super(SerialConnection, self).__init__(*args, **kwargs)
         self.sm = screen_manager
         self.sett = settings_manager
         self.m = machine
@@ -669,7 +672,7 @@ class SerialConnection(EventDispatcher):
                     self.sm.get_screen('spindle_cooldown').return_screen = 'job_feedback'
                     self.sm.current = 'spindle_cooldown'
                 else:
-                    self.m.spindle_off()
+                    self.m.turn_off_spindle()
                     time.sleep(0.4)
                     self.update_machine_runtime()
                     self.sm.current = 'job_feedback'
@@ -1824,8 +1827,17 @@ class SerialConnection(EventDispatcher):
             log("FAILED to display on CONSOLE: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
 
         # Catch and correct all instances of the spindle speed command "M3 S{RPM}"
-        if 'S' in serialCommand.upper():
-            serialCommand = self.compensate_spindle_speed_command(serialCommand)
+        if 'M3' in serialCommand.upper():
+            # Set spindle_on flag
+            self.spindle_on = True
+
+            if 'S' in serialCommand.upper():
+                # Correct the spindle speed command
+                serialCommand = self.compensate_spindle_speed_command(serialCommand)
+
+        if 'M5' in serialCommand.upper():
+            # Clear spindle_on flag
+            self.spindle_on = False
 
         # Finally issue the command        
         if self.s:

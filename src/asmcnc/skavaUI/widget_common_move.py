@@ -9,6 +9,7 @@ from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 
 from asmcnc.core_UI import scaling_utils
+from asmcnc.core_UI.components.buttons.spindle_button import SpindleButton
 from asmcnc.core_UI.components.widgets.blinking_widget import BlinkingWidget
 
 Builder.load_string(
@@ -99,25 +100,17 @@ class CommonMove(Widget):
         self.set_jog_speeds()
         self.add_spindle_button()
 
+    spindle_button_padding_container = None
+    spindle_button = None
+
     def add_spindle_button(self):
         self.spindle_button_padding_container = BoxLayout(padding=[dp(10)])
-        self.spindle_button = Button(
-            background_normal="./asmcnc/skavaUI/img/spindle_off.png",
-            background_down="./asmcnc/skavaUI/img/spindle_off.png",
-            on_press=self.set_spindle,
-            allow_stretch=True,
-            size_hint=(None, None),
-            border=(0, 0, 0, 0),
-            size=(dp(scaling_utils.get_scaled_width(71)), dp(scaling_utils.get_scaled_height(72)))
-        )
-        self.spindle_blinker = BlinkingWidget()
-        self.spindle_blinker.bind(pos=self.update_spindle_button, size=self.update_spindle_button)
-        self.spindle_blinker.add_widget(self.spindle_button)
-        self.spindle_button_padding_container.add_widget(self.spindle_blinker)
+        self.spindle_button = SpindleButton(self.m, self.m.s, self.sm,
+                                            size_hint=(None, None),
+                                            size=(scaling_utils.get_scaled_dp_width(71),
+                                                  scaling_utils.get_scaled_dp_height(72)))
+        self.spindle_button_padding_container.add_widget(self.spindle_button)
         self.vacuum_spindle_container.add_widget(self.spindle_button_padding_container)
-
-    def update_spindle_button(self, *args):
-        self.spindle_button.center = self.spindle_blinker.center
 
     fast_x_speed = 6000
     fast_y_speed = 6000
@@ -146,12 +139,11 @@ class CommonMove(Widget):
     def set_spindle(self, *args):
         def button_two_callback():
             self.spindle_button.background_normal = "./asmcnc/skavaUI/img/spindle_on.png"
-            self.m.spindle_on()
-            self.spindle_blinker.blinking = True
+            self.m.turn_on_spindle()
 
-        if self.spindle_blinker.blinking:
+        if self.m.is_spindle_on():
             self.spindle_button.background_normal = "./asmcnc/skavaUI/img/spindle_off.png"
-            self.m.spindle_off()
+            self.m.turn_off_spindle()
             self.spindle_blinker.blinking = False
         else:
             self.sm.pm.show_spindle_safety_popup(None, button_two_callback)

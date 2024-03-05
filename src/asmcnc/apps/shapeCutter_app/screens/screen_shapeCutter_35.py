@@ -360,12 +360,12 @@ If not, check that it's connected and switched on, then retry by pressing the bu
             self.next_button.disabled = False
             self.back_button.disabled = False
             self.spindle_image.source = "./asmcnc/skavaUI/img/spindle_off.png"
-            self.m.spindle_off()
+            self.m.turn_off_spindle()
         else:
             self.spindle_image.source = "./asmcnc/skavaUI/img/spindle_on.png"
             self.next_button.disabled = True
             self.back_button.disabled = True
-            self.m.spindle_on()
+            self.m.turn_on_spindle()
             Clock.schedule_once(self.reset_spindle, 2)
 
     def reset_spindle(self, dt):

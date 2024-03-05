@@ -225,9 +225,9 @@ class LaserDatumButtons(Widget):
             self.spindle_image.source = (
                 "./asmcnc/apps/maintenance_app/img/spindle_off_120.png"
             )
-            self.m.spindle_off()
+            self.m.turn_off_spindle()
         else:
             self.spindle_image.source = (
                 "./asmcnc/apps/maintenance_app/img/spindle_on_120.png"
             )
-            self.m.spindle_on()
+            self.m.turn_on_spindle()
