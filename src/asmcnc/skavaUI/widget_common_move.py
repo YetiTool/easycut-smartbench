@@ -101,21 +101,15 @@ class CommonMove(Widget):
         self.set_jog_speeds()
         self.add_spindle_button()
 
-    spindle_button_padding_container = None
     spindle_button = None
 
     def add_spindle_button(self):
-        self.spindle_button_padding_container = BoxLayout(padding=[dp(10)])
-        with self.spindle_button_padding_container.canvas.before:
-            self.spindle_button_padding_container.canvas.before.add(Color(1, 1, 1, 1))
-            self.spindle_button_padding_container.canvas.before.add(RoundedRectangle(size=self.spindle_button_padding_container.size,
-                                                                                      pos=self.spindle_button_padding_container.pos))
         self.spindle_button = SpindleButton(self.m, self.m.s, self.sm,
                                             size_hint=(None, None),
                                             size=(scaling_utils.get_scaled_dp_width(71),
-                                                  scaling_utils.get_scaled_dp_height(72)))
-        self.spindle_button_padding_container.add_widget(self.spindle_button)
-        self.vacuum_spindle_container.add_widget(self.spindle_button_padding_container)
+                                                  scaling_utils.get_scaled_dp_height(72)),
+                                            padding=[dp(10)])
+        self.vacuum_spindle_container.add_widget(self.spindle_button)
 
     fast_x_speed = 6000
     fast_y_speed = 6000
