@@ -47,7 +47,7 @@ class SpindleButton(ButtonBase, BlinkingWidget):
 
     def __handle_touch_down(self):
         if not self.serial_connection.spindle_on:
-            self.sm.pm.show_spindle_safety_popup(None, self.router_machine.turn_on_spindle)
+            self.screen_manager.pm.show_spindle_safety_popup(None, self.router_machine.turn_on_spindle)
         else:
             self.router_machine.turn_off_spindle()
 
