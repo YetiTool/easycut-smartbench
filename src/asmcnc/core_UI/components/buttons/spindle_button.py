@@ -1,9 +1,9 @@
 import os
 
+from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.image import Image
 
 from asmcnc.core_UI import path_utils
-from asmcnc.core_UI.components.buttons.button_base import ButtonBase
 from asmcnc.core_UI.components.widgets.blinking_widget import BlinkingWidget
 
 SKAVA_UI_PATH = path_utils.get_path("skavaUI")[0]
@@ -12,7 +12,7 @@ SPINDLE_ON_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "spindle_on.png")
 SPINDLE_OFF_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "spindle_off.png")
 
 
-class SpindleButton(ButtonBase, BlinkingWidget, Image):
+class SpindleButton(Image, BlinkingWidget, ButtonBehavior):
     """A custom button widget used for spindle functionality."""
 
     background_normal = ""
