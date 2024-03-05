@@ -1,8 +1,5 @@
 import os
 
-from kivy.event import EventDispatcher
-from kivy.properties import BooleanProperty
-
 from asmcnc.core_UI import path_utils
 from asmcnc.core_UI.components.buttons.button_base import ButtonBase
 from asmcnc.core_UI.components.widgets.blinking_widget import BlinkingWidget
@@ -11,10 +8,6 @@ SKAVA_UI_PATH = path_utils.get_path("skavaUI")[0]
 SKAVA_UI_IMG_PATH = os.path.join(SKAVA_UI_PATH, "img")
 SPINDLE_ON_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "spindle_on.png")
 SPINDLE_OFF_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "spindle_off.png")
-
-
-class FakeRouterMachine(EventDispatcher):
-    spindle_on = BooleanProperty(False)
 
 
 class SpindleButton(ButtonBase, BlinkingWidget):
