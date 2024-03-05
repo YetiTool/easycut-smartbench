@@ -17,9 +17,8 @@ class SpindleButton(ButtonBase, BlinkingWidget):
 
     background_normal = ""
     background_down = ""
-
+    background_color = (0, 0, 0, 0)
     border = (0, 0, 0, 0)
-    allow_stretch = True
 
     def __init__(self, router_machine, serial_connection, screen_manager, **kwargs):
         super(SpindleButton, self).__init__(**kwargs)
