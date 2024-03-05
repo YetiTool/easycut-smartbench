@@ -12,13 +12,14 @@ SPINDLE_ON_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "spindle_on.png")
 SPINDLE_OFF_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "spindle_off.png")
 
 
-class SpindleButton(ButtonBase, BlinkingWidget):
+class SpindleButton(ButtonBase, BlinkingWidget, Image):
     """A custom button widget used for spindle functionality."""
 
     background_normal = ""
     background_down = ""
     background_color = (0, 0, 0, 0)
     border = (0, 0, 0, 0)
+    source = SPINDLE_OFF_IMAGE
 
     def __init__(self, router_machine, serial_connection, screen_manager, **kwargs):
         super(SpindleButton, self).__init__(**kwargs)
@@ -27,18 +28,8 @@ class SpindleButton(ButtonBase, BlinkingWidget):
         self.serial_connection = serial_connection
         self.screen_manager = screen_manager
 
-        self.image = Image(source=SPINDLE_OFF_IMAGE, size=self.size, pos=self.pos, allow_stretch=True)
-        self.bind(size=self.update_image_size, pos=self.update_image_pos)
-        self.add_widget(self.image)
-
         self.serial_connection.bind(spindle_on=self.__on_spindle_on)
         self.bind(on_press=self.__on_press)
-
-    def update_image_size(self, instance, value):
-        self.image.size = value
-
-    def update_image_pos(self, instance, value):
-        self.image.pos = value
 
     def __on_press(self, *args):
         """
@@ -63,4 +54,3 @@ class SpindleButton(ButtonBase, BlinkingWidget):
         self.image.source = SPINDLE_ON_IMAGE if value else SPINDLE_OFF_IMAGE
 
         self.blinking = value
-
