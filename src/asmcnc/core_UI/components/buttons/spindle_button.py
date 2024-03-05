@@ -26,19 +26,10 @@ class SpindleButton(ButtonBase, BlinkingWidget):
         self.serial_connection = serial_connection
         self.screen_manager = screen_manager
 
-        self.serial_connection.bind(spindle_on=self.on_spindle_on)
+        self.serial_connection.bind(spindle_on=self.__on_spindle_on)
+        self.bind(on_press=self.__on_press)
 
-    def on_touch_down(self, touch):
-        """
-        Callback for the touch_down event. Checks if the touch event is inside the button and calls __handle_touch_down
-        :param touch: the touch event
-        :return: None
-        """
-        if self.collide_point(*touch.pos):
-            self.__handle_touch_down()
-        return super(SpindleButton, self).on_touch_down(touch)
-
-    def __handle_touch_down(self):
+    def __on_press(self):
         """
         Handles what happens when the button is pressed.
         If the spindle is off, it shows the safety popup.
@@ -50,7 +41,7 @@ class SpindleButton(ButtonBase, BlinkingWidget):
         else:
             self.router_machine.turn_off_spindle()
 
-    def on_spindle_on(self, instance, value):
+    def __on_spindle_on(self, instance, value):
         """
         Callback for the spindle_on event. Changes the button image and starts/stops the blinking.
 
