@@ -16,7 +16,7 @@ class SpindleButton(ImageButtonBase, BlinkingWidget):
     """A custom button widget used for spindle functionality."""
 
     source = SPINDLE_OFF_IMAGE
-    allow_stretch = True
+    allow_stretch = BooleanProperty(True)
 
     def __init__(self, router_machine, serial_connection, screen_manager, **kwargs):
         super(SpindleButton, self).__init__(**kwargs)
