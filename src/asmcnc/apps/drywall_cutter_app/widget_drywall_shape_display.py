@@ -53,7 +53,6 @@ Builder.load_string("""
                 size: dp(83), dp(32)
                 size_hint: (None, None)
                 pos: self.parent.pos[0] + self.parent.size[0] - self.size[0] - dp(3), self.parent.pos[1] + dp(3)
-                on_active: root.toggle_units()
 
             BoxLayout:
                 size: dp(70), dp(40)
@@ -281,6 +280,7 @@ class DrywallShapeDisplay(Widget):
 
         # Show custom switch image
         self.unit_switch.canvas.children[5].source = "./asmcnc/apps/drywall_cutter_app/img/unit_toggle.png"
+        self.unit_switch.bind(active=self.toggle_units)
 
         self.m.s.bind(m_state=self.display_machine_state)
 
@@ -408,8 +408,8 @@ class DrywallShapeDisplay(Widget):
                     return True
         return False
 
-    def toggle_units(self):
-        self.dwt_config.on_parameter_change('units', 'mm' if self.unit_switch.active else 'inch')
+    def toggle_units(self, instance, value):
+        self.dwt_config.on_parameter_change('units', 'mm' if value else 'inch')
 
     def poll_position(self, dt):
         # Maths from Ed, documented here https://docs.google.com/spreadsheets/d/1X37CWF8bsXeC0dY-HsbwBu_QR6N510V-5aPTnxwIR6I/edit#gid=677510108
