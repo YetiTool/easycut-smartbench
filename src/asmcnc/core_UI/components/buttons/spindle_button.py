@@ -49,6 +49,8 @@ class SpindleButton(ButtonBase, BlinkingWidget):
         :param value: the new value of the spindle_on property from SerialConnection
         :return: None
         """
+        print("SpindleButton.__on_spindle_on: value = ", value)
+
         self.background_normal = SPINDLE_ON_IMAGE if value else SPINDLE_OFF_IMAGE
         self.background_down = SPINDLE_ON_IMAGE if value else SPINDLE_OFF_IMAGE
 
