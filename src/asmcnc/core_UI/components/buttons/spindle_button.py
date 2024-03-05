@@ -1,5 +1,7 @@
 import os
 
+from kivy.properties import BooleanProperty
+
 from asmcnc.core_UI import path_utils
 from asmcnc.core_UI.components.buttons.button_base import ImageButtonBase
 from asmcnc.core_UI.components.widgets.blinking_widget import BlinkingWidget
@@ -14,7 +16,7 @@ class SpindleButton(ImageButtonBase, BlinkingWidget):
     """A custom button widget used for spindle functionality."""
 
     source = SPINDLE_OFF_IMAGE
-    allow_stretch = True
+    allow_stretch = BooleanProperty(True)
 
     def __init__(self, router_machine, serial_connection, screen_manager, **kwargs):
         super(SpindleButton, self).__init__(**kwargs)

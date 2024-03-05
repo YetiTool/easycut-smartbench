@@ -18,12 +18,12 @@ class ButtonBase(Button):
     pass
 
 
-class ImageButtonBase(Image, ButtonBehavior):
+class ImageButtonBase(ButtonBehavior, Image):
     """
     The ImageButton class is a button that uses an image as its background.
 
     Base classes:
-     - ButtonBase
+     - kivy.uix.image.Image
      - kivy.uix.behaviors.ButtonBehavior
 
     Additional notes:
