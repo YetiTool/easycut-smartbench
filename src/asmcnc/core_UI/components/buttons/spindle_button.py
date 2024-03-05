@@ -1,5 +1,7 @@
 import os
 
+from kivy.uix.image import Image
+
 from asmcnc.core_UI import path_utils
 from asmcnc.core_UI.components.buttons.button_base import ButtonBase
 from asmcnc.core_UI.components.widgets.blinking_widget import BlinkingWidget
@@ -26,6 +28,9 @@ class SpindleButton(ButtonBase, BlinkingWidget):
         self.serial_connection = serial_connection
         self.screen_manager = screen_manager
 
+        self.image = Image(source=SPINDLE_OFF_IMAGE, size=self.size, pos=self.pos, allow_stretch=True)
+        self.add_widget(self.image)
+
         self.serial_connection.bind(spindle_on=self.__on_spindle_on)
         self.bind(on_press=self.__on_press)
 
@@ -49,8 +54,7 @@ class SpindleButton(ButtonBase, BlinkingWidget):
         :param value: the new value of the spindle_on property from SerialConnection
         :return: None
         """
-        self.background_normal = SPINDLE_ON_IMAGE if value else SPINDLE_OFF_IMAGE
-        self.dispatch('on_background_normal')
+        self.image.source = SPINDLE_ON_IMAGE if value else SPINDLE_OFF_IMAGE
 
         self.blinking = value
 
