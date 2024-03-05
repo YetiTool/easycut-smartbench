@@ -48,5 +48,4 @@ class SpindleButton(ImageButtonBase, BlinkingWidget):
         """
         self.background_normal = SPINDLE_ON_IMAGE if value else SPINDLE_OFF_IMAGE
         self.blinking = value
-        self.do_layout()
 
