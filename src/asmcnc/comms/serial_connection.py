@@ -859,8 +859,8 @@ class SerialConnection(EventDispatcher):
     expecting_probe_result = False
 
     # VERSIONS
-    fw_version = ''
-    hw_version = ''
+    fw_version = StringProperty()
+    hw_version = StringProperty()
 
     # TEMPERATURES
     motor_driver_temp = None

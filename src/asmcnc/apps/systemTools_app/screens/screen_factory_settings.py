@@ -579,9 +579,9 @@ Builder.load_string(
 class FactorySettingsScreen(Screen):
     latest_machine_model_values = [
         "SmartBench V1.3 PrecisionPro CNC Router",
-        "SmartBench Mini V1.3 PrecisionPro",
-        "SmartBench Mini V1.3 PrecisionPro Plus",
-        "SmartBench Mini V1.3 PrecisionPro X",
+        "SmartBench V1.3 PrecisionPro",
+        "SmartBench V1.3 PrecisionPro Plus",
+        "SmartBench V1.3 PrecisionPro X",
         "DRYWALLTEC SmartCNC",
     ]
     old_machine_model_values = [

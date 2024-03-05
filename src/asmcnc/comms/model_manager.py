@@ -1,6 +1,7 @@
 import json
 import os
 import threading
+from datetime import datetime
 from hashlib import md5
 
 from kivy._event import EventDispatcher
@@ -9,11 +10,23 @@ from kivy.clock import Clock
 from asmcnc.comms.router_machine import ProductCodes
 
 
+def log(message):
+    timestamp = datetime.now()
+    print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
+
+
 class ModelManagerSingleton(EventDispatcher):
     _instance = None
     _initialized = False
-    product_code = ProductCodes.UNKNOWN
+    machine = None
     _lock = threading.Lock()
+
+    # json skeleton
+    _data = {
+        'product_code': ProductCodes.UNKNOWN.value,
+        'fw_version':  '0.0.0.0',
+        'hw_version': '0'
+    }
 
     # File paths:
     PC_FILE_PATH = os.path.join(os.path.dirname(os.getcwd()), "src", "sb_values", "model_info.json")
@@ -45,17 +58,18 @@ class ModelManagerSingleton(EventDispatcher):
 
     def __init__(self, machine=None):
         # Always check for call with machine object:
-        if machine is not None:
+        if self.machine is None and machine is not None:
             self.machine = machine
-            # we only need the update when we have no file yet.
-            if not os.path.exists(self.PC_FILE_PATH):
-                self.machine.s.bind(setting_50=self.on_setting_50)
+            self.machine.s.bind(setting_50=self.on_setting_50)
+            self.machine.s.bind(fw_version=self.on_firmware_version)
+            self.machine.s.bind(hw_version=self.on_hardware_version)
 
         if self._initialized:
             return
         self._initialized = True
         # Do init here:
-        self.set_machine_type(self.load_saved_product_code())
+        self.load_model_data_from_file()
+        self.set_machine_type(self._data['product_code'])
         self._process_raw_migration_file()
 
     def _process_raw_migration_file(self):
@@ -68,6 +82,20 @@ class ModelManagerSingleton(EventDispatcher):
             with open(self.MIGRATION_FILE_PATH, 'w') as f:
                 json.dump(d, f)
 
+    def on_firmware_version(self, instance, value):
+        """Is called when the firmware_version is first read. Updates the saved firmware_version if changed."""
+        if self._data['fw_version'] != value:
+            log('Save new firmware version to file: {}'.format(value))
+            self._data['fw_version'] = value
+            self.save_model_data_to_file()
+
+    def on_hardware_version(self, instance, value):
+        """Is called when the hardware_version is first read. Updates the saved hardware_version if changed."""
+        if self._data['hw_version'] != value:
+            log('Save new hardware version to file: {}'.format(value))
+            self._data['hw_version'] = value
+            self.save_model_data_to_file()
+
     def on_setting_50(self, instance, value):
         """is called when the serial number ($50) is first read.
         value should be XXXX.YY where YY is the product code.
@@ -75,14 +103,15 @@ class ModelManagerSingleton(EventDispatcher):
         Also fixes Pro Plus and Pro X machines in the field."""
         try:
             serial_number = str(value).split('.')[0]
-            pc_value = int(str(value).split('.')[1])
-            self.fix_wrong_product_code(serial_number, pc_value)
-            self.set_machine_type(ProductCodes(pc_value), True)
-            self.__set_default_machine_name()
         except:
-            # this should only happen when then machine has no serial number yet (first boot)
-            # so we do nothing. ;)
-            pass
+            serial_number = '0000'
+        try:
+            pc_value = int(str(value).split('.')[1])
+        except:
+            pc_value = 0
+        self.fix_wrong_product_code(serial_number, pc_value)
+        self.set_machine_type(ProductCodes(pc_value), True)
+        self.__set_default_machine_fields()
 
     def fix_wrong_product_code(self, sn, old_pc):
         """Checks if the machine was produced with a wrong product code. 03 != 04,05"""
@@ -93,22 +122,21 @@ class ModelManagerSingleton(EventDispatcher):
         os.remove(self.MIGRATION_FILE_PATH)
         if md5('YS6' + sn).hexdigest() in data['Pro Plus']:
             full_sn = sn + '.04'
-            print('Old Pro Plus detected. Fixed SN to: {}'.format(full_sn))
+            log('Old Pro Plus detected. Fixed SN to: {}'.format(full_sn))
             Clock.schedule_once(lambda dt: self.machine.write_dollar_setting(50, full_sn), 1)
             return ProductCodes.PRECISION_PRO_PLUS
         elif md5(sn).hexdigest() in data['Pro X']:
             full_sn = sn + '.05'
-            print('Old Pro X detected. Fixed SN to: {}'.format(full_sn))
+            log('Old Pro X detected. Fixed SN to: {}'.format(full_sn))
             Clock.schedule_once(lambda dt: self.machine.write_dollar_setting(50, full_sn), 1)
             return ProductCodes.PRECISION_PRO_X
 
     def is_machine_drywall(self):
         # () -> bool
         """
-        Checks for the existence of the dwt.txt file.
-        :return: True if the file exists, False otherwise.
+        Returns True if the machine is a drywalltec machine, False otherwise.
         """
-        return self.product_code is ProductCodes.DRYWALLTEC
+        return self._data['product_code'] is ProductCodes.DRYWALLTEC
 
     def set_machine_type(self, pc, save=False):
         # type: (ProductCodes, bool) ->  None
@@ -117,13 +145,14 @@ class ModelManagerSingleton(EventDispatcher):
         Sets the console to a specific product code. See ProductCodes for more info.
         Takes care of additional needed changes like splash screen.
         """
-        if self.product_code == pc:
+        if self._data['product_code'] == pc:
             return
-        self.product_code = pc
+        self._data['product_code'] = pc
         if save:
             self.save_product_code(pc)
 
         self.__set_splash_screen(pc)
+        log('Product code set to: {}'.format(pc))
 
     def __set_splash_screen(self, pc):
         # type: (ProductCodes) ->  None
@@ -135,24 +164,37 @@ class ModelManagerSingleton(EventDispatcher):
         else:
             os.system("sudo cp {} {}".format(self.YETI_SPLASH_PATH, self.PLYMOUTH_SPLASH_FILE_PATH))
 
-    def load_saved_product_code(self):
-        """Returns the saved product code or UNKNOWN if nothing was saved yet."""
-        if not os.path.exists(self.PC_FILE_PATH):
-            return ProductCodes.UNKNOWN
-        else:
+    def load_model_data_from_file(self):
+        """
+        Loads the model_data from file. Only do this once in __init__.
+        """
+        if os.path.exists(self.PC_FILE_PATH):
             with open(self.PC_FILE_PATH, 'r') as f:
-                d = json.load(f)
+                tmp = json.load(f)
+            for k, v in tmp.items():
+                self._data[k] = v
+            #remove hashing
             for pc in ProductCodes:
-                if md5(str(pc.value)).hexdigest() == d['product_code']:
-                    return pc
+                if md5(str(pc.value)).hexdigest() == self._data['product_code']:
+                    self._data['product_code'] = pc
 
     def save_product_code(self, pc):
         # type: (ProductCodes) -> None
-        hashed_pc = md5(str(pc.value)).hexdigest()
-        d = {'product_code': hashed_pc}
+        """Saves the given product code to model_info.json."""
+        log('Save new product code to file: {}'.format(pc))
+        self._data['product_code'] = pc
+        self.save_model_data_to_file()
 
+    def save_model_data_to_file(self):
+        """Updates the model_info.json with the current data."""
+        # make a copy of _data to hash the pc temporarily
+        tmp = dict(self._data)
+        for pc in ProductCodes:
+            if pc is self._data['product_code']:
+                tmp['product_code'] = md5(str(pc.value)).hexdigest()  # hashing the product code
+                break
         with open(self.PC_FILE_PATH, 'w') as f:
-            json.dump(d, f)
+            json.dump(tmp, f)
 
     def __set_default_machine_fields(self):
         # type: () -> None
@@ -167,7 +209,32 @@ class ModelManagerSingleton(EventDispatcher):
             'location': self.SMARTBENCH_DEFAULT_LOCATION
         }
 
-        name_location = self.MODEL_NAME_LOCATIONS.get(self.product_code, default)
+        name_location = self.MODEL_NAME_LOCATIONS.get(self._data['product_code'], default)
 
         self.machine.write_device_label(name_location['name'])
         self.machine.write_device_location(name_location['location'])
+
+    def fw_version_greater_or_equal(self, reference_version):
+        # type: (str) -> bool
+        """
+        Compares the machines fw version against a reference_version.
+
+        Returns True if fw version is at least as high as the given reference_version.
+
+        reference_version format: 'x.y.z'
+        """
+        # [:3] take's only the first three split values (throw away the date field)
+        machine_fw_parts = [int(i) for i in self._data['fw_version'].split('.')[:3]]
+        ref_version_parts = [int(i) for i in reference_version.split('.')[:3]]
+
+        return machine_fw_parts >= ref_version_parts
+
+    def is_machine_upgradeable(self):
+        """Returns True if the upgrade app should be shown for the current machine."""
+        if self._data['product_code'] in [ProductCodes.PRECISION_PRO_X, ProductCodes.PRECISION_PRO_PLUS]:
+            return True
+        # fw_version >= 2.2.8 determines platform 1.3
+        elif self._data['product_code'] is ProductCodes.PRECISION_PRO and self.fw_version_greater_or_equal('2.2.8'):
+            return True
+        else:
+            return False
