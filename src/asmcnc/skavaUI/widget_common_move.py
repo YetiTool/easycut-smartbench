@@ -107,8 +107,7 @@ class CommonMove(Widget):
         self.spindle_button = SpindleButton(self.m, self.m.s, self.sm,
                                             size_hint=(None, None),
                                             size=(scaling_utils.get_scaled_dp_width(71),
-                                                  scaling_utils.get_scaled_dp_height(72)),
-                                            padding=[dp(10)])
+                                                  scaling_utils.get_scaled_dp_height(72)))
         self.vacuum_spindle_container.add_widget(self.spindle_button)
 
     fast_x_speed = 6000
