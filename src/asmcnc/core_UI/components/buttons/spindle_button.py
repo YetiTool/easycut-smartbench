@@ -29,10 +29,17 @@ class SpindleButton(ButtonBase, BlinkingWidget):
         self.screen_manager = screen_manager
 
         self.image = Image(source=SPINDLE_OFF_IMAGE, size=self.size, pos=self.pos, allow_stretch=True)
+        self.bind(size=self.update_image_size, pos=self.update_image_pos)
         self.add_widget(self.image)
 
         self.serial_connection.bind(spindle_on=self.__on_spindle_on)
         self.bind(on_press=self.__on_press)
+
+    def update_image_size(self, instance, value):
+        self.image.size = value
+
+    def update_image_pos(self, instance, value):
+        self.image.pos = value
 
     def __on_press(self, *args):
         """
