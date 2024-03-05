@@ -15,8 +15,8 @@ SPINDLE_OFF_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "spindle_off.png")
 class SpindleButton(ButtonBase, BlinkingWidget):
     """A custom button widget used for spindle functionality."""
 
-    background_normal = SPINDLE_OFF_IMAGE
-    background_down = SPINDLE_OFF_IMAGE
+    background_normal = ""
+    background_down = ""
 
     border = (0, 0, 0, 0)
     allow_stretch = True
