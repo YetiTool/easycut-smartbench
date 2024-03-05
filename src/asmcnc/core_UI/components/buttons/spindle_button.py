@@ -1,4 +1,5 @@
 import os
+from functools import partial
 
 from kivy.clock import Clock
 from kivy.properties import BooleanProperty, StringProperty
@@ -45,14 +46,15 @@ class SpindleButton(ImageButtonBase, BlinkingWidget):
         """
         Callback for the spindle_on event. Changes the button image and starts/stops the blinking.
 
+        The call to Clock.schedule_once is necessary because otherwise the image would not update.
         :param instance:
         :param value: the new value of the spindle_on property from SerialConnection
         :return: None
         """
-        Clock.schedule_once(lambda dt: self.__update_spindle_image(value))
+        Clock.schedule_once(partial(self.__update_spindle_image, value))
         self.blinking = value
 
-    def __update_spindle_image(self, value):
+    def __update_spindle_image(self, value, *args):
         """
         Updates the spindle image based on the spindle_on property of the SerialConnection.
 
