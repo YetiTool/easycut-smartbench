@@ -29,7 +29,7 @@ class SpindleButton(ButtonBase, BlinkingWidget):
         self.serial_connection.bind(spindle_on=self.__on_spindle_on)
         self.bind(on_press=self.__on_press)
 
-    def __on_press(self):
+    def __on_press(self, *args):
         """
         Handles what happens when the button is pressed.
         If the spindle is off, it shows the safety popup.
