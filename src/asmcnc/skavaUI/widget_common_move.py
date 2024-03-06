@@ -22,6 +22,7 @@ Builder.load_string(
     vacuum_image:vacuum_image
     vacuum_toggle:vacuum_toggle
     vacuum_spindle_container:vacuum_spindle_container
+    spindle_container:spindle_container
 
     BoxLayout:
         size: self.parent.size
@@ -89,6 +90,10 @@ Builder.load_string(
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
                         allow_stretch: True  
+            
+            BoxLayout:
+                id: spindle_container
+                padding: [dp(app.get_scaled_width(10)), dp(app.get_scaled_height(10))]
 """
 )
 
@@ -107,8 +112,9 @@ class CommonMove(Widget):
         self.spindle_button = SpindleButton(self.m, self.m.s, self.sm,
                                             size_hint=(None, None),
                                             size=(scaling_utils.get_scaled_dp_width(71),
-                                                  scaling_utils.get_scaled_dp_height(72)))
-        self.vacuum_spindle_container.add_widget(self.spindle_button)
+                                                  scaling_utils.get_scaled_dp_height(72)),
+                                            center=self.spindle_container.center)
+        self.spindle_container.add_widget(self.spindle_button)
 
     fast_x_speed = 6000
     fast_y_speed = 6000
