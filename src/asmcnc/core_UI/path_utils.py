@@ -108,14 +108,14 @@ def search_tree(root, target, files_only=False, folders_only=False, first_result
         folder_path_split = re.split(r'[\\/]|' + re.escape(os.sep), foldername) # split the foldername into a list of strings eg. ['easycut-smartbench', 'src', 'asmcnc', 'skavaUI', 'img']
 
         if target_slash_count == 0:
-            if target in filenames: # If target found as a file
+            if target in filenames and not folders_only: # If target found as a file
                 search_results.append(foldername + "/" + target) 
-            elif target in folder_path_split[-1]: # If target found as a folder
+            elif target in folder_path_split[-1] and not files_only: # If target found as a folder
                 search_results.append(foldername)
         else:
-            if target_split == folder_path_split[-len(target_split):]: # If target found as a folder where target is a path eg. 'skavaUI/img'
+            if target_split == folder_path_split[-len(target_split):] and not files_only: # If target found as a folder where target is a path eg. 'skavaUI/img'
                 search_results.append(foldername)
-            elif target_split[:-1] == folder_path_split[-len(target_split)+1:] and target_split[-1] in filenames: # If target found as a file where target is a path eg. 'skavaUI/img/z_probe.png'
+            elif target_split[:-1] == folder_path_split[-len(target_split)+1:] and target_split[-1] in filenames and not folders_only: # If target found as a file where target is a path eg. 'skavaUI/img/z_probe.png'
                 search_results.append(foldername + "/" + target_split[-1])
 
 
