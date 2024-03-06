@@ -20,7 +20,7 @@ from asmcnc.job.yetipilot import yetipilot
 '''
 ######################################
 RUN FROM easycut-smartbench FOLDER WITH: 
-python -m pytest --show-capture=no --disable-pytest-warnings tests/automated_unit_tests/job/yetipilot/test_yetipilot_units.py
+python -m pytest tests/automated_unit_tests/job/yetipilot/test_yetipilot_units.py
 ######################################
 '''
 

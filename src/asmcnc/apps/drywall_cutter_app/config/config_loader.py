@@ -3,10 +3,12 @@ import os
 import config_classes
 import inspect
 
-configurations_dir = 'asmcnc/apps/drywall_cutter_app/config/configurations'
-cutters_dir = 'asmcnc/apps/drywall_cutter_app/config/cutters'
+current_dir = os.path.dirname(os.path.realpath(__file__))
+configurations_dir = os.path.join(current_dir, 'configurations')
+cutters_dir = os.path.join(current_dir, 'cutters')
+temp_dir = os.path.join(current_dir, 'temp')
 
-TEMP_CONFIG_PATH = os.path.join(configurations_dir, '..', 'temp', 'temp_config.json')
+TEMP_CONFIG_PATH = os.path.join(temp_dir, 'temp_config.json')
 DEBUG_MODE = False
 
 
@@ -24,8 +26,12 @@ class DWTConfig(object):
     active_config = None  # type: config_classes.Configuration
     active_cutter = None  # type: config_classes.Cutter
 
-    def __init__(self):
+    def __init__(self, screen_drywall_cutter=None):
+        self.screen_drywall_cutter = screen_drywall_cutter
         # Load the temp config if it exists, otherwise load the default config.
+        if not os.path.exists(temp_dir):
+            os.mkdir(temp_dir)
+
         if os.path.exists(TEMP_CONFIG_PATH):
             self.load_temp_config()
         else:
@@ -172,7 +178,7 @@ class DWTConfig(object):
 
         This is used to save the configuration when the Drywall Cutter screen is left.
         """
-        self.save_config(os.path.join('..', 'temp', 'temp_config.json'))
+        self.save_config(TEMP_CONFIG_PATH)
 
     @debug
     def load_temp_config(self):
@@ -182,7 +188,7 @@ class DWTConfig(object):
 
         This is used to load the configuration when the Drywall Cutter screen is loaded.
         """
-        self.load_config(os.path.join('..', 'temp', 'temp_config.json'))
+        self.load_config(TEMP_CONFIG_PATH)
 
     @debug
     def on_parameter_change(self, parameter_name, parameter_value):
@@ -203,6 +209,16 @@ class DWTConfig(object):
             for parameter_name in parameter_names[:-1]:
                 parameter = getattr(parameter, parameter_name)
 
+            if getattr(parameter, parameter_names[-1]) != parameter_value:
+                self.__set_new_configuration_label()
+
             setattr(parameter, parameter_names[-1], parameter_value)
         else:
+            if getattr(self.active_config, parameter_name) != parameter_value:
+                self.__set_new_configuration_label()
+
             setattr(self.active_config, parameter_name, parameter_value)
+
+    def __set_new_configuration_label(self):
+        if self.screen_drywall_cutter:
+            self.screen_drywall_cutter.drywall_shape_display_widget.config_name_label.text = "New Configuration"

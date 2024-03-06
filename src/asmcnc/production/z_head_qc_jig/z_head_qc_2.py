@@ -300,7 +300,7 @@ class ZHeadQC2(Screen):
             self.m.s.write_command('M5')
             self.continue_digital_spindle_test(fail_report)
 
-        rpm_to_run = 10000 if self.m.spindle_voltage == 230 else self.m.convert_from_110_to_230(10000)
+        rpm_to_run = 10000
 
         self.m.s.write_command('M3 S' + str(rpm_to_run))
 

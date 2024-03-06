@@ -4,6 +4,9 @@ Created on 18 Aug 2022
 '''
 
 import sys
+
+from tests import test_utils
+
 sys.path.append('./src')
 
 try: 
@@ -21,9 +24,11 @@ from asmcnc.comms import localization
 '''
 ######################################
 RUN FROM easycut-smartbench FOLDER WITH: 
-python -m pytest --show-capture=no --disable-pytest-warnings tests/automated_unit_tests/comms/test_router_machine_tuning_and_calibration.py
+python -m pytest tests/automated_unit_tests/comms/test_router_machine_tuning_and_calibration.py
 ######################################
 '''
+
+test_utils.create_app()
 
 @pytest.fixture
 def m():

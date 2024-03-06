@@ -11,6 +11,7 @@ from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from asmcnc.skavaUI import widget_z_height
 from kivy.clock import Clock
+from asmcnc.core_UI.components.buttons.probe_button import ProbeButton
 
 Builder.load_string(
     """
@@ -18,6 +19,7 @@ Builder.load_string(
 <ZMove>
 
     virtual_z_container:virtual_z_container
+    probe_button_container:probe_button_container
 
     BoxLayout:
 
@@ -98,32 +100,16 @@ Builder.load_string(
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
-                        source: "./asmcnc/skavaUI/img/z_jog_down.png"
                         source: "./asmcnc/skavaUI/img/xy_arrow_down.png"
                         center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
                         allow_stretch: True   
                         
-            Button:
-                font_size: str(0.01875 * app.width) + 'sp'
-                size_hint_y: 1
-                background_color: hex('#F4433600')
-                on_release: 
-                    self.background_color = hex('#F4433600')
-                on_press: 
-                    root.probe_z()
-                    self.background_color = hex('#F44336FF')
-                BoxLayout:
-                    padding: 0
-                    size: self.parent.size
-                    pos: self.parent.pos
-                    Image:
-                        source: "./asmcnc/skavaUI/img/z_probe.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True   
+            BoxLayout:
+                padding: 0, dp(10)
+                size_hint_y: 1              
+                id: probe_button_container
                         
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
@@ -169,11 +155,13 @@ class ZMove(Widget):
         self.m = kwargs["machine"]
         self.sm = kwargs["screen_manager"]
         self.jd = kwargs["job"]
+        self.l = kwargs["localization"]
         self.virtual_z_container.add_widget(
             widget_z_height.VirtualZ(
                 machine=self.m, screen_manager=self.sm, job=self.jd
             )
         )
+        self.probe_button_container.add_widget(ProbeButton(self.m, self.sm, self.l))
 
     def jog_z(self, case):
         self.m.set_led_colour("WHITE")

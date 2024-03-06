@@ -3,37 +3,56 @@ Created on 31 Jan 2018
 @author: Ed
 This module defines the machine's properties (e.g. travel), services (e.g. serial comms) and functions (e.g. move left)
 '''
+import re
+import threading
+import traceback
 
-import logging, threading, re, traceback
+from enum import Enum
 
-try: 
+from asmcnc.comms.serial_connection import MachineState
+
+try:
     import pigpio
 except:
     pass
 
-from asmcnc.comms import serial_connection  # @UnresolvedImport
+from asmcnc.comms import serial_connection
 from asmcnc.comms.yeti_grbl_protocol import protocol
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.comms import motors
+from asmcnc.skavaUI import popup_info
 
 from kivy.clock import Clock
+from kivy.properties import NumericProperty
+from kivy.event import EventDispatcher
 import sys, os, time
+import os, time
 from datetime import datetime
-import os.path
-from os import path
 
-
-
-from asmcnc.skavaUI import popup_info
 
 def log(message):
     timestamp = datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
 
 
-class RouterMachine(object):
+class ProductCodes(Enum):
+    DRYWALLTEC = 06
+    PRECISION_PRO_X = 05
+    PRECISION_PRO_PLUS = 04
+    PRECISION_PRO = 03
+    STANDARD = 02
+    FIRST_VERSION = 01
+    UNKNOWN = 00
 
-# SETUP
+
+class Axis(Enum):
+    X = 'X'
+    Y = 'Y'
+    Z = 'Z'
+
+
+class RouterMachine(EventDispatcher):
+    # SETUP
     
     s = None # serial object
 
@@ -41,14 +60,13 @@ class RouterMachine(object):
     grbl_x_max_travel = 1500.0 # measured from true home
     grbl_y_max_travel = 3000.0 # measured from true home
     grbl_z_max_travel = 300.0 # measured from true home
-    
+
     # how close do we allow the machine to get to its limit switches when requesting a move (so as not to accidentally trip them)
     # note this an internal UI setting, it is NOT grbl pulloff ($27)
     limit_switch_safety_distance = 1.0
 
     # put commonly used speed and pos values here (or any values that need to be easy to find :))
-    z_max_feed = 750
-    z_post_homing_raise_abs = -5.0
+    Z_MAX_FEED_RATE = 750
 
     is_machine_completed_the_initial_squaring_decision = False
     is_machine_homed = False # status on powerup
@@ -74,7 +92,7 @@ class RouterMachine(object):
     set_up_options_file_path = smartbench_values_dir + 'set_up_options.txt'
     z_touch_plate_thickness_file_path = smartbench_values_dir + 'z_touch_plate_thickness.txt'
     calibration_settings_file_path = smartbench_values_dir + 'calibration_settings.txt'
-    z_head_maintenance_settings_file_path = smartbench_values_dir + 'z_head_maintenance_settings.txt'   
+    z_head_maintenance_settings_file_path = smartbench_values_dir + 'z_head_maintenance_settings.txt'
     z_head_laser_offset_file_path = smartbench_values_dir + 'z_head_laser_offset.txt'
     spindle_brush_values_file_path = smartbench_values_dir + 'spindle_brush_values.txt'
     spindle_cooldown_settings_file_path = smartbench_values_dir + 'spindle_cooldown_settings.txt'
@@ -91,6 +109,8 @@ class RouterMachine(object):
     z_lift_after_probing = 20.0
     z_probe_speed = 60
     z_touch_plate_thickness = 1.53
+    z_probe_speed_fast = 400
+    fast_probing = False
 
     ## CALIBRATION SETTINGS
     time_since_calibration_seconds = 0
@@ -107,6 +127,8 @@ class RouterMachine(object):
     is_laser_on = False
     is_laser_enabled = False
 
+    laser_offset_tool_clearance_to_access_edge_of_sheet = 5
+
     ## STYLUS SETTINGS
     is_stylus_enabled = True
     stylus_router_choice = 'router'
@@ -121,7 +143,7 @@ class RouterMachine(object):
     spindle_digital = True #spindle can be manual or digital
     spindle_cooldown_time_seconds = 10 # YETI value is 10 seconds
     spindle_cooldown_rpm = 12000 # YETI default value was 20k, but has been lowered to 12k
-    
+
     amb_cooldown_rpm_default = 10000
     yeti_cooldown_rpm_default = 12000
     spindle_cooldown_rpm_override = False
@@ -167,6 +189,24 @@ class RouterMachine(object):
         self.TMC_motor[TMC_Y2] = motors.motor_class(TMC_Y2)
         self.TMC_motor[TMC_Z] = motors.motor_class(TMC_Z)
 
+    Z_AXIS_ACCESSIBLE_ABS_HEIGHT = -5
+    Z_PROBE_SAFE_PULL_OFF = 1
+
+    def raise_z_axis_for_collet_access(self):
+        """
+        Raise Z to a height that the user can access the spindle collet
+        :return: None
+        """
+        self.jog_absolute_single_axis(Axis.Z.value, target=self.Z_AXIS_ACCESSIBLE_ABS_HEIGHT,
+                                      speed=self.Z_MAX_FEED_RATE)
+
+    def raise_z_axis_to_safe_height_after_probing(self):
+        """
+        Raise Z to a height that is slightly above the probe coordinate so the machine clears the stock
+        :return: none
+        """
+        self.jog_relative(Axis.Z.value, self.Z_PROBE_SAFE_PULL_OFF, self.Z_MAX_FEED_RATE)
+
     # CREATE/DESTROY SERIAL CONNECTION (for cycle app)
     def reconnect_serial_connection(self):
         self.starting_serial_connection = True
@@ -186,88 +226,88 @@ class RouterMachine(object):
     def check_presence_of_sb_values_files(self):
 
         # check folder exists
-        if not path.exists(self.smartbench_values_dir):
+        if not os.path.exists(self.smartbench_values_dir):
             log("Creating sb_values dir...")
             os.mkdir(self.smartbench_values_dir)
 
-        if not path.exists(self.set_up_options_file_path):
+        if not os.path.exists(self.set_up_options_file_path):
             log("Creating set up options file...")
             file = open(self.set_up_options_file_path, "w+")
             file.write(str(self.trigger_setup))
             file.close()
 
-        if not path.exists(self.z_touch_plate_thickness_file_path):
+        if not os.path.exists(self.z_touch_plate_thickness_file_path):
             log("Creating z touch plate thickness file...")
             file = open(self.z_touch_plate_thickness_file_path, "w+")
             file.write(str(self.z_touch_plate_thickness))
             file.close()
 
-        if not path.exists(self.z_head_laser_offset_file_path):
+        if not os.path.exists(self.z_head_laser_offset_file_path):
             log("Creating z head laser offset file...")
             file = open(self.z_head_laser_offset_file_path, "w+")
             file.write('False' + "\n" + "0" + "\n" + "0")
             file.close()
 
-        if not path.exists(self.spindle_brush_values_file_path):
+        if not os.path.exists(self.spindle_brush_values_file_path):
             log("Creating spindle brush values file...")
             file = open(self.spindle_brush_values_file_path, "w+")
             file.write(str(self.spindle_brush_use_seconds) + "\n" + str(self.spindle_brush_lifetime_seconds))
             file.close()
 
-        if not path.exists(self.spindle_cooldown_rpm_override_file_path):
+        if not os.path.exists(self.spindle_cooldown_rpm_override_file_path):
             log("Creating spindle cooldown_rpm override settings file...")
             file = open(self.spindle_cooldown_rpm_override_file_path, "w+")
             file.write(str(self.spindle_cooldown_rpm_override))
             file.close()
 
-        if not path.exists(self.spindle_cooldown_settings_file_path):
+        if not os.path.exists(self.spindle_cooldown_settings_file_path):
             log("Creating spindle cooldown settings file...")
             file = open(self.spindle_cooldown_settings_file_path, "w+")
             file.write(
-                str(self.spindle_brand) + "\n" + 
-                str(self.spindle_voltage) + "\n" + 
-                str(self.spindle_digital) + "\n" + 
+                str(self.spindle_brand) + "\n" +
+                str(self.spindle_voltage) + "\n" +
+                str(self.spindle_digital) + "\n" +
                 str(self.spindle_cooldown_time_seconds) + "\n" +
                 str(self.spindle_cooldown_rpm)
                 )
             file.close()
 
-        if not path.exists(self.stylus_settings_file_path):
+        if not os.path.exists(self.stylus_settings_file_path):
             log("Creating stylus settings file...")
             file = open(self.stylus_settings_file_path, "w+")
             file.write(str(self.is_stylus_enabled))
             file.close()
 
-        if not path.exists(self.calibration_settings_file_path):
+        if not os.path.exists(self.calibration_settings_file_path):
             log('Creating calibration settings file...')
             file = open(self.calibration_settings_file_path, 'w+')
             file.write(str(self.time_since_calibration_seconds) + "\n" + str(self.time_to_remind_user_to_calibrate_seconds))
             file.close()
 
-        if not path.exists(self.z_head_maintenance_settings_file_path):
+        if not os.path.exists(self.z_head_maintenance_settings_file_path):
             log('Creating z head maintenance settings file...')
             file = open(self.z_head_maintenance_settings_file_path, 'w+')
             file.write(str(self.time_since_z_head_lubricated_seconds))
             file.close()
 
-        if not path.exists(self.spindle_health_check_file_path):
+        if not os.path.exists(self.spindle_health_check_file_path):
             log("Creating spindle health check settings file...")
             file = open(self.spindle_health_check_file_path, "w+")
             file.write(str(self.is_spindle_health_check_enabled_as_default))
             file.close()
 
-        if not path.exists(self.device_label_file_path):
+        if not os.path.exists(self.device_label_file_path):
             log('Creating device label settings file...')
             file = open(self.device_label_file_path, 'w+')
             file.write(str(self.device_label))
             file.close()
 
-        if not path.exists(self.device_location_file_path):
+        if not os.path.exists(self.device_location_file_path):
             log('Creating device location settings file...')
             file = open(self.device_location_file_path, 'w+')
             file.write(str(self.device_location))
 
-        if not path.exists(self.persistent_language_path):
+        if not os.path.exists(self.persistent_language_path):
             log("Creating language settings file")
             file = open(self.persistent_language_path, 'w+')
             file.write('English (GB)')
@@ -289,11 +329,11 @@ class RouterMachine(object):
 
 
     def look_at(self, f):
-        return path.isfile(f)
+        return os.path.isfile(f)
 
     ## SET UP OPTIONS
     def read_set_up_options(self):
-        try: 
+        try:
             file = open(self.set_up_options_file_path, 'r')
             trigger_bool_string  = str(file.read())
             file.close()
@@ -327,7 +367,7 @@ class RouterMachine(object):
     ## TOUCH PLATE THICKENESS
     def read_z_touch_plate_thickness(self):
 
-        try: 
+        try:
             file = open(self.z_touch_plate_thickness_file_path, 'r')
             self.z_touch_plate_thickness  = float(file.read())
             file.close()
@@ -359,7 +399,7 @@ class RouterMachine(object):
 
     def read_calibration_settings(self):
 
-        try: 
+        try:
             file = open(self.calibration_settings_file_path, 'r')
             [read_time_since_calibration_seconds, read_time_to_remind_user_to_calibrate_seconds]  = file.read().splitlines()
             file.close()
@@ -394,7 +434,7 @@ class RouterMachine(object):
 
     def read_z_head_maintenance_settings(self):
 
-        try: 
+        try:
             file = open(self.z_head_maintenance_settings_file_path, 'r')
             self.time_since_z_head_lubricated_seconds  = float(file.read())
             file.close()
@@ -402,7 +442,7 @@ class RouterMachine(object):
             log("Read in z head maintenance settings")
             return True
 
-        except: 
+        except:
             log("Unable to read z head maintenance settings")
             return False
 
@@ -418,7 +458,7 @@ class RouterMachine(object):
             log("Write z head maintenance settings")
             return True
 
-        except: 
+        except:
             log("Unable to write z head maintenance settings")
             return False
 
@@ -441,8 +481,8 @@ class RouterMachine(object):
             log("Read in z head laser offset values")
             return True
 
-        except: 
-            log("Unable to read z head laser offset values") 
+        except:
+            log("Unable to read z head laser offset values")
             return False
 
     def write_z_head_laser_offset_values(self, enabled, X, Y):
@@ -457,7 +497,7 @@ class RouterMachine(object):
 
             return True
 
-        except: 
+        except:
             log("Unable to write z head laser offset values")
             return False
 
@@ -475,7 +515,7 @@ class RouterMachine(object):
             log("Read in spindle brush use and lifetime")
             return True
 
-        except: 
+        except:
 
             log("Unable to read spindle brush use and lifetime values")
             return False
@@ -492,7 +532,7 @@ class RouterMachine(object):
             log("Spindle brush use and lifetime written to file")
             return True
 
-        except: 
+        except:
             log("Unable to write spindle brush use and lifetime values")
             return False
 
@@ -512,7 +552,7 @@ class RouterMachine(object):
             log("Read in spindle cooldown override settings")
             return True
 
-        except: 
+        except:
             log("Unable to read spindle cooldown override settings")
             return False
 
@@ -531,7 +571,7 @@ class RouterMachine(object):
             log("Spindle cooldown override settings written to file")
             return True
 
-        except: 
+        except:
             log("Unable to write spindle cooldown override settings")
             return False
 
@@ -557,7 +597,7 @@ class RouterMachine(object):
             # otherwise use default values
             if self.spindle_cooldown_rpm_override:
                 self.spindle_cooldown_rpm = int(read_spindle[4])
-            
+
             elif "YETI" in self.spindle_brand:
                 self.spindle_cooldown_rpm = self.yeti_cooldown_rpm_default
 
@@ -570,7 +610,7 @@ class RouterMachine(object):
             log("Read in spindle cooldown settings")
             return True
 
-        except: 
+        except:
             log("Unable to read spindle cooldown settings")
             return False
 
@@ -596,7 +636,7 @@ class RouterMachine(object):
             log("Spindle cooldown settings written to file")
             return True
 
-        except: 
+        except:
             log("Unable to write spindle cooldown settings")
             return False
 
@@ -616,7 +656,7 @@ class RouterMachine(object):
             log("Read in stylus settings")
             return True
 
-        except: 
+        except:
             log("Unable to read stylus settings")
             return False
 
@@ -634,7 +674,7 @@ class RouterMachine(object):
             log("Stylus settings written to file")
             return True
 
-        except: 
+        except:
             log("Unable to write stylus settings")
             return False
 
@@ -654,7 +694,7 @@ class RouterMachine(object):
             log("Read in spindle health check settings")
             return True
 
-        except: 
+        except:
             log("Unable to read spindle health check settings")
             return False
 
@@ -672,7 +712,7 @@ class RouterMachine(object):
             log("Spindle health check settings written to file")
             return True
 
-        except: 
+        except:
             log("Unable to write spindle health check settings")
             return False
 
@@ -790,7 +830,7 @@ class RouterMachine(object):
                     '$122=200.0',                                   #Z Acceleration, mm/sec^2
                     '$130=1300.0',                                  #X Max travel, mm TODO: Link to a settings object
                     '$131=2503.0',                                  #Y Max travel, mm
-                    '$132=' + str(z_max_travel_value)  #Z Max travel, mm       
+                    '$132=' + str(z_max_travel_value)  #Z Max travel, mm
             ]
 
         if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'send $51 and $53 settings'):
@@ -851,7 +891,7 @@ class RouterMachine(object):
                     '$11=' + str(self.s.setting_11),      #Junction deviation, mm
                     '$12=' + str(self.s.setting_12),      #Arc tolerance, mm
                     '$13=' + str(self.s.setting_13),          #Report inches, boolean
-                    '$22=' + str(self.s.setting_22),          #Homing cycle, boolean <------------------------                        
+                    '$22=' + str(self.s.setting_22),          #Homing cycle, boolean <------------------------
                     '$20=' + str(self.s.setting_20),          #Soft limits, boolean <-------------------
                     '$21=' + str(self.s.setting_21),          #Hard limits, boolean <------------------
                     '$23=' + str(self.s.setting_23),          #Homing dir invert, mask
@@ -886,7 +926,7 @@ class RouterMachine(object):
                     '$130=' + str(self.s.setting_130),   #X Max travel, mm TODO: Link to a settings object
                     '$131=' + str(self.s.setting_131),   #Y Max travel, mm
                     '$132=' + str(self.s.setting_132)   #Z Max travel, mm
-                    # 'G10 L2 P1 X' + str(self.m.s.g54_x) + ' Y' + str(self.m.s.g54_y) + ' Z' + str(self.m.s.g54_z) # tell GRBL what position it's in                        
+                    # 'G10 L2 P1 X' + str(self.m.s.g54_x) + ' Y' + str(self.m.s.g54_y) + ' Z' + str(self.m.s.g54_z) # tell GRBL what position it's in
             ]
 
         f = open('/home/pi/easycut-smartbench/src/sb_values/saved_grbl_settings_params.txt', 'w')
@@ -896,7 +936,7 @@ class RouterMachine(object):
 
     def restore_grbl_settings_from_file(self, filename):
 
-        try: 
+        try:
             fileobject = open(filename, 'r')
             settings_to_restore = (fileobject.read()).split('\n')
             settings_to_restore.append("$$")
@@ -916,11 +956,11 @@ class RouterMachine(object):
         # XY home end
         self.x_min_jog_abs_limit = -self.grbl_x_max_travel + self.limit_switch_safety_distance
         self.y_min_jog_abs_limit = -self.grbl_y_max_travel + self.limit_switch_safety_distance
-        
+
         # XY far end
         self.x_max_jog_abs_limit = -self.limit_switch_safety_distance
         self.y_max_jog_abs_limit = -self.limit_switch_safety_distance
-    
+
         # Z 
         self.z_max_jog_abs_limit = -self.limit_switch_safety_distance
         self.z_min_jog_abs_limit = -self.grbl_z_max_travel
@@ -976,7 +1016,7 @@ class RouterMachine(object):
 
         log('FW version able to lift on pause: ' + str(self.is_machines_fw_version_equal_to_or_greater_than_version('1.0.13', 'Z up on pause')))
         return self.is_machines_fw_version_equal_to_or_greater_than_version('1.0.13', 'Z up on pause')
-    
+
 
     def is_machines_fw_version_equal_to_or_greater_than_version(self, version_to_reference, capability_decription):  # ref_version_parts syntax "x.x.x"
 
@@ -984,7 +1024,7 @@ class RouterMachine(object):
         try:
             machine_fw_parts = self.s.fw_version.split('.')[:3]  # [:3] take's only the first three split values (throw away the date field
             ref_version_parts = version_to_reference.split('.')[:3]
-        
+
             # convert values to ints for comparison
             machine_fw_parts = [int(i) for i in machine_fw_parts]
             ref_version_parts = [int(i) for i in ref_version_parts]
@@ -994,7 +1034,7 @@ class RouterMachine(object):
             log(error_description)
 
             return False
-        
+
         if machine_fw_parts[0] > ref_version_parts[0]:
             return True
         elif machine_fw_parts[0] < ref_version_parts[0]:
@@ -1009,17 +1049,17 @@ class RouterMachine(object):
                     return True
                 elif machine_fw_parts[2] < ref_version_parts[2]:
                     return False
-                else: 
+                else:
                     return True # equal
 
-    def is_machines_hw_version_equal_to_or_greater_than_version(self, version_to_reference, capability_decription): 
+    def is_machines_hw_version_equal_to_or_greater_than_version(self, version_to_reference, capability_decription):
 
         try:
             if float(self.s.hw_version) >= version_to_reference:
                 return True
             else:
                 return False
-        
+
         except:
             error_description = "Couldn't process machine hardware value when checking capability: " + str(capability_decription) + \
             ".\n\n Please check Z Head connection."
@@ -1043,28 +1083,169 @@ class RouterMachine(object):
 
 # HW/FW ADJUSTMENTS
 
-    # Functions to convert spindle RPMs if using a 110V spindle
-    # 'red' refers to 230V line (which is what electronics thinks spindle will be regardless of actual HW)
-    # 'green' refers to 110V line
-    """
-    Use these functions when setting the spindle RPM, for example:
-    To run a 110V spindle at 10000 RPM, you would set the spindle RPM to convert_from_110_to_230(10000)
-    You then don't need to convert the value read back in.
-    """
+    def correct_rpm_for_120(self, target_rpm, revert = False):
+        """
+        Compensates for the desparity in set and actual spindle RPM for a 120V spindle.
 
-    def convert_from_110_to_230(self, rpm_green):
-        if float(rpm_green) != 0:
-            v_green = (float(rpm_green) - 9375)/1562.5
-            rpm_red = (2187.5*float(v_green)) + 3125
-            return float(rpm_red)
-        else: return 0
+        Args:
+            target_rpm (int): The target RPM to be corrected.
+            revert (bool, optional): If True, the corrected RPM will be reverted back to the original requested RPM. Defaults to False.
 
-    def convert_from_230_to_110(self, rpm_red):
-        if float(rpm_red) != 0:
-            v_red = (float(rpm_red) - 3125)/2187.5
-            rpm_green = (1562.5*float(v_red)) + 9375
-            return float(rpm_green)
-        else: return 0
+        Returns:
+            int: The corrected RPM value.
+        """
+
+        # For conversion maths see https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/edit#gid=1507195715
+
+        if 10000 <= target_rpm <= 25000:
+
+            if revert:
+                return int(round(0.6739 * target_rpm + 8658)) # Revert the corrected RPM back to the original requested RPM
+
+            compensated_RPM = int(round((target_rpm - 8658) / 0.6739))
+
+            if compensated_RPM < 0:
+                log("Calculated RPM {} too low for 120V spindle, setting to 0".format(target_rpm))
+                compensated_RPM = 0
+            elif compensated_RPM > 25000:
+                compensated_RPM = 25000
+
+            return compensated_RPM
+
+        else:
+            log("Requested RPM {} outside of range for 120V spindle (10000 - 25000)".format(target_rpm))
+            return 0
+
+    def correct_rpm_for_230(self, target_rpm, revert = False):
+        """
+        Compensates for the desparity in set and actual spindle RPM for a 230V spindle.
+
+        Args:
+            target_rpm (int): The target RPM to be corrected.
+            revert (bool, optional): If True, the corrected RPM will be reverted back to the original requested RPM. Defaults to False.
+
+        Returns:
+            int: The corrected RPM value.
+        """
+        # For conversion maths see https://docs.google.com/spreadsheets/d/1Dbn6JmNCWaCNxpXMXxxNB2IKvNlhND6zz_qQlq60dQY/edit#gid=1507195715
+
+        if 4000 <= target_rpm <= 25000:
+
+            if revert:
+                return int(round(0.95915 * target_rpm + 1886)) # Revert the corrected RPM back to the original requested RPM
+
+            compensated_RPM = int(round((target_rpm - 1886) / 0.95915))
+
+            if compensated_RPM < 0:
+                log("Calculated RPM {} too low for 230V spindle, setting to 0".format(target_rpm))
+                compensated_RPM = 0
+            elif compensated_RPM > 25000:
+                compensated_RPM = 25000
+
+            return compensated_RPM
+
+        else:
+            log("Requested RPM {} outside of range for 230V spindle (4000 - 25000)".format(target_rpm))
+            return 0
+
+    def correct_rpm(self, requested_rpm, spindle_voltage = None, revert = False):
+        """
+        Compensates for the desparity in set and actual spindle RPM for a spindle.
+
+        For use outside of router_machine.py
+
+        Args:
+            requested_rpm (float): The RPM value to be corrected.
+            voltage (int, optional): The spindle voltage. Defaults to spindle_voltage.
+            revert (bool, optional): If True, the corrected RPM will be reverted back to the original requested RPM. Defaults to False.
+
+        Returns:
+            float: The corrected RPM value.
+
+        Raises:
+            ValueError: If the spindle voltage is not recognised.
+        """
+
+        if spindle_voltage is None:
+            spindle_voltage = self.spindle_voltage # Use spindle voltage set by user in maintenance app
+
+        if spindle_voltage in [110, 120]:
+            rpm_to_set = self.correct_rpm_for_120(requested_rpm, revert)
+
+        elif spindle_voltage in [230, 240]:
+            rpm_to_set = self.correct_rpm_for_230(requested_rpm, revert)
+
+        else:
+            raise ValueError('Spindle voltage: {} not recognised'.format(spindle_voltage))
+
+        if revert:
+            log("Requested RPM: "+ str(requested_rpm) + " Reverted RPM: " + str(rpm_to_set) + " Voltage: " + str(spindle_voltage))
+        else:
+            log("Requested RPM: "+ str(requested_rpm) + " Compensated RPM: " + str(rpm_to_set) + " Voltage: " + str(spindle_voltage))
+
+        return rpm_to_set
+
+    def turn_on_spindle(self, rpm=None):
+        """
+        This method sends the command 'M3' to the Z Head to turn on the spindle at a given speed.
+
+        No RPM compensation occurs in this command as this is captured and handled by compensate_spindle_speed_command() in the SerialConnection object 
+
+        For use outside of router_machine.py
+
+        Args:
+            rpm (int, optional): The desired RPM (Rotations Per Minute) of the spindle. Defaults to None, which will be same as last set value (handled by GRBL).
+
+        Returns:
+            None
+        """
+
+        if rpm: # If a value is given, turn the spindle on at that speed
+            self.s.write_command('M3 S' + str(rpm))
+
+        else: # If no value is given, turn the spindle on at the last set value (handled by GRBL)
+            self.s.write_command('M3')
+
+    def turn_off_spindle(self):
+        """
+        This method sends the command 'M5' to the Z Head to turn off the spindle.
+
+        Returns:
+            None
+        """
+        self.s.write_command('M5')
+
+    def minimum_spindle_speed(self, spindle_voltage = None):
+        """
+        Returns the minimum spindle speed for a given spindle voltage.
+
+        For use outside of router_machine.py
+
+        Args:
+            spindle_voltage (int, optional): The spindle voltage. Defaults to spindle_voltage.
+
+        Returns:
+            int: The minimum spindle speed.
+        """
+
+        if spindle_voltage is None:
+            spindle_voltage = self.spindle_voltage # Use spindle voltage set by user in maintenance app
+
+        if spindle_voltage in [110, 120]:
+            return 10000 # Defined by Mafell spindle HW
+
+        elif spindle_voltage in [230, 240]:
+            return 4000 # Defined by Mafell spindle HW
+
+        else:
+            raise ValueError('Spindle voltage: {} not recognised'.format(spindle_voltage))
+
+    def maximum_spindle_speed(self):
+        return 25000
+
+    def is_spindle_on(self):
+        return float(self.s.spindle_speed) > 0
+
 
 # START UP SEQUENCES
 
@@ -1101,7 +1282,7 @@ class RouterMachine(object):
             if self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'get TMC registers'):
                 self.send_command_to_motor("GET REGISTERS", command=GET_REGISTERS)
 
-        else: 
+        else:
             # In case handshake is too soon, it tries one more time to see if it can read a FW version
             self.handshake_event = Clock.schedule_once(lambda dt: self.tmc_handshake(), 10)
 
@@ -1161,7 +1342,7 @@ class RouterMachine(object):
         # Machine has stopped without warning and probably lost position
         self._stop_all_streaming()  # In case alarm happened during stream, stop that
         self._grbl_soft_reset()     # Reset to get out of Alarm mode. All buffers will be dumped.
-        
+
     def resume_from_alarm(self):
         # Machine has stopped without warning and probably lost position
         self._stop_all_streaming()  # In case alarm happened during stream, stop that
@@ -1195,15 +1376,15 @@ class RouterMachine(object):
         self._stop_all_streaming()
         self._grbl_soft_reset()
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1)
-        Clock.schedule_once(lambda dt: self.set_led_colour('GREEN'),0.2) 
-        
+        Clock.schedule_once(lambda dt: self.set_led_colour('GREEN'),0.2)
+
     def stop_for_a_stream_pause(self, reason_for_pause=None):
         self.set_pause(True, reason_for_pause=reason_for_pause)
-        self._grbl_door() # send a soft-door command
+        self._grbl_door()
 
     def resume_after_a_stream_pause(self):
         self.reason_for_machine_pause = "Resuming"
-        self._grbl_resume()        
+        self._grbl_resume()
         Clock.schedule_once(lambda dt: self.set_pause(False),0.3)
 
     def set_pause(self, pauseBool, reason_for_pause=None):
@@ -1225,8 +1406,8 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: record_pause_time(prev_state, pauseBool), 0.2)
 
     def stop_from_soft_stop_cancel(self):
-        self.resume_from_alarm() 
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.6) 
+        self.resume_from_alarm()
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.6)
 
     def resume_from_a_soft_door(self):
         self.reason_for_machine_pause = "Resuming"
@@ -1239,26 +1420,26 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.set_pause(False),0.4)
 
     def cancel_after_a_hard_door(self):
-        self.resume_from_alarm() 
-        Clock.schedule_once(lambda dt: self.set_pause(False),0.4) 
+        self.resume_from_alarm()
+        Clock.schedule_once(lambda dt: self.set_pause(False),0.4)
 
     def reset_after_sequential_stream(self):
         self._stop_all_streaming()
         self._grbl_soft_reset()
-    
+
     def reset_pre_homing(self):
         self._stop_all_streaming()
-        self._grbl_soft_reset() 
+        self._grbl_soft_reset()
         Clock.schedule_once(lambda dt: self._grbl_unlock(),0.1) # if awaking from an alarm state, to allow other calls to process prior to the ineveitable $H which would normally clear it
         Clock.schedule_once(lambda dt: self.set_led_colour("ORANGE"),0.2)
         # Then allow 0.2 seconds for grbl to become receptive after reset
 
     def reset_on_cancel_homing(self):
         self._stop_all_streaming()
-        self._grbl_soft_reset() 
+        self._grbl_soft_reset()
         Clock.schedule_once(lambda dt: self.set_led_colour("BLUE"),0.2)
-        
-                
+
+
     # Internal calls
 
     def _stop_all_streaming(self):
@@ -1283,7 +1464,7 @@ class RouterMachine(object):
     def _grbl_door(self):
         log('grbl realtime cmd sent: \\x84')
         self.s.write_realtime('\x84', altDisplayText = 'Door')
-    
+
     def _grbl_unlock(self):
         log('grbl realtime cmd sent: $X unlock')
         self.s.write_command('$X', altDisplayText = 'Unlock: $X')
@@ -1346,12 +1527,12 @@ class RouterMachine(object):
     def get_grbl_settings(self):
         self.s.write_command('$$')
 
-    def get_grbl_motion_mode(self): 
+    def get_grbl_motion_mode(self):
         return self.jd.grbl_mode_tracker[0][0] if self.jd.grbl_mode_tracker else None
-        
+
     def send_any_gcode_command(self, gcode):
         self.s.write_command(gcode)
-    
+
     def enable_check_mode(self):
         self._grbl_soft_reset()
         if self.s.m_state != "Check":
@@ -1367,27 +1548,27 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self._grbl_soft_reset(), 0.1)
 
     def get_switch_states(self):
-        
+
         switch_states = []
-        
+
         if self.s.limit_x == True: switch_states.append('limit_x') # convention: min is lower_case
         if self.s.limit_X == True: switch_states.append('limit_X') # convention: MAX is UPPER_CASE
-        if self.s.limit_y == True: switch_states.append('limit_y')   
-        if self.s.limit_Y == True: switch_states.append('limit_Y') 
-        if self.s.limit_z == True: switch_states.append('limit_z') 
-        if self.s.probe == True: switch_states.append('probe') 
-        if self.s.dust_shoe_cover == True: switch_states.append('dust_shoe_cover') 
+        if self.s.limit_y == True: switch_states.append('limit_y')
+        if self.s.limit_Y == True: switch_states.append('limit_Y')
+        if self.s.limit_z == True: switch_states.append('limit_z')
+        if self.s.probe == True: switch_states.append('probe')
+        if self.s.dust_shoe_cover == True: switch_states.append('dust_shoe_cover')
         if self.s.spare_door == True: switch_states.append('spare_door')
-        
-        return switch_states 
-    
+
+        return switch_states
+
     def disable_limit_switches(self):
 
         #turn soft limits, hard limts OFF
         print('switching soft limits & hard limts OFF')
         settings = ['$22=0','$20=0','$21=0']
         self.s.start_sequential_stream(settings)
-    
+
     def enable_limit_switches(self):
 
         #turn soft limits, hard limts OFF
@@ -1459,47 +1640,51 @@ class RouterMachine(object):
 
 
 # SETTINGS GETTERS
-    def serial_number(self): 
-        try: self.s.setting_50
-        except: return 0
-        else: return self.s.setting_50
+    def serial_number(self):
+        return self.s.setting_50
 
-    def z_head_version(self):
-        try: self.s.setting_50
-        except: return 0
-        else: return str(self.s.setting_50)[-2] + str(self.s.setting_50)[-1]
+    def get_product_code(self):
+        """takes the last two digits of $50 and converts them to a ProductCode."""
+        if self.s.setting_50 == 0.0:
+            return ProductCodes.UNKNOWN
+        else:
+            pc = str(self.s.setting_50)[-2] + str(self.s.setting_50)[-1]
+            return ProductCodes(int(pc))
 
     def firmware_version(self):
         try: self.s.fw_version
         except: return 0
         else: return self.s.fw_version
 
-    dwt_path =  "../../dwt.txt"
 
     def bench_is_dwt(self):
-        return path.isfile(self.dwt_path)
+        return self.get_product_code() is ProductCodes.DRYWALLTEC
 
     def smartbench_model(self):
-        if self.bench_is_dwt():
+        # recommend refactoring models into an enum, relying on strings is error-prone
+        pc = self.get_product_code()
+        if pc is ProductCodes.DRYWALLTEC:
             return "DRYWALLTEC SmartCNC"
-        elif self.bench_is_short():
-            return "SmartBench Mini V1.3 PrecisionPro"
-        elif self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Smartbench model'):
-            return "SmartBench V1.3 PrecisionPro CNC Router"
-        elif self.is_machines_fw_version_equal_to_or_greater_than_version('1.4.0', 'Smartbench model'):
-            return "SmartBench V1.2 PrecisionPro CNC Router"
-        else:
-            zh_ver = self.z_head_version()
-
-            if zh_ver == "03":
+        elif pc == ProductCodes.PRECISION_PRO_X:
+            return "SmartBench V1.3 PrecisionPro X"
+        elif pc is ProductCodes.PRECISION_PRO_PLUS:
+            return "SmartBench V1.3 PrecisionPro Plus"
+        elif pc is ProductCodes.PRECISION_PRO:
+            if self.bench_is_short():
+                return "SmartBench Mini V1.3 PrecisionPro"
+            elif self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'Smartbench model'):
+                return "SmartBench V1.3 PrecisionPro CNC Router"
+            elif self.is_machines_fw_version_equal_to_or_greater_than_version('1.4.0', 'Smartbench model'):
+                return "SmartBench V1.2 PrecisionPro CNC Router"
+            else:
                 return "SmartBench V1.2 Precision CNC Router"
-            elif zh_ver == "02":
-                return "SmartBench V1.2 Standard CNC Router"
-            elif zh_ver == "01":
-                if self.is_machines_hw_version_equal_to_or_greater_than_version(5, 'Smartbench model'):
-                    return "SmartBench V1.1 CNC Router"
-                else:
-                    return "SmartBench V1.0 CNC Router"
+        elif pc is ProductCodes.STANDARD:
+            return "SmartBench V1.2 Standard CNC Router"
+        elif pc is ProductCodes.FIRST_VERSION:
+            if self.is_machines_hw_version_equal_to_or_greater_than_version(5, 'Smartbench model'):
+                return "SmartBench V1.1 CNC Router"
+            else:
+                return "SmartBench V1.0 CNC Router"
 
         log("SmartBench model detection failed")
         return "SmartBench model detection failed"
@@ -1507,8 +1692,8 @@ class RouterMachine(object):
     def get_dollar_setting(self, setting_num):
         return getattr(self.s, "setting_" + str(setting_num), 0)
 
-# POSITONAL GETTERS            
-        
+# POSITONAL GETTERS
+
     def x_pos_str(self): return self.s.m_x
     def y_pos_str(self): return self.s.m_y
     def z_pos_str(self): return self.s.m_z
@@ -1517,19 +1702,19 @@ class RouterMachine(object):
     def mpos_x(self): return float(self.s.m_x)
     def mpos_y(self): return float(self.s.m_y)
     def mpos_z(self): return float(self.s.m_z)
-    
+
     # 'Work position'/wpos is the position of the tooltip relative to the datum position set for the job
     # WPos = MPos - WCO.
     def wpos_x(self): return float(self.s.m_x) - self.x_wco()
     def wpos_y(self): return float(self.s.m_y) - self.y_wco()
     def wpos_z(self): return float(self.s.m_z) - self.z_wco()
-    
+
     # 'Work Co-ordinate offset'/wco is the definition of the datum position set for the job, wrt home
     # WPos = MPos - WCO
     def x_wco(self): return float(self.s.wco_x)
     def y_wco(self): return float(self.s.wco_y)
     def z_wco(self): return float(self.s.wco_z)
-    
+
     # The G28 command moves the tooltip to an intermediate parking position. 
     # Potentially useful if you want the tool to go to a specific position before and after a job (for example to reload a part for batch work)
     def g28_x(self): return float(self.s.g28_x)
@@ -1543,14 +1728,10 @@ class RouterMachine(object):
         constant_feed_target = last_modal_feed_rate * feed_override_percentage / 100
         return abs(constant_feed_target - current_feed_rate) <= tolerance_for_acceleration_detection, last_modal_feed_rate
 
-    def spindle_speed(self): 
-        if self.spindle_voltage == 110:
-            converted_speed = self.convert_from_230_to_110(self.s.spindle_speed)
-            return int(converted_speed)
-        else: 
-            return int(self.s.spindle_speed)
+    def spindle_speed(self):
+        return int(self.s.spindle_speed)
 
-    def spindle_load(self): 
+    def spindle_load(self):
         try:
             return int(self.s.spindle_load_voltage)
         except:
@@ -1582,7 +1763,7 @@ class RouterMachine(object):
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
 
     def set_workzone_to_pos_xy_with_laser(self):
-        if self.jog_spindle_to_laser_datum('XY'): 
+        if self.jog_spindle_to_laser_datum('XY'):
 
             def wait_for_movement_to_complete(dt):
                 if not self.state() == 'Jog':
@@ -1591,7 +1772,7 @@ class RouterMachine(object):
 
             xy_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
 
-        else: 
+        else:
             error_message = (
                 self.l.get_str("Laser crosshair is out of bounds!") + \
                 "\n\n" + \
@@ -1601,7 +1782,7 @@ class RouterMachine(object):
             popup_info.PopupError(self.sm, self.l, error_message)
 
     def set_x_datum_with_laser(self):
-        if self.jog_spindle_to_laser_datum('X'): 
+        if self.jog_spindle_to_laser_datum('X'):
 
             def wait_for_movement_to_complete(dt):
                 if not self.state() == 'Jog':
@@ -1610,7 +1791,7 @@ class RouterMachine(object):
 
             x_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
 
-        else: 
+        else:
             error_message = (
                 self.l.get_str("Laser crosshair is out of bounds!") + \
                 "\n\n" + \
@@ -1620,7 +1801,7 @@ class RouterMachine(object):
             popup_info.PopupError(self.sm, self.l, error_message)
 
     def set_y_datum_with_laser(self):
-        if self.jog_spindle_to_laser_datum('Y'): 
+        if self.jog_spindle_to_laser_datum('Y'):
 
             def wait_for_movement_to_complete(dt):
                 if not self.state() == 'Jog':
@@ -1629,7 +1810,7 @@ class RouterMachine(object):
 
             y_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
 
-        else: 
+        else:
             error_message = (
                 self.l.get_str("Laser crosshair is out of bounds!") + \
                 "\n\n" + \
@@ -1669,19 +1850,19 @@ class RouterMachine(object):
 
     def jog_absolute_single_axis(self, axis, target, speed):
         self.s.write_command('$J=G53 ' + axis + str(target) + ' F' + str(speed))
-    
+
     def jog_absolute_xy(self, x_target, y_target, speed):
-        self.s.write_command('$J=G53 X' + str(x_target) + ' Y' + str(y_target) + ' F' + str(speed))  
- 
+        self.s.write_command('$J=G53 X' + str(x_target) + ' Y' + str(y_target) + ' F' + str(speed))
+
     def jog_relative(self, axis, dist, speed):
         self.s.write_command('$J=G91 ' + axis + str(dist) + ' F' + str(speed))
-    
+
     def quit_jog(self):
         self.s.write_realtime('\x85', altDisplayText = 'Quit jog')
 
     def spindle_on(self):
         self.s.write_command('M3 S12000')
-    
+
     def spindle_off(self):
         self.s.write_command('M5')
 
@@ -1690,12 +1871,12 @@ class RouterMachine(object):
         if self.spindle_voltage == 230:
             self.s.write_command('M3 S' + str(self.spindle_cooldown_rpm))
         else:
-            cooldown_rpm = self.convert_from_110_to_230(self.spindle_cooldown_rpm)
+            cooldown_rpm = self.spindle_cooldown_rpm
             self.s.write_command('M3 S' + str(cooldown_rpm))
-        self.zUp()
+        self.raise_z_axis_for_collet_access()
 
     def laser_on(self):
-        if self.is_laser_enabled == True: 
+        if self.is_laser_enabled == True:
 
             if self.hw_can_operate_laser_commands():
                 self.s.write_command('AZ')
@@ -1714,22 +1895,19 @@ class RouterMachine(object):
 
     def toggle_spindle_off_overide(self, dt):
         self.s.write_realtime('\x9e', altDisplayText = 'Spindle stop override')
-    
+
     def go_to_jobstart_xy(self):
         self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
         self.s.write_command('G4 P0.1')
         self.s.write_command('G0 G54 X0 Y0')
-    
+
     def go_to_standby(self):
         self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
         self.s.write_command('G4 P0.1')
         self.s.write_command('G28')
-    
+
     def go_to_jobstart_z(self):
         self.s.write_command('G0 G54 Z0')
-        
-    def zUp(self):
-        self.s.write_command('G0 G53 Z-' + str(self.s.setting_27))
 
     def vac_on(self):
         self.s.write_command('AE')
@@ -1741,11 +1919,16 @@ class RouterMachine(object):
         self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
         self.s.write_command('G4 P0.1')
         self.s.write_command('G0 G54 X0')
- 
+
     def go_y_datum(self):
         self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
         self.s.write_command('G4 P0.1')
         self.s.write_command('G0 G54 Y0')
+
+    def go_xy_datum(self):
+        self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
+        self.s.write_command('G4 P0.1')
+        self.s.write_command('G0 G54 X0 Y0')
 
     def jog_spindle_to_laser_datum(self, axis):
 
@@ -1787,7 +1970,7 @@ class RouterMachine(object):
     def feed_override_down_10(self, final_percentage=''):
         self.s.write_realtime('\x92', altDisplayText='Feed override DOWN ' + str(final_percentage))
 
-    def feed_override_up_1(self, final_percentage=''): 
+    def feed_override_up_1(self, final_percentage=''):
         self.s.write_realtime('\x93', altDisplayText='Feed override UP ' + str(final_percentage))
 
     def feed_override_down_1(self, final_percentage=''):
@@ -1809,7 +1992,7 @@ class RouterMachine(object):
     def speed_override_down_10(self, final_percentage=''):
         self.s.write_realtime('\x9B', altDisplayText='Speed override DOWN ' + str(final_percentage))
 
-        
+
 # HOMING
 
     """
@@ -1855,20 +2038,20 @@ class RouterMachine(object):
         if self.homing_task_idx != self.auto_squaring_idx:
             return False
 
-        if not self.s.is_sequential_streaming: 
+        if not self.s.is_sequential_streaming:
             return False
 
         if len(self.s._sequential_stream_buffer) < 2:
             return False
 
-        return True 
+        return True
 
     # components of homing sequence
     def start_homing(self, dt=0):
         log("Start GRBL Homing")
-        self.set_state('Home') 
+        self.set_state('Home')
         self.s.start_sequential_stream(['$H'])
-    
+
     def start_auto_squaring(self, dt=0):
         '''
         This function is designed to square the machine's X&Y axes
@@ -1878,12 +2061,12 @@ class RouterMachine(object):
         We're waiting for grbl responses before we send each line, as we're editing GRBL dollar settings
         Delays after $ settings will be auto-inserted by serial connection module
         '''
-        if not self.is_squaring_XY_needed_after_homing: 
+        if not self.is_squaring_XY_needed_after_homing:
             log("Skip auto squaring")
             return
 
         log("Start auto squaring")
-        
+
         square_homing_sequence =  [
                                   '$20=0', # soft limits off
                                   '$21=0', # hard limits off
@@ -1893,10 +2076,10 @@ class RouterMachine(object):
                                   'G1 Y28', # re-enter work area
                                   'G90', # abs coords
                                   'G53 G0 X-1285', # position zHead to put CoG of X beam on the mid plane (mX: -400)
-                                  'G4 P0.5', # delay, which is needed solely for it's "blocking ok" response                                
+                                  'G4 P0.5', # delay, which is needed solely for it's "blocking ok" response
                                   '$21=1', # soft limits on
                                   '$20=1', # hard limits on
-                                  'G4 P0.5', # delay, which is needed solely for it's "blocking ok" response   
+                                  'G4 P0.5', # delay, which is needed solely for it's "blocking ok" response
                                   '$H'
                                   ]
         self.s.start_sequential_stream(square_homing_sequence, reset_grbl_after_stream=True)
@@ -1908,15 +2091,11 @@ class RouterMachine(object):
                     '$I' # Echo grbl version info, which will be read by sw, and internal parameters sync'd
                     ]
         self.s.start_sequential_stream(query_grbl_list_to_stream)
-    
+
     def move_to_accommodate_laser_offset(self, dt=0):
         if not self.is_laser_enabled: return
         log("Move to laser offset")
         self.jog_absolute_single_axis('X', float(self.x_min_jog_abs_limit) + 5 - self.laser_offset_x_value, 3000)
-
-    def raise_z_axis_for_collet_access(self, dt=0):
-        log("Raise Z axis to allow access to spindle motor clamping nut")
-        self.jog_absolute_single_axis('Z', self.z_post_homing_raise_abs, self.z_max_feed)
 
     # final component is always complete homing sequence
     def complete_homing_sequence(self, dt=0):
@@ -2004,12 +2183,12 @@ class RouterMachine(object):
         self.set_current_homing_task_complete()
 
     def if_last_task_complete(self):
-        if self.get_current_homing_task_complete(): 
+        if self.get_current_homing_task_complete():
             self.homing_task_idx+=1
             return True
 
     def do_next_task_in_sequence(self, dt=0):
-        if self.if_last_task_complete(): 
+        if self.if_last_task_complete():
             self.schedule_homing_event(self.next_homing_task_wrapper, self.homing_seq_first_delay[self.homing_task_idx])
             if not self.homing_task_idx: return
             self.schedule_homing_event(self.complete_homing_task, self.homing_seq_first_delay[self.homing_task_idx])
@@ -2022,12 +2201,12 @@ class RouterMachine(object):
 
     def set_current_homing_task_complete(self):
         try: self.completed_homing_tasks[self.homing_task_idx] = True
-        except: 
+        except:
             log("Could not set completed homing task")
 
     def get_current_homing_task_complete(self):
         try: return self.completed_homing_tasks[self.homing_task_idx]
-        except: 
+        except:
             log("Could not get completed homing task")
             return False
 
@@ -2047,31 +2226,53 @@ class RouterMachine(object):
 
     # Home the Z axis by moving the cutter down until it touches the probe.
     # On touching, electrical contact is made, detected, and WPos Z0 set, factoring in probe plate thickness.
-    def probe_z(self):
+    def probe_z(self, fast_probe=False):
 
         if self.state() == 'Idle':
             self.set_led_colour("WHITE")
             self.s.expecting_probe_result = True
-            probeZTarget =  -(self.grbl_z_max_travel) - self.mpos_z() + 0.1 # 0.1 added to prevent rounding error triggering soft limit
-            self.s.write_command('G91 G38.2 Z' + str(probeZTarget) + ' F' + str(self.z_probe_speed))
+            probe_z_target =  -(self.grbl_z_max_travel) - self.mpos_z() + 0.1 # 0.1 added to prevent rounding error triggering soft limit
+            probe_speed = self.z_probe_speed_fast if fast_probe else self.z_probe_speed
+            self.fast_probing = fast_probe
+            fast_travel_distance = 60  # mm to go fast and not probing yet
+            min_probing_distance = 30  # have at least 30mm safety margin for probing
+            if fast_probe and abs(probe_z_target) > fast_travel_distance + min_probing_distance:
+                self.s.write_command('G0 G53 Z-' + str(fast_travel_distance))
+                probe_z_target += fast_travel_distance # adjust max travel for the 60mm traveled in G0
+            self.s.write_command('G91 G38.2 Z' + str(probe_z_target) + ' F' + str(probe_speed))
             self.s.write_command('G90')
             # Serial module then looks for probe detection
             # On detection "probe_z_detection_event" is called (for a single immediate EEPROM write command)....
             # ... followed by a delayed call to "probe_z_post_operation" for any post-write actions.
 
 
+    probe_z_coord = NumericProperty()
+
     def probe_z_detection_event(self, z_machine_coord_when_probed):
-
+        """
+        This function is called by the serial module when the probe detection is detected.
+        :param z_machine_coord_when_probed: the machine's Z coordinate when the probe is detected
+        :return: None
+        """
+        self.probe_z_coord = z_machine_coord_when_probed
         self.s.write_command('G90 G1 G53 Z' + z_machine_coord_when_probed)
-        self.s.write_command('G4 P0.5') 
+        self.s.write_command('G4 P0.5')
         self.s.write_command('G10 L20 P1 Z' + str(self.z_touch_plate_thickness))
-        self.s.write_command('G4 P0.5') 
+        self.s.write_command('G4 P0.5')
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.5)
-        self.zUp()    
 
+        if self.fast_probing:
+            self.jog_relative('Z', 5, 750)
+            self.fast_probing = False
+        else:
+            # Ensure that it doesn't go down to -5 if the probe was detected higher than that
+            if float(z_machine_coord_when_probed) < self.Z_AXIS_ACCESSIBLE_ABS_HEIGHT:
+                self.raise_z_axis_for_collet_access()
+            else:
+                # Raise z axis by 1mm to ensure it's clear of the probe plate
+                self.raise_z_axis_to_safe_height_after_probing()
 
-
-# LIGHTING
+    # LIGHTING
 
     led_colour_status = "none"
 
@@ -2079,9 +2280,9 @@ class RouterMachine(object):
 
         # NEVER SEND MID-JOB. Chars defining RGB will fill up the serial buffer unless handled somehow
         if not self.s.is_job_streaming and not self.s.is_sequential_streaming:
-        
-            self.led_colour_status = colour_name 
-    
+
+            self.led_colour_status = colour_name
+
             if colour_name == 'RED':        self.s.write_command("*LFF0000")
             elif (colour_name == 'GREEN'and self.is_machine_homed):    self.s.write_command("*L11FF00")
             elif (colour_name == 'GREEN'and not self.is_machine_homed):    self.s.write_command("*LFFFF00")
@@ -2091,7 +2292,7 @@ class RouterMachine(object):
             elif colour_name == 'ORANGE':   self.s.write_command("*LFF8000")
             elif colour_name == 'MAGENTA':  self.s.write_command("*LFF00FF")
             elif colour_name == 'OFF':      self.s.write_command("*L110000")
-         
+
         else: print ("LED Colour denied because streaming: " + colour_name + "\n")
 
 
@@ -2103,12 +2304,12 @@ class RouterMachine(object):
         # This can be unfrozen by sending any normal led command (assuming that the grbl has been released from suspension ie. with a RESUME)
         self.s.write_realtime('&', altDisplayText = 'LED restore')
 
-        
+
 
     def strobe_led_playlist(self, situation):
-        
+
         # Can be used to generate all manners of temporary lighting effects. Well most of them anyway.
-        
+
         if situation == "datum_has_been_set":
             strobe_colour1 = 'GREEN'
             strobe_colour2 = 'GREEN'
@@ -2137,9 +2338,9 @@ class RouterMachine(object):
             self._strobe_loop(strobe_colour1, strobe_colour2, colour_1_period, colour_2_period, cycles, end_on_colour)
 
         else: print ("Strobe situation: " + situation + " not recognised")
-            
+
     strobe_cycle_count = 0
-    
+
     def _strobe_loop(self, strobe_colour1, strobe_colour2, colour_1_period, colour_2_period, cycles, end_on_colour):
         self.set_led_colour(strobe_colour1)
         Clock.schedule_once(lambda dt: self.set_led_colour(strobe_colour2), colour_1_period)
@@ -2149,7 +2350,7 @@ class RouterMachine(object):
         else:
             self.strobe_cycle_count = 0
             Clock.schedule_once(lambda dt: self.set_led_colour(end_on_colour), colour_1_period + colour_2_period)
-    
+
     # LED DISCO inferno
 
     rainbow_delay = 0.03
@@ -2164,9 +2365,9 @@ class RouterMachine(object):
     rainbow_cycle_limit = len(led_rainbow_ending_green)
 
     def run_led_rainbow_ending_green(self):
-        
+
         if self.state().startswith('Idle'):
-            
+
             self.set_rainbow_cycle_led(self.led_rainbow_ending_green[self.rainbow_cycle_count])
             self.rainbow_cycle_count += 1
 
@@ -2211,24 +2412,24 @@ class RouterMachine(object):
         # global commands:
         if command == SET_SG_ALARM          :   cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = value
         if command == SET_CALIBR_MODE       :   cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = value
-        if command == RESTORE_TMC_DEFAULTS  :   cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = 0    
+        if command == RESTORE_TMC_DEFAULTS  :   cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = 0
         if command == STORE_TMC_PARAMS      :   cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = 0
         if command == GET_REGISTERS         :   cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = 0
         if command == WDT_TMC_TEST          :   cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = value
         if command == REPORT_STALLS         :   cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = 0
         if command == UPLOAD_CALIBR_VALUE   :   cmd = command;      len = TMC_REG_CMD_LENGTH;       val = value
         if command == REPORT_RAW_SG         :   cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = value
-        
-        
+
+
 
         # individual motor commands 
         if command == SET_IDLE_CURRENT:         cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = value
         if command == SET_ACTIVE_CURRENT:       cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = value; val = self.setShadowReg(motor, SGCSCONF, value, CS_MASK     , CS_SHIFT          )
-        if command == SET_MOTOR_ENERGIZED:      cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = value        
+        if command == SET_MOTOR_ENERGIZED:      cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = value
         if command == SET_SG_ALARM_TRSHLD:      cmd = command;      len = TMC_REG_CMD_LENGTH;       val = value; self.TMC_motor[motor].stallGuardAlarmThreshold   = value # 4 bytes value
         if command == SET_THERMAL_COEFF:        cmd = command;      len = TMC_REG_CMD_LENGTH;       val = value; self.TMC_motor[motor].temperatureCoefficient     = value # 4 bytes value
         if command == SET_MAX_SG_STEP_US:       cmd = command;      len = TMC_REG_CMD_LENGTH;       val = value; self.TMC_motor[motor].max_step_period_us_SG      = value # 4 bytes value
-        
+
 
         # DRVCTRL register
         if command == SET_MRES      : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCTRL; val = self.setShadowReg(motor, DRVCTRL, value, MRES_MASK     , MRES_SHIFT        )
@@ -2256,7 +2457,7 @@ class RouterMachine(object):
         #if command == SET_CS        : len = TMC_REG_CMD_LENGTH; cmd = SET_SGCSCONF; val = self.setShadowReg(motor, SGCSCONF, value, CS_MASK     , CS_SHIFT          )
         if command == SET_SGT       : len = TMC_REG_CMD_LENGTH; cmd = SET_SGCSCONF; val = self.setShadowReg(motor, SGCSCONF, value, SGT_MASK    , SGT_SHIFT         )
         if command == SET_SFILT     : len = TMC_REG_CMD_LENGTH; cmd = SET_SGCSCONF; val = self.setShadowReg(motor, SGCSCONF, value, SFILT_MASK  , SFILT_SHIFT       )
-                                                                                                                                                                    
+
         # DRVCONF register                                                                                                                                          
         if command == SET_RDSEL      : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCONF; val = self.setShadowReg(motor, DRVCONF, value, RDSEL_MASK   , RDSEL_SHIFT       )
         if command == SET_VSENSE     : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCONF; val = self.setShadowReg(motor, DRVCONF, value, VSENSE_MASK  , VSENSE_SHIFT      )
@@ -2270,13 +2471,13 @@ class RouterMachine(object):
         if command == SET_SDOFF      : len = TMC_REG_CMD_LENGTH; cmd = SET_DRVCONF; val = self.setShadowReg(motor, DRVCONF, value, SDOFF_MASK   , SDOFF_SHIFT       )
 
 
-        if len < 999: 
+        if len < 999:
             if cmd < (MOTOR_OFFSET+1)*TOTAL_TMCS:
                 cmd = cmd + motor * MOTOR_OFFSET # if individual command shift it by the motor index
-                
+
             out = self.s.write_protocol(self.p.constructTMCcommand(cmd, val, len), altDisplayText)
 
-            if printlog: 
+            if printlog:
                 log("Sending command to motor: " + str(motor) + ", cmd: " + str(cmd) + ", val: " + hex(val))
 
         else:
@@ -2461,7 +2662,7 @@ class RouterMachine(object):
         self.s.write_command('$20=0')
 
         # Enable raw SG reporting: command REPORT_RAW_SG
-        self.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1) # is there a way to check this has sent? 
+        self.send_command_to_motor("REPORT RAW SG SET", command=REPORT_RAW_SG, value=1) # is there a way to check this has sent?
         self.reset_tuning_flags()
 
         # Zero position
@@ -2500,7 +2701,7 @@ class RouterMachine(object):
             self.calibration_tuning_fail_info = "Raw SG values are still not enabled or reads are bad after 3 mins"
             Clock.schedule_once(self.finish_tuning, 0.1)
 
-        else: 
+        else:
             if self.state().startswith('Idle'):
                 self.tuning_jog_back_fast(X=X, Y=Y, Z=Z)
                 self.tuning_jog_forwards_fast(X=X, Y=Y, Z=Z)
@@ -2532,7 +2733,7 @@ class RouterMachine(object):
             Clock.schedule_once(self.finish_tuning, 0.1)
 
 
-        else: 
+        else:
             Clock.schedule_once(lambda dt: self.check_temps_and_then_go_to_idle_check_then_tune(X=X, Y=Y, Z=Z), 3)
 
 
@@ -2551,7 +2752,7 @@ class RouterMachine(object):
             self.calibration_tuning_fail_info = "Machine not IDLE after 2 mins - check for alarms etc"
             Clock.schedule_once(self.finish_tuning, 0.1)
 
-        else: 
+        else:
             Clock.schedule_once(lambda dt: self.is_machine_idle_for_tuning(X=X, Y=Y, Z=Z), 5)
 
 
@@ -2560,16 +2761,16 @@ class RouterMachine(object):
 
         # 3. Start long jogging in the axis of interest at 300mm/min for X and Y or for 30mm/min for Z
 
-        if X and Z and not Y: 
+        if X and Z and not Y:
             self.s.write_command('$J = G91 X2000 Z-200 F301.5')
 
-        elif X and Y and Z: 
+        elif X and Y and Z:
             self.s.write_command('$J = G91 X1270 Y1270 Z-127 F425.3')
 
-        elif Y: 
+        elif Y:
             self.s.write_command('$J = G91 Y2000 F300')
 
-        elif X: 
+        elif X:
             self.s.write_command('$J = G91 X2000 F300')
 
         elif Z:
@@ -2582,19 +2783,19 @@ class RouterMachine(object):
 
     def tuning_jog_back_fast(self, X=False, Y=False, Z=False):
 
-        if X and Z and not Y: 
+        if X and Z and not Y:
             self.s.write_command('$J=G53 X' + str(self.x_min_jog_abs_limit) + ' Z' + str(self.z_max_jog_abs_limit) + ' F6029.9')
 
-        elif X and Y and Z: 
+        elif X and Y and Z:
             self.s.write_command('$J=G53 X' + str(self.x_min_jog_abs_limit) + ' Y' + str(self.y_min_jog_abs_limit) + ' Z' + str(self.z_max_jog_abs_limit) + ' F8518.3')
 
-        elif Y: 
+        elif Y:
             self.jog_absolute_single_axis('Y', self.y_min_jog_abs_limit, 6000)
 
-        elif X: 
+        elif X:
             self.jog_absolute_single_axis('X', self.x_min_jog_abs_limit, 6000)
 
-        elif Z: 
+        elif Z:
             self.jog_absolute_single_axis('Z', self.z_max_jog_abs_limit, 750)
 
         # does not yet handle: 
@@ -2604,19 +2805,19 @@ class RouterMachine(object):
 
     def tuning_jog_forwards_fast(self, X=False, Y=False, Z=False):
 
-        if X and Z and not Y: 
+        if X and Z and not Y:
             self.s.write_command('$J=G53 X-1192 Z-149 F6046')
 
-        elif X and Y and Z: 
+        elif X and Y and Z:
             self.s.write_command('$J = G91 X-1270 Y-1270 Z127 F8518.3')
 
-        elif Y: 
+        elif Y:
             self.jog_absolute_single_axis('Y', self.y_max_jog_abs_limit, 6000)
 
-        elif X: 
+        elif X:
             self.jog_absolute_single_axis('X', self.x_max_jog_abs_limit, 6000)
 
-        elif Z: 
+        elif Z:
             self.jog_absolute_single_axis('Z', self.z_min_jog_abs_limit, 750)
 
         # does not yet handle: 
@@ -2656,12 +2857,12 @@ class RouterMachine(object):
         self.print_tmc_registers(3)
         self.print_tmc_registers(4)
 
-        try: 
+        try:
 
             tuning_array, current_temp = self.sweep_toff_and_sgt_and_motor_driver_temp(X = X, Y = Y, Z = Z)
             log("Sweep finished")
 
-            if X: 
+            if X:
                 X_target_SG = self.get_target_SG_from_current_temperature('X', current_temp)
                 if (self.s.sg_x1_motor != None) and (self.s.sg_x2_motor != None):
                     self.x1_toff_tuned, self.x1_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, X_target_SG, 5)
@@ -2670,16 +2871,16 @@ class RouterMachine(object):
                 else:
                     self.x1_toff_tuned, self.x1_sgt_tuned = self.x2_toff_tuned, self.x2_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, X_target_SG, 1)
 
-            if Y: 
+            if Y:
                 Y_target_SG = self.get_target_SG_from_current_temperature('Y', current_temp)
                 self.y1_toff_tuned, self.y1_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, Y_target_SG, 3)
                 self.y2_toff_tuned, self.y2_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, Y_target_SG, 4)
 
-            if Z: 
+            if Z:
                 Z_target_SG =self.get_target_SG_from_current_temperature('Z', current_temp)
                 self.z_toff_tuned, self.z_sgt_tuned = self.find_best_combo_per_motor_or_axis(tuning_array, Z_target_SG, 0)
 
-        except: 
+        except:
 
             log("Could not complete tuning! Check log for errors")
             Clock.unschedule(self.tuning_poll)
@@ -2708,29 +2909,29 @@ class RouterMachine(object):
 
             # Commands have to be sent at least 0.05 s apart, so sleeps after commands are sent give time for each command to be sent and recieved
 
-            if X: 
+            if X:
                 self.send_command_to_motor("SET TOFF X1 " + str(self.temp_toff), motor = TMC_X1, command = SET_TOFF, value = self.temp_toff)
                 self.send_command_to_motor("SET TOFF X2 " + str(self.temp_toff), motor = TMC_X2, command = SET_TOFF, value = self.temp_toff)
                 time.sleep(0.2)
-            if Y: 
+            if Y:
                 self.send_command_to_motor("SET TOFF Y1 " + str(self.temp_toff), motor = TMC_Y1, command = SET_TOFF, value = self.temp_toff)
                 self.send_command_to_motor("SET TOFF Y2 " + str(self.temp_toff), motor = TMC_Y2, command = SET_TOFF, value = self.temp_toff)
                 time.sleep(0.2)
-            if Z: 
+            if Z:
                 self.send_command_to_motor("SET TOFF Z " + str(self.temp_toff), motor = TMC_Z, command = SET_TOFF, value = self.temp_toff)
                 time.sleep(0.1)
 
             while self.temp_sgt <= self.sgt_max:
 
-                if X: 
+                if X:
                     self.send_command_to_motor("SET SGT X1 " + str(self.temp_sgt), motor = TMC_X1, command = SET_SGT, value = self.temp_sgt)
                     self.send_command_to_motor("SET SGT X2 " + str(self.temp_sgt), motor = TMC_X2, command = SET_SGT, value = self.temp_sgt)
                     time.sleep(0.2)
-                if Y: 
+                if Y:
                     self.send_command_to_motor("SET SGT Y1 " + str(self.temp_sgt), motor = TMC_Y1, command = SET_SGT, value = self.temp_sgt)
                     self.send_command_to_motor("SET SGT Y2 " + str(self.temp_sgt), motor = TMC_Y2, command = SET_SGT, value = self.temp_sgt)
                     time.sleep(0.2)
-                if Z: 
+                if Z:
                     self.send_command_to_motor("SET SGT Z " + str(self.temp_sgt), motor = TMC_Z, command = SET_SGT, value = self.temp_sgt)
                     time.sleep(0.1)
 
@@ -2776,7 +2977,7 @@ class RouterMachine(object):
             log("Average temperature: " + str(avg_temperature))
             return tuning_array, avg_temperature
 
-        except: 
+        except:
             self.calibration_tuning_fail_info = "Bad temps during tuning!"
             log("BAD TEMPERATURES! CAN'T CALIBRATE")
 
@@ -2870,17 +3071,17 @@ class RouterMachine(object):
 
         # Apply found TOFF and SGT values to the motor: commands SET_CHOPCONF and SET_SGCSCONF
 
-        if X: 
+        if X:
             self.send_command_to_motor("SET TOFF X1 " + str(self.x1_toff_tuned), motor = TMC_X1, command = SET_TOFF, value = self.x1_toff_tuned)
             self.send_command_to_motor("SET TOFF X2 " + str(self.x2_toff_tuned), motor = TMC_X2, command = SET_TOFF, value = self.x2_toff_tuned)
             self.send_command_to_motor("SET SGT X1 " + str(self.x1_sgt_tuned), motor = TMC_X1, command = SET_SGT, value = self.x1_sgt_tuned)
             self.send_command_to_motor("SET SGT X2 " + str(self.x2_sgt_tuned), motor = TMC_X2, command = SET_SGT, value = self.x2_sgt_tuned)
-        if Y: 
+        if Y:
             self.send_command_to_motor("SET TOFF Y1 " + str(self.y1_toff_tuned), motor = TMC_Y1, command = SET_TOFF, value = self.y1_toff_tuned)
             self.send_command_to_motor("SET TOFF Y2 " + str(self.y2_toff_tuned), motor = TMC_Y2, command = SET_TOFF, value = self.y2_toff_tuned)
             self.send_command_to_motor("SET SGT Y1 " + str(self.y1_sgt_tuned), motor = TMC_Y1, command = SET_SGT, value = self.y1_sgt_tuned)
             self.send_command_to_motor("SET SGT Y2 " + str(self.y2_sgt_tuned), motor = TMC_Y2, command = SET_SGT, value = self.y2_sgt_tuned)
-        if Z: 
+        if Z:
             self.send_command_to_motor("SET TOFF Z " + str(self.z_toff_tuned), motor = TMC_Z, command = SET_TOFF, value = self.z_toff_tuned)
             self.send_command_to_motor("SET SGT Z " + str(self.z_sgt_tuned), motor = TMC_Z, command = SET_SGT, value = self.z_sgt_tuned)
 
@@ -2947,7 +3148,7 @@ class RouterMachine(object):
         self.disable_and_enable_soft_limits = mod_soft_limits
         self.quick_calibration = quick_calibration
 
-        if self.disable_and_enable_soft_limits: 
+        if self.disable_and_enable_soft_limits:
             self.s.write_command('$20=0')
 
         if zero_position:
@@ -3000,7 +3201,7 @@ class RouterMachine(object):
             self.time_to_check_for_calibration_prep = time.time()
             self.check_idle_and_buffer_then_start_calibration('Z')
 
-    def check_idle_and_buffer_then_start_calibration(self, axis): 
+    def check_idle_and_buffer_then_start_calibration(self, axis):
 
         if self.state().startswith('Idle') and not self.s.write_protocol_buffer:
 
@@ -3008,15 +3209,15 @@ class RouterMachine(object):
             else: path_end = '_cal.gc'
             calibration_file = self.calibration_files_folder_path + axis + path_end
 
-            if axis == 'X': 
+            if axis == 'X':
                 calibrate_mode = 32
                 altDisplayText = "CALIBRATE X AXIS"
 
-            if axis == 'Y': 
+            if axis == 'Y':
                 calibrate_mode = 64
                 altDisplayText = "CALIBRATE Y AXIS"
 
-            if axis == 'Z': 
+            if axis == 'Z':
                 calibrate_mode = 128
                 altDisplayText = "CALIBRATE Z AXIS"
 
@@ -3030,7 +3231,7 @@ class RouterMachine(object):
             self.calibration_tuning_fail_info = "Machine not IDLE after 2 mins - check for alarms etc"
             Clock.schedule_once(lambda dt: self.complete_calibration(), 0.1)
 
-        else: 
+        else:
             Clock.schedule_once(lambda dt: self.check_idle_and_buffer_then_start_calibration(axis), 0.1)
 
 
@@ -3080,10 +3281,10 @@ class RouterMachine(object):
 
         if not self.run_calibration: return
 
-        if self.state().startswith('Idle') and self.s.NOT_SKELETON_STUFF and not self.s.is_job_streaming and not self.s.is_stream_lines_remaining and not self.is_machine_paused: 
+        if self.state().startswith('Idle') and self.s.NOT_SKELETON_STUFF and not self.s.is_job_streaming and not self.s.is_stream_lines_remaining and not self.is_machine_paused:
             Clock.unschedule(self.poll_end_of_calibration_file_stream)
             self.send_command_to_motor("COMPUTE THIS CALIBRATION", command=SET_CALIBR_MODE, value=2)
-            
+
             # FW needs 5 seconds to compute & store after calibration
             Clock.schedule_once(lambda dt: self.do_next_axis_or_finish_calibration_sequence(), 5)
 
@@ -3170,17 +3371,17 @@ class RouterMachine(object):
 
         if self.state().startswith('Idle') and not self.s.write_protocol_buffer:
 
-            if axis == 'X': 
+            if axis == 'X':
                 calibrate_mode = 32
                 altDisplayText = "UPLOAD CALIBRATION TO X AXIS"
                 motor_index = TMC_X1
 
-            if axis == 'Y': 
+            if axis == 'Y':
                 calibrate_mode = 64
                 altDisplayText = "UPLOAD CALIBRATION TO Y AXIS"
                 motor_index = TMC_Y1
 
-            if axis == 'Z': 
+            if axis == 'Z':
                 calibrate_mode = 128
                 altDisplayText = "UPLOAD CALIBRATION TO Z AXIS"
                 motor_index = TMC_Z
@@ -3196,7 +3397,7 @@ class RouterMachine(object):
             self.calibration_upload_fail_info = "Machine not IDLE after 2 mins - check for alarms etc"
             Clock.schedule_once(lambda dt: self.complete_calibration_upload(), 0.1)
 
-        else: 
+        else:
             Clock.schedule_once(lambda dt: self.initialise_calibration_upload(axis), 2)
 
 
@@ -3274,7 +3475,7 @@ class RouterMachine(object):
             self.calibration_upload_in_progress = False
             log("Calibration upload complete")
 
-        else: 
+        else:
             Clock.schedule_once(lambda dt: self.complete_calibration_upload(), 1)
 
 
@@ -3345,12 +3546,12 @@ class RouterMachine(object):
             Clock.schedule_once(lambda dt: self.do_calibration_check(axes, do_reset, assembled), 5)
             return
 
-        self.stream_calibration_check_files(axes)        
+        self.stream_calibration_check_files(axes)
 
 
     def prep_calibration_check(self, axes, do_reset):
 
-        if self.checking_calibration_in_progress: 
+        if self.checking_calibration_in_progress:
             return True
 
         self.checking_calibration_in_progress = True
@@ -3383,7 +3584,7 @@ class RouterMachine(object):
 
         check_calibration_gcode_pre_scrubbed = []
 
-        for axis in axes: 
+        for axis in axes:
 
             with open(self.construct_calibration_check_file_path(axis)) as f:
                 check_calibration_gcode_pre_scrubbed.extend(f.readlines())
@@ -3403,7 +3604,7 @@ class RouterMachine(object):
     def post_calibration_check(self, axes):
 
         if  self.state().startswith('Idle') and self.TMC_registers_have_been_read_in() and \
-            self.s.NOT_SKELETON_STUFF and not self.s.is_job_streaming and not self.s.is_stream_lines_remaining and not self.is_machine_paused: 
+            self.s.NOT_SKELETON_STUFF and not self.s.is_job_streaming and not self.s.is_stream_lines_remaining and not self.is_machine_paused:
             if self.poll_end_of_calibration_check != None: Clock.unschedule(self.poll_end_of_calibration_check)
             self.s.record_sg_values_flag = False
             self.are_sg_values_in_range_after_calibration(axes)
@@ -3461,9 +3662,9 @@ class RouterMachine(object):
     def get_abs_maximums_from_sg_array(self, sub_array, index):
 
         just_idx_sgs = [sg_arr[index] for sg_arr in sub_array if sg_arr[index] != -999]
-        try: 
+        try:
             abs_max_idx = max(just_idx_sgs, key=abs)
-        except: 
+        except:
             log(traceback.format_exc())
             self.checking_calibration_fail_info = "All values -999 for idx: " + str(index)
         return abs_max_idx
@@ -3478,7 +3679,7 @@ class RouterMachine(object):
 
     def set_threshold_for_axis(self, axis, threshold):
 
-        if axis == "X": 
+        if axis == "X":
             self.set_sg_threshold(TMC_X1, threshold)
             self.set_sg_threshold(TMC_X2, threshold)
             return
@@ -3500,19 +3701,19 @@ class RouterMachine(object):
 
             if "Z" in axis: motors.append(TMC_Z)
 
-            if "X1" in axis or "X2" in axis: 
+            if "X1" in axis or "X2" in axis:
                 if "X1" in axis: motors.append(TMC_X1)
                 if "X2" in axis: motors.append(TMC_X2)
-            elif "X" in axis: 
+            elif "X" in axis:
                 motors.extend([TMC_X1, TMC_X2])
 
-            if "Y1" in axis or "Y2" in axis: 
+            if "Y1" in axis or "Y2" in axis:
                 if "Y1" in axis: motors.append(TMC_Y1)
                 if "Y2" in axis: motors.append(TMC_Y2)
-            elif "Y" in axis: 
+            elif "Y" in axis:
                 motors.extend([TMC_Y1, TMC_Y2])
-            
-            for motor in motors: 
+
+            for motor in motors:
 
                 altDisplayText = 'SET ACTIVE CURRENT: ' + axis + ': ' + "TMC: " + str(motor) + ", I: " + str(current)
                 self.send_command_to_motor(altDisplayText, motor=motor, command=SET_ACTIVE_CURRENT, value=current)
@@ -3534,7 +3735,7 @@ class RouterMachine(object):
             if "Y" in axis: motors = [TMC_Y1, TMC_Y2]
             if "Z" in axis: motors = [TMC_Z]
 
-            for motor in motors: 
+            for motor in motors:
 
                 altDisplayText = 'SET THERMAL COEFF: ' + axis + ': ' + "TMC: " + str(motor) + ", " + str(value)
                 self.send_command_to_motor(altDisplayText, motor=motor, command=SET_THERMAL_COEFF, value=value)
@@ -3585,11 +3786,11 @@ class RouterMachine(object):
 
     def hard_reset_pcb_sequence(self):
 
-        try: 
+        try:
             pi = pigpio.pi()
             pi.stop()
-        
-        except: 
+
+        except:
             log("Check pigpio daemon!")
             return False
 
@@ -3604,7 +3805,7 @@ class RouterMachine(object):
         try:
 
             pi = pigpio.pi()
-            if int(pi.get_mode(17)) != 7: 
+            if int(pi.get_mode(17)) != 7:
                 if not self.set_mode_of_reset_pin(): return False
             time.sleep(0.5)
             original_setting = pi.read(17)
@@ -3618,13 +3819,13 @@ class RouterMachine(object):
             time.sleep(1)
             return int(original_setting) == int(restored_setting) == int(not new_setting)
 
-        except: 
+        except:
             log("Couldn't toggle reset pin, maybe check the pigio daemon?")
             return False
 
     def set_mode_of_reset_pin(self):
 
-        try: 
+        try:
             # Toggle reset pin
             pi = pigpio.pi()
             pi.set_mode(17, pigpio.ALT3)
@@ -3635,7 +3836,7 @@ class RouterMachine(object):
             if new_pin_mode == 7: return True
             else: return False
 
-        except: 
+        except:
             log("Couldn't set mode of reset pin, maybe check the pigio daemon?")
             return False
 
@@ -3661,7 +3862,7 @@ class RouterMachine(object):
 
     ## MEASURING STATUS DATA
 
-    def measured_running_data(self): 
+    def measured_running_data(self):
         if not self.s.measure_running_data and self.s.running_data:
             return self.s.running_data
 

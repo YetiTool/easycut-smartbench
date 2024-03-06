@@ -3,7 +3,6 @@ Created on 31 Jan 2018
 @author: Ed
 Module to manage all serial comms between pi (EasyCut s/w) and realtime arduino chip (GRBL f/w)
 '''
-
 import re
 from datetime import datetime, timedelta
 from functools import partial
@@ -15,7 +14,10 @@ import string
 import sys
 import threading
 import time
+from enum import Enum
 from kivy.clock import Clock
+from kivy.event import EventDispatcher
+from kivy.properties import StringProperty, NumericProperty
 
 # Import managers for GRBL Notification screens (e.g. alarm, error, etc.)
 from asmcnc.core_UI.sequence_alarm import alarm_manager
@@ -26,7 +28,18 @@ ENABLE_STATUS_REPORTS = True
 GRBL_SCANNER_MIN_DELAY = 0.01  # Delay between checking for response from grbl. Needs to be hi-freq for quick streaming, e.g. 0.01 = 100Hz
 
 
-class SerialConnection(object):
+class MachineState(Enum):
+    IDLE = 'Idle'
+    RUN = 'Run'
+    HOLD = 'Hold'
+    JOG = 'Jog'
+    HOME = 'Home'
+    CHECK = 'Check'
+    DOOR_0 = 'Door:0'
+
+
+class SerialConnection(EventDispatcher):
+    setting_50 = NumericProperty(0.0)
     STATUS_INTERVAL = 0.1  # How often to poll general status to update UI (0.04 = 25Hz = smooth animation)
 
     s = None  # Serial comms object
@@ -196,7 +209,7 @@ class SerialConnection(object):
 
             filesForDevice = listdir('/dev/')  # put all device files into list[]
             for line in filesForDevice:
-                if line.startswith('tty.usbmodem'):  # look for...
+                if line.startswith('tty.usbmodem') or line.startswith('tty.usbserial'):  # look for...
 
                     print("Mac port to try: ")  # for debugging
                     print(line)
@@ -495,7 +508,7 @@ class SerialConnection(object):
 
         if self.m_state != "Check":
             self.m.set_led_colour('GREEN')
-            self.m.zUp()
+            self.m.raise_z_axis_for_collet_access()
 
         self.FLUSH_FLAG = True
         self.NOT_SKELETON_STUFF = True
@@ -692,7 +705,7 @@ class SerialConnection(object):
             self.FLUSH_FLAG = True
 
             # Move head up        
-            Clock.schedule_once(lambda dt: self.m.zUp(), 0.5)
+            Clock.schedule_once(lambda dt: self.m.raise_z_axis_for_collet_access(), 0.5)
             Clock.schedule_once(lambda dt: self.m.vac_off(), 1)
 
             # Update time for maintenance reminders
@@ -760,7 +773,7 @@ class SerialConnection(object):
 
     # PUSH MESSAGE HANDLING
 
-    m_state = 'Unknown'
+    m_state = StringProperty('Unknown')
 
     # Machine co-ordinates
     m_x = '0.0'
@@ -840,8 +853,8 @@ class SerialConnection(object):
     expecting_probe_result = False
 
     # VERSIONS
-    fw_version = ''
-    hw_version = ''
+    fw_version = StringProperty()
+    hw_version = StringProperty()
 
     # TEMPERATURES
     motor_driver_temp = None
@@ -1804,7 +1817,11 @@ class SerialConnection(object):
         except:
             self.logger.info("FAILED to display on CONSOLE: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
 
-        # Finally issue the command        
+        # Catch and correct all instances of the spindle speed command "M3 S{RPM}"
+        if 'S' in serialCommand.upper():
+            serialCommand = self.compensate_spindle_speed_command(serialCommand)
+
+        # Finally issue the command
         if self.s:
             try:
 
@@ -1869,3 +1886,31 @@ class SerialConnection(object):
 
         self.write_protocol_buffer.append([serialCommand, altDisplayText])
         return serialCommand
+
+    # Function for correcting spindle speed
+
+    def compensate_spindle_speed_command(self, spindle_speed_line):
+        """
+        Modifies the spindle speed command by correcting the RPM value and replacing it in the command line.
+        Correcting in this case refers to compensating for the conversion that happens from Z Head -> spindle
+
+        Args:
+            spindle_speed_line (str): The original spindle speed command line.
+
+        Returns:
+            str: The modified spindle speed command line with the corrected RPM value.
+        """
+        match = re.search(r'S(\d+(\.\d+)?)', spindle_speed_line.upper()) ## search for spnidle speed definition in the line
+        if match:
+            spindle_speed = float(match.group(1))
+
+        try:
+            corrected_spindle_speed = self.m.correct_rpm(spindle_speed)
+            new_line = re.sub(r'(S\d+(\.\d+)?)', "S" + str(corrected_spindle_speed), spindle_speed_line.upper())
+            log("Modified spindle command: " + new_line)
+            return new_line
+
+        except:
+            log("Spindle speed command could not be modified")
+
+        return spindle_speed_line

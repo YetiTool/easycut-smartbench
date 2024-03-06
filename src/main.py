@@ -17,17 +17,18 @@ www.yetitool.com
 # except:
 # 	print("Could not import hanging_threads")
 
-import time
-import sys, os
-from datetime import datetime
+import os
 import os.path
-from os import path
+import sys
+from datetime import datetime
 
 from kivy.config import Config
-from kivy.clock import Clock
+from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 
+from asmcnc.core_UI import scaling_utils
 from asmcnc.core_UI.popup_manager import PopupManager
+from asmcnc.comms.model_manager import ModelManagerSingleton
 
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
 
@@ -45,25 +46,19 @@ Config.set('graphics', 'maxfps', '60')
 Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
 Config.write()
 
-os.environ['KIVY_NO_FILELOG'] = '1'
-
-from kivy.logger import Logger, LOG_LEVELS
-Logger.setLevel(LOG_LEVELS['info'])
-
-import kivy
 from kivy.app import App
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
+from kivy.uix.screenmanager import ScreenManager, NoTransition
 from kivy.core.window import Window
 
 
 # COMMS IMPORTS
-from asmcnc.comms import router_machine  # @UnresolvedImport
+from asmcnc.comms import router_machine
 from asmcnc.comms import server_connection
 from asmcnc.comms import smartbench_flurry_database_connection
 
 # NB: router_machine imports serial_connection
-from asmcnc.apps import app_manager # @UnresolvedImport
-from settings import settings_manager # @UnresolvedImport
+from asmcnc.apps import app_manager
+from settings import settings_manager
 
 # Languages and keyboard
 from asmcnc.comms import localization
@@ -74,43 +69,41 @@ from asmcnc.job import job_data
 from asmcnc.job.yetipilot.yetipilot import YetiPilot
 
 # SKAVAUI IMPORTS (LEGACY)
-from asmcnc.skavaUI import screen_home # @UnresolvedImport
-from asmcnc.skavaUI import screen_local_filechooser # @UnresolvedImport
-from asmcnc.skavaUI import screen_usb_filechooser # @UnresolvedImport
-from asmcnc.skavaUI import screen_go # @UnresolvedImport
+from asmcnc.skavaUI import screen_home
+from asmcnc.skavaUI import screen_local_filechooser
+from asmcnc.skavaUI import screen_usb_filechooser
+from asmcnc.skavaUI import screen_go
 from asmcnc.skavaUI import screen_jobstart_warning
-from asmcnc.skavaUI import screen_lobby # @UnresolvedImport
-from asmcnc.skavaUI import screen_file_loading # @UnresolvedImport
-from asmcnc.skavaUI import screen_check_job # @UnresolvedImport
-from asmcnc.skavaUI import screen_error # @UnresolvedImport
-from asmcnc.skavaUI import screen_serial_failure # @UnresolvedImport
-from asmcnc.skavaUI import screen_mstate_warning # @UnresolvedImport
-from asmcnc.skavaUI import screen_boundary_warning # @UnresolvedImport
-from asmcnc.skavaUI import screen_rebooting # @UnresolvedImport
-from asmcnc.skavaUI import screen_job_feedback # @UnresolvedImport
-from asmcnc.skavaUI import screen_job_incomplete # @UnresolvedImport
-from asmcnc.skavaUI import screen_powercycle_alert # @UnresolvedImport
-from asmcnc.skavaUI import screen_door # @UnresolvedImport
-from asmcnc.skavaUI import screen_squaring_manual_vs_square # @UnresolvedImport
-from asmcnc.skavaUI import screen_homing_prepare # @UnresolvedImport
-from asmcnc.skavaUI import screen_homing_active # @UnresolvedImport
-from asmcnc.skavaUI import screen_squaring_active # @UnresolvedImport
-from asmcnc.skavaUI import screen_spindle_shutdown # @UnresolvedImport
+from asmcnc.skavaUI import screen_lobby
+from asmcnc.skavaUI import screen_file_loading
+from asmcnc.skavaUI import screen_check_job
+from asmcnc.skavaUI import screen_error
+from asmcnc.skavaUI import screen_serial_failure
+from asmcnc.skavaUI import screen_mstate_warning
+from asmcnc.skavaUI import screen_boundary_warning
+from asmcnc.skavaUI import screen_rebooting
+from asmcnc.skavaUI import screen_job_feedback
+from asmcnc.skavaUI import screen_job_incomplete
+from asmcnc.skavaUI import screen_door
+from asmcnc.skavaUI import screen_squaring_manual_vs_square
+from asmcnc.skavaUI import screen_homing_prepare
+from asmcnc.skavaUI import screen_homing_active
+from asmcnc.skavaUI import screen_squaring_active
+from asmcnc.skavaUI import screen_spindle_shutdown
 from asmcnc.skavaUI import screen_spindle_cooldown
-from asmcnc.skavaUI import screen_stop_or_resume_decision # @UnresolvedImport
-from asmcnc.skavaUI import screen_lift_z_on_pause_decision # @UnresolvedImport
-from asmcnc.skavaUI import screen_tool_selection # @UnresolvedImport
-from asmcnc.skavaUI import screen_restart_smartbench # @UnresolvedImport
-from asmcnc.skavaUI import screen_job_recovery # @UnresolvedImport
-from asmcnc.skavaUI import screen_nudge # @UnresolvedImport
-from asmcnc.skavaUI import screen_recovery_decision # @UnresolvedImport
-from asmcnc.skavaUI import screen_homing_decision # @UnresolvedImport
+from asmcnc.skavaUI import screen_stop_or_resume_decision
+from asmcnc.skavaUI import screen_lift_z_on_pause_decision
+from asmcnc.skavaUI import screen_tool_selection
+from asmcnc.skavaUI import screen_job_recovery
+from asmcnc.skavaUI import screen_nudge
+from asmcnc.skavaUI import screen_recovery_decision
+from asmcnc.skavaUI import screen_homing_decision
 
 # developer testing
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v2.8.0'
+initial_version = 'v2.8.1'
 
 config_flag = False
         
@@ -156,12 +149,26 @@ def log(message):
     print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 
+# load scaled kv
+Builder.load_file('scaled_kv.kv')
+
+
 class SkavaUI(App):
 
     test_no = 0
 
     width = Window.width
     height = Window.height if Window.height == 480 else Window.height - 32
+
+    def get_scaled_width(self, val):
+        return scaling_utils.get_scaled_width(val)
+
+    def get_scaled_height(self, val):
+        return scaling_utils.get_scaled_height(val)
+
+    def get_scaled_sp(self, val):
+        return scaling_utils.get_scaled_sp(val)
+
 
     def build(self):
 
@@ -185,6 +192,9 @@ class SkavaUI(App):
 
         # Initialise 'm'achine object
         m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
+
+        # initialise ModelManagerSingleton with machine for setting_50 update
+        ModelManagerSingleton(m)
 
         # Initialise yetipilot
         yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd, localization=l)

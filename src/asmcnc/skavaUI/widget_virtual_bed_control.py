@@ -8,7 +8,7 @@ import kivy, textwrap
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
+from kivy.properties import ObjectProperty, ListProperty, NumericProperty 
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from asmcnc.skavaUI import popup_info

@@ -73,6 +73,7 @@ class YetiPilot(object):
         self.sm = kwargs['screen_manager']
         self.jd = kwargs['job_data']
         self.l = kwargs['localization']
+        self.m = kwargs['machine']
 
         if kwargs.get('test', False):
             self.profiles_path = 'src/' + self.profiles_path
@@ -143,9 +144,13 @@ class YetiPilot(object):
 
     def get_speed_adjustment_percentage(self):
         last_gcode_rpm = self.jd.grbl_mode_tracker[0][2]
+        target_rpm = self.target_spindle_speed
+        spindle_minimum_rpm = self.m.minimum_spindle_speed()
 
-        if abs(last_gcode_rpm - self.target_spindle_speed) > 500:
-            return ((self.target_spindle_speed - last_gcode_rpm) / last_gcode_rpm) * 100
+        if abs(last_gcode_rpm - target_rpm) > 100:
+            target_speed_multiplier = ((target_rpm-spindle_minimum_rpm)/(last_gcode_rpm-spindle_minimum_rpm)) * 0.9 + 0.1
+            adjustment_percentage = (target_speed_multiplier - 1) * 100
+            return adjustment_percentage
         return 0
 
     def start_feed_too_low_check(self):
@@ -372,14 +377,6 @@ class YetiPilot(object):
                     str(profile.material_type) == material_type:
                 return profile
 
-    def get_spindle_speed_correction(self, target_rpm):
-        is_230v = self.m.spindle_voltage == 230
-
-        if is_230v:
-            return target_rpm - self.spindle_230v_correction_factor
-
-        return (target_rpm - 12916) / 0.514
-
     def use_profile(self, profile):
         if self.active_profile != profile:
             self.m.speed_override_reset()
@@ -395,7 +392,6 @@ class YetiPilot(object):
         for parameter in profile.parameters:
             setattr(self, parameter["Name"], parameter["Value"])
 
-        self.target_spindle_speed = self.get_spindle_speed_correction(self.target_spindle_speed)
 
     # USE THESE FUNCTIONS FOR BASIC PROFILE DROPDOWNS
     def get_available_cutter_diameters(self):

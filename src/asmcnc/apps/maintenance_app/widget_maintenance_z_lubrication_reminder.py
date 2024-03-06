@@ -7,6 +7,7 @@ widget to allow user to change touchplate offset
 """
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
+from asmcnc.core_UI.scaling_utils import get_scaled_width
 
 Builder.load_string(
     """
@@ -186,8 +187,8 @@ class ZLubricationReminderWidget(Widget):
     def update_label_font_size(self, value):
         text_length = self.l.get_text_length(value.text)
         if text_length > 45:
-            value.font_size = 18
+            value.font_size = get_scaled_width(18)
         elif text_length > 43:
-            value.font_size = 22
+            value.font_size = get_scaled_width(22)
         else:
-            value.font_size = 24
+            value.font_size = get_scaled_width(24)
