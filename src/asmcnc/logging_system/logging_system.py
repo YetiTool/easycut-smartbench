@@ -3,6 +3,7 @@ import logging
 import os
 
 from colorlog import ColoredFormatter
+from kivy import Logger
 
 LOG_STRING_FORMAT = "[%(asctime)s] - [%(levelname)s] [%(module_name)s] %(message)s"
 LOG_DATE_FORMAT = "%H:%M:%S %d-%m-%Y"
@@ -120,3 +121,6 @@ class LoggerSingleton(object):
 
 
 logger = LoggerSingleton().get_logger()
+
+Logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)

@@ -203,6 +203,7 @@ class SerialConnection(EventDispatcher):
 
                 if not SmartBench_port:
                     self.logger.warning("No arduino connected")
+                    self.logger.debug("TEST")
 
         elif sys.platform == "darwin":
             self.suppress_error_screens = True
