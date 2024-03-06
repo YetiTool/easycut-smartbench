@@ -101,15 +101,13 @@ class CommonMove(Widget):
     def add_buttons(self):
         self.vacuum_button = VacuumButton(self.m, self.m.s, size_hint=(None, None),
                                           size=(scaling_utils.get_scaled_dp_width(71),
-                                                scaling_utils.get_scaled_dp_height(72)),
-                                          center=self.vacuum_container.center)
+                                                scaling_utils.get_scaled_dp_height(72)))
         self.vacuum_container.add_widget(self.vacuum_button)
 
         self.spindle_button = SpindleButton(self.m, self.m.s, self.sm,
                                             size_hint=(None, None),
                                             size=(scaling_utils.get_scaled_dp_width(71),
-                                                  scaling_utils.get_scaled_dp_height(72)),
-                                            center=self.spindle_container.center)
+                                                  scaling_utils.get_scaled_dp_height(72)))
         self.spindle_container.add_widget(self.spindle_button)
 
     fast_x_speed = 6000
