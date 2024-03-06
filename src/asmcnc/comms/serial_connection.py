@@ -1907,10 +1907,10 @@ class SerialConnection(EventDispatcher):
         try:
             corrected_spindle_speed = self.m.correct_rpm(spindle_speed)
             new_line = re.sub(r'(S\d+(\.\d+)?)', "S" + str(corrected_spindle_speed), spindle_speed_line.upper())
-            log("Modified spindle command: " + new_line)
+            self.logger.info("Modified spindle command: " + new_line)
             return new_line
 
         except:
-            log("Spindle speed command could not be modified")
+            self.logger.info("Spindle speed command could not be modified")
 
         return spindle_speed_line
