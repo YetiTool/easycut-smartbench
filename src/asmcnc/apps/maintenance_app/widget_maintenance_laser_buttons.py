@@ -42,11 +42,13 @@ Builder.load_string(
                 size: self.parent.size
                 pos: self.parent.pos 
                 id: vacuum_button_container
+                padding: [dp(app.get_scaled_width(10)), dp(app.get_scaled_height(10))]
 
             BoxLayout: 
                 size: self.parent.size
                 pos: self.parent.pos 
                 id: spindle_button_container
+                padding: [dp(app.get_scaled_width(10)), dp(app.get_scaled_height(10))]
 
             BoxLayout: 
                 size: self.parent.size
