@@ -153,10 +153,8 @@ check_and_update_config()
 # load scaled kv
 Builder.load_file('scaled_kv.kv')
 
-# Set the logger to INFO level
+# Set the kivy logger to INFO level
 Logger.setLevel(logging.INFO)
-log_format = '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
-logging.basicConfig(format=log_format)
 
 
 class SkavaUI(App):

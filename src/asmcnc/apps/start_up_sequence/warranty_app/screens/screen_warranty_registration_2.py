@@ -2,7 +2,7 @@
 Created on nov 2020
 @author: Ollie
 """
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os

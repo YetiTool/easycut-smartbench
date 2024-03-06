@@ -3,7 +3,7 @@ From the easycut folder: python -m tests.manual_tests.visual_screen_tests.info_p
 """
 import sys, os, textwrap
 
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 
 path_to_EC = os.getcwd()
 sys.path.append('./src')

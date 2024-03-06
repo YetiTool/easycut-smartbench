@@ -4,7 +4,7 @@ import threading
 from datetime import datetime
 from hashlib import md5
 
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy._event import EventDispatcher
 from kivy.clock import Clock
 

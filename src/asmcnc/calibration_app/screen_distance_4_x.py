@@ -8,7 +8,7 @@ Step 2: Inform user of measurement after machine has moved, and ask user if they
 
 @author: Letty
 """
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.properties import ObjectProperty, StringProperty, NumericProperty

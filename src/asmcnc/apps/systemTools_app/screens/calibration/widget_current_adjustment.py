@@ -1,6 +1,6 @@
 import traceback
 
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *

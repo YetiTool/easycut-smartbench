@@ -1,6 +1,6 @@
 import os
 
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 
 """
 Utility functions for getting paths to directories and files.

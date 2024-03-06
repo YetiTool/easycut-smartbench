@@ -4,7 +4,7 @@ import traceback, threading
 import json
 import sys
 
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 
 from asmcnc.production.database.payload_publisher import DataPublisher
 

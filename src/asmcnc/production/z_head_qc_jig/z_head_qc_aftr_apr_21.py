@@ -8,7 +8,7 @@ Created on 03 August 2020
 import os, sys, subprocess
 from datetime import datetime
 
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 
 try: 
     import pigpio

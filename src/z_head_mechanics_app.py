@@ -1,4 +1,4 @@
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, NoTransition
 from kivy.clock import Clock

@@ -1,7 +1,7 @@
 import os
 import sys
 
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 
 sys.path.append('./src')
 from asmcnc.apps.drywall_cutter_app.config import config_loader

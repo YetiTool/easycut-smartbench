@@ -10,7 +10,7 @@ from chardet import detect
 from itertools import takewhile
 import traceback
 
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 
 decode_and_encode = lambda x: (unicode(x, detect(x)['encoding']).encode('utf-8'))
 

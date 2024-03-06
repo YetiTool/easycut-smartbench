@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os

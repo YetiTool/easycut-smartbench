@@ -9,7 +9,7 @@ python -m tests.manual_tests.experiments.experiment_toggle_reset_pin
 
 import sys, os, subprocess
 
- from kivy import Logger
+ from asmcnc.comms.logging_system.logging_system import Logger
 
  sys.path.append('./src')
 os.chdir('./src')

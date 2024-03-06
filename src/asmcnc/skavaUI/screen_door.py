@@ -5,7 +5,7 @@ Created March 2020
 
 Screen to handle door command, and allow user to resume.
 """
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.animation import Animation
 from kivy.clock import Clock
 from kivy.lang import Builder

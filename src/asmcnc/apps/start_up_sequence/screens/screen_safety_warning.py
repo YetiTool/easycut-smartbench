@@ -8,7 +8,7 @@ Screen to give a safety warning to the user when they switch on SmartBench.
 """
 from datetime import datetime
 
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 

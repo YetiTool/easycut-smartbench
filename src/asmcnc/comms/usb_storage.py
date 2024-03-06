@@ -9,7 +9,7 @@ WARNINGS:
 
 @author: Ed
 '''
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.clock import Clock
 import sys, os, subprocess
 

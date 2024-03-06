@@ -7,7 +7,7 @@ Created Feb 2024
 import sys
 from datetime import datetime
 
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock

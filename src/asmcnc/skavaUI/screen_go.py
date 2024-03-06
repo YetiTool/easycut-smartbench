@@ -8,7 +8,7 @@ import time
 import traceback
 from datetime import datetime
 
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.lang import Builder

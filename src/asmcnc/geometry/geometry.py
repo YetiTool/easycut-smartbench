@@ -1,6 +1,6 @@
 import math
 
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 
 
 def compute_polygon_points(sides, circumscribe_rad):

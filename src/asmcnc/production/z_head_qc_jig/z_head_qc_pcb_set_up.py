@@ -3,7 +3,7 @@ from functools import partial
 import glob
 import os, subprocess
 
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 from kivy.clock import Clock

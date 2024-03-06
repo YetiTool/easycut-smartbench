@@ -1,7 +1,7 @@
 import json
 import os
 
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 
 import config_classes
 import inspect

@@ -9,7 +9,7 @@ from time import sleep
 
 from datetime import datetime
 
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 from requests import get
 
 try: 

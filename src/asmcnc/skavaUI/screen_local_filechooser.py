@@ -13,7 +13,7 @@ from shutil import copy
 
 import kivy
 from chardet import detect
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.clock import Clock
 from kivy.graphics import Color, Rectangle
 from kivy.lang import Builder

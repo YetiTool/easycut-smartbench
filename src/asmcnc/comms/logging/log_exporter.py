@@ -2,7 +2,7 @@ from datetime import datetime
 import os
 import sys
 
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 
 WORKING_DIR = 'A:\\Logs\\'
 export_logs_folder = '/home/pi/exported_logs'

@@ -2,7 +2,7 @@
 
 import sys, os
 
- from kivy import Logger
+ from asmcnc.comms.logging_system.logging_system import Logger
 
  if len(sys.argv) != 2:
     Logger.info("Correct usage: python -m tests.manual_tests.visual_screen_tests.visual_screen_tests <test_function_name>")

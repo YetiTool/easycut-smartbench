@@ -4,7 +4,7 @@ Created for info buttons in the shapecutter app
 '''
 
 import kivy
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 
 from kivy.lang import Builder
 from kivy.uix.gridlayout import GridLayout

@@ -8,7 +8,7 @@ import threading
 import traceback
 
 from enum import Enum
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 
 try:
     import pigpio

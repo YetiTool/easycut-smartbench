@@ -5,7 +5,7 @@ Created on 22 Feb 2023
 
 import sys, os
 
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 
 sys.path.append('./src')
 

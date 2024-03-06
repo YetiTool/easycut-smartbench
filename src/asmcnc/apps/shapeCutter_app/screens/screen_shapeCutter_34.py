@@ -4,7 +4,7 @@ Screen 34 for the Shape Cutter App
 
 @author: Letty
 """
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase

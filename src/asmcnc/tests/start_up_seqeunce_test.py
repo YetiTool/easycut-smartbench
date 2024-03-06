@@ -2,7 +2,7 @@ from itertools import combinations
 import os 
 import subprocess
 
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 
 smartbench_values_dir = './sb_values/'
 set_up_options_file_path = smartbench_values_dir + 'set_up_options.txt'

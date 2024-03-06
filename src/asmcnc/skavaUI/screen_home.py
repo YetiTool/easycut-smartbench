@@ -5,7 +5,7 @@ Created on 19 Aug 2017
 @author: Ed
 """
 import kivy
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, FadeTransition
 from kivy.uix.floatlayout import FloatLayout

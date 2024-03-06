@@ -7,7 +7,7 @@ import json
 import time
 from math import sqrt
 
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.clock import Clock
 
 from asmcnc.job.yetipilot.config.yetipilot_profile import YetiPilotProfile

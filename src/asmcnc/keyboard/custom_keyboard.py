@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.core.window import Window
 from kivy.uix.vkeyboard import VKeyboard
 import traceback

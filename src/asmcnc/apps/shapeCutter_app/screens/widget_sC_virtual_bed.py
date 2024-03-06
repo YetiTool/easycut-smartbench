@@ -3,7 +3,7 @@ Created on 1 Feb 2018
 @author: Ed
 """
 import kivy
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.floatlayout import FloatLayout

@@ -5,7 +5,7 @@ import traceback
 from datetime import datetime
 import os
 
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 
 try:
     import pika

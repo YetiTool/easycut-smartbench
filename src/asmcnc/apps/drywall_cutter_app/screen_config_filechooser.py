@@ -13,7 +13,7 @@ import json
 
 import kivy
 from chardet import detect
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty, StringProperty  
 from kivy.uix.screenmanager import Screen

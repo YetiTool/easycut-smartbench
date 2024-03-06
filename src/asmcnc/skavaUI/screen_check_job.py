@@ -9,7 +9,7 @@ This screen checks the users job, and allows them to review any errors
 from datetime import datetime
 from functools import partial
 
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.lang import Builder

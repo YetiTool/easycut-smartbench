@@ -1,7 +1,7 @@
 """
 Popups that aren't covered by the default popup system.
 """
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.carousel import Carousel

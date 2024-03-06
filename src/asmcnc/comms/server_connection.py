@@ -5,7 +5,7 @@ from time import sleep
 from datetime import datetime
 import traceback
 
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 
 PORT = 65432        # Port to listen on (non-privileged ports are > 1023)
 

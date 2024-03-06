@@ -5,7 +5,7 @@ Step 4: Report old no. steps vs. new no. steps, and allow user to home and verfi
         They will then need to go through the homing screen, and back to step 1.
 @author: Letty
 """
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.properties import ObjectProperty, StringProperty, NumericProperty

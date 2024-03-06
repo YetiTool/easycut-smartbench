@@ -1,4 +1,4 @@
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 
 current_position = { # this may need changing depending on direction that X axis travels
 

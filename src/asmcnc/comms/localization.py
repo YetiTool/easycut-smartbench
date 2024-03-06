@@ -4,7 +4,7 @@ import os
 import re
 from datetime import datetime
 
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.core.text import LabelBase
 from kivy.lang import Builder
 

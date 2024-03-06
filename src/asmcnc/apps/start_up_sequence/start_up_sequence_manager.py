@@ -1,6 +1,6 @@
 import os
 
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 
 from asmcnc.apps.start_up_sequence.screens import \
 screen_reboot_to_apply_settings, \

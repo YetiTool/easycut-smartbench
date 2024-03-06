@@ -2,7 +2,7 @@
 Created on 15 Feb 2022
 @author: Letty
 '''
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 
 try: 
     import unittest

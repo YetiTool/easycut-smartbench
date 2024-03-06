@@ -7,7 +7,7 @@ Info pop-up
 import kivy
 import os
 
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.popup import Popup

@@ -15,11 +15,11 @@ import sys
 import threading
 import time
 from enum import Enum
-from kivy import Logger
 from kivy.clock import Clock
 from kivy.event import EventDispatcher
 from kivy.properties import StringProperty, NumericProperty
 
+from asmcnc.comms.logging_system.logging_system import Logger
 # Import managers for GRBL Notification screens (e.g. alarm, error, etc.)
 from asmcnc.core_UI.sequence_alarm import alarm_manager
 

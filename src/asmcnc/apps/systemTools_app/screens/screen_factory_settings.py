@@ -7,7 +7,7 @@ Menu screen for system tools app
 import os
 import sys
 
-from kivy import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
