@@ -11,6 +11,7 @@ from kivy.uix.widget import Widget
 
 from asmcnc.core_UI import scaling_utils
 from asmcnc.core_UI.components.buttons.spindle_button import SpindleButton
+from asmcnc.core_UI.components.buttons.vacuum_button import VacuumButton
 from asmcnc.core_UI.components.widgets.blinking_widget import BlinkingWidget
 
 Builder.load_string(
@@ -19,10 +20,9 @@ Builder.load_string(
 
     speed_image:speed_image
     speed_toggle:speed_toggle
-    vacuum_image:vacuum_image
-    vacuum_toggle:vacuum_toggle
     vacuum_spindle_container:vacuum_spindle_container
     spindle_container:spindle_container
+    vacuum_container:vacuum_container
 
     BoxLayout:
         size: self.parent.size
@@ -74,22 +74,9 @@ Builder.load_string(
                     size: self.size
                     pos: self.pos 
 
-            ToggleButton:
-                font_size: str(0.01875 * app.width) + 'sp'
-                id: vacuum_toggle
-                on_press: root.set_vacuum()
-                background_color: 1, 1, 1, 0 
-                BoxLayout:
-                    padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
-                    size: self.parent.size
-                    pos: self.parent.pos      
-                    Image:
-                        id: vacuum_image
-                        source: "./asmcnc/skavaUI/img/vac_off.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True  
+            BoxLayout:
+                id: vacuum_container
+                padding: [dp(app.get_scaled_width(10)), dp(app.get_scaled_height(10))]
             
             BoxLayout:
                 id: spindle_container
@@ -104,11 +91,18 @@ class CommonMove(Widget):
         self.m = kwargs["machine"]
         self.sm = kwargs["screen_manager"]
         self.set_jog_speeds()
-        self.add_spindle_button()
+        self.add_buttons()
 
     spindle_button = None
+    vacuum_button = None
 
-    def add_spindle_button(self):
+    def add_buttons(self):
+        self.vacuum_button = VacuumButton(self.m, self.m.s, size_hint=(None, None),
+                                          size=(scaling_utils.get_scaled_dp_width(71),
+                                                scaling_utils.get_scaled_dp_height(72)),
+                                          center=self.vacuum_container.center)
+        self.vacuum_container.add_widget(self.vacuum_button)
+
         self.spindle_button = SpindleButton(self.m, self.m.s, self.sm,
                                             size_hint=(None, None),
                                             size=(scaling_utils.get_scaled_dp_width(71),
@@ -131,11 +125,3 @@ class CommonMove(Widget):
             self.feedSpeedJogX = self.fast_x_speed
             self.feedSpeedJogY = self.fast_y_speed
             self.feedSpeedJogZ = self.fast_z_speed
-
-    def set_vacuum(self):
-        if self.vacuum_toggle.state == "normal":
-            self.vacuum_image.source = "./asmcnc/skavaUI/img/vac_off.png"
-            self.m.turn_off_vacuum()
-        else:
-            self.vacuum_image.source = "./asmcnc/skavaUI/img/vac_on.png"
-            self.m.turn_on_vacuum()
