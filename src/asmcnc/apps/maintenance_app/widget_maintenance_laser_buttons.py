@@ -8,6 +8,7 @@ from kivy.uix.widget import Widget
 
 from asmcnc.core_UI import scaling_utils
 from asmcnc.core_UI.components.buttons.spindle_button import SpindleButton
+from asmcnc.core_UI.components.buttons.vacuum_button import VacuumButton
 from asmcnc.core_UI.popups import InfoPopup
 from asmcnc.apps.maintenance_app import popup_maintenance
 
