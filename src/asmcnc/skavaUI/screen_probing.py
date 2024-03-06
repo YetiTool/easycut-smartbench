@@ -7,6 +7,7 @@ Created Feb 2024
 import sys
 from datetime import datetime
 
+from kivy import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
@@ -82,10 +83,6 @@ Builder.load_string("""
 """
 ) # Based on src/asmcnc/skavaUI/screen_homing_active.py
 
-def log(message):
-    timestamp = datetime.now()
-    print(timestamp.strftime("%H:%M:%S.%f")[:12] + " " + str(message))
-
 
 class ProbingScreen(Screen):
     parent_button = None
@@ -108,9 +105,9 @@ class ProbingScreen(Screen):
 
     def on_enter(self):
         if self.function_debug:
-            log("**** on_enter called")
+            Logger.info("**** on_enter called")
         if self.variable_debug:
-            Clock.schedule_interval(lambda dt: self.debug_log(), 1)
+            Clock.schedule_interval(lambda dt: self.debug_Logger.info(), 1)
 
         delay_time = [0]
 
@@ -124,13 +121,13 @@ class ProbingScreen(Screen):
 
         if self.m.is_spindle_on():
             # Spindle is on, need to turn it off
-            log("Spindle is on, turning off before probing")
+            Logger.info("Spindle is on, turning off before probing")
             self.m.turn_off_spindle()
             delay_time.append(8)
 
         if self.m.state().lower() == "run" or self.m.state().lower() == "jog":
             # Machine is running, need to stop it
-            log("Machine is running, pausing before probing")
+            Logger.info("Machine is running, pausing before probing")
             self.m._grbl_feed_hold()
             Clock.schedule_once(lambda dt: self.m._grbl_soft_reset(), 3.5) # Wait before reseting to avoid alarm
             delay_time.append(4)
@@ -146,27 +143,27 @@ class ProbingScreen(Screen):
             Clock.schedule_once(lambda dt: self.watchdog_clock(), max(delay_time) + 1)
 
         if self.alarm_triggered:
-            log("Probing screen exited due to alarm")
+            Logger.info("Probing screen exited due to alarm")
             self.exit()
 
     def probe(self):
         if self.function_debug:
-            log ("**** probing called")
+            Logger.info("**** probing called")
         if self.m.state().lower() == "idle":
             self.m.probe_z(self.fp)
             self.update_text("Probing")
         else:
-            log("Machine state is {}, not idle. Cannot probe".format(self.m.state()))
+            Logger.info("Machine state is {}, not idle. Cannot probe".format(self.m.state()))
             # Watchdog should handle exiting the screen
     
     def watchdog_clock(self):
         if self.function_debug:
-            log("**** watchdog_clock called")
+            Logger.info("**** watchdog_clock called")
         self.watchdog_event = Clock.schedule_interval(lambda dt: self.watchdog(), 0.1)
 
     def watchdog(self):
         if self.function_debug:
-            log("**** watchdog called")
+            Logger.info("**** watchdog called")
         machine_state = self.m.state().lower()
         screen = self.sm.current
         screen = str(screen).lower()
@@ -178,37 +175,37 @@ class ProbingScreen(Screen):
             Clock.unschedule(self.watchdog_event)
         
         if screen == 'probing' and self.alarm_triggered:
-            log("Probing screen exited due to alarm")
+            Logger.info("Probing screen exited due to alarm")
             self.exit()
         if screen == 'probing' and self.not_probing:
             self.exit()
 
         if self.variable_debug:
-            log(("Watchdog:\nMachine state: " + machine_state, "Not probing: " + str(self.not_probing), "Alarm triggered: " + str(self.alarm_triggered)))
+            Logger.info(("Watchdog:\nMachine state: " + machine_state, "Not probing: " + str(self.not_probing), "Alarm triggered: " + str(self.alarm_triggered)))
 
     def probe_button_press(self):
         pass
     
     def stop_button_press(self):
         if self.function_debug:
-            log("**** stop_button_press called")
-        log("Probing cancelled by user")
+            Logger.info("**** stop_button_press called")
+        Logger.info("Probing cancelled by user")
         self.cancel_probing()
         self.exit()
 
     def cancel_probing(self):
         if self.function_debug:
-            log("**** cancel_probing called")
+            Logger.info("**** cancel_probing called")
         Clock.unschedule(self.probing_event)
         self.m._grbl_feed_hold()
         Clock.schedule_once(lambda dt: self.m._grbl_soft_reset(), 0.5) # Wait before reseting to avoid alarm
 
     def exit(self):
         if self.function_debug:
-            log("**** exit called")
+            Logger.info("**** exit called")
         # Should only be called if sm.current == 'probing'
         if self.sm.current != 'probing':
-            log("Probing screen exited but current screen may not be as expected")
+            Logger.info("Probing screen exited but current screen may not be as expected")
         # If watchdog is scheduled, stop it
         if hasattr(self, "watchdog_event"):
             if self.watchdog_event.is_triggered:
@@ -222,4 +219,4 @@ class ProbingScreen(Screen):
         self.parent_button.close_screen()
         
     def debug_log(self):
-        log(("Current screen: " + self.sm.current, "Machine state: " + self.m.state(), "Not probing: " + str(self.not_probing), "Alarm triggered: " + str(self.alarm_triggered), "Watchdog scheduled: " + str(self.watchdog_event.is_triggered)if hasattr(self, "watchdog_event") else "No watchdog event") )
+        Logger.info(("Current screen: " + self.sm.current, "Machine state: " + self.m.state(), "Not probing: " + str(self.not_probing), "Alarm triggered: " + str(self.alarm_triggered), "Watchdog scheduled: " + str(self.watchdog_event.is_triggered)if hasattr(self, "watchdog_event") else "No watchdog event") )

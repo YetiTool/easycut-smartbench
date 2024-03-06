@@ -1,6 +1,7 @@
 import sys
 from datetime import datetime
 
+from kivy import Logger
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
@@ -16,9 +17,6 @@ Builder.load_string("""
 
 """)
 
-def log(message):
-    timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
 
 class ZHeadMechanicsBooting(Screen):
 
@@ -40,4 +38,4 @@ class ZHeadMechanicsBooting(Screen):
             self.sm.current = 'mechanics'
         except:
             Clock.schedule_once(self.next_screen, 1)
-            log('Failed to read grbl settings, retrying')
+            Logger.info('Failed to read grbl settings, retrying')

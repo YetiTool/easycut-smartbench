@@ -1,4 +1,4 @@
-
+from kivy import Logger
 
 current_position = { # this may need changing depending on direction that X axis travels
 
@@ -27,7 +27,7 @@ detection_too_late = { # this may need changing depending on direction that X ax
 
 
 if detection_too_late["X"](100): 
-	print("YES")
+	Logger.info("YES")
 
 else:
-	print("NO")
+	Logger.info("NO")

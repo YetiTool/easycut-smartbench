@@ -5,6 +5,7 @@ Step 4: Report old no. steps vs. new no. steps, and allow user to home and verfi
         They will then need to go through the homing screen, and back to step 1.
 @author: Letty
 """
+from kivy import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.properties import ObjectProperty, StringProperty, NumericProperty
@@ -275,7 +276,7 @@ You will need to home the machine, and then repeat steps 1 and 2 to verify your 
     def check_for_successful_completion(self, dt):
         # if sequential_stream completes successfully
         if self.m.s.is_sequential_streaming == False:
-            print("New steps have been set: $101 = " + str(self.new_y_steps))
+            Logger.info("New steps have been set: $101 = " + str(self.new_y_steps))
             Clock.unschedule(self.poll_for_success)
             self.next_screen()
 

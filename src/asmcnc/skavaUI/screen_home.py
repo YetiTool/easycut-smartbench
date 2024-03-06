@@ -5,6 +5,7 @@ Created on 19 Aug 2017
 @author: Ed
 """
 import kivy
+from kivy import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, FadeTransition
 from kivy.uix.floatlayout import FloatLayout
@@ -277,11 +278,6 @@ Builder.load_string(
 )
 
 
-def log(message):
-    timestamp = datetime.now()
-    print(timestamp.strftime("%H:%M:%S.%f")[:12] + " " + message)
-
-
 class HomeScreen(Screen):
     no_image_preview_path = "asmcnc/skavaUI/img/image_preview_inverted.png"
     gcode_has_been_checked_and_its_ok = False
@@ -372,7 +368,7 @@ class HomeScreen(Screen):
             try:
                 Clock.schedule_once(self.preview_job_file, 0.05)
             except:
-                log("Unable to preview file")
+                Logger.info("Unable to preview file")
 
     def on_pre_enter(self):
         if self.jd.job_gcode == []:
@@ -394,7 +390,7 @@ class HomeScreen(Screen):
                 self.gcode_preview_widget.draw_file_in_xy_plane([])
                 self.gcode_preview_widget.get_non_modal_gcode([])
             except:
-                print("No G-code loaded.")
+                Logger.info("No G-code loaded.")
             self.gcode_summary_widget.hide_summary()
         else:
             # File label at the top
@@ -438,12 +434,12 @@ class HomeScreen(Screen):
     def preview_job_file(self, dt):
         # Draw gcode preview
         try:
-            log("> draw_file_in_xy_plane")
+            Logger.info("> draw_file_in_xy_plane")
             self.gcode_preview_widget.draw_file_in_xy_plane(self.non_modal_gcode_list)
-            log("< draw_file_in_xy_plane")
+            Logger.info("< draw_file_in_xy_plane")
         except:
-            print("Unable to draw gcode")
-        log("DONE")
+            Logger.info("Unable to draw gcode")
+        Logger.info("DONE")
 
     def on_pre_leave(self):
         self.m.laser_off()

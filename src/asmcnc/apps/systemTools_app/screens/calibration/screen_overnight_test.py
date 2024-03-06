@@ -1,3 +1,4 @@
+from kivy import Logger
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
@@ -756,11 +757,6 @@ Builder.load_string(
 )
 
 
-def log(message):
-    timestamp = datetime.now()
-    print(timestamp.strftime("%H:%M:%S.%f")[:12] + " " + str(message))
-
-
 class OvernightTesting(Screen):
     # STAGES ARE:
     # "CalibrationQC"
@@ -902,10 +898,10 @@ class OvernightTesting(Screen):
         try:
             self.calibration_db.insert_final_test_stage(self.sn_for_db, self.stage_id)
         except:
-            log("Could not insert final test stage into DB!!")
-            print(traceback.format_exc())
+            Logger.info("Could not insert final test stage into DB!!")
+            Logger.info(traceback.format_exc())
         self.status_data_dict[self.stage]["Statuses"] = []
-        log("Overnight test, stage: " + str(self.stage))
+        Logger.info("Overnight test, stage: " + str(self.stage))
 
     # Function called from serial comms to record SG values
     def measure(self):
@@ -1112,8 +1108,8 @@ class OvernightTesting(Screen):
         try:
             return min(raw_vals)
         except:
-            print("Min peak error:")
-            print(traceback.format_exc())
+            Logger.info("Min peak error:")
+            Logger.info(traceback.format_exc())
             return None
 
     def read_out_peaks(self, stage):
@@ -1147,7 +1143,7 @@ class OvernightTesting(Screen):
             return peak_list
 
     def get_statistics(self):
-        log("Getting statistics...")
+        Logger.info("Getting statistics...")
         try:
 
             # x_forw_peak, x_backw_peak, y_forw_peak, y_backw_peak, y1_forw_peak, y1_backw_peak, y2_forw_peak, y2_backw_peak, z_forw_peak, z_backw_peak
@@ -1175,7 +1171,7 @@ class OvernightTesting(Screen):
                 peak_list[9],
             ]
         except:
-            print(traceback.format_exc())
+            Logger.info(traceback.format_exc())
 
     def back_to_fac_settings(self):
         self.systemtools_sm.open_factory_settings_screen()
@@ -1236,7 +1232,7 @@ class OvernightTesting(Screen):
         self.setup_arrays()
 
         # Schedule stages #2 and #3, and then run the first stage (6 hour wear in)
-        log("Start full overnight test")
+        Logger.info("Start full overnight test")
         self.poll_for_recalibration_stage = Clock.schedule_interval(
             self.ready_for_recalibration, 10
         )
@@ -1251,7 +1247,7 @@ class OvernightTesting(Screen):
     def start_cal_and_post_cal(self):
         self.buttons_disabled(True)
         self.setup_arrays()
-        log("Start cal and post cal")
+        Logger.info("Start cal and post cal")
 
         # Schedule stages #2 and #3, and then run the first stage (6 hour wear in)
         self.poll_for_fully_calibrated_final_run_stage = Clock.schedule_interval(
@@ -1279,7 +1275,7 @@ class OvernightTesting(Screen):
         self.reset_checkbox(self.z_wear_in_checkbox)
         self.reset_checkbox(self.sent_six_hour_wear_in_data)
         self.setup_arrays()
-        log("Start 6 hour wear-in")
+        Logger.info("Start 6 hour wear-in")
         self.m.jog_absolute_xy(
             self.m.x_min_jog_abs_limit, self.m.y_min_jog_abs_limit, 6000
         )
@@ -1299,14 +1295,14 @@ class OvernightTesting(Screen):
         self.poll_end_of_six_hour_wear_in = Clock.schedule_interval(
             self.post_six_hour_wear_in, 60
         )
-        log("Running six hour wear-in...")
+        Logger.info("Running six hour wear-in...")
 
     def post_six_hour_wear_in(self, dt):
 
         # This should also trigger the payload data send for any data that did not succeed in sending
         if self._not_finished_streaming(self.poll_end_of_six_hour_wear_in):
             return
-        log("Six hour wear-in completed")
+        Logger.info("Six hour wear-in completed")
         self.pass_or_fail_peak_loads()
         self.tick_checkbox(self.six_hour_wear_in_checkbox, True)
         self.get_statistics()
@@ -1322,7 +1318,7 @@ class OvernightTesting(Screen):
         ) and self.is_step_complete(self.sent_six_hour_wear_in_data):
             if self.poll_for_recalibration_stage != None:
                 Clock.unschedule(self.poll_for_recalibration_stage)
-            log("Start recalibration...")
+            Logger.info("Start recalibration...")
             self.start_recalibration()
 
     def start_recalibration(self):
@@ -1334,7 +1330,7 @@ class OvernightTesting(Screen):
                 lambda dt: self.start_recalibration(), 3
             )
             return
-        log("Starting recalibration...")
+        Logger.info("Starting recalibration...")
         self.setup_arrays()
         self.overnight_running = False
         self.stage = ""
@@ -1387,13 +1383,13 @@ class OvernightTesting(Screen):
             self.send_recalibration_data()
             self.setup_arrays()
             self.stop_button.disabled = False
-            log("Recalibration complete...")
+            Logger.info("Recalibration complete...")
         else:
             self.tick_checkbox(self.recalibration_checkbox, False)
             self.setup_arrays()
             self.cancel_active_polls()
             self.buttons_disabled(False)
-            log("Recalibration did not complete, cancelling further tests")
+            Logger.info("Recalibration did not complete, cancelling further tests")
         if self.poll_for_completion_of_overnight_test is None:
             self.buttons_disabled(False)
 
@@ -1406,7 +1402,7 @@ class OvernightTesting(Screen):
         ):
             if self.poll_for_fully_calibrated_final_run_stage != None:
                 Clock.unschedule(self.poll_for_fully_calibrated_final_run_stage)
-            log("Start fully calibrated final run...")
+            Logger.info("Start fully calibrated final run...")
             self.start_fully_calibrated_final_run()
 
     def start_fully_calibrated_final_run(self):
@@ -1418,7 +1414,7 @@ class OvernightTesting(Screen):
         self.reset_checkbox(self.x_fully_calibrated_checkbox)
         self.reset_checkbox(self.z_fully_calibrated_checkbox)
         self.reset_checkbox(self.sent_fully_recalibrated_run_data)
-        log("SB fully calibrated, start final run")
+        Logger.info("SB fully calibrated, start final run")
         self.m.jog_absolute_xy(
             self.m.x_min_jog_abs_limit + 1, self.m.y_min_jog_abs_limit, 6000
         )
@@ -1439,8 +1435,8 @@ class OvernightTesting(Screen):
         self.run_event_after_datum_set = Clock.schedule_once(
             lambda dt: self._stream_overnight_file("spiral_file"), 3
         )
-        log("Running fully calibrated final run...")
-        log("Running spiral file...")
+        Logger.info("Running fully calibrated final run...")
+        Logger.info("Running spiral file...")
         self.poll_end_of_spiral = Clock.schedule_interval(
             self.finish_spiral_file_reset_for_rectangle, 60
         )
@@ -1462,7 +1458,7 @@ class OvernightTesting(Screen):
         self.run_event_after_datum_set = Clock.schedule_once(
             lambda dt: self._stream_overnight_file("five_rectangles"), 3
         )
-        log("Running last rectangle")
+        Logger.info("Running last rectangle")
         self.poll_end_of_fully_calibrated_final_run = Clock.schedule_interval(
             self.post_fully_calibrated_final_run, 60
         )
@@ -1470,7 +1466,7 @@ class OvernightTesting(Screen):
     def post_fully_calibrated_final_run(self, dt):
         if self._not_finished_streaming(self.poll_end_of_fully_calibrated_final_run):
             return
-        log("Fully calibrated final run complete")
+        Logger.info("Fully calibrated final run complete")
         self.pass_or_fail_peak_loads()
         self.tick_checkbox(self.fully_calibrated_run_checkbox, True)
         self.get_statistics()
@@ -1489,7 +1485,7 @@ class OvernightTesting(Screen):
             return
         if not self.is_step_complete(self.fully_calibrated_run_checkbox):
             return
-        log("Overnight test completed")
+        Logger.info("Overnight test completed")
         self._unschedule_event(self.poll_for_completion_of_overnight_test)
         self.cancel_active_polls()
         self.setup_arrays()
@@ -1555,7 +1551,7 @@ class OvernightTesting(Screen):
     # Add all statuses to same array - and then for each function/check, see if any of the stages are in the lists. 
 
     def send_six_hour_wear_in_data(self):
-        log("Sending six hour wear-in data")
+        Logger.info("Sending six hour wear-in data")
         self._has_data_been_sent("OvernightWearIn", self.sent_six_hour_wear_in_data)
 
     def send_recalibration_data(self):
@@ -1576,12 +1572,12 @@ class OvernightTesting(Screen):
         return latest_file
 
     def show_failed_send_popup(self, csv_name):
-        log("Transferring file failed, copying to USB stick")
+        Logger.info("Transferring file failed, copying to USB stick")
         if os.path.exists("/media/usb"):
             os.system("sudo cp " + csv_name + " /media/usb/")
             PopupCSVOnUSB()
         else:
-            log("USB stick not found")
+            Logger.info("USB stick not found")
 
     def _has_data_been_sent(self, stage, checkbox_id):
         sent_data = self.send_data(stage)
@@ -1591,7 +1587,7 @@ class OvernightTesting(Screen):
 
     def send_data(self, stage):
         try:
-            log("Doing data send...")
+            Logger.info("Doing data send...")
             stage_id = self.calibration_db.get_stage_id_by_description(stage)
             # self.calibration_db.insert_final_test_stage(
             #     self.sn_for_db,
@@ -1602,17 +1598,17 @@ class OvernightTesting(Screen):
             statuses = j_obj["Statuses"]
             table = j_obj["Table"]
             done_send = publisher.run_data_send(statuses, table, stage)
-            log("Data send status: " + str(done_send))
+            Logger.info("Data send status: " + str(done_send))
             # self.calibration_db.insert_final_test_statuses(self.status_data_dict[stage])
             statistics = [self.sn_for_db, stage_id]
             statistics.extend(self.statistics_data_dict[stage])
             self.calibration_db.insert_final_test_statistics(*statistics)
-            log("Finished statistics data send")
+            Logger.info("Finished statistics data send")
             log_exporter.create_and_send_logs(self.sn_for_db)
             return done_send
         except:
-            log("Failed to send data to DB!!")
-            print(traceback.format_exc())
+            Logger.info("Failed to send data to DB!!")
+            Logger.info(traceback.format_exc())
             log_exporter.create_and_send_logs(self.sn_for_db)
             return False
 
@@ -1625,8 +1621,8 @@ class OvernightTesting(Screen):
             self.send_calibration_coefficients_for_one_motor(self.zh_serial, 4)
             return True
         except:
-            log("Failed to send calibration coefficients to DB!!")
-            print(traceback.format_exc())
+            Logger.info("Failed to send calibration coefficients to DB!!")
+            Logger.info(traceback.format_exc())
             return False
 
     def send_calibration_coefficients_for_one_motor(self, sub_serial, motor_index):
@@ -1791,12 +1787,12 @@ class OvernightTesting(Screen):
     def check_in_range(
         self, peak_id_pos, peak_id_neg, min_pos, min_neg, within_plus_minus
     ):
-        print("Lower bound: " + str(-1 * within_plus_minus))
-        print("Upper bound: " + str(within_plus_minus))
-        print("Peak pos: " + str(peak_id_pos.text))
-        print("Peak neg: " + str(peak_id_neg.text))
-        print("Min pos: " + str(min_pos))
-        print("Min neg: " + str(min_neg))
+        Logger.info("Lower bound: " + str(-1 * within_plus_minus))
+        Logger.info("Upper bound: " + str(within_plus_minus))
+        Logger.info("Peak pos: " + str(peak_id_pos.text))
+        Logger.info("Peak neg: " + str(peak_id_neg.text))
+        Logger.info("Min pos: " + str(min_pos))
+        Logger.info("Min neg: " + str(min_neg))
         try:
             if not -1 * within_plus_minus < int(peak_id_pos.text) < within_plus_minus:
                 return False
@@ -1808,5 +1804,5 @@ class OvernightTesting(Screen):
                 return False
             return True
         except:
-            print(traceback.format_exc())
+            Logger.info(traceback.format_exc())
             return False

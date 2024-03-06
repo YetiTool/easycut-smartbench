@@ -2,6 +2,7 @@
 Created on nov 2020
 @author: Ollie
 """
+from kivy import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
@@ -171,7 +172,7 @@ class WarrantyScreen2(Screen):
             serial_number_from_file = str(file.read())
             file.close()
         except:
-            print("Could not get serial number! Please contact YetiTool support!")
+            Logger.info("Could not get serial number! Please contact YetiTool support!")
         return str(serial_number_from_file)
 
     def next_screen(self):

@@ -3,6 +3,8 @@ From the easycut folder: python -m tests.manual_tests.visual_screen_tests.info_p
 """
 import sys, os, textwrap
 
+from kivy import Logger
+
 path_to_EC = os.getcwd()
 sys.path.append('./src')
 os.chdir('./src')
@@ -100,7 +102,7 @@ class MenuScreen(Screen):
         if self.test_no < len(self.l.approved_languages):
             lang = self.l.approved_languages[self.test_no]
             self.l.load_in_new_language(lang)
-            print("New lang: " + str(lang))
+            Logger.info("New lang: " + str(lang))
             self.test_no = self.test_no + 1
         else:
             self.test_no = 0

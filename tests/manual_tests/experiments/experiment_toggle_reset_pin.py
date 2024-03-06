@@ -8,7 +8,10 @@ python -m tests.manual_tests.experiments.experiment_toggle_reset_pin
 '''
 
 import sys, os, subprocess
-sys.path.append('./src')
+
+ from kivy import Logger
+
+ sys.path.append('./src')
 os.chdir('./src')
 
 from kivy.config import Config
@@ -218,13 +221,13 @@ class TestScreen(Screen):
         else: 
             did_fw_update_succeed = "Update failed."
 
-        print(did_fw_update_succeed)
-        print(str(stdout))
+        Logger.info(did_fw_update_succeed)
+        Logger.info(str(stdout))
 
 
     def test_fw_update(self):
 
-        print("Updating")
+        Logger.info("Updating")
 
         def disconnect_and_update():
             self.m.s.grbl_scanner_running = False
@@ -265,8 +268,8 @@ class TestScreen(Screen):
             else: 
                 did_fw_update_succeed = "Update failed."
 
-            print(did_fw_update_succeed)
-            print(str(self.stdout))
+            Logger.info(did_fw_update_succeed)
+            Logger.info(str(self.stdout))
 
         disconnect_and_update()
 
@@ -302,7 +305,7 @@ class ScreenTest(App):
 
     def build(self):
 
-        print("Starting App:")
+        Logger.info("Starting App:")
 
         # Establish screens
         sm = ScreenManager(transition=NoTransition())

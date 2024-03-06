@@ -1,5 +1,6 @@
 import sys
 
+from kivy import Logger
 
 sys.path.append('./src')
 
@@ -17,8 +18,8 @@ try:
     from mock import patch, Mock, create_autospec, call
 
 except Exception as e:
-    print(e)
-    print("Can't import mocking packages, are you on a dev machine?")
+    Logger.info(e)
+    Logger.info("Can't import mocking packages, are you on a dev machine?")
 
 """
 RUN WITH 

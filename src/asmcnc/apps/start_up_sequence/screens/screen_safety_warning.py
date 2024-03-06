@@ -8,6 +8,7 @@ Screen to give a safety warning to the user when they switch on SmartBench.
 """
 from datetime import datetime
 
+from kivy import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 
@@ -270,11 +271,6 @@ Builder.load_string(
 )
 
 
-def log(message):
-    timestamp = datetime.now()
-    print(timestamp.strftime("%H:%M:%S.%f")[:12] + " " + message)
-
-
 class SafetyScreen(Screen):
     user_has_confirmed = False
 
@@ -292,7 +288,7 @@ class SafetyScreen(Screen):
         self.update_strings()
 
     def on_enter(self):
-        log("Safety screen UP")
+        Logger.info("Safety screen UP")
 
     def next_screen(self):
         self.user_has_confirmed = True

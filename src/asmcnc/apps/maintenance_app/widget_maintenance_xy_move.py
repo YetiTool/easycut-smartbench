@@ -155,11 +155,11 @@ Builder.load_string(
                 background_color: hex('#F4433600')
                 always_release: True
                 on_release:
-                    print('release')
+                    Logger.info('release')
                     root.cancelXYJog()
                     self.background_color = hex('#F4433600')
                 on_press: 
-                    print('press')
+                    Logger.info('press')
                     root.buttonJogXY('X-')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:

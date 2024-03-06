@@ -9,6 +9,7 @@ Squaring decision: manual or auto?
 import sys
 from datetime import datetime
 
+from kivy import Logger
 from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
@@ -86,11 +87,6 @@ Builder.load_string(
 )
 
 
-def log(message):
-    timestamp = datetime.now()
-    print(timestamp.strftime("%H:%M:%S.%f")[:12] + " " + str(message))
-
-
 class HomingScreenActive(Screen):
     return_to_screen = "lobby"
     cancel_to_screen = "lobby"
@@ -105,7 +101,7 @@ class HomingScreenActive(Screen):
         self.update_strings()
 
     def on_pre_enter(self):
-        log("Open homing screen")
+        Logger.info("Open homing screen")
         if self.m.homing_interrupted:
             self.go_to_cancel_to_screen()
             return
@@ -151,7 +147,7 @@ class HomingScreenActive(Screen):
         self.sm.current = "squaring_active"
 
     def stop_button_press(self):
-        log("Homing cancelled by user")
+        Logger.info("Homing cancelled by user")
         self.cancel_homing()
         self.go_to_cancel_to_screen()
 

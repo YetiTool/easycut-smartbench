@@ -1,3 +1,4 @@
+from kivy import Logger
 from kivy.core.window import Window
 from datetime import datetime
 from kivy.lang import Builder
@@ -156,11 +157,6 @@ Builder.load_string(
 )
 
 
-def log(message):
-    timestamp = datetime.now()
-    print(timestamp.strftime("%H:%M:%S.%f")[:12] + " " + message)
-
-
 class UpgradeScreen(Screen):
     def __init__(self, **kwargs):
         super(UpgradeScreen, self).__init__(**kwargs)
@@ -266,7 +262,7 @@ class UpgradeScreen(Screen):
             self.sm.current = "upgrade_successful"
         except:
             ErrorPopup(sm=self.sm, l=self.l, main_string=self.l.get_str("Error!")).open()
-            log("Failed to create SC2 compatibility file!")
+            Logger.info("Failed to create SC2 compatibility file!")
 
     def update_spindle_cooldown_settings(self):
         # Write default SC2 settings, and set voltage to whatever is already selected

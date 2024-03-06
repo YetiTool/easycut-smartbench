@@ -4,6 +4,8 @@ Created on 17 Aug 2022
 '''
 
 import sys
+
+from kivy import Logger
 from tests import test_utils
 sys.path.append('./src')
 
@@ -13,7 +15,7 @@ try:
     from mock import Mock, MagicMock
 
 except: 
-    print("Can't import mocking packages, are you on a dev machine?")
+    Logger.info("Can't import mocking packages, are you on a dev machine?")
 
 
 from asmcnc.comms import serial_connection

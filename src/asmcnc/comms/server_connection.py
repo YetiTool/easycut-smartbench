@@ -5,12 +5,9 @@ from time import sleep
 from datetime import datetime
 import traceback
 
+from kivy import Logger
+
 PORT = 65432        # Port to listen on (non-privileged ports are > 1023)
-
-
-def log(message):
-	timestamp = datetime.now()
-	print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' Server connection: ' + str(message))
 
 
 class ServerConnection(object):
@@ -37,14 +34,14 @@ class ServerConnection(object):
 		server_thread.start()
 
 	def __del__(self):
-		log("Server connection class has been deleted")
+		Logger.info("Server connection class has been deleted")
 
 	def initialise_server_connection(self):
 
-		log("Initialising server connection...")
+		Logger.info("Initialising server connection...")
 
 		self.HOST = self.set.ip_address
-		log("IP address: " + str(self.HOST))
+		Logger.info("IP address: " + str(self.HOST))
 		self.prev_host = self.HOST
 		self.doing_reconnect = True
 		self.set_up_socket()
@@ -55,7 +52,7 @@ class ServerConnection(object):
 
 	def set_up_socket(self):
 
-		log("Attempting to set up socket with IP address: " + str(self.HOST))
+		Logger.info("Attempting to set up socket with IP address: " + str(self.HOST))
 
 		if sys.platform != 'win32' and sys.platform != 'darwin':
 
@@ -71,17 +68,17 @@ class ServerConnection(object):
 					self.is_socket_available = True
 
 					try: 
-						log("Thread is alive? " + str(t.is_alive()))
+						Logger.info("Thread is alive? " + str(t.is_alive()))
 					except:
 						t = threading.Thread(target=self.do_connection_loop)
 						t.daemon = True
 						t.start()
 
 				except Exception as e: 
-					log("Unable to set up socket, exception: " + str(e))
+					Logger.info("Unable to set up socket, exception: " + str(e))
 			
 			else:
-				log("No IP address available to open socket with.")
+				Logger.info("No IP address available to open socket with.")
 
 		else:
 			self.set.get_public_ip_address()
@@ -90,7 +87,7 @@ class ServerConnection(object):
 
 	def do_connection_loop(self):
 
-		log("Starting server connection loop...")
+		Logger.info("Starting server connection loop...")
 
 		while True:
 			try: 
@@ -100,7 +97,7 @@ class ServerConnection(object):
 					self.set.get_public_ip_address() # messy and hopefully temporary, to prevent thread conflicts
 
 					conn, addr = self.sock.accept()
-					log("Accepted connection with IP address " + str(self.HOST))
+					Logger.info("Accepted connection with IP address " + str(self.HOST))
 
 					self.set.start_ssh()
 
@@ -108,7 +105,7 @@ class ServerConnection(object):
 						self.get_smartbench_name()
 						conn.send(self.smartbench_name)
 					except: 
-						log("Message not sent")
+						Logger.info("Message not sent")
 
 					conn.close()
 				else:
@@ -126,7 +123,7 @@ class ServerConnection(object):
 
 	def do_check_connection_loop(self):
 
-		log("Starting connection checking loop...")
+		Logger.info("Starting connection checking loop...")
 
 		while True:
 			if not self.doing_reconnect:
@@ -140,15 +137,15 @@ class ServerConnection(object):
 			self.doing_reconnect = True
 
 			try: 
-				log("Closing socket before attempting to reconnect...")
+				Logger.info("Closing socket before attempting to reconnect...")
 				self.is_socket_available = False
 				self.sock.shutdown(socket.SHUT_RDWR)
 				self.sock.close()
 
 			except Exception as e: 
-				log("Attempted to close socket, but raised exception: " + str(e))
+				Logger.info("Attempted to close socket, but raised exception: " + str(e))
 
-			log("Try to reconnect...")
+			Logger.info("Try to reconnect...")
 			sleep(2)
 			self.set_up_socket()
 

@@ -4,15 +4,11 @@ import threading
 from datetime import datetime
 from hashlib import md5
 
+from kivy import Logger
 from kivy._event import EventDispatcher
 from kivy.clock import Clock
 
 from asmcnc.comms.router_machine import ProductCodes
-
-
-def log(message):
-    timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
 class ModelManagerSingleton(EventDispatcher):
@@ -52,7 +48,7 @@ class ModelManagerSingleton(EventDispatcher):
     def __new__(cls, machine=None):
         with cls._lock:
             if cls._instance is None:
-                print("Creating new instance of ModelManagerSingleton")
+                Logger.info("Creating new instance of ModelManagerSingleton")
                 cls._instance = super(ModelManagerSingleton, cls).__new__(cls)
             return cls._instance
 
@@ -85,14 +81,14 @@ class ModelManagerSingleton(EventDispatcher):
     def on_firmware_version(self, instance, value):
         """Is called when the firmware_version is first read. Updates the saved firmware_version if changed."""
         if self._data['fw_version'] != value:
-            log('Save new firmware version to file: {}'.format(value))
+            Logger.info('Save new firmware version to file: {}'.format(value))
             self._data['fw_version'] = value
             self.save_model_data_to_file()
 
     def on_hardware_version(self, instance, value):
         """Is called when the hardware_version is first read. Updates the saved hardware_version if changed."""
         if self._data['hw_version'] != value:
-            log('Save new hardware version to file: {}'.format(value))
+            Logger.info('Save new hardware version to file: {}'.format(value))
             self._data['hw_version'] = value
             self.save_model_data_to_file()
 
@@ -129,13 +125,13 @@ class ModelManagerSingleton(EventDispatcher):
         os.remove(self.MIGRATION_FILE_PATH)
         if md5('YS6' + sn).hexdigest() in data['Pro Plus']:
             full_sn = sn + '.04'
-            log('Old Pro Plus detected. Fixed SN to: {}'.format(full_sn))
+            Logger.info('Old Pro Plus detected. Fixed SN to: {}'.format(full_sn))
             Clock.schedule_once(lambda dt: self.machine.write_dollar_setting(50, full_sn), 1)
             self._data['product_code'] = ProductCodes.PRECISION_PRO_PLUS.value
             return ProductCodes.PRECISION_PRO_PLUS
         elif md5(sn).hexdigest() in data['Pro X']:
             full_sn = sn + '.05'
-            log('Old Pro X detected. Fixed SN to: {}'.format(full_sn))
+            Logger.info('Old Pro X detected. Fixed SN to: {}'.format(full_sn))
             Clock.schedule_once(lambda dt: self.machine.write_dollar_setting(50, full_sn), 1)
             return ProductCodes.PRECISION_PRO_X
         else:
@@ -162,7 +158,7 @@ class ModelManagerSingleton(EventDispatcher):
             self.save_product_code(pc)
 
         self.__set_splash_screen(pc)
-        log('Product code set to: {}'.format(pc))
+        Logger.info('Product code set to: {}'.format(pc))
 
     def __set_splash_screen(self, pc):
         # type: (ProductCodes) ->  None
@@ -191,7 +187,7 @@ class ModelManagerSingleton(EventDispatcher):
     def save_product_code(self, pc):
         # type: (ProductCodes) -> None
         """Saves the given product code to model_info.json."""
-        log('Save new product code to file: {}'.format(pc))
+        Logger.info('Save new product code to file: {}'.format(pc))
         self._data['product_code'] = pc
         self.save_model_data_to_file()
 

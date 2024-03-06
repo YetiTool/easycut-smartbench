@@ -1,5 +1,7 @@
 import os
 
+from kivy import Logger
+
 """
 Utility functions for getting paths to directories and files.
 
@@ -20,10 +22,10 @@ Usage:
     path = get_path("easycut-smartbench")
     image_path = get_image_path("image.png")
     
-    print(easycut_path)
-    print(tests_path)
-    print(asmcnc_path)
-    print(skava_ui_img_path)
+    Logger.info(easycut_path)
+    Logger.info(tests_path)
+    Logger.info(asmcnc_path)
+    Logger.info(skava_ui_img_path)
 """
 
 def get_path(target_dir):
@@ -50,7 +52,7 @@ def get_path(target_dir):
             target_path = search_tree(easycut_path, target_dir)
             return target_path
         except:
-            print("Error: '{}' not found in the path '{}'.".format(target_dir, root_path))
+            Logger.info("Error: '{}' not found in the path '{}'.".format(target_dir, root_path))
             return None
     
 def search_tree(root, target):
@@ -73,7 +75,7 @@ def search_tree(root, target):
             search_results.append(os.path.join(foldername, target))
 
     if not search_results:
-        print("Error: '{}' not found in the path '{}'.".format(target, root))    
+        Logger.info("Error: '{}' not found in the path '{}'.".format(target, root))    
         return None
     return search_results[0] if len(search_results) == 1 else search_results
     

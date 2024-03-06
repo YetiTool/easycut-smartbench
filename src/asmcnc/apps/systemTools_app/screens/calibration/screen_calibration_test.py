@@ -1,3 +1,4 @@
+from kivy import Logger
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
@@ -926,11 +927,6 @@ MAX_XY_SPEED = 2400.0
 MAX_Z_SPEED = 150.0
 
 
-def log(message):
-    timestamp = datetime.now()
-    print(timestamp.strftime("%H:%M:%S.%f")[:12] + " " + str(message))
-
-
 class CalibrationTesting(Screen):
     next_run_event = None
     confirm_event = None
@@ -1002,7 +998,7 @@ class CalibrationTesting(Screen):
         self.stage = stage
         self.stage_id = self.calibration_db.get_stage_id_by_description(self.stage)
         self.status_data_dict[self.stage] = []
-        log("Overnight test, stage: " + str(self.stage))
+        Logger.info("Overnight test, stage: " + str(self.stage))
 
     def stop(self):
         self.x_running = False
@@ -1682,7 +1678,7 @@ class CalibrationTesting(Screen):
                 self.sent_data_check.source = self.red_cross
         except:
             self.sent_data_check.source = self.red_cross
-            print(traceback.format_exc())
+            Logger.info(traceback.format_exc())
         self.data_send_label.text = "Sent data?"
         self.data_send_button.disabled = False
         log_exporter.create_and_send_logs(self.sn_for_db)
@@ -1700,7 +1696,7 @@ class CalibrationTesting(Screen):
                 self.calibration_db.insert_final_test_statistics(*statistics)
                 return True
             except:
-                print(traceback.format_exc())
+                Logger.info(traceback.format_exc())
                 return False
         finally:
             log_exporter.create_and_send_logs(self.sn_for_db)
@@ -1709,7 +1705,7 @@ class CalibrationTesting(Screen):
         try:
             self.calibration_db.insert_final_test_stage(self.sn_for_db, stage_id)
         except:
-            log("Could not insert final test stage into DB!!")
-            print(traceback.format_exc())
+            Logger.info("Could not insert final test stage into DB!!")
+            Logger.info(traceback.format_exc())
             message = "Issue contacting database - if you continue data send may fail!"
             popup_info.PopupError(self.sm, self.l, message)

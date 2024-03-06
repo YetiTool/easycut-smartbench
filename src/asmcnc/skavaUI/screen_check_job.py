@@ -9,6 +9,7 @@ This screen checks the users job, and allows them to review any errors
 from datetime import datetime
 from functools import partial
 
+from kivy import Logger
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.lang import Builder
@@ -203,11 +204,6 @@ Builder.load_string(
 )
 
 
-def log(message):
-    timestamp = datetime.now()
-    print(timestamp.strftime("%H:%M:%S.%f")[:12] + " " + message)
-
-
 class CheckingScreen(Screen):
     job_checking_checked = StringProperty()
     check_outcome = StringProperty()
@@ -276,11 +272,11 @@ class CheckingScreen(Screen):
     def boundary_check(self):
         bounds_output = self.is_job_within_bounds()
         if bounds_output == "job is within bounds":
-            log("In bounds...")
+            Logger.info("In bounds...")
             self.check_outcome = self.l.get_str("Job is within bounds.")
             Clock.schedule_once(lambda dt: self.try_gcode_check(), 0.4)
         else:
-            log("Out of bounds...")
+            Logger.info("Out of bounds...")
             self.job_checking_checked = self.l.get_str("Boundary issue!")
             self.toggle_boundary_buttons(False)
             self.check_outcome = (
@@ -585,7 +581,7 @@ class CheckingScreen(Screen):
             self.write_error_output(self.error_log)
             if self.job_ok == False:
                 self.jd.reset_values()
-            log("File has been checked!")
+            Logger.info("File has been checked!")
             self.exit_label = self.l.get_str("Finish")
 
     def write_error_output(self, error_log):

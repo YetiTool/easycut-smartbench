@@ -8,7 +8,10 @@ python -m tests.manual_tests.experiments.experiment_custom_keyboard
 '''
 
 import sys, os, subprocess
-sys.path.append('./src')
+
+ from kivy import Logger
+
+ sys.path.append('./src')
 os.chdir('./src')
 
 import kivy
@@ -106,10 +109,10 @@ class BasicScreen(Screen):
         self.kb.defocus_all_text_inputs(self.text_inputs)
 
     def func(self, x):
-        print(x)
+        Logger.info(x)
 
     def end_func(self):
-        print("YAY")
+        Logger.info("YAY")
 
     def test_generic_for_loop_alternative(self):
         self.kb.generic_for_loop_alternative(self.func, self.list_of_items)
@@ -121,14 +124,14 @@ class BasicScreen(Screen):
         self.kb.add_keyboard_instance()
 
     def does_keyboard_exist(self):
-        print(self.kb.return_if_keyboard_exists(Window.children[0]))
+        Logger.info(self.kb.return_if_keyboard_exists(Window.children[0]))
 
     def remove_keyboard(self):
         self.kb.remove_children(Window.children[0])
 
     def raise_keyboard_if_none_exists_with_mocks(self):
 
-        def add_keyboard(*args): print("raise keyboard")
+        def add_keyboard(*args): Logger.info("raise keyboard")
         self.kb.add_keyboard_instance = Mock(side_effect=add_keyboard)
 
         self.kb.raise_keyboard_if_none_exists()

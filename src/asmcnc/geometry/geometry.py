@@ -1,5 +1,8 @@
 import math
 
+from kivy import Logger
+
+
 def compute_polygon_points(sides, circumscribe_rad):
     polygon_vertices = []
     # https://stackoverflow.com/questions/21690008/how-to-generate-random-vertices-to-form-a-convex-polygon-in-c
@@ -12,9 +15,9 @@ def compute_polygon_points(sides, circumscribe_rad):
     while angle_r < 2.0 * math.pi:
         x = x0 + (circumscribe_rad * math.cos(angle_r))
         y = y0 + (circumscribe_rad * math.sin(angle_r))
-        print("{} {}".format(x, y))
+        Logger.info("{} {}".format(x, y))
         polygon_vertices.append([x, y])
         angle_r += angle_delta_r
 
-    print(polygon_vertices)
+    Logger.info(polygon_vertices)
     return polygon_vertices

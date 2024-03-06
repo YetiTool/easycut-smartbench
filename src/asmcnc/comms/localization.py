@@ -4,6 +4,7 @@ import os
 import re
 from datetime import datetime
 
+from kivy import Logger
 from kivy.core.text import LabelBase
 from kivy.lang import Builder
 
@@ -28,10 +29,6 @@ builder_font_string = """
     title_font: "%s"
 """
 
-
-def log(message):
-    timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
 class Localization(object):
@@ -135,17 +132,17 @@ class Localization(object):
             file = open(self.persistent_language_path, 'r')
             self.lang = str(file.read())
             file.close()
-            log("Read in language name: using " + self.lang)
+            Logger.info("Read in language name: using " + self.lang)
 
         except:
             self.lang = self.default_lang
-            log("Could not read in language name, using English (GB) as default")
+            Logger.info("Could not read in language name, using English (GB) as default")
 
         if self.lang in self.supported_languages:
-            log("Loading software in " + self.lang)
+            Logger.info("Loading software in " + self.lang)
 
         else:
-            log("Could not find " + self.lang + " in list of supported_languages, using English (GB) as default")
+            Logger.info("Could not find " + self.lang + " in list of supported_languages, using English (GB) as default")
             self.lang = self.default_lang
 
     # Save language name
@@ -154,10 +151,10 @@ class Localization(object):
             file = open(self.persistent_language_path, 'w+')
             file.write(str(self.lang))
             file.close()
-            log("Save language name to file")
+            Logger.info("Save language name to file")
 
         except:
-            log("Could not save language name, using English (GB) as default")
+            Logger.info("Could not save language name, using English (GB) as default")
 
     # DICTIONARY
     def load_from_dictionary(self):
@@ -166,7 +163,7 @@ class Localization(object):
                 csv_reader = csv.DictReader(csv_file, delimiter='\t')
                 for lines in csv_reader:
                     self.dictionary[str(lines[self.default_lang])] = str(lines[self.lang])
-            log("Loaded language in from full dictionary")
+            Logger.info("Loaded language in from full dictionary")
 
             # For Korean characters to show up, an external font is required
             if self.lang == self.ko:
@@ -183,7 +180,7 @@ class Localization(object):
 
 
         except:
-            log("Could not load in from full dictionary")
+            Logger.info("Could not load in from full dictionary")
 
     # LOAD IN NEW LANGUAGE
     def load_in_new_language(self, language):
@@ -197,11 +194,11 @@ class Localization(object):
     #     try: 
     #         with open(self.complete_foreign_dictionary_path, "r") as csv_file:
     #             self.supported_languages = (csv_file.readline()).strip().split('\t')
-    #         log("supported_languages: ")
-    #         print(self.supported_languages)
+    #         Logger.info("supported_languages: ")
+    #         Logger.info(self.supported_languages)
 
     #     except:
-    #         log("Could not load list of supported_languages from dictionary")
+    #         Logger.info("Could not load list of supported_languages from dictionary")
 
     # FAST DICTIONARY
 
@@ -219,9 +216,9 @@ class Localization(object):
     #         # Read in from a file that only has English and corresponding chosen language (2 rows)
     #         csv_reader = csv.DictReader(open(self.fast_dictionary_path, "r"), delimiter=',')
     #         self.dictionary = (list(csv_reader))[0]
-    #         log("Load from fast dictionary")
+    #         Logger.info("Load from fast dictionary")
     #     except:
-    #         log("Could not load from fast dictionary")
+    #         Logger.info("Could not load from fast dictionary")
 
     #     self.save_fast_dictionary()
 
@@ -234,7 +231,7 @@ class Localization(object):
     #             dict_writer = csv.DictWriter(csv_file, fieldnames=list(self.dictionary.keys()))
     #             dict_writer.writeheader()
     #             dict_writer.writerow(self.dictionary)
-    #             log("Save fast dictionary")
+    #             Logger.info("Save fast dictionary")
 
     #     except:
-    #         log("Could not save fast dictionary")
+    #         Logger.info("Could not save fast dictionary")

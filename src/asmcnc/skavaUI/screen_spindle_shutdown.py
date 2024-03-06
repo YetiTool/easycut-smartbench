@@ -7,6 +7,7 @@ Created March 2019
 Prepare to home
 """
 import kivy
+from kivy import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
@@ -83,11 +84,6 @@ Builder.load_string(
 )
 
 
-def log(message):
-    timestamp = datetime.now()
-    print(timestamp.strftime("%H:%M:%S.%f")[:12] + " " + str(message))
-
-
 class SpindleShutdownScreen(Screen):
     # Vars to preset before calling this screen
     reason_for_pause = None
@@ -111,7 +107,7 @@ class SpindleShutdownScreen(Screen):
         self.update_strings()
 
     def on_enter(self):
-        log("Pausing job...")
+        Logger.info("Pausing job...")
 
         if self.reason_for_pause == "spindle_overload":
             # Job paused due to overload, send event

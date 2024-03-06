@@ -2,8 +2,10 @@
 
 import sys, os
 
-if len(sys.argv) != 2:
-    print("Correct usage: python -m tests.manual_tests.visual_screen_tests.visual_screen_tests <test_function_name>")
+ from kivy import Logger
+
+ if len(sys.argv) != 2:
+    Logger.info("Correct usage: python -m tests.manual_tests.visual_screen_tests.visual_screen_tests <test_function_name>")
     sys.exit(0)
 
 from kivy.config import Config
@@ -178,7 +180,7 @@ class ScreenTest(App):
             def show_next_language(test_languages, index):
                 lang = test_languages[index]
                 l.load_in_new_language(lang)
-                print("New lang: " + str(lang))
+                Logger.info("New lang: " + str(lang))
                 try:
                     current_screen = sm.get_screen(str(sm.current))
                     current_screen.update_strings()
@@ -186,7 +188,7 @@ class ScreenTest(App):
                         if isinstance(widget, Label):
                             widget.font_name = l.font_regular
                 except: 
-                    print(str(sm.current) + " has no update strings function")
+                    Logger.info(str(sm.current) + " has no update strings function")
 
                 index += 1
                 if index >= len(test_languages):
@@ -400,7 +402,7 @@ class ScreenTest(App):
             sm.get_screen('upgrade').get_correct_unlock_code = Mock(return_value=str(unlock_code))
             sm.get_screen('lobby').carousel.index = 3
 
-            print(sm.get_screen('upgrade').get_correct_unlock_code())
+            Logger.info(sm.get_screen('upgrade').get_correct_unlock_code())
 
             sm.current = 'lobby'
 
@@ -773,7 +775,7 @@ class ScreenTest(App):
             def stream_and_pause(dt=0):
                 m.s.is_job_streaming = True
                 m.set_pause(True, 'yetipilot_low_feed')
-                print("STOP FOR STREAM PAUSE")
+                Logger.info("STOP FOR STREAM PAUSE")
                 # m.stop_for_a_stream_pause('yetipilot_spindle_data_loss')
 
             Clock.schedule_once(stream_and_pause, 5)

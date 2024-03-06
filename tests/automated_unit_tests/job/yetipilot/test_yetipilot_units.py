@@ -3,6 +3,9 @@ Created on 22 Feb 2023
 @author: Letty
 '''
 import sys
+
+from kivy import Logger
+
 sys.path.append('./src')
 
 try: 
@@ -11,7 +14,7 @@ try:
     from mock import Mock, MagicMock
 
 except: 
-    print("Can't import mocking packages, are you on a dev machine?")
+    Logger.info("Can't import mocking packages, are you on a dev machine?")
 
 
 from asmcnc.comms import localization

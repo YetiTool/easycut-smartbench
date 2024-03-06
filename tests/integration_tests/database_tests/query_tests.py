@@ -1,8 +1,10 @@
-try: 
+from kivy import Logger
+
+try:
     import unittest
 
 except:
-    print("Can't import mocking packages, are you on a dev machine?")
+    Logger.info("Can't import mocking packages, are you on a dev machine?")
 
 import sys
 sys.path.append('./src')

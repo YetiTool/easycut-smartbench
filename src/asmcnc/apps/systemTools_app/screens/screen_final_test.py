@@ -4,6 +4,7 @@ Screen to help production move through final test more quickly
 
 @author: Letty
 """
+from kivy import Logger
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -297,7 +298,7 @@ class FinalTestScreen(Screen):
     def set_x_steps(self):
         try:
             x_overstep = float(self.x_over_count.text) * self.x_calibration_scale_factor
-            print(x_overstep)
+            Logger.info(x_overstep)
             self.m.write_dollar_setting(
                 100,
                 float(self.m.s.setting_100) - x_overstep,
@@ -310,7 +311,7 @@ class FinalTestScreen(Screen):
     def set_y_steps(self):
         try:
             y_overstep = float(self.y_over_count.text) * self.y_calibration_scale_factor
-            print(y_overstep)
+            Logger.info(y_overstep)
             self.m.write_dollar_setting(
                 101,
                 float(self.m.s.setting_101) - y_overstep,
