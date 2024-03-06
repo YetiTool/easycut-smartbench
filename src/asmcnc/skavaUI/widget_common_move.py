@@ -135,7 +135,7 @@ class CommonMove(Widget):
     def set_vacuum(self):
         if self.vacuum_toggle.state == "normal":
             self.vacuum_image.source = "./asmcnc/skavaUI/img/vac_off.png"
-            self.m.vac_off()
+            self.m.turn_off_vacuum()
         else:
             self.vacuum_image.source = "./asmcnc/skavaUI/img/vac_on.png"
-            self.m.vac_on()
+            self.m.turn_on_vacuum()

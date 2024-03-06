@@ -76,6 +76,9 @@ class SerialConnection(EventDispatcher):
     # This flag is set by the serial connection when it sends M3/M5
     spindle_on = BooleanProperty(False)
 
+    # This flag is set by the serial connection when it sends AE/AF
+    vacuum_on = BooleanProperty(False)
+
     def __init__(self, machine, screen_manager, settings_manager, localization, job, *args, **kwargs):
         super(SerialConnection, self).__init__(*args, **kwargs)
         self.sm = screen_manager
@@ -715,7 +718,7 @@ class SerialConnection(EventDispatcher):
 
             # Move head up        
             Clock.schedule_once(lambda dt: self.m.raise_z_axis_for_collet_access(), 0.5)
-            Clock.schedule_once(lambda dt: self.m.vac_off(), 1)
+            Clock.schedule_once(lambda dt: self.m.turn_off_vacuum(), 1)
 
             # Update time for maintenance reminders
             time.sleep(0.4)
@@ -1827,17 +1830,24 @@ class SerialConnection(EventDispatcher):
             log("FAILED to display on CONSOLE: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
 
         # Catch and correct all instances of the spindle speed command "M3 S{RPM}"
-        if 'M3' in serialCommand.upper():
+        if "M3" in serialCommand.upper():
             # Set spindle_on flag
             self.spindle_on = True
 
-            if 'S' in serialCommand.upper():
+            if "S" in serialCommand.upper():
                 # Correct the spindle speed command
                 serialCommand = self.compensate_spindle_speed_command(serialCommand)
 
-        if 'M5' in serialCommand.upper():
+        if "M5" in serialCommand.upper():
             # Clear spindle_on flag
             self.spindle_on = False
+
+        # Catch any instances of AE/AF to set the vacuum_on flag
+        if "AE" in serialCommand.upper():
+            self.vacuum_on = True
+
+        if "AF" in serialCommand.upper():
+            self.vacuum_on = False
 
         # Finally issue the command        
         if self.s:

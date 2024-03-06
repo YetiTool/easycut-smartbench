@@ -213,12 +213,12 @@ class LaserDatumButtons(Widget):
             self.vacuum_image.source = (
                 "./asmcnc/apps/maintenance_app/img/extractor_off_120.png"
             )
-            self.m.vac_off()
+            self.m.turn_off_vacuum()
         else:
             self.vacuum_image.source = (
                 "./asmcnc/apps/maintenance_app/img/extractor_on_120.png"
             )
-            self.m.vac_on()
+            self.m.turn_on_vacuum()
 
     def set_spindle(self):
         if self.spindle_toggle.state == "normal":

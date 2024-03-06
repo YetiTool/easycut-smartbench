@@ -1359,7 +1359,7 @@ class RouterMachine(EventDispatcher):
         Clock.schedule_once(lambda dt: self._grbl_soft_reset(), 1.5)
 
         # Sulk
-        Clock.schedule_once(lambda dt: self.vac_off(), 2.0)
+        Clock.schedule_once(lambda dt: self.turn_off_vacuum(), 2.0)
         Clock.schedule_once(lambda dt: self.set_led_colour('RED'),2.1)
 
     def resume_from_gcode_error(self):
@@ -1896,11 +1896,19 @@ class RouterMachine(EventDispatcher):
     def go_to_jobstart_z(self):
         self.s.write_command('G0 G54 Z0')
 
-    def vac_on(self):
-        self.s.write_command('AE')
+    def turn_on_vacuum(self):
+        """
+        Turns the vacuum on by sending the 'AE' command.
+        :return: None
+        """
+        self.s.write_command("AE")
 
-    def vac_off(self):
-        self.s.write_command('AF')
+    def turn_off_vacuum(self):
+        """
+        Turns the vacuum off by sending the 'AF' command.
+        :return: None
+        """
+        self.s.write_command("AF")
 
     def go_x_datum(self):
         self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))

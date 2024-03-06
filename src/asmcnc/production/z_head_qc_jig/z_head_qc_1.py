@@ -560,9 +560,9 @@ class ZHeadQC1(Screen):
 
     def set_vac(self):
         if self.vac_toggle.state == 'normal': 
-            self.m.vac_off()
+            self.m.turn_off_vacuum()
         else: 
-            self.m.vac_on()
+            self.m.turn_on_vacuum()
 
     def dust_shoe_red(self):
         self.m.set_led_colour('RED')
