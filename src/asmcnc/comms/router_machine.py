@@ -1193,16 +1193,20 @@ class RouterMachine(EventDispatcher):
         """
         self.turn_on_spindle(rpm=0)
 
-    def turn_on_spindle(self, rpm=12000):
+    def turn_on_spindle(self, rpm=12000, run_at_grbl_speed=False):
         """
         This method sends the command 'M3' to the Z Head to turn on the spindle at a given speed.
 
         No RPM compensation occurs in this command as this is captured and handled by compensate_spindle_speed_command() in the SerialConnection object
 
         :param rpm: The RPM to turn the spindle on at. Defaults to 12,000.
+        :param run_at_grbl_speed: If True, the spindle will run at the last GRBL speed. Defaults to False.
         :return: None
         """
-        self.s.write_command("M3 S" + str(rpm))
+        if run_at_grbl_speed:
+            self.s.write_command("M3")
+        else:
+            self.s.write_command("M3 S" + str(rpm))
 
     def turn_off_spindle(self):
         """
