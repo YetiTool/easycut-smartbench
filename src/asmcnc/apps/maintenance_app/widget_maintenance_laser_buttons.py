@@ -118,15 +118,15 @@ class LaserDatumButtons(Widget):
 
     def add_buttons(self):
         self.vacuum_button = VacuumButton(self.m, self.m.s, size_hint=(None, None),
-                                          size=(scaling_utils.get_scaled_dp_width(71),
-                                                scaling_utils.get_scaled_dp_height(72)),
+                                          size=(scaling_utils.get_scaled_dp_width(120),
+                                                scaling_utils.get_scaled_dp_height(120)),
                                           pos_hint={"center_x": 0.5, "center_y": 0.5})
         self.vacuum_button_container.add_widget(self.vacuum_button)
 
         self.spindle_button = SpindleButton(self.m, self.m.s, self.sm,
                                             size_hint=(None, None),
-                                            size=(scaling_utils.get_scaled_dp_width(71),
-                                                  scaling_utils.get_scaled_dp_height(72)),
+                                            size=(scaling_utils.get_scaled_dp_width(120),
+                                                  scaling_utils.get_scaled_dp_height(122)),
                                             pos_hint={"center_x": 0.5, "center_y": 0.5})
         self.spindle_button_container.add_widget(self.spindle_button)
 
