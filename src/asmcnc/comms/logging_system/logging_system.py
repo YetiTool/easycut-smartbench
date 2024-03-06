@@ -1,6 +1,7 @@
 import inspect
 import logging
 import os
+import sys
 
 from colorlog import ColoredFormatter
 
@@ -94,7 +95,7 @@ class LoggerSingleton(object):
 
         :return:  A console handler for the logger.
         """
-        console_handler = logging.StreamHandler()
+        console_handler = logging.StreamHandler(stream=sys.stdout)
         console_handler.setLevel(level)
         console_handler.setFormatter(
             ColoredFormatter(
