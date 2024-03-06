@@ -9,8 +9,6 @@ import traceback
 
 from enum import Enum
 
-from asmcnc.comms.serial_connection import MachineState
-
 try:
     import pigpio
 except:
@@ -25,7 +23,6 @@ from asmcnc.skavaUI import popup_info
 from kivy.clock import Clock
 from kivy.properties import NumericProperty
 from kivy.event import EventDispatcher
-import sys, os, time
 import os, time
 from datetime import datetime
 
