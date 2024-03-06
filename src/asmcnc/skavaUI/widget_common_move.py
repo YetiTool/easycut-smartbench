@@ -76,10 +76,12 @@ Builder.load_string(
 
             BoxLayout:
                 id: vacuum_container
+                size_hint_y: 1
                 padding: [dp(app.get_scaled_width(10)), dp(app.get_scaled_height(10))]
             
             BoxLayout:
                 id: spindle_container
+                size_hint_y: 1
                 padding: [dp(app.get_scaled_width(10)), dp(app.get_scaled_height(10))]
 """
 )
