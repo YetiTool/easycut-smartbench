@@ -62,7 +62,7 @@ Builder.load_string(
                         allow_stretch: True  
             
         BoxLayout:
-            spacing: 0
+            spacing: dp(app.get_scaled_width(10))
             padding:dp(0)
             size_hint_y: 2
             orientation: 'vertical'
@@ -101,13 +101,15 @@ class CommonMove(Widget):
     def add_buttons(self):
         self.vacuum_button = VacuumButton(self.m, self.m.s, size_hint=(None, None),
                                           size=(scaling_utils.get_scaled_dp_width(71),
-                                                scaling_utils.get_scaled_dp_height(72)))
+                                                scaling_utils.get_scaled_dp_height(72)),
+                                          pos_hint={"center_x": 0.5, "center_y": 0.5})
         self.vacuum_container.add_widget(self.vacuum_button)
 
         self.spindle_button = SpindleButton(self.m, self.m.s, self.sm,
                                             size_hint=(None, None),
                                             size=(scaling_utils.get_scaled_dp_width(71),
-                                                  scaling_utils.get_scaled_dp_height(72)))
+                                                  scaling_utils.get_scaled_dp_height(72)),
+                                            pos_hint={"center_x": 0.5, "center_y": 0.5})
         self.spindle_container.add_widget(self.spindle_button)
 
     fast_x_speed = 6000
