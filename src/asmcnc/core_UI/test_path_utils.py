@@ -21,6 +21,12 @@ class TestPathUtils(unittest.TestCase):
         result = get_path(target_dir, first_result_only=True).replace("\\", "/")
         self.assertIn(expected_result, result) 
 
+    def test_directory_in_target(self):
+        target_dir = "skavaUI/img"
+        expected_result = "easycut-smartbench/src/asmcnc/skavaUI/img"
+        result = get_path(target_dir).replace("\\", "/")
+        self.assertIn(expected_result, result)
+
     def test_get_path_not_found(self):
         target_dir = "nonexistent_dir"
         result = get_path(target_dir)
