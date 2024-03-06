@@ -133,7 +133,7 @@ class SerialConnection(EventDispatcher):
                     # Read in first input and log it
                     def strip_and_log(input_string):
                         new_string = input_string.strip()
-                        Logger.debug(new_string)
+                        Logger.info(new_string)
                         return new_string
 
                     stripped_input = map(strip_and_log, self.s.readlines())
@@ -202,7 +202,6 @@ class SerialConnection(EventDispatcher):
 
                 if not SmartBench_port:
                     Logger.warning("No arduino connected")
-                    Logger.debug("TEST")
 
         elif sys.platform == "darwin":
             self.suppress_error_screens = True
@@ -271,7 +270,7 @@ class SerialConnection(EventDispatcher):
 
         try:
             if self.is_connected():
-                Logger.debug('Initialising grbl...')
+                Logger.info('Initialising grbl...')
                 self.write_direct("\r\n\r\n", realtime=False, show_in_sys=False, show_in_console=False)  # Wakes grbl
 
         except:
@@ -285,7 +284,7 @@ class SerialConnection(EventDispatcher):
     # called by first kivy screen when safe to assume kivy processing is completed, to ensure correct clock scheduling
     def start_services(self, dt):
 
-        Logger.debug('Starting services')
+        Logger.info('Starting services')
         self.s.flushInput()  # Flush startup text in serial input
         self.next_poll_time = time.time()
         self.grbl_scanner_running = True
@@ -312,7 +311,7 @@ class SerialConnection(EventDispatcher):
 
     def grbl_scanner(self, run_grbl_scanner_once=False):
 
-        Logger.debug('Running grbl_scanner thread')
+        Logger.info('Running grbl_scanner thread')
 
         while self.grbl_scanner_running or run_grbl_scanner_once:
 
