@@ -60,7 +60,8 @@ class ModelManagerSingleton(EventDispatcher):
         # Always check for call with machine object:
         if self.machine is None and machine is not None:
             self.machine = machine
-            self.machine.s.bind(setting_50=self.on_setting_50)
+            if not os.path.exists(self.PC_FILE_PATH):
+                self.machine.s.bind(setting_50=self.on_setting_50)
             self.machine.s.bind(fw_version=self.on_firmware_version)
             self.machine.s.bind(hw_version=self.on_hardware_version)
 
@@ -69,7 +70,6 @@ class ModelManagerSingleton(EventDispatcher):
         self._initialized = True
         # Do init here:
         self.load_model_data_from_file()
-        self.set_machine_type(self._data['product_code'])
         self._process_raw_migration_file()
 
     def _process_raw_migration_file(self):
@@ -109,8 +109,15 @@ class ModelManagerSingleton(EventDispatcher):
             pc_value = int(str(value).split('.')[1])
         except:
             pc_value = 0
-        self.fix_wrong_product_code(serial_number, pc_value)
-        self.set_machine_type(ProductCodes(pc_value), True)
+
+        fixed_product_code = self.fix_wrong_product_code(serial_number, pc_value)
+        if fixed_product_code != ProductCodes.UNKNOWN:
+            # overwrite saved value with fixed product_code
+            self.set_machine_type(fixed_product_code, True)
+        elif self._data['product_code'] == ProductCodes.UNKNOWN.value:
+            # save product_code to file ONLY when it is still set to default: UNKNOWN!!!
+            # !!!Don't override a previously saved proper product_code !!!
+            self.set_machine_type(ProductCodes(pc_value), True)
         self.__set_default_machine_fields()
 
     def fix_wrong_product_code(self, sn, old_pc):
@@ -124,12 +131,15 @@ class ModelManagerSingleton(EventDispatcher):
             full_sn = sn + '.04'
             log('Old Pro Plus detected. Fixed SN to: {}'.format(full_sn))
             Clock.schedule_once(lambda dt: self.machine.write_dollar_setting(50, full_sn), 1)
+            self._data['product_code'] = ProductCodes.PRECISION_PRO_PLUS.value
             return ProductCodes.PRECISION_PRO_PLUS
         elif md5(sn).hexdigest() in data['Pro X']:
             full_sn = sn + '.05'
             log('Old Pro X detected. Fixed SN to: {}'.format(full_sn))
             Clock.schedule_once(lambda dt: self.machine.write_dollar_setting(50, full_sn), 1)
             return ProductCodes.PRECISION_PRO_X
+        else:
+            return ProductCodes.UNKNOWN
 
     def is_machine_drywall(self):
         # () -> bool
