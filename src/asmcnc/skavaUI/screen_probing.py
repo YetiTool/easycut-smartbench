@@ -107,7 +107,7 @@ class ProbingScreen(Screen):
         if self.function_debug:
             Logger.info("**** on_enter called")
         if self.variable_debug:
-            Clock.schedule_interval(lambda dt: self.debug_Logger.info(), 1)
+            Clock.schedule_interval(lambda dt: self.debug_log(), 1)
 
         delay_time = [0]
 
