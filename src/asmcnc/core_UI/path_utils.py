@@ -2,6 +2,7 @@ import os
 
 """
 Utility functions for getting paths to directories and files.
+This folder must remain somewhere within /easycut-smartbench/
 
 Functions:
     get_path(target_dir, files_only=False, folders_only=False, first_result_only=False)
@@ -63,7 +64,7 @@ def get_path(target_dir, files_only=False, folders_only=False, first_result_only
             target_path = root_path[:target_path_index + len(target_dir)]
             return target_path
         else:
-            raise Exception
+            raise ValueError
     except ValueError:
         # If not found, search the whole tree
         try:
@@ -109,4 +110,3 @@ tests_path = get_path("tests") # easycut-smartbench/tests
 asmcnc_path = get_path("asmcnc") # easycut-smartbench/src/asmcnc
 skava_ui_path = get_path("skavaUI") # easycut-smartbench/src/asmcnc/skavaUI
 skava_ui_img_path = os.path.join(asmcnc_path, "skavaUI", "img") # easycut-smartbench/src/asmcnc/skavaUI/img
-
