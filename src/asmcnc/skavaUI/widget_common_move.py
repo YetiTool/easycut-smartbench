@@ -62,7 +62,7 @@ Builder.load_string(
                         allow_stretch: True  
             
         BoxLayout:
-            spacing: dp(app.get_scaled_width(10))
+            spacing: 0
             padding:dp(0)
             size_hint_y: 2
             orientation: 'vertical'
