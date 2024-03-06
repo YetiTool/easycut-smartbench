@@ -190,13 +190,13 @@ class SerialConnection(EventDispatcher):
                 port_list = [port.device for port in serial.tools.list_ports.comports() if
                              'n/a' not in port.description]
 
-                print("Windows port list: ")  # for debugging
-                print(str(port_list))
+                self.logger.info("Windows port list: ")  # for debugging
+                self.logger.info(str(port_list))
 
                 for comport in port_list:
 
-                    print("Windows port to try: ")
-                    print(comport)
+                    self.logger.info("Windows port to try: ")
+                    self.logger.info(comport)
 
                     SmartBench_port = self.is_port_SmartBench(comport)
                     if SmartBench_port: break
@@ -211,8 +211,8 @@ class SerialConnection(EventDispatcher):
             for line in filesForDevice:
                 if line.startswith('tty.usbmodem') or line.startswith('tty.usbserial'):  # look for...
 
-                    print("Mac port to try: ")  # for debugging
-                    print(line)
+                    self.logger.info("Mac port to try: ")  # for debugging
+                    self.logger.info(line)
 
                     SmartBench_port = self.is_port_SmartBench('/dev/' + str(line))
                     if SmartBench_port: break
@@ -916,7 +916,7 @@ class SerialConnection(EventDispatcher):
 
     def process_grbl_push(self, message):
 
-        if self.VERBOSE_ALL_PUSH_MESSAGES: print(message)
+        if self.VERBOSE_ALL_PUSH_MESSAGES: self.logger.info(message)
 
         # If it's a status message, e.g. <Idle|MPos:-1218.001,-2438.002,-2.000|Bf:35,255|FS:0,0>
         if message.startswith('<'):
@@ -1780,7 +1780,7 @@ class SerialConnection(EventDispatcher):
         if reset_grbl_after_cancel or self._reset_grbl_after_stream:
             self._reset_grbl_after_stream = False
             self.m._grbl_soft_reset()
-            print("GRBL Reset after sequential stream cancelled")
+            self.logger.info("GRBL Reset after sequential stream cancelled")
         self.is_sequential_streaming = False
 
     def is_buffer_clear(self):
