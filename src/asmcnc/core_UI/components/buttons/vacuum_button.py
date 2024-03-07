@@ -11,7 +11,7 @@ from asmcnc.core_UI.components.widgets.blinking_widget import BlinkingWidget
 
 SKAVA_UI_PATH = path_utils.get_path("skavaUI")[0]  # bug with get_path currently returns a list
 SKAVA_UI_IMG_PATH = os.path.join(SKAVA_UI_PATH, "img")
-EXTRACTOR_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "vac_on.png")
+EXTRACTOR_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "vac_off.png")
 RED_NO_SIGN_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "red_no_sign.png")
 
 
@@ -28,7 +28,7 @@ class VacuumButton(ImageButtonBase, BlinkingWidget):
         self.serial_connection = serial_connection
 
         self.overlay_image = Image(source=RED_NO_SIGN_IMAGE, pos_hint={"center_x": 0.75, "center_y": 0.25},
-                                   size_hint=(None, None), size=(self.width / 4, self.height / 4))
+                                   size_hint=(None, None), size=(self.width / 2, self.height / 2))
         self.bind(pos=self.__update_overlay_image, size=self.__update_overlay_image)
         self.add_widget(self.overlay_image)
 
