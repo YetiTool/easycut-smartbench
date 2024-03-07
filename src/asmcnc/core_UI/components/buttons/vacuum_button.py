@@ -11,14 +11,14 @@ from asmcnc.core_UI.components.widgets.blinking_widget import BlinkingWidget
 
 SKAVA_UI_PATH = path_utils.get_path("skavaUI")[0]  # bug with get_path currently returns a list
 SKAVA_UI_IMG_PATH = os.path.join(SKAVA_UI_PATH, "img")
-VACUUM_ON_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "extraction_on.png")
-RED_NO_SIGN = os.path.join(SKAVA_UI_IMG_PATH, "red_no_sign.png")
+EXTRACTOR_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "extraction_on.png")
+RED_NO_SIGN_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "red_no_sign.png")
 
 
 class VacuumButton(ImageButtonBase, BlinkingWidget):
     """A custom button widget used for vacuum functionality."""
 
-    source = StringProperty(VACUUM_ON_IMAGE)
+    source = StringProperty(EXTRACTOR_IMAGE)
     allow_stretch = BooleanProperty(True)
 
     def __init__(self, router_machine, serial_connection, **kwargs):
@@ -27,7 +27,7 @@ class VacuumButton(ImageButtonBase, BlinkingWidget):
         self.router_machine = router_machine
         self.serial_connection = serial_connection
 
-        self.overlay_image = Image(source=RED_NO_SIGN, pos_hint={"center_x": 0.75, "center_y": 0.25},
+        self.overlay_image = Image(source=RED_NO_SIGN_IMAGE, pos_hint={"center_x": 0.75, "center_y": 0.25},
                                    size_hint=(0.25, 0.25))
         self.add_widget(self.overlay_image)
 
