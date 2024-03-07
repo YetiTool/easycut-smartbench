@@ -1,4 +1,8 @@
 import unittest
+import os
+import sys
+
+sys.path.insert(0, '../src/asmcnc/core_UI')
 from path_utils import get_path
 
 class TestPathUtils(unittest.TestCase):
@@ -7,7 +11,7 @@ class TestPathUtils(unittest.TestCase):
         target_dir = "router_machine.py"
         expected_result = "/easycut-smartbench/src/asmcnc/comms/router_machine.py"
         result = get_path(target_dir, files_only=True).replace("\\", "/")
-        self.assertIn(expected_result, result)        
+        self.assertIn(expected_result, result)
 
     def test_get_path_folders_only(self):
         target_dir = "skavaUI"
