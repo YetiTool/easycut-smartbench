@@ -252,6 +252,10 @@ class GCodeMonitor(Widget):
 
 
     def update_monitor_text_buffer(self, input_or_output, content):
+        """
+        This function updates both the serial monitor and the status report buffer.
+        It is called as a callback when on_serial_monitor_update is fired.
+        """
         # Try to chuck out any problem strings
         if isinstance(content, basestring):
             # Don't update if content is to be hidden
