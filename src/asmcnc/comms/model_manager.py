@@ -4,10 +4,10 @@ import threading
 from datetime import datetime
 from hashlib import md5
 
-from kivy._event import EventDispatcher
 from kivy.clock import Clock
 
 from asmcnc.comms.router_machine import ProductCodes
+from asmcnc.core_UI import path_utils
 
 
 def log(message):
@@ -15,7 +15,15 @@ def log(message):
     print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
-class ModelManagerSingleton(EventDispatcher):
+class ModelManagerSingleton(object):
+    """
+    This class takes care of all the model specific handling:
+    - saves the product code (hashed) to the console if no file exists (Updating UC). Update only possible via
+      factory settings. Update will handle things like splash screen image.
+    - saves hw and fw version (updated on change): Will be used to determine model capabilities.
+      console swap will update the file with new ZH values.
+    - provides model distinction: e.g. is_machine_drywall()
+    """
     _instance = None
     _initialized = False
     machine = None
@@ -29,15 +37,13 @@ class ModelManagerSingleton(EventDispatcher):
     }
 
     # File paths:
-    PC_FILE_PATH = os.path.join(os.path.dirname(os.getcwd()), "src", "sb_values", "model_info.json")
-    PC_MIGRATION_PATH = os.path.join(os.path.dirname(os.getcwd()), "src", "asmcnc", "comms", "product_code_migration")
-    MIGRATION_FILE_PATH = os.path.join(PC_MIGRATION_PATH, "migration.json")
-    MIGRATION_RAW_FILE_PATH = os.path.join(PC_MIGRATION_PATH, "migration_raw.json")
+    PC_FILE_PATH = path_utils.get_path("model_info.json")
+    MIGRATION_FILE_PATH = path_utils.get_path("migration.json")
+    MIGRATION_RAW_FILE_PATH = path_utils.get_path("migration_raw.json")
 
     PLYMOUTH_SPLASH_FILE_PATH = "/usr/share/plymouth/debian-logo.png"
-    SKAVA_UI_IMAGES_PATH = os.path.join(os.getcwd(), "asmcnc", "skavaUI", "img")
-    YETI_SPLASH_PATH = os.path.join(SKAVA_UI_IMAGES_PATH, "yeti_splash_screen.png")
-    DWT_SPLASH_PATH = os.path.join(SKAVA_UI_IMAGES_PATH, "dwt_splash_screen.png")
+    YETI_SPLASH_PATH = path_utils.get_path("yeti_splash_screen.png")
+    DWT_SPLASH_PATH = path_utils.get_path("dwt_splash_screen.png")
 
     SMARTBENCH_DEFAULT_NAME = "My SmartBench"
     SMARTBENCH_DEFAULT_LOCATION = "SmartBench location"
@@ -60,7 +66,8 @@ class ModelManagerSingleton(EventDispatcher):
         # Always check for call with machine object:
         if self.machine is None and machine is not None:
             self.machine = machine
-            self.machine.s.bind(setting_50=self.on_setting_50)
+            if not os.path.exists(self.PC_FILE_PATH):
+                self.machine.s.bind(setting_50=self.on_setting_50)
             self.machine.s.bind(fw_version=self.on_firmware_version)
             self.machine.s.bind(hw_version=self.on_hardware_version)
 
@@ -69,7 +76,6 @@ class ModelManagerSingleton(EventDispatcher):
         self._initialized = True
         # Do init here:
         self.load_model_data_from_file()
-        self.set_machine_type(self._data['product_code'])
         self._process_raw_migration_file()
 
     def _process_raw_migration_file(self):
@@ -109,8 +115,15 @@ class ModelManagerSingleton(EventDispatcher):
             pc_value = int(str(value).split('.')[1])
         except:
             pc_value = 0
-        self.fix_wrong_product_code(serial_number, pc_value)
-        self.set_machine_type(ProductCodes(pc_value), True)
+
+        fixed_product_code = self.fix_wrong_product_code(serial_number, pc_value)
+        if fixed_product_code != ProductCodes.UNKNOWN:
+            # overwrite saved value with fixed product_code
+            self.set_machine_type(fixed_product_code, True)
+        elif self._data['product_code'] == ProductCodes.UNKNOWN.value:
+            # save product_code to file ONLY when it is still set to default: UNKNOWN!!!
+            # !!!Don't override a previously saved proper product_code !!!
+            self.set_machine_type(ProductCodes(pc_value), True)
         self.__set_default_machine_fields()
 
     def fix_wrong_product_code(self, sn, old_pc):
@@ -124,12 +137,15 @@ class ModelManagerSingleton(EventDispatcher):
             full_sn = sn + '.04'
             log('Old Pro Plus detected. Fixed SN to: {}'.format(full_sn))
             Clock.schedule_once(lambda dt: self.machine.write_dollar_setting(50, full_sn), 1)
+            self._data['product_code'] = ProductCodes.PRECISION_PRO_PLUS.value
             return ProductCodes.PRECISION_PRO_PLUS
         elif md5(sn).hexdigest() in data['Pro X']:
             full_sn = sn + '.05'
             log('Old Pro X detected. Fixed SN to: {}'.format(full_sn))
             Clock.schedule_once(lambda dt: self.machine.write_dollar_setting(50, full_sn), 1)
             return ProductCodes.PRECISION_PRO_X
+        else:
+            return ProductCodes.UNKNOWN
 
     def is_machine_drywall(self):
         # () -> bool
