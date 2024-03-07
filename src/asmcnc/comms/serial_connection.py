@@ -44,6 +44,9 @@ class MachineState(Enum):
 
 class SerialConnection(EventDispatcher):
     setting_50 = NumericProperty(0.0)
+    setting_100 = NumericProperty(0.0)
+    setting_101 = NumericProperty(0.0)
+    setting_102 = NumericProperty(0.0)
     STATUS_INTERVAL = 0.1  # How often to poll general status to update UI (0.04 = 25Hz = smooth animation)
 
     s = None  # Serial comms object

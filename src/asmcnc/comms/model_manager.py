@@ -4,10 +4,10 @@ import threading
 from datetime import datetime
 from hashlib import md5
 
-from kivy._event import EventDispatcher
 from kivy.clock import Clock
 
 from asmcnc.comms.router_machine import ProductCodes
+from asmcnc.core_UI import path_utils
 
 
 def log(message):
@@ -15,7 +15,15 @@ def log(message):
     print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
-class ModelManagerSingleton(EventDispatcher):
+class ModelManagerSingleton(object):
+    """
+    This class takes care of all the model specific handling:
+    - saves the product code (hashed) to the console if no file exists (Updating UC). Update only possible via
+      factory settings. Update will handle things like splash screen image.
+    - saves hw and fw version (updated on change): Will be used to determine model capabilities.
+      console swap will update the file with new ZH values.
+    - provides model distinction: e.g. is_machine_drywall()
+    """
     _instance = None
     _initialized = False
     machine = None
@@ -29,15 +37,13 @@ class ModelManagerSingleton(EventDispatcher):
     }
 
     # File paths:
-    PC_FILE_PATH = os.path.join(os.path.dirname(os.getcwd()), "src", "sb_values", "model_info.json")
-    PC_MIGRATION_PATH = os.path.join(os.path.dirname(os.getcwd()), "src", "asmcnc", "comms", "product_code_migration")
-    MIGRATION_FILE_PATH = os.path.join(PC_MIGRATION_PATH, "migration.json")
-    MIGRATION_RAW_FILE_PATH = os.path.join(PC_MIGRATION_PATH, "migration_raw.json")
+    PC_FILE_PATH = path_utils.get_path("model_info.json")
+    MIGRATION_FILE_PATH = path_utils.get_path("migration.json")
+    MIGRATION_RAW_FILE_PATH = path_utils.get_path("migration_raw.json")
 
     PLYMOUTH_SPLASH_FILE_PATH = "/usr/share/plymouth/debian-logo.png"
-    SKAVA_UI_IMAGES_PATH = os.path.join(os.getcwd(), "asmcnc", "skavaUI", "img")
-    YETI_SPLASH_PATH = os.path.join(SKAVA_UI_IMAGES_PATH, "yeti_splash_screen.png")
-    DWT_SPLASH_PATH = os.path.join(SKAVA_UI_IMAGES_PATH, "dwt_splash_screen.png")
+    YETI_SPLASH_PATH = path_utils.get_path("yeti_splash_screen.png")
+    DWT_SPLASH_PATH = path_utils.get_path("dwt_splash_screen.png")
 
     SMARTBENCH_DEFAULT_NAME = "My SmartBench"
     SMARTBENCH_DEFAULT_LOCATION = "SmartBench location"
