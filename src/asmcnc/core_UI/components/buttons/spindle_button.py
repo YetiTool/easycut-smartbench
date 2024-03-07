@@ -59,6 +59,8 @@ class SpindleButton(ImageButtonBase, BlinkingWidget):
         """
         Updates the spindle image based on the spindle_on property of the SerialConnection.
 
+        :param value: the new value of the spindle_on property from SerialConnection
+        :param args: unused dt parameter from Clock
         :return: None
         """
         self.source = SPINDLE_ON_IMAGE if value else SPINDLE_OFF_IMAGE

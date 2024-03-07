@@ -3,6 +3,7 @@ from functools import partial
 
 from kivy.clock import Clock
 from kivy.properties import StringProperty, BooleanProperty
+from kivy.uix.image import Image
 
 from asmcnc.core_UI import path_utils
 from asmcnc.core_UI.components.buttons.button_base import ImageButtonBase
@@ -11,13 +12,13 @@ from asmcnc.core_UI.components.widgets.blinking_widget import BlinkingWidget
 SKAVA_UI_PATH = path_utils.get_path("skavaUI")[0]  # bug with get_path currently returns a list
 SKAVA_UI_IMG_PATH = os.path.join(SKAVA_UI_PATH, "img")
 VACUUM_ON_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "extraction_on.png")
-VACUUM_OFF_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "extraction_off.png")
+RED_NO_SIGN = os.path.join(SKAVA_UI_IMG_PATH, "red_no_sign.png")
 
 
 class VacuumButton(ImageButtonBase, BlinkingWidget):
     """A custom button widget used for vacuum functionality."""
 
-    source = StringProperty(VACUUM_OFF_IMAGE)
+    source = StringProperty(VACUUM_ON_IMAGE)
     allow_stretch = BooleanProperty(True)
 
     def __init__(self, router_machine, serial_connection, **kwargs):
@@ -25,6 +26,10 @@ class VacuumButton(ImageButtonBase, BlinkingWidget):
 
         self.router_machine = router_machine
         self.serial_connection = serial_connection
+
+        self.overlay_image = Image(source=RED_NO_SIGN, pos_hint={"center_x": 0.75, "center_y": 0.25},
+                                   size_hint=(0.25, 0.25))
+        self.add_widget(self.overlay_image)
 
         self.serial_connection.bind(vacuum_on=self.__on_vacuum_on)
         self.bind(on_press=self.__on_press)
@@ -50,8 +55,14 @@ class VacuumButton(ImageButtonBase, BlinkingWidget):
         :param value: the new value of the vacuum_on property from SerialConnection
         :return:
         """
-        Clock.schedule_once(partial(self.__update_image_source, value))
+        Clock.schedule_once(partial(self.__update_image, value))
         self.blinking = value
 
-    def __update_image_source(self, value, *args):
-        self.source = VACUUM_ON_IMAGE if value else VACUUM_OFF_IMAGE
+    def __update_image(self, value, *args):
+        """
+        Updates the overlay image's opacity based on the vacuum_on property.
+        :param value: the new value of the vacuum_on property from SerialConnection
+        :param args: unused dt parameter from Clock
+        :return: None
+        """
+        self.overlay_image.opacity = 0 if value else 1
