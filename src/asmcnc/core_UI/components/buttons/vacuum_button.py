@@ -41,8 +41,8 @@ class VacuumButton(ImageButtonBase, BlinkingWidget):
         :param args:
         :return:
         """
-        self.overlay_image.pos_hint = {"center_x": 0.75, "center_y": 0.25}
-        self.overlay_image.size_hint = (0.25, 0.25)
+        self.overlay_image.pos = self.pos[0] + self.width * 0.75, self.pos[1] + self.height * 0.25
+        self.overlay_image.size = self.width * 0.25, self.height * 0.25
 
     def __on_press(self, *args):
         """
