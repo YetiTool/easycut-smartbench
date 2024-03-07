@@ -26,7 +26,6 @@ class GRBLSettingsManagerSingleton(object):
     _received_sn = ''
 
     SERIAL_ID = 50
-    WRITE_DOLLAR_INTERVAL = 0.2  # needed, because serial_connection sequential stream is not thread safe!!!
 
     # json skeletons
     _machine_saved_data = {
@@ -103,8 +102,7 @@ class GRBLSettingsManagerSingleton(object):
             # check if saved value exists:
             if self._machine_saved_data[self.SERIAL_ID] != '0000.00':
                 # restore saved value:
-                Clock.schedule_once(lambda dt: self.machine.write_dollar_setting(
-                    self.SERIAL_ID, self._machine_saved_data[self.SERIAL_ID]), self._get_write_interval())
+                self.machine.write_dollar_setting(self.SERIAL_ID, self._machine_saved_data[self.SERIAL_ID])
                 log('Restored $50 (serial number) from file: {}'.format(self._machine_saved_data[self.SERIAL_ID]))
             else:
                 log('Cannot restore serial number. Nothing saved yet!')
@@ -138,9 +136,7 @@ class GRBLSettingsManagerSingleton(object):
             if self._machine_saved_data[setting] != 0:  # saved value exists?
                 if self._machine_saved_data[self.SERIAL_ID] == self._received_sn:  # serial number matches?
                     # restore saved value:
-                    Clock.schedule_once(lambda dt: self.machine.write_dollar_setting(setting,
-                                        self._machine_saved_data[setting]),
-                                        self._get_write_interval())
+                    self.machine.write_dollar_setting(setting, self._machine_saved_data[setting])
                     log('Restored {} from file: {}'.format(descriptions[setting], self._machine_saved_data[setting]))
                 else:
                     log('Cannot restore {}. Wrong serial detected! Found: {} | Expected: {}'.
@@ -153,17 +149,3 @@ class GRBLSettingsManagerSingleton(object):
                 self.save_machine_data_to_file()
                 log('Calibration run? Updated {} in file: {}'.
                     format(descriptions[setting], value))
-
-    def _get_write_interval(self):
-        """
-        Returns the next write interval and increases it for the next call.
-        This is needed to avoid race conditions with simultaneous write_dollar_setting calls.
-        """
-        ret = self.WRITE_DOLLAR_INTERVAL
-        self.WRITE_DOLLAR_INTERVAL += self.WRITE_DOLLAR_INTERVAL
-        return ret
-
-
-
-
-
