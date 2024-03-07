@@ -5,6 +5,8 @@ from datetime import datetime
 
 from kivy.clock import Clock
 
+from asmcnc.core_UI import path_utils
+
 
 def log(message):
     timestamp = datetime.now()
@@ -42,7 +44,7 @@ class GRBLSettingsManagerSingleton(object):
     }
 
     # File paths:
-    MACHINE_DATA_FILE_PATH = os.path.join(os.path.dirname(os.getcwd()), "src", "sb_values", "machine_settings.json")
+    MACHINE_DATA_FILE_PATH = path_utils.get_path("machine_settings.json")
 
     def __new__(cls, machine=None):
         with cls._lock:
