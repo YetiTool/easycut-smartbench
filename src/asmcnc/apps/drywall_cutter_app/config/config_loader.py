@@ -18,7 +18,7 @@ DEBUG_MODE = False
 def debug(func):
     def wrapper(*args, **kwargs):
         if DEBUG_MODE:
-            Logger.info('Calling function: ' + func.__name__ + ' with args: ' + str(args) + ' and kwargs: ' + str(
+            Logger.debug('Calling function: ' + func.__name__ + ' with args: ' + str(args) + ' and kwargs: ' + str(
                 kwargs))
         return func(*args, **kwargs)
 

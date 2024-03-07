@@ -3,8 +3,6 @@ import logging
 import os
 import sys
 
-from colorlog import ColoredFormatter
-
 LOG_STRING_FORMAT = "[%(asctime)s] - [%(levelname)s] [%(module_name)s] %(message)s"
 LOG_DATE_FORMAT = "%H:%M:%S %d-%m-%Y"
 
@@ -13,30 +11,26 @@ LOG_FOLDER_PATH = os.path.join(os.path.dirname(__file__), "logs")
 if not os.path.exists(LOG_FOLDER_PATH):
     os.makedirs(LOG_FOLDER_PATH)
 
+try:
+    from colorlog import ColoredFormatter
+    formatter = ColoredFormatter(
+                fmt="%(log_color)s" + LOG_STRING_FORMAT,
+                datefmt=LOG_DATE_FORMAT,
+                log_colors={
+                    "DEBUG": "cyan",
+                    "INFO": "green",
+                    "WARNING": "yellow",
+                    "ERROR": "red",
+                    "CRITICAL": "red,bg_black",
+                },
+            )
+except ImportError:
+    formatter = logging.Formatter(LOG_STRING_FORMAT, datefmt=LOG_DATE_FORMAT)
+
 
 class ModuleLogger(logging.Logger):
     def __init__(self, name, level=logging.DEBUG):
         super(ModuleLogger, self).__init__(name, level)
-
-    def debug(self, msg, *args, **kwargs):
-        if self.isEnabledFor(logging.DEBUG):
-            self._log(logging.DEBUG, msg, args, **kwargs)
-
-    def info(self, msg, *args, **kwargs):
-        if self.isEnabledFor(logging.INFO):
-            self._log(logging.INFO, msg, args, **kwargs)
-
-    def warning(self, msg, *args, **kwargs):
-        if self.isEnabledFor(logging.WARNING):
-            self._log(logging.WARNING, msg, args, **kwargs)
-
-    def error(self, msg, *args, **kwargs):
-        if self.isEnabledFor(logging.ERROR):
-            self._log(logging.ERROR, msg, args, **kwargs)
-
-    def critical(self, msg, *args, **kwargs):
-        if self.isEnabledFor(logging.CRITICAL):
-            self._log(logging.CRITICAL, msg, args, **kwargs)
 
     def _log(self, level, msg, args, exc_info=None, extra=None):
         if extra is None:
@@ -97,19 +91,7 @@ class LoggerSingleton(object):
         """
         console_handler = logging.StreamHandler(stream=sys.stdout)
         console_handler.setLevel(level)
-        console_handler.setFormatter(
-            ColoredFormatter(
-                fmt="%(log_color)s" + LOG_STRING_FORMAT,
-                datefmt=LOG_DATE_FORMAT,
-                log_colors={
-                    "DEBUG": "cyan",
-                    "INFO": "green",
-                    "WARNING": "yellow",
-                    "ERROR": "red",
-                    "CRITICAL": "red,bg_black",
-                },
-            )
-        )
+        console_handler.setFormatter(formatter)
         return console_handler
 
     def get_logger(self):
@@ -121,3 +103,4 @@ class LoggerSingleton(object):
 
 
 Logger = LoggerSingleton().get_logger()
+Logger.info("Logger initialised")
