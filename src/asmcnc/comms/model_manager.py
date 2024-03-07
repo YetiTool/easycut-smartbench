@@ -7,7 +7,7 @@ from hashlib import md5
 from kivy.clock import Clock
 
 from asmcnc.comms.router_machine import ProductCodes
-from asmcnc.core_UI import path_utils
+from asmcnc.core_UI import path_utils as pu
 
 
 def log(message):
@@ -37,13 +37,13 @@ class ModelManagerSingleton(object):
     }
 
     # File paths:
-    PC_FILE_PATH = path_utils.get_path("model_info.json")
-    MIGRATION_FILE_PATH = path_utils.get_path("migration.json")
-    MIGRATION_RAW_FILE_PATH = path_utils.get_path("migration_raw.json")
+    PC_FILE_PATH = pu.join(pu.sb_values_path, "model_info.json")
+    MIGRATION_FILE_PATH = pu.join(pu.get_path('product_code_migration'), "migration.json")
+    MIGRATION_RAW_FILE_PATH = pu.join(pu.get_path('product_code_migration'), "migration_raw.json")
 
     PLYMOUTH_SPLASH_FILE_PATH = "/usr/share/plymouth/debian-logo.png"
-    YETI_SPLASH_PATH = path_utils.get_path("yeti_splash_screen.png")
-    DWT_SPLASH_PATH = path_utils.get_path("dwt_splash_screen.png")
+    YETI_SPLASH_PATH = pu.get_path("yeti_splash_screen.png")
+    DWT_SPLASH_PATH = pu.get_path("dwt_splash_screen.png")
 
     SMARTBENCH_DEFAULT_NAME = "My SmartBench"
     SMARTBENCH_DEFAULT_LOCATION = "SmartBench location"
