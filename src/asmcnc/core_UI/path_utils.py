@@ -122,8 +122,9 @@ def search_tree(root, target, files_only=False, folders_only=False, first_result
     if not search_results:
         print("Error: '{}' not found in the root '{}'.".format(target, root))    
         return None
-    for i in range(len(search_results)):
-        search_results[i] = search_results[i].replace("\\", "/")
+    
+    # Tidy output
+    search_results = [result.replace("\\", "/") for result in search_results]
 
     return search_results[0] if (len(search_results) == 1  or first_result_only) else search_results
     
