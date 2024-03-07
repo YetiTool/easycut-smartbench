@@ -1,10 +1,13 @@
 import os
+import re
 
 """
 Utility functions for getting paths to directories and files.
+This file must remain somewhere within /easycut-smartbench/
+Root for all searches is 1 stage up from /easycut-smartbench/
 
 Functions:
-    get_path(target_dir, files_only=False, folders_only=False, first_result_only=False)
+    get_path(target_dir, files_only=False, folders_only=False, first_result_only=False, search_outside_easycut=False)
     search_tree(root, target, files_only=False, folders_only=False, first_result_only=False)
 
 Variables:
@@ -24,6 +27,7 @@ Usage:
     path = get_path("tests", folders_only=True, first_result_only=True)
     path = get_path("z_probe.png", files_only=True)
     path = get_path("path_utils.py")
+    path = get_path("plus.txt", search_outside_easycut=True)
     etc.
     
     # Common paths
@@ -34,7 +38,7 @@ Usage:
     print(skava_ui_img_path)
 """
 
-def get_path(target_dir, files_only=False, folders_only=False, first_result_only=False):
+def get_path(target_dir, files_only=False, folders_only=False, first_result_only=False, search_outside_easycut=False):
     """
     Returns the whole path(s) of the target directory or file.
 
@@ -45,6 +49,7 @@ def get_path(target_dir, files_only=False, folders_only=False, first_result_only
         files_only (bool): If True, only search for files.
         folders_only (bool): If True, only search for folders.
         first_result_only (bool): If True, return the first result only.
+        search_outside_easycut (bool): If True, search from parent of easycut
 
     Returns:
         str: If one path is found, the entire path of the target directory or file.
@@ -61,13 +66,18 @@ def get_path(target_dir, files_only=False, folders_only=False, first_result_only
         if not files_only:
             target_path_index = root_path.index(target_dir)
             target_path = root_path[:target_path_index + len(target_dir)]
-            return target_path
+            return target_path.replace("\\", "/")
         else:
-            raise Exception
+            raise ValueError
     except ValueError:
         # If not found, search the whole tree
-        try:
-            target_path = search_tree(easycut_path, target_dir, files_only, folders_only, first_result_only)
+        try:            
+            if search_outside_easycut:
+                easycut_location = os.path.dirname(easycut_path) # Get location of easycut folder
+                root = easycut_location
+            else:
+                root = easycut_path            
+            target_path = search_tree(root, target_dir, files_only, folders_only, first_result_only)
             return target_path
         except:
             print("Error: '{}' not found in the path '{}'.".format(target_dir, root_path))
@@ -91,22 +101,36 @@ def search_tree(root, target, files_only=False, folders_only=False, first_result
     """
     search_results = []
 
+    target_split = re.split(r'[\\/]|' + re.escape(os.sep), target) # split the target into a list of strings eg. ['skavaUI', 'img']
+    target_slash_count = len(target_split) - 1
+    
     for foldername, _, filenames in os.walk(root):
-        # If target is in foldername after the last slash
-        if target in foldername.split(os.sep)[-1] and not files_only:
-            search_results.append(foldername)
-        elif target in filenames and not folders_only:
-            search_results.append(os.path.join(foldername, target))
+        folder_path_split = re.split(r'[\\/]|' + re.escape(os.sep), foldername) # split the foldername into a list of strings eg. ['easycut-smartbench', 'src', 'asmcnc', 'skavaUI', 'img']
+
+        if target_slash_count == 0:
+            if target in filenames and not folders_only: # If target found as a file
+                search_results.append(foldername + "/" + target) 
+            elif target in folder_path_split[-1] and not files_only: # If target found as a folder
+                search_results.append(foldername)
+        else:
+            if target_split == folder_path_split[-len(target_split):] and not files_only: # If target found as a folder where target is a path eg. 'skavaUI/img'
+                search_results.append(foldername)
+            elif target_split[:-1] == folder_path_split[-len(target_split)+1:] and target_split[-1] in filenames and not folders_only: # If target found as a file where target is a path eg. 'skavaUI/img/z_probe.png'
+                search_results.append(foldername + "/" + target_split[-1])
+
 
     if not search_results:
-        print("Error: '{}' not found in the path '{}'.".format(target, root))    
+        print("Error: '{}' not found in the root '{}'.".format(target, root))    
         return None
+    
+    # Tidy output
+    search_results = [result.replace("\\", "/") for result in search_results]
+
     return search_results[0] if (len(search_results) == 1  or first_result_only) else search_results
     
 # Common paths
 easycut_path = get_path("easycut-smartbench") # easycut-smartbench
-tests_path = get_path("tests") # easycut-smartbench/tests
+root_tests_path = get_path("easycut-smartbench/tests") # easycut-smartbench/tests
 asmcnc_path = get_path("asmcnc") # easycut-smartbench/src/asmcnc
 skava_ui_path = get_path("skavaUI") # easycut-smartbench/src/asmcnc/skavaUI
-skava_ui_img_path = os.path.join(asmcnc_path, "skavaUI", "img") # easycut-smartbench/src/asmcnc/skavaUI/img
-
+skava_ui_img_path = get_path("skavaUI/img") # easycut-smartbench/src/asmcnc/skavaUI/img
