@@ -28,7 +28,7 @@ class VacuumButton(ImageButtonBase, BlinkingWidget):
         self.serial_connection = serial_connection
 
         self.overlay_image = Image(source=RED_NO_SIGN_IMAGE, pos_hint={"center_x": 0.75, "center_y": 0.25},
-                                   size_hint=(0.25, 0.25))
+                                   size_hint=(None, None), size=(self.width / 4, self.height / 4))
         self.bind(pos=self.__update_overlay_image, size=self.__update_overlay_image)
         self.add_widget(self.overlay_image)
 
