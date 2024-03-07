@@ -11,7 +11,7 @@ from asmcnc.core_UI.components.widgets.blinking_widget import BlinkingWidget
 SKAVA_UI_PATH = path_utils.get_path("skavaUI")[0]  # bug with get_path currently returns a list
 SKAVA_UI_IMG_PATH = os.path.join(SKAVA_UI_PATH, "img")
 VACUUM_ON_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "vac_on.png")
-VACUUM_OFF_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "vac_off.png")
+VACUUM_OFF_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "extraction_off.png")
 
 
 class VacuumButton(ImageButtonBase, BlinkingWidget):
