@@ -136,13 +136,13 @@ class ModelManagerSingleton(object):
         if md5('YS6' + sn).hexdigest() in data['Pro Plus']:
             full_sn = sn + '.04'
             log('Old Pro Plus detected. Fixed SN to: {}'.format(full_sn))
-            Clock.schedule_once(lambda dt: self.machine.write_dollar_setting(50, full_sn), 1)
+            self.machine.write_dollar_setting(50, full_sn)
             self._data['product_code'] = ProductCodes.PRECISION_PRO_PLUS.value
             return ProductCodes.PRECISION_PRO_PLUS
         elif md5(sn).hexdigest() in data['Pro X']:
             full_sn = sn + '.05'
             log('Old Pro X detected. Fixed SN to: {}'.format(full_sn))
-            Clock.schedule_once(lambda dt: self.machine.write_dollar_setting(50, full_sn), 1)
+            self.machine.write_dollar_setting(50, full_sn)
             return ProductCodes.PRECISION_PRO_X
         else:
             return ProductCodes.UNKNOWN

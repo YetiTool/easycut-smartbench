@@ -1732,6 +1732,10 @@ class SerialConnection(EventDispatcher):
     _micro_dwell_command = "G4 P" + str(0.01)
 
     def start_sequential_stream(self, list_to_stream, reset_grbl_after_stream=False, end_dwell=False):
+        if self.is_sequential_streaming:
+            log('already streaming...try again later')
+            Clock.schedule_once(lambda dt: self.start_sequential_stream(list_to_stream, reset_grbl_after_stream, end_dwell), 0.3)
+            return
         self.is_sequential_streaming = True
         log("Start_sequential_stream")
         if reset_grbl_after_stream:
