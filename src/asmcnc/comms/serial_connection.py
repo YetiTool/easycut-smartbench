@@ -86,6 +86,12 @@ class SerialConnection(EventDispatcher):
         # Initialise managers for GRBL Notification screens (e.g. alarm, error, etc.)
         self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m, self.l, self.jd)
         self.FINAL_TEST = False
+        # on_serial_monitor_update is fired when there is new data to show for the serial monitor:
+        self.register_event_type('on_serial_monitor_update')
+
+    def on_serial_monitor_update(self, *args):
+        """Default callback. Needs to exist."""
+        pass
 
     def __del__(self):
         if self.s: self.s.close()
@@ -379,11 +385,8 @@ class SerialConnection(EventDispatcher):
                     else:
                         log('< ' + rec_temp)
 
-                # Update the gcode monitor (may not be initialised) and console:
-                try:
-                    self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('rec', rec_temp)
-                except:
-                    pass
+                # Update the gcode monitor:
+                self.dispatch('on_serial_monitor_update', 'rec', rec_temp)
 
                 # Process the GRBL response:
                 # NB: Sequential streaming is controlled through process_grbl_response
@@ -1822,10 +1825,10 @@ class SerialConnection(EventDispatcher):
 
             # Print to console in the UI
             if show_in_console == True and altDisplayText == None:
-                self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', serialCommand)
+                self.dispatch('on_serial_monitor_update', 'snd', serialCommand)
 
             if altDisplayText != None:
-                self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', altDisplayText)
+                self.dispatch('on_serial_monitor_update', 'snd', altDisplayText)
 
         except:
             log("FAILED to display on CONSOLE: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
