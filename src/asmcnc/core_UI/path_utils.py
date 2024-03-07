@@ -9,6 +9,7 @@ Root for all searches is 1 stage up from /easycut-smartbench/
 Functions:
     get_path(target_dir, files_only=False, folders_only=False, first_result_only=False, search_outside_easycut=False)
     search_tree(root, target, files_only=False, folders_only=False, first_result_only=False)
+    join(folder, filename)
 
 Variables:
     easycut_path
@@ -22,7 +23,7 @@ Usage:
     # Import path_utils
     from asmcnc.core_UI import path_utils
     
-    # Get the path of a directory or file
+    # Get the path of a directory or  an existing file
     path = get_path("easycut-smartbench")
     path = get_path("tests", folders_only=True, first_result_only=True)
     path = get_path("z_probe.png", files_only=True)
@@ -30,12 +31,16 @@ Usage:
     path = get_path("plus.txt", search_outside_easycut=True)
     etc.
     
+    # To create a path to a file that might not exist yet:
+    path = join(get_path("sb_values"),"model_info.json"))
+    
     # Common paths
     print(easycut_path)
     print(tests_path)
     print(asmcnc_path)
     print(skava_ui_path)
     print(skava_ui_img_path)
+    print(sb_values_path)
 """
 
 def get_path(target_dir, files_only=False, folders_only=False, first_result_only=False, search_outside_easycut=False):
@@ -127,10 +132,18 @@ def search_tree(root, target, files_only=False, folders_only=False, first_result
     search_results = [result.replace("\\", "/") for result in search_results]
 
     return search_results[0] if (len(search_results) == 1  or first_result_only) else search_results
-    
+
+
+def join(folder, filename):
+    """
+    Returns the path with the given folder and filename.
+    Can be used for filepaths that don't exist yet.
+    """
+    return os.path.join(folder, filename).replace("\\", "/")
 # Common paths
 easycut_path = get_path("easycut-smartbench") # easycut-smartbench
 root_tests_path = get_path("easycut-smartbench/tests") # easycut-smartbench/tests
 asmcnc_path = get_path("asmcnc") # easycut-smartbench/src/asmcnc
 skava_ui_path = get_path("skavaUI") # easycut-smartbench/src/asmcnc/skavaUI
 skava_ui_img_path = get_path("skavaUI/img") # easycut-smartbench/src/asmcnc/skavaUI/img
+sb_values_path = get_path("sb_values")  # easycut-smartbench/src/sb_values

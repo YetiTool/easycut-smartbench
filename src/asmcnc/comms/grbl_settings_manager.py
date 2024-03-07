@@ -44,7 +44,7 @@ class GRBLSettingsManagerSingleton(object):
     }
 
     # File paths:
-    MACHINE_DATA_FILE_PATH = path_utils.get_path("machine_settings.json")
+    MACHINE_DATA_FILE_PATH = path_utils.join(path_utils.sb_values_path, "machine_settings.json")
 
     def __new__(cls, machine=None):
         with cls._lock:
