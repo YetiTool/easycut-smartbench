@@ -4,7 +4,6 @@ import threading
 from datetime import datetime
 from hashlib import md5
 
-from kivy._event import EventDispatcher
 from kivy.clock import Clock
 
 from asmcnc.comms.router_machine import ProductCodes
@@ -15,7 +14,15 @@ def log(message):
     print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
-class ModelManagerSingleton(EventDispatcher):
+class ModelManagerSingleton(object):
+    """
+    This class takes care of all the model specific handling:
+    - saves the product code (hashed) to the console if no file exists (Updating UC). Update only possible via
+      factory settings. Update will handle things like splash screen image.
+    - saves hw and fw version (updated on change): Will be used to determine model capabilities.
+      console swap will update the file with new ZH values.
+    - provides model distinction: e.g. is_machine_drywall()
+    """
     _instance = None
     _initialized = False
     machine = None
