@@ -59,22 +59,11 @@ class SpindleButton(ImageButtonBase, BlinkingWidget):
 
     def __on_spindle_on(self, instance, value):
         """
-        Callback for the spindle_on event. Changes the button image and starts/stops the blinking.
-        The call to Clock.schedule_once is necessary because otherwise the image would not update.
+        Callback for the spindle_on event. Changes the overlay image opacity and starts/stops the blinking.
 
         :param instance: the instance of the variable that changed
         :param value: the new value of the spindle_on property from SerialConnection
         :return: None
         """
-        Clock.schedule_once(partial(self.__update_image_source, value))
-        self.blinking = value
-
-    def __update_image_source(self, value, *args):
-        """
-        Updates the spindle image based on the spindle_on property of the SerialConnection.
-
-        :param value: the new value of the spindle_on property from SerialConnection
-        :param args: unused dt parameter from Clock
-        :return: None
-        """
         self.overlay_image.opacity = 0 if value else 1
+        self.blinking = value

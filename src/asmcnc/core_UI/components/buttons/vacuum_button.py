@@ -65,14 +65,4 @@ class VacuumButton(ImageButtonBase, BlinkingWidget):
         :return:
         """
         self.overlay_image.opacity = 0 if value else 1
-        # Clock.schedule_once(partial(self.__update_image, value))
         self.blinking = value
-
-    def __update_image(self, value, *args):
-        """
-        Updates the overlay image's opacity based on the vacuum_on property.
-        :param value: the new value of the vacuum_on property from SerialConnection
-        :param args: unused dt parameter from Clock
-        :return: None
-        """
-        self.overlay_image.opacity = 0 if value else 1
