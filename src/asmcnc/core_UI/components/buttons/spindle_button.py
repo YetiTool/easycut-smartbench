@@ -67,7 +67,6 @@ class SpindleButton(ImageButtonBase, BlinkingWidget):
         :return: None
         """
         Clock.schedule_once(partial(self.__update_images, value))
-        self.blinking = value
 
     def __update_images(self, value, *args):
         """
@@ -79,3 +78,4 @@ class SpindleButton(ImageButtonBase, BlinkingWidget):
         """
         self.overlay_image.opacity = 0 if value else 1
         self.source = SPINDLE_ON_IMAGE if value else SPINDLE_OFF_IMAGE
+        self.blinking = value
