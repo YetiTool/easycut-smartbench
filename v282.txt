@@ -1,6 +1,6 @@
 .. _top:
 
-This is the text for the RST doc published on the console screen
+New spindle speed algorithm, ShapeCutter on XL and additional YetiPilot profiles
 ====================================================
 We have now implemented our new spindle speed algorithm which now improves accuracy of RPM’s as well as a new spindle-on safety feature.
 GRBL settings are now restored from a local backup should the system fail to read correctly. 
@@ -8,4 +8,3 @@ New screen shown when Z probing to avoid additional button taps.
 **Find full release notes on our website, by scanning the QR code on the right.**
 
 .. _bottom:
-
