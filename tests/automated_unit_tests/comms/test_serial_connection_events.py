@@ -4,7 +4,7 @@ import sys
 from asmcnc.skavaUI.screen_go import GoScreen
 from asmcnc.skavaUI.widget_gcode_monitor import GCodeMonitor
 from automated_unit_tests.unit_test_base import UnitTestBase
-from tests import test_utils
+
 
 sys.path.append('./src')
 
