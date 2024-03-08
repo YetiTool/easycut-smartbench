@@ -1,9 +1,8 @@
 import unittest
-import os
 import sys
 
-sys.path.insert(0, '../src/asmcnc/core_UI')
-from path_utils import get_path
+sys.path.append('./src')
+from asmcnc.core_UI.path_utils import get_path
 
 class TestPathUtils(unittest.TestCase):
 
