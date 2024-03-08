@@ -78,6 +78,7 @@ class SerialConnection(EventDispatcher):
 
     def __init__(self, machine, screen_manager, settings_manager, localization, job):
 
+        super(SerialConnection, self).__init__()
         self.sm = screen_manager
         self.sett = settings_manager
         self.m = machine
