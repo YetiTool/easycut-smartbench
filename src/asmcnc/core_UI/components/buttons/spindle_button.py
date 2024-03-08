@@ -9,7 +9,7 @@ from asmcnc.core_UI import path_utils
 from asmcnc.core_UI.components.buttons.button_base import ImageButtonBase
 from asmcnc.core_UI.components.widgets.blinking_widget import BlinkingWidget
 
-SKAVA_UI_PATH = path_utils.get_path("skavaUI")[0]  # bug with get_path currently returns a list
+SKAVA_UI_PATH = path_utils.get_path("skavaUI")
 SKAVA_UI_IMG_PATH = os.path.join(SKAVA_UI_PATH, "img")
 SPINDLE_ON_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "spindle_on.png")
 SPINDLE_OFF_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "spindle_off.png")
