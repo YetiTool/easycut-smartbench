@@ -18,7 +18,7 @@ class VacuumButton(ImageButtonBase, BlinkingWidget):
 
     source = StringProperty(EXTRACTOR_IMAGE)
     allow_stretch = BooleanProperty(True)
-    bg_color = BlinkingWidget.TRANSPARENT_YELLOW
+    bg_color = [240.0 / 255, 1, 0, 0]
 
     def __init__(self, router_machine, serial_connection, **kwargs):
         super(VacuumButton, self).__init__(**kwargs)
