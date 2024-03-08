@@ -11,14 +11,15 @@ from asmcnc.core_UI.components.widgets.blinking_widget import BlinkingWidget
 
 SKAVA_UI_PATH = path_utils.get_path("skavaUI")[0]  # bug with get_path currently returns a list
 SKAVA_UI_IMG_PATH = os.path.join(SKAVA_UI_PATH, "img")
-SPINDLE_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "spindle_on.png")
+SPINDLE_ON_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "spindle_on.png")
+SPINDLE_OFF_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "spindle_off.png")
 RED_NO_SIGN_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "off_icon.png")
 
 
 class SpindleButton(ImageButtonBase, BlinkingWidget):
     """A custom button widget used for spindle functionality."""
 
-    source = StringProperty(SPINDLE_IMAGE)
+    source = StringProperty(SPINDLE_OFF_IMAGE)
     allow_stretch = BooleanProperty(True)
 
     def __init__(self, router_machine, serial_connection, screen_manager, **kwargs):
@@ -65,5 +66,16 @@ class SpindleButton(ImageButtonBase, BlinkingWidget):
         :param value: the new value of the spindle_on property from SerialConnection
         :return: None
         """
-        self.overlay_image.opacity = 0 if value else 1
+        Clock.schedule_once(partial(self.__update_images, value))
         self.blinking = value
+
+    def __update_images(self, value, *args):
+        """
+        Update the button image and the overlay image opacity.
+        Called from Clock.schedule_once as otherwise the image wouldn't update.
+        :param value: the new value of the spindle_on property from SerialConnection
+        :param args:
+        :return: None
+        """
+        self.overlay_image.opacity = 0 if value else 1
+        self.source = SPINDLE_ON_IMAGE if value else SPINDLE_OFF_IMAGE
