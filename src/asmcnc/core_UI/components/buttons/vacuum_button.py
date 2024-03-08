@@ -37,7 +37,7 @@ class VacuumButton(ImageButtonBase, BlinkingWidget):
 
     def __update_overlay_image(self, *args):
         """
-        Update the overlay image so it stays in the same position relative to the button.
+        Update the overlay image, so it stays in the same position relative to the button.
         :param args:
         :return:
         """
