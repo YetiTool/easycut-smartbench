@@ -1,5 +1,7 @@
 import os
+from functools import partial
 
+from kivy.clock import Clock
 from kivy.properties import StringProperty, BooleanProperty
 from kivy.uix.image import Image
 
@@ -60,6 +62,17 @@ class VacuumButton(ImageButtonBase, BlinkingWidget):
 
         :param instance: the instance of the variable that changed
         :param value: the new value of the vacuum_on property from SerialConnection
+        :return:
+        """
+        Clock.schedule_once(partial(self.__update_image, value))
+
+    def __update_image(self, value, *args):
+        """
+        Update the opacity of the overlay image and the blinking.
+        Called from Clock.schedule_once as otherwise the image wouldn't update properly.
+
+        :param value: the new value of the vacuum_on property from SerialConnection
+        :param args: unused dt argument from clock
         :return:
         """
         self.overlay_image.opacity = 0 if value else 1

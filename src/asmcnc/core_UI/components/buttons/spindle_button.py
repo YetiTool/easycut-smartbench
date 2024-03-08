@@ -71,7 +71,8 @@ class SpindleButton(ImageButtonBase, BlinkingWidget):
     def __update_images(self, value, *args):
         """
         Update the button image and the overlay image opacity.
-        Called from Clock.schedule_once as otherwise the image wouldn't update.
+        Called from Clock.schedule_once as otherwise the image wouldn't update properly.
+
         :param value: the new value of the spindle_on property from SerialConnection
         :param args:
         :return: None
