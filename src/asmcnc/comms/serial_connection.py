@@ -44,6 +44,9 @@ class MachineState(Enum):
 
 class SerialConnection(EventDispatcher):
     setting_50 = NumericProperty(0.0)
+    setting_100 = NumericProperty(0.0)
+    setting_101 = NumericProperty(0.0)
+    setting_102 = NumericProperty(0.0)
     STATUS_INTERVAL = 0.1  # How often to poll general status to update UI (0.04 = 25Hz = smooth animation)
 
     s = None  # Serial comms object
@@ -865,8 +868,8 @@ class SerialConnection(EventDispatcher):
     expecting_probe_result = False
 
     # VERSIONS
-    fw_version = ''
-    hw_version = ''
+    fw_version = StringProperty()
+    hw_version = StringProperty()
 
     # TEMPERATURES
     motor_driver_temp = None
@@ -1735,6 +1738,10 @@ class SerialConnection(EventDispatcher):
     _micro_dwell_command = "G4 P" + str(0.01)
 
     def start_sequential_stream(self, list_to_stream, reset_grbl_after_stream=False, end_dwell=False):
+        if self.is_sequential_streaming:
+            log('already streaming...try again later')
+            Clock.schedule_once(lambda dt: self.start_sequential_stream(list_to_stream, reset_grbl_after_stream, end_dwell), 0.3)
+            return
         self.is_sequential_streaming = True
         log("Start_sequential_stream")
         if reset_grbl_after_stream:
