@@ -284,7 +284,7 @@ class ZHeadQC2(Screen):
 
         fail_report = []
         self.brush_reset_test_count += 1
-        self.m.power_on_spindle()  # Turn on spindle to read info (at 0 rpm)
+        self.m.turn_on_spindle_for_data_read()  # Turn on spindle to read info (at 0 rpm)
 
         Clock.schedule_once(read_info, 1)
 

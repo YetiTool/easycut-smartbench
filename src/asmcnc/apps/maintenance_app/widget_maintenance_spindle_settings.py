@@ -440,7 +440,7 @@ class SpindleSettingsWidget(Widget):
         if not self.m.smartbench_is_busy():
             self.wait_popup.dismiss()
             self.wait_popup.open()
-            self.m.power_on_spindle()
+            self.m.turn_on_spindle_for_data_read()
             Clock.schedule_once(self.get_spindle_info, 0.3)
         else:
             Clock.schedule_once(self.get_spindle_data, 0.4)

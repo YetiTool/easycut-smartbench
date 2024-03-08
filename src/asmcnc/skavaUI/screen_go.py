@@ -577,7 +577,7 @@ class GoScreen(Screen):
         )
 
     def get_sc2_brush_data(self):
-        self.m.power_on_spindle()
+        self.m.turn_on_spindle_for_data_read()
         Clock.schedule_once(self.get_spindle_info, 0.1)
         self.wait_popup = popup_info.PopupWait(self.sm, self.l)
 

@@ -1185,7 +1185,7 @@ class RouterMachine(EventDispatcher):
 
         return rpm_to_set
 
-    def power_on_spindle(self):
+    def turn_on_spindle_for_data_read(self):
         """
         Turns on the spindle at 0 RPM. Used to read spindle data.
 

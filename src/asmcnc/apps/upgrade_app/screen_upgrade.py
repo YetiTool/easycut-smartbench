@@ -197,7 +197,7 @@ class UpgradeScreen(Screen):
     def code_entered(self):
         self.hide_error_message()
         self.show_verifying()
-        self.m.power_on_spindle()
+        self.m.turn_on_spindle_for_data_read()
         Clock.schedule_once(self.get_restore_info, 0.3)
 
     def get_restore_info(self, dt):
