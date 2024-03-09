@@ -409,7 +409,8 @@ class DrywallShapeDisplay(Widget):
         return False
 
     def toggle_units(self, instance, value):
-        self.dwt_config.on_parameter_change('units', 'mm' if value else 'inch')
+        instance.active = True
+        # self.dwt_config.on_parameter_change('units', 'mm' if value else 'inch')
 
     def poll_position(self, dt):
         # Maths from Ed, documented here https://docs.google.com/spreadsheets/d/1X37CWF8bsXeC0dY-HsbwBu_QR6N510V-5aPTnxwIR6I/edit#gid=677510108
