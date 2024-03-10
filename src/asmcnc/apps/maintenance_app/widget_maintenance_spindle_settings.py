@@ -180,7 +180,7 @@ Builder.load_string(
                             max: 60
                             step: 1
                             size_hint_y: None
-                            height: dp(0.075*app.width)
+                            height: app.get_scaled_height(60)
 
                         Label:
                             id: seconds_label
