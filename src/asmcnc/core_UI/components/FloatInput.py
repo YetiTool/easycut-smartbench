@@ -8,6 +8,8 @@ class FloatInput(TextInput):
     def __init__(self, **kwargs):
         super(FloatInput, self).__init__(**kwargs)
 
+        self.input_filter =  'float'
+
     def on_focus(self, instance, value):
         """Selects all text when focused. text validation is done when unfocused."""
         if value:
