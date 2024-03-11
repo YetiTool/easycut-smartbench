@@ -78,6 +78,7 @@ class SerialConnection(EventDispatcher):
 
     def __init__(self, machine, screen_manager, settings_manager, localization, job):
 
+        super(SerialConnection, self).__init__()
         self.sm = screen_manager
         self.sett = settings_manager
         self.m = machine
@@ -86,6 +87,18 @@ class SerialConnection(EventDispatcher):
         # Initialise managers for GRBL Notification screens (e.g. alarm, error, etc.)
         self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m, self.l, self.jd)
         self.FINAL_TEST = False
+        # Register events to provide data:
+        self.register_event_type('on_serial_monitor_update') # new data to show for the serial monitor
+        self.register_event_type('on_update_overload_peak') # new overload peak value
+
+    def on_serial_monitor_update(self, *args):
+        """Default callback. Needs to exist."""
+        pass
+
+    def on_update_overload_peak(self, *args):
+        """Default callback. Needs to exist."""
+        pass
+
 
     def __del__(self):
         if self.s: self.s.close()
@@ -379,11 +392,8 @@ class SerialConnection(EventDispatcher):
                     else:
                         log('< ' + rec_temp)
 
-                # Update the gcode monitor (may not be initialised) and console:
-                try:
-                    self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('rec', rec_temp)
-                except:
-                    pass
+                # Update the gcode monitor:
+                self.dispatch('on_serial_monitor_update', 'rec', rec_temp)
 
                 # Process the GRBL response:
                 # NB: Sequential streaming is controlled through process_grbl_response
@@ -1691,7 +1701,7 @@ class SerialConnection(EventDispatcher):
                 self.sm.current = 'spindle_shutdown'
 
                 try:
-                    self.sm.get_screen('go').update_overload_peak(self.overload_state)
+                    self.dispatch('on_update_overload_peak', self.overload_state)
 
                 except:
                     log('Unable to update overload peak on go screen')
@@ -1707,12 +1717,7 @@ class SerialConnection(EventDispatcher):
     def check_for_sustained_peak(self, dt):
 
         if self.overload_state >= self.prev_overload_state and self.overload_state != 100:
-
-            try:
-                self.sm.get_screen('go').update_overload_peak(self.prev_overload_state)
-
-            except:
-                log('Unable to update overload peak on go screen')
+            self.dispatch('on_update_overload_peak', self.prev_overload_state)
 
     ## SEQUENTIAL STREAMING
 
@@ -1822,10 +1827,10 @@ class SerialConnection(EventDispatcher):
 
             # Print to console in the UI
             if show_in_console == True and altDisplayText == None:
-                self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', serialCommand)
+                self.dispatch('on_serial_monitor_update', 'snd', serialCommand)
 
             if altDisplayText != None:
-                self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', altDisplayText)
+                self.dispatch('on_serial_monitor_update', 'snd', altDisplayText)
 
         except:
             log("FAILED to display on CONSOLE: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")

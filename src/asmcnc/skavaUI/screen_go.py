@@ -409,6 +409,8 @@ class GoScreen(Screen):
         self.l = kwargs["localization"]
         self.database = kwargs["database"]
         self.yp = kwargs["yetipilot"]
+        # bind on updates:
+        self.m.s.bind(on_update_overload_peak=self.update_overload_peak)
         self.feedOverride = widget_feed_override.FeedOverride(
             machine=self.m, screen_manager=self.sm, database=self.database
         )
@@ -1022,7 +1024,7 @@ class GoScreen(Screen):
         else:
             log("Overload state not recognised: " + str(state))
 
-    def update_overload_peak(self, state):
+    def update_overload_peak(self, instance, state):
         if state > self.overload_peak:
             self.overload_peak = state
             log("New overload peak: " + str(self.overload_peak))
