@@ -1,5 +1,6 @@
 import json
 import os
+from collections import OrderedDict
 
 from asmcnc.comms.logging_system.logging_system import Logger
 
@@ -58,7 +59,7 @@ class DWTConfig(object):
             return False
 
         with open(file_path, 'r') as f:
-            cfg = json.load(f)
+            cfg = json.loads(f.read(), object_pairs_hook=OrderedDict)
 
         field_count = len(cfg)
 
@@ -86,7 +87,7 @@ class DWTConfig(object):
             return False
 
         with open(file_path, 'r') as f:
-            cfg = json.load(f)
+            cfg = json.loads(f.read(), object_pairs_hook=OrderedDict)
 
         valid_field_names = inspect.getargspec(config_classes.Configuration.__init__).args[1:]
 
@@ -118,7 +119,7 @@ class DWTConfig(object):
                 self.save_temp_config()
 
         with open(file_path, 'r') as f:
-            self.active_config = config_classes.Configuration(**json.load(f))
+            self.active_config = config_classes.Configuration(**json.loads(f.read(), object_pairs_hook=OrderedDict))
 
         self.load_cutter(self.active_config.cutter_type)
 
