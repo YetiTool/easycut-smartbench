@@ -10,6 +10,7 @@ edited by Archie 2023 for use in dwt app
 import os
 import sys
 import json
+from collections import OrderedDict
 
 import kivy
 from chardet import detect
@@ -431,7 +432,7 @@ class ConfigFileChooser(Screen):
             self.file_selected_label.text = self.filechooser.selection[0].split("/")[-1]
 
         with open(self.filechooser.selection[0], 'r') as f:
-            json_obj = json.load(f)
+            json_obj = json.loads(f.read(), object_pairs_hook=OrderedDict)
 
         self.metadata_preview.text = self.to_human_readable(json_obj)
 
