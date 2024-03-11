@@ -195,7 +195,7 @@ Builder.load_string("""
                             pos: self.parent.pos
                             Image:
                                 id: image_select
-                                source: "./asmcnc/apps/drywall_cutter_app/img/lobby_logo.png"
+                                source: "./asmcnc/apps/drywall_cutter_app/img/dwt_lobby_logo.png"
                                 center_x: self.parent.center_x
                                 y: self.parent.y
                                 size: self.parent.width, self.parent.height
