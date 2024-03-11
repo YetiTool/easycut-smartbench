@@ -79,6 +79,7 @@ Builder.load_string("""
                     font_size: dp(25)
                     halign: 'center'
                     multiline: False
+                    input_filter: 'float'
                     size: self.parent.size
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
@@ -108,6 +109,7 @@ Builder.load_string("""
                     font_size: dp(25)
                     halign: 'center'
                     multiline: False
+                    input_filter: 'float'
                     size: self.parent.size
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
@@ -137,6 +139,7 @@ Builder.load_string("""
                     font_size: dp(25)
                     halign: 'center'
                     multiline: False
+                    input_filter: 'float'
                     size: self.parent.size
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
@@ -166,6 +169,7 @@ Builder.load_string("""
                     font_size: dp(25)
                     halign: 'center'
                     multiline: False
+                    input_filter: 'float'
                     size: self.parent.size
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
@@ -195,6 +199,7 @@ Builder.load_string("""
                     font_size: dp(25)
                     halign: 'center'
                     multiline: False
+                    input_filter: 'float'
                     size: self.parent.size
                     pos: self.parent.pos
                     background_color: (0,0,0,0)
