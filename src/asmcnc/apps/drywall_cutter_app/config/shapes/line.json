@@ -1,0 +1,9 @@
+{
+  "default_toolpath_offset": "on",
+  "toolpath_offsets": {
+    "inside": false,
+    "on": true,
+    "outside": false
+  },
+  "rotatable": true
+}
