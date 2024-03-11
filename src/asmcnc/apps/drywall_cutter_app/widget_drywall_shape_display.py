@@ -293,6 +293,14 @@ class DrywallShapeDisplay(Widget):
 
         Clock.schedule_interval(self.check_datum_and_extents, 0.1)
 
+        self.validation_inputs = [self.d_input_validation_label,
+                 self.l_input_validation_label,
+                 self.r_input_validation_label,
+                 self.x_input_validation_label,
+                 self.y_input_validation_label,
+                 self.x_datum_validation_label,
+                 self.y_datum_validation_label]
+
     def select_shape(self, shape, rotation, swap_lengths=False):
         image_source = self.image_filepath + shape
         if shape in ['rectangle', 'line']:
@@ -567,6 +575,9 @@ class DrywallShapeDisplay(Widget):
                     self.l_input_validation_label.opacity = 0
         else:
             self.l_input_validation_label.opacity = 0
+
+    def get_steps_to_validate(self):
+        if any(self.validation_inputs, )
 
     def are_inputs_valid(self):
         # Logic defined by Benji here https://docs.google.com/spreadsheets/d/1X37CWF8bsXeC0dY-HsbwBu_QR6N510V-5aPTnxwIR6I/edit#gid=1512963755
