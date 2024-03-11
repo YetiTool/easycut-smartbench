@@ -65,7 +65,7 @@ class GCodeEngine():
         else:
             return False
 
-    #Determine shape point direction
+    # Determine shape point direction
     def is_clockwise(self, coordinates):
         total = 0
         for i in xrange(len(coordinates)):
@@ -73,17 +73,13 @@ class GCodeEngine():
             x2, y2 = coordinates[(i + 1) % len(coordinates)]  # Handle the wraparound at the end
             total += (x2 - x1) * (y2 + y1)
         
-        if total > 0:
-            return False
-        elif total < 0:
-            return True
+        return total > 0
 
-    #Reverse coordinates if need to be clockwise
+    # Reverse coordinates if need to be clockwise
     def correct_orientation(self, coordinates, clockwise):
-        if clockwise:
-            return coordinates
-        else:
+        if not clockwise:
             return coordinates[::-1]
+        return coordinates
 
     #Take in corner coordinates and return coordinates for arcs
     def add_corner_coordinates(self, coordinates, shape_centre, corner_radius):
