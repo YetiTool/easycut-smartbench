@@ -8,6 +8,7 @@ import time
 import traceback
 from datetime import datetime
 
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.lang import Builder
@@ -374,11 +375,6 @@ Builder.load_string(
 )
 
 
-def log(message):
-    timestamp = datetime.now()
-    print(timestamp.strftime("%H:%M:%S.%f")[:12] + " " + str(message))
-
-
 class GoScreen(Screen):
     btn_back = ObjectProperty()
     btn_back_img = ObjectProperty()
@@ -602,7 +598,7 @@ class GoScreen(Screen):
                 )
                 return
             except:
-                print(traceback.format_exc())
+                Logger.info(traceback.format_exc())
         popup_info.PopupError(self.sm, self.l, self.l.get_str("Error!"))
 
     def check_brush_use_and_lifetime(self, use, lifetime):
@@ -684,7 +680,7 @@ class GoScreen(Screen):
 
     ### COMMON SCREEN PREP METHOD
     def reset_go_screen_prior_to_job_start(self):
-        print("RESET GO SCREEN FIRES")
+        Logger.info("RESET GO SCREEN FIRES")
         # Update images
         self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/go.png"
         # Show back button
@@ -721,7 +717,7 @@ class GoScreen(Screen):
     ### GENERAL ACTIONS
 
     def start_or_pause_button_press(self):
-        log("start/pause button pressed")
+        Logger.info("start/pause button pressed")
         if self.is_job_started_already:
             if not self.m.is_machine_paused:
                 self._pause_job()
@@ -805,7 +801,7 @@ class GoScreen(Screen):
             if self.listen_for_pauses != None:
                 self.listen_for_pauses.cancel()
                 self.listen_for_pauses = None
-            log("RAISE PAUSE SCREEN: " + str(self.m.reason_for_machine_pause))
+            Logger.info("RAISE PAUSE SCREEN: " + str(self.m.reason_for_machine_pause))
             self.sm.get_screen(
                 "spindle_shutdown"
             ).reason_for_pause = self.m.reason_for_machine_pause
@@ -823,7 +819,7 @@ class GoScreen(Screen):
         self.btn_back.disabled = True
         self.m.set_pause(False)
         self.is_job_started_already = True
-        log("Starting job...")
+        Logger.info("Starting job...")
 
         # Vac_fix. Not very tidy but will probably work.
         # Also inject zUp-on-pause code if needed
@@ -881,9 +877,9 @@ class GoScreen(Screen):
         self.jd.job_gcode_modified = map(mapGcodes, modified_job_gcode)
         try:
             self.m.s.run_job(self.jd.job_gcode_modified)
-            log("Job started ok from go screen...")
+            Logger.info("Job started ok from go screen...")
         except:
-            log("Job start from go screen failed!")
+            Logger.info("Job start from go screen failed!")
 
     def return_to_app(self):
         if self.m.fw_can_operate_zUp_on_pause():  # precaution
@@ -1022,12 +1018,12 @@ class GoScreen(Screen):
                     "[color=C11C17][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
             )
         else:
-            log("Overload state not recognised: " + str(state))
+            Logger.info("Overload state not recognised: " + str(state))
 
     def update_overload_peak(self, instance, state):
         if state > self.overload_peak:
             self.overload_peak = state
-            log("New overload peak: " + str(self.overload_peak))
+            Logger.info("New overload peak: " + str(self.overload_peak))
 
     def update_strings(self):
         self.feed_label.text = self.l.get_str("Feed") + "\n" + self.l.get_str("rate")

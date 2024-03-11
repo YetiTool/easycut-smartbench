@@ -140,9 +140,6 @@ Builder.load_string("""
             pos: self.pos
 """)
 
-def log(message):
-    timestamp = datetime.now()
-    print ('Z Head Connecting Screen: ' + timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
 
 class ZHeadPCBSetUpOutcome(Screen):
 

@@ -1,3 +1,4 @@
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
@@ -170,11 +171,6 @@ Builder.load_string(
 )
 
 
-def log(message):
-    timestamp = datetime.now()
-    print(timestamp.strftime("%H:%M:%S.%f")[:12] + " " + str(message))
-
-
 class UploadSerialNumbersScreen(Screen):
     machine_serial_number = ""
     fw_version = ""
@@ -243,7 +239,7 @@ class UploadSerialNumbersScreen(Screen):
             message = (
                 "This serial number is already in the database! You cannot overwrite."
             )
-            log(message)
+            Logger.info(message)
             popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 500, message)
             return True
         except:
@@ -378,7 +374,7 @@ class UploadSerialNumbersScreen(Screen):
             )
         except:
             self.error_label.text = "Could not get data"
-            print(traceback.format_exc())
+            Logger.info(traceback.format_exc())
 
     def save_calibration_data_to_motor(self, motor_index, data):
         self.m.TMC_motor[motor_index].calibration_dataset_SG_values = data[

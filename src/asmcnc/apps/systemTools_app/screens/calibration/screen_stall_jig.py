@@ -9,6 +9,7 @@ Stall detection experiment
 import traceback
 
 import kivy
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.boxlayout import BoxLayout
@@ -191,11 +192,6 @@ Builder.load_string(
 
 """
 )
-
-
-def log(message):
-    timestamp = datetime.now()
-    print(timestamp.strftime("%H:%M:%S.%f")[:12] + " " + str(message))
 
 
 class StallJigScreen(Screen):
@@ -531,7 +527,7 @@ class StallJigScreen(Screen):
         self.unschedule_event_if_it_exists(self.poll_to_prepare_to_calibrate)
         self.unschedule_event_if_it_exists(self.poll_to_calibrate_axis)
         self.unschedule_event_if_it_exists(self.poll_to_move_into_test_run_position)
-        log("Unschedule all events")
+        Logger.info("Unschedule all events")
 
     def unschedule_event_if_it_exists(self, event):
         if event != None:
@@ -545,7 +541,7 @@ class StallJigScreen(Screen):
         self.all_tests_completed = False
         self.test_stopped = False
         self.test_passed = False
-        log("Reset flags")
+        Logger.info("Reset flags")
 
     ## DISABLE/ENABLE BUTTON FUNCTIONS ----------------------------------------------------------------------
     def disable_all_buttons_except_stop(self):
@@ -645,7 +641,7 @@ class StallJigScreen(Screen):
         self.disable_run(False)
         self.result_label.text = ""
         self.result_label.background_color = [0, 0, 0, 1]
-        log("CHOOSE TEST: " + str(axis) + ", " + str(feed) + ", " + str(threshold))
+        Logger.info("CHOOSE TEST: " + str(axis) + ", " + str(feed) + ", " + str(threshold))
         self.test_status_label.text = (
             str(axis) + ", " + str(feed) + ", " + str(threshold)
         )
@@ -659,7 +655,7 @@ class StallJigScreen(Screen):
             self.minimum_threshold_index[axis] = tidx
         else:
             self.minimum_threshold_index[axis] = 0
-        log(
+        Logger.info(
             "Minimum threshold set for "
             + str(axis)
             + ": "
@@ -673,11 +669,11 @@ class StallJigScreen(Screen):
         self.set_default_thresholds()
         self.restore_grbl_settings()
         self.systemtools_sm.open_factory_settings_screen()
-        log("Return to factory settings")
+        Logger.info("Return to factory settings")
 
     # SET UP SCREEN BEFORE ENTERING
     def on_pre_enter(self):
-        log("Opening stall experiment wizard")
+        Logger.info("Opening stall experiment wizard")
 
     # STALL/LIMIT EVENT DETECTION -----------------------------------------------------------------
 
@@ -685,7 +681,7 @@ class StallJigScreen(Screen):
     ## AND THEN THIS TRIGGERS CHECKS FOR WHETHER AN EXPECTED STALL ALARM OR A LIMIT
     def on_leave(self):
         if not self.systemtools_sm.sm.current.startswith("alarm"):
-            log("Leaving stall jig...")
+            Logger.info("Leaving stall jig...")
             self.restore_grbl_settings()
             return
         self.systemtools_sm.sm.current = "stall_jig"
@@ -695,17 +691,17 @@ class StallJigScreen(Screen):
 
         # Alarm screens should automatically handle the GRBL reset
         self.get_alarm_info_event = Clock.schedule_once(self.get_alarm_info, 1)
-        log("Stall jig has registered an alarm")
+        Logger.info("Stall jig has registered an alarm")
 
     def get_alarm_info(self, dt):
         if self.m.is_grbl_waiting_for_reset():
             if self.VERBOSE:
-                log("GRBL locked, can't get alarm info yet")
+                Logger.info("GRBL locked, can't get alarm info yet")
             self.get_alarm_info_event = Clock.schedule_once(
                 self.get_alarm_info, self.sequence_interval
             )
             return
-        log("GRBL reset, getting alarm info")
+        Logger.info("GRBL reset, getting alarm info")
         if self.expected_stall_alarm_detected():
             self.threshold_detection_event = Clock.schedule_once(
                 lambda dt: self.register_threshold_detection(),
@@ -715,7 +711,7 @@ class StallJigScreen(Screen):
             self.hard_limit_found_event = Clock.schedule_once(
                 lambda dt: self.register_hard_limit_found(), self.register_alarm_delay
             )
-        log("Resume from alarm")
+        Logger.info("Resume from alarm")
         self.resume_from_alarm_event = Clock.schedule_once(
             lambda dt: self.m.resume_from_alarm(), 2
         )
@@ -730,7 +726,7 @@ class StallJigScreen(Screen):
                 self.m.resume_from_alarm()
                 limit_found_at_time = time()
             if self.VERBOSE:
-                log("Poll for resuming alarm")
+                Logger.info("Poll for resuming alarm")
             self.ensure_alarm_resumed_event = Clock.schedule_once(
                 lambda dt: self.ensure_alarm_resumed(limit_found_at_time),
                 self.alarm_resume_check_interval,
@@ -742,11 +738,11 @@ class StallJigScreen(Screen):
             self.m.s.alarm.sg_alarm and self.current_axis() in self.m.s.alarm.stall_axis
         ):
             return False
-        log("Imminent stall detected: " + self.m.s.alarm.stall_axis)
+        Logger.info("Imminent stall detected: " + self.m.s.alarm.stall_axis)
         self.m.s.alarm.sg_alarm = False
         self.m.s.alarm.stall_axis = "W"
         self.threshold_reached = True
-        log("Set threshold reached flag")
+        Logger.info("Set threshold reached flag")
         return True
 
     def register_threshold_detection(self):
@@ -760,10 +756,10 @@ class StallJigScreen(Screen):
     def expected_limit_alarm(self):
         if self.m.s.alarm.alarm_code != "ALARM:1":
             if self.VERBOSE:
-                log("Alarm that is not stall or limit! " + self.m.s.alarm.alarm_code)
+                Logger.info("Alarm that is not stall or limit! " + self.m.s.alarm.alarm_code)
             return False
         if self.VERBOSE:
-            log(
+            Logger.info(
                 "Possible limit alarm: Is "
                 + self.current_axis()
                 + " in "
@@ -776,7 +772,7 @@ class StallJigScreen(Screen):
             return False
         self.expected_limit_found = True
         if self.VERBOSE:
-            log("Expected limit found!")
+            Logger.info("Expected limit found!")
         self.test_status_label.text = "LIMIT FOUND"
         limit_found_at_time = time()
         self.ensure_alarm_resumed_event = Clock.schedule_once(
@@ -788,7 +784,7 @@ class StallJigScreen(Screen):
         self.result_label.text = "THRESHOLD REACHED"
         self.result_label.background_color = self.highlight_yellow
         self.test_status_label.text = "ANALYSING"
-        log("Threshold reached (imminent stall detected)")
+        Logger.info("Threshold reached (imminent stall detected)")
 
     ## LIMITS
 
@@ -804,7 +800,7 @@ class StallJigScreen(Screen):
 
     # HOMING --------------------------------------------------------------------------------------------
     def start_homing(self):
-        log("Begin homing")
+        Logger.info("Begin homing")
 
         # Issue homing commands
         normal_homing_sequence = ["$H"]
@@ -823,18 +819,18 @@ class StallJigScreen(Screen):
 
         # if alarm state is triggered which prevents homing from completing, stop checking for success
         if self.m.state().startswith("Alarm"):
-            log("Poll for homing success unscheduled")
+            Logger.info("Poll for homing success unscheduled")
             self.test_status_label.text = "ALARM"
             return
         
         # if sequential_stream completes successfully
         if self.m.s.is_sequential_streaming == False:
-            log("Homing detected as success!")
+            Logger.info("Homing detected as success!")
             if self.test_status_label.text != "CHECK CALIBRATION":
                 self.test_status_label.text = "READY"
             return
         if self.VERBOSE:
-            log("Poll for homing completion")
+            Logger.info("Poll for homing completion")
         self.poll_for_homing_completion_loop = Clock.schedule_once(
             self.check_for_homing_completion, self.homing_check_interval
         )
@@ -845,9 +841,9 @@ class StallJigScreen(Screen):
     ## THE EXPECTED STALL POSITION
 
     def if_less_than_expected_pos(self, expected_pos):
-        log("CURRENT POS: " + str(self.current_position[self.current_axis()]()))
-        log("EXPECTED POS: " + str(expected_pos))
-        log(
+        Logger.info("CURRENT POS: " + str(self.current_position[self.current_axis()]()))
+        Logger.info("EXPECTED POS: " + str(expected_pos))
+        Logger.info(
             "DIFFERENCE: "
             + str(self.current_position[self.current_axis()]() - expected_pos)
         )
@@ -857,9 +853,9 @@ class StallJigScreen(Screen):
             return False
 
     def if_more_than_expected_pos(self, expected_pos):
-        log("CURRENT POS: " + str(self.current_position[self.current_axis()]()))
-        log("EXPECTED POS: " + str(expected_pos))
-        log(
+        Logger.info("CURRENT POS: " + str(self.current_position[self.current_axis()]()))
+        Logger.info("EXPECTED POS: " + str(expected_pos))
+        Logger.info(
             "DIFFERENCE: "
             + str(self.current_position[self.current_axis()]() - expected_pos)
         )
@@ -874,13 +870,13 @@ class StallJigScreen(Screen):
         self.test_stopped = True
         self.m.stop_measuring_running_data()
         PopupStopStallJig(self.m, self.systemtools_sm.sm, self.l, self)
-        log("Tests stopped")
+        Logger.info("Tests stopped")
 
     ## RESET FROM ALARMS ETC.
     def grbl_reset(self):
         self.m.resume_from_alarm()
         self.test_status_label.text = "GRBL RESET"
-        log("GRBL RESET")
+        Logger.info("GRBL RESET")
 
     ## CHECK WHETHER SMARTBENCH IS *TRULY* IDLE AND READY FOR NEXT COMMAND
     def smartbench_is_not_ready_for_next_command(self, ignore_alarm=False):
@@ -917,7 +913,7 @@ class StallJigScreen(Screen):
         self.choose_test(
             self.indices["axis"], self.indices["threshold"], self.indices["feed"]
         )
-        log("Current test reset")
+        Logger.info("Current test reset")
 
     ## DATA SEND FUNCTIONALITY
 
@@ -926,17 +922,17 @@ class StallJigScreen(Screen):
         if self.unlock_button.state == "down":
             self.unlock_button.text = "lock"
             self.send_data_button.disabled = False
-            log("Data send enabled")
+            Logger.info("Data send enabled")
         else:
             self.unlock_button.text = "unlock"
             self.send_data_button.disabled = True
-            log("Data send disabled")
+            Logger.info("Data send disabled")
 
     ### DO DATA SEND
     def start_stall_jig_data_send(self):
         self.send_data_button.disabled = True
         self.test_status_label.text = "SENDING RESULTS"
-        log("Sending data...")
+        Logger.info("Sending data...")
         self.data_send_complete = False
         self.log_send_complete = False
         self.m.stop_measuring_running_data()
@@ -962,7 +958,7 @@ class StallJigScreen(Screen):
 
     def send_stall_jig_statuses_when_ready(self, results_send_successful):
         if self.calibration_db.processing_running_data:
-            log("Poll for sending stall jig statuses when ready")
+            Logger.info("Poll for sending stall jig statuses when ready")
             Clock.schedule_once(
                 lambda dt: self.send_stall_jig_statuses_when_ready(
                     results_send_successful
@@ -971,14 +967,14 @@ class StallJigScreen(Screen):
             )
             return
         self.test_status_label.text = "SENDING STATUSES"
-        log("Sending statuses")
+        Logger.info("Sending statuses")
         try:
             self.calibration_db.insert_final_test_stage(self.sn_for_db, 9)
             self.calibration_db.insert_final_test_stage(self.sn_for_db, 10)
             self.calibration_db.insert_final_test_stage(self.sn_for_db, 11)
         except:
-            log("Could not insert final test stage into DB!!")
-            print(traceback.format_exc())
+            Logger.info("Could not insert final test stage into DB!!")
+            Logger.info(traceback.format_exc())
         data_send_successful = self.calibration_db.send_data_through_publisher(
             self.sn_for_db, 9
         )
@@ -1007,12 +1003,12 @@ class StallJigScreen(Screen):
     def populate_and_transfer_logs(self):
         if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE:
-                log("Poll to get registers for logs")
+                Logger.info("Poll to get registers for logs")
             self.populate_and_transfer_logs_event = Clock.schedule_once(
                 lambda dt: self.populate_and_transfer_logs(), self.data_process_interval
             )
             return
-        log("Get registers into logs")
+        Logger.info("Get registers into logs")
         self.m.tmc_handshake()
         self.send_logs()
 
@@ -1022,12 +1018,12 @@ class StallJigScreen(Screen):
             and not self.m.TMC_registers_have_been_read_in()
         ):
             if self.VERBOSE:
-                log("Poll to send logs once registers are in")
+                Logger.info("Poll to send logs once registers are in")
             self.send_logs_event = Clock.schedule_once(
                 lambda dt: self.send_logs(), self.data_process_interval
             )
             return
-        log("Registers are in, ready to send logs")
+        Logger.info("Registers are in, ready to send logs")
 
     # THE MAIN EVENT ----------------------------------------------------------------------------------------------------
     # HANDLES THE MANAGEMENT OF ALL STAGES OF THE TEST  
@@ -1038,7 +1034,7 @@ class StallJigScreen(Screen):
                 self.test_status_label.text = "CAN'T START"
                 return
             if self.VERBOSE:
-                log("Poll to start next run")
+                Logger.info("Poll to start next run")
             self.run_event = Clock.schedule_once(lambda dt: self.run(), 2)
             return
         self.test_passed = False
@@ -1047,7 +1043,7 @@ class StallJigScreen(Screen):
         self.expected_limit_found = False
         self.result_label.text = ""
         self.result_label.background_color = [0, 0, 0, 1]
-        log("Run next test")
+        Logger.info("Run next test")
         self.test_status_label.text = "RUNNING"
 
         # If no tests have been started yet, SB will need to do a prep sequence instead
@@ -1075,7 +1071,7 @@ class StallJigScreen(Screen):
     def restore_grbl_settings(self):
         if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE:
-                log("Poll to restore grbl settings")
+                Logger.info("Poll to restore grbl settings")
             self.restore_settings_event = Clock.schedule_once(
                 lambda dt: self.restore_grbl_settings(), self.sequence_interval
             )
@@ -1088,8 +1084,8 @@ class StallJigScreen(Screen):
         self.m.s.start_sequential_stream(
             default_grbl_values, reset_grbl_after_stream=True
         )
-        log("Enabling soft and hard limits")
-        log("Disabling stall guard")
+        Logger.info("Enabling soft and hard limits")
+        Logger.info("Disabling stall guard")
 
     def disable_soft_limits_enable_stall_guard_enable_hard_limits(self):
         settings_list_to_stream = [
@@ -1100,16 +1096,16 @@ class StallJigScreen(Screen):
         self.m.s.start_sequential_stream(
             settings_list_to_stream, reset_grbl_after_stream=True
         )
-        log("Disabling soft limits")
-        log("Enabling soft limits")
-        log("Enabling stall guard")
-        log("Move to start position")
+        Logger.info("Disabling soft limits")
+        Logger.info("Enabling soft limits")
+        Logger.info("Enabling stall guard")
+        Logger.info("Move to start position")
 
     ## FUNCTION TO NEATLY MOVE TO ABSOLUTE POSITION STORED IN WHATEVER POS DICTIONARY (AT MAX FEED)
     def move_all_axes(self, pos_dict, next_func, disable_hard_limits=False):
         if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE:
-                log("Poll to move all axes")
+                Logger.info("Poll to move all axes")
             self.move_all_axes_event = Clock.schedule_once(
                 lambda dt: self.move_all_axes(pos_dict, next_func, disable_hard_limits),
                 self.sequence_interval,
@@ -1119,11 +1115,11 @@ class StallJigScreen(Screen):
         # Move Z up, 
         # Move to XY position
         # Move Z back down
-        log("Moving all axes...")
+        Logger.info("Moving all axes...")
         move_sequence = []
         if disable_hard_limits:
             if self.VERBOSE:
-                log("DISABLE HARD LIMITS")
+                Logger.info("DISABLE HARD LIMITS")
             move_sequence.append("$21=0")
         move_sequence.append("G0 G53 Z-" + str(self.m.s.setting_27))
         move_sequence.append(
@@ -1149,7 +1145,7 @@ class StallJigScreen(Screen):
     def set_threshold_and_drive_into_barrier(self, axis, threshold_idx, feed_idx):
         if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE:
-                log("Poll for setting threshold before driving into barrier")
+                Logger.info("Poll for setting threshold before driving into barrier")
             self.stadib_event = Clock.schedule_once(
                 lambda dt: self.set_threshold_and_drive_into_barrier(
                     axis, threshold_idx, feed_idx
@@ -1160,7 +1156,7 @@ class StallJigScreen(Screen):
         threshold = self.threshold_dict[axis][threshold_idx]
         feed = self.feed_dict[axis][feed_idx]
         start_pos = self.current_position[axis]()
-        log(
+        Logger.info(
             "Setting threshold to "
             + str(threshold)
             + " for "
@@ -1178,7 +1174,7 @@ class StallJigScreen(Screen):
     def drive_into_barrier(self, axis, feed, start_pos):
         if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE:
-                log("Poll for driving into barrier")
+                Logger.info("Poll for driving into barrier")
             self.drive_into_barrier_event = Clock.schedule_once(
                 lambda dt: self.drive_into_barrier(axis, feed, start_pos),
                 self.sequence_interval,
@@ -1190,20 +1186,20 @@ class StallJigScreen(Screen):
             )
         except:
             pass
-        log("Drive into barrier")
+        Logger.info("Drive into barrier")
         self.test_status_label.text = "CRASH TIME!"
         move_sequence = [
             "G01 G91 " + axis + str(self.crash_distance[axis]) + " F" + str(feed)
         ]
         self.seq_stream_and_mini_dwell(move_sequence)
         if self.setting_up_axis_for_test:
-            log("Setting up axis, so look for stall position")
+            Logger.info("Setting up axis, so look for stall position")
             self.poll_for_stall_position_found = Clock.schedule_once(
                 lambda dt: self.stall_position_found(axis, start_pos),
                 self.sequence_interval,
             )
         else:
-            log("Start poll for SB travelling or exceeding threshold")
+            Logger.info("Start poll for SB travelling or exceeding threshold")
             self.poll_for_threshold_detection = Clock.schedule_once(
                 lambda dt: self.sb_has_travelled_or_detected(expected_pos),
                 self.sequence_interval,
@@ -1223,12 +1219,12 @@ class StallJigScreen(Screen):
     def back_off_and_find_position(self):
         if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE:
-                log("Poll to start backing off")
+                Logger.info("Poll to start backing off")
             self.poll_to_start_back_off = Clock.schedule_once(
                 lambda dt: self.back_off_and_find_position(), self.sequence_interval
             )
             return
-        log("Back off and find position")
+        Logger.info("Back off and find position")
         self.test_status_label.text = "REFIND POS"
         self.expected_limit_found = False
         move_command = [
@@ -1246,7 +1242,7 @@ class StallJigScreen(Screen):
     def back_off_completed(self):
         if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE:
-                log("Poll for back off completion")
+                Logger.info("Poll for back off completion")
             self.poll_for_back_off_completion = Clock.schedule_once(
                 lambda dt: self.back_off_completed(), self.sequence_interval
             )
@@ -1255,7 +1251,7 @@ class StallJigScreen(Screen):
             self.false_stall_happened = True
             self.threshold_reached = False
             if self.VERBOSE:
-                log("FALSE STALL DETECTED!! Temporarily increasing threshold")
+                Logger.info("FALSE STALL DETECTED!! Temporarily increasing threshold")
             self.result_label.text = "FALSE STALL"
             self.result_label.background_color = self.false_stall_amber
             self.test_status_label.text = "REFIND POS"
@@ -1267,12 +1263,12 @@ class StallJigScreen(Screen):
             return
         if not self.expected_limit_found:
             if self.VERBOSE:
-                log("Expected limit not found, no threshold exceeded. Confused :(")
+                Logger.info("Expected limit not found, no threshold exceeded. Confused :(")
             self.test_status_label.text = "POS LOST :("
             return
-        log("Position found")
+        Logger.info("Position found")
         self.test_status_label.text = "POS FOUND"
-        log("Turn off hard limits, and pull off from limit")
+        Logger.info("Turn off hard limits, and pull off from limit")
         move_command = (
             "G01 G91 "
             + self.current_axis()
@@ -1290,7 +1286,7 @@ class StallJigScreen(Screen):
     def relax_motors(self):
         if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE:
-                log("Poll for relax motors")
+                Logger.info("Poll for relax motors")
             self.poll_to_relax_motors = Clock.schedule_once(
                 lambda dt: self.relax_motors(), self.sequence_interval
             )
@@ -1302,12 +1298,12 @@ class StallJigScreen(Screen):
     def deenergize_motors(self):
         if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE:
-                log("Poll for deenergize motors")
+                Logger.info("Poll for deenergize motors")
             self.poll_to_deenergize_motors = Clock.schedule_once(
                 lambda dt: self.deenergize_motors(), self.sequence_interval
             )
             return
-        log("De-energize motors")
+        Logger.info("De-energize motors")
         self.test_status_label.text = "MOTORS OFF"
         self.disable_motors[self.current_axis()]()
         self.poll_to_energize_motors = Clock.schedule_once(
@@ -1317,12 +1313,12 @@ class StallJigScreen(Screen):
     def energize_motors(self):
         if self.smartbench_is_not_ready_for_next_command() and not self.test_stopped:
             if self.VERBOSE:
-                log("Poll for energize motors")
+                Logger.info("Poll for energize motors")
             self.poll_to_energize_motors = Clock.schedule_once(
                 lambda dt: self.energize_motors(), self.sequence_interval
             )
             return
-        log("Energize motors")
+        Logger.info("Energize motors")
         self.test_status_label.text = "MOTORS ON"
         self.enable_motors[self.current_axis()]()
         self.poll_to_reenable_hard_limits_and_go_to_calibrate = Clock.schedule_once(
@@ -1333,7 +1329,7 @@ class StallJigScreen(Screen):
     def reenable_hard_limits_and_go_to_calibrate(self):
         if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE:
-                log("Poll for reenable hard limits and start next test")
+                Logger.info("Poll for reenable hard limits and start next test")
             self.poll_to_reenable_hard_limits_and_go_to_calibrate = Clock.schedule_once(
                 lambda dt: self.reenable_hard_limits_and_go_to_calibrate(),
                 self.sequence_interval,
@@ -1345,12 +1341,12 @@ class StallJigScreen(Screen):
     def prepare_to_calibrate(self):
         if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE:
-                log("Poll to prepare to calibrate")
+                Logger.info("Poll to prepare to calibrate")
             self.poll_to_prepare_to_calibrate = Clock.schedule_once(
                 lambda dt: self.prepare_to_calibrate(), self.sequence_interval
             )
             return
-        log("Move probe out of the way, ready to calibrate")
+        Logger.info("Move probe out of the way, ready to calibrate")
         self.test_status_label.text = "PREP CAL"
         self.seq_stream_and_mini_dwell(
             [self.move_the_probe_out_of_the_way[self.current_axis()]]
@@ -1360,7 +1356,7 @@ class StallJigScreen(Screen):
     def calibrate_axis(self):
         if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE:
-                log("Poll to calibrate")
+                Logger.info("Poll to calibrate")
             self.poll_to_calibrate_axis = Clock.schedule_once(
                 lambda dt: self.calibrate_axis(), self.sequence_interval
             )
@@ -1376,7 +1372,7 @@ class StallJigScreen(Screen):
     def move_into_test_run_position(self):
         if self.smartbench_is_not_ready_for_next_command() or self.m.run_calibration:
             if self.VERBOSE:
-                log("Poll to move into test run position")
+                Logger.info("Poll to move into test run position")
             self.poll_to_move_into_test_run_position = Clock.schedule_once(
                 lambda dt: self.move_into_test_run_position(), self.sequence_interval
             )
@@ -1401,33 +1397,33 @@ class StallJigScreen(Screen):
     def finish_procedure_and_start_next_test(self):
         if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE:
-                log("Poll to finish procedure and start next test")
+                Logger.info("Poll to finish procedure and start next test")
             self.poll_to_finish_procedure = Clock.schedule_once(
                 lambda dt: self.finish_procedure_and_start_next_test(),
                 self.sequence_interval,
             )
             return
-        log("Procedure finished...")
+        Logger.info("Procedure finished...")
         self.test_status_label.text = "RECORDING RESULT"
         if self.setting_up_axis_for_test:
             self.test_status_label.text = "AXIS READY"
-            log("Axis set up")
+            Logger.info("Axis set up")
             self.setting_up_axis_for_test = False
         elif self.false_stall_happened and self.test_passed:
             self.false_stall_happened = False
-            log("False stall happened - test failed")
+            Logger.info("False stall happened - test failed")
             self.colour_current_grid_button(self.false_stall_amber)
             self.go_to_next_threshold()
         elif self.test_passed:
-            log("Recording stall detection event - test passed")
+            Logger.info("Recording stall detection event - test passed")
             self.colour_current_grid_button(self.pass_green)
             self.record_stall_event()
             self.go_to_next_threshold()
         else:
-            log("Stall was not detected - test failed")
+            Logger.info("Stall was not detected - test failed")
             self.colour_current_grid_button(self.fail_orange)
             self.go_to_next_feed_set()
-        log("Moved to next test indices - starting new run")
+        Logger.info("Moved to next test indices - starting new run")
         self.run()
 
     # START TEST SEQUENCE (PREP TEST): ----------------------------------------------------------------------------------
@@ -1445,7 +1441,7 @@ class StallJigScreen(Screen):
     def start_of_all_tests(self):
         if self.run_button.text == "RUN":
             return False
-        log("Set up for all tests")
+        Logger.info("Set up for all tests")
         self.test_status_label.text = "SETTING UP"
         self.choose_test(0, 0, 0)
 
@@ -1462,7 +1458,7 @@ class StallJigScreen(Screen):
             or not self.m.TMC_registers_have_been_read_in()
         ):
             if self.VERBOSE:
-                log("Poll for registers having been read in, and ready to move")
+                Logger.info("Poll for registers having been read in, and ready to move")
             self.poll_ready_to_start_moving = Clock.schedule_once(
                 lambda dt: self.start_moving(), self.sequence_interval
             )
@@ -1475,14 +1471,14 @@ class StallJigScreen(Screen):
     def full_calibration_check(self):
         if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE:
-                log("Poll for ready to check calibration")
+                Logger.info("Poll for ready to check calibration")
             self.poll_for_ready_to_check_calibration = Clock.schedule_once(
                 lambda dt: self.full_calibration_check(), self.sequence_interval
             )
             return
         self.test_status_label.text = "CHECK CALIBRATION"
         self.m.start_measuring_running_data(10)
-        log("Run a calibration check in all axes")
+        Logger.info("Run a calibration check in all axes")
         if not self.dev_mode:
             self.m.cal_check_threshold_x_min = -2001
             self.m.cal_check_threshold_x_max = 2001
@@ -1501,7 +1497,7 @@ class StallJigScreen(Screen):
             or self.smartbench_is_not_ready_for_next_command()
         ):
             if self.VERBOSE:
-                log("Poll for ready to run tests")
+                Logger.info("Poll for ready to run tests")
             self.poll_for_ready_to_run_tests = Clock.schedule_once(
                 self.ready_to_run_tests, self.sequence_interval
             )
@@ -1510,13 +1506,13 @@ class StallJigScreen(Screen):
             self.test_status_label.text = "CAL CHECK FAIL"
             return
         self.m.change_stage_measuring_running_data(9)
-        log("Ready to run tests, disabling limits")
+        Logger.info("Ready to run tests, disabling limits")
         self.set_grbl_settings_for_experiment(True)
 
     def set_grbl_settings_for_experiment(self, start_pos_bool):
         if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE:
-                log(
+                Logger.info(
                     "Poll to disable soft limits, enable stall guard, and enable hard limits"
                 )
             self.limits_event = Clock.schedule_once(
@@ -1543,7 +1539,7 @@ class StallJigScreen(Screen):
     def print_registers_just_before_run_tests_starts(self, dt):
         if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE:
-                log("Poll to print registers just before running tests")
+                Logger.info("Poll to print registers just before running tests")
             self.print_registers_just_before_run_tests_starts_event = (
                 Clock.schedule_once(
                     self.print_registers_just_before_run_tests_starts,
@@ -1560,12 +1556,12 @@ class StallJigScreen(Screen):
             or not self.m.TMC_registers_have_been_read_in()
         ):
             if self.VERBOSE:
-                log("Poll to tell user that SB is ready")
+                Logger.info("Poll to tell user that SB is ready")
             self.tell_user_ready_event = Clock.schedule_once(
                 self.tell_user_that_SB_is_ready_to_run_tests, self.sequence_interval
             )
             return
-        log("Tell user to put the magnets on to set up fake home")
+        Logger.info("Tell user to put the magnets on to set up fake home")
         self.test_status_label.text = "INSTALL JIGS"
         self.run_button.text = "RUN"
         self.enable_all_buttons_except_run()
@@ -1577,13 +1573,13 @@ class StallJigScreen(Screen):
         self.test_status_label.text = "SET UP AXIS"
         if self.smartbench_is_not_ready_for_next_command(ignore_alarm=True):
             if self.VERBOSE:
-                log("Poll for setting up axis for test")
+                Logger.info("Poll for setting up axis for test")
             self.poll_for_setting_up_axis_for_test = Clock.schedule_once(
                 lambda dt: self.set_up_axis_for_test(), self.sequence_interval
             )
             return
-        log("Set up axis for test")
-        log("Home against the magnets that give fake home position")
+        Logger.info("Set up axis for test")
+        Logger.info("Home against the magnets that give fake home position")
         self.start_homing()
 
         # go to start pos for the axis (relative to the magnets)
@@ -1594,12 +1590,12 @@ class StallJigScreen(Screen):
     def go_to_start_pos(self, dt): # may want to set this to 0,0,0 and turn off limits
         if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE:
-                log("Poll for going to start position")
+                Logger.info("Poll for going to start position")
             self.poll_for_going_to_start_pos = Clock.schedule_once(
                 self.go_to_start_pos, self.sequence_interval
             )
             return
-        log("Go to start pos for the axis (relative to the magnets)")
+        Logger.info("Go to start pos for the axis (relative to the magnets)")
         self.test_status_label.text = "GO TO START POS"
        
         # disable hard limits and go to test start position, relative to faux home
@@ -1614,14 +1610,14 @@ class StallJigScreen(Screen):
     def find_travel_from_start_pos(self, dt):
         if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE:
-                log("Poll for setting travel")
+                Logger.info("Poll for setting travel")
             self.poll_to_find_travel_from_start_pos = Clock.schedule_once(
                 self.find_travel_from_start_pos, self.sequence_interval
             )
             return
-        log("Set expected travel to stall position")
+        Logger.info("Set expected travel to stall position")
         self.test_status_label.text = "SET TRAVEL"
-        log("Pull off from limit")
+        Logger.info("Pull off from limit")
         move_command = [
             "G91 "
             + self.current_axis()
@@ -1638,7 +1634,7 @@ class StallJigScreen(Screen):
     def prepare_to_find_stall_pos(self, axis):
         if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE:
-                log("Poll to prepare to find stall pos")
+                Logger.info("Poll to prepare to find stall pos")
             self.poll_to_prepare_to_find_stall_pos = Clock.schedule_once(
                 lambda dt: self.prepare_to_find_stall_pos(self.current_axis()),
                 self.sequence_interval,
@@ -1650,7 +1646,7 @@ class StallJigScreen(Screen):
     def stall_position_found(self, axis, start_pos):
         if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE:
-                log("Poll for finding stall position")
+                Logger.info("Poll for finding stall position")
             self.poll_for_stall_position_found = Clock.schedule_once(
                 lambda dt: self.stall_position_found(axis, start_pos),
                 self.sequence_interval,
@@ -1659,7 +1655,7 @@ class StallJigScreen(Screen):
         if self.threshold_reached:
             self.threshold_reached = False
             self.test_status_label.text = "STALL POS FOUND"
-            log("Stall position found")
+            Logger.info("Stall position found")
             self.travel_to_stall_pos[axis] = self.current_position[axis]() - start_pos
             self.back_off_and_find_position()
             return
@@ -1683,13 +1679,13 @@ class StallJigScreen(Screen):
     def sb_has_travelled_or_detected(self, expected_pos):
         if self.smartbench_is_not_ready_for_next_command():
             if self.VERBOSE:
-                log("Poll for threshold detection")
+                Logger.info("Poll for threshold detection")
             self.poll_for_threshold_detection = Clock.schedule_once(
                 lambda dt: self.sb_has_travelled_or_detected(expected_pos),
                 self.sequence_interval,
             )
             return
-        log(
+        Logger.info(
             "SB has either completed its move command, or it has detected that a limit has been reached!"
         )
         self.test_passed = self.determine_test_result(expected_pos)
@@ -1711,7 +1707,7 @@ class StallJigScreen(Screen):
         self.test_status_label.text = "NO DETECT YET"
 
     def test_did_pass(self):
-        log("TEST PASSED")
+        Logger.info("TEST PASSED")
         self.threshold_reached = False
         self.result_label.text = "THRESHOLD REACHED"
         self.result_label.background_color = self.bright_pass_green
@@ -1719,7 +1715,7 @@ class StallJigScreen(Screen):
         return True
 
     def test_did_fail(self):
-        log("TEST FAILED")
+        Logger.info("TEST FAILED")
         self.threshold_reached = False
         self.result_label.text = "THRESHOLD NOT REACHED"
         self.result_label.background_color = self.fail_orange
@@ -1756,9 +1752,9 @@ class StallJigScreen(Screen):
             stall_coord,
         ]
         self.stall_test_events.append(last_test_pass)
-        log("Stall event: ")
+        Logger.info("Stall event: ")
         for i in range(len(last_test_pass)):
-            log(str(self.stall_test_data_col_names[i]) + str(last_test_pass[i]))
+            Logger.info(str(self.stall_test_data_col_names[i]) + str(last_test_pass[i]))
 
     ## IF TEST PASSES, GO TO NEXT THRESHOLD (UNLESS DONE ALL THRESHOLDS IN FEED SET)
     def go_to_next_threshold(self):
@@ -1766,7 +1762,7 @@ class StallJigScreen(Screen):
             self.threshold_dict[self.current_axis()]
         ):
             self.indices["threshold"] = self.indices["threshold"] + 1
-            log("Next threshold index: " + str(self.indices["threshold"]))
+            Logger.info("Next threshold index: " + str(self.indices["threshold"]))
         else:
             self.go_to_next_feed_set()
 
@@ -1777,8 +1773,8 @@ class StallJigScreen(Screen):
             self.indices["threshold"] = self.minimum_threshold_index[
                 self.current_axis()
             ]
-            log("Next feed index: " + str(self.indices["feed"]))
-            log("Next threshold index: " + str(self.indices["threshold"]))
+            Logger.info("Next feed index: " + str(self.indices["feed"]))
+            Logger.info("Next threshold index: " + str(self.indices["threshold"]))
         else:
             self.go_to_next_axis()
             
@@ -1790,9 +1786,9 @@ class StallJigScreen(Screen):
             self.indices["feed"] = 0
             self.indices["threshold"] = 0
             self.travel_to_stall_pos[self.current_axis()] = None
-            log("Next feed index: " + str(self.indices["feed"]))
-            log("Next threshold index: " + str(self.indices["threshold"]))
-            log("Next axis index: " + str(self.indices["axis"]))
+            Logger.info("Next feed index: " + str(self.indices["feed"]))
+            Logger.info("Next threshold index: " + str(self.indices["threshold"]))
+            Logger.info("Next axis index: " + str(self.indices["axis"]))
         else:
             self.all_tests_completed = True
 
@@ -1801,7 +1797,7 @@ class StallJigScreen(Screen):
     ## WHEN ALL EXPERIMENTS ARE COMPLETE, DATA CAN BE SENT, AND SETTINGS REVERTED
     def end_of_all_tests(self):
         if self.all_tests_completed:
-            log("All tests completed!!")
+            Logger.info("All tests completed!!")
             self.set_default_thresholds()
             self.restore_grbl_settings()
             self.test_status_label.text = "TESTS COMPLETE"
@@ -1815,7 +1811,7 @@ class StallJigScreen(Screen):
 
     def run_final_calibration_check_and_then_send_data(self, dt):
         self.m.change_stage_measuring_running_data(11)
-        log("Run a calibration check in all axes")
+        Logger.info("Run a calibration check in all axes")
         self.m.cal_check_threshold_x_min = -2001
         self.m.cal_check_threshold_x_max = 2001
         self.m.cal_check_threshold_y_min = -2001
@@ -1832,7 +1828,7 @@ class StallJigScreen(Screen):
             or self.smartbench_is_not_ready_for_next_command()
         ):
             if self.VERBOSE:
-                log("Poll for sending data after calibration check")
+                Logger.info("Poll for sending data after calibration check")
             self.poll_for_send_data_after_final_calibration_check = Clock.schedule_once(
                 self.send_data_after_final_calibration_check, self.sequence_interval
             )
@@ -1840,7 +1836,7 @@ class StallJigScreen(Screen):
         if self.m.checking_calibration_fail_info:
             self.test_status_label.text = "CAL CHECK FAIL"
         self.m.stop_measuring_running_data()
-        log("Send data")
+        Logger.info("Send data")
         self.data_send_event = Clock.schedule_once(
             lambda dt: self.start_stall_jig_data_send(), self.data_process_interval
         )

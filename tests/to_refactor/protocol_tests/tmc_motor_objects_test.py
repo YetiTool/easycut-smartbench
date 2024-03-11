@@ -2,6 +2,7 @@
 Created on 4 Mar 2022
 @author: Letty
 '''
+from asmcnc.comms.logging_system.logging_system import Logger
 
 try: 
     import unittest
@@ -10,7 +11,7 @@ try:
     from serial_mock.decorators import serial_query
 
 except: 
-    print("Can't import mocking packages, are you on a dev machine?")
+    Logger.info("Can't import mocking packages, are you on a dev machine?")
 
 from time import sleep
 

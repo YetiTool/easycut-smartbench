@@ -143,11 +143,6 @@ Builder.load_string("""
 """)
 
 
-def log(message):
-    timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + message)
-
-
 class DrywallCutterScreen(Screen):
     shape_options = ['circle', 'square', 'rectangle', 'line', 'geberit']
     line_cut_options = ['inside', 'on', 'outside']
