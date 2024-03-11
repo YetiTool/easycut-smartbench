@@ -2286,7 +2286,7 @@ class RouterMachine(EventDispatcher):
             elif colour_name == 'MAGENTA':  self.s.write_command("*LFF00FF")
             elif colour_name == 'OFF':      self.s.write_command("*L110000")
 
-        else: print ("LED Colour denied because streaming: " + colour_name + "\n")
+        else: Logger.info("LED Colour denied because streaming: " + colour_name + "\n")
 
 
     def led_restore(self):
@@ -2330,7 +2330,7 @@ class RouterMachine(EventDispatcher):
             end_on_colour = self.led_colour_status
             self._strobe_loop(strobe_colour1, strobe_colour2, colour_1_period, colour_2_period, cycles, end_on_colour)
 
-        else: print ("Strobe situation: " + situation + " not recognised")
+        else: Logger.info("Strobe situation: " + situation + " not recognised")
 
     strobe_cycle_count = 0
 
