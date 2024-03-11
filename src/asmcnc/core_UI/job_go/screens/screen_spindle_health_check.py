@@ -8,6 +8,7 @@ Spindle cooldown screen
 """
 from math import sqrt, ceil
 
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
@@ -188,7 +189,7 @@ class SpindleHealthCheckActiveScreen(Screen):
             return int(ceil(n / 10.0)) * 10
 
         def pass_test(free_load):
-            print("Spindle health check passed - free load: " + str(free_load))
+            Logger.info("Spindle health check passed - free load: " + str(free_load))
             self.m.spindle_health_check_failed = False
             self.m.spindle_health_check_passed = True
             self.m.s.yp.set_free_load(free_load)
@@ -209,7 +210,7 @@ class SpindleHealthCheckActiveScreen(Screen):
                 self.sm.get_screen("go").raise_pause_screens_if_paused(override=True)
 
         def fail_test(reason):
-            print("Spindle health check failed - " + reason)
+            Logger.info("Spindle health check failed - " + reason)
             self.m.spindle_health_check_failed = True
             self.m.spindle_health_check_passed = False
             show_fail_screen(reason)

@@ -13,6 +13,7 @@ from shutil import copy
 
 import kivy
 from chardet import detect
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.clock import Clock
 from kivy.graphics import Color, Rectangle
 from kivy.lang import Builder
@@ -635,7 +636,7 @@ class LocalFileChooser(Screen):
                 os.remove(filename)
                 self.filechooser.selection = []
             except:
-                print("attempt to delete folder, or undeletable file")
+                Logger.info("attempt to delete folder, or undeletable file")
             self.refresh_filechooser()
 
     def delete_all(self):
@@ -648,7 +649,7 @@ class LocalFileChooser(Screen):
                     if files_in_cache.index(file) + 2 >= len(files_in_cache):
                         self.refresh_filechooser()
                 except:
-                    print("attempt to delete folder, or undeletable file")
+                    Logger.info("attempt to delete folder, or undeletable file")
         self.filechooser.selection = []
         self.refresh_filechooser()
 

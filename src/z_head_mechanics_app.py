@@ -1,3 +1,4 @@
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, NoTransition
 from kivy.clock import Clock
@@ -27,13 +28,9 @@ from datetime import datetime
 Cmport = 'COM3'
 
 
-def log(message):
-    timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
-
 class ZHeadMechanicsApp(App):
     def build(self):
-        log('Starting diagnostics')
+        Logger.info('Starting diagnostics')
 
         sm = ScreenManager(transition=NoTransition())
 

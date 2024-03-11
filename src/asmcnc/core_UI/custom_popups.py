@@ -1,6 +1,7 @@
 """
 Popups that aren't covered by the default popup system.
 """
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.carousel import Carousel
@@ -884,7 +885,7 @@ class PopupSoftwareUpdateWarning(Widget):
             elif update_method == "USB":
                 prep_for_sw_update_over_usb()
             else:  # Fail-safe message to make debugging easier in case usb_or_wifi strings are broken
-                print("Error getting update method. Please check screen_update_SW.py" + \
+                Logger.info("Error getting update method. Please check screen_update_SW.py" + \
                          "\nShould be: 'WiFi' or 'USB'" + \
                          "\nBut was: " + update_method)
 

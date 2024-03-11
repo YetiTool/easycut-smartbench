@@ -1,3 +1,4 @@
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.core.window import Window
 
 """
@@ -283,11 +284,11 @@ class WarrantyScreen3(Screen):
 
     def generate_activation_code(self, serial_number):
         ActiveTempNoOnly = int("".join(filter(str.isdigit, serial_number)))
-        print(str(ActiveTempNoOnly) + "\n")
+        Logger.info(str(ActiveTempNoOnly) + "\n")
         ActiveTempStart = str(ActiveTempNoOnly * 76289103623 + 20)
-        print(ActiveTempStart + "\n")
+        Logger.info(ActiveTempStart + "\n")
         ActiveTempStartReduce = ActiveTempStart[0:15]
-        print(ActiveTempStartReduce + "\n")
+        Logger.info(ActiveTempStartReduce + "\n")
         Activation_Code_1 = int(ActiveTempStartReduce[0]) * 171350
         Activation_Code_2 = int(ActiveTempStartReduce[3]) * 152740
         Activation_Code_3 = int(ActiveTempStartReduce[5]) * 213431
@@ -318,7 +319,7 @@ class WarrantyScreen3(Screen):
             + Activation_Code_13
             + Activation_Code_14
         )
-        print(str(Final_Activation_Code) + "\n")
+        Logger.info(str(Final_Activation_Code) + "\n")
         return Final_Activation_Code
 
     def update_strings(self):

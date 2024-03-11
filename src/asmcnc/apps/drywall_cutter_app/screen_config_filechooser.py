@@ -14,6 +14,7 @@ from collections import OrderedDict
 
 import kivy
 from chardet import detect
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty, StringProperty  
 from kivy.uix.screenmanager import Screen
@@ -478,7 +479,7 @@ class ConfigFileChooser(Screen):
                 self.filechooser.selection = []
 
             except:
-                print("attempt to delete folder, or undeletable file")
+                Logger.info("attempt to delete folder, or undeletable file")
 
             self.refresh_filechooser()
 
@@ -494,7 +495,7 @@ class ConfigFileChooser(Screen):
                         self.refresh_filechooser()
 
                 except:
-                    print("attempt to delete folder, or undeletable file")
+                    Logger.info("attempt to delete folder, or undeletable file")
 
         self.filechooser.selection = []
         self.refresh_filechooser()
