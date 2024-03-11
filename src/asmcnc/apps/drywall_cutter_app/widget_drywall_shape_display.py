@@ -294,7 +294,7 @@ class DrywallShapeDisplay(Widget):
     def select_shape(self, shape, rotation, swap_lengths=False):
         shape = shape.lower() # in case it's a test config with a capital letter
         image_source = self.image_filepath + shape
-        if shape in ['rectangle', 'line']:
+        if shape in ['rectangle', 'line', 'geberit']:
             image_source += "_" + rotation
         self.shape_dims_image.source = image_source + "_dims.png"
         self.shape_dims_image.opacity = 1
@@ -352,8 +352,12 @@ class DrywallShapeDisplay(Widget):
             self.disable_input(self.l_input)
 
         if shape == 'geberit':
-            self.place_widget(self.x_datum_label, (360, 19))
-            self.place_widget(self.y_datum_label, (390, 77))
+            if rotation == 'horizontal':
+                self.place_widget(self.x_datum_label, (407, 46))
+                self.place_widget(self.y_datum_label, (416, 125))
+            else:
+                self.place_widget(self.x_datum_label, (360, 19))
+                self.place_widget(self.y_datum_label, (390, 77))
 
         self.dwt_config.on_parameter_change('rotation', rotation)
 

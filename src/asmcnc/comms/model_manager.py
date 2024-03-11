@@ -9,9 +9,18 @@ from kivy._event import EventDispatcher
 from kivy.clock import Clock
 
 from asmcnc.comms.router_machine import ProductCodes
+from asmcnc.core_UI import path_utils as pu
 
 
 class ModelManagerSingleton(EventDispatcher):
+    """
+    This class takes care of all the model specific handling:
+    - saves the product code (hashed) to the console if no file exists (Updating UC). Update only possible via
+      factory settings. Update will handle things like splash screen image.
+    - saves hw and fw version (updated on change): Will be used to determine model capabilities.
+      console swap will update the file with new ZH values.
+    - provides model distinction: e.g. is_machine_drywall()
+    """
     _instance = None
     _initialized = False
     machine = None
@@ -25,15 +34,13 @@ class ModelManagerSingleton(EventDispatcher):
     }
 
     # File paths:
-    PC_FILE_PATH = os.path.join(os.path.dirname(os.getcwd()), "src", "sb_values", "model_info.json")
-    PC_MIGRATION_PATH = os.path.join(os.path.dirname(os.getcwd()), "src", "asmcnc", "comms", "product_code_migration")
-    MIGRATION_FILE_PATH = os.path.join(PC_MIGRATION_PATH, "migration.json")
-    MIGRATION_RAW_FILE_PATH = os.path.join(PC_MIGRATION_PATH, "migration_raw.json")
+    PC_FILE_PATH = pu.join(pu.sb_values_path, "model_info.json")
+    MIGRATION_FILE_PATH = pu.join(pu.get_path('product_code_migration'), "migration.json")
+    MIGRATION_RAW_FILE_PATH = pu.join(pu.get_path('product_code_migration'), "migration_raw.json")
 
     PLYMOUTH_SPLASH_FILE_PATH = "/usr/share/plymouth/debian-logo.png"
-    SKAVA_UI_IMAGES_PATH = os.path.join(os.getcwd(), "asmcnc", "skavaUI", "img")
-    YETI_SPLASH_PATH = os.path.join(SKAVA_UI_IMAGES_PATH, "yeti_splash_screen.png")
-    DWT_SPLASH_PATH = os.path.join(SKAVA_UI_IMAGES_PATH, "dwt_splash_screen.png")
+    YETI_SPLASH_PATH = pu.get_path("yeti_splash_screen.png")
+    DWT_SPLASH_PATH = pu.get_path("dwt_splash_screen.png")
 
     SMARTBENCH_DEFAULT_NAME = "My SmartBench"
     SMARTBENCH_DEFAULT_LOCATION = "SmartBench location"
@@ -126,13 +133,13 @@ class ModelManagerSingleton(EventDispatcher):
         if md5('YS6' + sn).hexdigest() in data['Pro Plus']:
             full_sn = sn + '.04'
             Logger.info('Old Pro Plus detected. Fixed SN to: {}'.format(full_sn))
-            Clock.schedule_once(lambda dt: self.machine.write_dollar_setting(50, full_sn), 1)
+            self.machine.write_dollar_setting(50, full_sn)
             self._data['product_code'] = ProductCodes.PRECISION_PRO_PLUS.value
             return ProductCodes.PRECISION_PRO_PLUS
         elif md5(sn).hexdigest() in data['Pro X']:
             full_sn = sn + '.05'
             Logger.info('Old Pro X detected. Fixed SN to: {}'.format(full_sn))
-            Clock.schedule_once(lambda dt: self.machine.write_dollar_setting(50, full_sn), 1)
+            self.machine.write_dollar_setting(50, full_sn)
             return ProductCodes.PRECISION_PRO_X
         else:
             return ProductCodes.UNKNOWN

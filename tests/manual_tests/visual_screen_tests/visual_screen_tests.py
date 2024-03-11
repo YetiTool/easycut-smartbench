@@ -54,6 +54,7 @@ from asmcnc.apps import app_manager
 from asmcnc.job.yetipilot.yetipilot import YetiPilot
 from asmcnc.comms import server_connection
 from asmcnc.core_UI.popup_manager import PopupManager
+from asmcnc.core_UI import scaling_utils
 
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_error, screen_rebooting, screen_file_loading, screen_lobby
 from asmcnc.skavaUI import screen_job_recovery, screen_nudge, screen_recovery_decision, screen_homing_decision, popup_nudge
@@ -96,6 +97,15 @@ Cmport = 'COM3'
 class ScreenTest(App):
     width = Window.width
     height = Window.height if Window.height == 480 else Window.height - 32
+
+    def get_scaled_width(self, val):
+        return scaling_utils.get_scaled_width(val)
+
+    def get_scaled_height(self, val):
+        return scaling_utils.get_scaled_height(val)
+
+    def get_scaled_sp(self, val):
+        return scaling_utils.get_scaled_sp(val)
 
     lang_idx = 0
     cycle_languages = True

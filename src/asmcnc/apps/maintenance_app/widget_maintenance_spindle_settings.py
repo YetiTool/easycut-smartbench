@@ -179,6 +179,8 @@ Builder.load_string(
                             min: 1
                             max: 60
                             step: 1
+                            size_hint_y: None
+                            height: app.get_scaled_height(60)
 
                         Label:
                             id: seconds_label

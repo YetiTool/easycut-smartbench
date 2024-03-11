@@ -210,7 +210,7 @@ class DrywallCutterScreen(Screen):
             self.cut_offset_selection.values[0]
             self.cut_offset_selection.disabled = False
 
-        if self.shape_selection.text in ['rectangle', 'line']:
+        if self.shape_selection.text in ['rectangle', 'line', 'geberit']:
             self.rotate_button.disabled = False
         else:
             self.rotate_button.disabled = True

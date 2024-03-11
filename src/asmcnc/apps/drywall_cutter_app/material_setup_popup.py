@@ -92,7 +92,6 @@ Builder.load_string("""
             markup: True
             multiline: False
             text: ''
-            input_filter: 'float'
         
         Label:
             id: bottom_offset_label
@@ -121,7 +120,6 @@ Builder.load_string("""
             markup: True
             multiline: False
             text: ''
-            input_filter: 'float' 
         
         Image:
             id: total_cut_depth_dims
@@ -236,7 +234,6 @@ Builder.load_string("""
                 multiline: False
                 text: ''
                 disabled: True
-                input_filter: 'float' 
                 
         BoxLayout:
             orientation: 'horizontal'

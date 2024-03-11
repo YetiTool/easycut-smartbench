@@ -27,6 +27,7 @@ from kivy.config import Config
 from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 
+from asmcnc.comms.grbl_settings_manager import GRBLSettingsManagerSingleton
 from asmcnc.core_UI import scaling_utils
 from asmcnc.core_UI.popup_manager import PopupManager
 from asmcnc.comms.model_manager import ModelManagerSingleton
@@ -103,7 +104,7 @@ from asmcnc.skavaUI import screen_homing_decision
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v2.8.1'
+initial_version = 'v2.8.2'
 
 config_flag = False
 
@@ -195,6 +196,9 @@ class SkavaUI(App):
 
         # initialise ModelManagerSingleton with machine for setting_50 update
         ModelManagerSingleton(m)
+
+        # initialise GRBLSettingsManagerSingleton with machine to manage GRBL settings
+        GRBLSettingsManagerSingleton(m)
 
         # Initialise yetipilot
         yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd, localization=l)
