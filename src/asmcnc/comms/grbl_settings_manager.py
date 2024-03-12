@@ -30,9 +30,37 @@ class GRBLSettingsManagerSingleton(object):
     # json skeletons
     _machine_saved_data = {
         SERIAL_ID: '0000.00',  # serial number
+        0: None, # Step pulse, microseconds
+        1: None, # Step idle delay, milliseconds
+        2: None, # Step port invert, mask
+        4: None, # Step enable invert, boolean
+        5: None, # Limit pins invert, boolean
+        6: None, # Probe pin invert, boolean
+        10: None, # Status report, mask
+        11: None, # Junction deviation, mm
+        12: None, # Arc tolerance, mm
+        13: None, # Report inches, boolean
+        20: None, # Soft limits, boolean
+        21: None, # Hard limits, boolean
+        22: None, # Homing cycle, boolean
+        23: None, # Homing dir invert, mask
+        24: None, # Homing feed, mm/min
+        25: None, # Homing seek, mm/min
+        26: None, # Homing debounce, milliseconds
+        27: None, # Homing pull-off, mm
+        30: None, # Max spindle speed, RPM
+        31: None, # Min spindle speed, RPM
+        32: None, # Laser mode, boolean
         100: 0,  # x steps/mm
         101: 0,  # y steps/mm
-        102: 0  # z steps/mm
+        102: 0,  # z steps/mm
+        110: None, # X Max rate, mm/min
+        111: None, # Y Max rate, mm/min
+        112: None, # Z Max rate, mm/min
+        120: None, # X Acceleration, mm/sec^2
+        121: None, # Y Acceleration, mm/sec^2
+        122: None, # Z Acceleration, mm/sec^2
+        130: None # X Max travel, mm
     }
 
     _machine_fw_default_data = {
@@ -40,6 +68,37 @@ class GRBLSettingsManagerSingleton(object):
         100: 56.649,  # x steps/mm
         101: 56.667,  # y steps/mm
         102: 1066.667  # z steps/mm
+    }
+
+    _system_default_data = {
+        0: 10, # Step pulse, microseconds
+        1: 255, # Step idle delay, milliseconds
+        2: 0, # Step port invert, mask
+        4: 0, # Step enable invert, boolean
+        5: 0, # Limit pins invert, boolean
+        6: 0, # Probe pin invert, boolean
+        10: 3, # Status report, mask
+        11: 0.010, # Junction deviation, mm
+        12: 0.002, # Arc tolerance, mm
+        13: 0, # Report inches, boolean
+        20: 1, # Soft limits, boolean
+        21: 1, # Hard limits, boolean
+        22: 1, # Homing cycle, boolean
+        23: 3, # Homing dir invert, mask
+        24: 600.000, # Homing feed, mm/min
+        25: 3000.000, # Homing seek, mm/min
+        26: 250, # Homing debounce, milliseconds
+        27: 15.000, # Homing pull-off, mm
+        30: 25000, # Max spindle speed, RPM
+        31: 0, # Min spindle speed, RPM
+        32: 0, # Laser mode, boolean
+        110: 8000.000, # X Max rate, mm/min
+        111: 6000.000, # Y Max rate, mm/min
+        112: 750.000, # Z Max rate, mm/min
+        120: 500.000, # X Acceleration, mm/sec^2
+        121: 500.000, # Y Acceleration, mm/sec^2
+        122: 200.000, # Z Acceleration, mm/sec^2
+        130: 1300.000 # X Max travel, mm
     }
 
     # File paths:
@@ -66,6 +125,34 @@ class GRBLSettingsManagerSingleton(object):
             self.machine.s.bind(setting_102=lambda instance, value: self.on_setting_steps_per_mm(instance,
                                                                                                  value,
                                                                                                  102))
+            self.machine.s.bind(setting_0=lambda instance, value: self.on_persistent_setting(instance, value, 0))
+            self.machine.s.bind(setting_1=lambda instance, value: self.on_persistent_setting(instance, value, 1))
+            self.machine.s.bind(setting_2=lambda instance, value: self.on_persistent_setting(instance, value, 2))
+            self.machine.s.bind(setting_4=lambda instance, value: self.on_persistent_setting(instance, value, 4))
+            self.machine.s.bind(setting_5=lambda instance, value: self.on_persistent_setting(instance, value, 5))
+            self.machine.s.bind(setting_6=lambda instance, value: self.on_persistent_setting(instance, value, 6))
+            self.machine.s.bind(setting_10=lambda instance, value: self.on_persistent_setting(instance, value, 10))
+            self.machine.s.bind(setting_11=lambda instance, value: self.on_persistent_setting(instance, value, 11))
+            self.machine.s.bind(setting_12=lambda instance, value: self.on_persistent_setting(instance, value, 12))
+            self.machine.s.bind(setting_13=lambda instance, value: self.on_persistent_setting(instance, value, 13))
+            self.machine.s.bind(setting_20=lambda instance, value: self.on_persistent_setting(instance, value, 20))
+            self.machine.s.bind(setting_21=lambda instance, value: self.on_persistent_setting(instance, value, 21))
+            self.machine.s.bind(setting_22=lambda instance, value: self.on_persistent_setting(instance, value, 22))
+            self.machine.s.bind(setting_23=lambda instance, value: self.on_persistent_setting(instance, value, 23))
+            self.machine.s.bind(setting_24=lambda instance, value: self.on_persistent_setting(instance, value, 24))
+            self.machine.s.bind(setting_25=lambda instance, value: self.on_persistent_setting(instance, value, 25))
+            self.machine.s.bind(setting_26=lambda instance, value: self.on_persistent_setting(instance, value, 26))
+            self.machine.s.bind(setting_27=lambda instance, value: self.on_persistent_setting(instance, value, 27))
+            self.machine.s.bind(setting_30=lambda instance, value: self.on_persistent_setting(instance, value, 30))
+            self.machine.s.bind(setting_31=lambda instance, value: self.on_persistent_setting(instance, value, 31))
+            self.machine.s.bind(setting_32=lambda instance, value: self.on_persistent_setting(instance, value, 32))
+            self.machine.s.bind(setting_110=lambda instance, value: self.on_persistent_setting(instance, value, 110))
+            self.machine.s.bind(setting_111=lambda instance, value: self.on_persistent_setting(instance, value, 111))
+            self.machine.s.bind(setting_112=lambda instance, value: self.on_persistent_setting(instance, value, 112))
+            self.machine.s.bind(setting_120=lambda instance, value: self.on_persistent_setting(instance, value, 120))
+            self.machine.s.bind(setting_121=lambda instance, value: self.on_persistent_setting(instance, value, 121))
+            self.machine.s.bind(setting_122=lambda instance, value: self.on_persistent_setting(instance, value, 122))
+            self.machine.s.bind(setting_130=lambda instance, value: self.on_persistent_setting(instance, value, 130))
 
         if self._initialized:
             return
@@ -128,8 +215,8 @@ class GRBLSettingsManagerSingleton(object):
         """
         descriptions = {
             100: 'x_steps/mm ($100) setting',
-            101: 'y_steps/mm ($100) setting',
-            102: 'z_steps/mm ($100) setting'
+            101: 'y_steps/mm ($101) setting',
+            102: 'z_steps/mm ($102) setting'
         }
 
         if value == self._machine_fw_default_data[setting]:  # default? EEPROM error happened -> restored defaults
@@ -149,3 +236,56 @@ class GRBLSettingsManagerSingleton(object):
                 self.save_machine_data_to_file()
                 log('Calibration run? Updated {} in file: {}'.
                     format(descriptions[setting], value))
+
+    def on_persistent_setting(self, instance, value, setting):
+        """
+        Called when a persistent setting is read in.
+
+        Checks for default value and restores value from file if possible.
+        """
+        descriptions = {
+            0: "Step pulse, microseconds ($0) setting",
+            1: "Step idle delay, milliseco ($1) setting",
+            2: "Step port invert, mask ($2) setting",
+            4: "Step enable invert, boolean ($4) setting",
+            5: "Limit pins invert, boolean ($5) setting",
+            6: "Probe pin invert, boolean ($6) setting",
+            10: "Status report, mask ($10) setting",
+            11: "Junction deviation, mm ($11) setting",
+            12: "Arc tolerance, mm ($12) setting",
+            13: "Report inches, boolean ($13) setting",
+            20: "Soft limits, boolean ($20) setting",
+            21: "Hard limits, boolean ($21) setting",
+            22: "Homing cycle, boolean ($22) setting",
+            23: "Homing dir invert, mask ($23) setting",
+            24: "Homing feed, mm/min ($24) setting",
+            25: "Homing seek, mm/min ($25) setting",
+            26: "Homing debounce, millisec ($26) setting",
+            27: "Homing pull-off, mm ($27) setting",
+            30: "Max spindle speed, RPM ($30) setting",
+            31: "Min spindle speed, RPM ($31) setting",
+            32: "Laser mode, boolean ($32) setting",
+            110: "X Max rate, mm/min ($110) setting",
+            111: "Y Max rate, mm/min ($111) setting",
+            112: "Z Max rate, mm/min ($112) setting",
+            120: "X Acceleration, mm/s ($120) setting",
+            121: "Y Acceleration, mm/s ($121) setting",
+            122: "Z Acceleration, mm/s ($122) setting",
+            130: "X Max travel, mm ($130) setting"
+        }
+
+        if self._machine_saved_data[setting] is None:  # not saved yet?
+            self._machine_saved_data[setting] = value
+            self.save_machine_data_to_file()
+            log('First startup after update? {} saved to file: {}'.format(descriptions[setting], value))
+        elif value == self._system_default_data[setting]:  # default? EEPROM error happened -> restored defaults
+            if self._machine_saved_data[setting] is not None:  # saved value exists?
+                # restore saved value:
+                self.machine.write_dollar_setting(setting, self._machine_saved_data[setting])
+                log('Restored {} from file: {}'.format(descriptions[setting], self._machine_saved_data[setting]))
+            else:
+                log('Cannot restore {}. No backup found!'.format(descriptions[setting]))
+        elif value != self._machine_saved_data[setting]:  # new values detected?
+            self._machine_saved_data[setting] = value
+            self.save_machine_data_to_file()
+            log('{} updated to: {}'.format(descriptions[setting], value))
