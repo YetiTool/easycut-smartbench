@@ -28,7 +28,7 @@ class ModelManagerSingleton(EventDispatcher):
 
     # json skeleton
     _data = {
-        'product_code': ProductCodes.UNKNOWN.value,
+        'product_code': ProductCodes.UNKNOWN,
         'fw_version':  '0.0.0.0',
         'hw_version': '0'
     }
@@ -190,6 +190,8 @@ class ModelManagerSingleton(EventDispatcher):
             for pc in ProductCodes:
                 if md5(str(pc.value)).hexdigest() == self._data['product_code']:
                     self._data['product_code'] = pc
+                    Logger.info("Read product code from file: {}".format(pc.name))
+                    break
 
     def save_product_code(self, pc):
         # type: (ProductCodes) -> None
@@ -197,6 +199,9 @@ class ModelManagerSingleton(EventDispatcher):
         Logger.info('Save new product code to file: {}'.format(pc))
         self._data['product_code'] = pc
         self.save_model_data_to_file()
+
+    def get_product_code_name(self):
+        return self._data['product_code'].name
 
     def save_model_data_to_file(self):
         """Updates the model_info.json with the current data."""
