@@ -3,6 +3,7 @@ This module contains the classes used to store the configuration data for the dr
 
 Data types are not confirmed.
 """
+from collections import OrderedDict
 
 
 class Cutter:
@@ -82,6 +83,18 @@ class Configuration:
         self.toolpath_offset = toolpath_offset  # type: str
         self.cutting_depths = CuttingDepths(**cutting_depths)  # type: CuttingDepths
         self.datum_position = DatumPosition(**datum_position)  # type: DatumPosition
+
+    def to_dict(self):
+        return OrderedDict([
+            ("shape_type", self.shape_type),
+            ("units", self.units),
+            ("rotation", self.rotation),
+            ("canvas_shape_dims", self.canvas_shape_dims.__dict__),
+            ("cutter_type", self.cutter_type),
+            ("toolpath_offset", self.toolpath_offset),
+            ("cutting_depths", self.cutting_depths.__dict__),
+            ("datum_position", self.datum_position.__dict__)
+        ])
 
     @staticmethod
     def default():

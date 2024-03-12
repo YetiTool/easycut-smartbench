@@ -134,7 +134,7 @@ class DWTConfig(object):
         file_path = os.path.join(configurations_dir, config_name)
 
         with open(file_path, 'w') as f:
-            f.write(json.dumps(self.active_config, indent=4, default=lambda o: o.__dict__))
+            json.dump(self.active_config.to_dict(), indent=4)
 
     @debug
     def load_cutter(self, cutter_name):

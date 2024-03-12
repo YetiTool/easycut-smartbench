@@ -97,3 +97,36 @@ def test_get_available_cutter_names():
         'unique_label': 'tool_6mm.json',
         'cutter 2': 'test_cutter2.json'
     }
+
+
+def test_config_order_is_persistent():
+    dwt_config = config_loader.DWTConfig()
+
+    dwt_config.load_config('test_config')
+
+    assert dwt_config.active_config.to_dict().keys() == [
+        "shape_type",
+        "units",
+        "rotation",
+        "canvas_shape_dims",
+        "cutter_type",
+        "toolpath_offset",
+        "cutting_depths",
+        "datum_position"
+    ]
+
+    dwt_config.save_config('test_config')
+
+    dwt_config.load_config('test_config')
+
+    assert dwt_config.active_config.to_dict().keys() == [
+        "shape_type",
+        "units",
+        "rotation",
+        "canvas_shape_dims",
+        "cutter_type",
+        "toolpath_offset",
+        "cutting_depths",
+        "datum_position"
+    ]
+
