@@ -10,6 +10,7 @@ edited by Archie 2023 for use in dwt app
 import os
 import sys
 import json
+from collections import OrderedDict
 
 import kivy
 from chardet import detect
@@ -434,7 +435,12 @@ class ConfigFileChooser(Screen):
         with open(self.filechooser.selection[0], 'r') as f:
             json_obj = json.load(f)
 
-        self.metadata_preview.text = self.to_human_readable(json_obj)
+        desired_order = ["shape_type", "units", "rotation", "canvas_shape_dims", "cutter_type", "toolpath_offset",
+                         "cutting_depths", "datum_position"]
+
+        ordered_j_obj = OrderedDict((key, json_obj[key]) for key in desired_order)
+
+        self.metadata_preview.text = self.to_human_readable(ordered_j_obj)
 
         self.load_button.disabled = False
         self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
