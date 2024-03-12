@@ -435,10 +435,35 @@ class ConfigFileChooser(Screen):
         with open(self.filechooser.selection[0], 'r') as f:
             json_obj = json.load(f)
 
-        desired_order = ["shape_type", "units", "rotation", "canvas_shape_dims", "cutter_type", "toolpath_offset",
-                         "cutting_depths", "datum_position"]
+        nested_desired_order = {
+            "shape_type": 0,
+            "units": 1,
+            "rotation": 2,
+            "canvas_shape_dims": {
+                "x": 0,
+                "y": 1,
+                "r": 2,
+                "d": 3,
+                "l": 4
+            },
+            "cutter_type": 3,
+            "toolpath_offset": 4,
+            "cutting_depths": {
+                "material_thickness": 0,
+                "bottom_offset": 1,
+                "auto_pass": 2,
+                "depth_per_pass": 3
+            },
+            "datum_position": {
+                "x": 0,
+                "y": 1
+            }
+        }
 
-        ordered_j_obj = OrderedDict((key, json_obj[key]) for key in desired_order)
+        def sort_nested_dict(key):
+            return OrderedDict((key, json_obj[key] if not isinstance(json_obj[key], dict) else sort_nested_dict(key)) for key in nested_desired_order[key])
+
+        ordered_j_obj = OrderedDict((key, json_obj[key] if not isinstance(json_obj[key], dict) else sort_nested_dict(key)) for key in nested_desired_order.keys())
 
         self.metadata_preview.text = self.to_human_readable(ordered_j_obj)
 
