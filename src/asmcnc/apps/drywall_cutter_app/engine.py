@@ -276,23 +276,24 @@ class GCodeEngine():
                 else:
                     raise IOError("Gcode file not found")
 
-    #Scrape through gcode and replace feedrate, plungerate and spindle speed
+    # Scrape through gcode and replace feedrate, plungerate and spindle speed
     def adjust_feeds_and_speeds(self, gcode_lines, feedrate, plungerate, spindle_speed):
         adjusted_lines = []
         feedrate_pattern = re.compile(r'G1.*?[XY].*?F([\d.]+)', re.IGNORECASE)
-        plungerate_pattern = re.compile(r'G1.*?Z(-?\d+\.\d+).*?F([\d.]+)', re.IGNORECASE)
-        spindle_speed_pattern = re.compile(r'S\d+', re.IGNORECASE)
+        plungerate_pattern = re.compile(r'G1.*?[Z].*?F([\d.]+)', re.IGNORECASE)
+        spindle_speed_pattern = re.compile(r'S\d.+', re.IGNORECASE)
 
         for line in gcode_lines:
-            if 'F' in line and feedrate_pattern.search(line):
+            line = line.upper()
+            if 'F' in line and feedrate_pattern.search(line) and ('Z' not in line):
                 # Replace the feedrate if 'G1', 'X' or 'Y' move is present
                 match = feedrate_pattern.search(line)
                 line = line.replace(match.group(1), str(feedrate))
 
-            if 'G1' in line and 'Z' in line and 'F' in line and plungerate_pattern.search(line):
-                # Replace the plungerate
+            elif 'Z' in line and plungerate_pattern.search(line) and ('X' not in line and 'Y' not in line):
+                # Replace the plungerate if 'G1' and 'Z' move is present
                 match = plungerate_pattern.search(line)
-                line = line.replace(match.group(2), str(plungerate))
+                line = line.replace(match.group(1), str(plungerate))
 
             # Replace the spindle speed
             line = spindle_speed_pattern.sub('S' + str(spindle_speed), line)

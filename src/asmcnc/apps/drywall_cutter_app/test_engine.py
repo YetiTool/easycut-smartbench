@@ -213,8 +213,6 @@ class EngineTests(unittest.TestCase):
         input_list = ["Line 1", keyword, "G1 X5", "Line 3"]
         expected_output = ["Line 1", keyword, "G0 X5", "Line 3"]
         output = self.engine.replace_mode_after_keyword(input_list, keyword, replacement)
-        print(output)
-        print(expected_output)
         self.assertEqual(output, expected_output)
 
         # Case 2: Keyword exists but there is only one line after the keyword
@@ -233,6 +231,51 @@ class EngineTests(unittest.TestCase):
         input_list = []
         expected_output = []
         output = self.engine.replace_mode_after_keyword(input_list, keyword, replacement)
+        self.assertEqual(output, expected_output)
+
+    def test_adjust_feeds_and_speeds(self):
+        # Case 1: Upper case, float spindle speed
+        gcode_lines = [
+            "G1 X10 Y10 F100",
+            "G1 Z-5 F200",
+            "G1 X30 Y30 Z-2",
+            "S1000.0"
+        ]
+
+        feedrate = 150
+        plungerate = 250
+        spindle_speed = 5000
+
+        expected_output = [
+            "G1 X10 Y10 F150",
+            "G1 Z-5 F250",
+            "G1 X30 Y30 Z-2",
+            "S5000"
+        ]
+
+        output = self.engine.adjust_feeds_and_speeds(gcode_lines, feedrate, plungerate, spindle_speed)
+        self.assertEqual(output, expected_output)
+
+        # Case 2: Lower case, integer spindle speed
+        gcode_lines = [
+            "g1 x10 y10 f100",
+            "g1 z-5 f200",
+            "g1 x30 y30 z-2",
+            "s1000"
+        ]
+
+        feedrate = 150
+        plungerate = 250
+        spindle_speed = 5000
+
+        expected_output = [
+            "G1 X10 Y10 F150",
+            "G1 Z-5 F250",
+            "G1 X30 Y30 Z-2",
+            "S5000"
+        ]
+
+        output = self.engine.adjust_feeds_and_speeds(gcode_lines, feedrate, plungerate, spindle_speed)
         self.assertEqual(output, expected_output)
 
 if __name__ == '__main__':
