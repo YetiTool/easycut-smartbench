@@ -42,7 +42,6 @@
       dest: /home/pi/starteasycut.sh
       mode: '0755'
   - name: Install and configure samba
-    become: true
     tasks:
       - name: Install Samba
         apt:
