@@ -50,9 +50,11 @@ class GCodeEngine():
         return [bottom_left, top_left, top_right, bottom_right]
 
     #Find the shape centre coordinates
-    def find_centre(self, coordinates, x_offset, y_offset):
+    def find_centre(self, coordinates, x_offset = 0, y_offset = 0):
         x_sum = 0
         y_sum = 0
+        # Remove duplicates from the list
+        coordinates = list(set(coordinates))
         for x, y in coordinates:
             x_sum += x + x_offset
             y_sum += y + y_offset
@@ -63,10 +65,7 @@ class GCodeEngine():
 
     #Check if a corner radius is present (and not tiny)
     def find_corner_rads(self, radius):
-        if radius > 0.09:
-            return True
-        else:
-            return False
+        return radius > 0.09
 
     # Determine shape point direction
     def is_clockwise(self, coordinates):

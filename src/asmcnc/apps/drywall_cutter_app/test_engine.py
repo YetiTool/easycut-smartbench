@@ -18,6 +18,21 @@ class EngineTests(unittest.TestCase):
         output = self.engine.rectangle_coordinates(x, y)
         self.assertEqual(output, expected_output)
 
+    def test_find_centre(self):
+        coordinates = [(0, 0), (100.0, 0), (100.0, 100.0), (0, 100.0), (0, 0)] # Snuck in a duplicate at the end
+        expected_output = (50, 50)
+        output = self.engine.find_centre(coordinates)
+        self.assertEqual(output, expected_output)
+
+    def test_find_corner_rads(self):
+        # Case 1
+        output = self.engine.find_corner_rads(0.05)
+        self.assertFalse(output)
+
+        # Case 2
+        output = self.engine.find_corner_rads(0.5)
+        self.assertTrue(output)
+
     def test_replace_cut_depth_and_z_safe_distance(self):
         gcode_lines = ["G1 X10 Y10 Z10", "G1 X20 Y20 Z-5", "G1 X30 Y30 Z-2"]
         processing_args= {
