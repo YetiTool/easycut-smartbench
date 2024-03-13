@@ -7,13 +7,15 @@ class EngineTests(unittest.TestCase):
 
     def test_replace_cut_depth_and_z_safe_distance(self):
         gcode_lines = ["G1 X10 Y10 Z10", "G1 X20 Y20 Z-5", "G1 X30 Y30 Z-2"]
-        gcode_cut_depth = -5
-        gcode_z_safe_distance = 10
-        new_cut_depth = -8
-        new_z_safe_distance = 5
+        processing_args= {
+            "gcode_cut_depth": -5,
+            "gcode_z_safe_distance": 10,
+            "new_cut_depth": -8,
+            "new_z_safe_distance": 5
+        }
 
         expected_output = ["G1 X10 Y10 Z5", "G1 X20 Y20 Z-8", "G1 X30 Y30 Z-2"]
-        output = self.engine.replace_cut_depth_and_z_safe_distance(gcode_lines, gcode_cut_depth, gcode_z_safe_distance, new_cut_depth, new_z_safe_distance)
+        output = self.engine.replace_cut_depth_and_z_safe_distance(gcode_lines, **processing_args)
         self.assertEqual(output, expected_output)
 
     def test_is_clockwise(self):
