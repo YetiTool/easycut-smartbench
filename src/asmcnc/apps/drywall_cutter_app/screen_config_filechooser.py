@@ -434,6 +434,7 @@ class ConfigFileChooser(Screen):
         with open(self.filechooser.selection[0], 'r') as f:
             json_obj = json.load(f)
 
+        print('here')
         self.metadata_preview.text = self.get_display_preview(json_obj)
 
         self.load_button.disabled = False
@@ -462,6 +463,7 @@ class ConfigFileChooser(Screen):
         preview += "Datum position: \n"
         preview += "    X: " + json_obj['datum_position']['x'] + "\n"
         preview += "    Y: " + json_obj['datum_position']['y'] + "\n"
+        print(preview)
         return preview
 
     def load_config_and_return_to_dwt(self):
