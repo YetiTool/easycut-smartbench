@@ -148,5 +148,34 @@ class EngineTests(unittest.TestCase):
         output = self.engine.calculate_pass_depths(total_cut_depth, pass_depth)
         self.assertEqual(output, expected_output)
 
+    def test_determine_cut_direction_clockwise(self):
+        # Case 1: climb=True, offset_type="outside"
+        offset_type = "outside"
+        climb = True
+        expected_output = True
+        output = self.engine.determine_cut_direction_clockwise(offset_type, climb)
+        self.assertEqual(output, expected_output)
+
+        # Case 2: climb=False, offset_type="inside"
+        offset_type = "inside"
+        climb = False
+        expected_output = True
+        output = self.engine.determine_cut_direction_clockwise(offset_type, climb)
+        self.assertEqual(output, expected_output)
+
+        # Case 3: climb=True, offset_type="inside"
+        offset_type = "inside"
+        climb = True
+        expected_output = False
+        output = self.engine.determine_cut_direction_clockwise(offset_type, climb)
+        self.assertEqual(output, expected_output)
+
+        # Case 4: climb=False, offset_type="outside"
+        offset_type = "outside"
+        climb = False
+        expected_output = False
+        output = self.engine.determine_cut_direction_clockwise(offset_type, climb)
+        self.assertEqual(output, expected_output)
+
 if __name__ == '__main__':
     unittest.main()
