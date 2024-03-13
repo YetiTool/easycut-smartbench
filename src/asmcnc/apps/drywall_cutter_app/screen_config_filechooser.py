@@ -434,7 +434,7 @@ class ConfigFileChooser(Screen):
         with open(self.filechooser.selection[0], 'r') as f:
             json_obj = json.load(f)
 
-        self.metadata_preview.text = self.to_human_readable(json_obj)
+        self.metadata_preview.text = self.get_display_preview(json_obj)
 
         self.load_button.disabled = False
         self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
@@ -442,18 +442,27 @@ class ConfigFileChooser(Screen):
         self.delete_selected_button.disabled = False
         self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete.png'
 
-    def to_human_readable(self, json_obj, indent=0):
-        def format_key(json_key):
-            return json_key.replace("_", " ").title()
-
-        result = ''
-
-        for key, value in json_obj.items():
-            if isinstance(value, dict):
-                result += ' ' * indent + format_key(key) + ":\n" + self.to_human_readable(value, indent + 4)
-            else:
-                result += ' ' * indent + format_key(key) + ": " + str(value) + "\n"
-        return result
+    def get_display_preview(self, json_obj):
+        preview = "Shape type: " + json_obj['shape_type'] + "\n"
+        preview += "Units: " + json_obj['units'] + "\n"
+        preview += "Rotation: " + json_obj['rotation'] + "\n"
+        preview += "Canvas shape dims: \n"
+        preview += "    X: " + json_obj['canvas_shape_dims']['x'] + "\n"
+        preview += "    Y: " + json_obj['canvas_shape_dims']['y'] + "\n"
+        preview += "    R: " + json_obj['canvas_shape_dims']['r'] + "\n"
+        preview += "    D: " + json_obj['canvas_shape_dims']['d'] + "\n"
+        preview += "    L: " + json_obj['canvas_shape_dims']['l'] + "\n"
+        preview += "Cutter type: " + json_obj['cutter_type'] + "\n"
+        preview += "Toolpath offset: " + json_obj['toolpath_offset'] + "\n"
+        preview += "Cutting depths: \n"
+        preview += "    Material thickness: " + json_obj['cutting_depths']['material_thickness'] + "\n"
+        preview += "    Bottom offset: " + json_obj['cutting_depths']['bottom_offset'] + "\n"
+        preview += "    Auto pass: " + json_obj['cutting_depths']['auto_pass'] + "\n"
+        preview += "    Depth per pass: " + json_obj['cutting_depths']['depth_per_pass'] + "\n"
+        preview += "Datum position: \n"
+        preview += "    X: " + json_obj['datum_position']['x'] + "\n"
+        preview += "    Y: " + json_obj['datum_position']['y'] + "\n"
+        return preview
 
     def load_config_and_return_to_dwt(self):
         self.callback(self.filechooser.selection[0])
