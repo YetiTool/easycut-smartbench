@@ -68,5 +68,12 @@ class EngineTests(unittest.TestCase):
         output = self.engine.replace_cut_depth_and_z_safe_distance(gcode_lines, **processing_args)
         self.assertEqual(output, expected_output)
 
+    def test_add_corner_coordinates(self):
+        coordinates = [(0, 0), (100.0, 0), (100.0, 100.0), (0, 100.0), (0, 0)]
+        corner_radius = 10
+        expected_output = [(10, 0), (0, 10), (100.0, 10), (90.0, 0), (90.0, 100.0), (100.0, 90.0), (0, 90.0), (10, 100.0), (10, 0), (0, 10)]
+        output = self.engine.add_corner_coordinates(coordinates, self.engine.find_centre(coordinates), corner_radius)
+        self.assertEqual(output, expected_output)
+
 if __name__ == '__main__':
     unittest.main()
