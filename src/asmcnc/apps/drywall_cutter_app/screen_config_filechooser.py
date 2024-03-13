@@ -410,7 +410,7 @@ class ConfigFileChooser(Screen):
                 self.file_selected_label.text = self.l.get_str("Press the icon to display the full filename here.")
                 self.metadata_preview.text = self.l.get_str("Select a file to see metadata or gcode preview.")
 
-        except:
+        except Exception as e:
             self.load_button.disabled = True
             self.image_select.source = './asmcnc/skavaUI/img/file_select_select_disabled.png'
             self.file_selected_label.text = self.l.get_str("Press the icon to display the full filename here.")
@@ -420,6 +420,7 @@ class ConfigFileChooser(Screen):
             self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete_disabled.png'
             self.file_selected_label.text = self.l.get_str("Press the icon to display the full filename here.")
             self.metadata_preview.text = self.l.get_str("Select a file to see metadata or gcode preview.")
+            print(e)
 
         self.filechooser._update_files()
 
