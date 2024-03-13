@@ -13,6 +13,8 @@ import json
 
 import kivy
 from chardet import detect
+
+from asmcnc.apps.drywall_cutter_app.config import config_loader
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty, StringProperty  
@@ -434,35 +436,13 @@ class ConfigFileChooser(Screen):
         with open(self.filechooser.selection[0], 'r') as f:
             json_obj = json.load(f)
 
-        self.metadata_preview.text = self.get_display_preview(json_obj)
+        self.metadata_preview.text = config_loader.get_display_preview(json_obj)
 
         self.load_button.disabled = False
         self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
 
         self.delete_selected_button.disabled = False
         self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete.png'
-
-    def get_display_preview(self, json_obj):
-        preview = "Shape type: " + json_obj['shape_type'] + "\n"
-        preview += "Units: " + json_obj['units'] + "\n"
-        preview += "Rotation: " + json_obj['rotation'] + "\n"
-        preview += "Canvas shape dims: \n"
-        preview += "    X: " + str(json_obj['canvas_shape_dims']['x']) + "\n"
-        preview += "    Y: " + str(json_obj['canvas_shape_dims']['y']) + "\n"
-        preview += "    R: " + str(json_obj['canvas_shape_dims']['r']) + "\n"
-        preview += "    D: " + str(json_obj['canvas_shape_dims']['d']) + "\n"
-        preview += "    L: " + str(json_obj['canvas_shape_dims']['l']) + "\n"
-        preview += "Cutter type: " + json_obj['cutter_type'] + "\n"
-        preview += "Toolpath offset: " + json_obj['toolpath_offset'] + "\n"
-        preview += "Cutting depths: \n"
-        preview += "    Material thickness: " + str(json_obj['cutting_depths']['material_thickness']) + "\n"
-        preview += "    Bottom offset: " + str(json_obj['cutting_depths']['bottom_offset']) + "\n"
-        preview += "    Auto pass: " + str(json_obj['cutting_depths']['auto_pass']) + "\n"
-        preview += "    Depth per pass: " + str(json_obj['cutting_depths']['depth_per_pass']) + "\n"
-        preview += "Datum position: \n"
-        preview += "    X: " + str(json_obj['datum_position']['x']) + "\n"
-        preview += "    Y: " + str(json_obj['datum_position']['y']) + "\n"
-        return preview
 
     def load_config_and_return_to_dwt(self):
         self.callback(self.filechooser.selection[0])

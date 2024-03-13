@@ -24,6 +24,28 @@ def debug(func):
 
     return wrapper
 
+def get_display_preview(json_obj):
+    preview = "Shape type: " + json_obj['shape_type'] + "\n"
+    preview += "Units: " + json_obj['units'] + "\n"
+    preview += "Rotation: " + json_obj['rotation'] + "\n"
+    preview += "Canvas shape dims: \n"
+    preview += "    X: " + str(json_obj['canvas_shape_dims']['x']) + "\n"
+    preview += "    Y: " + str(json_obj['canvas_shape_dims']['y']) + "\n"
+    preview += "    R: " + str(json_obj['canvas_shape_dims']['r']) + "\n"
+    preview += "    D: " + str(json_obj['canvas_shape_dims']['d']) + "\n"
+    preview += "    L: " + str(json_obj['canvas_shape_dims']['l']) + "\n"
+    preview += "Cutter type: " + json_obj['cutter_type'] + "\n"
+    preview += "Toolpath offset: " + json_obj['toolpath_offset'] + "\n"
+    preview += "Cutting depths: \n"
+    preview += "    Material thickness: " + str(json_obj['cutting_depths']['material_thickness']) + "\n"
+    preview += "    Bottom offset: " + str(json_obj['cutting_depths']['bottom_offset']) + "\n"
+    preview += "    Auto pass: " + str(json_obj['cutting_depths']['auto_pass']) + "\n"
+    preview += "    Depth per pass: " + str(json_obj['cutting_depths']['depth_per_pass']) + "\n"
+    preview += "Datum position: \n"
+    preview += "    X: " + str(json_obj['datum_position']['x']) + "\n"
+    preview += "    Y: " + str(json_obj['datum_position']['y']) + "\n"
+    return preview
+
 
 class DWTConfig(object):
     active_config = None  # type: config_classes.Configuration
