@@ -220,11 +220,12 @@
         apt:
           name: samba
           state: present
+
       - name: Copy Samba config
         template:
           src: /home/pi/easycut-smartbench/src/asmcnc/comms/smart_transfer/smb.conf
           dest: /etc/samba/smb.conf
-    notify: restart samba
+        notify: restart samba
 
     handlers:
       - name: restart samba
