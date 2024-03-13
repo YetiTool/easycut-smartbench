@@ -41,7 +41,23 @@
       src: starteasycut.sh
       dest: /home/pi/starteasycut.sh
       mode: '0755'
-
+  - name: Install and configure samba
+    become: true
+    tasks:
+      - name: Install Samba
+        apt:
+          name: samba
+          state: present
+      - name: Copy Samba config
+        template:
+          src: /home/pi/easycut-smartbench/src/asmcnc/comms/smart_transfer/smb.conf
+          dest: /etc/samba/smb.conf
+        notify: restart samba
+    handlers:
+      - name: restart samba
+        service:
+          name: smbd
+          state: restarted
     # Python2 pip and mysqldb are only available on stretch
   - name: Install packages for Raspbian Stretch
     package:
@@ -195,26 +211,6 @@
       state: present
       insertafter: 'wiring'
       line: '  reset = 17;'
-  - name: Install and configure samba
-    become: true
-
-    tasks:
-      - name: Install Samba
-        apt:
-          name: samba
-          state: present
-
-      - name: Copy Samba config
-        template:
-          src: /home/pi/easycut-smartbench/src/asmcnc/comms/smart_transfer/smb.conf
-          dest: /etc/samba/smb.conf
-        notify: restart samba
-
-    handlers:
-      - name: restart samba
-        service:
-          name: smbd
-          state: restarted
   - name: Add ansible_from_easycut line to Easycut config
     lineinfile:
       name: /home/pi/easycut-smartbench/src/config.txt
