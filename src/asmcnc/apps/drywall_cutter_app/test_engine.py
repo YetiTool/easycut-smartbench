@@ -5,6 +5,19 @@ class EngineTests(unittest.TestCase):
     def setUp(self):
         self.engine = GCodeEngine(None)
 
+    def test_rectangle_coordinates(self):
+        # Case 1, valid input
+        x, y = 100, 100
+        expected_output = [(0, 0), (0, y), (x, y), (x, 0)] # BL -> TL -> TR -> BR 
+        output = self.engine.rectangle_coordinates(x, y)
+        self.assertEqual(output, expected_output)
+
+        # Case 2, invalid input
+        x, y = 0, 100
+        expected_output = None
+        output = self.engine.rectangle_coordinates(x, y)
+        self.assertEqual(output, expected_output)
+
     def test_replace_cut_depth_and_z_safe_distance(self):
         gcode_lines = ["G1 X10 Y10 Z10", "G1 X20 Y20 Z-5", "G1 X30 Y30 Z-2"]
         processing_args= {

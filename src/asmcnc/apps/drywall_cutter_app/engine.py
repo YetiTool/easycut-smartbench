@@ -22,7 +22,10 @@ from io import open
 import os
 import re
 
-from asmcnc.apps.drywall_cutter_app.config import config_loader
+try:
+    from asmcnc.apps.drywall_cutter_app.config import config_loader
+except ImportError:
+    print("unable to import config_loader")
 
 class GCodeEngine():
     def __init__(self, dwt_config):
@@ -35,13 +38,13 @@ class GCodeEngine():
     #Produce corner coordinates for a rectangle of size x, y
     def rectangle_coordinates(self, x, y):
         if x <= 0 or y <= 0:
-            return []  # Invalid dimensions, return an empty list
+            return None  # Invalid dimensions, return None
 
         # Define the coordinates for the four corners
         top_left = (0, y)
         top_right = (x, y)
-        bottom_right = (x, 0)
         bottom_left = (0, 0)
+        bottom_right = (x, 0)
 
         # Return the coordinates in clockwise order
         return [bottom_left, top_left, top_right, bottom_right]
