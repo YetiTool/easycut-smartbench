@@ -186,12 +186,12 @@ class GCodeEngine():
         return input_list
 
     #For use when reordering gcode instructions
-    def replace_after_keyword(self, input_list, keyword, replacement):
+    def replace_mode_after_keyword(self, input_list, keyword, replacement_mode):
         for i in xrange(len(input_list) - 1):
             if keyword.lower() in input_list[i].lower():
                 if i + 1 < len(input_list):
                     # Replace the first two letters of the line that follows the keyword
-                    input_list[i + 1] = replacement + input_list[i + 1][2:]
+                    input_list[i + 1] = replacement_mode + input_list[i + 1][2:]
         return input_list
 
     #Produce gcode instructions to cut a rounded (or not) rectangle
@@ -257,7 +257,7 @@ class GCodeEngine():
         # Correct gcode order
         cutting_lines = self.swap_lines_after_keyword(cutting_lines, u"Roughing pass")
         # Speed up first XY move
-        cutting_lines = self.replace_after_keyword(cutting_lines, u"Roughing pass", u"G0")
+        cutting_lines = self.replace_mode_after_keyword(cutting_lines, u"Roughing pass", u"G0")
 
         return cutting_lines
 

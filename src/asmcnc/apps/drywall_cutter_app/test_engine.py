@@ -206,5 +206,34 @@ class EngineTests(unittest.TestCase):
         output = self.engine.swap_lines_after_keyword(input_list, keyword)
         self.assertEqual(output, expected_output)
 
+    def test_replace_mode_after_keyword(self):
+        # Case 1: Keyword exists and there are at least two lines after the keyword
+        keyword = "keyword"
+        replacement = "G0"
+        input_list = ["Line 1", keyword, "G1 X5", "Line 3"]
+        expected_output = ["Line 1", keyword, "G0 X5", "Line 3"]
+        output = self.engine.replace_mode_after_keyword(input_list, keyword, replacement)
+        print(output)
+        print(expected_output)
+        self.assertEqual(output, expected_output)
+
+        # Case 2: Keyword exists but there is only one line after the keyword
+        input_list = ["Line 1", keyword, "G1 X5"]
+        expected_output = ["Line 1", keyword, "G0 X5"]
+        output = self.engine.replace_mode_after_keyword(input_list, keyword, replacement)
+        self.assertEqual(output, expected_output)
+
+        # Case 3: Keyword does not exist
+        input_list = ["Line 1", "Line 2", "Line 3"]
+        expected_output = ["Line 1", "Line 2", "Line 3"]
+        output = self.engine.replace_mode_after_keyword(input_list, keyword, replacement)
+        self.assertEqual(output, expected_output)
+
+        # Case 4: Empty input list
+        input_list = []
+        expected_output = []
+        output = self.engine.replace_mode_after_keyword(input_list, keyword, replacement)
+        self.assertEqual(output, expected_output)
+
 if __name__ == '__main__':
     unittest.main()
