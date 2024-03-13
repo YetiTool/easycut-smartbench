@@ -177,5 +177,34 @@ class EngineTests(unittest.TestCase):
         output = self.engine.determine_cut_direction_clockwise(offset_type, climb)
         self.assertEqual(output, expected_output)
 
+    def test_swap_lines_after_keyword(self):
+        # Case 1: Keyword exists and there are at least two lines after the keyword
+        input_list = ["Line 1", "Keyword", "Line 2", "Line 3"]
+        keyword = "keyword"
+        expected_output = ["Line 1", "Keyword", "Line 3", "Line 2"]
+        output = self.engine.swap_lines_after_keyword(input_list, keyword)
+        self.assertEqual(output, expected_output)
+
+        # Case 2: Keyword exists but there is only one line after the keyword
+        input_list = ["Line 1", "Keyword", "Line 2"]
+        keyword = "keyword"
+        expected_output = ["Line 1", "Keyword", "Line 2"]
+        output = self.engine.swap_lines_after_keyword(input_list, keyword)
+        self.assertEqual(output, expected_output)
+
+        # Case 3: Keyword does not exist
+        input_list = ["Line 1", "Line 2", "Line 3"]
+        keyword = "keyword"
+        expected_output = ["Line 1", "Line 2", "Line 3"]
+        output = self.engine.swap_lines_after_keyword(input_list, keyword)
+        self.assertEqual(output, expected_output)
+
+        # Case 4: Empty input list
+        input_list = []
+        keyword = "keyword"
+        expected_output = []
+        output = self.engine.swap_lines_after_keyword(input_list, keyword)
+        self.assertEqual(output, expected_output)
+
 if __name__ == '__main__':
     unittest.main()
