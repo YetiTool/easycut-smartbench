@@ -435,7 +435,6 @@ class ConfigFileChooser(Screen):
         with open(self.filechooser.selection[0], 'r') as f:
             json_obj = json.load(f)
 
-        print('here')
         self.metadata_preview.text = self.get_display_preview(json_obj)
 
         self.load_button.disabled = False
@@ -449,22 +448,21 @@ class ConfigFileChooser(Screen):
         preview += "Units: " + json_obj['units'] + "\n"
         preview += "Rotation: " + json_obj['rotation'] + "\n"
         preview += "Canvas shape dims: \n"
-        preview += "    X: " + json_obj['canvas_shape_dims']['x'] + "\n"
-        preview += "    Y: " + json_obj['canvas_shape_dims']['y'] + "\n"
-        preview += "    R: " + json_obj['canvas_shape_dims']['r'] + "\n"
-        preview += "    D: " + json_obj['canvas_shape_dims']['d'] + "\n"
-        preview += "    L: " + json_obj['canvas_shape_dims']['l'] + "\n"
+        preview += "    X: " + str(json_obj['canvas_shape_dims']['x']) + "\n"
+        preview += "    Y: " + str(json_obj['canvas_shape_dims']['y']) + "\n"
+        preview += "    R: " + str(json_obj['canvas_shape_dims']['r']) + "\n"
+        preview += "    D: " + str(json_obj['canvas_shape_dims']['d']) + "\n"
+        preview += "    L: " + str(json_obj['canvas_shape_dims']['l']) + "\n"
         preview += "Cutter type: " + json_obj['cutter_type'] + "\n"
         preview += "Toolpath offset: " + json_obj['toolpath_offset'] + "\n"
         preview += "Cutting depths: \n"
-        preview += "    Material thickness: " + json_obj['cutting_depths']['material_thickness'] + "\n"
-        preview += "    Bottom offset: " + json_obj['cutting_depths']['bottom_offset'] + "\n"
-        preview += "    Auto pass: " + json_obj['cutting_depths']['auto_pass'] + "\n"
-        preview += "    Depth per pass: " + json_obj['cutting_depths']['depth_per_pass'] + "\n"
+        preview += "    Material thickness: " + str(json_obj['cutting_depths']['material_thickness']) + "\n"
+        preview += "    Bottom offset: " + str(json_obj['cutting_depths']['bottom_offset']) + "\n"
+        preview += "    Auto pass: " + str(json_obj['cutting_depths']['auto_pass']) + "\n"
+        preview += "    Depth per pass: " + str(json_obj['cutting_depths']['depth_per_pass']) + "\n"
         preview += "Datum position: \n"
-        preview += "    X: " + json_obj['datum_position']['x'] + "\n"
-        preview += "    Y: " + json_obj['datum_position']['y'] + "\n"
-        print(preview)
+        preview += "    X: " + str(json_obj['datum_position']['x']) + "\n"
+        preview += "    Y: " + str(json_obj['datum_position']['y']) + "\n"
         return preview
 
     def load_config_and_return_to_dwt(self):
