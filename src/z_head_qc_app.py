@@ -25,11 +25,7 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, NoTransition
 from kivy.clock import Clock
 
-from time import sleep
-
-from asmcnc.comms.router_machine import RouterMachine 
-from asmcnc.comms import server_connection
-from asmcnc.apps.app_manager import AppManagerClass
+from asmcnc.comms.router_machine import RouterMachine
 from settings.settings_manager import Settings
 from asmcnc.job.job_data import JobData
 from asmcnc.comms.localization import Localization
@@ -67,8 +63,6 @@ from asmcnc.production.z_head_qc_jig.z_head_qc_db_fail import ZHeadQCDBFail
 from asmcnc.production.z_head_mechanics_jig.z_head_mechanics_monitor import ZHeadMechanicsMonitor
 
 from asmcnc.production.database.calibration_database import CalibrationDatabase
-
-from datetime import datetime
 
 Cmport = 'COM3'
 

@@ -23,25 +23,17 @@ Config.set('graphics', 'maxfps', '60')
 Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
 Config.write()
 
-import unittest
-from mock import Mock, MagicMock, patch
+ from mock import Mock
 
-
-import kivy
-from kivy.app import App
+ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.core.window import Window
-from asmcnc.comms import localization
-from kivy.lang import Builder
+ from kivy.lang import Builder
 
 # COMMS IMPORTS
-from asmcnc.comms import router_machine  
-from asmcnc.comms import server_connection
-from asmcnc.comms import smartbench_flurry_database_connection
+from asmcnc.comms import router_machine
 
-# NB: router_machine imports serial_connection
-from asmcnc.apps import app_manager 
-from settings import settings_manager 
+ # NB: router_machine imports serial_connection
+ from settings import settings_manager
 from asmcnc.comms import localization
 from asmcnc.job import job_data
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *

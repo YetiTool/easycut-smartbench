@@ -20,7 +20,6 @@ import logging
 import os
 import os.path
 import sys
-from datetime import datetime
 
 from kivy import Logger
 from kivy.config import Config
@@ -54,7 +53,7 @@ from kivy.core.window import Window
 
 # COMMS IMPORTS
 from asmcnc.comms import router_machine
-from asmcnc.comms import server_connection
+from asmcnc.comms.smart_transfer import server_connection
 from asmcnc.comms import smartbench_flurry_database_connection
 
 # NB: router_machine imports serial_connection
