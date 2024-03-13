@@ -73,7 +73,7 @@ class GCodeEngine():
             x2, y2 = coordinates[(i + 1) % len(coordinates)]  # Handle the wraparound at the end
             total += (x2 - x1) * (y2 + y1)
         
-        return total > 0
+        return total < 0
 
     # Reverse coordinates if need to be clockwise
     def correct_orientation(self, coordinates, clockwise):

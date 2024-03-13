@@ -16,5 +16,27 @@ class EngineTests(unittest.TestCase):
         output = self.engine.replace_cut_depth_and_z_safe_distance(gcode_lines, gcode_cut_depth, gcode_z_safe_distance, new_cut_depth, new_z_safe_distance)
         self.assertEqual(output, expected_output)
 
+    def test_is_clockwise(self):
+        # Case 1
+        coordinates = [(0, 0), (100.0, 0), (100.0, 100.0), (0, 100.0), (0, 0)] # BL -> BR -> TR -> TL -> BL, clockwise
+        self.assertTrue(self.engine.is_clockwise(coordinates))
+
+        # Case 2
+        coordinates = [(0, 0), (0, 100.0), (100.0, 100.0), (100.0, 0), (0, 0)] # TL -> BL -> BR -> TR -> TL, counter-clockwise
+        self.assertFalse(self.engine.is_clockwise(coordinates))
+
+    def test_correct_orientation(self):
+        # Case 1
+        coordinates = [(0, 0), (0, 100.0), (100.0, 100.0), (100.0, 0), (0, 0)] # TL -> BL -> BR -> TR -> TL, counter-clockwise
+        expected_output = [(0, 0), (100.0, 0), (100.0, 100.0), (0, 100.0), (0, 0)] # BL -> BR -> TR -> TL -> BL, clockwise
+        output = self.engine.correct_orientation(coordinates, self.engine.is_clockwise(coordinates))
+        self.assertEqual(output, expected_output)
+
+        # Case 2
+        coordinates = [(0, 0), (100.0, 0), (100.0, 100.0), (0, 100.0), (0, 0)] # BL -> BR -> TR -> TL -> BL, clockwise
+        expected_output = [(0, 0), (100.0, 0), (100.0, 100.0), (0, 100.0), (0, 0)] # BL -> BR -> TR -> TL -> BL, clockwise
+        output = self.engine.correct_orientation(coordinates, self.engine.is_clockwise(coordinates))
+        self.assertEqual(output, expected_output)
+
 if __name__ == '__main__':
     unittest.main()
