@@ -24,6 +24,7 @@ def debug(func):
 
     return wrapper
 
+
 def get_display_preview(json_obj):
     preview = "Shape type: " + json_obj['shape_type'] + "\n"
     preview += "Units: " + json_obj['units'] + "\n"
