@@ -278,5 +278,65 @@ class EngineTests(unittest.TestCase):
         output = self.engine.adjust_feeds_and_speeds(gcode_lines, feedrate, plungerate, spindle_speed)
         self.assertEqual(output, expected_output)
 
-if __name__ == '__main__':
+    def test_extract_cut_depth_and_z_safe_distance(self):
+        # Case 1: Both cut depth and z safe distance are present in the gcode lines
+        gcode_lines = [
+            "(Cut depth: -12.000)",
+            "(Z safe distance: 5.080)",
+            "(Final part x dim: 1250.0)",
+            "(Final part y dim: 640.0)",
+            "",
+            "(VECTRIC POST REVISION)",
+            "(B467C182A25E2781624BDAEC17A0D7CE)",
+            "T1",
+            "G17",
+            "G21",
+            "G90",
+            "G0Z20.320",
+            "G0X0.000Y0.000",
+            "S20000M3",
+            "G0X348.294Y189.894Z5.080",
+            "G1Z-12.000F750.0",
+            "G1X348.249Y189.981F3000.0",
+            "G1X348.209Y190.071",
+            "G1X348.173Y190.163"
+        ]
+
+        expected_output = ("-12.000", "5.080")
+        output = self.engine.extract_cut_depth_and_z_safe_distance(gcode_lines)
+        self.assertEqual(output, expected_output)
+
+        # Case 2: Only cut depth is present in the gcode lines
+        gcode_lines = [
+            "Cut depth: -3.5"
+            "G1 X10 Y10 Z10",
+            "G1 X20 Y20 Z-5",
+            "G1 X30 Y30 Z-2",
+        ]
+        expected_output = ("-3.5", None)
+        output = self.engine.extract_cut_depth_and_z_safe_distance(gcode_lines)
+        self.assertEqual(output, expected_output)
+
+        # Case 3: Only z safe distance is present in the gcode lines
+        gcode_lines = [
+            "Z safe distance: 1.0"
+            "G1 X10 Y10 Z10",
+            "G1 X20 Y20 Z-5",
+            "G1 X30 Y30 Z-2",
+        ]
+        expected_output = (None, "1.0")
+        output = self.engine.extract_cut_depth_and_z_safe_distance(gcode_lines)
+        self.assertEqual(output, expected_output)
+
+        # Case 4: Neither cut depth nor z safe distance is present in the gcode lines
+        gcode_lines = [
+            "G1 X10 Y10 Z10",
+            "G1 X20 Y20 Z-5",
+            "G1 X30 Y30 Z-2"
+        ]
+        expected_output = (None, None)
+        output = self.engine.extract_cut_depth_and_z_safe_distance(gcode_lines)
+        self.assertEqual(output, expected_output)
+
+if __name__ == "__main__":
     unittest.main()
