@@ -152,6 +152,9 @@ class GCodeEngine():
 
     #Produce a list of cut depths based on total depth and pass depth
     def calculate_pass_depths(self, total_cut_depth, pass_depth):
+        if total_cut_depth <= 0 or pass_depth <= 0:
+            raise ValueError("Total cut depth and pass depth must be positive values.")
+        
         pass_depths = []
         current_depth = pass_depth
         while current_depth < total_cut_depth:

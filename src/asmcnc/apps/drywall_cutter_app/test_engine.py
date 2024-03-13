@@ -119,5 +119,34 @@ class EngineTests(unittest.TestCase):
         output = self.engine.apply_offset(coordinates, offset_type, tool_diameter, shape_centre)
         self.assertEqual(output, expected_output)
 
+    def test_calculate_pass_depths(self):
+        # Case 1: total_cut_depth is divisible by pass_depth
+        total_cut_depth = 10
+        pass_depth = 2
+        expected_output = [2, 4, 6, 8, 10]
+        output = self.engine.calculate_pass_depths(total_cut_depth, pass_depth)
+        self.assertEqual(output, expected_output)
+
+        # Case 2: total_cut_depth is not divisible by pass_depth
+        total_cut_depth = 12
+        pass_depth = 5
+        expected_output = [5, 10, 12]
+        output = self.engine.calculate_pass_depths(total_cut_depth, pass_depth)
+        self.assertEqual(output, expected_output)
+
+        # Case 3: total_cut_depth is equal to pass_depth
+        total_cut_depth = 5
+        pass_depth = 5
+        expected_output = [5]
+        output = self.engine.calculate_pass_depths(total_cut_depth, pass_depth)
+        self.assertEqual(output, expected_output)
+
+        # Case 4: total_cut_depth is less than pass_depth
+        total_cut_depth = 2
+        pass_depth = 5
+        expected_output = [2]
+        output = self.engine.calculate_pass_depths(total_cut_depth, pass_depth)
+        self.assertEqual(output, expected_output)
+
 if __name__ == '__main__':
     unittest.main()
