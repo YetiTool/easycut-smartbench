@@ -93,5 +93,31 @@ class EngineTests(unittest.TestCase):
         output = self.engine.calculate_corner_radius_offset(offset_type, tool_diameter)
         self.assertEqual(output, expected_output)
 
+    def test_apply_offset(self):
+        coordinates = [(0, 0), (100.0, 0), (100.0, 100.0), (0, 100.0), (0, 0)]
+        shape_centre = (50, 50)
+        tool_diameter = 10
+        
+        offset_type = "inside"
+        expected_output = [(5, 5), (95, 5), (95, 95), (5, 95), (5, 5)]
+        # Convert to floats
+        expected_output = [(float(x), float(y)) for x, y in expected_output]
+        output = self.engine.apply_offset(coordinates, offset_type, tool_diameter, shape_centre)
+        self.assertEqual(output, expected_output)
+
+        offset_type = "outside"
+        expected_output = [(-5, -5), (105, -5), (105, 105), (-5, 105), (-5, -5)]
+        # Convert to floats
+        expected_output = [(float(x), float(y)) for x, y in expected_output]
+        output = self.engine.apply_offset(coordinates, offset_type, tool_diameter, shape_centre)
+        self.assertEqual(output, expected_output)
+
+        offset_type = None
+        expected_output = coordinates
+        # Convert to floats
+        expected_output = [(float(x), float(y)) for x, y in expected_output]
+        output = self.engine.apply_offset(coordinates, offset_type, tool_diameter, shape_centre)
+        self.assertEqual(output, expected_output)
+
 if __name__ == '__main__':
     unittest.main()
