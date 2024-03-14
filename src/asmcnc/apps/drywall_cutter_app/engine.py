@@ -456,10 +456,7 @@ class GCodeEngine():
         pass_depths = []
         stepovers = [0]
 
-        if self.config.active_cutter.cutting_direction.lower() == "climb":
-            is_climb = True
-        else:
-            is_climb = False
+        is_climb = self.config.active_cutter.cutting_direction.lower() == "climb"
 
         # Calculated parameters
         total_cut_depth = self.config.active_config.cutting_depths.material_thickness - self.config.active_config.cutting_depths.bottom_offset
