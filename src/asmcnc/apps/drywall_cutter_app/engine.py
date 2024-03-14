@@ -19,6 +19,7 @@ from __future__ import division
 from __future__ import absolute_import
 from __future__ import with_statement
 from io import open
+import decimal
 import os
 import re
 
@@ -367,12 +368,12 @@ class GCodeEngine():
         return adjusted_lines
 
     # For use with apply_datum_offset
-    def format_float(self, value):
+    def format_float(value):
         if value == int(value):
             return str(int(value))
         else:
-            decimal_places = len(str(value).split('.')[1])
-            return "{:.decimal_placesf}".format(value)
+            # return float without extra zeros
+            return str(decimal.Decimal(str(value)).normalize())
 
     # Repeat gcode for each pass 
     def repeat_for_depths(self, gcode_lines, pass_depths, start_line_key, end_line_key):
@@ -384,11 +385,11 @@ class GCodeEngine():
                 # Replace "cut depth" with the depth value in the line
                 cut_line = line.replace("[cut depth]", "-" + str(depth))
                 cut_lines.append(cut_line)
-            output.append(''.join(cut_lines))
+            output.append(cut_lines)
 
-        output.append('\n'.join(gcode_lines[end_line_key:]))
+        output.append(gcode_lines[end_line_key:])
 
-        return '\n'.join(output)
+        return output
 
     #Add partoff cut for geberit shape
     def add_partoff(self, gcode_lines, insertion_key, start_coordinate, end_coordinate, pass_depths, feedrate, plungerate, z_safe_distance):
