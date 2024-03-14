@@ -338,5 +338,46 @@ class EngineTests(unittest.TestCase):
         output = self.engine.replace_cut_depth_and_z_safe_distance(gcode_lines, **processing_args)
         self.assertEqual(output, expected_output)
 
+    def test_apply_datum_offset(self):
+        # Case 1: No adjustment needed
+        gcode_lines = ["G1 X10 Y20", "G1 Z5", "G1 X30 Y40"]
+        x_adjustment = 0
+        y_adjustment = 0
+        expected_output = ["G1 X10 Y20", "G1 Z5", "G1 X30 Y40"]
+        output = self.engine.apply_datum_offset(gcode_lines, x_adjustment, y_adjustment)
+        self.assertEqual(output, expected_output)
+
+        # Case 2: Positive adjustment
+        gcode_lines = ["G1 X10 Y20", "G1 Z5", "G1 X30 Y40"]
+        x_adjustment = 5
+        y_adjustment = 10
+        expected_output = ["G1 X15 Y30", "G1 Z5", "G1 X35 Y50"]
+        output = self.engine.apply_datum_offset(gcode_lines, x_adjustment, y_adjustment)
+        self.assertEqual(output, expected_output)
+
+        # Case 3: Negative adjustment
+        gcode_lines = ["G1 X10 Y20", "G1 Z5", "G1 X30 Y40"]
+        x_adjustment = -5
+        y_adjustment = -10
+        expected_output = ["G1 X5 Y10", "G1 Z5", "G1 X25 Y30"]
+        output = self.engine.apply_datum_offset(gcode_lines, x_adjustment, y_adjustment)
+        self.assertEqual(output, expected_output)
+
+        # Case 4: Mixed positive and negative adjustment
+        gcode_lines = ["G1 X10 Y20", "G1 Z5", "G1 X30 Y40"]
+        x_adjustment = 2
+        y_adjustment = -8
+        expected_output = ["G1 X12 Y12", "G1 Z5", "G1 X32 Y32"]
+        output = self.engine.apply_datum_offset(gcode_lines, x_adjustment, y_adjustment)
+        self.assertEqual(output, expected_output)
+
+        # Case 5: No adjustment needed for Z axis
+        gcode_lines = ["G1 X10 Y20", "G1 Z5", "G1 X30 Y40"]
+        x_adjustment = 5
+        y_adjustment = 10
+        expected_output = ["G1 X15 Y30", "G1 Z5", "G1 X35 Y50"]
+        output = self.engine.apply_datum_offset(gcode_lines, x_adjustment, y_adjustment)
+        self.assertEqual(output, expected_output)
+
 if __name__ == "__main__":
     unittest.main()

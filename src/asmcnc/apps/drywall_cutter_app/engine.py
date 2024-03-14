@@ -346,7 +346,7 @@ class GCodeEngine():
     def apply_datum_offset(self, gcode_lines, x_adjustment, y_adjustment):
         adjusted_lines = []
         for line in gcode_lines:
-            if line.startswith("G1Z"):
+            if line.startswith("G1Z") or line.startswith("G1 Z"):
                 adjusted_lines.append(line)
                 continue
 
@@ -356,15 +356,23 @@ class GCodeEngine():
                 if part.startswith('X'):
                     x_value = float(part[1:])
                     adjusted_x = x_value + x_adjustment
-                    adjusted_parts.append('X{:.3f}'.format(adjusted_x))
+                    adjusted_parts.append('X{}'.format(self.format_float(adjusted_x)))
                 elif part.startswith('Y'):
                     y_value = float(part[1:])
                     adjusted_y = y_value + y_adjustment
-                    adjusted_parts.append('Y{:.3f}'.format(adjusted_y))
+                    adjusted_parts.append('Y{}'.format(self.format_float(adjusted_y)))
                 else:
                     adjusted_parts.append(part)
-            adjusted_lines.append(' '.join(adjusted_parts) + "\n")
+            adjusted_lines.append(' '.join(adjusted_parts))
         return adjusted_lines
+
+    # For use with apply_datum_offset
+    def format_float(self, value):
+        if value == int(value):
+            return str(int(value))
+        else:
+            decimal_places = len(str(value).split('.')[1])
+            return "{:.decimal_placesf}".format(value)
 
     # Repeat gcode for each pass 
     def repeat_for_depths(self, gcode_lines, pass_depths, start_line_key, end_line_key):
