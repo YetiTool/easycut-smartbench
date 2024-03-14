@@ -27,6 +27,7 @@ from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 
 from asmcnc.comms.grbl_settings_manager import GRBLSettingsManagerSingleton
+from asmcnc.comms.router_machine import ProductCodes
 from asmcnc.core_UI import scaling_utils
 from asmcnc.core_UI.popup_manager import PopupManager
 from asmcnc.comms.model_manager import ModelManagerSingleton
@@ -215,7 +216,8 @@ class SkavaUI(App):
         m.s.yp = yp
 
         # Server connection object
-        sc = server_connection.ServerConnection(sett)
+        if ModelManagerSingleton().get_product_code_name() != ProductCodes.DRYWALLTEC:
+            sc = server_connection.ServerConnection(sett)
 
         # Popup manager
         pm = PopupManager(sm, m, l)
