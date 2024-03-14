@@ -38,7 +38,6 @@ class ProbeButton(Button):
         self.bind(pos=self.update_image_pos)
 
         self.bind(on_press=self.open_screen)
-        # self.m.bind(probe_z_coord=self.close_screen)
 
     def update_image_size(self, instance, value):
         self.image.size = value

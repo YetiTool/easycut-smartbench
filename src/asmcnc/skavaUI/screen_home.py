@@ -297,6 +297,8 @@ class HomeScreen(Screen):
         self.l = kwargs["localization"]
         self.kb = kwargs["keyboard"]
 
+        self.m.bind(probe_z_coord=self.dismiss_z_datum_reminder)
+
         # Job tab
         self.gcode_summary_widget = widget_gcode_summary.GCodeSummary(job=self.jd)
         self.gcode_preview_container.add_widget(self.gcode_summary_widget)
@@ -443,3 +445,7 @@ class HomeScreen(Screen):
 
     def on_pre_leave(self):
         self.m.laser_off()
+
+    def dismiss_z_datum_reminder(self, *args):
+        self.z_datum_reminder_flag = False
+        Logger.debug("Z datum reminder disabled")
