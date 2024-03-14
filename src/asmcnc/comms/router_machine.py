@@ -190,7 +190,7 @@ class RouterMachine(EventDispatcher):
         Raise Z to a height that the user can access the spindle collet
         :return: None
         """
-        self.s.write_command('G0 G53 Z-' + str(self.Z_AXIS_ACCESSIBLE_ABS_HEIGHT))
+        self.s.write_command('G0 G53 Z' + str(self.Z_AXIS_ACCESSIBLE_ABS_HEIGHT))
         # self.jog_absolute_single_axis(Axis.Z.value, target=self.Z_AXIS_ACCESSIBLE_ABS_HEIGHT,
                                     #   speed=self.Z_MAX_FEED_RATE)
 
