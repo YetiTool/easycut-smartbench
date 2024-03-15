@@ -1722,9 +1722,6 @@ class RouterMachine(EventDispatcher):
         constant_feed_target = last_modal_feed_rate * feed_override_percentage / 100
         return abs(constant_feed_target - current_feed_rate) <= tolerance_for_acceleration_detection, last_modal_feed_rate
 
-    def spindle_speed(self):
-        return int(self.s.spindle_speed)
-
     def spindle_load(self):
         try:
             return int(self.s.spindle_load_voltage)
