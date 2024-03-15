@@ -17,7 +17,7 @@ import time
 from enum import Enum
 from kivy.clock import Clock
 from kivy.event import EventDispatcher
-from kivy.properties import StringProperty, NumericProperty, ListProperty
+from kivy.properties import StringProperty, NumericProperty
 
 from asmcnc.comms.logging_system.logging_system import Logger
 # Import managers for GRBL Notification screens (e.g. alarm, error, etc.)
@@ -51,7 +51,7 @@ class SerialConnection(EventDispatcher):
     yp = None  # Yetipilot object
 
     grbl_out = ""
-    response_log = ListProperty()
+    response_log = []
     suppress_error_screens = False
     FLUSH_FLAG = False
 
@@ -88,7 +88,7 @@ class SerialConnection(EventDispatcher):
         self.register_event_type('on_serial_monitor_update') # new data to show for the serial monitor
         self.register_event_type('on_update_overload_peak') # new overload peak value
         self.register_event_type('on_reset_runtime') # runtime counter will be reset
-        self.bind(response_log=self.return_check_outcome)
+        self.register_event_type('on_check_job_finished')
 
     def on_reset_runtime(self, *args):
         """Default callback. Needs to exist."""
@@ -102,6 +102,9 @@ class SerialConnection(EventDispatcher):
         """Default callback. Needs to exist."""
         pass
 
+    def on_check_job_finished(self, *args):
+        """Default callback. Needs to exist."""
+        pass
 
     def __del__(self):
         if self.s: self.s.close()
@@ -492,20 +495,11 @@ class SerialConnection(EventDispatcher):
                 # run job as per normal
                 self.run_job(job_object)
 
-                # get error log back to the checking screen when it's ready
-                Clock.schedule_interval(partial(self.return_check_outcome, job_object), 0.1)
-
             else:
                 Clock.schedule_once(lambda dt: check_job_inner_function(), 0.9)
 
         # Sleep to ensure check mode ok isn't included in log, AND to ensure it's enabled before job run
         Clock.schedule_once(lambda dt: check_job_inner_function(), 0.9)
-
-    def return_check_outcome(self, *args):
-        if len(self.response_log) >= len(self.job_to_check):
-            self.suppress_error_screens = False
-            self.sm.get_screen('check_job').error_log = self.response_log
-            return False
 
     def run_job(self, job_object):
 
@@ -636,13 +630,14 @@ class SerialConnection(EventDispatcher):
 
     # if 'ok' or 'error' rec'd from GRBL
     def process_grbl_response(self, message):
-        if self.suppress_error_screens == True:
+        # if we are in check mode, append message to add it to error_log later
+        if self.suppress_error_screens:
             self.response_log.append(message)
 
         if message.startswith('error'):
             Logger.info('ERROR from GRBL: ' + message)
 
-            if self.suppress_error_screens == False and self.sm.current != 'errorScreen':
+            if not self.suppress_error_screens and self.sm.current != 'errorScreen':
                 self.sm.get_screen('errorScreen').message = message
 
                 if self.sm.current == 'alarmScreen':
@@ -695,6 +690,8 @@ class SerialConnection(EventDispatcher):
                 self.m.disable_check_mode()
                 self.suppress_error_screens = False
                 self._reset_counters()
+                self.job_to_check = []
+                self.dispatch('on_check_job_finished', self.response_log)
 
         else:
             self._reset_counters()
@@ -742,6 +739,8 @@ class SerialConnection(EventDispatcher):
             self.check_streaming_started = False
             self.m.disable_check_mode()
             self.suppress_error_screens = False
+            self.job_to_check = []
+            self.dispatch('on_check_job_finished', self.response_log)
 
             # Flush
             self.FLUSH_FLAG = True

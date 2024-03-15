@@ -1,6 +1,6 @@
 import sys
 
-
+from asmcnc.skavaUI.screen_check_job import CheckingScreen
 from asmcnc.skavaUI.screen_go import GoScreen
 from asmcnc.skavaUI.widget_gcode_monitor import GCodeMonitor
 from automated_unit_tests.unit_test_base import UnitTestBase
@@ -25,8 +25,6 @@ from asmcnc.comms import localization
 RUN FROM easycut-smartbench FOLDER WITH: 
 python -m pytest tests/automated_unit_tests/comms/test_serial_connection_events.py
 '''
-
-#test_utils.create_app()
 
 
 class TestSerialConnectionEvents(UnitTestBase):
@@ -81,3 +79,20 @@ class TestSerialConnectionEvents(UnitTestBase):
                  yetipilot=Mock())
         self._router_machine_module.s.dispatch('on_reset_runtime', 20)
         self.assertEqual(go_screen.total_runtime_seconds, 0)
+
+    def test_check_finished_event(self):
+        """
+        Fires on_check_job_finished event from serial_connection
+        and checks if CheckingScreen receives and handles it.
+        """
+        check_job_screen = CheckingScreen(name='check_job',
+                                                    screen_manager=self._screen_manager,
+                                                    machine=self._router_machine_module,
+                                                    job=self._job_data_module,
+                                                    localization=self._localization_module)
+
+
+        test_data = ['line1', 'line2', 'line3', 'line4']
+        self._router_machine_module.s.response_log = test_data
+        self._router_machine_module.s.dispatch('on_check_job_finished', self._router_machine_module.s.response_log)
+        self.assertEqual(check_job_screen.error_log, test_data)
