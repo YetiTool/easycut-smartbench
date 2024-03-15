@@ -1242,7 +1242,10 @@ class SerialConnection(EventDispatcher):
                     feed_speed = part[3:].split(',')
                     self.feed_rate = feed_speed[0]
                     # convert spindle speed to int after re-compensating to show the old users value
-                    self.spindle_speed = int(self.m.correct_rpm(feed_speed[1], spindle_voltage=None, revert=True))
+                    if int(feed_speed[1]) != 0:
+                        self.spindle_speed = int(self.m.correct_rpm(int(feed_speed[1]), spindle_voltage=None, revert=True))
+                    else:
+                        self.spindle_speed = 0
 
                 elif part.startswith('Ov:'):
                     values = part[3:].split(',')
