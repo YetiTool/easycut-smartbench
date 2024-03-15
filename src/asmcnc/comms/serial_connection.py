@@ -816,7 +816,7 @@ class SerialConnection(EventDispatcher):
     grbl_ln = None
 
     # Feeds and speeds
-    spindle_speed = 0
+    spindle_speed = NumericProperty(0)
     feed_rate = 0
 
     # Feed override feedback
@@ -1241,7 +1241,11 @@ class SerialConnection(EventDispatcher):
                 elif part.startswith('FS:'):
                     feed_speed = part[3:].split(',')
                     self.feed_rate = feed_speed[0]
-                    self.spindle_speed = feed_speed[1]
+                    # convert spindle speed to int after re-compensating to show the old users value
+                    if int(feed_speed[1]) != 0:
+                        self.spindle_speed = int(self.m.correct_rpm(int(feed_speed[1]), spindle_voltage=None, revert=True))
+                    else:
+                        self.spindle_speed = 0
 
                 elif part.startswith('Ov:'):
                     values = part[3:].split(',')
@@ -1731,7 +1735,7 @@ class SerialConnection(EventDispatcher):
 
     def start_sequential_stream(self, list_to_stream, reset_grbl_after_stream=False, end_dwell=False):
         if self.is_sequential_streaming:
-            log('already streaming...try again later')
+            Logger.info('already streaming...try again later')
             Clock.schedule_once(lambda dt: self.start_sequential_stream(list_to_stream, reset_grbl_after_stream, end_dwell), 0.3)
             return
         self.is_sequential_streaming = True
