@@ -465,7 +465,8 @@ class GoScreen(Screen):
                 str(self.m.serial_number()).endswith("03")
                 or self.show_spindle_overload == True
         ) and self.m.stylus_router_choice != "stylus":
-            self.update_overload_label(self.m.s.overload_state)
+            # self.update_overload_label(self.m.s.overload_state)
+            self.update_overload_label(0)
             self.spindle_overload_container.size_hint_y = 0.25
             self.spindle_overload_container.opacity = 1
             self.spindle_overload_container.padding = [0, 0, 0, -10]
@@ -968,7 +969,6 @@ class GoScreen(Screen):
 
     def poll_for_feeds_and_speeds(self, dt):
         # Spindle speed and feed rate
-        self.speedOverride.update_spindle_speed_label()
         self.speedOverride.update_speed_percentage_override_label()
         self.feedOverride.update_feed_rate_label()
         self.feedOverride.update_feed_percentage_override_label()

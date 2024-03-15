@@ -190,8 +190,9 @@ class RouterMachine(EventDispatcher):
         Raise Z to a height that the user can access the spindle collet
         :return: None
         """
-        self.jog_absolute_single_axis(Axis.Z.value, target=self.Z_AXIS_ACCESSIBLE_ABS_HEIGHT,
-                                      speed=self.Z_MAX_FEED_RATE)
+        self.s.write_command('G0 G53 Z' + str(self.Z_AXIS_ACCESSIBLE_ABS_HEIGHT))
+        # self.jog_absolute_single_axis(Axis.Z.value, target=self.Z_AXIS_ACCESSIBLE_ABS_HEIGHT,
+                                    #   speed=self.Z_MAX_FEED_RATE)
 
     def raise_z_axis_to_safe_height_after_probing(self):
         """
@@ -1720,9 +1721,6 @@ class RouterMachine(EventDispatcher):
     def get_is_constant_feed_rate(self, last_modal_feed_rate, feed_override_percentage, current_feed_rate, tolerance_for_acceleration_detection):
         constant_feed_target = last_modal_feed_rate * feed_override_percentage / 100
         return abs(constant_feed_target - current_feed_rate) <= tolerance_for_acceleration_detection, last_modal_feed_rate
-
-    def spindle_speed(self):
-        return int(self.s.spindle_speed)
 
     def spindle_load(self):
         try:
