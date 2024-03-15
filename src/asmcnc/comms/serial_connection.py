@@ -17,7 +17,7 @@ import time
 from enum import Enum
 from kivy.clock import Clock
 from kivy.event import EventDispatcher
-from kivy.properties import StringProperty, NumericProperty
+from kivy.properties import StringProperty, NumericProperty, ListProperty
 
 from asmcnc.comms.logging_system.logging_system import Logger
 # Import managers for GRBL Notification screens (e.g. alarm, error, etc.)
@@ -51,7 +51,7 @@ class SerialConnection(EventDispatcher):
     yp = None  # Yetipilot object
 
     grbl_out = ""
-    response_log = []
+    response_log = ListProperty()
     suppress_error_screens = False
     FLUSH_FLAG = False
 
@@ -87,6 +87,12 @@ class SerialConnection(EventDispatcher):
         # Register events to provide data:
         self.register_event_type('on_serial_monitor_update') # new data to show for the serial monitor
         self.register_event_type('on_update_overload_peak') # new overload peak value
+        self.register_event_type('on_reset_runtime') # runtime counter will be reset
+        self.bind(response_log=self.return_check_outcome)
+
+    def on_reset_runtime(self, *args):
+        """Default callback. Needs to exist."""
+        pass
 
     def on_serial_monitor_update(self, *args):
         """Default callback. Needs to exist."""
@@ -448,6 +454,7 @@ class SerialConnection(EventDispatcher):
 
     is_job_streaming = False
     is_stream_lines_remaining = False
+    job_to_check = []
 
     g_count = 0  # gcodes processed (ok/error'd) by grbl (gcodes may not get processed immediately after being sent)
     l_count = 0  # lines sent to grbl
@@ -467,6 +474,7 @@ class SerialConnection(EventDispatcher):
 
         Logger.info('Checking job...')
 
+        self.job_to_check = job_object
         self.m.enable_check_mode()
         self.set_use_yp(False)
 
@@ -493,8 +501,8 @@ class SerialConnection(EventDispatcher):
         # Sleep to ensure check mode ok isn't included in log, AND to ensure it's enabled before job run
         Clock.schedule_once(lambda dt: check_job_inner_function(), 0.9)
 
-    def return_check_outcome(self, job_object, dt):
-        if len(self.response_log) >= len(job_object):
+    def return_check_outcome(self, *args):
+        if len(self.response_log) >= len(self.job_to_check):
             self.suppress_error_screens = False
             self.sm.get_screen('check_job').error_log = self.response_log
             return False
@@ -557,8 +565,7 @@ class SerialConnection(EventDispatcher):
         self.stream_paused_accumulated_time = 0
         self.stream_start_time = time.time()
 
-        if self.sm.has_screen('go'):
-            self.sm.get_screen('go').total_runtime_seconds = 0
+        self.dispatch('on_reset_runtime')
 
     def set_streaming_flags_to_true(self):
         # self.m.set_pause(False) # moved to go screen for timing reasons

@@ -64,3 +64,20 @@ class TestSerialConnectionEvents(UnitTestBase):
                      localization=self._localization_module)
         self._router_machine_module.s.dispatch('on_serial_monitor_update', 'dir', 'myContent')
         mock_update_monitor_text_buffer.assert_called_with('dir', 'myContent')
+
+    @patch.object(GoScreen, 'total_runtime_seconds')
+    def test_reset_runtime_counter(self,mock_total_runtime_seconds):
+        """
+        Fire the on_reset_runtime event by serial_connection
+        and check if the GoScreen receives and handles it.
+        """
+        go_screen = GoScreen(name='go',
+                 screen_manager=self._screen_manager,
+                 machine=self._router_machine_module,
+                 job=self._job_data_module,
+                 app_manager=None,
+                 database=Mock(),
+                 localization=self._localization_module,
+                 yetipilot=Mock())
+        self._router_machine_module.s.dispatch('on_reset_runtime', 20)
+        self.assertEqual(go_screen.total_runtime_seconds, 0)
