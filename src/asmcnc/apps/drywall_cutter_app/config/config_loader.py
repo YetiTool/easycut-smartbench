@@ -52,9 +52,12 @@ def get_shape_type(json_obj):
         return "Shape type: " + json_obj['shape_type'] + "\n"
 
 def get_shape_dimensions(json_obj):
-    if json_obj['shape_type'] in ['square', 'rectangle']:
+    if json_obj['shape_type'] == 'rectangle':
         dims =  INDENT_VALUE + "X: " + str(json_obj['canvas_shape_dims']['x']) + "\n"
         dims += INDENT_VALUE + "Y: " + str(json_obj['canvas_shape_dims']['y']) + "\n"
+        dims += INDENT_VALUE + "R: " + str(json_obj['canvas_shape_dims']['r']) + "\n"
+    elif json_obj['shape_type'] == 'square':
+        dims =  INDENT_VALUE + "Y: " + str(json_obj['canvas_shape_dims']['y']) + "\n"
         dims += INDENT_VALUE + "R: " + str(json_obj['canvas_shape_dims']['r']) + "\n"
     elif json_obj['shape_type'] == 'circle':
         dims = INDENT_VALUE + "D: " + str(json_obj['canvas_shape_dims']['d']) + "\n"
@@ -170,10 +173,28 @@ class DWTConfig(object):
         :param config_name: The name of to save the configuration file as.
         """
         file_path = os.path.join(configurations_dir, config_name)
-
+        self.cleanup_active_config()
         with open(file_path, 'w') as f:
             json.dump(self.active_config, f, indent=4, default=lambda o: o.__dict__)
 
+    def cleanup_active_config(self):
+        if self.active_config.shape_type == 'rectangle':
+            self.active_config.canvas_shape_dims.d = 0
+            self.active_config.canvas_shape_dims.l = 0
+        elif self.active_config.shape_type == 'square':
+            self.active_config.canvas_shape_dims.x = 0
+            self.active_config.canvas_shape_dims.d = 0
+            self.active_config.canvas_shape_dims.l = 0
+        elif self.active_config.shape_type == 'circle':
+            self.active_config.canvas_shape_dims.x = 0
+            self.active_config.canvas_shape_dims.y = 0
+            self.active_config.canvas_shape_dims.r = 0
+            self.active_config.canvas_shape_dims.l = 0
+        elif self.active_config.shape_type == 'line':
+            self.active_config.canvas_shape_dims.x = 0
+            self.active_config.canvas_shape_dims.y = 0
+            self.active_config.canvas_shape_dims.r = 0
+            self.active_config.canvas_shape_dims.d = 0
     @debug
     def load_cutter(self, cutter_name):
         # type (str) -> None
