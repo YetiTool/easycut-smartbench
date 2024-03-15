@@ -1,8 +1,10 @@
 .. _top:
 
-Release headline features (title)
+This release is a patch for V2.8.2
 ====================================================
-Detailed release notes here!
+We have now corrected the fault that was causing an Error 9 when starting a job.
+This patch also includes correct spindle speed figures for analogue spindles.
+The Z datum reminder now displays at the correct time.
 **Find full release notes on our website, by scanning the QR code on the right.**
 
 .. _bottom:
