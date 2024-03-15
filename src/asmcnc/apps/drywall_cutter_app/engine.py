@@ -368,7 +368,8 @@ class GCodeEngine():
         return adjusted_lines
 
     # For use with apply_datum_offset
-    def format_float(value):
+    def format_float(*args):
+        value = args[1]
         if value == int(value):
             return str(int(value))
         else:
@@ -594,4 +595,3 @@ class GCodeEngine():
         with open(output_file, 'w+') as out_file:
             out_file.write(output.decode('utf-8'))  # Use write() to write the entire output as a single string
             print("%s written" % output_file)
-

@@ -379,5 +379,36 @@ class EngineTests(unittest.TestCase):
         output = self.engine.apply_datum_offset(gcode_lines, x_adjustment, y_adjustment)
         self.assertEqual(output, expected_output)
 
-if __name__ == "__main__":
+    def test_format_float_integer(self):
+        # Case 1: Integer value
+        value = 10
+        expected_output = "10"
+        output = self.engine.format_float(value)
+        self.assertEqual(output, expected_output)
+
+        # Case 2: Negative integer value
+        value = -5
+        expected_output = "-5"
+        output = self.engine.format_float(value)
+        self.assertEqual(output, expected_output)
+
+        # Case 3: Decimal value without extra zeros
+        value = 3.14
+        expected_output = "3.14"
+        output = self.engine.format_float(value)
+        self.assertEqual(output, expected_output)
+
+        # Case 4: Decimal value with extra zeros
+        value = 2.5000
+        expected_output = "2.5"
+        output = self.engine.format_float(value)
+        self.assertEqual(output, expected_output)
+
+        # Case 5: Negative decimal value
+        value = -1.234
+        expected_output = "-1.234"
+        output = self.engine.format_float(value)
+        self.assertEqual(output, expected_output)
+
+if __name__ == '__main__':
     unittest.main()
