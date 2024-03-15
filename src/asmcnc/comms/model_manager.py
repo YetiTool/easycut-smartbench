@@ -200,6 +200,9 @@ class ModelManagerSingleton(EventDispatcher):
         self._data['product_code'] = pc
         self.save_model_data_to_file()
 
+    def get_product_code(self):
+        return self._data['product_code']
+
     def get_product_code_name(self):
         return self._data['product_code'].name
 
