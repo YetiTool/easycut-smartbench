@@ -216,7 +216,7 @@ class SkavaUI(App):
         m.s.yp = yp
 
         # Server connection object
-        if ModelManagerSingleton().get_product_code_name() != ProductCodes.DRYWALLTEC:
+        if ModelManagerSingleton().get_product_code() != ProductCodes.DRYWALLTEC:
             sc = server_connection.ServerConnection(sett)
 
         # Popup manager

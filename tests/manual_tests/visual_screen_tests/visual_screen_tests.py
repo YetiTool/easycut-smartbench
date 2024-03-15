@@ -2,9 +2,9 @@
 
 import sys, os
 
- from asmcnc.comms.logging_system.logging_system import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 
- if len(sys.argv) != 2:
+if len(sys.argv) != 2:
     Logger.info("Correct usage: python -m tests.manual_tests.visual_screen_tests.visual_screen_tests <test_function_name>")
     sys.exit(0)
 
@@ -38,7 +38,7 @@ path_to_EC = os.getcwd()
 sys.path.append('./src')
 os.chdir('./src')
 
- from kivy.app import App
+from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
@@ -51,8 +51,8 @@ from settings import settings_manager
 from asmcnc.comms import smartbench_flurry_database_connection
 from asmcnc.apps import app_manager
 from asmcnc.job.yetipilot.yetipilot import YetiPilot
- from asmcnc.comms.smart_transfer import server_connection
- from asmcnc.core_UI.popup_manager import PopupManager
+from asmcnc.comms.smart_transfer import server_connection
+from asmcnc.core_UI.popup_manager import PopupManager
 from asmcnc.core_UI import scaling_utils
 
 from asmcnc.skavaUI import screen_error, screen_rebooting, screen_file_loading, screen_lobby
@@ -62,7 +62,7 @@ from asmcnc.skavaUI import screen_door, screen_mstate_warning, screen_serial_fai
 from asmcnc.skavaUI import screen_check_job, popup_info
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety
- from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1
+from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1
 from asmcnc.apps.systemTools_app.screens.calibration import screen_stall_jig
 from asmcnc.apps.upgrade_app import screen_upgrade, screen_upgrade_successful, screen_already_upgraded
 from asmcnc.core_UI.job_go.screens import screen_spindle_health_check

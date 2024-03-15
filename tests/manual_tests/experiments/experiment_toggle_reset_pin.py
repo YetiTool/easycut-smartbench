@@ -9,9 +9,9 @@ python -m tests.manual_tests.experiments.experiment_toggle_reset_pin
 
 import sys, os, subprocess
 
- from asmcnc.comms.logging_system.logging_system import Logger
+from asmcnc.comms.logging_system.logging_system import Logger
 
- sys.path.append('./src')
+sys.path.append('./src')
 os.chdir('./src')
 
 from kivy.config import Config
@@ -23,17 +23,17 @@ Config.set('graphics', 'maxfps', '60')
 Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
 Config.write()
 
- from mock import Mock
+from mock import Mock
 
- from kivy.app import App
+from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
- from kivy.lang import Builder
+from kivy.lang import Builder
 
 # COMMS IMPORTS
 from asmcnc.comms import router_machine
 
- # NB: router_machine imports serial_connection
- from settings import settings_manager
+# NB: router_machine imports serial_connection
+from settings import settings_manager
 from asmcnc.comms import localization
 from asmcnc.job import job_data
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
