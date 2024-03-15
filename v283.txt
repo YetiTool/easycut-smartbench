@@ -1,0 +1,8 @@
+.. _top:
+
+Release headline features (title)
+====================================================
+Detailed release notes here!
+**Find full release notes on our website, by scanning the QR code on the right.**
+
+.. _bottom:
