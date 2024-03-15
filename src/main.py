@@ -20,7 +20,6 @@ import logging
 import os
 import os.path
 import sys
-from datetime import datetime
 
 from kivy import Logger
 from kivy.config import Config
@@ -28,6 +27,7 @@ from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 
 from asmcnc.comms.grbl_settings_manager import GRBLSettingsManagerSingleton
+from asmcnc.comms.router_machine import ProductCodes
 from asmcnc.core_UI import scaling_utils
 from asmcnc.core_UI.popup_manager import PopupManager
 from asmcnc.comms.model_manager import ModelManagerSingleton
@@ -54,7 +54,7 @@ from kivy.core.window import Window
 
 # COMMS IMPORTS
 from asmcnc.comms import router_machine
-from asmcnc.comms import server_connection
+from asmcnc.comms.smart_transfer import server_connection
 from asmcnc.comms import smartbench_flurry_database_connection
 
 # NB: router_machine imports serial_connection
@@ -104,7 +104,7 @@ from asmcnc.skavaUI import screen_homing_decision
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v2.8.2'
+initial_version = 'v2.8.3'
 
 config_flag = False
 
@@ -216,7 +216,8 @@ class SkavaUI(App):
         m.s.yp = yp
 
         # Server connection object
-        sc = server_connection.ServerConnection(sett)
+        if ModelManagerSingleton().get_product_code() != ProductCodes.DRYWALLTEC:
+            sc = server_connection.ServerConnection(sett)
 
         # Popup manager
         pm = PopupManager(sm, m, l)
