@@ -495,7 +495,7 @@ class DatabaseEventManager():
 					"public_ip_address": self.set.public_ip_address
 				},
 				"speeds": {
-					"spindle_speed": self.m.spindle_speed(),
+					"spindle_speed": self.m.s.spindle_speed,
 					"spindle_percentage": self.sm.get_screen('go').speedOverride.speed_rate_label.text,
 					"max_spindle_speed_absolute": self.sm.get_screen('go').spindle_speed_max_absolute or '',
 					"max_spindle_speed_percentage": self.sm.get_screen('go').spindle_speed_max_percentage or ''
