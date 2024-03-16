@@ -6,6 +6,8 @@ Info pop-up
 
 import kivy
 import os
+
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.popup import Popup
@@ -24,9 +26,6 @@ from datetime import datetime
 from kivy.graphics import Color, Rectangle
 from asmcnc.core_UI import console_utils
 
-def log(message):
-    timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 class PopupWelcome(Widget):
 
@@ -587,7 +586,7 @@ class PopupSoftwareUpdateWarning(Widget):
             elif update_method == "USB":
                 prep_for_sw_update_over_usb()
             else:  # Fail-safe message to make debugging easier in case usb_or_wifi strings are broken
-                log("Error getting update method. Please check screen_update_SW.py" + \
+                Logger.info("Error getting update method. Please check screen_update_SW.py" + \
                          "\nShould be: 'WiFi' or 'USB'" + \
                          "\nBut was: " + update_method)
 

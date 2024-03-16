@@ -103,11 +103,6 @@ Builder.load_string(
 )
 
 
-def log(message):
-    timestamp = datetime.now()
-    print(timestamp.strftime("%H:%M:%S.%f")[:12] + " " + str(message))
-
-
 class LiftZOnPauseDecisionScreen(Screen):
     default_font_size = get_scaled_sp("36sp")
 

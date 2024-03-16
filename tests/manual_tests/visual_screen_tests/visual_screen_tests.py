@@ -2,8 +2,10 @@
 
 import sys, os
 
+from asmcnc.comms.logging_system.logging_system import Logger
+
 if len(sys.argv) != 2:
-    print("Correct usage: python -m tests.manual_tests.visual_screen_tests.visual_screen_tests <test_function_name>")
+    Logger.info("Correct usage: python -m tests.manual_tests.visual_screen_tests.visual_screen_tests <test_function_name>")
     sys.exit(0)
 
 from kivy.config import Config
@@ -36,7 +38,6 @@ path_to_EC = os.getcwd()
 sys.path.append('./src')
 os.chdir('./src')
 
-import kivy
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
@@ -50,16 +51,17 @@ from settings import settings_manager
 from asmcnc.comms import smartbench_flurry_database_connection
 from asmcnc.apps import app_manager
 from asmcnc.job.yetipilot.yetipilot import YetiPilot
-from asmcnc.comms import server_connection
+from asmcnc.comms.smart_transfer import server_connection
 from asmcnc.core_UI.popup_manager import PopupManager
+from asmcnc.core_UI import scaling_utils
 
-from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_error, screen_rebooting, screen_file_loading, screen_lobby
+from asmcnc.skavaUI import screen_error, screen_rebooting, screen_file_loading, screen_lobby
 from asmcnc.skavaUI import screen_job_recovery, screen_nudge, screen_recovery_decision, screen_homing_decision, popup_nudge
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_spindle_shutdown, screen_stop_or_resume_decision
 from asmcnc.skavaUI import screen_door, screen_mstate_warning, screen_serial_failure, screen_squaring_active, screen_jobstart_warning
 from asmcnc.skavaUI import screen_check_job, popup_info
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
-from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety, screen_starting_smartbench
+from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety
 from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1
 from asmcnc.apps.systemTools_app.screens.calibration import screen_stall_jig
 from asmcnc.apps.upgrade_app import screen_upgrade, screen_upgrade_successful, screen_already_upgraded
@@ -94,6 +96,15 @@ Cmport = 'COM3'
 class ScreenTest(App):
     width = Window.width
     height = Window.height if Window.height == 480 else Window.height - 32
+
+    def get_scaled_width(self, val):
+        return scaling_utils.get_scaled_width(val)
+
+    def get_scaled_height(self, val):
+        return scaling_utils.get_scaled_height(val)
+
+    def get_scaled_sp(self, val):
+        return scaling_utils.get_scaled_sp(val)
 
     lang_idx = 0
     cycle_languages = True
@@ -178,7 +189,7 @@ class ScreenTest(App):
             def show_next_language(test_languages, index):
                 lang = test_languages[index]
                 l.load_in_new_language(lang)
-                print("New lang: " + str(lang))
+                Logger.info("New lang: " + str(lang))
                 try:
                     current_screen = sm.get_screen(str(sm.current))
                     current_screen.update_strings()
@@ -186,7 +197,7 @@ class ScreenTest(App):
                         if isinstance(widget, Label):
                             widget.font_name = l.font_regular
                 except: 
-                    print(str(sm.current) + " has no update strings function")
+                    Logger.info(str(sm.current) + " has no update strings function")
 
                 index += 1
                 if index >= len(test_languages):
@@ -400,7 +411,7 @@ class ScreenTest(App):
             sm.get_screen('upgrade').get_correct_unlock_code = Mock(return_value=str(unlock_code))
             sm.get_screen('lobby').carousel.index = 3
 
-            print(sm.get_screen('upgrade').get_correct_unlock_code())
+            Logger.info(sm.get_screen('upgrade').get_correct_unlock_code())
 
             sm.current = 'lobby'
 
@@ -773,7 +784,7 @@ class ScreenTest(App):
             def stream_and_pause(dt=0):
                 m.s.is_job_streaming = True
                 m.set_pause(True, 'yetipilot_low_feed')
-                print("STOP FOR STREAM PAUSE")
+                Logger.info("STOP FOR STREAM PAUSE")
                 # m.stop_for_a_stream_pause('yetipilot_spindle_data_loss')
 
             Clock.schedule_once(stream_and_pause, 5)

@@ -5,6 +5,7 @@ Created on 19 Aug 2017
 @author: Ed
 """
 import kivy
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, FadeTransition
 from kivy.uix.floatlayout import FloatLayout
@@ -277,11 +278,6 @@ Builder.load_string(
 )
 
 
-def log(message):
-    timestamp = datetime.now()
-    print(timestamp.strftime("%H:%M:%S.%f")[:12] + " " + message)
-
-
 class HomeScreen(Screen):
     no_image_preview_path = "asmcnc/skavaUI/img/image_preview_inverted.png"
     gcode_has_been_checked_and_its_ok = False
@@ -300,6 +296,8 @@ class HomeScreen(Screen):
         self.set = kwargs["settings"]
         self.l = kwargs["localization"]
         self.kb = kwargs["keyboard"]
+
+        self.m.bind(probe_z_coord=self.dismiss_z_datum_reminder)
 
         # Job tab
         self.gcode_summary_widget = widget_gcode_summary.GCodeSummary(job=self.jd)
@@ -335,7 +333,7 @@ class HomeScreen(Screen):
         self.xy_move_container.add_widget(self.xy_move_widget)
         self.common_move_container.add_widget(self.common_move_widget)
         self.z_move_container.add_widget(
-            widget_z_move.ZMove(machine=self.m, screen_manager=self.sm, job=self.jd)
+            widget_z_move.ZMove(machine=self.m, screen_manager=self.sm, job=self.jd, localization=self.l)
         )
 
         # Settings tab
@@ -364,6 +362,7 @@ class HomeScreen(Screen):
             Clock.schedule_once(lambda dt: self.m.laser_on(), 0.2)
         else:
             Clock.schedule_once(lambda dt: self.m.set_led_colour("GREEN"), 0.2)
+
         if self.jd.job_gcode != []:
             self.gcode_summary_widget.display_summary()
 
@@ -371,7 +370,7 @@ class HomeScreen(Screen):
             try:
                 Clock.schedule_once(self.preview_job_file, 0.05)
             except:
-                log("Unable to preview file")
+                Logger.info("Unable to preview file")
 
     def on_pre_enter(self):
         if self.jd.job_gcode == []:
@@ -393,7 +392,7 @@ class HomeScreen(Screen):
                 self.gcode_preview_widget.draw_file_in_xy_plane([])
                 self.gcode_preview_widget.get_non_modal_gcode([])
             except:
-                print("No G-code loaded.")
+                Logger.info("No G-code loaded.")
             self.gcode_summary_widget.hide_summary()
         else:
             # File label at the top
@@ -437,12 +436,16 @@ class HomeScreen(Screen):
     def preview_job_file(self, dt):
         # Draw gcode preview
         try:
-            log("> draw_file_in_xy_plane")
+            Logger.info("> draw_file_in_xy_plane")
             self.gcode_preview_widget.draw_file_in_xy_plane(self.non_modal_gcode_list)
-            log("< draw_file_in_xy_plane")
+            Logger.info("< draw_file_in_xy_plane")
         except:
-            print("Unable to draw gcode")
-        log("DONE")
+            Logger.info("Unable to draw gcode")
+        Logger.info("DONE")
 
     def on_pre_leave(self):
         self.m.laser_off()
+
+    def dismiss_z_datum_reminder(self, *args):
+        self.z_datum_reminder_flag = False
+        Logger.debug("Z datum reminder disabled")

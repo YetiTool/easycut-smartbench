@@ -116,8 +116,10 @@ class SpeedOverride(Widget):
         self.sm = kwargs["screen_manager"]
         self.db = kwargs["database"]
 
-    def update_spindle_speed_label(self):
-        self.spindle_rpm.text = str(self.m.spindle_speed())
+        self.m.s.bind(spindle_speed=self.update_spindle_speed_label)
+
+    def update_spindle_speed_label(self, instance, value):
+        self.spindle_rpm.text = str(value)
 
     def update_speed_percentage_override_label(self):
         self.speed_override_percentage = self.m.s.speed_override_percentage

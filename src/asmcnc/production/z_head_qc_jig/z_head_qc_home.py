@@ -1,3 +1,4 @@
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
@@ -91,7 +92,7 @@ class ZHeadQCHome(Screen):
             self.update_usb_button_label()
 
         except:
-            print("Can't get HW version or hex file")
+            Logger.info("Can't get HW version or hex file")
 
     def go_back_to_pcb_setup(self):
         self.sm.current = "qcpcbsetup"  
@@ -135,7 +136,7 @@ class ZHeadQCHome(Screen):
         def nested_do_fw_update(dt):
             pi = pigpio.pi()
             pi.set_mode(17, pigpio.ALT3)
-            print(pi.get_mode(17))
+            Logger.info(pi.get_mode(17))
             pi.stop()
 
             cmd = "grbl_file=" + self.get_fw_filepath() + " && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
