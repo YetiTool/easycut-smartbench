@@ -691,7 +691,7 @@ class BuildInfoScreen(Screen):
                 "CNC Router", ""
             )
         else:
-            self.smartbench_model.text = ModelManagerSingleton().product_code.name
+            self.smartbench_model.text = ModelManagerSingleton().get_product_code_name()
 
     def choose_language(self):
         chosen_lang = self.language_button.text

@@ -739,7 +739,7 @@ class WifiScreen(Screen):
                 popup_info.PopupWarning(self.sm, self.l, message)
 
         self.dismiss_wait_popup_event = Clock.schedule_once(dismiss_wait_popup, 5)
-        self.wifi_error_timeout_event = Clock.schedule_once(wifi_error_timeout, 30)
+        self.wifi_error_timeout_event = Clock.schedule_once(wifi_error_timeout, 45)
 
     def refresh_ip_label_value(self, dt):
         self.ip_status_label.text = self.set.ip_address

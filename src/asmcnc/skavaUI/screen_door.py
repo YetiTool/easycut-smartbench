@@ -5,6 +5,7 @@ Created March 2020
 
 Screen to handle door command, and allow user to resume.
 """
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.animation import Animation
 from kivy.clock import Clock
 from kivy.lang import Builder
@@ -265,7 +266,7 @@ class DoorScreen(Screen):
 
     def on_enter(self):
         if not str(self.m.state()).startswith("Door:0"):
-            print(str(self.m.state()))
+            Logger.info(str(self.m.state()))
             self.anim_countdown_img.repeat = True
             self.anim_spindle_label.repeat = True
             Clock.schedule_once(self.start_spindle_label_animation, 1.4)

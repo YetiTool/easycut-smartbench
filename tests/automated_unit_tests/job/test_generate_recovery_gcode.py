@@ -1,4 +1,7 @@
 import sys, os
+
+from asmcnc.comms.logging_system.logging_system import Logger
+
 sys.path.append('./src')
 
 try: 
@@ -7,7 +10,7 @@ try:
     from mock import Mock, MagicMock
 
 except: 
-    print("Can't import mocking packages, are you on a dev machine?")
+    Logger.info("Can't import mocking packages, are you on a dev machine?")
 
 from asmcnc.job import job_data
 from asmcnc.comms import localization

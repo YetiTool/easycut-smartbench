@@ -3,6 +3,7 @@ Created on 1 Feb 2018
 @author: Ed
 """
 import kivy
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.floatlayout import FloatLayout
@@ -164,7 +165,7 @@ class VirtualBed(Widget):
             * self.m.grbl_y_max_travel
             - self.m.grbl_y_max_travel
         )
-        print("Y: ", str(touch.y), str(self.touch_zone.y), str(self.touch_zone.pos[1]))
+        Logger.info("Y: ", str(touch.y), str(self.touch_zone.y), str(self.touch_zone.pos[1]))
         self.m.quit_jog()
         self.m.jog_absolute_xy(machineX, machineY, self.bedWidgetJogFeedrate)
 

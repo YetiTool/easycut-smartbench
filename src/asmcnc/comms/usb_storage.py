@@ -9,7 +9,7 @@ WARNINGS:
 
 @author: Ed
 '''
-
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.clock import Clock
 import sys, os, subprocess
 
@@ -91,11 +91,11 @@ class USB_storage(object):
                 # If files are in directory
                 if files_in_usb_dir:
                     self.is_usb_mounted_flag = True
-                    if self.IS_USB_VERBOSE: print('USB: OK')
+                    if self.IS_USB_VERBOSE: Logger.info('USB: OK')
 
                 # If directory is empty
                 else:
-                    if self.IS_USB_VERBOSE: print('USB: NONE')
+                    if self.IS_USB_VERBOSE: Logger.info('USB: NONE')
 
                     # UNmount the usb if: it is mounted but not present (since the directory is empty)
                     if self.is_usb_mounted_flag:
@@ -111,7 +111,7 @@ class USB_storage(object):
                             if ('sd' + char) in devices:
                                 # temporarily stop polling for USB while mounting, and attempt to mount:
                                 self.stop_polling_for_usb()
-                                if self.IS_USB_VERBOSE: print('Stopped polling')
+                                if self.IS_USB_VERBOSE: Logger.info('Stopped polling')
                                 # allow time for linux to establish filesystem after os detection of device:
                                 self.mount_event = Clock.schedule_once(lambda dt: self.mount_linux_usb('sd' + char),
                                                                        1)
@@ -129,7 +129,7 @@ class USB_storage(object):
             os.system(unmount_command)
 
         except:
-            if self.IS_USB_VERBOSE: print('FAILED: Could not UNmount USB')
+            if self.IS_USB_VERBOSE: Logger.info('FAILED: Could not UNmount USB')
 
         def check_linux_usb_unmounted():
             if sys.platform != "win32":
@@ -139,11 +139,11 @@ class USB_storage(object):
                 # If files are in directory
                 if files_in_usb_dir:
                     self.is_usb_mounted_flag = True
-                    if self.IS_USB_VERBOSE: print('USB: STILL MOUNTED')
+                    if self.IS_USB_VERBOSE: Logger.info('USB: STILL MOUNTED')
 
                 # If directory is empty
                 else:
-                    if self.IS_USB_VERBOSE: print('USB: UNMOUNTED')
+                    if self.IS_USB_VERBOSE: Logger.info('USB: UNMOUNTED')
                     self.is_usb_mounted_flag = False
                     Clock.unschedule(poll_for_dismount)
 
@@ -159,7 +159,7 @@ class USB_storage(object):
     def mount_linux_usb(self, device):
 
         if self.mount_event != None: Clock.unschedule(self.mount_event)
-        if self.IS_USB_VERBOSE: print('Attempting to mount')
+        if self.IS_USB_VERBOSE: Logger.info('Attempting to mount')
 
         mount_command = "echo posys | sudo mount /dev/" + device + "1 " + self.linux_usb_path  # TODO: NOT SECURE
         try:
@@ -176,7 +176,7 @@ class USB_storage(object):
             if exit_code == 0:
                 self.is_usb_mounted_flag = True
                 self.start_polling_for_usb()  # restart checking for USB
-                if self.IS_USB_VERBOSE: print('USB: MOUNTED')
+                if self.IS_USB_VERBOSE: Logger.info('USB: MOUNTED')
 
                 self.show_user_usb_status("connected")
 
@@ -189,7 +189,7 @@ class USB_storage(object):
                 self.sm.pm.show_error_popup(description, button_one_callback=self.start_polling_for_usb)
 
         except:
-            if self.IS_USB_VERBOSE: print('FAILED: Could not mount USB')
+            if self.IS_USB_VERBOSE: Logger.info('FAILED: Could not mount USB')
             self.is_usb_mounted_flag = False
             self.start_polling_for_usb()  # restart checking for USB
 

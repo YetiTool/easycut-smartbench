@@ -92,7 +92,6 @@ Builder.load_string("""
             markup: True
             multiline: False
             text: ''
-            input_filter: 'float'
         
         Label:
             id: bottom_offset_label
@@ -121,7 +120,6 @@ Builder.load_string("""
             markup: True
             multiline: False
             text: ''
-            input_filter: 'float' 
         
         Image:
             id: total_cut_depth_dims
@@ -236,7 +234,6 @@ Builder.load_string("""
                 multiline: False
                 text: ''
                 disabled: True
-                input_filter: 'float' 
                 
         BoxLayout:
             orientation: 'horizontal'
@@ -494,6 +491,8 @@ class CuttingDepthsPopup(Popup):
             self.generate_pass_depth_lines(number_of_passes)
 
     def confirm(self):
+        self.kb.defocus_all_text_inputs(self.text_inputs)
+
         material_thickness = self.get_safe_float(self.material_thickness.text)
         bottom_offset = self.get_safe_float(self.bottom_offset.text)
         depth_per_pass = self.get_safe_float(self.depth_per_pass.text)
@@ -505,6 +504,7 @@ class CuttingDepthsPopup(Popup):
         self.dismiss()
 
     def cancel(self):
+        self.kb.defocus_all_text_inputs(self.text_inputs)
         self.dismiss()
 
     def validate_inputs(self):

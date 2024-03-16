@@ -20,16 +20,12 @@ touch /home/pi/YETI_ZHEADQC_PROD_JIG.txt
 
 #######################################################
 '''
-
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, NoTransition
 from kivy.clock import Clock
 
-from time import sleep
-
-from asmcnc.comms.router_machine import RouterMachine 
-from asmcnc.comms import server_connection
-from asmcnc.apps.app_manager import AppManagerClass
+from asmcnc.comms.router_machine import RouterMachine
 from settings.settings_manager import Settings
 from asmcnc.job.job_data import JobData
 from asmcnc.comms.localization import Localization
@@ -68,18 +64,12 @@ from asmcnc.production.z_head_mechanics_jig.z_head_mechanics_monitor import ZHea
 
 from asmcnc.production.database.calibration_database import CalibrationDatabase
 
-from datetime import datetime
-
 Cmport = 'COM3'
 
 
-def log(message):
-    timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
-
 class ZHeadQC(App):
     def build(self):
-        log('Starting diagnostics')
+        Logger.info('Starting diagnostics')
 
         sm = ScreenManager(transition=NoTransition())
 

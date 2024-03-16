@@ -1,5 +1,7 @@
 import os
 
+from asmcnc.comms.logging_system.logging_system import Logger
+
 from asmcnc.apps.start_up_sequence.screens import \
 screen_reboot_to_apply_settings, \
 screen_release_notes, \
@@ -201,13 +203,13 @@ class StartUpSequence(object):
 
 			try:
 				self.sm.remove_widget(self.sm.get_screen(screen_name))
-				print(screen_name + ' deleted')
+				Logger.info(screen_name + ' deleted')
 
 			except: pass
 
 
 	def __del__(self):
-		print('End of startup sequence')
+		Logger.info('End of startup sequence')
 
 
 

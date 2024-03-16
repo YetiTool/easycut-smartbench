@@ -20,13 +20,11 @@ touch /home/pi/YETI_LBQC_PROD_JIG.txt
 
 #######################################################
 '''
-
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, NoTransition
 
-from asmcnc.comms.router_machine import RouterMachine 
-from asmcnc.comms import server_connection
-from asmcnc.apps.app_manager import AppManagerClass
+from asmcnc.comms.router_machine import RouterMachine
 from settings.settings_manager import Settings
 from asmcnc.job.job_data import JobData
 from asmcnc.comms.localization import Localization
@@ -40,18 +38,12 @@ from asmcnc.skavaUI import screen_error
 from asmcnc.production.lower_beam_qc_jig.lower_beam_qc import LowerBeamQC
 from asmcnc.production.lower_beam_qc_jig.lower_beam_qc_warranty import LowerBeamQCWarranty
 
-from datetime import datetime
-
 Cmport = 'COM3'
 
 
-def log(message):
-    timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
-
 class LowerBeamQCApp(App):
     def build(self):
-        log('Starting diagnostics')
+        Logger.info('Starting diagnostics')
 
         sm = ScreenManager(transition=NoTransition())
 
