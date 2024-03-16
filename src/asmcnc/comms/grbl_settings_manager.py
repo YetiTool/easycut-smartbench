@@ -30,37 +30,9 @@ class GRBLSettingsManagerSingleton(object):
     # json skeletons
     _machine_saved_data = {
         SERIAL_ID: '0000.00',  # serial number
-        0: None, # Step pulse, microseconds
-        1: None, # Step idle delay, milliseconds
-        2: None, # Step port invert, mask
-        4: None, # Step enable invert, boolean
-        5: None, # Limit pins invert, boolean
-        6: None, # Probe pin invert, boolean
-        10: None, # Status report, mask
-        11: None, # Junction deviation, mm
-        12: None, # Arc tolerance, mm
-        13: None, # Report inches, boolean
-        20: None, # Soft limits, boolean
-        21: None, # Hard limits, boolean
-        22: None, # Homing cycle, boolean
-        23: None, # Homing dir invert, mask
-        24: None, # Homing feed, mm/min
-        25: None, # Homing seek, mm/min
-        26: None, # Homing debounce, milliseconds
-        27: None, # Homing pull-off, mm
-        30: None, # Max spindle speed, RPM
-        31: None, # Min spindle speed, RPM
-        32: None, # Laser mode, boolean
         100: 0,  # x steps/mm
         101: 0,  # y steps/mm
-        102: 0,  # z steps/mm
-        110: None, # X Max rate, mm/min
-        111: None, # Y Max rate, mm/min
-        112: None, # Z Max rate, mm/min
-        120: None, # X Acceleration, mm/sec^2
-        121: None, # Y Acceleration, mm/sec^2
-        122: None, # Z Acceleration, mm/sec^2
-        130: None # X Max travel, mm
+        102: 0  # z steps/mm
     }
 
     _machine_fw_default_data = {
@@ -245,7 +217,7 @@ class GRBLSettingsManagerSingleton(object):
         """
         descriptions = {
             0: "Step pulse, microseconds ($0) setting",
-            1: "Step idle delay, milliseco ($1) setting",
+            1: "Step idle delay, milliseconds ($1) setting",
             2: "Step port invert, mask ($2) setting",
             4: "Step enable invert, boolean ($4) setting",
             5: "Limit pins invert, boolean ($5) setting",
@@ -260,7 +232,7 @@ class GRBLSettingsManagerSingleton(object):
             23: "Homing dir invert, mask ($23) setting",
             24: "Homing feed, mm/min ($24) setting",
             25: "Homing seek, mm/min ($25) setting",
-            26: "Homing debounce, millisec ($26) setting",
+            26: "Homing debounce, milliseconds ($26) setting",
             27: "Homing pull-off, mm ($27) setting",
             30: "Max spindle speed, RPM ($30) setting",
             31: "Min spindle speed, RPM ($31) setting",
@@ -268,24 +240,13 @@ class GRBLSettingsManagerSingleton(object):
             110: "X Max rate, mm/min ($110) setting",
             111: "Y Max rate, mm/min ($111) setting",
             112: "Z Max rate, mm/min ($112) setting",
-            120: "X Acceleration, mm/s ($120) setting",
-            121: "Y Acceleration, mm/s ($121) setting",
-            122: "Z Acceleration, mm/s ($122) setting",
+            120: "X Acceleration, mm/sec^2 ($120) setting",
+            121: "Y Acceleration, mm/sec^2 ($121) setting",
+            122: "Z Acceleration, mm/sec^2 ($122) setting",
             130: "X Max travel, mm ($130) setting"
         }
 
-        if self._machine_saved_data[setting] is None:  # not saved yet?
-            self._machine_saved_data[setting] = value
-            self.save_machine_data_to_file()
-            log('First startup after update? {} saved to file: {}'.format(descriptions[setting], value))
-        elif value == self._system_default_data[setting]:  # default? EEPROM error happened -> restored defaults
-            if self._machine_saved_data[setting] is not None:  # saved value exists?
-                # restore saved value:
-                self.machine.write_dollar_setting(setting, self._machine_saved_data[setting])
-                log('Restored {} from file: {}'.format(descriptions[setting], self._machine_saved_data[setting]))
-            else:
-                log('Cannot restore {}. No backup found!'.format(descriptions[setting]))
-        elif value != self._machine_saved_data[setting]:  # new values detected?
-            self._machine_saved_data[setting] = value
-            self.save_machine_data_to_file()
-            log('{} updated to: {}'.format(descriptions[setting], value))
+        if value != self._system_default_data[setting]:  # check if value deviates from default
+            # restore default value:
+            self.machine.write_dollar_setting(setting, self._system_default_data[setting])
+            log('Restored {} to default: {}'.format(descriptions[setting], self._system_default_data[setting]))
