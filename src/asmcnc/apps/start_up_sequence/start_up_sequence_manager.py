@@ -12,6 +12,7 @@ from asmcnc.apps.start_up_sequence.warranty_app import screen_manager_warranty
 from asmcnc.apps.start_up_sequence.data_consent_app import screen_manager_data_consent
 from asmcnc.apps.start_up_sequence.welcome_to_smartbench_app import screen_manager_welcome_to_smartbench
 from asmcnc.apps.start_up_sequence.welcome_to_smartbench_app import screen_manager_welcome_to_smartbench
+from asmcnc.core_UI import console_utils
 
 
 class StartUpSequence(object):
@@ -72,7 +73,7 @@ class StartUpSequence(object):
 
 		else:
 			self.prep_starting_smartbench_screen()
-			if self.show_incorrect_shutdown_screen():
+			if console_utils.correct_shutdown():
 				self.prep_incorrect_shutdown_screen()
 			self.prep_safety_screen()
 
@@ -126,16 +127,6 @@ class StartUpSequence(object):
 		pro_plus_safety = (os.popen('grep "user_has_seen_pro_plus_safety" config.txt').read())
 		if ('False' in pro_plus_safety or not pro_plus_safety) and os.path.exists(self.m.theateam_path): return True
 		else: return False
-
-	def show_incorrect_shutdown_screen(self):
-		correct_shutdown = (os.popen('grep "correct_shutdown" config.txt').read())
-		if ('False' in correct_shutdown): return True
-		else:
-			if not correct_shutdown:
-				os.system("sudo sed -i -e '$acorrect_shutdown=False' /home/pi/easycut-smartbench/src/config.txt")
-			elif 'True' in correct_shutdown:
-				os.system('sudo sed -i "s/correct_shutdown=True/correct_shutdown=False/" config.txt')
-			return False
 
 	## FUNCTIONS TO PREP APPS AND SCREENS
 
