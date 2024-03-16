@@ -1104,12 +1104,6 @@ class PopupShutdown(Widget):
         shutdown_string = self.l.get_bold('Shutdown now')
         cancel_string = self.l.get_bold('Cancel')
 
-        def cancel_shutdown(*args):
-            console_utils.cancel_shutdown()
-
-        def shutdown_now(*args):
-            console_utils.shutdown()
-
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1.5, text_size=(480, None), halign='center', valign='middle', text=description,
                       color=[0, 0, 0, 1], padding=[0, 0], markup=True)
@@ -1144,8 +1138,8 @@ class PopupShutdown(Widget):
         popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
         popup.separator_height = '4dp'
 
-        ok_button.bind(on_press=shutdown_now)
-        cancel_button.bind(on_press=cancel_shutdown)
+        ok_button.bind(on_press=console_utils.shutdown)
+        cancel_button.bind(on_press=console_utils.cancel_shutdown)
         cancel_button.bind(on_press=popup.dismiss)
 
         popup.open()

@@ -43,7 +43,7 @@ Builder.load_string("""
                 font_size: dp(50)
             
             Button:
-                on_press: root.shutdown_console()
+                on_press: console_utils.shutdown()
                 text: 'OK, SHUT DOWN'
                 font_size: dp(30)
                 size_hint_y: 0.2
@@ -61,9 +61,6 @@ class LBCalibrationSuccess(Screen):
 
     def enter_prev_screen(self):
         self.sm.current = 'lbc4'
-
-    def shutdown_console(self):
-        console_utils.shutdown()
 
     def set_serial_no(self, serial_no):
         self.success_label.text = 'Database updated for: ' + serial_no

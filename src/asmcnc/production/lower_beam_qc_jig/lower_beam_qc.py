@@ -132,7 +132,7 @@ Builder.load_string("""
 								halign: 'left'
 								valign: 'middle'
 								padding: [dp(10),0]
-								on_press: root.shutdown_console()
+								on_press: console_utils.shutdown()
 
 							ToggleButton:
 								id: warranty_toggle
@@ -330,8 +330,6 @@ class LowerBeamQC(Screen):
 	def enable_alarms(self):
 		self.m.s.write_command('$21 = 1')
 
-	def shutdown_console(self):
-		console_utils.shutdown()
 
 	def switch_screen(self):
 		self.sm.current = 'qcWarranty'

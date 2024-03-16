@@ -62,7 +62,4 @@ class RebootingScreen(Screen):
         self.reboot_label.font_name = self.l.font_regular
 
     def on_enter(self):
-        Clock.schedule_once(self.reboot, 1)
-
-    def reboot(self, dt):
-        console_utils.reboot()
+        Clock.schedule_once(console_utils.reboot, 1)
