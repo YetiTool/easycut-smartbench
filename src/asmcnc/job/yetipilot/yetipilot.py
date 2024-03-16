@@ -7,6 +7,7 @@ import json
 import time
 from math import sqrt
 
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.clock import Clock
 
 from asmcnc.job.yetipilot.config.yetipilot_profile import YetiPilotProfile
@@ -273,7 +274,7 @@ class YetiPilot(object):
                                                            feed=True)
 
             if feed_adjustments:
-                print("YetiPilot: Feed Adjustments done: " + str(feed_adjustments))
+                Logger.info("YetiPilot: Feed Adjustments done: " + str(feed_adjustments))
 
             if not self.using_advanced_profile and not self.adjusting_spindle_speed:
                 speed_adjustment_percentage = self.get_speed_adjustment_percentage()
@@ -282,7 +283,7 @@ class YetiPilot(object):
                                                                 feed=False)
 
                 if speed_adjustments:
-                    print("YetiPilot: Speed Adjustments done: " + str(speed_adjustments))
+                    Logger.info("YetiPilot: Speed Adjustments done: " + str(speed_adjustments))
 
     def stop_and_show_error(self):
         self.disable()

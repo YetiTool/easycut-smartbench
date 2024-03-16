@@ -125,7 +125,6 @@ class PopupYetiPilotSettings(Widget):
         self.m = machine
         self.db = database
         self.yp = yetipilot
-        clock_speed_1 = None
         clock_speed_2 = None
         img_path = "./asmcnc/core_UI/job_go/img/"
         img_1_src = img_path + "yp_setting_1.png"
@@ -391,16 +390,11 @@ class PopupYetiPilotSettings(Widget):
                     (body_BL_height - spindle_health_check_button_size) / 2,
                 ]
                 left_BL.add_widget(spindle_health_check_button)
-            clock_speed_1 = Clock.schedule_interval(
-                lambda dt: speedOverride.update_spindle_speed_label(), 0.1
-            )
             clock_speed_2 = Clock.schedule_interval(
                 lambda dt: speedOverride.update_speed_percentage_override_label(), 0.1
             )
 
         def unschedule_clocks(*args):
-            if clock_speed_1:
-                Clock.unschedule(clock_speed_1)
             if clock_speed_2:
                 Clock.unschedule(clock_speed_2)
 

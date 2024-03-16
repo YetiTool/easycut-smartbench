@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
+
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.core.window import Window
 from kivy.uix.vkeyboard import VKeyboard
 import traceback
@@ -211,7 +213,7 @@ class Keyboard(VKeyboard):
         try: 
             Window.add_widget(self)
         except:
-            print(traceback.format_exc())
+            Logger.info(traceback.format_exc())
 
     # Functions to lower keyboard
     def lower_keyboard_if_not_focused(self):

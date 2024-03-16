@@ -8,6 +8,7 @@ Step 2: Inform user of measurement after machine has moved, and ask user if they
 
 @author: Letty
 """
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.properties import ObjectProperty, StringProperty, NumericProperty
@@ -288,7 +289,7 @@ You will need to home the machine, and then repeat steps 1 and 2 to verify your 
     def check_for_successful_completion(self, dt):
         # if sequential_stream completes successfully
         if self.m.s.is_sequential_streaming == False:
-            print("New steps have been set: $100 = " + str(self.new_x_steps))
+            Logger.info("New steps have been set: $100 = " + str(self.new_x_steps))
             Clock.unschedule(self.poll_for_success)
             self.next_screen()
 
