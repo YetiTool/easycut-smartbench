@@ -167,6 +167,9 @@ class Keyboard(VKeyboard):
             self.width = scaling_utils.Width / 3.4
             if self.custom_numeric_pos:
                 self.pos = self.custom_numeric_pos
+                if self.text_instance:
+                    if self.collide_widget(self.text_instance):
+                        self.pos = (scaling_utils.Width - self.custom_numeric_pos[0] - self.width, self.custom_numeric_pos[1])
         else:
             self.width = scaling_utils.Width
             if self.custom_qwerty_pos:
