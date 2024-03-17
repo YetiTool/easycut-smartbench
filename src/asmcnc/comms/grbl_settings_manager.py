@@ -24,7 +24,6 @@ class GRBLSettingsManagerSingleton(object):
     machine = None
     _lock = threading.Lock()
     _received_sn = ''
-    _has_read_51 = False
 
     SERIAL_ID = 50
 
@@ -258,7 +257,7 @@ class GRBLSettingsManagerSingleton(object):
             
     def on_console_specific_setting(self, instance, value, setting):
         """
-        Called when a console specific setting is read in or changed.
+        Called when a console specific setting is read in.
 
         Checks if the read in value differs from last recorded value.
         """
@@ -266,21 +265,25 @@ class GRBLSettingsManagerSingleton(object):
             51: "SC2 ($51) setting"
         }
 
-        # Check if this is the first read
-        if not self._has_read_51:
-            # If setting has not yet been saved then save it
-            if self._machine_saved_data[setting] == -1:
-                self._machine_saved_data[setting] = value
-                self.save_machine_data_to_file()
-                log('First startup after update? Setting {} saved to file: {}'.format(descriptions[setting], value))
-            # Otherwise if the value does not match then restore it
-            elif value != self._machine_saved_data[setting]:
-                self.machine.write_dollar_setting(setting, self._machine_saved_data[setting])
-                log('Restored {} from file: {}'.format(descriptions[setting], self._machine_saved_data[setting]))
-        # After startup, changes are intentional, so just overwrite internal value
+        # If setting has not yet been saved then save it
+        if self._machine_saved_data[setting] == -1:
+            self._machine_saved_data[setting] = value
+            self.save_machine_data_to_file()
+            log('First startup after update? Setting {} saved to file: {}'.format(descriptions[setting], value))
+        # Otherwise if the value does not match then restore it
         elif value != self._machine_saved_data[setting]:
+            self.machine.write_dollar_setting(setting, self._machine_saved_data[setting])
+            log('Restored {} from file: {}'.format(descriptions[setting], self._machine_saved_data[setting]))
+
+    def save_dollar_setting(self, setting, value):
+        """
+        Called externally to change a setting which has not been bound to a function.
+        """
+        descriptions = {
+            51: "SC2 ($51) setting"
+        }
+
+        if value != self._machine_saved_data[setting]:
             self._machine_saved_data[setting] = value
             self.save_machine_data_to_file()
             log('Wrote {} to file: {}'.format(descriptions[setting], value))
-
-        self._has_read_51 = True

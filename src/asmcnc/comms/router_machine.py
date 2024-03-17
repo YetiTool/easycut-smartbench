@@ -19,6 +19,7 @@ from asmcnc.comms import serial_connection
 from asmcnc.comms.yeti_grbl_protocol import protocol
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.comms import motors
+from asmcnc.comms.grbl_settings_manager import GRBLSettingsManagerSingleton
 from asmcnc.skavaUI import popup_info
 
 from kivy.clock import Clock
@@ -153,6 +154,9 @@ class RouterMachine(EventDispatcher):
 
     trigger_setup = False
 
+    # List of settings that are not watched by grbl settings manager
+    settings_to_save = [51]
+
     def __init__(self, win_serial_port, screen_manager, settings_manager, localization, job, *args, **kwargs):
         super(RouterMachine, self).__init__(*args, **kwargs)
 
@@ -160,6 +164,7 @@ class RouterMachine(EventDispatcher):
         self.sett = settings_manager
         self.l = localization
         self.jd = job
+        self.grbl_manager = GRBLSettingsManagerSingleton()
         self.set_jog_limits()
 
         self.win_serial_port = win_serial_port   # Need to save so that serial connection can be reopened (for zhead cycle app)
@@ -780,6 +785,8 @@ class RouterMachine(EventDispatcher):
             '$$'
         ]
         self.s.start_sequential_stream(list_to_stream, reset_grbl_after_stream)
+        if setting_no in self.settings_to_save:
+            self.grbl_manager.save_dollar_setting(setting_no, value)
 
     def bake_default_grbl_settings(self, z_head_qc_bake=False):
 
