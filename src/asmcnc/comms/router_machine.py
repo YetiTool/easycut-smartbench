@@ -898,9 +898,12 @@ class RouterMachine(EventDispatcher):
                     '$32=' + str(self.s.setting_32)           #Laser mode, boolean
             ]
 
-        try:
+        if self.get_dollar_setting(50):
             grbl_settings_and_params.append('$50=' + str(self.s.setting_50))     #Yeti custom serial number
+        if self.get_dollar_setting(51) != -1:
             grbl_settings_and_params.append('$51=' + str(self.s.setting_51))     #Enable digital feedback spindle, boolean
+
+        try:
             grbl_settings_and_params.append('$53=' + str(self.s.setting_53))     #Enable stall guard alarm operation, boolean
             grbl_settings_and_params.append('$54=' + str(self.s.setting_54))     #Motor load (SG) values reporting type, boolean
 
