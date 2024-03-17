@@ -24,12 +24,14 @@ class GRBLSettingsManagerSingleton(object):
     machine = None
     _lock = threading.Lock()
     _received_sn = ''
+    _has_read_51 = False
 
     SERIAL_ID = 50
 
     # json skeletons
     _machine_saved_data = {
         SERIAL_ID: '0000.00',  # serial number
+        51: -1, # SC2
         100: 0,  # x steps/mm
         101: 0,  # y steps/mm
         102: 0  # z steps/mm
@@ -88,6 +90,9 @@ class GRBLSettingsManagerSingleton(object):
         if self.machine is None and machine is not None:
             self.machine = machine
             self.machine.s.bind(setting_50=self.on_setting_50)
+            self.machine.s.bind(setting_51=lambda instance, value: self.on_console_specific_setting(instance,
+                                                                                                    value,
+                                                                                                    51))
             self.machine.s.bind(setting_100=lambda instance, value: self.on_setting_steps_per_mm(instance,
                                                                                                  value,
                                                                                                  100))
@@ -250,3 +255,32 @@ class GRBLSettingsManagerSingleton(object):
             # restore default value:
             self.machine.write_dollar_setting(setting, self._system_default_data[setting])
             log('Restored {} to default: {}'.format(descriptions[setting], self._system_default_data[setting]))
+            
+    def on_console_specific_setting(self, instance, value, setting):
+        """
+        Called when a console specific setting is read in or changed.
+
+        Checks if the read in value differs from last recorded value.
+        """
+        descriptions = {
+            51: "SC2 ($51) setting"
+        }
+
+        # Check if this is the first read
+        if not self._has_read_51:
+            # If setting has not yet been saved then save it
+            if self._machine_saved_data[setting] == -1:
+                self._machine_saved_data[setting] = value
+                self.save_machine_data_to_file()
+                log('First startup after update? Setting {} saved to file: {}'.format(descriptions[setting], value))
+            # Otherwise if the value does not match then restore it
+            elif value != self._machine_saved_data[setting]:
+                self.machine.write_dollar_setting(setting, self._machine_saved_data[setting])
+                log('Restored {} from file: {}'.format(descriptions[setting], self._machine_saved_data[setting]))
+        # After startup, changes are intentional, so just overwrite internal value
+        elif value != self._machine_saved_data[setting]:
+            self._machine_saved_data[setting] = value
+            self.save_machine_data_to_file()
+            log('Wrote {} to file: {}'.format(descriptions[setting], value))
+
+        self._has_read_51 = True
