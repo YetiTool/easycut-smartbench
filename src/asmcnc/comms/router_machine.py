@@ -154,9 +154,6 @@ class RouterMachine(EventDispatcher):
 
     trigger_setup = False
 
-    # List of settings that are not watched by grbl settings manager
-    settings_to_save = [51]
-
     def __init__(self, win_serial_port, screen_manager, settings_manager, localization, job, *args, **kwargs):
         super(RouterMachine, self).__init__(*args, **kwargs)
 
@@ -785,8 +782,8 @@ class RouterMachine(EventDispatcher):
             '$$'
         ]
         self.s.start_sequential_stream(list_to_stream, reset_grbl_after_stream)
-        if setting_no in self.settings_to_save:
-            self.grbl_manager.save_dollar_setting(setting_no, value)
+        if setting_no in self.grbl_manager.settings_to_save:
+            self.grbl_manager.save_console_specific_setting(setting_no, value)
 
     def bake_default_grbl_settings(self, z_head_qc_bake=False):
 

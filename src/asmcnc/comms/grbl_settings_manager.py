@@ -74,6 +74,9 @@ class GRBLSettingsManagerSingleton(object):
         130: 1300.000 # X Max travel, mm
     }
 
+    # List of settings that are not bound to a function during runtime
+    settings_to_save = [51]
+
     # File paths:
     MACHINE_DATA_FILE_PATH = path_utils.join(path_utils.sb_values_path, "machine_settings.json")
 
@@ -275,7 +278,7 @@ class GRBLSettingsManagerSingleton(object):
             self.machine.write_dollar_setting(setting, self._machine_saved_data[setting])
             log('Restored {} from file: {}'.format(descriptions[setting], self._machine_saved_data[setting]))
 
-    def save_dollar_setting(self, setting, value):
+    def save_console_specific_setting(self, setting, value):
         """
         Called externally to change a setting which has not been bound to a function.
         """
