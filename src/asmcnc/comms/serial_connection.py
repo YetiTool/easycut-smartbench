@@ -1244,14 +1244,20 @@ class SerialConnection(EventDispatcher):
                     # convert spindle speed to int after re-compensating to show the old users value
                     if int(feed_speed[1]) != 0:
                         try:
-                            if self.setting_51 == 0:  # not an SC2
-                                self.spindle_speed = int(self.m.correct_rpm(int(feed_speed[1]),spindle_voltage=None,
-                                                                            revert=True, log=False))
-                            else:
+                            if self.setting_51 == 1:  # Running SC2 spindle                                
                                 self.spindle_speed = int(feed_speed[1])
+                            else:
+                                self.spindle_speed = int(self.m.correct_rpm(int(feed_speed[1]), spindle_voltage=None,
+                                                                            revert=True, log=False))                                
                         except:  # $51 does not exist -> older machine -> spindle is not an SC2
-                            self.spindle_speed = int(self.m.correct_rpm(int(feed_speed[1]), spindle_voltage=None,
-                                                                        revert=True, log=False))
+                            grbl_reported_rpm = int(feed_speed[1]) # Value back from GRBL
+                            current_multiplier = float(self.speed_override_percentage) / 100 # Current override
+                            current_gcode_rpm = self.m.correct_rpm((grbl_reported_rpm / current_multiplier), revert=True, log=False) # Determine gcode rpm at current line
+                            current_running_rpm = current_gcode_rpm * current_multiplier
+                            # Apply limits
+                            if current_running_rpm > self.m.maximum_spindle_speed(): current_running_rpm = self.m.maximum_spindle_speed()
+                            if current_running_rpm < self.m.minimum_spindle_speed(): current_running_rpm = self.m.minimum_spindle_speed()
+                            self.spindle_speed = int(current_running_rpm)
                     else:
                         self.spindle_speed = 0
 
