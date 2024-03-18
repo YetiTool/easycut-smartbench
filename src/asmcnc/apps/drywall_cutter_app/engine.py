@@ -398,12 +398,15 @@ class GCodeEngine():
         x = 0
         y = 1
         insert_index = None
-        partoff_gcode = ["(Partoff)"]
+        partoff_gcode = ["(Partoff)"] # First line of partoff section
         direction_flag = True
 
         #Find index to insert partoff line
+        insertion_key = insertion_key.lower()
         for i in range(len(gcode_lines)):
-            if insertion_key.lower() == gcode_lines[i].lower() + gcode_lines[i+1].lower():
+            print(gcode_lines[i])
+            if insertion_key in gcode_lines[i].lower():
+                print("found")
                 insert_index = i
                 break
             if i == len(gcode_lines):
@@ -424,16 +427,11 @@ class GCodeEngine():
             direction_flag = not(direction_flag)
         partoff_gcode.append("G1 Z" + str(z_safe_distance)) #Lift to Z safe distance
 
-        output = ""
-        for line in partoff_gcode:
-            output += line + "\n"
-        partoff_gcode = "".join(output)
-
         #Insert partoff gcode
         gcode_part_1 = gcode_lines[:insert_index]
         gcode_part_2 = gcode_lines[insert_index:]
 
-        return gcode_part_1 +partoff_gcode + gcode_part_2      
+        return gcode_part_1 + partoff_gcode + gcode_part_2  
 
     #Read in custom shape dimensions from gcode
     def read_in_custom_shape_dimentions(self, gcode_lines):

@@ -471,5 +471,88 @@ class EngineTests(unittest.TestCase):
         output = self.engine.repeat_for_depths(gcode_lines, pass_depths, start_line_key, end_line_key)
         self.assertEqual(output, expected_output)
 
+    def test_add_partoff(self):
+        # Test case 1: Insert partoff line at the beginning of the gcode
+        gcode_lines = ["G1 X10 Y20", "G1 X30 Y40"]
+        processing_args = {
+            "insertion_key": "G1 X10 Y20",
+            "start_coordinate": (0, 0),
+            "end_coordinate": (50, 50),
+            "pass_depths": [5, 10],
+            "feedrate": 100,
+            "plungerate": 50,
+            "z_safe_distance": 2
+        }
+        expected_output = [
+            "(Partoff)",
+            "G1 Z2",
+            "G0 X0 Y0F100",
+            "G1 Z-5 F50",
+            "G1 X50 Y50F100",
+            "G1 Z-10 F50",
+            "G1 X0 Y0F100",
+            "G1 Z2",
+            "G1 X10 Y20",
+            "G1 X30 Y40"
+        ]
+        output = self.engine.add_partoff(gcode_lines, **processing_args)
+        self.assertEqual(output, expected_output)
+
+        # Test case 2: Insert partoff line in the middle of the gcode
+        gcode_lines = ["G1 X10 Y20", "G1 X30 Y40", "G1 X50 Y60"]
+        processing_args = {
+            "insertion_key": "G1 X30 Y40",
+            "start_coordinate": (20, 20),
+            "end_coordinate": (40, 40),
+            "pass_depths": [5, 10, 15],
+            "feedrate": 200,
+            "plungerate": 100,
+            "z_safe_distance": 3
+        }
+        expected_output = [
+            "G1 X10 Y20",
+            "(Partoff)",
+            "G1 Z3",
+            "G0 X20 Y20F200",
+            "G1 Z-5 F100",
+            "G1 X40 Y40F200",
+            "G1 Z-10 F100",
+            "G1 X20 Y20F200",
+            "G1 Z-15 F100",
+            "G1 X40 Y40F200",
+            "G1 Z3",
+            "G1 X30 Y40",
+            "G1 X50 Y60"
+        ]
+        output = self.engine.add_partoff(gcode_lines, **processing_args)
+        self.assertEqual(output, expected_output)
+
+        # Test case 3: Insert partoff line at the end of the gcode
+        gcode_lines = ["G1 X10 Y20", "G1 X30 Y40"]
+        processing_args = {
+            "insertion_key": "G1 X50 Y60",
+            "start_coordinate": (40, 40),
+            "end_coordinate": (60, 60),
+            "pass_depths": [5, 10, 15, 20],
+            "feedrate": 300,
+            "plungerate": 150,
+            "z_safe_distance": 4
+        }
+        expected_output = [
+            "G1 X10 Y20",
+            "G1 X30 Y40",
+            "(Partoff)",
+            "G1 Z4",
+            "G0 X40 Y40F300",
+            "G1 Z-5 F150",
+            "G1 X60 Y60F300",
+            "G1 Z-10 F150",
+            "G1 X40 Y40F300",
+            "G1 Z-15 F150",
+            "G1 X50 Y60"
+        ]
+        output = self.engine.add_partoff(gcode_lines, **processing_args)
+        self.assertEqual(output, expected_output)
+
 if __name__ == '__main__':
     unittest.main()
