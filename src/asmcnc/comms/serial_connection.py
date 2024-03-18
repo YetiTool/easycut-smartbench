@@ -1278,7 +1278,7 @@ class SerialConnection(EventDispatcher):
                                                                             revert=True, log=False))
                             else:
                                 self.spindle_speed = int(feed_speed[1])
-                        except:  # $51 not existent
+                        except:  # $51 does not exist -> older machine -> spindle is not an SC2
                             self.spindle_speed = int(self.m.correct_rpm(int(feed_speed[1]), spindle_voltage=None,
                                                                         revert=True, log=False))
                     else:
