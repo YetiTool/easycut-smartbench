@@ -1,0 +1,8 @@
+.. _top:
+
+This release is a patch for V2.8.3
+====================================================
+We have now corrected the fault that was causing a serial connection problem under certain conditions.
+**Find full release notes on our website, by scanning the QR code on the right.**
+
+.. _bottom:
