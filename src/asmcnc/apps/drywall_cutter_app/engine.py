@@ -435,6 +435,7 @@ class GCodeEngine():
 
         return gcode_part_1 +partoff_gcode + gcode_part_2      
 
+    #Read in custom shape dimensions from gcode
     def read_in_custom_shape_dimentions(self, gcode_lines):
         x_dim_pattern = r"Final part x dim: (-?\d+\.\d+)"
         y_dim_pattern = r"Final part y dim: (\d+\.\d+)"
