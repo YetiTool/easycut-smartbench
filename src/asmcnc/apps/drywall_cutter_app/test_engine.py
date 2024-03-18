@@ -410,5 +410,66 @@ class EngineTests(unittest.TestCase):
         output = self.engine.format_float(value)
         self.assertEqual(output, expected_output)
 
+    def test_repeat_for_depths(self):
+        # Case 1: Single pass depth
+        gcode_lines = [
+            "G1 X0 Y0 Z[cut depth]",
+            "G1 X10 Y10 Z[cut depth]",
+            "G1 X20 Y20 Z[cut depth]",
+            "G1 X30 Y30 Z[cut depth]",
+            "G1 X40 Y40 Z[cut depth]",
+        ]
+        pass_depths = [5]
+        start_line_key = 0
+        end_line_key = 5
+        expected_output = [
+            [
+                "G1 X0 Y0 Z-5",
+                "G1 X10 Y10 Z-5",
+                "G1 X20 Y20 Z-5",
+                "G1 X30 Y30 Z-5",
+                "G1 X40 Y40 Z-5",
+            ]
+        ]
+        output = self.engine.repeat_for_depths(gcode_lines, pass_depths, start_line_key, end_line_key)
+        self.assertEqual(output, expected_output)
+
+        # Case 2: Multiple pass depths
+        gcode_lines = [
+            "G1 X0 Y0 Z[cut depth]",
+            "G1 X10 Y10 Z[cut depth]",
+            "G1 X20 Y20 Z[cut depth]",
+            "G1 X30 Y30 Z[cut depth]",
+            "G1 X40 Y40 Z[cut depth]",
+        ]
+        pass_depths = [5, 10, 15]
+        start_line_key = 0
+        end_line_key = 5
+        expected_output = [
+            [
+                "G1 X0 Y0 Z-5",
+                "G1 X10 Y10 Z-5",
+                "G1 X20 Y20 Z-5",
+                "G1 X30 Y30 Z-5",
+                "G1 X40 Y40 Z-5",
+            ],
+            [
+                "G1 X0 Y0 Z-10",
+                "G1 X10 Y10 Z-10",
+                "G1 X20 Y20 Z-10",
+                "G1 X30 Y30 Z-10",
+                "G1 X40 Y40 Z-10",
+            ],
+            [
+                "G1 X0 Y0 Z-15",
+                "G1 X10 Y10 Z-15",
+                "G1 X20 Y20 Z-15",
+                "G1 X30 Y30 Z-15",
+                "G1 X40 Y40 Z-15",
+            ]
+        ]
+        output = self.engine.repeat_for_depths(gcode_lines, pass_depths, start_line_key, end_line_key)
+        self.assertEqual(output, expected_output)
+
 if __name__ == '__main__':
     unittest.main()

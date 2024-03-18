@@ -388,7 +388,8 @@ class GCodeEngine():
                 cut_lines.append(cut_line)
             output.append(cut_lines)
 
-        output.append(gcode_lines[end_line_key:])
+        if end_line_key < len(gcode_lines):
+            output.append(gcode_lines[end_line_key:])
 
         return output
 
