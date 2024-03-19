@@ -1272,12 +1272,13 @@ class SerialConnection(EventDispatcher):
                     # convert spindle speed to int after re-compensating to show the old users value
                     if int(feed_speed[1]) != 0:
                         try:
-                            if self.setting_51 == 1:  # Running SC2 spindle                                
-                                self.spindle_speed = int(feed_speed[1])
-                            else:
-                                self.spindle_speed = int(self.m.correct_rpm(int(feed_speed[1]), spindle_voltage=None,
-                                                                            revert=True, log=False))                                
-                        except:  # $51 does not exist -> older machine -> spindle is not an SC2
+                            is_spindle_sc2 = self.setting_51 == 1  # Running SC2 spindle
+                        except:
+                            is_spindle_sc2 = False
+
+                        if is_spindle_sc2:  # Running SC2 spindle
+                            self.spindle_speed = int(feed_speed[1])
+                        else:
                             grbl_reported_rpm = int(feed_speed[1]) # Value back from GRBL
                             current_multiplier = float(self.speed_override_percentage) / 100 # Current override
                             current_gcode_rpm = self.m.correct_rpm((grbl_reported_rpm / current_multiplier), revert=True, log=False) # Determine gcode rpm at current line
