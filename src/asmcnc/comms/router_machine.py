@@ -9,7 +9,6 @@ import traceback
 
 from enum import Enum
 from asmcnc.comms.logging_system.logging_system import Logger
-from asmcnc.core_UI import path_utils
 
 try:
     import pigpio
@@ -79,21 +78,21 @@ class RouterMachine(EventDispatcher):
     # PERSISTENT MACHINE VALUES
 
     ## PERSISTENT VALUES SETUP
-    smartbench_values_dir = path_utils.sb_values_path
+    smartbench_values_dir = './sb_values/'
 
     ### Individual files to hold persistent values
-    set_up_options_file_path = os.path.join(smartbench_values_dir, 'set_up_options.txt')
-    z_touch_plate_thickness_file_path = os.path.join(smartbench_values_dir, 'z_touch_plate_thickness.txt')
-    calibration_settings_file_path = os.path.join(smartbench_values_dir, 'calibration_settings.txt')
-    z_head_maintenance_settings_file_path = os.path.join(smartbench_values_dir, 'z_head_maintenance_settings.txt')
-    z_head_laser_offset_file_path = os.path.join(smartbench_values_dir, 'z_head_laser_offset.txt')
-    spindle_brush_values_file_path = os.path.join(smartbench_values_dir, 'spindle_brush_values.txt')
-    spindle_cooldown_settings_file_path = os.path.join(smartbench_values_dir, 'spindle_cooldown_settings.txt')
-    spindle_cooldown_rpm_override_file_path = os.path.join(smartbench_values_dir, 'spindle_cooldown_rpm_override.txt')
-    stylus_settings_file_path = os.path.join(smartbench_values_dir, 'stylus_settings.txt')
-    spindle_health_check_file_path = os.path.join(smartbench_values_dir, 'spindle_health_check.txt')
-    device_label_file_path = os.path.join(path_utils.above_easycut_path, 'smartbench_name.txt')
-    device_location_file_path = os.path.join(path_utils.above_easycut_path, 'smartbench_location.txt')
+    set_up_options_file_path = smartbench_values_dir + 'set_up_options.txt'
+    z_touch_plate_thickness_file_path = smartbench_values_dir + 'z_touch_plate_thickness.txt'
+    calibration_settings_file_path = smartbench_values_dir + 'calibration_settings.txt'
+    z_head_maintenance_settings_file_path = smartbench_values_dir + 'z_head_maintenance_settings.txt'
+    z_head_laser_offset_file_path = smartbench_values_dir + 'z_head_laser_offset.txt'
+    spindle_brush_values_file_path = smartbench_values_dir + 'spindle_brush_values.txt'
+    spindle_cooldown_settings_file_path = smartbench_values_dir + 'spindle_cooldown_settings.txt'
+    spindle_cooldown_rpm_override_file_path = smartbench_values_dir + 'spindle_cooldown_rpm_override.txt'
+    stylus_settings_file_path = smartbench_values_dir + 'stylus_settings.txt'
+    spindle_health_check_file_path = smartbench_values_dir + 'spindle_health_check.txt'
+    device_label_file_path = '../../smartbench_name.txt' # this puts it above EC folder in filesystem
+    device_location_file_path = '../../smartbench_location.txt' # this puts it above EC folder in filesystem
 
     ## LOCALIZATION
     persistent_language_path = smartbench_values_dir + 'user_language.txt'
