@@ -4,6 +4,8 @@ Beta testers screen for system tools app
 
 @author: Letty
 """
+import re
+
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -348,8 +350,11 @@ class BetaTestingScreen(Screen):
                                  + branch_name_formatted)
                 checkout_exit_code = os.system(checkout_call)
                 Logger.debug('Checkout call: {} | Returns: {}'.format(checkout_call,checkout_exit_code))
-                pull_exit_code = os.system("git pull")
-                Logger.debug('"git pull" returned: {}'.format(pull_exit_code))
+                # check if branch name is a tag like v2.8.1:
+                pull_exit_code = 0
+                if not re.match("v\d\.\d\.\d", branch_name_formatted):
+                    pull_exit_code = os.system("git pull")
+                    Logger.debug('"git pull" returned: {}'.format(pull_exit_code))
                 if checkout_exit_code == 0 and pull_exit_code == 0:
                     self.set.ansible_service_run_without_reboot()
                     wait_popup.popup.dismiss()
