@@ -82,21 +82,21 @@ class RouterMachine(EventDispatcher):
     smartbench_values_dir = path_utils.sb_values_path
 
     ### Individual files to hold persistent values
-    set_up_options_file_path = os.path.join(smartbench_values_dir, 'set_up_options.txt')
-    z_touch_plate_thickness_file_path = os.path.join(smartbench_values_dir, 'z_touch_plate_thickness.txt')
-    calibration_settings_file_path = os.path.join(smartbench_values_dir, 'calibration_settings.txt')
-    z_head_maintenance_settings_file_path = os.path.join(smartbench_values_dir, 'z_head_maintenance_settings.txt')
-    z_head_laser_offset_file_path = os.path.join(smartbench_values_dir, 'z_head_laser_offset.txt')
-    spindle_brush_values_file_path = os.path.join(smartbench_values_dir, 'spindle_brush_values.txt')
-    spindle_cooldown_settings_file_path = os.path.join(smartbench_values_dir, 'spindle_cooldown_settings.txt')
-    spindle_cooldown_rpm_override_file_path = os.path.join(smartbench_values_dir, 'spindle_cooldown_rpm_override.txt')
-    stylus_settings_file_path = os.path.join(smartbench_values_dir, 'stylus_settings.txt')
-    spindle_health_check_file_path = os.path.join(smartbench_values_dir, 'spindle_health_check.txt')
-    device_label_file_path = os.path.join(path_utils.above_easycut_path, 'smartbench_name.txt')
-    device_location_file_path = os.path.join(path_utils.above_easycut_path, 'smartbench_location.txt')
+    set_up_options_file_path = path_utils.join(smartbench_values_dir, 'set_up_options.txt')
+    z_touch_plate_thickness_file_path = path_utils.join(smartbench_values_dir, 'z_touch_plate_thickness.txt')
+    calibration_settings_file_path = path_utils.join(smartbench_values_dir, 'calibration_settings.txt')
+    z_head_maintenance_settings_file_path = path_utils.join(smartbench_values_dir, 'z_head_maintenance_settings.txt')
+    z_head_laser_offset_file_path = path_utils.join(smartbench_values_dir, 'z_head_laser_offset.txt')
+    spindle_brush_values_file_path = path_utils.join(smartbench_values_dir, 'spindle_brush_values.txt')
+    spindle_cooldown_settings_file_path = path_utils.join(smartbench_values_dir, 'spindle_cooldown_settings.txt')
+    spindle_cooldown_rpm_override_file_path = path_utils.join(smartbench_values_dir, 'spindle_cooldown_rpm_override.txt')
+    stylus_settings_file_path = path_utils.join(smartbench_values_dir, 'stylus_settings.txt')
+    spindle_health_check_file_path = path_utils.join(smartbench_values_dir, 'spindle_health_check.txt')
+    device_label_file_path = path_utils.join(path_utils.above_easycut_path, 'smartbench_name.txt')
+    device_location_file_path = path_utils.join(path_utils.above_easycut_path, 'smartbench_location.txt')
 
     ## LOCALIZATION
-    persistent_language_path = smartbench_values_dir + 'user_language.txt'
+    persistent_language_path = path_utils.join(smartbench_values_dir, 'user_language.txt')
 
     ## PROBE SETTINGS
     z_lift_after_probing = 20.0
