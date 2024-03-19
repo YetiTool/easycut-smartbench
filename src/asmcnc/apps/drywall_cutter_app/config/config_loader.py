@@ -36,7 +36,7 @@ class DWTConfig(object):
         self.screen_drywall_cutter = screen_drywall_cutter
         self.start_up()
 
-    def start_up(self):  # TODO: RENAME
+    def start_up(self):
         # Load most recent config
         most_recent_config = self.get_most_recent_config()
         if most_recent_config:
