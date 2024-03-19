@@ -1,17 +1,20 @@
 import json
 import os
-
-from asmcnc.comms.logging_system.logging_system import Logger
-
-import config_classes
 import inspect
 
-current_dir = os.path.dirname(os.path.realpath(__file__))
-configurations_dir = os.path.join(current_dir, 'configurations')
-cutters_dir = os.path.join(current_dir, 'cutters')
-temp_dir = os.path.join(current_dir, 'temp')
+import config_classes
+from asmcnc.comms.logging_system.logging_system import Logger
 
-TEMP_CONFIG_PATH = os.path.join(temp_dir, 'temp_config.json')
+
+CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
+CONFIGURATIONS_DIR = os.path.join(CURRENT_DIR, 'configurations')
+CUTTERS_DIR = os.path.join(CURRENT_DIR, 'cutters')
+TEMP_DIR = os.path.join(CURRENT_DIR, 'temp')
+
+if not os.path.exists(TEMP_DIR):
+    os.mkdir(TEMP_DIR)
+
+TEMP_CONFIG_PATH = os.path.join(TEMP_DIR, 'temp_config.json')
 DEBUG_MODE = False
 
 
@@ -31,15 +34,34 @@ class DWTConfig(object):
 
     def __init__(self, screen_drywall_cutter=None):
         self.screen_drywall_cutter = screen_drywall_cutter
-        # Load the temp config if it exists, otherwise load the default config.
-        if not os.path.exists(temp_dir):
-            os.mkdir(temp_dir)
+        self.start_up()
 
-        if os.path.exists(TEMP_CONFIG_PATH):
-            self.load_temp_config()
+    def start_up(self):  # TODO: RENAME
+        # Load most recent config
+        most_recent_config = self.get_most_recent_config()
+        if most_recent_config:
+            self.load_config(most_recent_config)
         else:
-            self.active_config = config_classes.Configuration.default()
-            self.load_cutter(self.active_config.cutter_type)
+            # If no configs, try to load temp config
+            if os.path.exists(TEMP_CONFIG_PATH):
+                self.load_temp_config()
+            else:
+                # Otherwise, create new config based on the default configuration
+                self.active_config = config_classes.Configuration.default()
+                self.load_cutter(self.active_config.cutter_type)
+
+    @staticmethod
+    def get_most_recent_config():
+        """
+        :return: the most recently used config path
+        """
+        files = os.listdir(CONFIGURATIONS_DIR)
+
+        if not files:
+            return None
+
+        most_recent_file = max(files, key=lambda f: os.path.getmtime(os.path.join(CONFIGURATIONS_DIR, f)))
+        return os.path.join(CONFIGURATIONS_DIR, most_recent_file)
 
     @staticmethod
     @debug
@@ -52,7 +74,7 @@ class DWTConfig(object):
         :return: True if the configuration file is valid/complete, otherwise False.
         """
 
-        file_path = os.path.join(configurations_dir, config_name)
+        file_path = os.path.join(CONFIGURATIONS_DIR, config_name)
 
         if not os.path.exists(file_path):
             return False
@@ -80,7 +102,7 @@ class DWTConfig(object):
         :return: True if the configuration file was fixed, otherwise False.
         """
 
-        file_path = os.path.join(configurations_dir, config_name)
+        file_path = os.path.join(CONFIGURATIONS_DIR, config_name)
 
         if not os.path.exists(file_path):
             return False
@@ -107,7 +129,7 @@ class DWTConfig(object):
 
         :param config_name: The name of the configuration file to load.
         """
-        file_path = os.path.join(configurations_dir, config_name)
+        file_path = os.path.join(CONFIGURATIONS_DIR, config_name)
 
         if not os.path.exists(file_path):
             raise Exception('Configuration file does not exist. ' + file_path + ' ' + os.getcwd())
@@ -130,7 +152,7 @@ class DWTConfig(object):
 
         :param config_name: The name of to save the configuration file as.
         """
-        file_path = os.path.join(configurations_dir, config_name)
+        file_path = os.path.join(CONFIGURATIONS_DIR, config_name)
 
         with open(file_path, 'w') as f:
             json.dump(self.active_config, f, indent=4, default=lambda o: o.__dict__)
@@ -143,10 +165,11 @@ class DWTConfig(object):
 
         :param cutter_name: The name of the cutter file to load.
         """
-        file_path = os.path.join(cutters_dir, cutter_name)
+        file_path = os.path.join(CUTTERS_DIR, cutter_name)
 
         if not os.path.exists(file_path):
-            raise Exception('Cutter file does not exist. ' + file_path + ' ' + os.getcwd())
+            Logger.error("Cutter file doesn't exist: " + cutter_name)
+            return
 
         with open(file_path, 'r') as f:
             self.active_cutter = config_classes.Cutter(**json.load(f))
@@ -159,11 +182,11 @@ class DWTConfig(object):
         :return: A list of the available cutter names and their file names.
         """
         cutters = {}
-        for f_name in os.listdir(cutters_dir):
+        for f_name in os.listdir(CUTTERS_DIR):
             if not f_name.endswith('.json'):
                 continue
 
-            file_path = os.path.join(cutters_dir, f_name)
+            file_path = os.path.join(CUTTERS_DIR, f_name)
 
             if os.path.isfile(file_path):
                 with open(file_path, 'r') as f:
