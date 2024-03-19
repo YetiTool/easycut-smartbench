@@ -114,10 +114,10 @@ class ModelManagerSingleton(EventDispatcher):
             pc_value = 0
 
         fixed_product_code = self.fix_wrong_product_code(serial_number, pc_value)
-        if fixed_product_code != ProductCodes.UNKNOWN:
+        if fixed_product_code is not ProductCodes.UNKNOWN:
             # overwrite saved value with fixed product_code
             self.set_machine_type(fixed_product_code, True)
-        elif self._data['product_code'] == ProductCodes.UNKNOWN.value:
+        elif self._data['product_code'] is ProductCodes.UNKNOWN:
             # save product_code to file ONLY when it is still set to default: UNKNOWN!!!
             # !!!Don't override a previously saved proper product_code !!!
             self.set_machine_type(ProductCodes(pc_value), True)
