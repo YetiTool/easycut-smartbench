@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 import sys
+
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.core.window import Window
 from kivy.uix.vkeyboard import VKeyboard
 import traceback
 from kivy.clock import Clock
+from asmcnc.core_UI import scaling_utils
+import os
 
 try:
     import hgtk
@@ -21,12 +25,20 @@ class Keyboard(VKeyboard):
         reload(sys)
         sys.setdefaultencoding('utf-8')
 
-        self.text_instance = None
+        self.bind(layout=self.set_keyboard_background)
+        self.bind(do_translation=self.set_keyboard_background)
 
-        self.kr_layout = "./asmcnc/keyboard/layouts/kr.json"
-        self.numeric_layout = "./asmcnc/keyboard/layouts/numeric.json"
+        self.text_instance = None
+        self.custom_numeric_pos = None
+        self.custom_qwerty_pos = None
+
+        dirname = os.path.dirname(__file__)
+
+        self.kr_layout = os.path.join(dirname, "layouts", "kr.json")
+        self.numeric_layout = os.path.join(dirname, "layouts", "numeric.json")
         self.qwerty_layout = "data/keyboards/qwerty.json"
-        self.qwertyKR_layout = "./asmcnc/keyboard/layouts/qwertyKR.json"
+        self.qwertyKR_layout = os.path.join(dirname, "layouts", "qwertyKR.json")
+        self.font_size = scaling_utils.get_scaled_width(20)
 
         try:
             if self.l.lang == self.l.ko:
@@ -41,12 +53,10 @@ class Keyboard(VKeyboard):
         self.previous_layout = self.layout
 
         self.do_translation = True
-        self.width = Window.width
-        self.height = int(Window.height / 2.1)
-        self.pos = (Window.width - self.width, 0)
+        self.width = scaling_utils.Width
+        self.height = int(scaling_utils.Height / 2.1)
+        self.pos = (scaling_utils.Width - self.width, 0)
         self.on_key_up = self.key_up
-        self.set_keyboard_background()
-
 
     def generic_for_loop_alternative(self, func, list_of_items, i=0, end_func=0):
 
@@ -117,32 +127,20 @@ class Keyboard(VKeyboard):
                 if keycode == "escape":
                     self.text_instance.focus = False
                 if keycode == "backspace":
-                    self.text_instance.do_backspace()
+                    if self.text_instance.selection_text:
+                        self.text_instance.delete_selection()
+                    else:
+                        self.text_instance.do_backspace()
 
                 if keycode == "layout":
                     self.layout = self.numeric_layout if self.layout == self.previous_layout else self.previous_layout
-
-                    if self.layout == self.numeric_layout:
-                        self.width = Window.width/3
-                    else:
-                        self.width = Window.width
-
-                    self.set_keyboard_background()
-
-                    # Make sure keyboard never goes off-screen and becomes unusable/unreachable
-                    if self.pos[0] + self.width > Window.width:
-                        self.pos = (Window.width-self.width, self.pos[1])
-                    if self.pos[1] < 0:
-                        self.pos = (self.pos[0], 0)
-                    if self.pos[0] < 0:
-                        self.pos = (0, self.pos[1])
-                    if self.pos[1] + self.height > Window.height:
-                        self.pos = (self.pos[0], Window.height - self.height)
                 return
+            if self.text_instance.selection_text:
+                self.text_instance.delete_selection()
             self.text_instance.insert_text(internal)
 
-    def set_keyboard_background(self):
-        if self.do_translation == (True,True):
+    def set_keyboard_background(self, *args):
+        if self.do_translation == (True,True) and sys.platform != 'darwin':
             self.margin_hint = [.15, .05, .06, .05]  # Set the margin between the keyboard background and the keys
             if self.layout == self.numeric_layout:
                 self.background = "./asmcnc/keyboard/images/numeric_background_" + str(Window.width) + ".png"
@@ -152,6 +150,38 @@ class Keyboard(VKeyboard):
             self.margin_hint = [.05, .06, .05, .06]  # Default margin
             self.background = "atlas://data/images/defaulttheme/vkeyboard_background"
 
+        self.setup_layout()
+
+        # Make sure keyboard never goes off-screen and becomes unusable/unreachable
+        if self.pos[0] + self.width > scaling_utils.Width:
+            self.pos = (scaling_utils.Width - self.width, self.pos[1])
+        if self.pos[1] < 0:
+            self.pos = (self.pos[0], 0)
+        if self.pos[0] < 0:
+            self.pos = (0, self.pos[1])
+        if self.pos[1] + self.height > scaling_utils.Height:
+            self.pos = (self.pos[0], scaling_utils.Height - self.height)
+
+    def setup_layout(self):
+        if self.layout == self.numeric_layout:
+            self.width = scaling_utils.Width / 3.4
+            if self.custom_numeric_pos:
+                self.pos = self.custom_numeric_pos
+                if self.text_instance:
+                    if self.collide_widget(self.text_instance):
+                        self.pos = (scaling_utils.Width - self.custom_numeric_pos[0] - self.width, self.custom_numeric_pos[1])
+        else:
+            self.width = scaling_utils.Width
+            if self.custom_qwerty_pos:
+                self.pos = self.custom_qwerty_pos
+
+    # Set custom positions for the keyboard
+    def set_numeric_pos(self, pos):
+        self.custom_numeric_pos = pos
+
+    def set_qwerty_pos(self, pos):
+        self.custom_qwerty_pos = pos
+
     # On focus behaviour is bound to all text inputs
     def on_focus_raise_keyboard(self,instance,value):
         if value:
@@ -159,8 +189,14 @@ class Keyboard(VKeyboard):
                 instance.get_focus_previous().focus = False
             except:
                 pass
+            # input_filter can be either None, ‘int’ (string), or ‘float’ (string), or a callable.
+            if instance.input_filter:
+                self.layout = self.numeric_layout
+            else:
+                self.layout = self.previous_layout
             instance.focus = True
             self.text_instance = instance
+            self.setup_layout()
             self.raise_keyboard_if_none_exists()
         else:
             self.lower_keyboard_if_not_focused()
@@ -177,7 +213,7 @@ class Keyboard(VKeyboard):
         try: 
             Window.add_widget(self)
         except:
-            print(traceback.format_exc())
+            Logger.info(traceback.format_exc())
 
     # Functions to lower keyboard
     def lower_keyboard_if_not_focused(self):

@@ -20,7 +20,7 @@ touch /home/pi/YETI_LBCAL_PROD_JIG.txt
 
 #######################################################
 '''
-
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, NoTransition
 from kivy.clock import Clock
@@ -31,6 +31,7 @@ from asmcnc.comms.router_machine import RouterMachine
 from settings.settings_manager import Settings
 from asmcnc.job.job_data import JobData
 from asmcnc.comms.localization import Localization
+from asmcnc.keyboard.custom_keyboard import Keyboard
 from asmcnc.comms import smartbench_flurry_database_connection
 
 from asmcnc.production.lowerbeam_calibration_jig.lowerbeam_calibration_1 import LBCalibration1
@@ -50,19 +51,18 @@ from datetime import datetime
 
 Cmport = 'COM3'
 
-def log(message):
-    timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 class LBCalibration(App):
     def build(self):
-        log('Starting LB Calibration')
+        Logger.info('Starting LB Calibration')
 
         sm = ScreenManager(transition=NoTransition())
 
         sett = Settings(sm)
 
         l = Localization()
+
+        kb = Keyboard(localization=l)
 
         jd = JobData(localization = l, settings_manager = sett)
 
@@ -76,7 +76,7 @@ class LBCalibration(App):
         if m.s.is_connected():
             Clock.schedule_once(m.s.start_services, 1)
 
-        home_screen = HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l)
+        home_screen = HomeScreen(name='home', screen_manager = sm, machine = m, job = jd, settings = sett, localization = l, keyboard = kb)
         sm.add_widget(home_screen)
 
         error_screen = screen_error.ErrorScreenClass(name='errorScreen', screen_manager = sm, machine = m, job = jd, database = db, localization = l)

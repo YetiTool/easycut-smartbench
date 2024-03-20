@@ -1,6 +1,7 @@
 {
   "shape_type": "rectangle",
   "units": "mm",
+  "rotation": "horizontal",
   "canvas_shape_dims": {
     "x": 10,
     "y": 20,
@@ -9,7 +10,7 @@
     "l": 30
   },
   "cutter_type": "test_cutter.json",
-  "toolpath_offset": "in",
+  "toolpath_offset": "inside",
   "cutting_depths": {
     "material_thickness": 3.0,
     "bottom_offset": 0.5,

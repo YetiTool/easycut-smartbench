@@ -4,7 +4,7 @@ Update testing screen for system tools app
 
 @author: Letty
 '''
-
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -254,7 +254,7 @@ class UpdateTestingScreen(Screen):
 
     def add_to_user_friendly_buffer(self, message):
         self.output_view_buffer.append(str(message))
-        print(message)
+        Logger.info(message)
 
     def update_display_text(self, dt):   
         self.output_view.text = '\n'.join(self.output_view_buffer)
@@ -268,7 +268,7 @@ class UpdateTestingScreen(Screen):
 
         full_cmd = cmd
 
-        print full_cmd 
+        Logger.info(full_cmd)
 
         proc = subprocess.Popen(full_cmd,
             cwd = dir_path,
@@ -282,7 +282,7 @@ class UpdateTestingScreen(Screen):
         while True:
             line = proc.stdout.readline()
             stdout_buffer.append(line)
-            print line,
+            Logger.info(line),
             if line == '' and proc.poll() != None:
                 break
         # return ''.join(stdout_buffer)
@@ -344,10 +344,10 @@ class UpdateTestingScreen(Screen):
         self.run_in_shell(repo, 'sudo rm ' + easycut_path + 'ansible/init.yaml')
         if not self._do_platform_ansible_run()[0]:
             reset_outcome = self.run_in_shell(repo, 'git --no-pager reset --hard')
-            print("Reset outcome")
-            print(reset_outcome)
+            Logger.info("Reset outcome")
+            Logger.info(reset_outcome)
             if self._do_platform_ansible_run():
-                print("success!")
+                Logger.info("success!")
 
 
     # these are less important because we already do them
