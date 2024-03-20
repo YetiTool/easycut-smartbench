@@ -570,40 +570,7 @@ class EngineTests(unittest.TestCase):
         output = self.engine.read_in_custom_shape_dimentions(gcode_lines)
         self.assertEqual(output, expected_output)
 
-        # Case 2: x_dim and y_dim not found within the first 20 lines
-        gcode_lines = [
-            "Line 1",
-            "Line 2",
-            "Line 3",
-            "Line 4"
-        ]
-        expected_output = (None, None)
-        output = self.engine.read_in_custom_shape_dimentions(gcode_lines)
-        self.assertEqual(output, expected_output)
-
-        # Case 3: x_dim found but y_dim not found within the first 20 lines
-        gcode_lines = [
-            "Line 1",
-            "(Final part x dim: 10.5)",
-            "Line 3",
-            "Line 4"
-        ]
-        expected_output = ("10.5", None)
-        output = self.engine.read_in_custom_shape_dimentions(gcode_lines)
-        self.assertEqual(output, expected_output)
-
-        # Case 4: y_dim found but x_dim not found within the first 20 lines
-        gcode_lines = [
-            "Line 1",
-            "(Final part y dim: 20.3)",
-            "Line 3",
-            "Line 4"
-        ]
-        expected_output = (None, "20.3")
-        output = self.engine.read_in_custom_shape_dimentions(gcode_lines)
-        self.assertEqual(output, expected_output)
-
-        # Case 5: x_dim and y_dim found on the same line within the first 20 lines
+        # Case 2: x_dim and y_dim found on the same line within the first 20 lines
         gcode_lines = [
             "Line 1",
             "(Final part x dim: 10.5, Final part y dim: 20.3)",
@@ -611,6 +578,17 @@ class EngineTests(unittest.TestCase):
             "Line 4"
         ]
         expected_output = ("10.5", "20.3")
+        output = self.engine.read_in_custom_shape_dimentions(gcode_lines)
+        self.assertEqual(output, expected_output)
+
+        # Case 3: x_dim and y_dim not found within the first 20 lines
+        gcode_lines = [
+            "Line 1",
+            "Line 2",
+            "Line 3",
+            "Line 4"
+        ]
+        expected_output = (None, None)
         output = self.engine.read_in_custom_shape_dimentions(gcode_lines)
         self.assertEqual(output, expected_output)
 

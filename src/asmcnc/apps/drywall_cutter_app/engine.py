@@ -23,10 +23,12 @@ import decimal
 import os
 import re
 
+
 try:
     from asmcnc.apps.drywall_cutter_app.config import config_loader
+    from asmcnc.apps.drywall_cutter_app.logger import Logger
 except ImportError:
-    print("unable to import config_loader")
+    print("Import fail in engine.py")
 
 class GCodeEngine():
     def __init__(self, dwt_config):
@@ -454,7 +456,10 @@ class GCodeEngine():
                 break  # Exit the loop once both values have been found
     
         if x_dim is None or y_dim is None:
-            raise ValueError("Unable to find custom shape dimensions in first 20 lines of gcode file.")
+            try:
+                Logger.Warning("Unable to find custom shape dimensions in first 20 lines of gcode file.")#
+            except:
+                print("Unable to find custom shape dimensions in first 20 lines of gcode file.")
         
         return x_dim, y_dim
 
