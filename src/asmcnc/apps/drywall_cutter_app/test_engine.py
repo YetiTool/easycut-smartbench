@@ -35,30 +35,30 @@ class EngineTests(unittest.TestCase):
 
     def test_is_clockwise(self):
         # Case 1
-        coordinates = [(0, 0), (100.0, 0), (100.0, 100.0), (0, 100.0), (0, 0)] # BL -> BR -> TR -> TL -> BL, clockwise
-        self.assertTrue(self.engine.is_clockwise(coordinates))
-
-        # Case 2
-        coordinates = [(0, 0), (0, 100.0), (100.0, 100.0), (100.0, 0), (0, 0)] # TL -> BL -> BR -> TR -> TL, counter-clockwise
+        coordinates = [(0, 0), (100.0, 0), (100.0, 100.0), (0, 100.0), (0, 0)] # BL -> BR -> TR -> TL -> BL, anti-clockwise
         self.assertFalse(self.engine.is_clockwise(coordinates))
 
+        # Case 2
+        coordinates = [(0, 0), (0, 100.0), (100.0, 100.0), (100.0, 0), (0, 0)] # BL, TL, TR, BR, BL, clockwise
+        self.assertTrue(self.engine.is_clockwise(coordinates))
+
     def test_correct_orientation(self):
-        # Case 1
-        coordinates = [(0, 0), (0, 100.0), (100.0, 100.0), (100.0, 0), (0, 0)] # TL -> BL -> BR -> TR -> TL, counter-clockwise
-        expected_output = [(0, 0), (100.0, 0), (100.0, 100.0), (0, 100.0), (0, 0)] # BL -> BR -> TR -> TL -> BL, clockwise
+        # Case 1: No change needed
+        coordinates = [(0, 0), (0, 100.0), (100.0, 100.0), (100.0, 0), (0, 0)] # BL, TL, TR, BR, BL, clockwise
+        expected_output = [(0, 0), (0, 100.0), (100.0, 100.0), (100.0, 0), (0, 0)] # BL, TL, TR, BR, BL, clockwise
         output = self.engine.correct_orientation(coordinates, self.engine.is_clockwise(coordinates))
         self.assertEqual(output, expected_output)
 
-        # Case 2
-        coordinates = [(0, 0), (100.0, 0), (100.0, 100.0), (0, 100.0), (0, 0)] # BL -> BR -> TR -> TL -> BL, clockwise
-        expected_output = [(0, 0), (100.0, 0), (100.0, 100.0), (0, 100.0), (0, 0)] # BL -> BR -> TR -> TL -> BL, clockwise
+        # Case 2: Change needed
+        coordinates = [(0, 0), (0, 100.0), (100.0, 100.0), (100.0, 0), (0, 0)] # BL, BR, TR, TL, BL, anti-clockwise
+        expected_output = [(0, 0), (0, 100.0), (100.0, 100.0), (100.0, 0), (0, 0)] # BL, TL, TR, BR, BL, clockwise
         output = self.engine.correct_orientation(coordinates, self.engine.is_clockwise(coordinates))
         self.assertEqual(output, expected_output)
 
     def test_add_corner_coordinates(self):
         coordinates = [(0, 0), (100.0, 0), (100.0, 100.0), (0, 100.0), (0, 0)]
         corner_radius = 10
-        expected_output = [(10, 0), (0, 10), (100.0, 10), (90.0, 0), (90.0, 100.0), (100.0, 90.0), (0, 90.0), (10, 100.0), (10, 0), (0, 10)]
+        expected_output = [(0, 10), (10, 0), (90, 0), (100, 10), (100, 90), (90, 100), (10, 100), (0, 90), (0, 10), (10, 0)]
         output = self.engine.add_corner_coordinates(coordinates, self.engine.find_centre(coordinates), corner_radius)
         self.assertEqual(output, expected_output)
 
