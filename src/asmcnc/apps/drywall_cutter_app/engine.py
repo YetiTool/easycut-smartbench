@@ -26,10 +26,7 @@ try:
     from asmcnc.apps.drywall_cutter_app.config import config_loader
     from asmcnc.apps.drywall_cutter_app.logger import Logger
 except ImportError:
-    try:
-        Logger.Warning("Import fail in engine.py")
-    except:
-        print("Import fail in engine.py")
+    print("Import fail in engine.py")
 
 class GCodeEngine():
     def __init__(self, dwt_config):
