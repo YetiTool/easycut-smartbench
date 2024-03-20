@@ -8,7 +8,9 @@ Created on 03 August 2020
 import os, sys, subprocess
 from datetime import datetime
 
-try: 
+from asmcnc.comms.logging_system.logging_system import Logger
+
+try:
     import pigpio
 
 except:
@@ -96,13 +98,22 @@ Builder.load_string("""
                     background_color: [1,0,0,1]
                     background_normal: ''
         # Row 2
-                Button:
-                    text: '  2. Bake GRBL Settings'
-                    text_size: self.size
-                    markup: 'True'
-                    halign: 'left'
-                    valign: 'middle'
-                    on_press: root.bake_grbl_settings()
+                GridLayout:
+                    cols: 2
+                    Button:
+                        text: '  2. Bake GRBL Settings'
+                        text_size: self.size
+                        markup: 'True'
+                        halign: 'left'
+                        valign: 'middle'
+                        on_press: root.bake_grbl_settings()
+                    Button: 
+                        text: '  2a. GRBL Monitor'
+                        text_size: self.size
+                        markup: 'True'
+                        halign: 'left'
+                        valign: 'middle'
+                        on_press: root.open_monitor()
                 Button:
                     text: '  10. DISABLE ALARMS'
                     text_size: self.size
@@ -301,10 +312,6 @@ Builder.load_string("""
 STATUS_UPDATE_DELAY = 0.4
 TEMP_POWER_POLL = 5
 
-def log(message):
-    timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
-
 class ScrollableLabelStatus(ScrollView):
     text = StringProperty('')
 
@@ -384,6 +391,10 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
 
         self.m.s.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
 
+    def open_monitor(self):
+        self.sm.get_screen('monitor').parent_screen = 'qcW112'
+        self.sm.current = "monitor"
+
     def home(self):
         self.m.is_machine_completed_the_initial_squaring_decision = True
         self.m.is_squaring_XY_needed_after_homing = False
@@ -405,21 +416,21 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
         self.m.jog_relative('Z', -20, 750)
 
     def set_spindle(self):
-        if self.spindle_toggle.state == 'normal': 
+        if self.spindle_toggle.state == 'normal':
             self.m.spindle_off()
-        else: 
+        else:
             self.m.spindle_on()
 
     def set_laser(self):
-        if self.laser_toggle.state == 'normal': 
+        if self.laser_toggle.state == 'normal':
             self.m.laser_off()
-        else: 
+        else:
             self.m.laser_on()
 
     def set_vac(self):
-        if self.vac_toggle.state == 'normal': 
+        if self.vac_toggle.state == 'normal':
             self.m.vac_off()
-        else: 
+        else:
             self.m.vac_on()
 
     def dust_shoe_red(self):
@@ -479,7 +490,7 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
             self.cycle_limit_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
             self.z_limit_set = True
         else:
-            self.cycle_limit_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"        
+            self.cycle_limit_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
 
     def stop(self):
         popup_info.PopupStop(self.m, self.sm, self.l)
@@ -524,7 +535,7 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
         def nested_do_fw_update(dt):
             pi = pigpio.pi()
             pi.set_mode(17, pigpio.ALT3)
-            print(pi.get_mode(17))
+            Logger.info(pi.get_mode(17))
             pi.stop()
 
             cmd = "grbl_file=/media/usb/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
@@ -550,10 +561,10 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
                 Clock.schedule_once(update_complete, 2)
 
         def update_complete(dt):
-            if self.exit_code == 0: 
+            if self.exit_code == 0:
                 did_fw_update_succeed = "Success!"
 
-            else: 
+            else:
                 did_fw_update_succeed = "Update failed."
 
             popup_z_head_qc.PopupFWUpdateDiagnosticsInfo(self.sm, did_fw_update_succeed, str(self.stdout))

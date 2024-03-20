@@ -2,6 +2,7 @@
 Created on 14 Feb 2022
 @author: Letty
 '''
+from asmcnc.comms.logging_system.logging_system import Logger
 
 try: 
     import unittest
@@ -10,7 +11,7 @@ try:
     from serial_mock.decorators import serial_query
 
 except: 
-    print("Can't import mocking packages, are you on a dev machine?")
+    Logger.info("Can't import mocking packages, are you on a dev machine?")
 
 from time import sleep
 from random import randint
@@ -73,7 +74,7 @@ class MotorCommandsTest(unittest.TestCase):
                     return "ok"
                 if buffer_type == "run": 
                     outerSelf.run_buffer = outerSelf.run_buffer + str(counter)
-                    print(outerSelf.run_buffer)
+                    Logger.info(outerSelf.run_buffer)
                     return "ok"
                 if buffer_type == "realtime": outerSelf.realtime_buffer = outerSelf.realtime_buffer + str(counter)
                 if buffer_type == "protocol": outerSelf.protocol_buffer = outerSelf.protocol_buffer + str(counter)
@@ -117,7 +118,7 @@ class MotorCommandsTest(unittest.TestCase):
 
         # self.create_job_object(self.max_count+1)
 
-        # print("JOB OBJECT: " + str(self.job_object))
+        # Logger.info("JOB OBJECT: " + str(self.job_object))
 
         # self.m.s.m_state = "Check"
 
