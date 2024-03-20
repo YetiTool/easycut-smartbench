@@ -41,7 +41,7 @@ class GCodeEngine():
 
     #Produce corner coordinates for a rectangle of size x, y
     def rectangle_coordinates(self, x, y):
-        if x <= 0 or y <= 0:
+        if x <= 0 or y <= 0 and self.config.active_config.shape_type.lower() not in ["circle", "geberit", "line"]:
             return None  # Invalid dimensions, return None
 
         # Define the coordinates for the four corners
@@ -489,7 +489,7 @@ class GCodeEngine():
             coordinates.append(coordinates[0])
 
             # Create a list of stepovers to add finishing passes
-            finish_passes = 1
+            finish_passes = 0
             finish_stepover = 0.5
             finish_stepdown = total_cut_depth
             if finish_passes > 0:
@@ -561,7 +561,7 @@ class GCodeEngine():
             coordinates.append(coordinates[0])
 
             # Create a list of stepovers to add finishing passes
-            finish_passes = 1
+            finish_passes = 0
             finish_stepover = 0.5
             finish_stepdown = self.config.active_config.cutting_depths.material_thickness
             if finish_passes > 0:
