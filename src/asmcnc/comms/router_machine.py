@@ -190,8 +190,9 @@ class RouterMachine(EventDispatcher):
         Raise Z to a height that the user can access the spindle collet
         :return: None
         """
-        self.jog_absolute_single_axis(Axis.Z.value, target=self.Z_AXIS_ACCESSIBLE_ABS_HEIGHT,
-                                      speed=self.Z_MAX_FEED_RATE)
+        self.s.write_command('G0 G53 Z' + str(self.Z_AXIS_ACCESSIBLE_ABS_HEIGHT))
+        # self.jog_absolute_single_axis(Axis.Z.value, target=self.Z_AXIS_ACCESSIBLE_ABS_HEIGHT,
+                                    #   speed=self.Z_MAX_FEED_RATE)
 
     def raise_z_axis_to_safe_height_after_probing(self):
         """
@@ -1076,13 +1077,14 @@ class RouterMachine(EventDispatcher):
 
 # HW/FW ADJUSTMENTS
 
-    def correct_rpm_for_120(self, target_rpm, revert = False):
+    def correct_rpm_for_120(self, target_rpm, revert = False, log = True):
         """
         Compensates for the desparity in set and actual spindle RPM for a 120V spindle.
 
         Args:
             target_rpm (int): The target RPM to be corrected.
             revert (bool, optional): If True, the corrected RPM will be reverted back to the original requested RPM. Defaults to False.
+            log (bool, optional): If True, compensating information will be logged.
 
         Returns:
             int: The corrected RPM value.
@@ -1098,7 +1100,8 @@ class RouterMachine(EventDispatcher):
             compensated_RPM = int(round((target_rpm - 8658) / 0.6739))
 
             if compensated_RPM < 0:
-                Logger.info("Calculated RPM {} too low for 120V spindle, setting to 0".format(target_rpm))
+                if log:
+                    Logger.info("Calculated RPM {} too low for 120V spindle, setting to 0".format(target_rpm))
                 compensated_RPM = 0
             elif compensated_RPM > 25000:
                 compensated_RPM = 25000
@@ -1106,16 +1109,18 @@ class RouterMachine(EventDispatcher):
             return compensated_RPM
 
         else:
-            Logger.info("Requested RPM {} outside of range for 120V spindle (10000 - 25000)".format(target_rpm))
+            if log:
+                Logger.info("Requested RPM {} outside of range for 120V spindle (10000 - 25000)".format(target_rpm))
             return 0
 
-    def correct_rpm_for_230(self, target_rpm, revert = False):
+    def correct_rpm_for_230(self, target_rpm, revert = False, log= True):
         """
         Compensates for the desparity in set and actual spindle RPM for a 230V spindle.
 
         Args:
             target_rpm (int): The target RPM to be corrected.
             revert (bool, optional): If True, the corrected RPM will be reverted back to the original requested RPM. Defaults to False.
+            log (bool, optional): If True, compensating information will be logged.
 
         Returns:
             int: The corrected RPM value.
@@ -1130,7 +1135,8 @@ class RouterMachine(EventDispatcher):
             compensated_RPM = int(round((target_rpm - 1886) / 0.95915))
 
             if compensated_RPM < 0:
-                Logger.info("Calculated RPM {} too low for 230V spindle, setting to 0".format(target_rpm))
+                if log:
+                    Logger.info("Calculated RPM {} too low for 230V spindle, setting to 0".format(target_rpm))
                 compensated_RPM = 0
             elif compensated_RPM > 25000:
                 compensated_RPM = 25000
@@ -1138,10 +1144,11 @@ class RouterMachine(EventDispatcher):
             return compensated_RPM
 
         else:
-            Logger.info("Requested RPM {} outside of range for 230V spindle (4000 - 25000)".format(target_rpm))
+            if log:
+                Logger.info("Requested RPM {} outside of range for 230V spindle (4000 - 25000)".format(target_rpm))
             return 0
 
-    def correct_rpm(self, requested_rpm, spindle_voltage = None, revert = False):
+    def correct_rpm(self, requested_rpm, spindle_voltage = None, revert = False, log = True):
         """
         Compensates for the desparity in set and actual spindle RPM for a spindle.
 
@@ -1163,18 +1170,24 @@ class RouterMachine(EventDispatcher):
             spindle_voltage = self.spindle_voltage # Use spindle voltage set by user in maintenance app
 
         if spindle_voltage in [110, 120]:
-            rpm_to_set = self.correct_rpm_for_120(requested_rpm, revert)
+            rpm_to_set = self.correct_rpm_for_120(requested_rpm, revert, log)
 
         elif spindle_voltage in [230, 240]:
-            rpm_to_set = self.correct_rpm_for_230(requested_rpm, revert)
+            rpm_to_set = self.correct_rpm_for_230(requested_rpm, revert, log)
 
         else:
             raise ValueError('Spindle voltage: {} not recognised'.format(spindle_voltage))
 
         if revert:
-            Logger.info("Requested RPM: "+ str(requested_rpm) + " Reverted RPM: " + str(rpm_to_set) + " Voltage: " + str(spindle_voltage))
+            if log:
+                Logger.info("Requested RPM: "+ str(requested_rpm) +
+                            " Reverted RPM: " + str(rpm_to_set) +
+                            " Voltage: " + str(spindle_voltage))
         else:
-            Logger.info("Requested RPM: "+ str(requested_rpm) + " Compensated RPM: " + str(rpm_to_set) + " Voltage: " + str(spindle_voltage))
+            if log:
+                Logger.info("Requested RPM: "+ str(requested_rpm) +
+                            " Compensated RPM: " + str(rpm_to_set) +
+                            " Voltage: " + str(spindle_voltage))
 
         return rpm_to_set
 
@@ -1720,9 +1733,6 @@ class RouterMachine(EventDispatcher):
     def get_is_constant_feed_rate(self, last_modal_feed_rate, feed_override_percentage, current_feed_rate, tolerance_for_acceleration_detection):
         constant_feed_target = last_modal_feed_rate * feed_override_percentage / 100
         return abs(constant_feed_target - current_feed_rate) <= tolerance_for_acceleration_detection, last_modal_feed_rate
-
-    def spindle_speed(self):
-        return int(self.s.spindle_speed)
 
     def spindle_load(self):
         try:

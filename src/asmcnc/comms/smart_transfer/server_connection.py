@@ -91,7 +91,7 @@ class ServerConnection(object):
 
 		while True:
 			try: 
-				"Waiting for connection..."
+				Logger.debug("Waiting for connection...")
 				if self.is_socket_available:
 					
 					self.set.get_public_ip_address() # messy and hopefully temporary, to prevent thread conflicts
@@ -104,8 +104,8 @@ class ServerConnection(object):
 					try: 
 						self.get_smartbench_name()
 						conn.send(self.smartbench_name)
-					except: 
-						Logger.info("Message not sent")
+					except Exception as e:
+						Logger.warning("Message couldn't be sent: " + str(e))
 
 					conn.close()
 				else:
