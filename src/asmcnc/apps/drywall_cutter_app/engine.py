@@ -36,6 +36,9 @@ class GCodeEngine():
         self.x = 0  # Identifier for use in arrays
         self.y = 1  # Identifier for use in arrays
 
+        #Constants
+        self.CORNER_RADIUS_THRESHOLD = 0.09  # Minimum corner radius to be considered a corner radius
+
     #Produce corner coordinates for a rectangle of size x, y
     def rectangle_coordinates(self, x, y):
         if x <= 0 or y <= 0:
@@ -66,7 +69,7 @@ class GCodeEngine():
 
     #Check if a corner radius is present (and not tiny)
     def find_corner_rads(self, radius):
-        return radius > 0.09
+        return radius > self.CORNER_RADIUS_THRESHOLD
 
     # Determine shape point direction
     def is_clockwise(self, coordinates):
