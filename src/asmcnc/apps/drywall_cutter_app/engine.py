@@ -367,7 +367,7 @@ class GCodeEngine():
                     adjusted_parts.append('Y{}'.format(self.format_float(adjusted_y)))
                 else:
                     adjusted_parts.append(part)
-            adjusted_lines.append(' '.join(adjusted_parts))
+            adjusted_lines.extend(adjusted_parts)
         return adjusted_lines
 
     # For use with apply_datum_offset
@@ -389,10 +389,10 @@ class GCodeEngine():
                 # Replace "cut depth" with the depth value in the line
                 cut_line = line.replace("[cut depth]", "-" + str(depth))
                 cut_lines.append(cut_line)
-            output.append(cut_lines)
+            output.extend(cut_lines)
 
         if end_line_key < len(gcode_lines):
-            output.append(gcode_lines[end_line_key:])
+            output.extend(gcode_lines[end_line_key:])
 
         return output
 
@@ -409,8 +409,6 @@ class GCodeEngine():
         for i in range(len(gcode_lines)):
             if insertion_key in gcode_lines[i].lower():
                 insert_index = i
-                break
-            if i == len(gcode_lines):
                 break
         if insert_index is None:
             raise Exception ("Unable to find " + insertion_key + " in gcode")
