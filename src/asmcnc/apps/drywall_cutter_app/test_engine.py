@@ -528,7 +528,7 @@ class EngineTests(unittest.TestCase):
         self.assertEqual(output, expected_output)
 
         # Test case 3: Insert partoff line at the end of the gcode
-        gcode_lines = ["G1 X10 Y20", "G1 X30 Y40"]
+        gcode_lines = ["G1 X10 Y20", "G1 X30 Y40", "G1 X50 Y60"]
         processing_args = {
             "insertion_key": "G1 X50 Y60",
             "start_coordinate": (40, 40),
@@ -549,6 +549,10 @@ class EngineTests(unittest.TestCase):
             "G1 Z-10 F150",
             "G1 X40 Y40F300",
             "G1 Z-15 F150",
+            "G1 X60 Y60F300",
+            "G1 Z-20 F150",
+            "G1 X40 Y40F300",
+            "G1 Z4",
             "G1 X50 Y60"
         ]
         output = self.engine.add_partoff(gcode_lines, **processing_args)

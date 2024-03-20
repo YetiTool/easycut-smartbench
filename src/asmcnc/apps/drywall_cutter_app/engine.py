@@ -404,9 +404,7 @@ class GCodeEngine():
         #Find index to insert partoff line
         insertion_key = insertion_key.lower()
         for i in range(len(gcode_lines)):
-            print(gcode_lines[i])
             if insertion_key in gcode_lines[i].lower():
-                print("found")
                 insert_index = i
                 break
             if i == len(gcode_lines):
