@@ -1862,7 +1862,7 @@ class RouterMachine(EventDispatcher):
         self.s.write_realtime('\x85', altDisplayText = 'Quit jog')
 
     def cooldown_zUp_and_spindle_on(self):
-        self.s.write_command('AE')
+        self.turn_off_vacuum()
         self.turn_on_spindle(self.spindle_cooldown_rpm)
         self.raise_z_axis_for_collet_access()
 
