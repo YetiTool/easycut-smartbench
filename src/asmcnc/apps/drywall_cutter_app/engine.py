@@ -76,7 +76,7 @@ class GCodeEngine():
             x2, y2 = coordinates[(i + 1) % len(coordinates)]  # Handle the wraparound at the end
             total += (x2 - x1) * (y2 + y1)
         
-        return total < 0
+        return total > 0
 
     # Reverse coordinates if need to be clockwise
     def correct_orientation(self, coordinates, clockwise):
@@ -90,20 +90,20 @@ class GCodeEngine():
         for coordinate in coordinates:
             #Bottom left
             if coordinate[self.x] < shape_centre[self.x] and coordinate[self.y] < shape_centre[self.y]: 
-                rad_point_1 = coordinate[self.x] + corner_radius, coordinate[self.y]
-                rad_point_2 = coordinate[self.x], coordinate[self.y] + corner_radius
+                rad_point_1 = coordinate[self.x], coordinate[self.y] + corner_radius
+                rad_point_2 = coordinate[self.x] + corner_radius, coordinate[self.y]
             #Top left
             elif coordinate[self.x] < shape_centre[self.x] and coordinate[self.y] > shape_centre[self.y]:
-                rad_point_1 = coordinate[self.x], coordinate[self.y] - corner_radius
-                rad_point_2 = coordinate[self.x] + corner_radius, coordinate[self.y]
+                rad_point_1 = coordinate[self.x] + corner_radius, coordinate[self.y]
+                rad_point_2 = coordinate[self.x], coordinate[self.y] - corner_radius
             #Top right
             elif coordinate[self.x] > shape_centre[self.x] and coordinate[self.y] > shape_centre[self.y]:
-                rad_point_1 = coordinate[self.x] - corner_radius, coordinate[self.y]
-                rad_point_2 = coordinate[self.x], coordinate[self.y] - corner_radius
+                rad_point_1 = coordinate[self.x], coordinate[self.y] - corner_radius
+                rad_point_2 = coordinate[self.x] - corner_radius, coordinate[self.y]
             #Bottom right
             elif coordinate[self.x] > shape_centre[self.x] and coordinate[self.y] < shape_centre[self.y]:
-                rad_point_1 = coordinate[self.x], coordinate[self.y] + corner_radius
-                rad_point_2 = coordinate[self.x] - corner_radius, coordinate[self.y]
+                rad_point_1 = coordinate[self.x] - corner_radius, coordinate[self.y]
+                rad_point_2 = coordinate[self.x], coordinate[self.y] + corner_radius
             new_coordinates.append(rad_point_1)
             new_coordinates.append(rad_point_2)
         return new_coordinates 
@@ -170,6 +170,8 @@ class GCodeEngine():
 
     #Determine if the cut direction should be clockwise or not
     def determine_cut_direction_clockwise(self, offset_type, climb):
+        if offset_type not in [u"inside", u"outside"]:
+            raise ValueError("Offset type must be 'inside' or 'outside'")            
         return climb and offset_type == u"outside" or not(climb) and offset_type == u"inside"
 
     #For use when reordering gcode instructions
@@ -206,28 +208,30 @@ class GCodeEngine():
         # Apply offset for toolpath (inside, on, outside the line cutting)
         offset_coordinates = self.apply_offset(coordinates, offset, tool_diameter, shape_centre)  
 
-        clockwise_cutting = self.determine_cut_direction_clockwise(offset, is_climb)  
-
         # Add corner coordinates if necessary
         radii_present = self.find_corner_rads(corner_radius)  
         final_coordinates = offset_coordinates
         if radii_present:
             adjusted_corner_radius = corner_radius + self.calculate_corner_radius_offset(offset, tool_diameter)  
             if adjusted_corner_radius > 0:
-                final_coordinates = self.add_corner_coordinates(offset_coordinates, shape_centre, adjusted_corner_radius)  
+                final_coordinates = self.add_corner_coordinates(reversed(offset_coordinates), shape_centre, adjusted_corner_radius)  
             else:
                 radii_present = False
 
         pass_depths = self.calculate_pass_depths(total_cut_depth, pass_depth)  
 
-        # Time to make some gcode :)
-        final_coordinates = self.correct_orientation(final_coordinates, clockwise_cutting)
-        
+        # Correct orientation for climb or conventional cutting
+        clockwise_cutting = self.determine_cut_direction_clockwise(offset, is_climb)
+
+        if clockwise_cutting:
+            final_coordinates = final_coordinates[::-1]
+    
         if clockwise_cutting:
             arc_instruction = u"G2"
         else:
             arc_instruction = u"G3"
 
+        # Time to make some gcode :)
         cutting_lines = []
 
         for depth in pass_depths:
@@ -470,7 +474,8 @@ class GCodeEngine():
         pass_depths = []
         stepovers = [0]
 
-        is_climb = self.config.active_cutter.cutting_direction.lower() == "climb"
+        # is_climb = self.config.active_cutter.cutting_direction.lower() == "climb"
+        is_climb = False
 
         # Calculated parameters
         total_cut_depth = self.config.active_config.cutting_depths.material_thickness - self.config.active_config.cutting_depths.bottom_offset
