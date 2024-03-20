@@ -82,4 +82,4 @@ class ScreenManagerWarranty(object):
 
         if self.sm.has_screen(screen_name):
             self.sm.remove_widget(self.sm.get_screen(screen_name))
-            print (screen_name + ' deleted')
+            Logger.info(screen_name + ' deleted')

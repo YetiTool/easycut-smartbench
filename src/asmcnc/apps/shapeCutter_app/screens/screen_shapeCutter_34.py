@@ -4,6 +4,7 @@ Screen 34 for the Shape Cutter App
 
 @author: Letty
 """
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
@@ -363,10 +364,10 @@ If not, check that it's connected and switched on, then retry by pressing the bu
             self.next_button.disabled = False
             self.back_button.disabled = False
             self.vacuum_image.source = "./asmcnc/skavaUI/img/vac_off.png"
-            print("vac off")
+            Logger.info("vac off")
             self.m.turn_off_vacuum()
         else:
-            print("vac on")
+            Logger.info("vac on")
             self.next_button.disabled = True
             self.back_button.disabled = True
             self.vacuum_image.source = "./asmcnc/skavaUI/img/vac_on.png"

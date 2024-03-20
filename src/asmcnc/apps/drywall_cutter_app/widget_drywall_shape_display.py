@@ -50,18 +50,9 @@ Builder.load_string("""
 
             Switch:
                 id: unit_switch
-                size: dp(100), dp(50)
+                size: dp(83), dp(32)
                 size_hint: (None, None)
-                pos: self.parent.pos[0] + self.parent.size[0] - self.size[0], self.parent.pos[1] - dp(3)
-                on_active: root.toggle_units()
-
-            Label:
-                font_size: dp(18)
-                size: self.texture_size
-                size_hint: (None, None)
-                pos: unit_switch.pos[0] + dp(14) + (dp(40) * unit_switch.active), unit_switch.pos[1] + dp(12)
-                text: 'mm' if not unit_switch.active else 'Inch'
-                color: 1,1,1,1
+                pos: self.parent.pos[0] + self.parent.size[0] - self.size[0] - dp(3), self.parent.pos[1] + dp(3)
 
             BoxLayout:
                 size: dp(70), dp(40)
@@ -287,6 +278,10 @@ class DrywallShapeDisplay(Widget):
             self.y_input:'y'
         }
 
+        # Show custom switch image
+        self.unit_switch.canvas.children[5].source = "./asmcnc/apps/drywall_cutter_app/img/unit_toggle.png"
+        self.unit_switch.bind(active=self.toggle_units)
+
         self.m.s.bind(m_state=self.display_machine_state)
 
         Clock.schedule_interval(self.poll_position, 0.1)
@@ -294,7 +289,7 @@ class DrywallShapeDisplay(Widget):
     def select_shape(self, shape, rotation, swap_lengths=False):
         shape = shape.lower() # in case it's a test config with a capital letter
         image_source = self.image_filepath + shape
-        if shape in ['rectangle', 'line']:
+        if shape in ['rectangle', 'line', 'geberit']:
             image_source += "_" + rotation
         self.shape_dims_image.source = image_source + "_dims.png"
         self.shape_dims_image.opacity = 1
@@ -352,8 +347,12 @@ class DrywallShapeDisplay(Widget):
             self.disable_input(self.l_input)
 
         if shape == 'geberit':
-            self.place_widget(self.x_datum_label, (360, 19))
-            self.place_widget(self.y_datum_label, (390, 77))
+            if rotation == 'horizontal':
+                self.place_widget(self.x_datum_label, (407, 46))
+                self.place_widget(self.y_datum_label, (416, 125))
+            else:
+                self.place_widget(self.x_datum_label, (360, 19))
+                self.place_widget(self.y_datum_label, (390, 77))
 
         self.dwt_config.on_parameter_change('rotation', rotation)
 
@@ -413,8 +412,9 @@ class DrywallShapeDisplay(Widget):
                     return True
         return False
 
-    def toggle_units(self):
-        self.dwt_config.on_parameter_change('units', 'mm' if not self.unit_switch.active else 'Inch')
+    def toggle_units(self, instance, value):
+        instance.active = True
+        # self.dwt_config.on_parameter_change('units', 'mm' if value else 'inch')
 
     def poll_position(self, dt):
         # Maths from Ed, documented here https://docs.google.com/spreadsheets/d/1X37CWF8bsXeC0dY-HsbwBu_QR6N510V-5aPTnxwIR6I/edit#gid=677510108

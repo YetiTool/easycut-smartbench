@@ -247,8 +247,15 @@ class GCodeMonitor(Widget):
         Clock.schedule_interval(self.update_status_text, STATUS_UPDATE_DELAY)
         self.popup_flag = True
         self.update_strings()
+        self.m.s.bind(on_serial_monitor_update=
+                      lambda instance, io, content: self.update_monitor_text_buffer(io, content))
+
 
     def update_monitor_text_buffer(self, input_or_output, content):
+        """
+        This function updates both the serial monitor and the status report buffer.
+        It is called as a callback when on_serial_monitor_update is fired.
+        """
         # Try to chuck out any problem strings
         if isinstance(content, basestring):
             # Don't update if content is to be hidden

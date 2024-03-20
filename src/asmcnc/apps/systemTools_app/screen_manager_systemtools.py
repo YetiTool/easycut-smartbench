@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
@@ -47,7 +48,12 @@ class ScreenManagerSystemTools(object):
 
         def get_logs(count):
             if self.usb_stick.is_usb_mounted_flag == True:
-                os.system("journalctl > smartbench_logs.txt && sudo cp --no-preserve=mode,ownership smartbench_logs.txt /media/usb/ && rm smartbench_logs.txt")
+                ec_create_log = os.system("journalctl > smartbench_logs.txt")
+                Logger.debug("Call: {} | Returned: {}".format("journalctl > smartbench_logs.txt", ec_create_log))
+                ec_copy = os.system("sudo cp --no-preserve=mode,ownership smartbench_logs.txt /media/usb/")
+                Logger.debug("Call: {} | Returned: {}".format("sudo cp --no-preserve=mode,ownership smartbench_logs.txt /media/usb/", ec_copy))
+                ec_delete_log = os.system("rm smartbench_logs.txt")
+                Logger.debug("Call: {} | Returned: {}".format("rm smartbench_logs.txt", ec_delete_log))
                 wait_popup.popup.dismiss()
                 self.usb_stick.disable()
 
@@ -63,7 +69,7 @@ class ScreenManagerSystemTools(object):
             else:
                 count +=1
                 Clock.schedule_once(lambda dt: get_logs(count), 0.2)
-                print(count)
+                Logger.info(count)
 
 
         Clock.schedule_once(lambda dt: get_logs(count), 0.2)
@@ -154,7 +160,7 @@ class ScreenManagerSystemTools(object):
     def download_settings_to_usb(self, *args):
         if self.mutex.locked():
             # already running
-            print('mutex locked!')
+            Logger.info('mutex locked!')
             return
         self.mutex.acquire(True)
         self.usb_stick.enable()
@@ -162,10 +168,10 @@ class ScreenManagerSystemTools(object):
         self.sm.pm.show_info_popup(message, 600)
 
         def copy_settings_to_usb(loop_counter):
-            print('Loop: {}').format(loop_counter)
+            Logger.info('Loop: {}').format(loop_counter)
             if self.usb_stick.is_usb_mounted_flag:
                 try:
-                    print('Copying...')
+                    Logger.info('Copying...')
                     # create temp folder
                     os.system('mkdir -p /home/pi/easycut-smartbench/transfer_tmp/easycut-smartbench/src')
                     # copy settings
@@ -180,17 +186,17 @@ class ScreenManagerSystemTools(object):
                     os.system('cp /home/pi/multiply.txt /home/pi/easycut-smartbench/transfer_tmp/')
                     os.system('cp /home/pi/plus.txt /home/pi/easycut-smartbench/transfer_tmp/')
                     # compress everything to usb
-                    print('Create tar...')
+                    Logger.info('Create tar...')
                     os.system('sudo tar czf /media/usb/transfer.tar.gz -C /home/pi/easycut-smartbench/transfer_tmp .')
                 except Exception as e:
-                    print(e)
+                    Logger.info(e)
                     pass
                 try:
                     #clean up
-                    print('Clean up...')
+                    Logger.info('Clean up...')
                     os.system('rm -r /home/pi/easycut-smartbench/transfer_tmp')
                 except Exception as e:
-                    print("Could not delete temporary files: {e}").format(e)
+                    Logger.info("Could not delete temporary files: {e}").format(e)
                     pass
                 self.sm.pm.close_info_popup()
                 #check if transfer file exists
@@ -219,7 +225,7 @@ class ScreenManagerSystemTools(object):
     def upload_settings_from_usb(self, *args):
         if self.mutex.locked():
             # already running
-            print('mutex locked!')
+            Logger.info('mutex locked!')
             return
         self.mutex.acquire(True)
         self.usb_stick.enable()
@@ -227,7 +233,7 @@ class ScreenManagerSystemTools(object):
         self.sm.pm.show_info_popup(message, 600)
 
         def restore_settings_from_usb(loop_counter):
-            print('Loop: {}').format(loop_counter)
+            Logger.info('Loop: {}').format(loop_counter)
             if self.usb_stick.is_usb_mounted_flag:
                 # TODO restore files here
                 success_flag = True
@@ -247,7 +253,7 @@ class ScreenManagerSystemTools(object):
                         self.m.get_persistent_values()
                 except Exception as e:
                     success_flag = False
-                    print(e)
+                    Logger.info(e)
                     pass
                 self.sm.pm.close_info_popup()
                 self.usb_stick.disable()
@@ -335,7 +341,7 @@ class ScreenManagerSystemTools(object):
     def destroy_screen(self, screen_name):
         if self.sm.has_screen(screen_name):
             self.sm.remove_widget(self.sm.get_screen(screen_name))
-            print (screen_name + ' deleted')
+            Logger.info(screen_name + ' deleted')
 
     def do_usb_first_aid(self):
         message = self.l.get_str('Ensuring USB is unmounted, please wait...')

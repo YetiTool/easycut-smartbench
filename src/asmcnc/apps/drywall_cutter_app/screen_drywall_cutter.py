@@ -143,11 +143,6 @@ Builder.load_string("""
 """)
 
 
-def log(message):
-    timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + message)
-
-
 class DrywallCutterScreen(Screen):
     shape_options = ['circle', 'square', 'rectangle', 'line', 'geberit']
     line_cut_options = ['inside', 'on', 'outside']
@@ -215,7 +210,7 @@ class DrywallCutterScreen(Screen):
             self.cut_offset_selection.values[0]
             self.cut_offset_selection.disabled = False
 
-        if self.shape_selection.text in ['rectangle', 'line']:
+        if self.shape_selection.text in ['rectangle', 'line', 'geberit']:
             self.rotate_button.disabled = False
         else:
             self.rotate_button.disabled = True
@@ -313,7 +308,7 @@ class DrywallCutterScreen(Screen):
         self.drywall_shape_display_widget.x_input.text = str(self.dwt_config.active_config.canvas_shape_dims.x)
         self.drywall_shape_display_widget.y_input.text = str(self.dwt_config.active_config.canvas_shape_dims.y)
 
-        self.drywall_shape_display_widget.unit_switch.active = False if self.dwt_config.active_config.units == 'mm' else True
+        self.drywall_shape_display_widget.unit_switch.active = True if self.dwt_config.active_config.units == 'mm' else False
 
         # Vlad set your text inputs here:
 

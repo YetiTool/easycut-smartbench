@@ -8,6 +8,8 @@ Created on 03 August 2020
 import os, sys, subprocess
 from datetime import datetime
 
+from asmcnc.comms.logging_system.logging_system import Logger
+
 try: 
     import pigpio
 
@@ -335,9 +337,6 @@ Builder.load_string("""
 STATUS_UPDATE_DELAY = 0.4
 TEMP_POWER_POLL = 5
 
-def log(message):
-    timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 class ScrollableLabelStatus(ScrollView):
     text = StringProperty('')
@@ -660,7 +659,7 @@ class ZHeadQCWarrantyAfterApr21(Screen):
                 self.spindle_pass_fail = True
 
             except:
-                log("Could not show outcome")
+                Logger.info("Could not show outcome")
 
 
         Clock.schedule_once(lambda dt: show_outcome(), 45)
@@ -737,7 +736,7 @@ class ZHeadQCWarrantyAfterApr21(Screen):
         def nested_do_fw_update(dt):
             pi = pigpio.pi()
             pi.set_mode(17, pigpio.ALT3)
-            print(pi.get_mode(17))
+            Logger.info(pi.get_mode(17))
             pi.stop()
 
             cmd = "grbl_file=/media/usb/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
