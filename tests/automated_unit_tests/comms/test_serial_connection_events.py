@@ -77,7 +77,8 @@ class TestSerialConnectionEvents(UnitTestBase):
                  database=Mock(),
                  localization=self._localization_module,
                  yetipilot=Mock())
-        self._router_machine_module.s.dispatch('on_reset_runtime', 20)
+        go_screen.total_runtime_seconds = 1
+        self._router_machine_module.s.dispatch('on_reset_runtime')
         self.assertEqual(go_screen.total_runtime_seconds, 0)
 
     def test_check_finished_event(self):
