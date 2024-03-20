@@ -452,7 +452,10 @@ class GCodeEngine():
 
             if x_dim and y_dim:
                 break  # Exit the loop once both values have been found
-
+    
+        if x_dim is None or y_dim is None:
+            raise ValueError("Unable to find custom shape dimensions in first 20 lines of gcode file.")
+        
         return x_dim, y_dim
 
     #Main
