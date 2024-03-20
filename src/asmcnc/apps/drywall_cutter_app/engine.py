@@ -477,7 +477,7 @@ class GCodeEngine():
         is_climb = False
 
         # Calculated parameters
-        total_cut_depth = self.config.active_config.cutting_depths.material_thickness - self.config.active_config.cutting_depths.bottom_offset
+        total_cut_depth = self.config.active_config.cutting_depths.material_thickness + self.config.active_config.cutting_depths.bottom_offset
 
         if self.config.active_config.shape_type.lower() == u"rectangle" or self.config.active_config.shape_type.lower() == u"square":
             rect_coordinates = self.rectangle_coordinates(self.config.active_config.canvas_shape_dims.x, self.config.active_config.canvas_shape_dims.y)
@@ -491,7 +491,7 @@ class GCodeEngine():
             # Create a list of stepovers to add finishing passes
             finish_passes = 1
             finish_stepover = 0.5
-            finish_stepdown = self.config.active_config.cutting_depths.material_thickness
+            finish_stepdown = total_cut_depth
             if finish_passes > 0:
                 stepovers = [finish_stepover * (finish_passes - i) for i in range(finish_passes)]
                 stepovers.append(0)
