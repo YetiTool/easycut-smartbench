@@ -124,7 +124,7 @@ class SpeedOverride(Widget):
     def update_speed_percentage_override_label(self):
         self.speed_override_percentage = self.m.s.speed_override_percentage
         self.speed_rate_label.text = str(self.m.s.speed_override_percentage) + "%"
-
+        
     def speed_up(self):
         if self.m.s.speed_override_percentage >= 200:
             return

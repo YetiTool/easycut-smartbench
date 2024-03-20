@@ -720,6 +720,8 @@ class WifiScreen(Screen):
                     Clock.unschedule(self.wifi_error_timeout_event)
                 try:
                     wait_popup.popup.dismiss()
+                    message = self.l.get_str("Wifi connected successfully!")
+                    popup_info.PopupMiniInfo(self.sm, self.l, message)
                 except:
                     pass
                 return
@@ -737,7 +739,7 @@ class WifiScreen(Screen):
                 popup_info.PopupWarning(self.sm, self.l, message)
 
         self.dismiss_wait_popup_event = Clock.schedule_once(dismiss_wait_popup, 5)
-        self.wifi_error_timeout_event = Clock.schedule_once(wifi_error_timeout, 30)
+        self.wifi_error_timeout_event = Clock.schedule_once(wifi_error_timeout, 45)
 
     def refresh_ip_label_value(self, dt):
         self.ip_status_label.text = self.set.ip_address

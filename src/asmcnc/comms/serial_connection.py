@@ -39,10 +39,38 @@ class MachineState(Enum):
 
 
 class SerialConnection(EventDispatcher):
+    setting_0 = NumericProperty(-1.0)
+    setting_1 = NumericProperty(-1.0)
+    setting_2 = NumericProperty(-1.0)
+    setting_4 = NumericProperty(-1.0)
+    setting_5 = NumericProperty(-1.0)
+    setting_6 = NumericProperty(-1.0)
+    setting_10 = NumericProperty(-1.0)
+    setting_11 = NumericProperty(-1.0)
+    setting_12 = NumericProperty(-1.0)
+    setting_13 = NumericProperty(-1.0)
+    setting_20 = NumericProperty(-1.0)
+    setting_21 = NumericProperty(-1.0)
+    setting_22 = NumericProperty(-1.0)
+    setting_23 = NumericProperty(-1.0)
+    setting_24 = NumericProperty(-1.0)
+    setting_25 = NumericProperty(-1.0)
+    setting_26 = NumericProperty(-1.0)
+    setting_27 = NumericProperty(-1.0)
+    setting_30 = NumericProperty(-1.0)
+    setting_31 = NumericProperty(-1.0)
+    setting_32 = NumericProperty(-1.0)
     setting_50 = NumericProperty(0.0)
     setting_100 = NumericProperty(0.0)
     setting_101 = NumericProperty(0.0)
     setting_102 = NumericProperty(0.0)
+    setting_110 = NumericProperty(-1.0)
+    setting_111 = NumericProperty(-1.0)
+    setting_112 = NumericProperty(-1.0)
+    setting_120 = NumericProperty(-1.0)
+    setting_121 = NumericProperty(-1.0)
+    setting_122 = NumericProperty(-1.0)
+    setting_130 = NumericProperty(-1.0)
     STATUS_INTERVAL = 0.1  # How often to poll general status to update UI (0.04 = 25Hz = smooth animation)
 
     s = None  # Serial comms object
@@ -1249,10 +1277,22 @@ class SerialConnection(EventDispatcher):
                     self.feed_rate = feed_speed[0]
                     # convert spindle speed to int after re-compensating to show the old users value
                     if int(feed_speed[1]) != 0:
-                        if self.setting_51 == 0:  # not an SC2
-                            self.spindle_speed = int(self.m.correct_rpm(int(feed_speed[1]), spindle_voltage=None, revert=True, log=False))
-                        else:
+                        try:
+                            is_spindle_sc2 = self.setting_51 == 1  # Running SC2 spindle
+                        except:
+                            is_spindle_sc2 = False
+
+                        if is_spindle_sc2:  # Running SC2 spindle
                             self.spindle_speed = int(feed_speed[1])
+                        else:
+                            grbl_reported_rpm = int(feed_speed[1]) # Value back from GRBL
+                            current_multiplier = float(self.speed_override_percentage) / 100 # Current override
+                            current_gcode_rpm = self.m.correct_rpm((grbl_reported_rpm / current_multiplier), revert=True, log=False) # Determine gcode rpm at current line
+                            current_running_rpm = current_gcode_rpm * current_multiplier
+                            # Apply limits
+                            if current_running_rpm > self.m.maximum_spindle_speed(): current_running_rpm = self.m.maximum_spindle_speed()
+                            if current_running_rpm < self.m.minimum_spindle_speed(): current_running_rpm = self.m.minimum_spindle_speed()
+                            self.spindle_speed = int(current_running_rpm)
                     else:
                         self.spindle_speed = 0
 
