@@ -1,4 +1,7 @@
 '''
+Author: BP
+Description: This module contains the GCodeEngine class, which is responsible for producing gcode instructions for cutting shapes. The class contains methods for producing gcode instructions for cutting rectangles, circles, and custom shapes. The class also contains methods for reading in gcode files, adjusting feeds and speeds, and replacing Z values. The class is used by the DrywallCutterApp class to produce gcode instructions for cutting shapes.
+
 Working theory:
 
 read in data
@@ -15,20 +18,18 @@ produce gcode
 tidy gcode
 write to output file
 '''
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import with_statement
-from io import open
 import decimal
 import os
 import re
-
 
 try:
     from asmcnc.apps.drywall_cutter_app.config import config_loader
     from asmcnc.apps.drywall_cutter_app.logger import Logger
 except ImportError:
-    print("Import fail in engine.py")
+    try:
+        Logger.Warning("Import fail in engine.py")
+    except:
+        print("Import fail in engine.py")
 
 class GCodeEngine():
     def __init__(self, dwt_config):
