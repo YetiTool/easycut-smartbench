@@ -1778,7 +1778,7 @@ class SerialConnection(EventDispatcher):
 
     def start_sequential_stream(self, list_to_stream, reset_grbl_after_stream=False, end_dwell=False):
         if self.is_sequential_streaming:
-            Logger.info('already streaming...try again later')
+            Logger.debug('already streaming...try again later')
             Clock.schedule_once(lambda dt: self.start_sequential_stream(list_to_stream, reset_grbl_after_stream, end_dwell), 0.3)
             return
         self.is_sequential_streaming = True
