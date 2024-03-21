@@ -1,4 +1,5 @@
 from kivy.core.window import Window
+from kivy.metrics import dp
 
 Width = Window.width if Window.width in [1280, 800] else 800
 Height = Window.height - 32 if Window.height == 800 else 480
@@ -26,6 +27,10 @@ def get_scaled_width(width):
     return float(width) / 800.0 * Width
 
 
+def get_scaled_dp_width(width):
+    return dp(get_scaled_width(width))
+
+
 def get_scaled_height(height):
     """
     Returns the scaled height of the given height, relative to the current console screen size
@@ -37,6 +42,10 @@ def get_scaled_height(height):
     if height is 0:
         return 0
     return float(height) / 480.0 * Height
+
+
+def get_scaled_dp_height(height):
+    return dp(get_scaled_height(height))
 
 
 def get_scaled_tuple(tup, orientation="horizontal"):

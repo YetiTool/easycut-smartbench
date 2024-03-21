@@ -1,7 +1,7 @@
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
-from asmcnc.core_UI.components import FloatInput  # Required for the builder string
+from asmcnc.core_UI.components import float_input  # Required for the builder string
 import re
 
 Builder.load_string("""

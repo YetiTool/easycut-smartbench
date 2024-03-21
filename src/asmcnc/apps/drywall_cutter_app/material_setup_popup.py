@@ -2,7 +2,7 @@ from kivy.uix.popup import Popup
 from kivy.lang import Builder
 import math
 from kivy.uix.image import Image
-from asmcnc.core_UI.components import FloatInput  # Required for the builder string
+from asmcnc.core_UI.components import float_input  # Required for the builder string
 
 Builder.load_string("""
 <CuttingDepthsPopup>:

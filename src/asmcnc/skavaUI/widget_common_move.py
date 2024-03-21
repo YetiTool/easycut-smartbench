@@ -2,6 +2,7 @@
 Created on 1 Feb 2018
 @author: Ed
 """
+from kivy.graphics import RoundedRectangle, Color
 from kivy.lang import Builder
 from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
@@ -9,6 +10,8 @@ from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 
 from asmcnc.core_UI import scaling_utils
+from asmcnc.core_UI.components.buttons.spindle_button import SpindleButton
+from asmcnc.core_UI.components.buttons.vacuum_button import VacuumButton
 from asmcnc.core_UI.components.widgets.blinking_widget import BlinkingWidget
 
 Builder.load_string(
@@ -17,9 +20,9 @@ Builder.load_string(
 
     speed_image:speed_image
     speed_toggle:speed_toggle
-    vacuum_image:vacuum_image
-    vacuum_toggle:vacuum_toggle
     vacuum_spindle_container:vacuum_spindle_container
+    spindle_container:spindle_container
+    vacuum_container:vacuum_container
 
     BoxLayout:
         size: self.parent.size
@@ -71,22 +74,15 @@ Builder.load_string(
                     size: self.size
                     pos: self.pos 
 
-            ToggleButton:
-                font_size: str(0.01875 * app.width) + 'sp'
-                id: vacuum_toggle
-                on_press: root.set_vacuum()
-                background_color: 1, 1, 1, 0 
-                BoxLayout:
-                    padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
-                    size: self.parent.size
-                    pos: self.parent.pos      
-                    Image:
-                        id: vacuum_image
-                        source: "./asmcnc/skavaUI/img/vac_off.png"
-                        center_x: self.parent.center_x
-                        y: self.parent.y
-                        size: self.parent.width, self.parent.height
-                        allow_stretch: True  
+            BoxLayout:
+                id: vacuum_container
+                size_hint_y: 1
+                padding: [dp(app.get_scaled_width(10)), dp(app.get_scaled_height(10))]
+            
+            BoxLayout:
+                id: spindle_container
+                size_hint_y: 1
+                padding: [dp(app.get_scaled_width(10)), dp(app.get_scaled_height(10))]
 """
 )
 
@@ -97,27 +93,24 @@ class CommonMove(Widget):
         self.m = kwargs["machine"]
         self.sm = kwargs["screen_manager"]
         self.set_jog_speeds()
-        self.add_spindle_button()
+        self.add_buttons()
 
-    def add_spindle_button(self):
-        self.spindle_button_padding_container = BoxLayout(padding=[dp(10)])
-        self.spindle_button = Button(
-            background_normal="./asmcnc/skavaUI/img/spindle_off.png",
-            background_down="./asmcnc/skavaUI/img/spindle_off.png",
-            on_press=self.set_spindle,
-            allow_stretch=True,
-            size_hint=(None, None),
-            border=(0, 0, 0, 0),
-            size=(dp(scaling_utils.get_scaled_width(71)), dp(scaling_utils.get_scaled_height(72)))
-        )
-        self.spindle_blinker = BlinkingWidget()
-        self.spindle_blinker.bind(pos=self.update_spindle_button, size=self.update_spindle_button)
-        self.spindle_blinker.add_widget(self.spindle_button)
-        self.spindle_button_padding_container.add_widget(self.spindle_blinker)
-        self.vacuum_spindle_container.add_widget(self.spindle_button_padding_container)
+    spindle_button = None
+    vacuum_button = None
 
-    def update_spindle_button(self, *args):
-        self.spindle_button.center = self.spindle_blinker.center
+    def add_buttons(self):
+        self.vacuum_button = VacuumButton(self.m, self.m.s, size_hint=(None, None),
+                                          size=(scaling_utils.get_scaled_dp_width(71),
+                                                scaling_utils.get_scaled_dp_height(72)),
+                                          pos_hint={"center_x": 0.5, "center_y": 0.5})
+        self.vacuum_container.add_widget(self.vacuum_button)
+
+        self.spindle_button = SpindleButton(self.m, self.m.s, self.sm,
+                                            size_hint=(None, None),
+                                            size=(scaling_utils.get_scaled_dp_width(71),
+                                                  scaling_utils.get_scaled_dp_height(72)),
+                                            pos_hint={"center_x": 0.5, "center_y": 0.5})
+        self.spindle_container.add_widget(self.spindle_button)
 
     fast_x_speed = 6000
     fast_y_speed = 6000
@@ -134,24 +127,3 @@ class CommonMove(Widget):
             self.feedSpeedJogX = self.fast_x_speed
             self.feedSpeedJogY = self.fast_y_speed
             self.feedSpeedJogZ = self.fast_z_speed
-
-    def set_vacuum(self):
-        if self.vacuum_toggle.state == "normal":
-            self.vacuum_image.source = "./asmcnc/skavaUI/img/vac_off.png"
-            self.m.vac_off()
-        else:
-            self.vacuum_image.source = "./asmcnc/skavaUI/img/vac_on.png"
-            self.m.vac_on()
-
-    def set_spindle(self, *args):
-        def button_two_callback():
-            self.spindle_button.background_normal = "./asmcnc/skavaUI/img/spindle_on.png"
-            self.m.spindle_on()
-            self.spindle_blinker.blinking = True
-
-        if self.spindle_blinker.blinking:
-            self.spindle_button.background_normal = "./asmcnc/skavaUI/img/spindle_off.png"
-            self.m.spindle_off()
-            self.spindle_blinker.blinking = False
-        else:
-            self.sm.pm.show_spindle_safety_popup(None, button_two_callback)
