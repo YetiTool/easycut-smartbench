@@ -25,6 +25,7 @@ import re
 try:
     from asmcnc.apps.drywall_cutter_app.config import config_loader
     from asmcnc.comms.logging_system.logging_system import Logger
+    from asmcnc.coreUI import path_utils as pu 
 except ImportError:
     print("Import fail in engine.py")
 
@@ -36,6 +37,7 @@ class GCodeEngine():
         self.x = 0  # Identifier for use in arrays
         self.y = 1  # Identifier for use in arrays
         self.custom_gcode_shapes = ["geberit"]  # List of custom shapes that require gcode files
+        self.source_folder_path = pu.get_path("/drywall_cutter_app/gcode")  # Path to the gcode files
 
         #Constants
         self.CORNER_RADIUS_THRESHOLD = 0.09  # Minimum corner radius to be considered a corner radius
@@ -539,11 +541,9 @@ class GCodeEngine():
                 cutting_lines += rectangle
 
         elif self.config.active_config.shape_type.lower() == u"geberit":
-            source_folder_name = u"gcode" 
-            self.source_folder_path = u"asmcnc/apps/drywall_cutter_app/" + source_folder_name #os.path.join(source_folder_name) 
 
             # Read in data
-            gcode_lines = self.find_and_read_gcode_file(source_folder_path, self.config.active_config.shape_type, self.config.active_cutter.diameter)
+            gcode_lines = self.find_and_read_gcode_file(self.source_folder_path, self.config.active_config.shape_type, self.config.active_cutter.diameter)
             gcode_cut_depth, gcode_z_safe_distance = self.extract_cut_depth_and_z_safe_distance(gcode_lines)
             x_size, y_size = self.read_in_custom_shape_dimentions(gcode_lines)
             
