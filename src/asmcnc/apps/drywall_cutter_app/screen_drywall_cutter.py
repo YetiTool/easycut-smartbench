@@ -224,7 +224,7 @@ class DrywallCutterScreen(Screen):
 
     def select_tool(self, cutter_file, *args):
         self.dwt_config.load_cutter(cutter_file)
-        self.show_tool_image()
+
         # Convert allowed toolpaths object to dict, then put attributes with True into a list
         allowed_toolpaths = [toolpath for toolpath, allowed in self.dwt_config.active_cutter.allowable_toolpath_offsets.__dict__.items() if allowed]
         # Use allowed toolpath list to create a dict of only allowed toolpaths
@@ -233,6 +233,9 @@ class DrywallCutterScreen(Screen):
         self.toolpath_selection.image_dict = allowed_toolpath_dict
         # Default to first toolpath, so disabled toolpath is never selected
         self.select_toolpath(allowed_toolpaths[0])
+
+        self.show_tool_image()
+        self.dwt_config.on_parameter_change('cutter_type', cutter_file)
 
     def show_tool_image(self):
         self.tool_selection.source = self.dwt_config.active_cutter.image_path
@@ -346,6 +349,7 @@ class DrywallCutterScreen(Screen):
         if rotation == 'vertical':
             self.rotate_shape(swap_lengths=False)
 
+        self.select_tool(self.dwt_config.active_config.cutter_type)
         self.select_toolpath(toolpath_offset)
 
         self.drywall_shape_display_widget.d_input.text = str(self.dwt_config.active_config.canvas_shape_dims.d)
