@@ -57,7 +57,7 @@ Builder.load_string("""
                 id: unit_switch
                 size: dp(83), dp(32)
                 size_hint: (None, None)
-                pos: self.parent.pos[0] + self.parent.size[0] - self.size[0] - dp(3), self.parent.pos[1] + dp(3)
+                pos: self.parent.pos[0] + self.parent.size[0] - self.size[0] - dp(9), self.parent.pos[1] + dp(6)
 
             BoxLayout:
                 size: dp(70), dp(40)
