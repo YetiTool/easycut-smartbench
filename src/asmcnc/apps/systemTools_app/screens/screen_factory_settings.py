@@ -785,8 +785,15 @@ class FactorySettingsScreen(Screen):
                 + str(self.product_number_input.text)
             )
             # Do specific tasks for setting up the machine model (e.g. splash screen)
-            self.model_manager.set_machine_type(ProductCodes(int(self.product_number_input.text)), True)
+            pc = ProductCodes(int(self.product_number_input.text))
+            self.model_manager.set_machine_type(pc, True)
             self.m.write_dollar_setting(50, full_serial_number)
+            if pc is ProductCodes.DRYWALLTEC:  # set max z travel to 120mm because of the rubber bellow
+                Logger.info("Z max travel ($132) is set to 130 for double stack motors.")
+                self.m.write_dollar_setting(132, 120)
+            elif pc in [ProductCodes.PRECISION_PRO, ProductCodes.PRECISION_PRO_X, ProductCodes.PRECISION_PRO_PLUS]:
+                Logger.info("Z max travel ($132) is set to 120 for Drywalltec machine.")
+                self.m.write_dollar_setting(132, 130)
             self.machine_serial.text = "updating..."
 
             def update_text_with_serial():
