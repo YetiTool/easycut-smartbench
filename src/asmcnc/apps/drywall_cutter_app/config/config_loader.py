@@ -14,6 +14,7 @@ TEMP_DIR = os.path.join(CURRENT_DIR, 'temp')
 if not os.path.exists(TEMP_DIR):
     os.mkdir(TEMP_DIR)
 
+SETTINGS_PATH = os.path.join(CURRENT_DIR, 'dwt_settings.json')
 TEMP_CONFIG_PATH = os.path.join(TEMP_DIR, 'temp_config.json')
 DEBUG_MODE = False
 
@@ -53,15 +54,28 @@ class DWTConfig(object):
     @staticmethod
     def get_most_recent_config():
         """
+        Get most recent config from dwt_settings.json
         :return: the most recently used config path
         """
-        files = os.listdir(CONFIGURATIONS_DIR)
-
-        if not files:
+        if not os.path.exists(SETTINGS_PATH):
             return None
+        else:
+            with open(SETTINGS_PATH, 'r') as settings_f:
+                j_obj = json.load(settings_f)
+                return j_obj["most_recent_config"]
 
-        most_recent_file = max(files, key=lambda f: os.path.getmtime(os.path.join(CONFIGURATIONS_DIR, f)))
-        return os.path.join(CONFIGURATIONS_DIR, most_recent_file)
+    @staticmethod
+    def set_most_recent_config(config_path):
+        """
+        Set the most recent config in dwt_settings.json
+        :param config_path: the path to the most recently used config
+        :return:
+        """
+        with open(SETTINGS_PATH, 'w+') as settings_f:
+            j_obj = {
+                "most_recent_config": config_path
+            }
+            json.dump(j_obj, settings_f)
 
     @staticmethod
     @debug
@@ -142,6 +156,7 @@ class DWTConfig(object):
         with open(file_path, 'r') as f:
             self.active_config = config_classes.Configuration(**json.load(f))
 
+        self.set_most_recent_config(file_path)
         self.load_cutter(self.active_config.cutter_type)
 
     @debug
