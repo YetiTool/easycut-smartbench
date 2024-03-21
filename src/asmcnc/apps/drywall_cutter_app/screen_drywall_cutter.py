@@ -183,21 +183,20 @@ class DrywallCutterScreen(Screen):
 
         self.select_tool()
 
+        self.bumper_list = [self.drywall_shape_display_widget.bumper_bottom_image,
+                            self.drywall_shape_display_widget.bumper_right_image,
+                            self.drywall_shape_display_widget.bumper_top_image,
+                            self.drywall_shape_display_widget.bumper_left_image]
+
     def on_pre_enter(self):
         self.apply_active_config()
-        self.pulse_poll = Clock.schedule_interval(self.xy_move_widget.check_zh_at_datum, 0.04)
+        self.pulse_poll = Clock.schedule_interval(self.update_pulse_opacity, 0.04)
         self.kb.set_numeric_pos((scaling_utils.get_scaled_width(565), scaling_utils.get_scaled_height(85)))
 
     def on_pre_leave(self):
         if self.pulse_poll:
             Clock.unschedule(self.pulse_poll)
         self.kb.set_numeric_pos(None)
-
-        self.bumper_list = [self.drywall_shape_display_widget.bumper_bottom_image,
-                            self.drywall_shape_display_widget.bumper_right_image,
-                            self.drywall_shape_display_widget.bumper_top_image,
-                            self.drywall_shape_display_widget.bumper_left_image]
-        Clock.schedule_interval(self.update_pulse_opacity, 0.04)
 
     def update_pulse_opacity(self, dt):
         # Pulse overlay by smoothly alternating between 0 and 1 opacity
