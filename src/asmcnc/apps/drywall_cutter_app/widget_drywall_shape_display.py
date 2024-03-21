@@ -657,7 +657,7 @@ class DrywallShapeDisplay(Widget):
         y_practical_range = y_machine_range - 2 * clearance_between_limit_edge
 
         # Now show a message if any dimensions are too big
-        d_limit = min(x_machine_range, y_machine_range)
+        d_limit = min(x_practical_range, y_practical_range)
         if current_shape == 'circle' and float(self.d_input.text or 0) > d_limit:
             self.d_input_validation_label.text = 'MAX: ' + str(d_limit)
             self.d_input_validation_label.opacity = 1
