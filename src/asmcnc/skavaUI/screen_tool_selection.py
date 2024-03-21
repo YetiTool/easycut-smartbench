@@ -1,15 +1,14 @@
-'''
+"""
 Created on 30 June 2021
 @author: Dennis
 
 Screen to select router or CNC stylus tool
-'''
-
-import kivy
+"""
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import Screen
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <ToolSelectionScreen>:
 
@@ -26,19 +25,19 @@ Builder.load_string("""
 
     BoxLayout:
         orientation: 'vertical'
-        padding: dp(50)
+        padding:[dp(0.0625)*app.width, dp(0.104166666667)*app.height]
 
         # Top text
 
         BoxLayout:
             orientation: 'vertical'
-            padding: [dp(0),dp(36),dp(0),dp(0)]
+            padding:[0, dp(0.075)*app.height, 0, 0]
             
 
             Label:
                 id: question_label
                 markup: True
-                font_size: '28px' 
+                font_size: str(0.035*app.width) + 'px' 
                 valign: 'top'
                 halign: 'center'
                 size:self.texture_size
@@ -49,9 +48,9 @@ Builder.load_string("""
 
         BoxLayout:
             orientation: 'horizontal'
-            spacing: dp(44)
+            spacing:dp(0.055)*app.width
             size_hint_y: dp(2.5)
-            padding: [dp(0),dp(0),dp(0),dp(20)]
+            padding:[0, 0, 0, dp(0.0416666666667)*app.height]
 
             # Stylus button
 
@@ -62,7 +61,7 @@ Builder.load_string("""
                 valign: 'bottom'
                 halign: 'center'
                 markup: True
-                font_size: '23px'
+                font_size: str(0.02875*app.width) + 'px'
                 text_size: self.size
                 background_normal: "./asmcnc/skavaUI/img/stylus_option.png"
                 padding_y: 30
@@ -77,7 +76,7 @@ Builder.load_string("""
                 valign: 'bottom'
                 halign: 'center'
                 markup: True
-                font_size: '23px'
+                font_size: str(0.02875*app.width) + 'px'
                 text_size: self.size
                 background_normal: "./asmcnc/skavaUI/img/router_option.png"
                 padding_y: 30
@@ -85,39 +84,35 @@ Builder.load_string("""
 
 
 
-""")
+"""
+)
+
 
 class ToolSelectionScreen(Screen):
-
-
     def __init__(self, **kwargs):
-        
         super(ToolSelectionScreen, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-        self.l=kwargs['localization']
-
+        self.sm = kwargs["screen_manager"]
+        self.m = kwargs["machine"]
+        self.l = kwargs["localization"]
         self.update_strings()
 
     def router_button_pressed(self):
-        self.m.stylus_router_choice = 'router'
+        self.m.stylus_router_choice = "router"
         self.exit_stylus_router_selection()
 
     def stylus_button_pressed(self):
-        self.m.stylus_router_choice = 'stylus'
+        self.m.stylus_router_choice = "stylus"
         self.exit_stylus_router_selection()
-    
+
     def exit_stylus_router_selection(self):
-        
-        # is fw capable of auto Z lift?
         if self.m.fw_can_operate_zUp_on_pause():
-            if self.m.stylus_router_choice == 'stylus':
-                self.sm.get_screen('go').lift_z_on_job_pause = True
-                self.sm.current = 'jobstart_warning'
-            else:    
-                self.sm.current = 'lift_z_on_pause_or_not'
+            if self.m.stylus_router_choice == "stylus":
+                self.sm.get_screen("go").lift_z_on_job_pause = True
+                self.sm.current = "jobstart_warning"
+            else:
+                self.sm.current = "lift_z_on_pause_or_not"
         else:
-            self.sm.current = 'jobstart_warning'
+            self.sm.current = "jobstart_warning"
 
     def update_strings(self):
         self.question_label.text = self.l.get_str("Which tool are you using?")

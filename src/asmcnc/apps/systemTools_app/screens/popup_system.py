@@ -8,7 +8,8 @@ import kivy
 from kivy.lang import Builder
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.popup import Popup
-from kivy.properties import StringProperty  # @UnresolvedImport
+from kivy.core.window import Window
+from kivy.properties import StringProperty  
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.widget import Widget
 from kivy.uix.textinput import TextInput
@@ -26,6 +27,7 @@ def on_touch(popup, touch):
     for child in popup.content.children:
         if isinstance(child, TextInput):
             child.focus = False
+
 
 ### DownloadLogs
 class PopupDownloadLogs(Widget):
