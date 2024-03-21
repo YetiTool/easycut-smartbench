@@ -17,7 +17,7 @@ import time
 from enum import Enum
 from kivy.clock import Clock
 from kivy.event import EventDispatcher
-from kivy.properties import StringProperty, NumericProperty
+from kivy.properties import StringProperty, NumericProperty, BooleanProperty
 
 from asmcnc.comms.logging_system.logging_system import Logger
 # Import managers for GRBL Notification screens (e.g. alarm, error, etc.)
@@ -100,10 +100,14 @@ class SerialConnection(EventDispatcher):
     # Need to disable grbl scanner before closing serial connection, or else causes problems (at least in windows)
     grbl_scanner_running = False
 
+    # This flag is set by the serial connection when it sends M3/M5
+    spindle_on = BooleanProperty(False)
+
+    # This flag is set by the serial connection when it sends AE/AF
+    vacuum_on = BooleanProperty(False)
+
     def __init__(self, machine, screen_manager, settings_manager, localization, job, *args, **kwargs):
         super(SerialConnection, self).__init__(*args, **kwargs)
-
-        super(SerialConnection, self).__init__()
         self.sm = screen_manager
         self.sett = settings_manager
         self.m = machine
@@ -703,7 +707,7 @@ class SerialConnection(EventDispatcher):
                     self.sm.get_screen('spindle_cooldown').return_screen = 'job_feedback'
                     self.sm.current = 'spindle_cooldown'
                 else:
-                    self.m.spindle_off()
+                    self.m.turn_off_spindle()
                     time.sleep(0.4)
                     self.update_machine_runtime()
                     self.sm.current = 'job_feedback'
@@ -746,7 +750,7 @@ class SerialConnection(EventDispatcher):
 
             # Move head up        
             Clock.schedule_once(lambda dt: self.m.raise_z_axis_for_collet_access(), 0.5)
-            Clock.schedule_once(lambda dt: self.m.vac_off(), 1)
+            Clock.schedule_once(lambda dt: self.m.turn_off_vacuum(), 1)
 
             # Update time for maintenance reminders
             time.sleep(0.4)
@@ -1876,8 +1880,24 @@ class SerialConnection(EventDispatcher):
             Logger.info("FAILED to display on CONSOLE: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
 
         # Catch and correct all instances of the spindle speed command "M3 S{RPM}"
-        if 'S' in serialCommand.upper():
-            serialCommand = self.compensate_spindle_speed_command(serialCommand)
+        if "M3" in serialCommand.upper():
+            # Set spindle_on flag
+            self.spindle_on = True
+
+            if "S" in serialCommand.upper():
+                # Correct the spindle speed command
+                serialCommand = self.compensate_spindle_speed_command(serialCommand)
+
+        if "M5" in serialCommand.upper():
+            # Clear spindle_on flag
+            self.spindle_on = False
+
+        # Catch any instances of AE/AF to set the vacuum_on flag
+        if "AE" in serialCommand.upper():
+            self.vacuum_on = True
+
+        if "AF" in serialCommand.upper():
+            self.vacuum_on = False
 
         # Finally issue the command
         if self.s:

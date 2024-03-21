@@ -416,10 +416,10 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
         self.m.jog_relative('Z', -20, 750)
 
     def set_spindle(self):
-        if self.spindle_toggle.state == 'normal':
-            self.m.spindle_off()
+        if self.m.s.spindle_on:
+            self.m.turn_off_spindle()
         else:
-            self.m.spindle_on()
+            self.m.turn_on_spindle()
 
     def set_laser(self):
         if self.laser_toggle.state == 'normal':
@@ -428,10 +428,10 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
             self.m.laser_on()
 
     def set_vac(self):
-        if self.vac_toggle.state == 'normal':
-            self.m.vac_off()
+        if self.m.s.vacuum_on:
+            self.m.turn_off_vacuum()
         else:
-            self.m.vac_on()
+            self.m.turn_on_vacuum()
 
     def dust_shoe_red(self):
         self.m.set_led_colour('RED')
