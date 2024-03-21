@@ -1,7 +1,7 @@
 {
   "cutter_description": "8mm drywall cutter",
   "units": "mm",
-  "diameter": 10.0,
+  "diameter": 8.0,
   "material": "drywall",
   "cutting_spindle_speed": 2000,
   "cutting_feedrate": 500,
@@ -9,8 +9,8 @@
   "cutting_direction": "climb",
   "allowable_toolpath_offsets": {
     "inside": true,
-    "outside": false,
-    "on": false
+    "outside": true,
+    "on": true
   },
   "max_depth_per_pass": 2.0,
   "max_depth_total": 10.0,
