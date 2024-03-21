@@ -514,7 +514,11 @@ class GCodeEngine():
         total_cut_depth = self.config.active_config.cutting_depths.material_thickness + self.config.active_config.cutting_depths.bottom_offset
 
         if self.config.active_config.shape_type.lower() == u"rectangle" or self.config.active_config.shape_type.lower() == u"square":
-            rect_coordinates = self.rectangle_coordinates(self.config.active_config.canvas_shape_dims.x, self.config.active_config.canvas_shape_dims.y)
+            y_rect = self.config.active_config.canvas_shape_dims.y
+            x_rect = self.config.active_config.canvas_shape_dims.x \
+                if self.config.active_config.shape_type.lower() == u"rectangle" \
+                else self.config.active_config.canvas_shape_dims.y
+            rect_coordinates = self.rectangle_coordinates(x_rect, y_rect)
             if len(rect_coordinates) != 4:
                 raise Exception(u"Sir, rectangles have 4 sides, not %d" % len(rect_coordinates))
 

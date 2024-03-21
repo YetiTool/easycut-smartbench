@@ -148,8 +148,10 @@ Builder.load_string("""
 
 class DrywallCutterScreen(Screen):
     shape_options = ['circle', 'square', 'rectangle', 'line', 'geberit']
+    line_cut_options = ['inside', 'on', 'outside']
     rotation = 'horizontal'
 
+    current_pulse_opacity = 1
     shape_options_dict = {
         'circle': {
             'image_path': './asmcnc/apps/drywall_cutter_app/img/circle_shape_button.png',
@@ -209,15 +211,43 @@ class DrywallCutterScreen(Screen):
         self.show_tool_image()
         self.show_toolpath_image()
 
+        self.bumper_list = [self.drywall_shape_display_widget.bumper_bottom_image,
+                            self.drywall_shape_display_widget.bumper_right_image,
+                            self.drywall_shape_display_widget.bumper_top_image,
+                            self.drywall_shape_display_widget.bumper_left_image]
+
     def on_pre_enter(self):
         self.apply_active_config()
-        self.pulse_poll = Clock.schedule_interval(self.xy_move_widget.check_zh_at_datum, 0.04)
+        self.pulse_poll = Clock.schedule_interval(self.update_pulse_opacity, 0.04)
         self.kb.set_numeric_pos((scaling_utils.get_scaled_width(565), scaling_utils.get_scaled_height(85)))
 
     def on_pre_leave(self):
         if self.pulse_poll:
             Clock.unschedule(self.pulse_poll)
         self.kb.set_numeric_pos(None)
+
+    def update_pulse_opacity(self, dt):
+        # Pulse overlay by smoothly alternating between 0 and 1 opacity
+        # Hacky way to track pulsing on or off without a variable by storing that information in the opacity value
+        if self.current_pulse_opacity <= 0:
+            self.current_pulse_opacity = 0.01
+        elif self.current_pulse_opacity >= 1:
+            self.current_pulse_opacity = 0.98
+        # Check if second decimal place is even or odd
+        elif int(("%.2f" % self.current_pulse_opacity)[-1]) % 2 == 1:
+            self.current_pulse_opacity += 0.1
+        else:
+            self.current_pulse_opacity -= 0.1
+
+        # Pulse bumpers
+        for bumper in self.bumper_list:
+            if "red" in bumper.source:
+                bumper.opacity = self.current_pulse_opacity
+            else:
+                bumper.opacity = 1
+
+        # Pulse go to datum button
+        self.xy_move_widget.check_zh_at_datum(self.current_pulse_opacity)
 
     def home(self):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
@@ -265,6 +295,8 @@ class DrywallCutterScreen(Screen):
 
         if self.drywall_shape_display_widget.rotation_required():
             self.rotate_shape(swap_lengths=False)
+
+        self.dwt_config.on_parameter_change('shape_type', self.shape_selection.text)
 
     def rotate_shape(self, swap_lengths=True):
         if self.rotation == 'horizontal':
