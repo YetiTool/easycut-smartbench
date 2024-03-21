@@ -100,8 +100,8 @@ class GRBLSettingsManagerSingleton(object):
             #                                                                                      102))
 
             # system persistent settings:
-            '''
-            COMMENTED OUT FOR NOW!!! CAUSES GRBL ERROR 9
+
+            # COMMENTED OUT FOR NOW!!! CAUSES GRBL ERROR 9
             self.machine.s.bind(setting_0=lambda instance, value: self.on_persistent_setting(value, 0))
             self.machine.s.bind(setting_1=lambda instance, value: self.on_persistent_setting(value, 1))
             self.machine.s.bind(setting_2=lambda instance, value: self.on_persistent_setting(value, 2))
@@ -130,7 +130,7 @@ class GRBLSettingsManagerSingleton(object):
             self.machine.s.bind(setting_121=lambda instance, value: self.on_persistent_setting(value, 121))
             self.machine.s.bind(setting_122=lambda instance, value: self.on_persistent_setting(value, 122))
             self.machine.s.bind(setting_130=lambda instance, value: self.on_persistent_setting(value, 130))
-            '''
+
 
         if self._initialized:
             return
