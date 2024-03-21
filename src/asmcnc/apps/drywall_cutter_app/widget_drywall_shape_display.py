@@ -20,6 +20,11 @@ Builder.load_string("""
     x_datum_label:x_datum_label
     y_datum_label:y_datum_label
 
+    bumper_bottom_image:bumper_bottom_image
+    bumper_left_image:bumper_left_image
+    bumper_right_image:bumper_right_image
+    bumper_top_image:bumper_top_image
+
     config_name_label:config_name_label
     machine_state_label:machine_state_label
 
@@ -52,7 +57,7 @@ Builder.load_string("""
                 id: unit_switch
                 size: dp(83), dp(32)
                 size_hint: (None, None)
-                pos: self.parent.pos[0] + self.parent.size[0] - self.size[0] - dp(3), self.parent.pos[1] + dp(3)
+                pos: self.parent.pos[0] + self.parent.size[0] - self.size[0] - dp(9), self.parent.pos[1] + dp(6)
 
             BoxLayout:
                 size: dp(70), dp(40)
@@ -223,6 +228,30 @@ Builder.load_string("""
                 text: 'Y:'
                 color: 0,0,0,1
 
+            Image:
+                id: bumper_bottom_image
+                source: "./asmcnc/apps/drywall_cutter_app/img/bumper_bottom_green.png"
+                size: self.parent.size
+                pos: self.parent.pos
+
+            Image:
+                id: bumper_left_image
+                source: "./asmcnc/apps/drywall_cutter_app/img/bumper_left_green.png"
+                size: self.parent.size
+                pos: self.parent.pos
+
+            Image:
+                id: bumper_right_image
+                source: "./asmcnc/apps/drywall_cutter_app/img/bumper_right_green.png"
+                size: self.parent.size
+                pos: self.parent.pos
+
+            Image:
+                id: bumper_top_image
+                source: "./asmcnc/apps/drywall_cutter_app/img/bumper_top_green.png"
+                size: self.parent.size
+                pos: self.parent.pos
+
             # TextInput instead of Label, as there is no way to left align a Label in a FloatLayout
             TextInput:
                 id: config_name_label
@@ -259,6 +288,7 @@ class DrywallShapeDisplay(Widget):
         self.m = kwargs['machine']
         self.sm = kwargs['screen_manager']
         self.dwt_config = kwargs['dwt_config']
+        self.engine = kwargs['engine']
         self.kb = kwargs['kb']
 
         self.d_input.bind(focus=self.text_input_change) # Diameter of circle
@@ -284,7 +314,7 @@ class DrywallShapeDisplay(Widget):
 
         self.m.s.bind(m_state=self.display_machine_state)
 
-        Clock.schedule_interval(self.poll_position, 0.1)
+        Clock.schedule_interval(self.check_datum_and_extents, 0.1)
 
     def select_shape(self, shape, rotation, swap_lengths=False):
         shape = shape.lower() # in case it's a test config with a capital letter
@@ -416,12 +446,72 @@ class DrywallShapeDisplay(Widget):
         instance.active = True
         # self.dwt_config.on_parameter_change('units', 'mm' if value else 'inch')
 
-    def poll_position(self, dt):
+    def check_datum_and_extents(self, dt):
         # Maths from Ed, documented here https://docs.google.com/spreadsheets/d/1X37CWF8bsXeC0dY-HsbwBu_QR6N510V-5aPTnxwIR6I/edit#gid=677510108
         current_x = round(self.m.x_wco() + (self.m.get_dollar_setting(130) - self.m.limit_switch_safety_distance) - self.m.laser_offset_tool_clearance_to_access_edge_of_sheet, 2)
         current_y = round(self.m.y_wco() + (self.m.get_dollar_setting(131) - self.m.limit_switch_safety_distance) - (self.m.get_dollar_setting(27) - self.m.limit_switch_safety_distance), 2)
         self.x_datum_label.text = 'X: ' + str(current_x)
         self.y_datum_label.text = 'Y: ' + str(current_y)
+
+        # Account for cutter size
+        cutter_radius = self.dwt_config.active_cutter.diameter / 2
+        if self.dwt_config.active_config.toolpath_offset == 'inside':
+            tool_offset_value = -cutter_radius
+        elif self.dwt_config.active_config.toolpath_offset == 'outside':
+            tool_offset_value = cutter_radius
+        else:
+            tool_offset_value = 0
+
+        # Calculate shape's extent from datum using shape type and input dimensions
+        current_shape = self.dwt_config.active_config.shape_type.lower()
+        if current_shape == 'circle':
+            x_min = y_min = -(float(self.d_input.text or 0) / 2) - tool_offset_value
+            x_dim = y_dim = (float(self.d_input.text or 0) / 2) + tool_offset_value
+        elif current_shape in ['square', 'rectangle']:
+            x_min = y_min = -tool_offset_value
+            y_dim = float(self.y_input.text or 0) + tool_offset_value
+            # As square only uses y input it needs a separate condition
+            if current_shape == 'square':
+                x_dim = y_dim
+            elif current_shape == 'rectangle':
+                x_dim = float(self.x_input.text or 0) + tool_offset_value
+        elif current_shape == 'line':
+            x_min = y_min = 0
+            if "horizontal" in self.shape_dims_image.source:
+                x_dim = 0
+                y_dim = float(self.l_input.text or 0)
+            else:
+                x_dim = float(self.l_input.text or 0)
+                y_dim = 0
+        elif current_shape == 'geberit':
+            x_dim, y_dim, x_min, y_min = self.engine.get_custom_shape_extents()
+
+        # Calculate shape's distances from every edge
+        x_min_clearance = self.m.x_wco() + x_min + self.m.get_dollar_setting(130) - self.m.limit_switch_safety_distance
+        y_min_clearance = self.m.y_wco() + y_min + self.m.get_dollar_setting(131) - self.m.limit_switch_safety_distance
+        x_max_clearance = -(self.m.x_wco() + x_dim) - self.m.limit_switch_safety_distance
+        y_max_clearance = -(self.m.y_wco() + y_dim) - self.m.limit_switch_safety_distance
+
+        # Set bumper colours based on whether anything crosses a boundary
+        if x_min_clearance < 0:
+            self.bumper_bottom_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_bottom_red.png"
+        else:
+            self.bumper_bottom_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_bottom_green.png"
+
+        if y_min_clearance < 0:
+            self.bumper_right_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_right_red.png"
+        else:
+            self.bumper_right_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_right_green.png"
+
+        if x_max_clearance < 0:
+            self.bumper_top_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_top_red.png"
+        else:
+            self.bumper_top_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_top_green.png"
+
+        if y_max_clearance < 0:
+            self.bumper_left_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_left_red.png"
+        else:
+            self.bumper_left_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_left_green.png"
 
     def display_machine_state(self, obj, value):
         self.machine_state_label.text = value

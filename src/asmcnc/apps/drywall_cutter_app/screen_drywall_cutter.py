@@ -173,6 +173,7 @@ class DrywallCutterScreen(Screen):
         self.drywall_shape_display_widget = widget_drywall_shape_display.DrywallShapeDisplay(machine=self.m,
                                                                                              screen_manager=self.sm,
                                                                                              dwt_config=self.dwt_config,
+                                                                                             engine=self.engine,
                                                                                              kb=self.kb)
         self.shape_display_container.add_widget(self.drywall_shape_display_widget)
 
@@ -222,6 +223,9 @@ class DrywallCutterScreen(Screen):
         self.rotation = 'horizontal'
         self.drywall_shape_display_widget.select_shape(self.shape_selection.text, self.rotation)
         self.select_toolpath()
+
+        if self.drywall_shape_display_widget.rotation_required():
+            self.rotate_shape(swap_lengths=False)
 
         self.dwt_config.on_parameter_change('shape_type', self.shape_selection.text)
 
