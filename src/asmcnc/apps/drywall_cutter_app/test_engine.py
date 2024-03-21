@@ -3,7 +3,27 @@ from engine import GCodeEngine
 
 class EngineTests(unittest.TestCase):
     def setUp(self):
-        self.engine = GCodeEngine(None)
+
+        class cutter:
+            def __init__(self):
+                self.diameter = 0
+                
+        class Config:
+            def __init__(self, *args, **kwargs):
+                self.active_config = self
+                self.shape_type = None
+                self.active_cutter = kwargs.get('active_cutter')
+                self.active_cutter.diameter = 10
+
+            # def get_shape_type(self):
+            #     return self.shape_type
+
+            # def get_cutter_diameter(self):
+            #     return self.cutter_diameter
+
+        dummy_cutter = cutter()
+        dummy_config = Config(active_cutter = dummy_cutter)
+        self.engine = GCodeEngine(dummy_config)
 
     def test_rectangle_coordinates(self):
         # Case 1, valid input
@@ -423,13 +443,11 @@ class EngineTests(unittest.TestCase):
         start_line_key = 0
         end_line_key = 5
         expected_output = [
-            [
                 "G1 X0 Y0 Z-5",
                 "G1 X10 Y10 Z-5",
                 "G1 X20 Y20 Z-5",
                 "G1 X30 Y30 Z-5",
                 "G1 X40 Y40 Z-5",
-            ]
         ]
         output = self.engine.repeat_for_depths(gcode_lines, pass_depths, start_line_key, end_line_key)
         self.assertEqual(output, expected_output)
@@ -446,27 +464,21 @@ class EngineTests(unittest.TestCase):
         start_line_key = 0
         end_line_key = 5
         expected_output = [
-            [
                 "G1 X0 Y0 Z-5",
                 "G1 X10 Y10 Z-5",
                 "G1 X20 Y20 Z-5",
                 "G1 X30 Y30 Z-5",
                 "G1 X40 Y40 Z-5",
-            ],
-            [
                 "G1 X0 Y0 Z-10",
                 "G1 X10 Y10 Z-10",
                 "G1 X20 Y20 Z-10",
                 "G1 X30 Y30 Z-10",
                 "G1 X40 Y40 Z-10",
-            ],
-            [
                 "G1 X0 Y0 Z-15",
                 "G1 X10 Y10 Z-15",
                 "G1 X20 Y20 Z-15",
                 "G1 X30 Y30 Z-15",
                 "G1 X40 Y40 Z-15",
-            ]
         ]
         output = self.engine.repeat_for_depths(gcode_lines, pass_depths, start_line_key, end_line_key)
         self.assertEqual(output, expected_output)
@@ -558,7 +570,7 @@ class EngineTests(unittest.TestCase):
         output = self.engine.add_partoff(gcode_lines, **processing_args)
         self.assertEqual(output, expected_output)
 
-    def test_read_in_custom_shape_dimentions(self):
+    def test_read_in_custom_shape_dimensions(self):
         # Case 1: x_dim and y_dim found within the first 20 lines
         gcode_lines = [
             "Line 1",
@@ -567,7 +579,7 @@ class EngineTests(unittest.TestCase):
             "Line 4"
         ]
         expected_output = ("10.5", "20.3")
-        output = self.engine.read_in_custom_shape_dimentions(gcode_lines)
+        output = self.engine.read_in_custom_shape_dimensions(gcode_lines)
         self.assertEqual(output, expected_output)
 
         # Case 2: x_dim and y_dim found on the same line within the first 20 lines
@@ -578,7 +590,7 @@ class EngineTests(unittest.TestCase):
             "Line 4"
         ]
         expected_output = ("10.5", "20.3")
-        output = self.engine.read_in_custom_shape_dimentions(gcode_lines)
+        output = self.engine.read_in_custom_shape_dimensions(gcode_lines)
         self.assertEqual(output, expected_output)
 
         # Case 3: x_dim and y_dim not found within the first 20 lines
@@ -589,8 +601,30 @@ class EngineTests(unittest.TestCase):
             "Line 4"
         ]
         expected_output = (None, None)
-        output = self.engine.read_in_custom_shape_dimentions(gcode_lines)
+        output = self.engine.read_in_custom_shape_dimensions(gcode_lines)
         self.assertEqual(output, expected_output)
 
-if __name__ == "__main__":
+    def test_get_custom_shape_extents(self):
+        # Case 1: Custom shape type is defined
+        self.engine.config.active_config.shape_type = "custom_shape"
+        self.engine.custom_gcode_shapes = ["custom_shape"]
+        self.engine.source_folder_path = "/path/to/gcode/files"
+        self.engine.config.active_cutter.diameter = 10
+
+        # Mocking the return values of helper methods
+        self.engine.find_and_read_gcode_file = lambda path, shape_type, diameter: ["G1 X10 Y20", "G1 X30 Y40"]
+        self.engine.read_in_custom_shape_dimensions = lambda lines: ("40", "60", "10", "20")
+
+        expected_output = (40.0, 60.0, 10.0, 20.0)
+        output = self.engine.get_custom_shape_extents()
+        self.assertEqual(output, expected_output)
+
+        # Case 2: Custom shape type is not defined
+        self.engine.config.active_config.shape_type = "invalid_shape"
+        self.engine.custom_gcode_shapes = ["custom_shape"]
+
+        with self.assertRaises(Exception):
+            self.engine.get_custom_shape_extents()
+
+if __name__ == '__main__':
     unittest.main()
