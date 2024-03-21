@@ -150,9 +150,6 @@ class DrywallCutterScreen(Screen):
     line_cut_options = ['inside', 'on', 'outside']
     rotation = 'horizontal'
 
-    dwt_config = config_loader.DWTConfig()
-    tool_options = dwt_config.get_available_cutter_names()
-
     current_pulse_opacity = 1
     pulse_poll = None
 
