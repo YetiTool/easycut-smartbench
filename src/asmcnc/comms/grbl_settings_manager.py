@@ -45,25 +45,25 @@ class GRBLSettingsManagerSingleton(object):
         6: 0, # Probe pin invert, boolean
         10: 3, # Status report, mask
         11: 0.010, # Junction deviation, mm
-        12: 0.003, # Arc tolerance, mm
+        12: 0.002, # Arc tolerance, mm
         13: 0, # Report inches, boolean
         20: 1, # Soft limits, boolean
         21: 1, # Hard limits, boolean
         22: 1, # Homing cycle, boolean
         23: 3, # Homing dir invert, mask
-        24: 500.000, # Homing feed, mm/min
-        25: 2500.000, # Homing seek, mm/min
-        26: 255, # Homing debounce, milliseconds
-        27: 14.000, # Homing pull-off, mm
-        30: 24000, # Max spindle speed, RPM
+        24: 600.000, # Homing feed, mm/min
+        25: 3000.000, # Homing seek, mm/min
+        26: 250, # Homing debounce, milliseconds
+        27: 15.000, # Homing pull-off, mm
+        30: 25000, # Max spindle speed, RPM
         31: 0, # Min spindle speed, RPM
         32: 0, # Laser mode, boolean
-        110: 6000.000, # X Max rate, mm/min
-        111: 5000.000, # Y Max rate, mm/min
-        112: 800.000, # Z Max rate, mm/min
-        120: 120.000, # X Acceleration, mm/sec^2
-        121: 120.000, # Y Acceleration, mm/sec^2
-        122: 190.000, # Z Acceleration, mm/sec^2
+        110: 8000.000, # X Max rate, mm/min
+        111: 6000.000, # Y Max rate, mm/min
+        112: 750.000, # Z Max rate, mm/min
+        120: 130.000, # X Acceleration, mm/sec^2
+        121: 130.000, # Y Acceleration, mm/sec^2
+        122: 200.000, # Z Acceleration, mm/sec^2
         130: 1300.000 # X Max travel, mm
     }
 
