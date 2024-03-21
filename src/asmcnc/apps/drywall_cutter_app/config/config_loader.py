@@ -32,7 +32,7 @@ def get_display_preview(json_obj):
     #preview += "Rotation: " + json_obj['rotation'] + "\n"
     preview += "Canvas shape dims: \n"
     preview += get_shape_dimensions(json_obj)
-    preview += "Cutter type: " + json_obj['cutter_type'] + "\n"
+    preview += "Cutter type: " + json_obj['cutter_type'][:-5] + "\n"
     preview += "Toolpath offset: " + json_obj['toolpath_offset'] + "\n"
     preview += "Cutting depths: \n"
     preview += INDENT_VALUE + "Material thickness: " + str(json_obj['cutting_depths']['material_thickness']) + "\n"
