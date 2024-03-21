@@ -3,6 +3,9 @@ Created on 22 Feb 2023
 @author: Letty
 '''
 import sys
+
+from asmcnc.comms.logging_system.logging_system import Logger
+
 sys.path.append('./src')
 
 try: 
@@ -11,7 +14,7 @@ try:
     from mock import Mock, MagicMock
 
 except: 
-    print("Can't import mocking packages, are you on a dev machine?")
+    Logger.info("Can't import mocking packages, are you on a dev machine?")
 
 
 from asmcnc.comms import localization
@@ -20,7 +23,7 @@ from asmcnc.job.yetipilot import yetipilot
 '''
 ######################################
 RUN FROM easycut-smartbench FOLDER WITH: 
-python -m pytest --show-capture=no --disable-pytest-warnings tests/automated_unit_tests/job/yetipilot/test_yetipilot_units.py
+python -m pytest tests/automated_unit_tests/job/yetipilot/test_yetipilot_units.py
 ######################################
 '''
 
