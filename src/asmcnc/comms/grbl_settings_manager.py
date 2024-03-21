@@ -61,15 +61,17 @@ class GRBLSettingsManagerSingleton(object):
         110: 8000.000, # X Max rate, mm/min
         111: 6000.000, # Y Max rate, mm/min
         112: 750.000, # Z Max rate, mm/min
-        120: 500.000, # X Acceleration, mm/sec^2
-        121: 500.000, # Y Acceleration, mm/sec^2
+        120: 130.000, # X Acceleration, mm/sec^2
+        121: 130.000, # Y Acceleration, mm/sec^2
         122: 200.000, # Z Acceleration, mm/sec^2
         130: 1300.000 # X Max travel, mm
     }
 
     _system_default_data_rig = {
-        2: 0,
-        5: 0
+        2: 0,  # Step port invert, mask
+        5: 0,  # Limit pins invert, boolean
+        120: 500.000,  # X Acceleration, mm/sec^2
+        121: 500.000   # Y Acceleration, mm/sec^2
     }
 
 
