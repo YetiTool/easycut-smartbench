@@ -285,6 +285,9 @@ class DWTConfig(object):
 
             setattr(self.active_config, parameter_name, parameter_value)
 
+        #update screen, check bumpers and so on:
+        self.screen_drywall_cutter.drywall_shape_display_widget.check_datum_and_extents()
+
     def __set_new_configuration_label(self):
         if self.screen_drywall_cutter:
             self.screen_drywall_cutter.drywall_shape_display_widget.config_name_label.text = "New Configuration"

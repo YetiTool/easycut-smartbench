@@ -820,9 +820,9 @@ class SerialConnection(EventDispatcher):
     m_state = StringProperty('Unknown')
 
     # Machine co-ordinates
-    m_x = '0.0'
-    m_y = '0.0'
-    m_z = '0.0'
+    m_x = NumericProperty(0.0)
+    m_y = NumericProperty(0.0)
+    m_z = NumericProperty(0.0)
 
     # Track co-ordinate change in each axis
     x_change = False
@@ -1026,13 +1026,13 @@ class SerialConnection(EventDispatcher):
                         Logger.info("ERROR status parse: Position invalid: " + message)
                         return
 
-                    self.x_change = self.m_x != pos[0]
-                    self.y_change = self.m_y != pos[1]
-                    self.z_change = self.m_z != pos[2]
+                    self.x_change = self.m_x != float(pos[0])
+                    self.y_change = self.m_y != float(pos[1])
+                    self.z_change = self.m_z != float(pos[2])
 
-                    self.m_x = pos[0]
-                    self.m_y = pos[1]
-                    self.m_z = pos[2]
+                    self.m_x = float(pos[0])
+                    self.m_y = float(pos[1])
+                    self.m_z = float(pos[2])
 
                 # Get work's position (may not be displayed, depending on mask)
                 elif part.startswith('WPos:'):
@@ -1547,7 +1547,7 @@ class SerialConnection(EventDispatcher):
                         Logger.info("Could not print calibration output")
 
             if self.VERBOSE_STATUS:
-                Logger.info(self.m_state, self.m_x, self.m_y, self.m_z, self.serial_blocks_available, self.serial_chars_available)
+                Logger.debug(self.m_state, str(self.m_x), str(self.m_y), str(self.m_z), self.serial_blocks_available, self.serial_chars_available)
 
             if self.measure_running_data:
 
@@ -1555,9 +1555,9 @@ class SerialConnection(EventDispatcher):
 
                     self.running_data.append([
                         int(self.measurement_stage),
-                        float(self.m_x),
-                        float(self.m_y),
-                        float(self.m_z),
+                        self.m_x,
+                        self.m_y,
+                        self.m_z,
                         int(self.sg_x_motor_axis),
                         int(self.sg_y_axis),
                         int(self.sg_y1_motor),

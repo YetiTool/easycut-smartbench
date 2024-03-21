@@ -191,9 +191,9 @@ def default_pos_values(serial_comms):
     serial_comms.x_change = False
     serial_comms.y_change = False
     serial_comms.z_change = False
-    serial_comms.m_x = '0.000'
-    serial_comms.m_y = '0.000'
-    serial_comms.m_z = '0.000'
+    serial_comms.m_x = 0.0
+    serial_comms.m_y = 0.0
+    serial_comms.m_z = 0.0
 
 def test_value_change_x(sc):
     default_pos_values(sc)
