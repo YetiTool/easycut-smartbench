@@ -571,38 +571,33 @@ class EngineTests(unittest.TestCase):
         self.assertEqual(output, expected_output)
 
     def test_read_in_custom_shape_dimensions(self):
-        # Case 1: x_dim and y_dim found within the first 20 lines
+        # Case 1: All dimensions are present in the gcode lines
         gcode_lines = [
-            "Line 1",
-            "(Final part x dim: 10.5)",
-            "(Final part y dim: 20.3)",
-            "Line 4"
+            "Final part x dim: 10.5",
+            "Final part y dim: 20.5",
+            "x min: -5.5",
+            "y min: -10.5"
         ]
-        expected_output = ("10.5", "20.3")
+        expected_output = ("10.5", "20.5", "-5.5", "-10.5")
         output = self.engine.read_in_custom_shape_dimensions(gcode_lines)
         self.assertEqual(output, expected_output)
 
-        # Case 2: x_dim and y_dim found on the same line within the first 20 lines
+        # Case 2: Some dimensions are missing in the gcode lines
         gcode_lines = [
-            "Line 1",
-            "(Final part x dim: 10.5, Final part y dim: 20.3)",
-            "Line 3",
-            "Line 4"
+            "Final part x dim: 10.5",
+            "x min: -5.5",
+            "y min: -10.5"
         ]
-        expected_output = ("10.5", "20.3")
-        output = self.engine.read_in_custom_shape_dimensions(gcode_lines)
-        self.assertEqual(output, expected_output)
+        with self.assertRaises(Exception):
+            self.engine.read_in_custom_shape_dimensions(gcode_lines)
 
-        # Case 3: x_dim and y_dim not found within the first 20 lines
+        # Case 3: No dimensions are present in the gcode lines
         gcode_lines = [
-            "Line 1",
-            "Line 2",
-            "Line 3",
-            "Line 4"
+            "Some other line",
+            "Another line"
         ]
-        expected_output = (None, None)
-        output = self.engine.read_in_custom_shape_dimensions(gcode_lines)
-        self.assertEqual(output, expected_output)
+        with self.assertRaises(Exception):
+            self.engine.read_in_custom_shape_dimensions(gcode_lines)
 
     def test_get_custom_shape_extents(self):
         # Case 1: Custom shape type is defined

@@ -23,10 +23,11 @@ import os
 import re
 
 try:
+    from asmcnc.core_UI import path_utils as pu
     from asmcnc.apps.drywall_cutter_app.config import config_loader
     from asmcnc.comms.logging_system.logging_system import Logger
-    from asmcnc.core_UI import path_utils as pu 
 except ImportError:
+    pu = None
     print("Import fail in engine.py")
 
 class GCodeEngine():
@@ -37,7 +38,10 @@ class GCodeEngine():
         self.x = 0  # Identifier for use in arrays
         self.y = 1  # Identifier for use in arrays
         self.custom_gcode_shapes = ["geberit"]  # List of custom shapes that require gcode files
-        self.source_folder_path = pu.get_path("drywall_cutter_app/gcode")  # Path to the gcode files
+        if pu is not None:
+            self.source_folder_path = pu.get_path("drywall_cutter_app/gcode")  # Path to the gcode files
+        else:
+            self.source_folder_path = "/gcode/"
 
         #Constants
         self.CORNER_RADIUS_THRESHOLD = 0.09  # Minimum corner radius to be considered a corner radius
@@ -438,15 +442,19 @@ class GCodeEngine():
 
         return gcode_part_1 + partoff_gcode + gcode_part_2  
 
-    #Read in custom shape dimensions from gcode
+    #Extract dimension data from gcode header (manually inserted)
     def read_in_custom_shape_dimensions(self, gcode_lines):
-        x_dim_pattern = r"Final part x dim: (-?\d+\.\d+)"
-        y_dim_pattern = r"Final part y dim: (\d+\.\d+)"
+        x_dim_pattern = r"Final part x dim: (-?\d+\.?\d*)"
+        y_dim_pattern = r"Final part y dim: (-?\d+\.?\d*)"
+        x_min_pattern = r"x min: (-?\d+\.?\d*)"
+        y_min_pattern = r"y min: (-?\d+\.?\d*)"
 
         x_dim = None
         y_dim = None
+        x_min = None
+        y_min = None
 
-        for string in gcode_lines[:20]: #Data should be found within the first 20 lines
+        for string in gcode_lines:
             if x_dim is None:
                 x_dim_match = re.search(x_dim_pattern, string, re.IGNORECASE)
                 if x_dim_match:
@@ -457,16 +465,24 @@ class GCodeEngine():
                 if y_dim_match:
                     y_dim = y_dim_match.group(1)  # Store the matched value as a string
 
-            if x_dim and y_dim:
-                break  # Exit the loop once both values have been found
-    
-        if x_dim is None or y_dim is None:
-            try:
-                Logger.Warning("Unable to find custom shape dimensions in first 20 lines of gcode file.")#
-            except:
-                print("Unable to find custom shape dimensions in first 20 lines of gcode file.")
-        
-        return x_dim, y_dim
+            if x_min is None:
+                x_min_match = re.search(x_min_pattern, string, re.IGNORECASE)
+                if x_min_match:
+                    x_min = x_min_match.group(1)  # Store the matched value as a string
+
+            if y_min is None:
+                y_min_match = re.search(y_min_pattern, string, re.IGNORECASE)
+                if y_min_match:
+                    y_min = y_min_match.group(1)  # Store the matched value as a string
+
+            if x_dim and y_dim and x_min and y_min:
+                break  # Exit the loop once all values have been found
+
+        missing_values = [dim for dim, value in zip(['x_dim', 'y_dim', 'x_min', 'y_min'], [x_dim, y_dim, x_min, y_min]) if value is None]
+        if missing_values:
+            raise Exception("Unable to gather shape dimension data. Missing values: {}".format(', '.join(missing_values)))
+
+        return x_dim, y_dim, x_min, y_min
 
     #For use in UI not engine
     def get_custom_shape_extents(self):
