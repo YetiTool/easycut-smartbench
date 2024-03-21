@@ -24,7 +24,7 @@ import re
 
 try:
     from asmcnc.apps.drywall_cutter_app.config import config_loader
-    from asmcnc.apps.drywall_cutter_app.logger import Logger
+    from asmcnc.comms.logging_system.logging_system import Logger
 except ImportError:
     print("Import fail in engine.py")
 
@@ -35,6 +35,7 @@ class GCodeEngine():
         #Globals 
         self.x = 0  # Identifier for use in arrays
         self.y = 1  # Identifier for use in arrays
+        self.custom_gcode_shapes = ["geberit"]  # List of custom shapes that require gcode files
 
         #Constants
         self.CORNER_RADIUS_THRESHOLD = 0.09  # Minimum corner radius to be considered a corner radius
@@ -358,19 +359,19 @@ class GCodeEngine():
                 continue
 
             parts = re.findall(r'[A-Z][0-9.-]+', line)
-            adjusted_parts = []
+            adjusted_parts = ""
             for part in parts:
                 if part.startswith('X'):
                     x_value = float(part[1:])
                     adjusted_x = x_value + x_adjustment
-                    adjusted_parts.append('X{}'.format(self.format_float(adjusted_x)))
+                    adjusted_parts += (' X{}'.format(self.format_float(adjusted_x)))
                 elif part.startswith('Y'):
                     y_value = float(part[1:])
                     adjusted_y = y_value + y_adjustment
-                    adjusted_parts.append('Y{}'.format(self.format_float(adjusted_y)))
+                    adjusted_parts +=(' Y{}'.format(self.format_float(adjusted_y)))
                 else:
-                    adjusted_parts.append(part)
-            adjusted_lines.extend(adjusted_parts)
+                    adjusted_parts += part
+            adjusted_lines.append(adjusted_parts)
         return adjusted_lines
 
     # For use with apply_datum_offset
@@ -436,7 +437,7 @@ class GCodeEngine():
         return gcode_part_1 + partoff_gcode + gcode_part_2  
 
     #Read in custom shape dimensions from gcode
-    def read_in_custom_shape_dimentions(self, gcode_lines):
+    def read_in_custom_shape_dimensions(self, gcode_lines):
         x_dim_pattern = r"Final part x dim: (-?\d+\.\d+)"
         y_dim_pattern = r"Final part y dim: (\d+\.\d+)"
 
@@ -464,6 +465,25 @@ class GCodeEngine():
                 print("Unable to find custom shape dimensions in first 20 lines of gcode file.")
         
         return x_dim, y_dim
+
+    #For use in UI not engine
+    def get_custom_shape_extents(self):
+        if self.config.active_config.shape_type.lower() in self.custom_gcode_shapes:
+            # Read in data
+            gcode_lines = self.find_and_read_gcode_file(self.source_folder_path, self.config.active_config.shape_type, self.config.active_cutter.diameter)
+            
+            # Get dimensions as strings
+            x_dim_str, y_dim_str, x_min_str, y_min_str = self.read_in_custom_shape_dimensions(gcode_lines)
+            
+            # Convert strings to floats
+            x_dim = float(x_dim_str)
+            y_dim = float(y_dim_str)
+            x_min = float(x_min_str)
+            y_min = float(y_min_str)
+
+            return x_dim, y_dim, x_min, y_min
+        else:
+            raise Exception ("Shape type: {} is not defined as a custom shape.".format(self.config.active_config.shape_type))
 
     #Main
     def engine_run(self):
