@@ -540,7 +540,7 @@ class GCodeEngine():
 
         elif self.config.active_config.shape_type.lower() == u"geberit":
             source_folder_name = u"gcode" 
-            source_folder_path = u"asmcnc/apps/drywall_cutter_app/" + source_folder_name #os.path.join(source_folder_name) 
+            self.source_folder_path = u"asmcnc/apps/drywall_cutter_app/" + source_folder_name #os.path.join(source_folder_name) 
 
             # Read in data
             gcode_lines = self.find_and_read_gcode_file(source_folder_path, self.config.active_config.shape_type, self.config.active_cutter.diameter)
