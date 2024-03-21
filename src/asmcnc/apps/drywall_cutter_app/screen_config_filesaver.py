@@ -14,9 +14,10 @@ import json
 import kivy
 from chardet import detect
 from kivy.lang import Builder
-from kivy.properties import ObjectProperty, StringProperty  # @UnresolvedImport
+from kivy.properties import ObjectProperty, StringProperty  
 from kivy.uix.screenmanager import Screen
 
+from asmcnc.apps.drywall_cutter_app.config import config_loader
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
 
@@ -75,7 +76,6 @@ Builder.load_string("""
                     id: filechooser
                     rootpath: './asmcnc/apps/drywall_cutter_app/config/configurations/'
                     show_hidden: False
-                    filters: ['*.json']
                     on_selection: root.refresh_filechooser()
                     sort_func: root.sort_by_date_reverse
                     FileChooserIconLayout
@@ -318,7 +318,7 @@ class ConfigFileSaver(Screen):
 
             if not os.path.exists(configs_dir + '.gitignore'):
                 file = open(configs_dir + '.gitignore', "w+")
-                file.write('*.json')
+                file.write('*')
                 file.close()
 
     def on_enter(self):
@@ -386,27 +386,21 @@ class ConfigFileSaver(Screen):
         with open(self.filechooser.selection[0], 'r') as f:
             json_obj = json.load(f)
 
-        self.metadata_preview.text = self.to_human_readable(json_obj)
+        self.metadata_preview.text = config_loader.get_display_preview(json_obj)
 
         self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
 
-    def to_human_readable(self, json_obj, indent=0):
-        def format_key(json_key):
-            return json_key.replace("_", " ").title()
-
-        result = ''
-
-        for key, value in json_obj.items():
-            if isinstance(value, dict):
-                result += ' ' * indent + format_key(key) + ":\n" + self.to_human_readable(value, indent + 4)
-            else:
-                result += ' ' * indent + format_key(key) + ": " + str(value) + "\n"
-        return result
-
     def save_config_and_return_to_dwt(self):
-        self.callback(self.file_selected_label.text)
+        if self.validate_file_name(self.file_selected_label.text):
+            self.callback(self.file_selected_label.text)
 
-        self.sm.current = 'drywall_cutter'
+            self.sm.current = 'drywall_cutter'
+        else:
+            popup_info.PopupInfo(screen_manager=self.sm, localization=self.l, popup_width=500,
+                                 description=self.l.get_str("File names must be between 1 and 40 characters long."))
+
+    def validate_file_name(self, file_name):
+        return 0 < len(file_name) <= 40
 
     def quit_to_home(self):
         if not self.is_filechooser_scrolling:
