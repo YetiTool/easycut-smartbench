@@ -1,4 +1,7 @@
 '''
+Author: BP
+Description: This module contains the GCodeEngine class, which is responsible for producing gcode instructions for cutting shapes. The class contains methods for producing gcode instructions for cutting rectangles, circles, and custom shapes. The class also contains methods for reading in gcode files, adjusting feeds and speeds, and replacing Z values. The class is used by the DrywallCutterApp class to produce gcode instructions for cutting shapes.
+
 Working theory:
 
 read in data
@@ -15,14 +18,16 @@ produce gcode
 tidy gcode
 write to output file
 '''
-from __future__ import division
-from __future__ import absolute_import
-from __future__ import with_statement
-from io import open
+import decimal
 import os
 import re
 
-from asmcnc.apps.drywall_cutter_app.config import config_loader
+try:
+    from asmcnc.apps.drywall_cutter_app.config import config_loader
+    from asmcnc.comms.logging_system.logging_system import Logger
+    from asmcnc.core_UI import path_utils as pu 
+except ImportError:
+    print("Import fail in engine.py")
 
 class GCodeEngine():
     def __init__(self, dwt_config):
@@ -31,41 +36,32 @@ class GCodeEngine():
         #Globals 
         self.x = 0  # Identifier for use in arrays
         self.y = 1  # Identifier for use in arrays
+        self.custom_gcode_shapes = ["geberit"]  # List of custom shapes that require gcode files
+        self.source_folder_path = pu.get_path("drywall_cutter_app/gcode")  # Path to the gcode files
 
-        self.custom_gcode_shapes = ["geberit"]
-
-        self.source_folder_name = u"gcode" 
-        self.source_folder_path = u"asmcnc/apps/drywall_cutter_app/" + self.source_folder_name 
+        #Constants
+        self.CORNER_RADIUS_THRESHOLD = 0.09  # Minimum corner radius to be considered a corner radius
 
     #Produce corner coordinates for a rectangle of size x, y
     def rectangle_coordinates(self, x, y):
-        if x <= 0 or y <= 0:
-            return []  # Invalid dimensions, return an empty list
+        if x <= 0 or y <= 0 and self.config.active_config.shape_type.lower() not in ["circle", "geberit", "line"]:
+            return None  # Invalid dimensions, return None
 
         # Define the coordinates for the four corners
         top_left = (0, y)
         top_right = (x, y)
-        bottom_right = (x, 0)
         bottom_left = (0, 0)
+        bottom_right = (x, 0)
 
         # Return the coordinates in clockwise order
         return [bottom_left, top_left, top_right, bottom_right]
 
-    #Adjust corner radius depending on the offset type (in, on, outside of line)
-    def offset_corner_radius(self, corner_radius, offset_type, tool_diameter):
-        if offset_type == u"inside":
-            return corner_radius - tool_diameter
-        elif offset_type == u"outside":
-            return corner_radius + tool_diameter
-        elif offset_type == None:
-            return corner_radius
-        else: 
-            raise  Exception(u"Unknown offset type. Please specify 'inside', 'outside' or 'none'.")
-
     #Find the shape centre coordinates
-    def find_centre(self, coordinates, x_offset, y_offset):
+    def find_centre(self, coordinates, x_offset = 0, y_offset = 0):
         x_sum = 0
         y_sum = 0
+        # Remove duplicates from the list
+        coordinates = list(set(coordinates))
         for x, y in coordinates:
             x_sum += x + x_offset
             y_sum += y + y_offset
@@ -76,12 +72,9 @@ class GCodeEngine():
 
     #Check if a corner radius is present (and not tiny)
     def find_corner_rads(self, radius):
-        if radius > 0.09:
-            return True
-        else:
-            return False
+        return radius > self.CORNER_RADIUS_THRESHOLD
 
-    #Determine shape point direction
+    # Determine shape point direction
     def is_clockwise(self, coordinates):
         total = 0
         for i in xrange(len(coordinates)):
@@ -89,17 +82,13 @@ class GCodeEngine():
             x2, y2 = coordinates[(i + 1) % len(coordinates)]  # Handle the wraparound at the end
             total += (x2 - x1) * (y2 + y1)
         
-        if total > 0:
-            return False
-        elif total < 0:
-            return True
+        return total > 0
 
-    #Reverse coordinates if need to be clockwise
+    # Reverse coordinates if need to be clockwise
     def correct_orientation(self, coordinates, clockwise):
-        if clockwise:
+        if not clockwise:
             return coordinates[::-1]
-        else:
-            return coordinates
+        return coordinates
 
     #Take in corner coordinates and return coordinates for arcs
     def add_corner_coordinates(self, coordinates, shape_centre, corner_radius):
@@ -107,20 +96,20 @@ class GCodeEngine():
         for coordinate in coordinates:
             #Bottom left
             if coordinate[self.x] < shape_centre[self.x] and coordinate[self.y] < shape_centre[self.y]: 
-                rad_point_1 = coordinate[self.x] + corner_radius, coordinate[self.y]
-                rad_point_2 = coordinate[self.x], coordinate[self.y] + corner_radius
+                rad_point_1 = coordinate[self.x], coordinate[self.y] + corner_radius
+                rad_point_2 = coordinate[self.x] + corner_radius, coordinate[self.y]
             #Top left
             elif coordinate[self.x] < shape_centre[self.x] and coordinate[self.y] > shape_centre[self.y]:
-                rad_point_1 = coordinate[self.x], coordinate[self.y] - corner_radius
-                rad_point_2 = coordinate[self.x] + corner_radius, coordinate[self.y]
+                rad_point_1 = coordinate[self.x] + corner_radius, coordinate[self.y]
+                rad_point_2 = coordinate[self.x], coordinate[self.y] - corner_radius
             #Top right
             elif coordinate[self.x] > shape_centre[self.x] and coordinate[self.y] > shape_centre[self.y]:
-                rad_point_1 = coordinate[self.x] - corner_radius, coordinate[self.y]
-                rad_point_2 = coordinate[self.x], coordinate[self.y] - corner_radius
+                rad_point_1 = coordinate[self.x], coordinate[self.y] - corner_radius
+                rad_point_2 = coordinate[self.x] - corner_radius, coordinate[self.y]
             #Bottom right
             elif coordinate[self.x] > shape_centre[self.x] and coordinate[self.y] < shape_centre[self.y]:
-                rad_point_1 = coordinate[self.x], coordinate[self.y] + corner_radius
-                rad_point_2 = coordinate[self.x] - corner_radius, coordinate[self.y]
+                rad_point_1 = coordinate[self.x] - corner_radius, coordinate[self.y]
+                rad_point_2 = coordinate[self.x], coordinate[self.y] + corner_radius
             new_coordinates.append(rad_point_1)
             new_coordinates.append(rad_point_2)
         return new_coordinates 
@@ -170,6 +159,9 @@ class GCodeEngine():
 
     #Produce a list of cut depths based on total depth and pass depth
     def calculate_pass_depths(self, total_cut_depth, pass_depth):
+        if total_cut_depth <= 0 or pass_depth <= 0:
+            raise ValueError("Total cut depth and pass depth must be positive values.")
+        
         pass_depths = []
         current_depth = pass_depth
         while current_depth < total_cut_depth:
@@ -184,10 +176,9 @@ class GCodeEngine():
 
     #Determine if the cut direction should be clockwise or not
     def determine_cut_direction_clockwise(self, offset_type, climb):
-        if climb and offset_type == u"outside" or not(climb) and offset_type == u"inside":
-            return True
-        else:
-            return False
+        if offset_type not in [u"inside", u"outside"]:
+            raise ValueError("Offset type must be 'inside' or 'outside'")            
+        return climb and offset_type == u"outside" or not(climb) and offset_type == u"inside"
 
     #For use when reordering gcode instructions
     def swap_lines_after_keyword(self, input_list, keyword):
@@ -204,12 +195,12 @@ class GCodeEngine():
         return input_list
 
     #For use when reordering gcode instructions
-    def replace_after_keyword(self, input_list, keyword, replacement):
+    def replace_mode_after_keyword(self, input_list, keyword, replacement_mode):
         for i in xrange(len(input_list) - 1):
             if keyword.lower() in input_list[i].lower():
                 if i + 1 < len(input_list):
                     # Replace the first two letters of the line that follows the keyword
-                    input_list[i + 1] = replacement + input_list[i + 1][2:]
+                    input_list[i + 1] = replacement_mode + input_list[i + 1][2:]
         return input_list
 
     #Produce gcode instructions to cut a rounded (or not) rectangle
@@ -223,27 +214,30 @@ class GCodeEngine():
         # Apply offset for toolpath (inside, on, outside the line cutting)
         offset_coordinates = self.apply_offset(coordinates, offset, tool_diameter, shape_centre)  
 
-        clockwise_cutting = self.determine_cut_direction_clockwise(offset, is_climb)  
-
         # Add corner coordinates if necessary
         radii_present = self.find_corner_rads(corner_radius)  
         final_coordinates = offset_coordinates
         if radii_present:
             adjusted_corner_radius = corner_radius + self.calculate_corner_radius_offset(offset, tool_diameter)  
             if adjusted_corner_radius > 0:
-                final_coordinates = self.add_corner_coordinates(offset_coordinates, shape_centre, adjusted_corner_radius)  
+                final_coordinates = self.add_corner_coordinates(reversed(offset_coordinates), shape_centre, adjusted_corner_radius)  
             else:
                 radii_present = False
 
         pass_depths = self.calculate_pass_depths(total_cut_depth, pass_depth)  
 
-        # Time to make some gcode :)
+        # Correct orientation for climb or conventional cutting
+        clockwise_cutting = self.determine_cut_direction_clockwise(offset, is_climb)
+
+        if clockwise_cutting:
+            final_coordinates = final_coordinates[::-1]
+    
         if clockwise_cutting:
             arc_instruction = u"G2"
         else:
-            final_coordinates = self.correct_orientation(final_coordinates, True)
             arc_instruction = u"G3"
 
+        # Time to make some gcode :)
         cutting_lines = []
 
         for depth in pass_depths:
@@ -262,51 +256,20 @@ class GCodeEngine():
                 arc_flag = True
                 for coordinate in final_coordinates[:-1]:
                     second_line = 1 == final_coordinates.index(coordinate)
-                    gcode_instruction = "G1 X%s Y%s %s\n" % (coordinate[0] + datum_x, coordinate[1] + datum_y, 'F%s' % feedrate if second_line else '')
                     if arc_flag:
-                        gcode_instruction = "G1 X%s Y%s\n" % (coordinate[0] + datum_x, coordinate[1] + datum_y)
+                        gcode_instruction = "G1 X%s Y%s %s\n" % (coordinate[0] + datum_x, coordinate[1] + datum_y, 'F%s' % feedrate if second_line else '')
                     else:
-                        gcode_instruction = "%s X%s Y%s R%s\n" % (arc_instruction, coordinate[0] + datum_x, coordinate[1] + datum_y, adjusted_corner_radius)
+                        gcode_instruction = "%s X%s Y%s R%s %s\n" % (arc_instruction, coordinate[0] + datum_x, coordinate[1] + datum_y, adjusted_corner_radius, 'F%s' % feedrate if second_line else '')
                     arc_flag = not arc_flag
                     cutting_lines.append(gcode_instruction)
             cutting_lines.append("G1 Z%d F%d\n\n" % (z_safe_distance, plungerate))
 
         # Correct gcode order
-        cutting_lines = self.swap_lines_after_keyword(cutting_lines, u"New pass")
+        cutting_lines = self.swap_lines_after_keyword(cutting_lines, u"Roughing pass")
         # Speed up first XY move
-        cutting_lines = self.replace_after_keyword(cutting_lines, u"New pass", u"G0")
+        cutting_lines = self.replace_mode_after_keyword(cutting_lines, u"Roughing pass", u"G0")
 
         return cutting_lines
-    
-    #Produce gcode instructions to cut a straight line
-    def cut_line(self, datum_x, datum_y, length, tool_diameter, orientation, pass_depth, feedrate, plungerate, total_cut_depth, z_safe_distance):
-        pass_depths = self.calculate_pass_depths(total_cut_depth, pass_depth)
-        tool_radius = tool_diameter / 2
-        x = 0
-        y = 1 
-        direction_flag = True
-
-        gcode_lines = ["G0 Z{}\n".format(z_safe_distance)]
-
-        if orientation == "vertical":
-            start_coordinate = [datum_x + tool_radius, datum_y]
-            end_coordinate = [datum_x + length - tool_radius, datum_y]
-        else: #horizontal
-            start_coordinate = [datum_x, datum_y + tool_radius]
-            end_coordinate = [datum_x, datum_y + length - tool_radius]
-        gcode_lines.append("G0 X{} Y{}\n".format(start_coordinate[x], start_coordinate[y]))
-        for depth in pass_depths:
-            if direction_flag:
-                gcode_lines.append("G1 Z-{} F{}\n".format(depth, plungerate))
-                gcode_lines.append("G1 X{} Y{} F{}\n".format(end_coordinate[x], end_coordinate[y], feedrate))
-            else:
-                gcode_lines.append("G1 Z-{} F{}\n".format(depth, plungerate))
-                gcode_lines.append("G1 X{} Y{} F{}\n".format(start_coordinate[x], start_coordinate[y], feedrate))
-            direction_flag = not(direction_flag)
-
-        gcode_lines.append("G1 Z{} F{}\n".format(z_safe_distance, plungerate))
-
-        return gcode_lines
 
     #Return lines in appropriate gcode file
     def find_and_read_gcode_file(self, directory, shape_type, tool_diameter):
@@ -323,23 +286,24 @@ class GCodeEngine():
                 else:
                     raise IOError("Gcode file not found")
 
-    #Scrape through gcode and replace feedrate, plungerate and spindle speed
+    # Scrape through gcode and replace feedrate, plungerate and spindle speed
     def adjust_feeds_and_speeds(self, gcode_lines, feedrate, plungerate, spindle_speed):
         adjusted_lines = []
         feedrate_pattern = re.compile(r'G1.*?[XY].*?F([\d.]+)', re.IGNORECASE)
-        plungerate_pattern = re.compile(r'G1.*?Z(-?\d+\.\d+).*?F([\d.]+)', re.IGNORECASE)
-        spindle_speed_pattern = re.compile(r'S\d+', re.IGNORECASE)
+        plungerate_pattern = re.compile(r'G1.*?[Z].*?F([\d.]+)', re.IGNORECASE)
+        spindle_speed_pattern = re.compile(r'S\d.+', re.IGNORECASE)
 
         for line in gcode_lines:
-            if 'F' in line and feedrate_pattern.search(line):
+            line = line.upper()
+            if 'F' in line and feedrate_pattern.search(line) and ('Z' not in line):
                 # Replace the feedrate if 'G1', 'X' or 'Y' move is present
                 match = feedrate_pattern.search(line)
                 line = line.replace(match.group(1), str(feedrate))
 
-            if 'G1' in line and 'Z' in line and 'F' in line and plungerate_pattern.search(line):
-                # Replace the plungerate
+            elif 'Z' in line and plungerate_pattern.search(line) and ('X' not in line and 'Y' not in line):
+                # Replace the plungerate if 'G1' and 'Z' move is present
                 match = plungerate_pattern.search(line)
-                line = line.replace(match.group(2), str(plungerate))
+                line = line.replace(match.group(1), str(plungerate))
 
             # Replace the spindle speed
             line = spindle_speed_pattern.sub('S' + str(spindle_speed), line)
@@ -372,13 +336,18 @@ class GCodeEngine():
 
         return cut_depth_value, z_safe_distance_value
 
-    #Replace gcode z data with user-driven z data
+    # Replace gcode z data with user-driven z data
     def replace_cut_depth_and_z_safe_distance(self, gcode_lines, gcode_cut_depth, gcode_z_safe_distance, new_cut_depth, new_z_safe_distance):
         output = []    
+
         for line in gcode_lines:
-            original_line = line
-            line = line.replace(str(gcode_cut_depth), str(new_cut_depth))
-            line = line.replace(str(gcode_z_safe_distance), str(new_z_safe_distance))
+            if "z" + str(gcode_cut_depth) in line.strip().lower():
+                # Replace Z cut depth
+                line = re.sub(r'Z[-+]?\d*\.?\d+', 'Z{}'.format(new_cut_depth), line)
+            elif "z" + str(gcode_z_safe_distance) in line.strip().lower(): # Only 1 Z value will be present per line, hence using elif
+                # Replace Z safe distance
+                line = re.sub(r'Z[-+]?\d*\.?\d+', 'Z{}'.format(new_z_safe_distance), line)
+
             output.append(line)
 
         return output
@@ -387,25 +356,34 @@ class GCodeEngine():
     def apply_datum_offset(self, gcode_lines, x_adjustment, y_adjustment):
         adjusted_lines = []
         for line in gcode_lines:
-            if line.startswith("G1Z"):
+            if line.startswith("G1Z") or line.startswith("G1 Z"):
                 adjusted_lines.append(line)
                 continue
 
             parts = re.findall(r'[A-Z][0-9.-]+', line)
-            adjusted_parts = []
+            adjusted_parts = ""
             for part in parts:
                 if part.startswith('X'):
                     x_value = float(part[1:])
                     adjusted_x = x_value + x_adjustment
-                    adjusted_parts.append('X{:.3f}'.format(adjusted_x))
+                    adjusted_parts += (' X{}'.format(self.format_float(adjusted_x)))
                 elif part.startswith('Y'):
                     y_value = float(part[1:])
                     adjusted_y = y_value + y_adjustment
-                    adjusted_parts.append('Y{:.3f}'.format(adjusted_y))
+                    adjusted_parts +=(' Y{}'.format(self.format_float(adjusted_y)))
                 else:
-                    adjusted_parts.append(part)
-            adjusted_lines.append(' '.join(adjusted_parts) + "\n")
+                    adjusted_parts += part
+            adjusted_lines.append(adjusted_parts)
         return adjusted_lines
+
+    # For use with apply_datum_offset
+    def format_float(*args):
+        value = args[1]
+        if value == int(value):
+            return str(int(value))
+        else:
+            # return float without extra zeros
+            return str(decimal.Decimal(str(value)).normalize())
 
     # Repeat gcode for each pass 
     def repeat_for_depths(self, gcode_lines, pass_depths, start_line_key, end_line_key):
@@ -417,26 +395,26 @@ class GCodeEngine():
                 # Replace "cut depth" with the depth value in the line
                 cut_line = line.replace("[cut depth]", "-" + str(depth))
                 cut_lines.append(cut_line)
-            output.append(''.join(cut_lines))
+            output.extend(cut_lines)
 
-        output.append('\n'.join(gcode_lines[end_line_key:]))
+        if end_line_key < len(gcode_lines):
+            output.extend(gcode_lines[end_line_key:])
 
-        return '\n'.join(output)
+        return output
 
     #Add partoff cut for geberit shape
     def add_partoff(self, gcode_lines, insertion_key, start_coordinate, end_coordinate, pass_depths, feedrate, plungerate, z_safe_distance):
         x = 0
         y = 1
         insert_index = None
-        partoff_gcode = ["(Partoff)"]
+        partoff_gcode = ["(Partoff)"] # First line of partoff section
         direction_flag = True
 
         #Find index to insert partoff line
+        insertion_key = insertion_key.lower()
         for i in range(len(gcode_lines)):
-            if insertion_key.lower() == gcode_lines[i].lower() + gcode_lines[i+1].lower():
+            if insertion_key in gcode_lines[i].lower():
                 insert_index = i
-                break
-            if i == len(gcode_lines):
                 break
         if insert_index is None:
             raise Exception ("Unable to find " + insertion_key + " in gcode")
@@ -454,23 +432,18 @@ class GCodeEngine():
             direction_flag = not(direction_flag)
         partoff_gcode.append("G1 Z" + str(z_safe_distance)) #Lift to Z safe distance
 
-        output = ""
-        for line in partoff_gcode:
-            output += line + "\n"
-        partoff_gcode = "".join(output)
-
         #Insert partoff gcode
         gcode_part_1 = gcode_lines[:insert_index]
         gcode_part_2 = gcode_lines[insert_index:]
 
-        return gcode_part_1 +partoff_gcode + gcode_part_2      
+        return gcode_part_1 + partoff_gcode + gcode_part_2  
 
-    #Extract dimention data from gcode header (manually inserted)
+    #Extract dimension data from gcode header (manually inserted)
     def read_in_custom_shape_dimensions(self, gcode_lines):
-        x_dim_pattern = r"Final part x dim: (-?\d+\.\d+)"
-        y_dim_pattern = r"Final part y dim: (\d+\.\d+)"
-        x_min_pattern = r"x min: (-?\d+\.\d+)"
-        y_min_pattern = r"y min: (-?\d+\.\d+)"
+        x_dim_pattern = r"Final part x dim: (-?\d+\.?\d*)"
+        y_dim_pattern = r"Final part y dim: (-?\d+\.?\d*)"
+        x_min_pattern = r"x min: (-?\d+\.?\d*)"
+        y_min_pattern = r"y min: (-?\d+\.?\d*)"
 
         x_dim = None
         y_dim = None
@@ -499,7 +472,7 @@ class GCodeEngine():
                     y_min = y_min_match.group(1)  # Store the matched value as a string
 
             if x_dim and y_dim and x_min and y_min:
-                break  # Exit the loop once both values have been found
+                break  # Exit the loop once all values have been found
 
         missing_values = [dim for dim, value in zip(['x_dim', 'y_dim', 'x_min', 'y_min'], [x_dim, y_dim, x_min, y_min]) if value is None]
         if missing_values:
@@ -535,13 +508,10 @@ class GCodeEngine():
         pass_depths = []
         stepovers = [0]
 
-        if self.config.active_cutter.cutting_direction.lower() == "climb":
-            is_climb = True
-        else:
-            is_climb = False
+        is_climb = self.config.active_cutter.cutting_direction.lower() == "climb"
 
         # Calculated parameters
-        total_cut_depth = self.config.active_config.cutting_depths.material_thickness - self.config.active_config.cutting_depths.bottom_offset
+        total_cut_depth = self.config.active_config.cutting_depths.material_thickness + self.config.active_config.cutting_depths.bottom_offset
 
         if self.config.active_config.shape_type.lower() == u"rectangle" or self.config.active_config.shape_type.lower() == u"square":
             rect_coordinates = self.rectangle_coordinates(self.config.active_config.canvas_shape_dims.x, self.config.active_config.canvas_shape_dims.y)
@@ -553,9 +523,9 @@ class GCodeEngine():
             coordinates.append(coordinates[0])
 
             # Create a list of stepovers to add finishing passes
-            finish_passes = 1
+            finish_passes = 0
             finish_stepover = 0.5
-            finish_stepdown = self.config.active_config.cutting_depths.material_thickness
+            finish_stepdown = total_cut_depth
             if finish_passes > 0:
                 stepovers = [finish_stepover * (finish_passes - i) for i in range(finish_passes)]
                 stepovers.append(0)
@@ -583,10 +553,11 @@ class GCodeEngine():
                 cutting_lines += rectangle
 
         elif self.config.active_config.shape_type.lower() == u"geberit":
+
             # Read in data
             gcode_lines = self.find_and_read_gcode_file(self.source_folder_path, self.config.active_config.shape_type, self.config.active_cutter.diameter)
             gcode_cut_depth, gcode_z_safe_distance = self.extract_cut_depth_and_z_safe_distance(gcode_lines)
-            x_size, y_size, _, _  = self.read_in_custom_shape_dimensions(gcode_lines)
+            x_size, y_size = self.read_in_custom_shape_dimentions(gcode_lines)
             
             # Remove header info
             gcode_lines = gcode_lines[next((i for i, s in enumerate(gcode_lines) if re.search(r"T[1-9]", s)), None):]
@@ -622,7 +593,7 @@ class GCodeEngine():
             coordinates.append(coordinates[0])
 
             # Create a list of stepovers to add finishing passes
-            finish_passes = 1
+            finish_passes = 0
             finish_stepover = 0.5
             finish_stepdown = self.config.active_config.cutting_depths.material_thickness
             if finish_passes > 0:
@@ -650,26 +621,13 @@ class GCodeEngine():
                 roughing_pass = False
                 cutting_lines += circle 
 
-        elif self.config.active_config.shape_type.lower() == u"line":
-            cutting_lines = self.cut_line(self.config.active_config.datum_position.x,
-                                        self.config.active_config.datum_position.y,
-                                        self.config.active_config.canvas_shape_dims.l,
-                                        self.config.active_cutter.diameter,
-                                        "vertical",
-                                        self.config.active_config.cutting_depths.depth_per_pass,
-                                        self.config.active_cutter.cutting_feedrate,
-                                        self.config.active_cutter.plunge_rate,
-                                        total_cut_depth,
-                                        z_safe_distance
-                                        )
-
         else:
             raise Exception("Shape type: '%s' not supported" % self.config.active_config.shape_type)
 
         # GCODE FILE STRUCTURE
-        file_structure_1_shapes = ["rectangle", "square", "circle", "line"]
+        file_structure_1_shapes = ["rectangle", "square", "circle"]
         if self.config.active_config.shape_type in file_structure_1_shapes:
-            output = "(%s)\nM3 S%d\nG0 %s\n\n%s\n(End)\nG0 Z%d\nM5\n" % (
+            output = "(%s)\nG90\nM3 S%d\nG0 %s\n\n%s\n(End)\nG0 Z%d\nM5\n" % (
                 output_file[output_file.find("/")+1:], self.config.active_cutter.cutting_spindle_speed, safe_start_position, ''.join(cutting_lines), z_safe_distance)
         else:
             output = ''.join(cutting_lines)  # Use ''.join() to concatenate lines without spaces
@@ -677,4 +635,3 @@ class GCodeEngine():
         with open(output_file, 'w+') as out_file:
             out_file.write(output.decode('utf-8'))  # Use write() to write the entire output as a single string
             print("%s written" % output_file)
-

@@ -6,8 +6,10 @@ Module to get and store settings info
 
 import sys, os, subprocess, time, threading
 from time import sleep
-from __builtin__ import True, False
+
 from datetime import datetime
+
+from asmcnc.comms.logging_system.logging_system import Logger
 from requests import get
 
 try: 
@@ -18,9 +20,6 @@ except:
 import socket
 from kivy.clock import Clock
 
-def log(message):
-    timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
 
 class Settings(object):
     
@@ -156,7 +155,7 @@ class Settings(object):
         except:
             self.timezone = None
 
-        log('TIMEZONE: ' + str(self.timezone))
+        Logger.info('TIMEZONE: ' + str(self.timezone))
 
 
 ## REFRESH EVERYTHING AT START UP    
@@ -203,11 +202,11 @@ class Settings(object):
                     self.latest_sw_beta = ""
 
             except: 
-                print("Could not sort software version tags")
+                Logger.info("Could not sort software version tags")
                 self.latest_sw_version = ""
 
         else:
-            print("Could not fetch software version tags")
+            Logger.info("Could not fetch software version tags")
             self.latest_sw_version = ""
 
     def fetch_platform_tags(self):
@@ -358,7 +357,7 @@ class Settings(object):
                 dir_path_name = 0
 
         
-        log('directory name: ' + dir_path_name)
+        Logger.info('directory name: ' + dir_path_name)
 
         if ((dir_path_name.count('SmartBench-SW-update') > 1) or (dir_path_name.count('easycut-smartbench') > 1)):
             return 2
@@ -399,7 +398,7 @@ class Settings(object):
             return dir_path_name
 
         if self.set_up_remote_repo(dir_path_name):
-            log('Updating software from: ' + dir_path_name)
+            Logger.info('Updating software from: ' + dir_path_name)
             self.refresh_sw_version()
             self.refresh_latest_sw_version()
             checkout_success = self.checkout_latest_version(beta)   
@@ -415,7 +414,7 @@ class Settings(object):
 ## FIRMWARE UPDATE FUNCTIONS
     def get_fw_update(self):
         os.system("sudo pigpiod")
-        print "pigpio daemon started"
+        Logger.info("pigpio daemon started")
         Clock.schedule_once(lambda dt: self.flash_fw(), 2)
 
     def get_hex_file(self):
@@ -431,7 +430,7 @@ class Settings(object):
 
         pi = pigpio.pi()
         pi.set_mode(17, pigpio.ALT3)
-        print(pi.get_mode(17))
+        Logger.info(pi.get_mode(17))
         pi.stop()
         os.system("sudo service pigpiod stop")    
         os.system("./update_fw.sh")
@@ -470,9 +469,9 @@ class Settings(object):
         self.details_of_fsck = str(process.communicate()[0])
 
         if self.details_of_fsck:
-            log("GIT FSCK ERRORS FOUND: ")
-            log(self.details_of_fsck)
-            log("END OF GIT FSCK DETAILS")
+            Logger.info("GIT FSCK ERRORS FOUND: ")
+            Logger.info(self.details_of_fsck)
+            Logger.info("END OF GIT FSCK DETAILS")
 
         if any(sign in self.details_of_fsck for sign in bad_repo_signs): 
             return False
@@ -518,7 +517,7 @@ class Settings(object):
                 return exit_code == 0
         except:
             # this will happen on non linux systems
-            log("Couldn't check status of service: " + service)
+            Logger.info("Couldn't check status of service: " + service)
 
 
             

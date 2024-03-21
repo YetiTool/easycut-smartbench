@@ -1,15 +1,15 @@
-'''
+"""
 Created on nov 2020
 @author: Letty
-'''
-
+"""
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from kivy.clock import Clock
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 
 <WelcomeTextScreen>:
@@ -22,8 +22,8 @@ Builder.load_string("""
 	next_button : next_button
 
 	BoxLayout:
-		height: dp(800)
-		width: dp(480)
+		height: dp(1.66666666667*app.height)
+		width: dp(0.6*app.width)
 		canvas.before:
 			Color: 
 				rgba: hex('#e5e5e5ff')
@@ -49,11 +49,11 @@ Builder.load_string("""
 				Label:
 					id: header_label
 					size_hint: (None,None)
-					height: dp(60)
-					width: dp(800)
+					height: dp(0.125*app.height)
+					width: dp(1.0*app.width)
 					color: hex('#f9f9f9ff')
 					# color: hex('#333333ff') #grey
-					font_size: dp(30)
+					font_size: dp(0.0375*app.width)
 					halign: "center"
 					valign: "bottom"
 					markup: True
@@ -61,16 +61,16 @@ Builder.load_string("""
 			# BODY
 			BoxLayout:
 				size_hint: (None,None)
-				width: dp(800)
-				height: dp(298)
-				padding: [dp(30), dp(10)]
-				spacing: dp(10)
+				width: dp(1.0*app.width)
+				height: dp(0.620833333333*app.height)
+				padding:[dp(0.0375)*app.width, dp(0.0208333333333)*app.height]
+				spacing:dp(0.0208333333333)*app.height
 				orientation: 'vertical'
 
 				Label:
 					id: thankyou_label
 					size_hint_y: 0.25
-					font_size: '20sp'
+					font_size: str(0.025*app.width) + 'sp'
 					text_size: self.size
 					valign: 'bottom'
 					halign: 'center'
@@ -80,7 +80,7 @@ Builder.load_string("""
 				Label:
 					id: next_steps_label
 					size_hint_y: 0.5
-					font_size: '20sp'
+					font_size: str(0.025*app.width) + 'sp'
 					text_size: self.size
 					valign: 'middle'
 					halign: 'center'
@@ -91,7 +91,7 @@ Builder.load_string("""
 				Label:
 					id: minutes_label
 					size_hint_y: 0.25
-					font_size: '20sp'
+					font_size: str(0.025*app.width) + 'sp'
 					text_size: self.size
 					valign: 'top'
 					halign: 'center'
@@ -101,20 +101,21 @@ Builder.load_string("""
 
 			# FOOTER
 			BoxLayout: 
-				padding: [10,0,10,10]
+				padding:[dp(0.0125)*app.width, 0, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
 				size_hint: (None, None)
-				height: dp(122)
-				width: dp(800)
+				height: dp(0.254166666667*app.height)
+				width: dp(1.0*app.width)
 				orientation: 'horizontal'
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(122)
-					width: dp(244.5)
-					padding: [0, 0, 184.5, 0]
+					height: dp(0.254166666667*app.height)
+					width: dp(0.305625*app.width)
+					padding:[0, 0, dp(0.230625)*app.width, 0]
 					Button:
+					    font_size: str(0.01875 * app.width) + 'sp'
 						size_hint: (None,None)
-						height: dp(52)
-						width: dp(60)
+						height: dp(0.108333333333*app.height)
+						width: dp(0.075*app.width)
 						background_color: hex('#F4433600')
 						center: self.parent.center
 						pos: self.parent.pos
@@ -132,63 +133,71 @@ Builder.load_string("""
 
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(122)
-					width: dp(291)
-					padding: [0,0,0,32]
+					height: dp(0.254166666667*app.height)
+					width: dp(0.36375*app.width)
+					padding:[0, 0, 0, dp(0.0666666666667)*app.height]
 					Button:
 						id: next_button
 						background_normal: "./asmcnc/skavaUI/img/next.png"
 						background_down: "./asmcnc/skavaUI/img/next.png"
 						border: [dp(14.5)]*4
 						size_hint: (None,None)
-						width: dp(291)
-						height: dp(79)
+						width: dp(0.36375*app.width)
+						height: dp(0.164583333333*app.height)
 						on_press: root.next_screen()
 						text: 'Next...'
-						font_size: '30sp'
+						font_size: str(0.0375*app.width) + 'sp'
 						color: hex('#f9f9f9ff')
 						markup: True
 						center: self.parent.center
 						pos: self.parent.pos
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(122)
-					width: dp(244.5)
-					padding: [193.5, 0, 0, 0]
+					height: dp(0.254166666667*app.height)
+					width: dp(0.305625*app.width)
+					padding:[dp(0.241875)*app.width, 0, 0, 0]
 
 
 
-""")
+"""
+)
+
 
 class WelcomeTextScreen(Screen):
+    def __init__(self, **kwargs):
+        super(WelcomeTextScreen, self).__init__(**kwargs)
+        self.start_seq = kwargs["start_sequence"]
+        self.sm = kwargs["screen_manager"]
+        self.l = kwargs["localization"]
+        self.update_strings()
 
+    def next_screen(self):
+        self.update_seen()
+        self.start_seq.next_in_sequence()
 
-	def __init__(self, **kwargs):
-		super(WelcomeTextScreen, self).__init__(**kwargs)
-		self.start_seq=kwargs['start_sequence']
-		self.sm=kwargs['screen_manager']
-		self.l=kwargs['localization']
-		self.update_strings()
+    def prev_screen(self):
+        self.start_seq.prev_in_sequence()
 
-	def next_screen(self):
-		self.update_seen()
-		self.start_seq.next_in_sequence()
+    def update_strings(self):
+        self.header_label.text = self.l.get_str("Welcome to SmartBench")
+        self.thankyou_label.text = self.l.get_str(
+            "Thank you for purchasing SmartBench."
+        )
+        self.next_steps_label.text = self.l.get_str(
+            "Please follow the next steps to set up your Console, and complete your warranty registration process."
+        )
+        self.minutes_label.text = self.l.get_str("It will only a take a few minutes.")
+        self.next_button.text = self.l.get_str("Next") + "..."
 
-	def prev_screen(self):
-		self.start_seq.prev_in_sequence()
-
-	def update_strings(self):
-		self.header_label.text = self.l.get_str("Welcome to SmartBench")
-		self.thankyou_label.text = self.l.get_str("Thank you for purchasing SmartBench.")
-		self.next_steps_label.text = self.l.get_str("Please follow the next steps to set up your Console, and complete your warranty registration process.")
-		self.minutes_label.text = self.l.get_str("It will only a take a few minutes.")
-		self.next_button.text = self.l.get_str("Next") + "..."
-
-	def update_seen(self):
-		show_user_welcome_app = (os.popen('grep "show_user_welcome_app" /home/pi/easycut-smartbench/src/config.txt').read())
-
-		if not show_user_welcome_app:
-			os.system("sudo sed -i -e '$ashow_user_welcome_app=False' /home/pi/easycut-smartbench/src/config.txt")
-
-		elif 'True' in show_user_welcome_app:
-			os.system('sudo sed -i "s/show_user_welcome_app=True/show_user_welcome_app=False/" /home/pi/easycut-smartbench/src/config.txt')
+    def update_seen(self):
+        show_user_welcome_app = os.popen(
+            'grep "show_user_welcome_app" /home/pi/easycut-smartbench/src/config.txt'
+        ).read()
+        if not show_user_welcome_app:
+            os.system(
+                "sudo sed -i -e '$ashow_user_welcome_app=False' /home/pi/easycut-smartbench/src/config.txt"
+            )
+        elif "True" in show_user_welcome_app:
+            os.system(
+                'sudo sed -i "s/show_user_welcome_app=True/show_user_welcome_app=False/" /home/pi/easycut-smartbench/src/config.txt'
+            )
