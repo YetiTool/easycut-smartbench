@@ -4,7 +4,7 @@ from engine import GCodeEngine
 class EngineTests(unittest.TestCase):
     def setUp(self):
 
-        class cutter:
+        class Cutter:
             def __init__(self):
                 self.diameter = 0
                 
@@ -21,7 +21,7 @@ class EngineTests(unittest.TestCase):
             # def get_cutter_diameter(self):
             #     return self.cutter_diameter
 
-        dummy_cutter = cutter()
+        dummy_cutter = Cutter()
         dummy_config = Config(active_cutter = dummy_cutter)
         self.engine = GCodeEngine(dummy_config)
 
