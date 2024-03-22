@@ -366,7 +366,9 @@ class DrywallCutterScreen(Screen):
         self.drywall_shape_display_widget.config_name_label.text = file_name
 
         # Set datum when loading a new config
-        self.m.set_datum(x=self.dwt_config.active_config.datum_position.x, y=self.dwt_config.active_config.datum_position.y, relative=True)
+        dx = self.dwt_config.active_config.datum_position.x - self.m.get_dollar_setting(130) + self.m.limit_switch_safety_distance + 5
+        dy = self.dwt_config.active_config.datum_position.y - self.m.get_dollar_setting(131) + self.m.limit_switch_safety_distance + self.m.get_dollar_setting(27) - self.m.limit_switch_safety_distance
+        self.m.set_datum(x=dx, y=dy, relative=True)
 
         self.apply_active_config()
 
