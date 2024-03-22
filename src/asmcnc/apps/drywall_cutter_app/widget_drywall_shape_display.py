@@ -397,7 +397,7 @@ class DrywallShapeDisplay(Widget):
 
         self.m.s.bind(m_state=self.display_machine_state)
 
-        Clock.schedule_interval(self.set_datum_in_config_with_m_wco, 0.1)
+        # Clock.schedule_interval(self.set_datum_in_config_with_m_wco, 0.1)
 
     def update_x_coord(self, instance, value):
         '''
@@ -615,7 +615,7 @@ class DrywallShapeDisplay(Widget):
                 x_dim = float(self.x_input.text or 0) + tool_offset_value
         elif current_shape == 'line':
             x_min = y_min = 0
-            if "horizontal" in self.shape_dims_image.source:
+            if "horizontal" in self.dwt_config.active_config.rotation:
                 x_dim = 0
                 y_dim = float(self.l_input.text or 0)
             else:
@@ -720,7 +720,7 @@ class DrywallShapeDisplay(Widget):
             self.y_input_validation_label.opacity = 0
 
         if current_shape == 'line':
-            if "horizontal" in self.shape_dims_image.source:
+            if "horizontal" in self.dwt_config.active_config.rotation:
                 if float(self.l_input.text or 0) > y_practical_range:
                     self.l_input_validation_label.text = 'MAX: ' + str(y_practical_range)
                     self.l_input_validation_label.opacity = 1
