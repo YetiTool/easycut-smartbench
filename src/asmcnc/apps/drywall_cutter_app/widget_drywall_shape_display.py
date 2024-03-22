@@ -642,15 +642,19 @@ class DrywallShapeDisplay(Widget):
         # Set bumper colours based on whether anything crosses a boundary, and show validation labels
         if x_min_clearance < 0:
             self.bumper_bottom_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_bottom_red.png"
-            self.x_datum_validation_label.text = 'MIN: ' + str(round(abs(x_min_clearance) + current_x, 2))
-            self.x_datum_validation_label.opacity = 1
+            x_datum_min = round(abs(x_min_clearance) + current_x, 2)
+            if x_datum_min > 0:
+                self.x_datum_validation_label.text = 'MIN: ' + str(x_datum_min)
+                self.x_datum_validation_label.opacity = 1
         else:
             self.bumper_bottom_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_bottom_green.png"
 
         if y_min_clearance < 0:
             self.bumper_right_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_right_red.png"
-            self.y_datum_validation_label.text = 'MIN: ' + str(round(abs(y_min_clearance) + current_y, 2))
-            self.y_datum_validation_label.opacity = 1
+            y_datum_min = round(abs(y_min_clearance) + current_y, 2)
+            if y_datum_min > 0:
+                self.y_datum_validation_label.text = 'MIN: ' + str(y_datum_min)
+                self.y_datum_validation_label.opacity = 1
         else:
             self.bumper_right_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_right_green.png"
 
