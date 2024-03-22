@@ -368,6 +368,8 @@ class GCodeEngine():
 
     #Add datum to each x and y move command
     def apply_datum_offset(self, gcode_lines, x_adjustment, y_adjustment):
+        if x_adjustment == 0 and y_adjustment == 0:
+            return gcode_lines
         adjusted_lines = []
         for line in gcode_lines:
             if line.startswith("G1Z") or line.startswith("G1 Z"):
