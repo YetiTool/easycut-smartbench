@@ -2,7 +2,7 @@
 (Z safe distance: 5.080)
 (Final part x dim: 1250.0)
 (Final part y dim: 640.0)
-(x min: -3.0)
+(x min: -4.0)
 (y min: 0.0)
 
 (VECTRIC POST REVISION)
