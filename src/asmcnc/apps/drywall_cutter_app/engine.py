@@ -39,7 +39,7 @@ class GCodeEngine():
         self.y = 1  # Identifier for use in arrays
         self.custom_gcode_shapes = ["geberit"]  # List of custom shapes that require gcode files
         if pu is not None:
-            self.source_folder_path = pu.get_path("drywall_cutter_app/gcode")  # Path to the gcode files
+            self.source_folder_path = pu.get_path("drywall_cutter_app/gcode")  # Path to the gcode files.
         else:
             self.source_folder_path = "/gcode/"
 
@@ -280,9 +280,11 @@ class GCodeEngine():
 
     #Return lines in appropriate gcode file
     def find_and_read_gcode_file(self, directory, shape_type, tool_diameter):
+        print("Searching for gcode file: %s" % shape_type)
         for file in os.listdir(directory):
             filename = file.lower().strip()
             if shape_type in filename and str(tool_diameter)[:-2] + "mm" in filename:
+                print("Found gcode file: %s" % filename)
                 file_path = os.path.join(directory, filename)
                 if os.path.exists(file_path):
                     try:
@@ -290,8 +292,7 @@ class GCodeEngine():
                             return file.readlines()
                     except IOError:
                         print("An error occurred while reading the Gcode file")
-                else:
-                    raise IOError("Gcode file not found")
+        raise IOError("Gcode file not found")
 
     # Scrape through gcode and replace feedrate, plungerate and spindle speed
     def adjust_feeds_and_speeds(self, gcode_lines, feedrate, plungerate, spindle_speed):
@@ -327,6 +328,9 @@ class GCodeEngine():
         cut_depth_value = None
         z_safe_distance_value = None
 
+        if not gcode_lines:
+            raise Exception("Gcode file is empty.")
+
         for string in gcode_lines:
             if cut_depth_value is None:
                 cut_depth_match = re.search(cut_depth_pattern, string, re.IGNORECASE)
@@ -340,6 +344,9 @@ class GCodeEngine():
 
             if cut_depth_value and z_safe_distance_value:
                 break  # Exit the loop once both values have been found
+
+        if cut_depth_value is None or z_safe_distance_value is None:
+            raise Exception("Unable to gather cut depth and Z safe distance data.")
 
         return cut_depth_value, z_safe_distance_value
 
@@ -564,7 +571,7 @@ class GCodeEngine():
             # Read in data
             gcode_lines = self.find_and_read_gcode_file(self.source_folder_path, self.config.active_config.shape_type, self.config.active_cutter.diameter)
             gcode_cut_depth, gcode_z_safe_distance = self.extract_cut_depth_and_z_safe_distance(gcode_lines)
-            x_size, y_size = self.read_in_custom_shape_dimentions(gcode_lines)
+            x_size, y_size, _, _, = self.read_in_custom_shape_dimensions(gcode_lines)
             
             # Remove header info
             gcode_lines = gcode_lines[next((i for i, s in enumerate(gcode_lines) if re.search(r"T[1-9]", s)), None):]
@@ -584,6 +591,7 @@ class GCodeEngine():
 
             tool_radius = self.config.active_cutter.diameter / 2
             
+            # Add partoff cut
             partoff_start_coordinate = [(-1 * tool_radius) + self.config.active_config.datum_position.x,
                                          float(y_size) + tool_radius + self.config.active_config.datum_position.y]
             partoff_end_coordinate = [tool_radius + float(x_size) + self.config.active_config.datum_position.x,
