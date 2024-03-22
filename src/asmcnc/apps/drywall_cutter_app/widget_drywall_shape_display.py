@@ -369,6 +369,11 @@ class DrywallShapeDisplay(Widget):
         self.engine = kwargs['engine']
         self.kb = kwargs['kb']
 
+        self.x_coord = 0
+        self.y_coord = 0
+        self.m.s.bind(m_x=self.update_x_coord)
+        self.m.s.bind(m_y=self.update_y_coord)
+
         self.d_input.bind(focus=self.text_input_change) # Diameter of circle
         self.l_input.bind(focus=self.text_input_change) # Length of line
         self.r_input.bind(focus=self.text_input_change) # Radius of corners
@@ -392,8 +397,21 @@ class DrywallShapeDisplay(Widget):
 
         self.m.s.bind(m_state=self.display_machine_state)
 
-        Clock.schedule_interval(self.check_datum_and_extents, 0.1)
-        Clock.schedule_interval(self.set_datum_in_config_with_m_wco, 0.1)
+        # Clock.schedule_interval(self.set_datum_in_config_with_m_wco, 0.1)
+
+    def update_x_coord(self, instance, value):
+        '''
+        Is called when m_x in serial_connection changes. E.g. machine jogging
+        '''
+        self.x_coord = value
+        self.check_datum_and_extents()
+
+    def update_y_coord(self, instance, value):
+        '''
+        Is called when m_y in serial_connection changes. E.g. machine jogging
+        '''
+        self.y_coord = value
+        self.check_datum_and_extents()
 
     def select_shape(self, shape, rotation, swap_lengths=False):
         shape = shape.lower() # in case it's a test config with a capital letter
@@ -533,7 +551,7 @@ class DrywallShapeDisplay(Widget):
         if self.dwt_config.active_config.datum_position.y != self.m.y_wco():
             self.dwt_config.active_config.datum_position.y = self.m.y_wco()
 
-    def check_datum_and_extents(self, dt):
+    def check_datum_and_extents(self):
         # All maths in this function from Ed, documented here https://docs.google.com/spreadsheets/d/1X37CWF8bsXeC0dY-HsbwBu_QR6N510V-5aPTnxwIR6I/edit#gid=677510108
 
         # DATUM/POSITION COORDINATES
@@ -544,16 +562,16 @@ class DrywallShapeDisplay(Widget):
         # x_coord = self.m.x_wco()
         # y_coord = self.m.y_wco()
 
-        x_coord = self.m.mpos_x()
-        y_coord = self.m.mpos_y()
+        # x and y coord will be retrieved via event
+
 
         # REST OF THIS FUNCTION
 
         # Get current x/y values & shape clearances
         current_shape = self.dwt_config.active_config.shape_type.lower()
-        current_x, current_y = self.get_current_x_y(x_coord, y_coord)
+        current_x, current_y = self.get_current_x_y(self.x_coord, self.y_coord)
         tool_offset_value = self.tool_offset_value()
-        x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance = self.get_x_y_clearances(current_shape, x_coord, y_coord, tool_offset_value)
+        x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance = self.get_x_y_clearances(current_shape, self.x_coord, self.y_coord, tool_offset_value)
 
         # Update canvas elements
         self.set_datum_position_label(current_x, current_y)
@@ -597,7 +615,7 @@ class DrywallShapeDisplay(Widget):
                 x_dim = float(self.x_input.text or 0) + tool_offset_value
         elif current_shape == 'line':
             x_min = y_min = 0
-            if "horizontal" in self.shape_dims_image.source:
+            if "horizontal" in self.dwt_config.active_config.rotation:
                 x_dim = 0
                 y_dim = float(self.l_input.text or 0)
             else:
@@ -702,7 +720,7 @@ class DrywallShapeDisplay(Widget):
             self.y_input_validation_label.opacity = 0
 
         if current_shape == 'line':
-            if "horizontal" in self.shape_dims_image.source:
+            if "horizontal" in self.dwt_config.active_config.rotation:
                 if float(self.l_input.text or 0) > y_practical_range:
                     self.l_input_validation_label.text = 'MAX: ' + str(y_practical_range)
                     self.l_input_validation_label.opacity = 1
