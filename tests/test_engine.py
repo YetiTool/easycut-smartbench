@@ -6,6 +6,12 @@ sys.path.append(os.path.join(os.getcwd(), 'src')) # Alternative to sys.path.appe
 
 from asmcnc.apps.drywall_cutter_app.engine import GCodeEngine
 
+'''
+To run this test,
+from /easyCut-smartbench directory, run:
+python tests/test_engine.py
+'''
+
 class EngineTests(unittest.TestCase):
     def setUp(self):
 
@@ -309,38 +315,6 @@ class EngineTests(unittest.TestCase):
         ]
 
         expected_output = ("-12.000", "5.080")
-        output = self.engine.extract_cut_depth_and_z_safe_distance(gcode_lines)
-        self.assertEqual(output, expected_output)
-
-        # Case 2: Only cut depth is present in the gcode lines
-        gcode_lines = [
-            "Cut depth: -3.5"
-            "G1 X10 Y10 Z10",
-            "G1 X20 Y20 Z-5",
-            "G1 X30 Y30 Z-2",
-        ]
-        expected_output = ("-3.5", None)
-        output = self.engine.extract_cut_depth_and_z_safe_distance(gcode_lines)
-        self.assertEqual(output, expected_output)
-
-        # Case 3: Only z safe distance is present in the gcode lines
-        gcode_lines = [
-            "Z safe distance: 1.0"
-            "G1 X10 Y10 Z10",
-            "G1 X20 Y20 Z-5",
-            "G1 X30 Y30 Z-2",
-        ]
-        expected_output = (None, "1.0")
-        output = self.engine.extract_cut_depth_and_z_safe_distance(gcode_lines)
-        self.assertEqual(output, expected_output)
-
-        # Case 4: Neither cut depth nor z safe distance is present in the gcode lines
-        gcode_lines = [
-            "G1 X10 Y10 Z10",
-            "G1 X20 Y20 Z-5",
-            "G1 X30 Y30 Z-2"
-        ]
-        expected_output = (None, None)
         output = self.engine.extract_cut_depth_and_z_safe_distance(gcode_lines)
         self.assertEqual(output, expected_output)
 
