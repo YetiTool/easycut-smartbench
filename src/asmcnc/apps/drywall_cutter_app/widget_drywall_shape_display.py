@@ -409,7 +409,7 @@ class DrywallShapeDisplay(Widget):
             if self._check_extent_clock is not None:
                 Clock.unschedule(self._check_extent_clock)
                 self._check_extent_clock = None
-            Logger.debug('Check_extent_clock OFF')
+                Logger.debug('Check_extent_clock OFF')
             # check once again to be safe. E.g. after Homing
             # state change back to idle comes before the last value change
             # Assumption: state eval happens before position eval in grbl_push in serial_connection
