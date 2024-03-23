@@ -702,18 +702,20 @@ class DrywallShapeDisplay(Widget):
         if current_shape in ['square', 'rectangle']:
             x_limit = x_practical_range
             y_limit = y_practical_range
-            r_limit = min(x_limit, y_limit) / 2
-            # Because square is limited by the smaller dimension
-            square_limit = min(x_limit, y_limit)
+            dims = self.dwt_config.active_config.canvas_shape_dims
 
             if current_shape == 'square':
                 self.x_input_validation_label.opacity = 0
+                # Because square is limited by the smaller dimension
+                square_limit = min(x_limit, y_limit)
+                r_limit = dims.y / 2
                 if float(self.y_input.text or 0) > square_limit:
                     self.y_input_validation_label.text = 'MAX: ' + str(square_limit)
                     self.y_input_validation_label.opacity = 1
                 else:
                     self.y_input_validation_label.opacity = 0
             else:
+                r_limit = min(dims.x, dims.y) / 2
                 if float(self.x_input.text or 0) > x_limit:
                     self.x_input_validation_label.text = 'MAX: ' + str(x_limit)
                     self.x_input_validation_label.opacity = 1
