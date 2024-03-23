@@ -1,6 +1,10 @@
+import threading
+
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
+
+from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.core_UI.components import float_input  # Required for the builder string
 import re
 
@@ -369,10 +373,9 @@ class DrywallShapeDisplay(Widget):
         self.engine = kwargs['engine']
         self.kb = kwargs['kb']
 
-        self.x_coord = 0
-        self.y_coord = 0
-        self.m.s.bind(m_x=self.update_x_coord)
-        self.m.s.bind(m_y=self.update_y_coord)
+        self._check_extent_clock = None
+        self._check_lock = threading.Lock()
+        self.m.s.bind(m_state=lambda i, value: self.update_state(value))
 
         self.d_input.bind(focus=self.text_input_change) # Diameter of circle
         self.l_input.bind(focus=self.text_input_change) # Length of line
@@ -395,23 +398,22 @@ class DrywallShapeDisplay(Widget):
         self.unit_switch.canvas.children[5].source = "./asmcnc/apps/drywall_cutter_app/img/unit_toggle.png"
         self.unit_switch.bind(active=self.toggle_units)
 
-        self.m.s.bind(m_state=self.display_machine_state)
-
         # Clock.schedule_interval(self.set_datum_in_config_with_m_wco, 0.1)
 
-    def update_x_coord(self, instance, value):
-        '''
-        Is called when m_x in serial_connection changes. E.g. machine jogging
-        '''
-        self.x_coord = value
-        self.check_datum_and_extents()
-
-    def update_y_coord(self, instance, value):
-        '''
-        Is called when m_y in serial_connection changes. E.g. machine jogging
-        '''
-        self.y_coord = value
-        self.check_datum_and_extents()
+    def update_state(self, value):
+        self.machine_state_label.text = value
+        if value in ['Jog', 'Run']:
+            self._check_extent_clock = Clock.schedule_interval(lambda dt: self.check_datum_and_extents(), 0.1)
+            Logger.debug('Check_extent_clock ON')
+        else:
+            if self._check_extent_clock is not None:
+                Clock.unschedule(self._check_extent_clock)
+                self._check_extent_clock = None
+            Logger.debug('Check_extent_clock OFF')
+            # check once again to be safe. E.g. after Homing
+            # state change back to idle comes before the last value change
+            # Assumption: state eval happens before position eval in grbl_push in serial_connection
+            Clock.schedule_once(lambda dt: self.check_datum_and_extents(), 0.1)
 
     def select_shape(self, shape, rotation, swap_lengths=False):
         shape = shape.lower() # in case it's a test config with a capital letter
@@ -543,14 +545,6 @@ class DrywallShapeDisplay(Widget):
         instance.active = True
         # self.dwt_config.on_parameter_change('units', 'mm' if value else 'inch')
 
-
-    def set_datum_in_config_with_m_wco(self, dt):
-        if self.dwt_config.active_config.datum_position.x != self.m.x_wco():
-            self.dwt_config.active_config.datum_position.x = self.m.x_wco()
-
-        if self.dwt_config.active_config.datum_position.y != self.m.y_wco():
-            self.dwt_config.active_config.datum_position.y = self.m.y_wco()
-
     def check_datum_and_extents(self):
         # All maths in this function from Ed, documented here https://docs.google.com/spreadsheets/d/1X37CWF8bsXeC0dY-HsbwBu_QR6N510V-5aPTnxwIR6I/edit#gid=677510108
 
@@ -563,19 +557,25 @@ class DrywallShapeDisplay(Widget):
         # y_coord = self.m.y_wco()
 
         # x and y coord will be retrieved via event
+        if self._check_lock.locked():
+            Logger.debug('LOCKED')
 
+        with self._check_lock:
 
-        # REST OF THIS FUNCTION
+            self.x_coord = self.m.s.m_x
+            self.y_coord = self.m.s.m_y
 
-        # Get current x/y values & shape clearances
-        current_shape = self.dwt_config.active_config.shape_type.lower()
-        current_x, current_y = self.get_current_x_y(self.x_coord, self.y_coord)
-        tool_offset_value = self.tool_offset_value()
-        x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance = self.get_x_y_clearances(current_shape, self.x_coord, self.y_coord, tool_offset_value)
+            # REST OF THIS FUNCTION
 
-        # Update canvas elements
-        self.set_datum_position_label(current_x, current_y)
-        self.update_bumpers_and_validation_labels(current_shape, current_x, current_y, x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance)
+            # Get current x/y values & shape clearances
+            current_shape = self.dwt_config.active_config.shape_type.lower()
+            current_x, current_y = self.get_current_x_y(self.x_coord, self.y_coord)
+            tool_offset_value = self.tool_offset_value()
+            x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance = self.get_x_y_clearances(current_shape, self.x_coord, self.y_coord, tool_offset_value)
+
+            # Update canvas elements
+            self.set_datum_position_label(current_x, current_y)
+            self.update_bumpers_and_validation_labels(current_shape, current_x, current_y, x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance)
 
     # Check_datum_and_extents sub-functions below this comment:
 
@@ -739,5 +739,3 @@ class DrywallShapeDisplay(Widget):
         else:
             self.l_input_validation_label.opacity = 0
 
-    def display_machine_state(self, obj, value):
-        self.machine_state_label.text = value
