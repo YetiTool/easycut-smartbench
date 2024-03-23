@@ -579,9 +579,22 @@ class DrywallShapeDisplay(Widget):
 
     # Check_datum_and_extents sub-functions below this comment:
 
-    def get_current_x_y(self, x_coord, y_coord):
-        current_x = round(x_coord + (self.m.get_dollar_setting(130) - self.m.limit_switch_safety_distance) - self.m.laser_offset_tool_clearance_to_access_edge_of_sheet, 2)
-        current_y = round(y_coord + (self.m.get_dollar_setting(131) - self.m.limit_switch_safety_distance) - (self.m.get_dollar_setting(27) - self.m.limit_switch_safety_distance), 2)
+    def get_current_x_y(self, x_coord, y_coord, revert=False):
+        """
+        converts machine_coordinates to and from dwt_coordinates
+        revert=False => machine -> dwt (for labels and configuration files)
+        revert=True => dwt -> machine (for set_datum())
+        """
+        offset_x = round(self.m.get_dollar_setting(130)
+                          - self.m.limit_switch_safety_distance
+                          - self.m.laser_offset_tool_clearance_to_access_edge_of_sheet, 2)
+        offset_y = round(self.m.get_dollar_setting(131) - self.m.get_dollar_setting(27), 2)
+        if revert:
+            current_x = x_coord - offset_x
+            current_y = y_coord - offset_y
+        else:
+            current_x = x_coord + offset_x
+            current_y = y_coord + offset_y
         return current_x, current_y
 
     def set_datum_position_label(self, current_x, current_y):
