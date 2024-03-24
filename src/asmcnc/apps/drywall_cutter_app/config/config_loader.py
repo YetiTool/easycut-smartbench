@@ -13,6 +13,7 @@ temp_dir = os.path.join(current_dir, 'temp')
 
 TEMP_CONFIG_PATH = os.path.join(temp_dir, 'temp_config.json')
 DEBUG_MODE = False
+INDENT_VALUE = "    "
 
 
 def debug(func):
@@ -24,6 +25,47 @@ def debug(func):
 
     return wrapper
 
+
+def get_display_preview(json_obj):
+    preview = get_shape_type(json_obj)
+    preview += "Units: " + json_obj['units'] + "\n"
+    #preview += "Rotation: " + json_obj['rotation'] + "\n"
+    preview += "Canvas shape dims: \n"
+    preview += get_shape_dimensions(json_obj)
+    preview += "Cutter type: " + json_obj['cutter_type'][:-5] + "\n"
+    preview += "Toolpath offset: " + json_obj['toolpath_offset'] + "\n"
+    preview += "Cutting depths: \n"
+    preview += INDENT_VALUE + "Material thickness: " + str(json_obj['cutting_depths']['material_thickness']) + "\n"
+    preview += INDENT_VALUE + "Bottom offset: " + str(json_obj['cutting_depths']['bottom_offset']) + "\n"
+    preview += INDENT_VALUE + "Auto pass: " + str(json_obj['cutting_depths']['auto_pass']) + "\n"
+    preview += INDENT_VALUE + "Depth per pass: " + str(json_obj['cutting_depths']['depth_per_pass']) + "\n"
+    preview += "Datum position: \n"
+    preview += INDENT_VALUE + "X: " + str(json_obj['datum_position']['x']) + "\n"
+    preview += INDENT_VALUE + "Y: " + str(json_obj['datum_position']['y']) + "\n"
+    return preview
+
+
+def get_shape_type(json_obj):
+    if json_obj['shape_type'] in ['line', 'rectangle']:
+        return "Shape type: " + json_obj['rotation'] + " " + json_obj['shape_type'] + "\n"
+    else:
+        return "Shape type: " + json_obj['shape_type'] + "\n"
+
+def get_shape_dimensions(json_obj):
+    if json_obj['shape_type'] == 'rectangle':
+        dims =  INDENT_VALUE + "X: " + str(json_obj['canvas_shape_dims']['x']) + "\n"
+        dims += INDENT_VALUE + "Y: " + str(json_obj['canvas_shape_dims']['y']) + "\n"
+        dims += INDENT_VALUE + "R: " + str(json_obj['canvas_shape_dims']['r']) + "\n"
+    elif json_obj['shape_type'] == 'square':
+        dims =  INDENT_VALUE + "Y: " + str(json_obj['canvas_shape_dims']['y']) + "\n"
+        dims += INDENT_VALUE + "R: " + str(json_obj['canvas_shape_dims']['r']) + "\n"
+    elif json_obj['shape_type'] == 'circle':
+        dims = INDENT_VALUE + "D: " + str(json_obj['canvas_shape_dims']['d']) + "\n"
+    elif json_obj['shape_type'] == 'line':
+        dims = INDENT_VALUE + "L: " + str(json_obj['canvas_shape_dims']['l']) + "\n"
+    else:
+        dims = ""
+    return dims
 
 class DWTConfig(object):
     active_config = None  # type: config_classes.Configuration
@@ -131,10 +173,28 @@ class DWTConfig(object):
         :param config_name: The name of to save the configuration file as.
         """
         file_path = os.path.join(configurations_dir, config_name)
-
+        self.cleanup_active_config()
         with open(file_path, 'w') as f:
             json.dump(self.active_config, f, indent=4, default=lambda o: o.__dict__)
 
+    def cleanup_active_config(self):
+        if self.active_config.shape_type == 'rectangle':
+            self.active_config.canvas_shape_dims.d = 0
+            self.active_config.canvas_shape_dims.l = 0
+        elif self.active_config.shape_type == 'square':
+            self.active_config.canvas_shape_dims.x = 0
+            self.active_config.canvas_shape_dims.d = 0
+            self.active_config.canvas_shape_dims.l = 0
+        elif self.active_config.shape_type == 'circle':
+            self.active_config.canvas_shape_dims.x = 0
+            self.active_config.canvas_shape_dims.y = 0
+            self.active_config.canvas_shape_dims.r = 0
+            self.active_config.canvas_shape_dims.l = 0
+        elif self.active_config.shape_type == 'line':
+            self.active_config.canvas_shape_dims.x = 0
+            self.active_config.canvas_shape_dims.y = 0
+            self.active_config.canvas_shape_dims.r = 0
+            self.active_config.canvas_shape_dims.d = 0
     @debug
     def load_cutter(self, cutter_name):
         # type (str) -> None
@@ -154,23 +214,26 @@ class DWTConfig(object):
     @staticmethod
     @debug
     def get_available_cutter_names():
-        # type () -> dict{str: str}
+        # type () -> dict{str: dict{str: str}}
         """
         :return: A list of the available cutter names and their file names.
         """
         cutters = {}
-        for f_name in os.listdir(cutters_dir):
-            if not f_name.endswith('.json'):
+        for cutter_file in sorted(os.listdir(cutters_dir)):
+            if not cutter_file.endswith('.json'):
                 continue
 
-            file_path = os.path.join(cutters_dir, f_name)
+            file_path = os.path.join(cutters_dir, cutter_file)
 
             if os.path.isfile(file_path):
                 with open(file_path, 'r') as f:
                     cutter = json.load(f)
 
-                    if 'cutter_description' in cutter:
-                        cutters[cutter['cutter_description']] = f_name
+                    if 'cutter_description' in cutter and 'image_path' in cutter:
+                        cutters[cutter['cutter_description']] = {
+                            'cutter_path': cutter_file,
+                            'image_path': cutter['image_path']
+                        }
         return cutters
 
     @debug
@@ -221,6 +284,9 @@ class DWTConfig(object):
                 self.__set_new_configuration_label()
 
             setattr(self.active_config, parameter_name, parameter_value)
+
+        # update screen, check bumpers and so on:
+        self.screen_drywall_cutter.drywall_shape_display_widget.check_datum_and_extents()
 
     def __set_new_configuration_label(self):
         if self.screen_drywall_cutter:
