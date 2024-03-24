@@ -142,6 +142,8 @@ def join(folder, filename):
     Can be used for filepaths that don't exist yet.
     """
     return os.path.join(folder, filename).replace("\\", "/")
+
+
 # Common paths
 easycut_path = get_path("easycut-smartbench") # easycut-smartbench
 root_tests_path = get_path("easycut-smartbench/tests") # easycut-smartbench/tests

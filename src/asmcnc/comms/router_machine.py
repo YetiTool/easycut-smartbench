@@ -79,7 +79,7 @@ class RouterMachine(EventDispatcher):
     # PERSISTENT MACHINE VALUES
 
     ## PERSISTENT VALUES SETUP
-    smartbench_values_dir = os.path.join(path_utils.easycut_path, "src", "sb_values")
+    smartbench_values_dir = path_utils.sb_values_path or os.path.join(path_utils.easycut_path, "src", "sb_values")
 
     ### Individual files to hold persistent values
     set_up_options_file_path = path_utils.join(smartbench_values_dir, 'set_up_options.txt')
