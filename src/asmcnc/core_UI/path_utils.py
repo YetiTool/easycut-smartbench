@@ -149,3 +149,4 @@ asmcnc_path = get_path("asmcnc") # easycut-smartbench/src/asmcnc
 skava_ui_path = get_path("skavaUI") # easycut-smartbench/src/asmcnc/skavaUI
 skava_ui_img_path = get_path("skavaUI/img") # easycut-smartbench/src/asmcnc/skavaUI/img
 sb_values_path = get_path("sb_values")  # easycut-smartbench/src/sb_values
+above_easycut_path = os.path.dirname(easycut_path)
