@@ -38,6 +38,10 @@ class Keyboard(VKeyboard):
         self.qwertyKR_layout = os.path.join(dirname, "layouts", "qwertyKR.json")
         self.font_size = scaling_utils.get_scaled_width(20)
 
+        # self.background_color = [0, 0, 0, 1]
+        # self.key_background_color = [0, 0, 0, 0.1]
+        # self.key_background_normal = "./asmcnc/keyboard/images/Rectangle 238.png"
+
         try:
             if self.l.lang == self.l.ko:
                 self.font = self.l.korean_font
