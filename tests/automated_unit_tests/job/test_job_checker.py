@@ -56,7 +56,7 @@ class TestJobChecker(UnitTestBase):
         self._serial_connection_module.wco_z = -20.0
 
         with mock.patch("__builtin__.open", mock_open(read_data=rect_within_bounds)):
-            self.assertEqual([], self.job_checker.is_job_within_bounds("test"))
+            self.assertEqual([], self.job_checker.is_job_out_of_bounds("test"))
 
         rect_out_of_bounds = """
         G00 X0 Y0 F70
@@ -70,4 +70,4 @@ class TestJobChecker(UnitTestBase):
         """
 
         with mock.patch("__builtin__.open", mock_open(read_data=rect_out_of_bounds)):
-            self.assertEqual(3, len(self.job_checker.is_job_within_bounds("test")))
+            self.assertEqual(3, len(self.job_checker.is_job_out_of_bounds("test")))

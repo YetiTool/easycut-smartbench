@@ -7,6 +7,7 @@ from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
 
+from asmcnc.job.job_checker import JobChecker
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
 from asmcnc.apps.drywall_cutter_app import widget_drywall_shape_display
@@ -194,6 +195,8 @@ class DrywallCutterScreen(Screen):
         self.l = kwargs['localization']
         self.kb = kwargs['keyboard']
 
+        self.job_checker = JobChecker(self.m, self.l)
+
         self.engine = GCodeEngine(self.dwt_config)
 
         # XY move widget
@@ -342,7 +345,13 @@ class DrywallCutterScreen(Screen):
         self.sm.current = 'config_filesaver'
 
     def run(self):
-        self.engine.engine_run()
+        created_file = self.engine.engine_run()
+
+        out_of_bounds_reasons = self.job_checker.is_job_out_of_bounds(created_file)
+        if out_of_bounds_reasons:
+            for reason in out_of_bounds_reasons:
+                print(reason)
+
 
     def open_filechooser(self):
         if not self.sm.has_screen('config_filechooser'):

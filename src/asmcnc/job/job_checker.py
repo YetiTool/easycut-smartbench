@@ -55,7 +55,7 @@ class JobChecker(object):
             return (-(self.router_machine.z_wco() - bounding_box.range_z[0]),
                     self.router_machine.z_wco() + bounding_box.range_z[1])
 
-    def is_job_within_bounds(self, job_file_path):
+    def is_job_out_of_bounds(self, job_file_path):
         # type: (str) -> list[str]
         """
         Checks whether the job file fits within available boundary.
