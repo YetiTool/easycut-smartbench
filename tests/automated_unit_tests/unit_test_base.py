@@ -25,7 +25,7 @@ Run unit tests with: python -m unittest discover -s tests/automated_unit_tests
 
 
 class UnitTestBase(unittest.TestCase):
-    _serial_connection = None
+    _serial_connection_module = None
     _router_machine_module = None
     _localization_module = None
     _protocol_module = None

@@ -9,6 +9,7 @@ import traceback
 
 from enum import Enum
 from asmcnc.comms.logging_system.logging_system import Logger
+from asmcnc.core_UI import path_utils
 
 try:
     import pigpio
@@ -22,7 +23,7 @@ from asmcnc.comms import motors
 from asmcnc.skavaUI import popup_info
 
 from kivy.clock import Clock
-from kivy.properties import NumericProperty, BooleanProperty
+from kivy.properties import NumericProperty
 from kivy.event import EventDispatcher
 import os, time
 
@@ -78,24 +79,24 @@ class RouterMachine(EventDispatcher):
     # PERSISTENT MACHINE VALUES
 
     ## PERSISTENT VALUES SETUP
-    smartbench_values_dir = './sb_values/'
+    smartbench_values_dir = path_utils.sb_values_path
 
     ### Individual files to hold persistent values
-    set_up_options_file_path = smartbench_values_dir + 'set_up_options.txt'
-    z_touch_plate_thickness_file_path = smartbench_values_dir + 'z_touch_plate_thickness.txt'
-    calibration_settings_file_path = smartbench_values_dir + 'calibration_settings.txt'
-    z_head_maintenance_settings_file_path = smartbench_values_dir + 'z_head_maintenance_settings.txt'
-    z_head_laser_offset_file_path = smartbench_values_dir + 'z_head_laser_offset.txt'
-    spindle_brush_values_file_path = smartbench_values_dir + 'spindle_brush_values.txt'
-    spindle_cooldown_settings_file_path = smartbench_values_dir + 'spindle_cooldown_settings.txt'
-    spindle_cooldown_rpm_override_file_path = smartbench_values_dir + 'spindle_cooldown_rpm_override.txt'
-    stylus_settings_file_path = smartbench_values_dir + 'stylus_settings.txt'
-    spindle_health_check_file_path = smartbench_values_dir + 'spindle_health_check.txt'
-    device_label_file_path = '../../smartbench_name.txt' # this puts it above EC folder in filesystem
-    device_location_file_path = '../../smartbench_location.txt' # this puts it above EC folder in filesystem
+    set_up_options_file_path = path_utils.join(smartbench_values_dir, 'set_up_options.txt')
+    z_touch_plate_thickness_file_path = path_utils.join(smartbench_values_dir, 'z_touch_plate_thickness.txt')
+    calibration_settings_file_path = path_utils.join(smartbench_values_dir, 'calibration_settings.txt')
+    z_head_maintenance_settings_file_path = path_utils.join(smartbench_values_dir, 'z_head_maintenance_settings.txt')
+    z_head_laser_offset_file_path = path_utils.join(smartbench_values_dir, 'z_head_laser_offset.txt')
+    spindle_brush_values_file_path = path_utils.join(smartbench_values_dir, 'spindle_brush_values.txt')
+    spindle_cooldown_settings_file_path = path_utils.join(smartbench_values_dir, 'spindle_cooldown_settings.txt')
+    spindle_cooldown_rpm_override_file_path = path_utils.join(smartbench_values_dir, 'spindle_cooldown_rpm_override.txt')
+    stylus_settings_file_path = path_utils.join(smartbench_values_dir, 'stylus_settings.txt')
+    spindle_health_check_file_path = path_utils.join(smartbench_values_dir, 'spindle_health_check.txt')
+    device_label_file_path = path_utils.join(path_utils.above_easycut_path, 'smartbench_name.txt')
+    device_location_file_path = path_utils.join(path_utils.above_easycut_path, 'smartbench_location.txt')
 
     ## LOCALIZATION
-    persistent_language_path = smartbench_values_dir + 'user_language.txt'
+    persistent_language_path = path_utils.join(smartbench_values_dir, 'user_language.txt')
 
     ## PROBE SETTINGS
     z_lift_after_probing = 20.0
@@ -1191,36 +1192,35 @@ class RouterMachine(EventDispatcher):
 
         return rpm_to_set
 
-    def turn_on_spindle_for_data_read(self):
-        """
-        Turns on the spindle at 0 RPM. Used to read spindle data.
-
-        :return: None
-        """
-        self.turn_on_spindle(rpm=0)
-
-    def turn_on_spindle(self, rpm=12000, run_at_grbl_speed=False):
+    def turn_on_spindle(self, rpm=None):
         """
         This method sends the command 'M3' to the Z Head to turn on the spindle at a given speed.
 
-        No RPM compensation occurs in this command as this is captured and handled by compensate_spindle_speed_command() in the SerialConnection object
+        No RPM compensation occurs in this command as this is captured and handled by compensate_spindle_speed_command() in the SerialConnection object 
 
-        :param rpm: The RPM to turn the spindle on at. Defaults to 12,000.
-        :param run_at_grbl_speed: If True, the spindle will run at the last GRBL speed. Defaults to False.
-        :return: None
+        For use outside of router_machine.py
+
+        Args:
+            rpm (int, optional): The desired RPM (Rotations Per Minute) of the spindle. Defaults to None, which will be same as last set value (handled by GRBL).
+
+        Returns:
+            None
         """
-        if run_at_grbl_speed:
-            self.s.write_command("M3")
-        else:
-            self.s.write_command("M3 S" + str(rpm))
+
+        if rpm: # If a value is given, turn the spindle on at that speed
+            self.s.write_command('M3 S' + str(rpm))
+
+        else: # If no value is given, turn the spindle on at the last set value (handled by GRBL)
+            self.s.write_command('M3')
 
     def turn_off_spindle(self):
         """
         This method sends the command 'M5' to the Z Head to turn off the spindle.
 
-        :return: None
+        Returns:
+            None
         """
-        self.s.write_command("M5")
+        self.s.write_command('M5')
 
     def minimum_spindle_speed(self, spindle_voltage = None):
         """
@@ -1369,7 +1369,7 @@ class RouterMachine(EventDispatcher):
         Clock.schedule_once(lambda dt: self._grbl_soft_reset(), 1.5)
 
         # Sulk
-        Clock.schedule_once(lambda dt: self.turn_off_vacuum(), 2.0)
+        Clock.schedule_once(lambda dt: self.vac_off(), 2.0)
         Clock.schedule_once(lambda dt: self.set_led_colour('RED'),2.1)
 
     def resume_from_gcode_error(self):
@@ -1701,20 +1701,20 @@ class RouterMachine(EventDispatcher):
 
 # POSITONAL GETTERS
 
-    def x_pos_str(self): return str(self.s.m_x)
-    def y_pos_str(self): return str(self.s.m_y)
-    def z_pos_str(self): return str(self.s.m_z)
+    def x_pos_str(self): return self.s.m_x
+    def y_pos_str(self): return self.s.m_y
+    def z_pos_str(self): return self.s.m_z
 
     # 'Machine position'/mpos is the absolute position of the tooltip, wrt home
-    def mpos_x(self): return self.s.m_x
-    def mpos_y(self): return self.s.m_y
-    def mpos_z(self): return self.s.m_z
+    def mpos_x(self): return float(self.s.m_x)
+    def mpos_y(self): return float(self.s.m_y)
+    def mpos_z(self): return float(self.s.m_z)
 
     # 'Work position'/wpos is the position of the tooltip relative to the datum position set for the job
     # WPos = MPos - WCO.
-    def wpos_x(self): return self.s.m_x - self.x_wco()
-    def wpos_y(self): return self.s.m_y - self.y_wco()
-    def wpos_z(self): return self.s.m_z - self.z_wco()
+    def wpos_x(self): return float(self.s.m_x) - self.x_wco()
+    def wpos_y(self): return float(self.s.m_y) - self.y_wco()
+    def wpos_z(self): return float(self.s.m_z) - self.z_wco()
 
     # 'Work Co-ordinate offset'/wco is the definition of the datum position set for the job, wrt home
     # WPos = MPos - WCO
@@ -1864,9 +1864,19 @@ class RouterMachine(EventDispatcher):
     def quit_jog(self):
         self.s.write_realtime('\x85', altDisplayText = 'Quit jog')
 
+    def spindle_on(self):
+        self.s.write_command('M3 S12000')
+
+    def spindle_off(self):
+        self.s.write_command('M5')
+
     def cooldown_zUp_and_spindle_on(self):
-        self.turn_off_vacuum()
-        self.turn_on_spindle(self.spindle_cooldown_rpm)
+        self.s.write_command('AE')
+        if self.spindle_voltage == 230:
+            self.s.write_command('M3 S' + str(self.spindle_cooldown_rpm))
+        else:
+            cooldown_rpm = self.spindle_cooldown_rpm
+            self.s.write_command('M3 S' + str(cooldown_rpm))
         self.raise_z_axis_for_collet_access()
 
     def laser_on(self):
@@ -1903,19 +1913,11 @@ class RouterMachine(EventDispatcher):
     def go_to_jobstart_z(self):
         self.s.write_command('G0 G54 Z0')
 
-    def turn_on_vacuum(self):
-        """
-        Turns the vacuum on by sending the 'AE' command.
-        :return: None
-        """
-        self.s.write_command("AE")
+    def vac_on(self):
+        self.s.write_command('AE')
 
-    def turn_off_vacuum(self):
-        """
-        Turns the vacuum off by sending the 'AF' command.
-        :return: None
-        """
-        self.s.write_command("AF")
+    def vac_off(self):
+        self.s.write_command('AF')
 
     def go_x_datum(self):
         self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
@@ -1934,27 +1936,27 @@ class RouterMachine(EventDispatcher):
 
     def jog_spindle_to_laser_datum(self, axis):
 
-        if 'X' in axis:
+        if axis == 'X' or axis == 'XY' or axis == 'YX':
 
             # Keep this is for beta testing, as 
-            Logger.debug("Laser offset value: " + str(self.laser_offset_x_value))
-            Logger.debug("Pos value: " + str(self.s.m_x))
+            Logger.info("Laser offset value: " + str(self.laser_offset_x_value))
+            Logger.info("Pos value: " + str(self.mpos_x()))
 
-            Logger.debug("Try to move to: " + str(self.s.m_x + float(self.laser_offset_x_value)))
-            Logger.debug("Limit at: " + str(float(self.x_min_jog_abs_limit)))
+            Logger.info("Try to move to: " + str(self.mpos_x() + float(self.laser_offset_x_value)))
+            Logger.info("Limit at: " + str(float(self.x_min_jog_abs_limit)))
 
             # Check that movement is within bounds before jogging
-            if (self.s.m_x + float(self.laser_offset_x_value) <= float(self.x_max_jog_abs_limit)
-            and self.s.m_x + float(self.laser_offset_x_value) >= float(self.x_min_jog_abs_limit)):
+            if (self.mpos_x() + float(self.laser_offset_x_value) <= float(self.x_max_jog_abs_limit)
+            and self.mpos_x() + float(self.laser_offset_x_value) >= float(self.x_min_jog_abs_limit)):
 
                 self.jog_relative('X', self.laser_offset_x_value, 6000.0)
 
             else: return False
 
-        if 'Y' in axis:
+        if axis == 'Y' or axis == 'XY' or axis == 'YX':
             # Check that movement is within bounds before jogging
-            if (self.s.m_y + float(self.laser_offset_y_value) <= float(self.y_max_jog_abs_limit)
-            and self.s.m_y + float(self.laser_offset_y_value) >= float(self.y_min_jog_abs_limit)):
+            if (self.mpos_y() + float(self.laser_offset_y_value) <= float(self.y_max_jog_abs_limit)
+            and self.mpos_y() + float(self.laser_offset_y_value) >= float(self.y_min_jog_abs_limit)):
 
                 self.jog_relative('Y', self.laser_offset_y_value, 6000.0)
 
@@ -2233,7 +2235,7 @@ class RouterMachine(EventDispatcher):
         if self.state() == 'Idle':
             self.set_led_colour("WHITE")
             self.s.expecting_probe_result = True
-            probe_z_target =  -(self.grbl_z_max_travel) - self.s.m_z + 0.1 # 0.1 added to prevent rounding error triggering soft limit
+            probe_z_target =  -(self.grbl_z_max_travel) - self.mpos_z() + 0.1 # 0.1 added to prevent rounding error triggering soft limit
             probe_speed = self.z_probe_speed_fast if fast_probe else self.z_probe_speed
             self.fast_probing = fast_probe
             fast_travel_distance = 60  # mm to go fast and not probing yet
