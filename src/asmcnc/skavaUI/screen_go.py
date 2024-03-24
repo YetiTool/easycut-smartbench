@@ -30,6 +30,7 @@ from asmcnc.skavaUI import (
     widget_z_height,
     popup_info
 )
+from asmcnc.apps.drywall_cutter_app.config import config_loader
 
 Builder.load_string(
     """
@@ -525,7 +526,7 @@ class GoScreen(Screen):
             self.temp_suppress_prompts = False
 
     def show_hide_yp_container(self, use_sc2):
-        if use_sc2:
+        if use_sc2 or True:
             # Show yetipilot container
             self.job_progress_container.padding = [20.0/800.0*Window.width, 10.0/480.0*Window.height]
             self.yetipilot_container.size_hint_y = 1
@@ -534,13 +535,23 @@ class GoScreen(Screen):
             if (
                     self.m.is_spindle_health_check_active()
                     and not self.m.has_spindle_health_check_failed()
-            ):
+            ) or True:
                 if not self.yp_widget.parent:
                     self.yetipilot_container.add_widget(self.yp_widget)
                 if self.disabled_yp_widget.parent:
                     self.yetipilot_container.remove_widget(self.disabled_yp_widget)
                 self.yp_widget.switch.disabled = False
                 self.yp_widget.yp_cog_button.disabled = False
+                if "DRYWALLTEC" in self.m.smartbench_model() or True:
+                    cutter_diameters ={"8.0": "8 mm", "6.0": "6 mm"}
+                    self.yp_widget.switch.state = "down"
+                    self.yp.enable()
+                    dwt_config = config_loader.DWTConfig()
+                    print(dwt_config.active_cutter.diameter)
+                    chosen_profile = self.yp.get_profile("6 mm", "2 flute upcut spiral", "Drywall")
+                    self.yp.use_profile(chosen_profile)
+                    self.yp_widget.update_profile_selection()
+                    self.yp_widget.switch_reflects_yp()
             else:
                 if not self.disabled_yp_widget.parent:
                     self.yetipilot_container.add_widget(self.disabled_yp_widget)

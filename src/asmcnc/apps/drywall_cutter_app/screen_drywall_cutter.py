@@ -1,4 +1,4 @@
-import os
+import os, sys
 from datetime import datetime
 
 from kivy.lang import Builder
@@ -194,6 +194,7 @@ class DrywallCutterScreen(Screen):
         self.m = kwargs['machine']
         self.l = kwargs['localization']
         self.kb = kwargs['keyboard']
+        self.jd = kwargs['job']
 
         self.engine = GCodeEngine(self.dwt_config)
 
