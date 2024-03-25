@@ -90,7 +90,7 @@ class JobChecker(object):
                 self.localization.get_str(
                     "The job extent over-reaches the N axis at the home end."
                 ).replace("N", "X")
-                + "\n\n\t"
+                + "\n"
                 + self.localization.get_bold(
                     "Try positioning the machine's N datum further away from home."
                 ).replace("N", "X")
@@ -101,7 +101,7 @@ class JobChecker(object):
                 self.localization.get_str(
                     "The job extent over-reaches the N axis at the home end."
                 ).replace("N", "Y")
-                + "\n\n\t"
+                + "\n"
                 + self.localization.get_bold(
                     "Try positioning the machine's N datum further away from home."
                 ).replace("N", "Y")
@@ -112,7 +112,7 @@ class JobChecker(object):
                 self.localization.get_str(
                     "The job extent over-reaches the Z axis at the lower end."
                 )
-                + "\n\n\t"
+                + "\n"
                 + self.localization.get_bold(
                     "Try positioning the machine's Z datum higher up."
                 )
@@ -123,7 +123,7 @@ class JobChecker(object):
                 self.localization.get_str(
                     "The job extent over-reaches the N axis at the far end."
                 ).replace("N", "X")
-                + "\n\n\t"
+                + "\n"
                 + self.localization.get_bold(
                     "Try positioning the machine's N datum closer to home."
                 ).replace("N", "X")
@@ -134,7 +134,7 @@ class JobChecker(object):
                 self.localization.get_str(
                     "The job extent over-reaches the N axis at the far end."
                 ).replace("N", "Y")
-                + "\n\n\t"
+                + "\n"
                 + self.localization.get_bold(
                     "Try positioning the machine's N datum closer to home."
                 ).replace("N", "Y")
@@ -145,7 +145,7 @@ class JobChecker(object):
                 self.localization.get_str(
                     "The job extent over-reaches the Z axis at the upper end."
                 )
-                + "\n\n\t"
+                + "\n"
                 + self.localization.get_bold(
                     "Try positioning the machine's Z datum lower down."
                 )
