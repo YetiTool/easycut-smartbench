@@ -330,6 +330,8 @@ class DrywallCutterScreen(Screen):
         popup_info.PopupStop(self.m, self.sm, self.l)
 
     def quit_to_lobby(self):
+        self.set_return_screens()
+        self.jd.reset_values()
         self.sm.current = 'lobby'
 
     def simulate(self):
