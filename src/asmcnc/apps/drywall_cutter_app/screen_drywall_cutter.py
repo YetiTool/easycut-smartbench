@@ -7,6 +7,7 @@ from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
 
+from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.job.job_checker import JobChecker
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
@@ -347,10 +348,11 @@ class DrywallCutterScreen(Screen):
         if self.materials_popup.validate_inputs() and self.drywall_shape_display_widget.are_inputs_valid():
             output_file = self.engine.engine_run()
 
-            is_job_out_of_bounds = self.job_checker.is_job_out_of_bounds(output_file)
-            if is_job_out_of_bounds:
-                steps_to_validate = "\n".join(is_job_out_of_bounds)
-                popup_info.PopupError(self.sm, self.l, steps_to_validate)
+            is_job_out_of_bounds = self.show_steps_to_validate_popup(output_file)
+
+            if not is_job_out_of_bounds:
+                Logger.debug("DWT Validation successful, starting job...")
+                pass  # job start logic to go here
         else:
             m_popup_steps = self.materials_popup.get_steps_to_validate()
             s_widget_steps = self.drywall_shape_display_widget.get_steps_to_validate()
@@ -372,6 +374,7 @@ class DrywallCutterScreen(Screen):
         if is_job_out_of_bounds:
             steps_to_validate = "\n".join(is_job_out_of_bounds)
             popup_info.PopupError(self.sm, self.l, steps_to_validate)
+        return is_job_out_of_bounds
 
     def open_filechooser(self):
         if not self.sm.has_screen('config_filechooser'):
