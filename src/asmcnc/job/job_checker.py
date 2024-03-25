@@ -3,6 +3,11 @@ from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.comms.router_machine import RouterMachine, Axis
 from asmcnc.geometry.job_envelope import BoundingBox
 
+"""
+The logic for this module was taken from screen_check_job.py and has been cleaned up slightly,
+but going forward it would be nice to bulk out this module so it can be used in other places.
+"""
+
 
 class JobChecker(object):
     """Job checking module"""
