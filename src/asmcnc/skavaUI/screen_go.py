@@ -556,6 +556,8 @@ class GoScreen(Screen):
                     chosen_profile = self.yp.filter_available_profiles(cutter_diameter=cutter_diameter,material_type="Drywall")[0]
                     self.yp.use_profile(chosen_profile)
                     self.yp_widget.update_profile_selection()
+                    self.yp_widget.switch.state = "down"
+                    self.yp_widget.switch_reflects_yp()
             else:
                 if not self.disabled_yp_widget.parent:
                     self.yetipilot_container.add_widget(self.disabled_yp_widget)
