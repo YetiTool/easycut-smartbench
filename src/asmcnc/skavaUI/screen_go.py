@@ -528,7 +528,7 @@ class GoScreen(Screen):
             self.temp_suppress_prompts = False
 
     def show_hide_yp_container(self, use_sc2):
-        if use_sc2 or True:
+        if use_sc2:
             # Show yetipilot container
             self.job_progress_container.padding = [20.0/800.0*Window.width, 10.0/480.0*Window.height]
             self.yetipilot_container.size_hint_y = 1
@@ -537,7 +537,7 @@ class GoScreen(Screen):
             if (
                     self.m.is_spindle_health_check_active()
                     and not self.m.has_spindle_health_check_failed()
-            ) or True:
+            ):
                 if not self.yp_widget.parent:
                     self.yetipilot_container.add_widget(self.yp_widget)
                 if self.disabled_yp_widget.parent:
@@ -545,7 +545,7 @@ class GoScreen(Screen):
                 self.yp_widget.switch.disabled = False
                 self.yp_widget.yp_cog_button.disabled = False
 
-                if self.model_manager.is_machine_drywall() or True:
+                if self.model_manager.is_machine_drywall():
                     self.yp.enable()
 
                     dwt_config = config_loader.DWTConfig()
@@ -556,8 +556,6 @@ class GoScreen(Screen):
                     chosen_profile = self.yp.filter_available_profiles(cutter_diameter=cutter_diameter,material_type="Drywall")[0]
                     self.yp.use_profile(chosen_profile)
                     self.yp_widget.update_profile_selection()
-                    self.yp_widget.switch.state = "down"
-                    self.yp_widget.switch_reflects_yp()
             else:
                 if not self.disabled_yp_widget.parent:
                     self.yetipilot_container.add_widget(self.disabled_yp_widget)

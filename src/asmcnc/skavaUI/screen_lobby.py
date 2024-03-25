@@ -558,7 +558,7 @@ class LobbyScreen(Screen):
 
     def show_desired_apps(self):
         # If it's a SmartCNC machine, then show the drywalltec app instead of shapecutter
-        if self.model_manager.is_machine_drywall() or True:
+        if self.model_manager.is_machine_drywall():
             self.remove_everything_but(self.drywall_app_container)
             self.put_drywall_app_first()
         # Check that window.height is valid & being read in - otherwise will default to SC
