@@ -1,7 +1,7 @@
 {
   "cutter_description": "45 degree V-bit",
   "units": "mm",
-  "diameter": 8.0,
+  "diameter": 45,
   "material": "drywall",
   "cutting_spindle_speed": 2000,
   "cutting_feedrate": 500,

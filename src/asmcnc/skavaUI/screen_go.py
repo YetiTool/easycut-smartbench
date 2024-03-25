@@ -31,6 +31,7 @@ from asmcnc.skavaUI import (
     popup_info
 )
 from asmcnc.apps.drywall_cutter_app.config import config_loader
+from asmcnc.comms.model_manager import ModelManagerSingleton
 
 Builder.load_string(
     """
@@ -414,6 +415,7 @@ class GoScreen(Screen):
         self.speedOverride = widget_speed_override.SpeedOverride(
             machine=self.m, screen_manager=self.sm, database=self.database
         )
+        self.model_manager = ModelManagerSingleton()
 
         # Graphics commands
 
@@ -542,15 +544,19 @@ class GoScreen(Screen):
                     self.yetipilot_container.remove_widget(self.disabled_yp_widget)
                 self.yp_widget.switch.disabled = False
                 self.yp_widget.yp_cog_button.disabled = False
-                if "DRYWALLTEC" in self.m.smartbench_model() or True:
-                    cutter_diameters ={"8.0": "8 mm", "6.0": "6 mm"}
-                    self.yp_widget.switch.state = "down"
+
+                if self.model_manager.is_machine_drywall() or True:
                     self.yp.enable()
+
                     dwt_config = config_loader.DWTConfig()
-                    print(dwt_config.active_cutter.diameter)
-                    chosen_profile = self.yp.get_profile("6 mm", "2 flute upcut spiral", "Drywall")
+                    dwt_cutter_diameter = str(int(dwt_config.active_cutter.diameter))
+                    available_diameters = self.yp.get_sorted_cutter_diameters(self.yp.filter_available_profiles("Drywall"))
+                    cutter_diameter = next((x for x in available_diameters if dwt_cutter_diameter in x), None)
+
+                    chosen_profile = self.yp.filter_available_profiles(cutter_diameter=cutter_diameter,material_type="Drywall")[0]
                     self.yp.use_profile(chosen_profile)
                     self.yp_widget.update_profile_selection()
+                    self.yp_widget.switch.state = "down"
                     self.yp_widget.switch_reflects_yp()
             else:
                 if not self.disabled_yp_widget.parent:
