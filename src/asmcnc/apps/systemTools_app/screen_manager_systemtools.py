@@ -190,14 +190,12 @@ class ScreenManagerSystemTools(object):
                     os.system('sudo tar czf /media/usb/transfer.tar.gz -C /home/pi/easycut-smartbench/transfer_tmp .')
                 except Exception as e:
                     Logger.error(e)
-                    pass
                 try:
                     #clean up
                     Logger.info('Clean up...')
                     os.system('rm -r /home/pi/easycut-smartbench/transfer_tmp')
                 except Exception as e:
                     Logger.error('Could not delete temporary files: {}'.format(e))
-                    pass
                 self.sm.pm.close_info_popup()
                 #check if transfer file exists
                 if os.path.isfile('/media/usb/transfer.tar.gz'):
@@ -254,7 +252,6 @@ class ScreenManagerSystemTools(object):
                 except Exception as e:
                     success_flag = False
                     Logger.error(e)
-                    pass
                 self.sm.pm.close_info_popup()
                 self.usb_stick.disable()
                 if success_flag:
