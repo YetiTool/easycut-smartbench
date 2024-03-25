@@ -357,7 +357,17 @@ class DrywallCutterScreen(Screen):
 
             m_popup_steps.extend(s_widget_steps)
 
+            if not m_popup_steps:
+                self.show_steps_to_validate_popup(self.engine.engine_run())
+                return
+
             steps_to_validate = "\n".join(m_popup_steps)
+            popup_info.PopupError(self.sm, self.l, steps_to_validate)
+
+    def show_steps_to_validate_popup(self, output_file):
+        is_job_out_of_bounds = self.job_checker.is_job_out_of_bounds(output_file)
+        if is_job_out_of_bounds:
+            steps_to_validate = "\n".join(is_job_out_of_bounds)
             popup_info.PopupError(self.sm, self.l, steps_to_validate)
 
     def open_filechooser(self):
