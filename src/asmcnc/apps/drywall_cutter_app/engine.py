@@ -639,3 +639,5 @@ class GCodeEngine():
         with open(output_file, 'w+') as out_file:
             out_file.write(output.decode('utf-8'))  # Use write() to write the entire output as a single string
             print("%s written" % output_file)
+
+        return output_file  # return path to the file

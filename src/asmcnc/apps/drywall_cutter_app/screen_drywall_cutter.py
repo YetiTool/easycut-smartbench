@@ -7,6 +7,7 @@ from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
 
+from asmcnc.job.job_checker import JobChecker
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
 from asmcnc.apps.drywall_cutter_app import widget_drywall_shape_display
@@ -195,6 +196,7 @@ class DrywallCutterScreen(Screen):
         self.kb = kwargs['keyboard']
 
         self.engine = GCodeEngine(self.dwt_config)
+        self.job_checker = JobChecker(self.m, self.l)
 
         # XY move widget
         self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm, localization=self.l)
@@ -342,7 +344,21 @@ class DrywallCutterScreen(Screen):
         self.sm.current = 'config_filesaver'
 
     def run(self):
-        self.engine.engine_run()
+        if self.materials_popup.validate_inputs() and self.drywall_shape_display_widget.are_inputs_valid():
+            output_file = self.engine.engine_run()
+
+            is_job_out_of_bounds = self.job_checker.is_job_out_of_bounds(output_file)
+            if is_job_out_of_bounds:
+                steps_to_validate = "\n".join(is_job_out_of_bounds)
+                popup_info.PopupError(self.sm, self.l, steps_to_validate)
+        else:
+            m_popup_steps = self.materials_popup.get_steps_to_validate()
+            s_widget_steps = self.drywall_shape_display_widget.get_steps_to_validate()
+
+            m_popup_steps.extend(s_widget_steps)
+
+            steps_to_validate = "\n".join(m_popup_steps)
+            popup_info.PopupError(self.sm, self.l, steps_to_validate)
 
     def open_filechooser(self):
         if not self.sm.has_screen('config_filechooser'):

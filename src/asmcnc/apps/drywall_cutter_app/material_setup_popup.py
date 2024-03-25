@@ -534,3 +534,43 @@ class CuttingDepthsPopup(Popup):
             return False
 
         return True
+
+    def get_steps_to_validate(self):
+        steps = []
+
+        material_thickness = 0 if self.material_thickness.text == '' or self.material_thickness.text == '-' else float(
+            self.material_thickness.text)
+        bottom_offset = 0 if self.bottom_offset.text == '' or self.bottom_offset.text == '-' else float(
+            self.bottom_offset.text)
+        total_cut_depth = 0 if self.total_cut_depth.text == '' or self.total_cut_depth.text == '-' else float(
+            self.total_cut_depth.text)
+        depth_per_pass = 0 if self.depth_per_pass.text == '' or self.depth_per_pass.text == '-' else float(
+            self.depth_per_pass.text)
+
+        max_cut_depth_per_pass = self.dwt_config.active_cutter.max_depth_per_pass
+
+        # Check for negative material thickness
+        if material_thickness < 0:
+            steps.append("Material thickness cannot be negative")
+
+        # The bottom offset should never have a greater value than the material thickness if negative
+        if abs(bottom_offset) > material_thickness:
+            if bottom_offset < 0:
+                steps.append("Bottom offset cannot be greater than material thickness")
+
+        if total_cut_depth < 0:
+            steps.append("Total cut depth must be positive")
+
+        if total_cut_depth > self.soft_limit_total_cut_depth:
+            steps.append("Total cut depth exceeds soft limit (62mm)")
+
+        if total_cut_depth != material_thickness + bottom_offset:
+            steps.append("Total cut depth must be equal to material thickness + bottom offset")
+
+        if depth_per_pass > max_cut_depth_per_pass:
+            steps.append("Depth per pass exceeds max depth per pass for this tool")
+
+        if depth_per_pass <= 0:
+            steps.append("Depth per pass must be positive")
+
+        return steps
