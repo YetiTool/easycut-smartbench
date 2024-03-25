@@ -207,7 +207,7 @@ class GCodeEngine():
                     input_list[i + 1] = replacement_mode + input_list[i + 1][2:]
         return input_list
 
-    #Produce gcode instructions to cut a rounded (or not) rectangle
+    # Produce gcode instructions to cut a rounded (or not) rectangle
     def cut_rectangle(self, coordinates, datum_x, datum_y, offset, tool_diameter, is_climb, corner_radius, pass_depth, feedrate, plungerate, total_cut_depth, z_safe_distance, roughing_pass):
         # Ensure coordinates are all in clockwise order
         coordinates = self.correct_orientation(coordinates, self.is_clockwise(coordinates))  
@@ -278,20 +278,36 @@ class GCodeEngine():
 
         return cutting_lines
 
+    # Produce gcode instructions to cut a line
+    def cut_line(self, datum_x, datum_y, length, tool_diameter, orientation, pass_depth, feedrate, plungerate, total_cut_depth, z_safe_distance, simulate):
+        pass_depths = self.calculate_pass_depths(total_cut_depth, pass_depth)
+        tool_radius = tool_diameter / 2
+        x = 0
+        y = 1 
+        direction_flag = True
+
+        # Start at z safe distance
+        gcode_lines = ["G0 Z{}\n".format(z_safe_distance)]
+
+        if orientation == "vertical":
+            start_coordinate = [datum_x + tool_radius, datum_y] 
+            end_coordinate = [datum_x + length - tool_radius, datum_y]
+        elif orientation == "horizontal":
+            start_coordinate = [datum_x, datum_y + tool_radius]
+            end_coordinate = [datum_x, datum_y + length - tool_radius]
+
     #Return lines in appropriate gcode file
     def find_and_read_gcode_file(self, directory, shape_type, tool_diameter):
-        print("Searching for gcode file: %s" % shape_type)
         for file in os.listdir(directory):
             filename = file.lower().strip()
             if shape_type in filename and str(tool_diameter)[:-2] + "mm" in filename:
-                print("Found gcode file: %s" % filename)
                 file_path = os.path.join(directory, filename)
                 if os.path.exists(file_path):
                     try:
                         with open(file_path, 'r') as file:
                             return file.readlines()
                     except IOError:
-                        print("An error occurred while reading the Gcode file")
+                        Logger.Warning("An error occurred while reading the Gcode file")
         raise IOError("Gcode file not found")
 
     # Scrape through gcode and replace feedrate, plungerate and spindle speed
@@ -514,6 +530,9 @@ class GCodeEngine():
             return x_dim, y_dim, x_min, y_min
         else:
             raise Exception ("Shape type: {} is not defined as a custom shape.".format(self.config.active_config.shape_type))
+
+    def simulate(self):
+        pass
 
     #Main
     def engine_run(self):
