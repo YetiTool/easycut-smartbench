@@ -172,7 +172,8 @@ class QuickCommands(Widget):
         elif not self.is_job_within_bounds() and sys.platform != "win32":
             self.sm.current = 'boundary'
 
-        elif self.m.is_machine_homed == False and sys.platform != "win32":
+        # Machine not homed and not on windows unless a machine is connected
+        elif not self.m.is_machine_homed and (sys.platform == "win32" and self.m.is_connected or sys.platform != "win32"):
             self.m.request_homing_procedure('home','home')
 
         elif self.sm.get_screen('home').z_datum_reminder_flag and not self.sm.get_screen('home').has_datum_been_reset:
