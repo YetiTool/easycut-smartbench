@@ -108,7 +108,7 @@ class HomingScreenActive(Screen):
 
     def on_enter(self):
         if sys.platform == "win32" or sys.platform == "darwin":
-            if self.m.m_state != "unknown": # Machine actually connected
+            if self.m.s.m_state not in ["unknown", "status"]: # Machine actually connected
                 self.m.do_standard_homing_sequence()
             else: # No machine connected
                 return
