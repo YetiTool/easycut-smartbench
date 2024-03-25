@@ -578,10 +578,6 @@ class DrywallShapeDisplay(Widget):
 
     def get_steps_to_validate(self):
         steps = []
-        for validation_label in self.validation_labels:
-            if validation_label.opacity == 1:
-                steps.append(validation_label.text)
-
         if self.dwt_config.active_config.shape_type.lower() == "square":
             # ensure roundness not too large
             if float(self.r_input.text or 0) > float(self.y_input.text or 0) / 2:

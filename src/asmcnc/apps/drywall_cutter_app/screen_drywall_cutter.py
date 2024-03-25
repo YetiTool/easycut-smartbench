@@ -3,6 +3,7 @@ from datetime import datetime
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 
+from asmcnc.job.job_checker import JobChecker
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
 from asmcnc.apps.drywall_cutter_app import widget_drywall_shape_display
@@ -136,6 +137,7 @@ class DrywallCutterScreen(Screen):
         self.kb = kwargs['keyboard']
 
         self.engine = GCodeEngine(self.dwt_config)
+        self.job_checker = JobChecker(self.m, self.l)
 
         # XY move widget
         self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm, localization=self.l)
@@ -217,9 +219,18 @@ class DrywallCutterScreen(Screen):
 
     def run(self):
         if self.are_inputs_valid():
-            self.engine.engine_run()
+            output_file_path = self.engine.engine_run()
+
+
         else:
-            popup_info.PopupError(self.sm, self.l, "Please check your inputs are valid, and not too small.")
+            material_setup_steps = self.materials_popup.get_steps_to_validate()
+            shape_display_steps = self.drywall_shape_display_widget.get_steps_to_validate()
+
+            material_setup_steps.extend(shape_display_steps)
+
+            steps_to_validate_string = "\n".join(material_setup_steps)
+
+            popup_info.PopupError(self.sm, self.l, steps_to_validate_string)
 
     def are_inputs_valid(self):
         return self.drywall_shape_display_widget.are_inputs_valid() and self.materials_popup.validate_inputs()
