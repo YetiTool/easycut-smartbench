@@ -357,7 +357,9 @@ class DrywallCutterScreen(Screen):
 
             m_popup_steps.extend(s_widget_steps)
 
-            # self.drywall_shape_display_widget.are_inputs_valid() will be false if job extends bounds, so use job checker to show detailed instruction
+            # self.drywall_shape_display_widget.are_inputs_valid() will be false if job extends bounds,
+            # so use job checker to show detailed instructions to fix if the validation functions returned no steps
+            # Could probably use Dennis' logic instead of generating the gcode, but i think this is okay for now
             if not m_popup_steps:
                 self.show_steps_to_validate_popup(self.engine.engine_run())
                 return
