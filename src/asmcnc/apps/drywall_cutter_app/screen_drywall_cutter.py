@@ -357,6 +357,7 @@ class DrywallCutterScreen(Screen):
 
             m_popup_steps.extend(s_widget_steps)
 
+            # self.drywall_shape_display_widget.are_inputs_valid() will be false if job extends bounds, so use job checker to show detailed instruction
             if not m_popup_steps:
                 self.show_steps_to_validate_popup(self.engine.engine_run())
                 return
@@ -416,7 +417,7 @@ class DrywallCutterScreen(Screen):
         self.drywall_shape_display_widget.x_input.text = str(self.dwt_config.active_config.canvas_shape_dims.x)
         self.drywall_shape_display_widget.y_input.text = str(self.dwt_config.active_config.canvas_shape_dims.y)
 
-        self.drywall_shape_display_widget.unit_switch.active = True if self.dwt_config.active_config.units == 'mm' else False
+        self.drywall_shape_display_widget.unit_switch.active = self.dwt_config.active_config.units == 'mm'
 
         # Vlad set your text inputs here:
 
