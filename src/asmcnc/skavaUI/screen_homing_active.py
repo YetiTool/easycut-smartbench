@@ -169,5 +169,3 @@ class HomingScreenActive(Screen):
         if sys.platform == "win32" or sys.platform == "darwin":
             self.return_to_ec_if_homing_not_in_progress()
             self.m.is_machine_homed = True
-        else:
-            pass
