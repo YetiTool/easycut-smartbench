@@ -108,9 +108,9 @@ class HomingScreenActive(Screen):
 
     def on_enter(self):
         if sys.platform == "win32" or sys.platform == "darwin":
-            if self.m.s.m_state not in ["unknown", "status"]: # Machine actually connected
+            if self.m.s.is_connected:
                 self.m.do_standard_homing_sequence()
-            else: # No machine connected
+            else:
                 return
         if self.m.homing_interrupted:
             return
@@ -173,5 +173,6 @@ class HomingScreenActive(Screen):
     def windows_cheat_to_procede(self):
         if sys.platform == "win32" or sys.platform == "darwin":
             self.return_to_ec_if_homing_not_in_progress()
+            self.m.is_machine_homed = True
         else:
             pass
