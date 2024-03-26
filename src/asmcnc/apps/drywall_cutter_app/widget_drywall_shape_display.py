@@ -807,6 +807,58 @@ class DrywallShapeDisplay(Widget):
 
     def get_steps_to_validate(self):
         steps = []
+
+        x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance = self.get_x_y_clearances(
+            self.dwt_config.active_config.shape_type.lower(), self.x_coord, self.y_coord, self.tool_offset_value())
+
+        if x_min_clearance < 0:
+            steps.append(
+                self.localization.get_str(
+                    "The job extent over-reaches the N axis at the home end."
+                ).replace("N", "X")
+                + "\n"
+                + self.localization.get_bold(
+                    "Try positioning the machine's N datum further away from home."
+                ).replace("N", "X")
+                + "\n"
+            )
+
+        if y_min_clearance < 0:
+            steps.append(
+                self.localization.get_str(
+                    "The job extent over-reaches the N axis at the home end."
+                ).replace("N", "Y")
+                + "\n"
+                + self.localization.get_bold(
+                    "Try positioning the machine's N datum further away from home."
+                ).replace("N", "Y")
+                + "\n"
+            )
+
+        if x_max_clearance < 0:
+            steps.append(
+                self.localization.get_str(
+                    "The job extent over-reaches the N axis at the far end."
+                ).replace("N", "X")
+                + "\n"
+                + self.localization.get_bold(
+                    "Try positioning the machine's N datum closer to home."
+                ).replace("N", "X")
+                + "\n"
+            )
+
+        if y_max_clearance < 0:
+            steps.append(
+                self.localization.get_str(
+                    "The job extent over-reaches the N axis at the far end."
+                ).replace("N", "Y")
+                + "\n"
+                + self.localization.get_bold(
+                    "Try positioning the machine's N datum closer to home."
+                ).replace("N", "Y")
+                + "\n"
+            )
+
         if self.dwt_config.active_config.shape_type.lower() == "square":
             # ensure roundness not too large
             if float(self.r_input.text or 0) > float(self.y_input.text or 0) / 2:
