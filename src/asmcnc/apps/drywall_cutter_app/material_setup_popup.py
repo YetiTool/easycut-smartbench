@@ -405,43 +405,37 @@ class CuttingDepthsPopup(Popup):
         self.update_graphic_position()
         self.calculate_depth_per_pass()
 
-        try:
-            if float(self.total_cut_depth.text) > max_cut_depth:
-                self.float_layout.add_widget(self.cut_depth_warning)
-            elif float(self.total_cut_depth.text) <= 0:
-                self.cut_depth_warning.text = self.cut_depth_warning_zero
-                self.float_layout.add_widget(self.cut_depth_warning)
-            else:
-                self.float_layout.remove_widget(self.cut_depth_warning)
-        except:
-            pass
+        if self.cut_depth_warning not in self.float_layout.children:
+            self.float_layout.add_widget(self.cut_depth_warning)
+        if float(self.total_cut_depth.text) > max_cut_depth:
+            self.cut_depth_warning.text = self.cut_depth_warning_cutter_max
+        elif float(self.total_cut_depth.text) <= 0:
+            self.cut_depth_warning.text = self.cut_depth_warning_zero
+        else:
+            self.float_layout.remove_widget(self.cut_depth_warning)
 
         self.disable_confirm_button()
 
     def warning_pass_depth(self, *args):
         if self.auto_pass_checkbox.active:
-            try:
-                depth_per_pass = self.dwt_config.active_cutter.max_depth_per_pass
-                if depth_per_pass <= 0:
-                    self.pass_depth_warning.text = self.pass_depth_warning_zero
-                    self.float_layout.add_widget(self.pass_depth_warning)
-                else:
-                    self.float_layout.remove_widget(self.pass_depth_warning)
-            except:
-                pass
+            depth_per_pass = self.dwt_config.active_cutter.max_depth_per_pass
+            if self.pass_depth_warning not in self.float_layout.children:
+                self.float_layout.add_widget(self.pass_depth_warning)
+            if depth_per_pass <= 0:
+                self.pass_depth_warning.text = self.pass_depth_warning_zero
+            else:
+                self.float_layout.remove_widget(self.pass_depth_warning)
         else:
             depth_per_pass = self.get_safe_float(self.depth_per_pass.text)
-            try:
-                if depth_per_pass > self.dwt_config.active_cutter.max_depth_per_pass:
-                    self.pass_depth_warning.text = self.pass_depth_warning_cutter_max
-                    self.float_layout.add_widget(self.pass_depth_warning)
-                elif depth_per_pass <= 0:
-                    self.pass_depth_warning.text = self.pass_depth_warning_zero
-                    self.float_layout.add_widget(self.pass_depth_warning)
-                else:
-                    self.float_layout.remove_widget(self.pass_depth_warning)
-            except:
-                pass
+            if self.pass_depth_warning not in self.float_layout.children:
+                self.float_layout.add_widget(self.pass_depth_warning)
+            if depth_per_pass > self.dwt_config.active_cutter.max_depth_per_pass:
+                self.pass_depth_warning.text = self.pass_depth_warning_cutter_max
+            elif depth_per_pass <= 0:
+                self.pass_depth_warning.text = self.pass_depth_warning_zero
+            else:
+                self.float_layout.remove_widget(self.pass_depth_warning)
+
 
     def disable_confirm_button(self):
         children = self.float_layout.children
