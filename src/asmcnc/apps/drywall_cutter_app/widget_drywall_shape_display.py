@@ -448,7 +448,7 @@ class DrywallShapeDisplay(Widget):
             else:
                 if rotation == 'horizontal':
                     self.enable_input(self.r_input, (453, 311))
-                    self.enable_input(self.x_input, (30, 175))
+                    self.enable_input(self.x_input, (33, 175))
                     self.enable_input(self.y_input, (238, 327))
                     self.place_widget(self.x_datum_label, (397, 35))
                     self.place_widget(self.y_datum_label, (416, 114))
