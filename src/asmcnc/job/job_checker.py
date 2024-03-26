@@ -6,6 +6,7 @@ from asmcnc.geometry.job_envelope import BoundingBox
 """
 The logic for this module was taken from screen_check_job.py and has been cleaned up slightly,
 but going forward it would be nice to refactor and bulk out this module so it can be used in other places.
+I didn't end up using it for DWT, but it could be useful going forward.
 """
 
 

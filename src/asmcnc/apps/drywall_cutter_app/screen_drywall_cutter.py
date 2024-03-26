@@ -349,33 +349,15 @@ class DrywallCutterScreen(Screen):
         if self.materials_popup.validate_inputs() and self.drywall_shape_display_widget.are_inputs_valid():
             output_file = self.engine.engine_run()
 
-            is_job_out_of_bounds = self.show_steps_to_validate_popup(output_file)
-
-            if not is_job_out_of_bounds:
-                Logger.debug("DWT Validation successful, starting job...")
-                pass  # job start logic to go here
+            # Run job
         else:
             m_popup_steps = self.materials_popup.get_steps_to_validate()
             s_widget_steps = self.drywall_shape_display_widget.get_steps_to_validate()
 
             m_popup_steps.extend(s_widget_steps)
 
-            # self.drywall_shape_display_widget.are_inputs_valid() will be false if job extends bounds,
-            # so use job checker to show detailed instructions to fix if the validation functions returned no steps
-            # Could probably use Dennis' logic instead of generating the gcode, but i think this is okay for now
-            if not m_popup_steps:
-                self.show_steps_to_validate_popup(self.engine.engine_run())
-                return
-
             steps_to_validate = "\n".join(m_popup_steps)
             self.sm.pm.show_job_validation_popup(steps_to_validate)
-
-    def show_steps_to_validate_popup(self, output_file):
-        is_job_out_of_bounds = self.job_checker.is_job_out_of_bounds(output_file)
-        if is_job_out_of_bounds:
-            steps_to_validate = "\n".join(is_job_out_of_bounds)
-            self.sm.pm.show_job_validation_popup(steps_to_validate)
-        return is_job_out_of_bounds
 
     def open_filechooser(self):
         if not self.sm.has_screen('config_filechooser'):
