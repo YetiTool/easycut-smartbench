@@ -49,7 +49,12 @@ class ScreenManagerSystemTools(object):
 
         def get_logs(count):
             if self.usb_stick.is_usb_mounted_flag == True:
-                os.system("journalctl > smartbench_logs.txt && sudo cp --no-preserve=mode,ownership smartbench_logs.txt /media/usb/ && rm smartbench_logs.txt")
+                ec_create_log = os.system("journalctl > smartbench_logs.txt")
+                Logger.debug("Call: {} | Returned: {}".format("journalctl > smartbench_logs.txt", ec_create_log))
+                ec_copy = os.system("sudo cp --no-preserve=mode,ownership smartbench_logs.txt /media/usb/")
+                Logger.debug("Call: {} | Returned: {}".format("sudo cp --no-preserve=mode,ownership smartbench_logs.txt /media/usb/", ec_copy))
+                ec_delete_log = os.system("rm smartbench_logs.txt")
+                Logger.debug("Call: {} | Returned: {}".format("rm smartbench_logs.txt", ec_delete_log))
                 wait_popup.popup.dismiss()
                 self.usb_stick.disable()
 
@@ -156,7 +161,7 @@ class ScreenManagerSystemTools(object):
     def download_settings_to_usb(self, *args):
         if self.mutex.locked():
             # already running
-            Logger.info('mutex locked!')
+            Logger.debug('mutex locked!')
             return
         self.mutex.acquire(True)
         self.usb_stick.enable()
@@ -164,7 +169,7 @@ class ScreenManagerSystemTools(object):
         self.sm.pm.show_info_popup(message, 600)
 
         def copy_settings_to_usb(loop_counter):
-            Logger.info('Loop: {}').format(loop_counter)
+            Logger.debug('Loop: {}'.format(loop_counter))
             if self.usb_stick.is_usb_mounted_flag:
                 try:
                     Logger.info('Copying...')
@@ -185,15 +190,13 @@ class ScreenManagerSystemTools(object):
                     Logger.info('Create tar...')
                     os.system('sudo tar czf /media/usb/transfer.tar.gz -C /home/pi/easycut-smartbench/transfer_tmp .')
                 except Exception as e:
-                    Logger.info(e)
-                    pass
+                    Logger.error(e)
                 try:
                     #clean up
                     Logger.info('Clean up...')
                     os.system('rm -r /home/pi/easycut-smartbench/transfer_tmp')
                 except Exception as e:
-                    Logger.info("Could not delete temporary files: {e}").format(e)
-                    pass
+                    Logger.error('Could not delete temporary files: {}'.format(e))
                 self.sm.pm.close_info_popup()
                 #check if transfer file exists
                 if os.path.isfile('/media/usb/transfer.tar.gz'):
@@ -221,7 +224,7 @@ class ScreenManagerSystemTools(object):
     def upload_settings_from_usb(self, *args):
         if self.mutex.locked():
             # already running
-            Logger.info('mutex locked!')
+            Logger.debug('mutex locked!')
             return
         self.mutex.acquire(True)
         self.usb_stick.enable()
@@ -229,7 +232,7 @@ class ScreenManagerSystemTools(object):
         self.sm.pm.show_info_popup(message, 600)
 
         def restore_settings_from_usb(loop_counter):
-            Logger.info('Loop: {}').format(loop_counter)
+            Logger.debug('Loop: {}'.format(loop_counter))
             if self.usb_stick.is_usb_mounted_flag:
                 # TODO restore files here
                 success_flag = True
@@ -249,8 +252,7 @@ class ScreenManagerSystemTools(object):
                         self.m.get_persistent_values()
                 except Exception as e:
                     success_flag = False
-                    Logger.info(e)
-                    pass
+                    Logger.error(e)
                 self.sm.pm.close_info_popup()
                 self.usb_stick.disable()
                 if success_flag:

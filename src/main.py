@@ -27,8 +27,8 @@ from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 
 from asmcnc.comms.grbl_settings_manager import GRBLSettingsManagerSingleton
-from asmcnc.comms.router_machine import ProductCodes
 from asmcnc.core_UI import scaling_utils, console_utils
+from asmcnc.comms.model_manager import ProductCodes
 from asmcnc.core_UI.popup_manager import PopupManager
 from asmcnc.comms.model_manager import ModelManagerSingleton
 
@@ -104,7 +104,7 @@ from asmcnc.skavaUI import screen_homing_decision
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v2.8.3'
+initial_version = 'v2.8.4'
 
 config_flag = False
 
