@@ -863,7 +863,7 @@ class DrywallShapeDisplay(Widget):
         if self.dwt_config.active_config.shape_type.lower() == "square":
             # ensure roundness not too large
             if float(self.r_input.text or 0) > float(self.y_input.text or 0) / 2:
-                steps.append("The roundness of the shape is too large.")
+                steps.append("The radius value is too large.")
                 steps.append("[b]Try reducing the 'R' input.[/b]")
 
             # ensure the square is not too small
@@ -881,7 +881,7 @@ class DrywallShapeDisplay(Widget):
                     steps.append("[b]Try increasing the 'Y' input.[/b]")
         elif self.dwt_config.active_config.shape_type.lower() == "rectangle":
             if float(self.r_input.text or 0) > (min(float(self.x_input.text or 0), float(self.y_input.text or 0)) / 2):
-                steps.append("The roundness of the shape is too large.")
+                steps.append("The radius value is too large.")
                 steps.append("[b]Try reducing the 'R' input.[/b]")
 
             if self.dwt_config.active_config.toolpath_offset.lower() == "inside":

@@ -551,33 +551,60 @@ class CuttingDepthsPopup(Popup):
 
         # Check for negative material thickness
         if material_thickness < 0:
-            steps.append("Material thickness cannot be negative.")
-            steps.append("[b]Try increasing the material thickness.[/b]")
+            steps.append(
+                self.l.get_str("Material thickness cannot be negative.")
+                + "\n"
+                + self.l.get_bold("Try increasing the material thickness.")
+                + "\n"
+            )
 
         # The bottom offset should never have a greater value than the material thickness if negative
         if abs(bottom_offset) > material_thickness:
             if bottom_offset < 0:
-                steps.append("Bottom offset cannot be greater than material thickness")
-                steps.append("[b]Try reducing the bottom offset, or increasing the material thickness.[/b]")
+                steps.append(
+                    self.l.get_str("Bottom offset cannot be greater than material thickness")
+                    + "\n"
+                    + self.l.get_bold("Try reducing the bottom offset, or increasing the material thickness.")
+                    + "\n"
+                )
 
         if total_cut_depth < 0:
-            steps.append("Total cut depth cannot be negative")
-            steps.append("[b]Try reducing the bottom offset, or increasing the material thickness.[/b]")
+            steps.append(
+                self.l.get_str("Total cut depth cannot be negative")
+                + "\n"
+                + self.l.get_bold("Try reducing the bottom offset, or increasing the material thickness.")
+                + "\n"
+            )
 
         if total_cut_depth > self.soft_limit_total_cut_depth:
-            steps.append("Total cut depth exceeds soft limit (62mm)")
-            steps.append("[b]Try increasing the bottom offset, or reducing the material thickness.[/b]")
+            steps.append(
+                self.l.get_str("Total cut depth exceeds 62mm")
+                + "\n"
+                + self.l.get_bold("Try increasing the bottom offset, or reducing the material thickness.")
+                + "\n"
+            )
 
         if total_cut_depth != material_thickness + bottom_offset:
-            steps.append("Total cut depth must be equal to material thickness + bottom offset.")
-            # I'm not sure if this can actually happen?
+            steps.append(
+                self.l.get_str("Total cut depth must be equal to material thickness + bottom offset.")
+                + "\n"
+            )
 
         if depth_per_pass > max_cut_depth_per_pass:
-            steps.append("Depth per pass exceeds max depth per pass for this tool.")
-            steps.append("[b]Try reducing the depth per pass, or use a different tool.[/b]")
+            steps.append(
+                self.l.get_str("Depth per pass exceeds max depth per pass for this tool.")
+                + "\n"
+                + self.l.get_bold("Try reducing the depth per pass, or use a different tool.")
+                + "\n"
+            )
 
         if depth_per_pass <= 0:
-            steps.append("Depth per pass must be positive.")
-            steps.append("[b]Try increasing the depth per pass, or use auto pass.[/b]")
+            steps.append(
+                self.l.get_str("Depth per pass must be positive.")
+                + "\n"
+                + self.l.get_bold("Try increasing the depth per pass, or use auto pass.")
+                + "\n"
+
+            )
 
         return steps
