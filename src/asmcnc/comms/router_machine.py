@@ -974,9 +974,8 @@ class RouterMachine(EventDispatcher):
 # HW/FW VERSION CAPABILITY
 
     def is_using_sc2(self):
-        return True
-        # return self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'SC2 capable') \
-        #     and self.theateam() and self.get_dollar_setting(51) and self.stylus_router_choice != 'stylus'
+        return self.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', 'SC2 capable') \
+            and self.theateam() and self.get_dollar_setting(51) and self.stylus_router_choice != 'stylus'
 
     def is_spindle_health_check_active(self):
         return self.is_spindle_health_check_enabled_as_default
