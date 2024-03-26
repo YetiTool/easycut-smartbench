@@ -11,6 +11,7 @@ from kivy.uix.button import Button
 from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
+from kivy.uix.scrollview import ScrollView
 
 from asmcnc.core_UI import scaling_utils as utils
 from asmcnc.core_UI.utils.hold_button import WarningHoldButton
@@ -966,3 +967,46 @@ class JobValidationPopup(BasicPopup):
             button_layout_size_hint_y=1,
             **kwargs
         )
+
+    def build(self):
+        text_size_x = dp(
+            utils.get_scaled_width(self.popup_width - self.main_label_size_delta)
+        )
+
+        self.scroll_view = ScrollView(
+            padding=utils.get_scaled_tuple((10, 10)),
+        )
+
+        self.main_label = Label(
+            size_hint_y=self.main_label_size_hint_y,
+            text_size=(text_size_x, None),
+            halign=self.main_label_h_align,
+            valign="middle",
+            text=self.l.get_str(self.main_string),
+            color=(0, 0, 0, 1),
+            padding=utils.get_scaled_tuple(self.main_label_padding),
+            markup=True,
+            font_size=str(utils.get_scaled_width(15)) + "sp",
+        )
+        self.scroll_view.add_widget(self.main_label)
+
+        self.main_layout = BoxLayout(
+            orientation="vertical",
+            spacing=utils.get_scaled_tuple(
+                self.main_layout_spacing, orientation="vertical"
+            ),
+            padding=utils.get_scaled_tuple(self.main_layout_padding),
+        )
+
+        image = self.get_image()
+        if image is not None:
+            self.main_layout.add_widget(image)
+
+        self.main_layout.add_widget(self.scroll_view)
+
+        if self.button_one_text:
+            self.button_layout = self.build_button_layout()
+            self.main_layout.add_widget(self.button_layout)
+
+        self.content = self.main_layout
+        self.update_font_sizes()
