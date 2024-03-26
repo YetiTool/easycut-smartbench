@@ -583,9 +583,6 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
     def update_status_text(self, dt):
         self.consoleStatusText.text = self.sm.get_screen('home').gcode_monitor_widget.consoleStatusText.text
 
-    def do_reboot(self):
-        console_utils.reboot()
-
     def back_to_choice(self):
         self.sm.current = 'qcWC'
 
