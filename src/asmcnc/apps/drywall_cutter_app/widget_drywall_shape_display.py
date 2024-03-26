@@ -812,6 +812,11 @@ class DrywallShapeDisplay(Widget):
         x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance = self.get_x_y_clearances(
             self.dwt_config.active_config.shape_type.lower(), self.x_coord, self.y_coord, self.tool_offset_value())
 
+        Logger.debug(x_min_clearance)
+        Logger.debug(y_min_clearance)
+        Logger.debug(x_max_clearance)
+        Logger.debug(y_max_clearance)
+
         if x_min_clearance < 0:
             steps.append(
                 self.localization.get_str(
