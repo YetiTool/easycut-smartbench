@@ -789,10 +789,10 @@ class FactorySettingsScreen(Screen):
             self.model_manager.set_machine_type(pc, True)
             self.m.write_dollar_setting(50, full_serial_number)
             if pc is ProductCodes.DRYWALLTEC:  # set max z travel to 120mm because of the rubber bellow
-                Logger.info("Z max travel ($132) is set to 130 for double stack motors.")
+                Logger.info("Z max travel ($132) is set to 120 for Drywalltec machine.")
                 self.m.write_dollar_setting(132, 120)
             elif pc in [ProductCodes.PRECISION_PRO, ProductCodes.PRECISION_PRO_X, ProductCodes.PRECISION_PRO_PLUS]:
-                Logger.info("Z max travel ($132) is set to 120 for Drywalltec machine.")
+                Logger.info("Z max travel ($132) is set to 130 for double stack motors.")
                 self.m.write_dollar_setting(132, 130)
             self.machine_serial.text = "updating..."
 
