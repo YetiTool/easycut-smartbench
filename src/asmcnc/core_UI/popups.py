@@ -975,6 +975,7 @@ class JobValidationPopup(BasicPopup):
 
         self.scroll_view = ScrollView(
             padding=utils.get_scaled_tuple((10, 10)),
+            size_hint_y=4
         )
 
         self.main_label = Label(
