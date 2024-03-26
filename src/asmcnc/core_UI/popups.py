@@ -981,7 +981,7 @@ class JobValidationPopup(BasicPopup):
         self.main_label = RstDocument(
             halign=self.main_label_h_align,
             valign="middle",
-            halign=self.main_label_h_align,
+            text_size=(text_size_x, None),
             text=self.l.get_str(self.main_string),
             color=(0, 0, 0, 1),
             markup=True,
