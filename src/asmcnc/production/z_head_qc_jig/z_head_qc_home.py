@@ -6,6 +6,7 @@ from kivy.lang import Builder
 from kivy.clock import Clock
 
 from asmcnc.production.z_head_qc_jig import popup_z_head_qc
+from asmcnc.core_UI import console_utils
 
 import subprocess
 
@@ -69,7 +70,7 @@ Builder.load_string("""
                     font_size: dp(20)
                     background_color: [1,0,0,1]
                     background_normal: ''
-                    on_press: root.shutdown_console()
+                    on_press: console_utils.shutdown()
 """)
 
 
@@ -181,8 +182,3 @@ class ZHeadQCHome(Screen):
 
     def secret_option_c(self):
         self.sm.current = 'qcWC'
-
-    def shutdown_console(self):
-        if sys.platform != 'win32' and sys.platform != 'darwin': 
-            os.system('sudo shutdown -h now')
-

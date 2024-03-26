@@ -35,6 +35,8 @@ from asmcnc.production.database.calibration_database import CalibrationDatabase
 
 from asmcnc.comms.model_manager import ModelManagerSingleton, ProductCodes
 
+from asmcnc.core_UI import console_utils
+
 Builder.load_string(
     """
 
@@ -901,7 +903,7 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
                     + "Not doing this may corrupt the warranty registration start up sequence."
                 )
                 popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 700, reset_warning)
-                Clock.schedule_once(self.shutdown_console, 5)
+                Clock.schedule_once(console_utils.shutdown, 5)
             else:
                 warning_message = (
                     "There was an issue doing the factory reset! Get Letty for help."
@@ -910,9 +912,6 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
 
     def close_sw(self, dt):
         sys.exit()
-
-    def shutdown_console(self, dt):
-        os.system("sudo shutdown -h now")
 
     def full_console_update(self):
         try:
