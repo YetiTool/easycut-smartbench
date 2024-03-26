@@ -984,6 +984,7 @@ class JobValidationPopup(BasicPopup):
             text_size=(text_size_x, None),
             text=self.l.get_str(self.main_string),
             color=(0, 0, 0, 1),
+            background_color=(0.95, 0.95, 0.95, 1),
             markup=True,
             font_size=str(utils.get_scaled_width(15)) + "sp",
         )

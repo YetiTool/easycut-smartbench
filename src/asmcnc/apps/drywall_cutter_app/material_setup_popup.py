@@ -553,9 +553,9 @@ class CuttingDepthsPopup(Popup):
         if material_thickness < 0:
             steps.append(
                 self.l.get_str("Material thickness cannot be negative.")
-                + "\n"
+                + "\n\n"
                 + self.l.get_bold("Try increasing the material thickness.")
-                + "\n"
+                + "\n\n"
             )
 
         # The bottom offset should never have a greater value than the material thickness if negative
@@ -563,48 +563,47 @@ class CuttingDepthsPopup(Popup):
             if bottom_offset < 0:
                 steps.append(
                     self.l.get_str("Bottom offset cannot be greater than material thickness")
-                    + "\n"
+                    + "\n\n"
                     + self.l.get_bold("Try reducing the bottom offset, or increasing the material thickness.")
-                    + "\n"
+                    + "\n\n"
                 )
 
         if total_cut_depth < 0:
             steps.append(
                 self.l.get_str("Total cut depth cannot be negative")
-                + "\n"
+                + "\n\n"
                 + self.l.get_bold("Try reducing the bottom offset, or increasing the material thickness.")
-                + "\n"
+                + "\n\n"
             )
 
         if total_cut_depth > self.soft_limit_total_cut_depth:
             steps.append(
                 self.l.get_str("Total cut depth exceeds 62mm")
-                + "\n"
+                + "\n\n"
                 + self.l.get_bold("Try increasing the bottom offset, or reducing the material thickness.")
-                + "\n"
+                + "\n\n"
             )
 
         if total_cut_depth != material_thickness + bottom_offset:
             steps.append(
                 self.l.get_str("Total cut depth must be equal to material thickness + bottom offset.")
-                + "\n"
+                + "\n\n"
             )
 
         if depth_per_pass > max_cut_depth_per_pass:
             steps.append(
                 self.l.get_str("Depth per pass exceeds max depth per pass for this tool.")
-                + "\n"
+                + "\n\n"
                 + self.l.get_bold("Try reducing the depth per pass, or use a different tool.")
-                + "\n"
+                + "\n\n"
             )
 
         if depth_per_pass <= 0:
             steps.append(
                 self.l.get_str("Depth per pass must be positive.")
-                + "\n"
+                + "\n\n"
                 + self.l.get_bold("Try increasing the depth per pass, or use auto pass.")
-                + "\n"
-
+                + "\n\n"
             )
 
         return steps

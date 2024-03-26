@@ -817,11 +817,11 @@ class DrywallShapeDisplay(Widget):
                 self.localization.get_str(
                     "The job extent over-reaches the N axis at the home end."
                 ).replace("N", "X")
-                + "\n"
+                + "\n\n"
                 + self.localization.get_bold(
                     "Try positioning the machine's N datum further away from home."
                 ).replace("N", "X")
-                + "\n"
+                + "\n\n"
             )
 
         if y_min_clearance < 0:
@@ -829,11 +829,11 @@ class DrywallShapeDisplay(Widget):
                 self.localization.get_str(
                     "The job extent over-reaches the N axis at the home end."
                 ).replace("N", "Y")
-                + "\n"
+                + "\n\n"
                 + self.localization.get_bold(
                     "Try positioning the machine's N datum further away from home."
                 ).replace("N", "Y")
-                + "\n"
+                + "\n\n"
             )
 
         if x_max_clearance < 0:
@@ -841,11 +841,11 @@ class DrywallShapeDisplay(Widget):
                 self.localization.get_str(
                     "The job extent over-reaches the N axis at the far end."
                 ).replace("N", "X")
-                + "\n"
+                + "\n\n"
                 + self.localization.get_bold(
                     "Try positioning the machine's N datum closer to home."
                 ).replace("N", "X")
-                + "\n"
+                + "\n\n"
             )
 
         if y_max_clearance < 0:
@@ -853,62 +853,151 @@ class DrywallShapeDisplay(Widget):
                 self.localization.get_str(
                     "The job extent over-reaches the N axis at the far end."
                 ).replace("N", "Y")
-                + "\n"
+                + "\n\n"
                 + self.localization.get_bold(
                     "Try positioning the machine's N datum closer to home."
                 ).replace("N", "Y")
-                + "\n"
+                + "\n\n"
             )
 
         if self.dwt_config.active_config.shape_type.lower() == "square":
             # ensure roundness not too large
             if float(self.r_input.text or 0) > float(self.y_input.text or 0) / 2:
-                steps.append("The radius value is too large.")
-                steps.append("[b]Try reducing the 'R' input.[/b]")
+                steps.append(
+                    self.localization.get_str(
+                        "The radius value is too large."
+                    )
+                    + "\n\n"
+                    + self.localization.get_bold(
+                        "Try reducing the 'R' input."
+                    )
+                    + "\n\n"
+                )
 
             # ensure the square is not too small
             if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
                 if float(self.y_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.diameter:
-                    steps.append("The square is too small.")
-                    steps.append("[b]Try increasing the 'Y' input.[/b]")
+                    steps.append(
+                        self.localization.get_str(
+                            "The square is too small."
+                        )
+                        + "\n\n"
+                        + self.localization.get_bold(
+                            "Try increasing the 'Y' input."
+                        )
+                        + "\n\n"
+                    )
             elif self.dwt_config.active_config.toolpath_offset.lower() == "outside":
                 if float(self.y_input.text or 0) <= 1:
-                    steps.append("The square is too small.")
-                    steps.append("[b]Try increasing the 'Y' input.[/b]")
+                    steps.append(
+                        self.localization.get_str(
+                            "The square is too small."
+                        )
+                        + "\n\n"
+                        + self.localization.get_bold(
+                            "Try increasing the 'Y' input."
+                        )
+                        + "\n\n"
+                    )
             else:
                 if float(self.y_input.text or 0) <= 0.1:
-                    steps.append("The square is too small.")
-                    steps.append("[b]Try increasing the 'Y' input.[/b]")
+                    steps.append(
+                        self.localization.get_str(
+                            "The square is too small."
+                        )
+                        + "\n\n"
+                        + self.localization.get_bold(
+                            "Try increasing the 'Y' input."
+                        )
+                        + "\n\n"
+                    )
         elif self.dwt_config.active_config.shape_type.lower() == "rectangle":
             if float(self.r_input.text or 0) > (min(float(self.x_input.text or 0), float(self.y_input.text or 0)) / 2):
-                steps.append("The radius value is too large.")
-                steps.append("[b]Try reducing the 'R' input.[/b]")
+                steps.append(
+                    self.localization.get_str(
+                        "The radius value is too large."
+                    )
+                    + "\n\n"
+                    + self.localization.get_bold(
+                        "Try reducing the 'R' input."
+                    )
+                    + "\n\n"
+                )
 
             if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
                 if (float(self.x_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.diameter) or (
                         float(self.y_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.diameter):
-                    steps.append("The rectangle's sides are too small.")
-                    steps.append("[b]Try increasing the 'X' and 'Y' inputs.[/b]")
+                    steps.append(
+                        self.localization.get_str(
+                            "The rectangle's sides are too small."
+                        )
+                        + "\n\n"
+                        + self.localization.get_bold(
+                            "Try increasing the 'X' and 'Y' inputs."
+                        )
+                        + "\n\n"
+                    )
             elif self.dwt_config.active_config.toolpath_offset.lower() == "outside":
                 if (float(self.x_input.text or 0) <= 1) or (float(self.y_input.text or 0) <= 1):
-                    steps.append("The rectangle's sides are too small.")
-                    steps.append("[b]Try increasing the 'X' and 'Y' inputs.[/b]")
+                    steps.append(
+                        self.localization.get_str(
+                            "The rectangle's sides are too small."
+                        )
+                        + "\n\n"
+                        + self.localization.get_bold(
+                            "Try increasing the 'X' and 'Y' inputs."
+                        )
+                        + "\n\n"
+                    )
             else:
                 if (float(self.x_input.text or 0) <= 0.1) or (float(self.y_input.text or 0) <= 0.1):
-                    steps.append("The rectangle's sides are too small.")
-                    steps.append("[b]Try increasing the 'X' and 'Y' inputs.[/b]")
+                    steps.append(
+                        self.localization.get_str(
+                            "The rectangle's sides are too small."
+                        )
+                        + "\n\n"
+                        + self.localization.get_bold(
+                            "Try increasing the 'X' and 'Y' inputs."
+                        )
+                        + "\n\n"
+                    )
         elif self.dwt_config.active_config.shape_type.lower() == "circle":
             if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
                 if float(self.d_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.diameter:
-                    steps.append("The circle's diameter is too small.")
-                    steps.append("[b]Try increasing the 'D' input.[/b]")
+                    steps.append(
+                        self.localization.get_str(
+                            "The circle's diameter is too small."
+                        )
+                        + "\n\n"
+                        + self.localization.get_bold(
+                            "Try increasing the 'D' input."
+                        )
+                        + "\n\n"
+                    )
             else:
                 if float(self.d_input.text or 0) <= 0.1:
-                    steps.append("The circle's diameter is too small.")
-                    steps.append("[b]Try increasing the 'D' input.[/b]")
+                    steps.append(
+                        self.localization.get_str(
+                            "The circle's diameter is too small."
+                        )
+                        + "\n\n"
+                        + self.localization.get_bold(
+                            "Try increasing the 'D' input."
+                        )
+                        + "\n\n"
+                    )
         elif self.dwt_config.active_config.shape_type.lower() == "line":
             if float(self.l_input.text or 0) <= 0.1:
-                steps.append("The line is too small.")
-                steps.append("[b]Try increasing the 'L' input.[/b]")
+                steps.append(
+                    self.localization.get_str(
+                        "The line is too small."
+                    )
+                    + "\n\n"
+                    + self.localization.get_bold(
+                        "Try increasing the 'L' input."
+                    )
+                    + "\n\n"
+
+                )
 
         return steps
