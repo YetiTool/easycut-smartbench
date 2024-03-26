@@ -11,6 +11,7 @@ from kivy.uix.button import Button
 from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
+from kivy.uix.rst import RstDocument
 from kivy.uix.scrollview import ScrollView
 
 from asmcnc.core_UI import scaling_utils as utils
@@ -977,13 +978,12 @@ class JobValidationPopup(BasicPopup):
             padding=utils.get_scaled_tuple((10, 10)),
         )
 
-        self.main_label = Label(
-            size_hint_y=self.main_label_size_hint_y,
-            text_size=(text_size_x, None),
+        self.main_label = RstDocument(
+            halign=self.main_label_h_align,
+            valign="middle",
             halign=self.main_label_h_align,
             text=self.l.get_str(self.main_string),
             color=(0, 0, 0, 1),
-            padding=utils.get_scaled_tuple(self.main_label_padding),
             markup=True,
             font_size=str(utils.get_scaled_width(15)) + "sp",
         )
