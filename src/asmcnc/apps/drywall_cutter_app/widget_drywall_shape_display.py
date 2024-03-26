@@ -205,7 +205,7 @@ Builder.load_string("""
                     halign: 'center'
                     multiline: False
                     size: self.parent.size
-                    pos: self.parent.pos[0] - 50, self.parent.pos[1]
+                    pos: self.parent.pos
                     background_color: (0,0,0,0)
 
             Label:
