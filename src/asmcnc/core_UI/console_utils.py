@@ -4,13 +4,13 @@ import os, sys, json
 def correct_shutdown(*args):
     correct_shutdown_flag = (os.popen('grep "correct_shutdown" config.txt').read())
     if 'False' in correct_shutdown_flag:
-        return True
+        return False
     else:
         if not correct_shutdown_flag:
             os.system("sudo sed -i -e '$acorrect_shutdown=False' /home/pi/easycut-smartbench/src/config.txt")
         elif 'True' in correct_shutdown_flag:
             os.system('sudo sed -i "s/correct_shutdown=True/correct_shutdown=False/" config.txt')
-        return False
+        return True
 
 
 def shutdown(*args):

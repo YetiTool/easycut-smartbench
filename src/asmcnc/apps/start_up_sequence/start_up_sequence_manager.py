@@ -75,7 +75,7 @@ class StartUpSequence(object):
 
 		else:
 			self.prep_starting_smartbench_screen()
-			if console_utils.correct_shutdown():
+			if not console_utils.correct_shutdown():
 				self.prep_incorrect_shutdown_screen()
 			self.prep_safety_screen()
 
