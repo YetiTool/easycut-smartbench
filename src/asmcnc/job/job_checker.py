@@ -99,6 +99,7 @@ class JobChecker(object):
                 + self.localization.get_bold(
                     "Try positioning the machine's N datum further away from home."
                 ).replace("N", "X")
+                + "\n\n"
             )
 
         if job_y_home_max >= machine_y_max_travel:
@@ -110,6 +111,7 @@ class JobChecker(object):
                 + self.localization.get_bold(
                     "Try positioning the machine's N datum further away from home."
                 ).replace("N", "Y")
+                + "\n\n"
             )
 
         if job_z_home_max >= machine_z_max_travel:
@@ -121,6 +123,7 @@ class JobChecker(object):
                 + self.localization.get_bold(
                     "Try positioning the machine's Z datum higher up."
                 )
+                + "\n\n"
             )
 
         if job_x_far_max >= -limit_switch_distance:
@@ -132,6 +135,7 @@ class JobChecker(object):
                 + self.localization.get_bold(
                     "Try positioning the machine's N datum closer to home."
                 ).replace("N", "X")
+                + "\n\n"
             )
 
         if job_y_far_max >= -limit_switch_distance:
@@ -143,6 +147,7 @@ class JobChecker(object):
                 + self.localization.get_bold(
                     "Try positioning the machine's N datum closer to home."
                 ).replace("N", "Y")
+                + "\n\n"
             )
 
         if job_z_far_max >= -limit_switch_distance:
@@ -154,6 +159,7 @@ class JobChecker(object):
                 + self.localization.get_bold(
                     "Try positioning the machine's Z datum lower down."
                 )
+                + "\n\n"
             )
 
         return steps
