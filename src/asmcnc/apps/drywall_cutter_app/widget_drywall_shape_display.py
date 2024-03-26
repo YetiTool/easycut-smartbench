@@ -72,15 +72,15 @@ Builder.load_string("""
                 pos: self.parent.pos[0] + self.parent.size[0] - self.size[0] - dp(9), self.parent.pos[1] + dp(6)
 
             BoxLayout:
-                size: dp(70), dp(40)
+                size: dp(90), dp(40)
                 size_hint: (None, None)
 
                 canvas.before:
                     Color:
                         rgba: hex('#E5E5E5FF')
                     Rectangle:
-                        pos: self.x + 5, self.y + 5
-                        size: self.width - 10, self.height - 10
+                        pos: self.x + 2.5, self.y + 5
+                        size: self.width - 5, self.height - 10
 
                 FloatInput:
                     id: d_input
@@ -94,7 +94,7 @@ Builder.load_string("""
             Label:
                 text: 'D'
                 font_size: dp(25)
-                pos: d_input.pos[0] - self.width, d_input.pos[1] + dp(3)
+                pos: d_input.pos[0] - self.width - 2.5, d_input.pos[1] + dp(3)
                 opacity: d_input.opacity
                 color: 0,0,0,1
                 size: self.texture_size
@@ -111,15 +111,15 @@ Builder.load_string("""
                 opacity: 0
 
             BoxLayout:
-                size: dp(70), dp(40)
+                size: dp(90), dp(40)
                 size_hint: (None, None)
 
                 canvas.before:
                     Color:
                         rgba: hex('#E5E5E5FF')
                     Rectangle:
-                        pos: self.x + 5, self.y + 5
-                        size: self.width - 10, self.height - 10
+                        pos: self.x + 2.5, self.y + 5
+                        size: self.width - 5, self.height - 10
 
                 FloatInput:
                     id: l_input
@@ -133,7 +133,7 @@ Builder.load_string("""
             Label:
                 text: 'L'
                 font_size: dp(25)
-                pos: l_input.pos[0] - self.width, l_input.pos[1] + dp(3)
+                pos: l_input.pos[0] - self.width - 2.5, l_input.pos[1] + dp(3)
                 opacity: l_input.opacity
                 color: 0,0,0,1
                 size: self.texture_size
@@ -150,15 +150,15 @@ Builder.load_string("""
                 opacity: 0
 
             BoxLayout:
-                size: dp(70), dp(40)
+                size: dp(90), dp(40)
                 size_hint: (None, None)
 
                 canvas.before:
                     Color:
                         rgba: hex('#E5E5E5FF')
                     Rectangle:
-                        pos: self.x + 5, self.y + 5
-                        size: self.width - 10, self.height - 10
+                        pos: self.x + 2.5, self.y + 5
+                        size: self.width - 5, self.height - 10
 
                 FloatInput:
                     id: r_input
@@ -172,7 +172,7 @@ Builder.load_string("""
             Label:
                 text: 'R'
                 font_size: dp(25)
-                pos: r_input.pos[0] - self.width, r_input.pos[1] + dp(3)
+                pos: r_input.pos[0] - self.width - 2.5, r_input.pos[1] + dp(3)
                 opacity: r_input.opacity
                 color: 0,0,0,1
                 size: self.texture_size
@@ -189,15 +189,15 @@ Builder.load_string("""
                 opacity: 0
 
             BoxLayout:
-                size: dp(70), dp(40)
+                size: dp(90), dp(40)
                 size_hint: (None, None)
 
                 canvas.before:
                     Color:
                         rgba: hex('#E5E5E5FF')
                     Rectangle:
-                        pos: self.x + 5, self.y + 5
-                        size: self.width - 10, self.height - 10
+                        pos: self.x + 2.5, self.y + 5
+                        size: self.width - 5, self.height - 10
 
                 FloatInput:
                     id: x_input
@@ -211,7 +211,7 @@ Builder.load_string("""
             Label:
                 text: 'X'
                 font_size: dp(25)
-                pos: x_input.pos[0] - self.width, x_input.pos[1] + dp(3)
+                pos: x_input.pos[0] - self.width - 2.5, x_input.pos[1] + dp(3)
                 opacity: x_input.opacity
                 color: 0,0,0,1
                 size: self.texture_size
@@ -228,15 +228,15 @@ Builder.load_string("""
                 opacity: 0
 
             BoxLayout:
-                size: dp(70), dp(40)
+                size: dp(90), dp(40)
                 size_hint: (None, None)
 
                 canvas.before:
                     Color:
                         rgba: hex('#E5E5E5FF')
                     Rectangle:
-                        pos: self.x + 5, self.y + 5
-                        size: self.width - 10, self.height - 10
+                        pos: self.x + 2.5, self.y + 5
+                        size: self.width - 5, self.height - 10
 
                 FloatInput:
                     id: y_input
@@ -250,7 +250,7 @@ Builder.load_string("""
             Label:
                 text: 'Y'
                 font_size: dp(25)
-                pos: y_input.pos[0] - self.width, y_input.pos[1] + dp(3)
+                pos: y_input.pos[0] - self.width - 2.5, y_input.pos[1] + dp(3)
                 opacity: y_input.opacity
                 color: 0,0,0,1
                 size: self.texture_size
@@ -432,7 +432,7 @@ class DrywallShapeDisplay(Widget):
             self.swapping_lengths = False
 
         if shape == 'circle':
-            self.enable_input(self.d_input, (468, 310))
+            self.enable_input(self.d_input, (458, 310))
             self.place_widget(self.x_datum_label, (278, 27))
             self.place_widget(self.y_datum_label, (403, 196))
         else:
@@ -440,22 +440,22 @@ class DrywallShapeDisplay(Widget):
 
         if shape in ['square', 'rectangle']:
             if shape == 'square':
-                self.enable_input(self.r_input, (421, 311))
+                self.enable_input(self.r_input, (411, 311))
                 self.disable_input(self.x_input)
-                self.enable_input(self.y_input, (248, 327))
+                self.enable_input(self.y_input, (238, 327))
                 self.place_widget(self.x_datum_label, (365, 35))
                 self.place_widget(self.y_datum_label, (398, 113))
             else:
                 if rotation == 'horizontal':
-                    self.enable_input(self.r_input, (463, 311))
-                    self.enable_input(self.x_input, (43, 175))
-                    self.enable_input(self.y_input, (248, 327))
+                    self.enable_input(self.r_input, (453, 311))
+                    self.enable_input(self.x_input, (33, 175))
+                    self.enable_input(self.y_input, (238, 327))
                     self.place_widget(self.x_datum_label, (397, 35))
                     self.place_widget(self.y_datum_label, (416, 114))
                 else:
-                    self.enable_input(self.r_input, (419, 333))
-                    self.enable_input(self.x_input, (98, 155))
-                    self.enable_input(self.y_input, (248, 331))
+                    self.enable_input(self.r_input, (409, 333))
+                    self.enable_input(self.x_input, (78, 155))
+                    self.enable_input(self.y_input, (238, 331))
                     self.place_widget(self.x_datum_label, (235, 20))
                     self.place_widget(self.y_datum_label, (395, 63))
         else:
@@ -465,11 +465,11 @@ class DrywallShapeDisplay(Widget):
 
         if shape == 'line':
             if rotation == 'horizontal':
-                self.enable_input(self.l_input, (250, 228))
+                self.enable_input(self.l_input, (240, 228))
                 self.place_widget(self.x_datum_label, (414, 75))
                 self.place_widget(self.y_datum_label, (425, 195))
             else:
-                self.enable_input(self.l_input, (178, 173))
+                self.enable_input(self.l_input, (158, 173))
                 self.place_widget(self.x_datum_label, (270, 20))
                 self.place_widget(self.y_datum_label, (350, 56))
         else:
