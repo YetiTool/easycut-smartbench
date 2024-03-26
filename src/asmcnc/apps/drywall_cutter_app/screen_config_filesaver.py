@@ -17,6 +17,7 @@ from kivy.lang import Builder
 from kivy.properties import ObjectProperty, StringProperty  
 from kivy.uix.screenmanager import Screen
 
+from asmcnc.apps.drywall_cutter_app.config import config_loader
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
 
@@ -385,22 +386,9 @@ class ConfigFileSaver(Screen):
         with open(self.filechooser.selection[0], 'r') as f:
             json_obj = json.load(f)
 
-        self.metadata_preview.text = self.to_human_readable(json_obj)
+        self.metadata_preview.text = config_loader.get_display_preview(json_obj)
 
         self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
-
-    def to_human_readable(self, json_obj, indent=0):
-        def format_key(json_key):
-            return json_key.replace("_", " ").title()
-
-        result = ''
-
-        for key, value in json_obj.items():
-            if isinstance(value, dict):
-                result += ' ' * indent + format_key(key) + ":\n" + self.to_human_readable(value, indent + 4)
-            else:
-                result += ' ' * indent + format_key(key) + ": " + str(value) + "\n"
-        return result
 
     def save_config_and_return_to_dwt(self):
         if self.validate_file_name(self.file_selected_label.text):

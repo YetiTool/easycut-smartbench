@@ -13,6 +13,8 @@ import json
 
 import kivy
 from chardet import detect
+
+from asmcnc.apps.drywall_cutter_app.config import config_loader
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty, StringProperty  
@@ -434,26 +436,13 @@ class ConfigFileChooser(Screen):
         with open(self.filechooser.selection[0], 'r') as f:
             json_obj = json.load(f)
 
-        self.metadata_preview.text = self.to_human_readable(json_obj)
+        self.metadata_preview.text = config_loader.get_display_preview(json_obj)
 
         self.load_button.disabled = False
         self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
 
         self.delete_selected_button.disabled = False
         self.image_delete.source = './asmcnc/skavaUI/img/file_select_delete.png'
-
-    def to_human_readable(self, json_obj, indent=0):
-        def format_key(json_key):
-            return json_key.replace("_", " ").title()
-
-        result = ''
-
-        for key, value in json_obj.items():
-            if isinstance(value, dict):
-                result += ' ' * indent + format_key(key) + ":\n" + self.to_human_readable(value, indent + 4)
-            else:
-                result += ' ' * indent + format_key(key) + ": " + str(value) + "\n"
-        return result
 
     def load_config_and_return_to_dwt(self):
         self.callback(self.filechooser.selection[0])
