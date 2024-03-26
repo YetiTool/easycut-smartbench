@@ -918,3 +918,51 @@ class SpindleSafetyPopup(BasicPopup):
                 markup=True
             )
         ]
+
+
+class JobValidationPopup(BasicPopup):
+    def __init__(
+        self,
+        main_string,
+        popup_width=800,
+        popup_height=480,
+        button_one_text="Ok",
+        button_one_callback=None,
+        button_one_background_color=(230 / 255., 74 / 255., 25 / 255., 1.),
+        button_two_text=None,
+        button_two_callback=None,
+        button_two_background_color=None,
+        title="Error",
+        main_label_padding=(0, 10),
+        main_layout_padding=(10, 10, 10, 10),
+        main_layout_spacing=10,
+        main_label_size_delta=10,
+        button_layout_padding=(0, 5, 0, 5),
+        button_layout_spacing=15,
+        main_label_h_align="left",
+        main_label_size_hint_y=2,
+        **kwargs
+    ):
+        super(JobValidationPopup, self).__init__(
+            main_string=main_string,
+            popup_type=PopupType.ERROR,
+            main_label_padding=main_label_padding,
+            main_layout_padding=main_layout_padding,
+            main_layout_spacing=main_layout_spacing,
+            main_label_size_delta=main_label_size_delta,
+            button_layout_padding=button_layout_padding,
+            button_layout_spacing=button_layout_spacing,
+            main_label_h_align=main_label_h_align,
+            popup_width=popup_width,
+            popup_height=popup_height,
+            button_one_text=button_one_text,
+            button_one_callback=button_one_callback,
+            button_one_background_color=button_one_background_color,
+            button_two_text=button_two_text,
+            button_two_callback=button_two_callback,
+            button_two_background_color=button_two_background_color,
+            title=title,
+            main_label_size_hint_y=main_label_size_hint_y,
+            button_layout_size_hint_y=1,
+            **kwargs
+        )
