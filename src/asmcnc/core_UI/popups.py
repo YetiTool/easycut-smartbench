@@ -939,7 +939,7 @@ class JobValidationPopup(BasicPopup):
         main_label_size_delta=30,
         button_layout_padding=(0, 5, 0, 5),
         button_layout_spacing=15,
-        main_label_h_align="left",
+        main_label_h_align="center",
         main_label_size_hint_y=2,
         **kwargs
     ):
