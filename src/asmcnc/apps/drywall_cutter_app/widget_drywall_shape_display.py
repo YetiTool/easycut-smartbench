@@ -372,6 +372,7 @@ class DrywallShapeDisplay(Widget):
         self.dwt_config = kwargs['dwt_config']
         self.engine = kwargs['engine']
         self.kb = kwargs['kb']
+        self.localization = kwargs['localization']
 
         self._check_extent_clock = None
         self._check_lock = threading.Lock()

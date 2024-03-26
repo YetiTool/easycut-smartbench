@@ -208,7 +208,8 @@ class DrywallCutterScreen(Screen):
                                                                                              screen_manager=self.sm,
                                                                                              dwt_config=self.dwt_config,
                                                                                              engine=self.engine,
-                                                                                             kb=self.kb)
+                                                                                             kb=self.kb,
+                                                                                             localization=self.l)
         self.shape_display_container.add_widget(self.drywall_shape_display_widget)
 
         self.show_tool_image()
