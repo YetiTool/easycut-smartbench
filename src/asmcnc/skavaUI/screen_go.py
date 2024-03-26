@@ -545,7 +545,7 @@ class GoScreen(Screen):
                 self.yp_widget.switch.disabled = False
                 self.yp_widget.yp_cog_button.disabled = False
 
-                if self.model_manager.is_machine_drywall():
+                if self.model_manager.is_machine_drywall() and self.return_to_screen == "drywall_cutter":
                     self.yp.enable()
 
                     dwt_config = config_loader.DWTConfig()
