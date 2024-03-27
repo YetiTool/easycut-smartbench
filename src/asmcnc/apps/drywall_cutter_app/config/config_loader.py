@@ -265,15 +265,17 @@ class DWTConfig(EventDispatcher):
         for cutter_file in sorted(os.listdir(CUTTERS_DIR)):
             file_path = os.path.join(CUTTERS_DIR, cutter_file)
 
-            if os.path.isfile(file_path):
-                with open(file_path, "r") as f:
-                    cutter = json.load(f)
+            if not os.path.isfile(file_path):
+                continue  # Skip directories
 
-                    if 'cutter_description' in cutter and 'image_path' in cutter:
-                        cutters[cutter['cutter_description']] = {
-                            'cutter_path': cutter_file,
-                            'image_path': cutter['image_path']
-                        }
+            with open(file_path, "r") as f:
+                cutter = json.load(f)
+
+                if 'cutter_description' in cutter and 'image_path' in cutter:
+                    cutters[cutter['cutter_description']] = {
+                        'cutter_path': cutter_file,
+                        'image_path': cutter['image_path']
+                    }
         return cutters
 
     def save_temp_config(self):
