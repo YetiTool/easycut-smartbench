@@ -272,14 +272,14 @@ class DrywallCutterScreen(Screen):
                                                                            callback=self.load_config))
         self.sm.current = 'config_filechooser'
 
-    def load_config(self, config):
+    def load_config(self, config_path):
         # type: (str) -> None
         """
         Used as the callback for the config filechooser screen.
 
-        :param config: The path to the config file, including extension.
+        :param config_path: The path to the config file, including extension (if present).
         """
-        self.dwt_config.load_config(config)
+        self.dwt_config.load_config(config_path.split(os.sep)[-1])
         self.apply_active_config()
 
         # Set datum when loading a new config
