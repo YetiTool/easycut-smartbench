@@ -11,6 +11,7 @@ from asmcnc.apps.drywall_cutter_app import widget_drywall_shape_display
 from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
 from asmcnc.apps.drywall_cutter_app.config import config_loader
 from asmcnc.apps.drywall_cutter_app.image_dropdown import ImageDropDownButton
+from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.core_UI import scaling_utils
 from asmcnc.skavaUI import popup_info
 
@@ -356,6 +357,8 @@ class DrywallCutterScreen(Screen):
 
         :return: None
         """
+        Logger.debug("New config loaded. Applying settings.")
+
         self.apply_active_config()
 
         # Set datum when loading a new config
