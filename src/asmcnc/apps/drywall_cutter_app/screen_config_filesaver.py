@@ -387,7 +387,7 @@ class ConfigFileSaver(Screen):
 
     def save_config_and_return_to_dwt(self):
         if self.validate_file_name(self.file_selected_label.text):
-            self.callback(self.file_selected_label.text)
+            self.callback(os.path.join(configs_dir, self.file_selected_label.text))
 
             self.sm.current = 'drywall_cutter'
         else:
