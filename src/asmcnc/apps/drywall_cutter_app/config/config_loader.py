@@ -40,10 +40,9 @@ class DWTConfig(EventDispatcher):
         super(DWTConfig, self).__init__(*args, **kwargs)
         self.screen_drywall_cutter = screen_drywall_cutter
 
-        most_recent_config = self.get_most_recent_config()
-
-        if most_recent_config:
-            self.load_config(most_recent_config)
+        most_recent_config_path = self.get_most_recent_config()
+        if most_recent_config_path:
+            self.load_config(most_recent_config_path)
         else:
             # If no configs, try to load temp config
             if os.path.exists(TEMP_CONFIG_PATH):
@@ -66,7 +65,7 @@ class DWTConfig(EventDispatcher):
     def set_most_recent_config(config_path):
         """
         Set the most recent config in settings.json
-        :param config_path: the path to the most recently used config
+        :param config_path: the name of the most recently used config
         :return:
         """
         with open(SETTINGS_PATH, 'w+') as settings_f:
@@ -134,31 +133,29 @@ class DWTConfig(EventDispatcher):
         return True
 
     @debug
-    def load_config(self, config_name):
+    def load_config(self, config_path):
         # type (str) -> None
         """
         Loads a configuration file from the configuration directory.
 
-        :param config_name: The name of the configuration file to load.
+        :param config_path: The path of the configuration file to load.
         """
-        file_path = os.path.join(CONFIGURATIONS_DIR, config_name)
+        if not os.path.exists(config_path):
+            raise Exception('Configuration file does not exist. ' + config_path + ' ' + os.getcwd())
 
-        if not os.path.exists(file_path):
-            raise Exception('Configuration file does not exist. ' + file_path + ' ' + os.getcwd())
-
-        if not self.is_valid_configuration(config_name):
-            if not self.fix_config(config_name):
+        if not self.is_valid_configuration(config_path):
+            if not self.fix_config(config_path):
                 self.active_config = config_classes.Configuration.default()
                 self.save_temp_config()
 
-        with open(file_path, 'r') as f:
+        with open(config_path, 'r') as f:
             self.active_config = config_classes.Configuration(**json.load(f))
 
-        if file_path != TEMP_CONFIG_PATH:
-            self.set_most_recent_config(file_path)
+        if config_path != TEMP_CONFIG_PATH:
+            self.set_most_recent_config(config_path)
 
         self.load_cutter(self.active_config.cutter_type)
-        self.active_config_name = config_name
+        self.active_config_name = config_path.split(os.sep)[-1]  # Get the name of the configuration file from the path
 
     @debug
     def save_config(self, config_name):
