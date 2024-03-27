@@ -271,7 +271,7 @@ class DWTConfig(EventDispatcher):
         :return: A list of the available cutter names and their file names.
         """
         cutters = {}
-        for cutter_file in sorted(os.listdir(cutters_dir)):
+        for cutter_file in sorted(os.listdir(CUTTERS_DIR)):
             file_path = os.path.join(CUTTERS_DIR, cutter_file)
 
             if os.path.isfile(file_path):
