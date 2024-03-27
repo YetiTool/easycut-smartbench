@@ -22,7 +22,7 @@ import decimal
 import os
 import re
 
-from asmcnc.apps.drywall_cutter_app.config.config_options import CuttingDirection, ShapeType
+from asmcnc.apps.drywall_cutter_app.config.config_options import CuttingDirectionOptions, ShapeTypeOptions
 
 try:
     from asmcnc.apps.drywall_cutter_app.config import config_loader
@@ -511,16 +511,16 @@ class GCodeEngine():
         pass_depths = []
         stepovers = [0]
 
-        is_climb = (self.config.active_cutter.parameters.cutting_direction == CuttingDirection.CLIMB.value
-                    or self.config.active_cutter.parameters.cutting_direction == CuttingDirection.BOTH.value)
+        is_climb = (self.config.active_cutter.parameters.cutting_direction == CuttingDirectionOptions.CLIMB.value
+                    or self.config.active_cutter.parameters.cutting_direction == CuttingDirectionOptions.BOTH.value)
 
         # Calculated parameters
         total_cut_depth = self.config.active_config.cutting_depths.material_thickness + self.config.active_config.cutting_depths.bottom_offset
 
-        if self.config.active_config.shape_type == ShapeType.RECTANGLE.value or self.config.active_config.shape_type == ShapeType.SQUARE.value:
+        if self.config.active_config.shape_type == ShapeTypeOptions.RECTANGLE.value or self.config.active_config.shape_type == ShapeTypeOptions.SQUARE.value:
             y_rect = self.config.active_config.canvas_shape_dims.y
             x_rect = self.config.active_config.canvas_shape_dims.x \
-                if self.config.active_config.shape_type.lower() == ShapeType.RECTANGLE.value \
+                if self.config.active_config.shape_type.lower() == ShapeTypeOptions.RECTANGLE.value \
                 else self.config.active_config.canvas_shape_dims.y
             rect_coordinates = self.rectangle_coordinates(x_rect, y_rect)
             if len(rect_coordinates) != 4:

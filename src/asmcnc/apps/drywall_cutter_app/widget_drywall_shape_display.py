@@ -4,7 +4,8 @@ from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 
-from asmcnc.apps.drywall_cutter_app.config.config_options import ToolpathOffset
+from asmcnc.apps.drywall_cutter_app.config.config_options import ToolpathOffsetOptions, ShapeTypeOptions, \
+    RotationOptions
 from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.core_UI.components import float_input  # Required for the builder string
 import re
@@ -502,7 +503,7 @@ class DrywallShapeDisplay(Widget):
         text_input.parent.opacity = 0
 
     def select_toolpath(self, shape, toolpath, rotation):
-        if shape in ['line', 'geberit']:
+        if shape in [ShapeTypeOptions.LINE.value, ShapeTypeOptions.GEBERIT.value]:
             self.shape_toolpath_image.opacity = 0
         else:
             if shape == 'rectangle':
@@ -524,12 +525,12 @@ class DrywallShapeDisplay(Widget):
                 self.sm.get_screen('drywall_cutter').rotate_shape(swap_lengths=False)
             if self.rectangle_with_equal_sides() and False: # DISABLE
                 toolpath = self.sm.get_screen('drywall_cutter').cut_offset_selection.text
-                self.sm.get_screen('drywall_cutter').shape_selection.text = 'square'
+                self.sm.get_screen('drywall_cutter').shape_selection.text = ShapeTypeOptions.SQUARE.value
                 self.sm.get_screen('drywall_cutter').cut_offset_selection.text = toolpath
 
     def rotation_required(self):
-        if self.dwt_config.active_config.shape_type.lower() == "rectangle":
-            if self.dwt_config.active_config.rotation == "vertical":
+        if self.dwt_config.active_config.shape_type == ShapeTypeOptions.RECTANGLE.value:
+            if self.dwt_config.active_config.rotation == RotationOptions.VERTICAL.value:
                 return float(self.x_input.text or 0) < float(self.y_input.text or 0)
             else:
                 return float(self.x_input.text or 0) > float(self.y_input.text or 0)
@@ -537,7 +538,7 @@ class DrywallShapeDisplay(Widget):
             return False
         
     def rectangle_with_equal_sides(self):
-        if self.dwt_config.active_config.shape_type.lower() == "rectangle":
+        if self.dwt_config.active_config.shape_type == ShapeTypeOptions.RECTANGLE.value:
             if self.x_input.text and self.y_input.text:
                 if float(self.x_input.text) == float(self.y_input.text):
                     return True
@@ -606,9 +607,9 @@ class DrywallShapeDisplay(Widget):
     def tool_offset_value(self):
         # Account for cutter size
         cutter_radius = (self.dwt_config.active_cutter.dimensions.diameter or 0) / 2  # if angled cutter, get 0
-        if self.dwt_config.active_config.toolpath_offset == ToolpathOffset.INSIDE.value:
+        if self.dwt_config.active_config.toolpath_offset == ToolpathOffsetOptions.INSIDE.value:
             tool_offset_value = -cutter_radius
-        elif self.dwt_config.active_config.toolpath_offset == ToolpathOffset.OUTSIDE.value:
+        elif self.dwt_config.active_config.toolpath_offset == ToolpathOffsetOptions.OUTSIDE.value:
             tool_offset_value = cutter_radius
         else:
             tool_offset_value = 0
@@ -617,26 +618,26 @@ class DrywallShapeDisplay(Widget):
 
     def get_x_y_clearances(self, current_shape, x_coord, y_coord, tool_offset_value):
         # Calculate shape's extent from datum using shape type and input dimensions
-        if current_shape == 'circle':
+        if current_shape == ShapeTypeOptions.CIRCLE.value:
             x_min = y_min = -(float(self.d_input.text or 0) / 2) - tool_offset_value
             x_dim = y_dim = (float(self.d_input.text or 0) / 2) + tool_offset_value
-        elif current_shape in ['square', 'rectangle']:
+        elif current_shape in [ShapeTypeOptions.SQUARE.value, ShapeTypeOptions.RECTANGLE.value]:
             x_min = y_min = -tool_offset_value
             y_dim = float(self.y_input.text or 0) + tool_offset_value
             # As square only uses y input it needs a separate condition
-            if current_shape == 'square':
+            if current_shape == ShapeTypeOptions.SQUARE.value:
                 x_dim = y_dim
-            elif current_shape == 'rectangle':
+            elif current_shape == ShapeTypeOptions.RECTANGLE.value:
                 x_dim = float(self.x_input.text or 0) + tool_offset_value
-        elif current_shape == 'line':
+        elif current_shape == ShapeTypeOptions.LINE.value:
             x_min = y_min = 0
-            if "horizontal" in self.dwt_config.active_config.rotation:
+            if self.dwt_config.active_config.rotation == RotationOptions.HORIZONTAL.value:
                 x_dim = 0
                 y_dim = float(self.l_input.text or 0)
             else:
                 x_dim = float(self.l_input.text or 0)
                 y_dim = 0
-        elif current_shape == 'geberit':
+        elif current_shape == ShapeTypeOptions.GEBERIT.value:
             x_dim, y_dim, x_min, y_min = self.engine.get_custom_shape_extents()
 
         # Calculate shape's distances from every edge
@@ -695,18 +696,18 @@ class DrywallShapeDisplay(Widget):
 
         # Now show a message if any dimensions are too big
         d_limit = min(x_practical_range, y_practical_range)
-        if current_shape == 'circle' and float(self.d_input.text or 0) > d_limit:
+        if current_shape == ShapeTypeOptions.CIRCLE.value and float(self.d_input.text or 0) > d_limit:
             self.d_input_validation_label.text = 'MAX: ' + str(d_limit)
             self.d_input_validation_label.opacity = 1
         else:
             self.d_input_validation_label.opacity = 0
 
-        if current_shape in ['square', 'rectangle']:
+        if current_shape in [ShapeTypeOptions.SQUARE.value, ShapeTypeOptions.RECTANGLE.value]:
             x_limit = x_practical_range
             y_limit = y_practical_range
             dims = self.dwt_config.active_config.canvas_shape_dims
 
-            if current_shape == 'square':
+            if current_shape == ShapeTypeOptions.SQUARE.value:
                 self.x_input_validation_label.opacity = 0
                 # Because square is limited by the smaller dimension
                 square_limit = min(x_limit, y_limit)
@@ -740,8 +741,8 @@ class DrywallShapeDisplay(Widget):
             self.x_input_validation_label.opacity = 0
             self.y_input_validation_label.opacity = 0
 
-        if current_shape == 'line':
-            if "horizontal" in self.dwt_config.active_config.rotation:
+        if current_shape == ShapeTypeOptions.LINE.value:
+            if self.dwt_config.active_config.rotation == RotationOptions.HORIZONTAL.value:
                 if float(self.l_input.text or 0) > y_practical_range:
                     self.l_input_validation_label.text = 'MAX: ' + str(y_practical_range)
                     self.l_input_validation_label.opacity = 1
