@@ -21,22 +21,6 @@ DEBUG_MODE = False
 INDENT_VALUE = "    "
 
 
-def debug(func):
-    def wrapper(*args, **kwargs):
-        if DEBUG_MODE:
-            Logger.debug(
-                "Calling function: "
-                + func.__name__
-                + " with args: "
-                + str(args)
-                + " and kwargs: "
-                + str(kwargs)
-            )
-        return func(*args, **kwargs)
-
-    return wrapper
-
-
 def get_display_preview(json_obj):
     preview = get_shape_type(json_obj)
     preview += "Units: " + json_obj['units'] + "\n"
@@ -103,8 +87,10 @@ class DWTConfig(EventDispatcher):
         :return: the most recently used config path
         """
         if not os.path.exists(SETTINGS_PATH):
+            Logger.warning("No settings file found")
             return None  # No settings file, so no most recent config
 
+        Logger.debug("Reading most recent config")
         with open(SETTINGS_PATH, "r") as settings_f:
             j_obj = json.load(settings_f)
             return j_obj["most_recent_config"]
@@ -117,12 +103,13 @@ class DWTConfig(EventDispatcher):
         :param config_path: the name of the most recently used config
         :return:
         """
+        Logger.debug("Writing most recent config: " + config_path.split(os.sep)[-1])
+
         with open(SETTINGS_PATH, "w+") as settings_f:
             j_obj = {"most_recent_config": config_path}
             json.dump(j_obj, settings_f)
 
     @staticmethod
-    @debug
     def is_valid_configuration(config_name):
         # type (str) -> bool
         """
@@ -152,7 +139,6 @@ class DWTConfig(EventDispatcher):
         return True
 
     @staticmethod
-    @debug
     def fix_config(config_name):
         # type (str) -> bool
         """
@@ -185,7 +171,6 @@ class DWTConfig(EventDispatcher):
 
         return True
 
-    @debug
     def load_config(self, config_path):
         # type (str) -> None
         """
@@ -194,15 +179,15 @@ class DWTConfig(EventDispatcher):
         :param config_path: The path of the configuration file to load.
         """
         if not os.path.exists(config_path):
-            raise Exception(
-                "Configuration file does not exist. " + config_path + " " + os.getcwd()
-            )
+            Logger.error("Configuration file doesn't exist: " + config_path)
+            return
 
         if not self.is_valid_configuration(config_path):
             if not self.fix_config(config_path):
                 self.active_config = config_classes.Configuration.default()
                 self.save_temp_config()
 
+        Logger.debug("Loading configuration: " + config_path)
         with open(config_path, "r") as f:
             self.active_config = config_classes.Configuration(**json.load(f))
 
@@ -214,7 +199,6 @@ class DWTConfig(EventDispatcher):
             -1
         ]  # Get the name of the configuration file from the path
 
-    @debug
     def save_config(self, config_path):
         # type (str) -> None
         """
@@ -222,6 +206,8 @@ class DWTConfig(EventDispatcher):
 
         :param config_path: The path to save the config to
         """
+        Logger.debug("Saving configuration: " + config_path)
+
         self.cleanup_active_config()
 
         with open(config_path, "w") as f:
@@ -246,7 +232,6 @@ class DWTConfig(EventDispatcher):
             self.active_config.canvas_shape_dims.r = 0
             self.active_config.canvas_shape_dims.d = 0
 
-    @debug
     def load_cutter(self, cutter_name):
         # type (str) -> None
         """
@@ -260,11 +245,11 @@ class DWTConfig(EventDispatcher):
             Logger.error("Cutter file doesn't exist: " + cutter_name)
             return
 
+        Logger.debug("Loading cutter: " + cutter_name)
         with open(file_path, "r") as f:
             self.active_cutter = config_classes.Cutter.from_json(json.load(f))
 
     @staticmethod
-    @debug
     def get_available_cutter_names():
         # type () -> dict{str: dict{str: str}}
         """
@@ -285,7 +270,6 @@ class DWTConfig(EventDispatcher):
                         }
         return cutters
 
-    @debug
     def save_temp_config(self):
         # type () -> None
         """
@@ -295,7 +279,6 @@ class DWTConfig(EventDispatcher):
         """
         self.save_config(TEMP_CONFIG_PATH)
 
-    @debug
     def load_temp_config(self):
         # type () -> None
         """
@@ -313,7 +296,6 @@ class DWTConfig(EventDispatcher):
 
         self.load_config(TEMP_CONFIG_PATH)
 
-    @debug
     def on_parameter_change(self, parameter_name, parameter_value):
         # type: (str, object) -> None
         """
@@ -324,6 +306,7 @@ class DWTConfig(EventDispatcher):
         :param parameter_name: The name of the parameter that was changed.
         :param parameter_value: The new value of the parameter.
         """
+        Logger.debug("Parameter change: " + parameter_name + " = " + str(parameter_value))
 
         if "." in parameter_name:
             parameter_names = parameter_name.split(".")
