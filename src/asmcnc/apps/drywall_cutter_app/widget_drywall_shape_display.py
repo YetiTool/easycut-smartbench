@@ -695,14 +695,8 @@ class DrywallShapeDisplay(Widget):
         else:
             self.bumper_left_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_left_green.png"
 
-        x_machine_range = self.m.get_dollar_setting(130) - 2 * self.m.limit_switch_safety_distance
-        y_machine_range = self.m.get_dollar_setting(131) - 2 * self.m.limit_switch_safety_distance
-        clearance_between_limit_edge = 1
-        x_practical_range = x_machine_range - 2 * clearance_between_limit_edge
-        y_practical_range = y_machine_range - 2 * clearance_between_limit_edge
-
-        # Now show a message if any dimensions are too big
-        d_limit = min(x_practical_range, y_practical_range)
+       # Now show a message if any dimensions are too big
+        d_limit = X_MAX
         if current_shape == 'circle' and float(self.d_input.text or 0) > d_limit:
             self.d_input_validation_label.text = 'MAX: ' + str(d_limit)
             self.d_input_validation_label.opacity = 1
@@ -710,8 +704,8 @@ class DrywallShapeDisplay(Widget):
             self.d_input_validation_label.opacity = 0
 
         if current_shape in ['square', 'rectangle']:
-            x_limit = x_practical_range
-            y_limit = y_practical_range
+            x_limit = X_MAX
+            y_limit = Y_MAX
             dims = self.dwt_config.active_config.canvas_shape_dims
 
             if current_shape == 'square':
@@ -750,14 +744,14 @@ class DrywallShapeDisplay(Widget):
 
         if current_shape == 'line':
             if "horizontal" in self.dwt_config.active_config.rotation:
-                if float(self.l_input.text or 0) > y_practical_range:
-                    self.l_input_validation_label.text = 'MAX: ' + str(y_practical_range)
+                if float(self.l_input.text or 0) > Y_MAX:
+                    self.l_input_validation_label.text = 'MAX: ' + str(Y_MAX)
                     self.l_input_validation_label.opacity = 1
                 else:
                     self.l_input_validation_label.opacity = 0
             else:
-                if float(self.l_input.text or 0) > x_practical_range:
-                    self.l_input_validation_label.text = 'MAX: ' + str(x_practical_range)
+                if float(self.l_input.text or 0) > X_MAX:
+                    self.l_input_validation_label.text = 'MAX: ' + str(X_MAX)
                     self.l_input_validation_label.opacity = 1
                 else:
                     self.l_input_validation_label.opacity = 0
