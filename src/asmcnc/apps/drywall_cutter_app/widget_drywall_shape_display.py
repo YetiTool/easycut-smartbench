@@ -4,6 +4,10 @@ from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 
+from asmcnc.apps.drywall_cutter_app import config
+from asmcnc.apps.drywall_cutter_app.config import config_loader
+from asmcnc.comms.logging_system.logging_system import Logger
+
 from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.core_UI.components import float_input  # Required for the builder string
 import re
@@ -398,7 +402,8 @@ class DrywallShapeDisplay(Widget):
         self.unit_switch.canvas.children[5].source = "./asmcnc/apps/drywall_cutter_app/img/unit_toggle.png"
         self.unit_switch.bind(active=self.toggle_units)
 
-        # Clock.schedule_interval(self.set_datum_in_config_with_m_wco, 0.1)
+        self.dwt_config.bind(active_config_name=self.on_config_name_change)
+        self.on_config_name_change(self.dwt_config, self.dwt_config.active_config_name)
 
     def update_state(self, value):
         self.machine_state_label.text = value
@@ -645,7 +650,7 @@ class DrywallShapeDisplay(Widget):
 
         return x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance
 
-    def update_bumpers_and_validation_labels(self, current_shape, current_x, current_y, 
+    def update_bumpers_and_validation_labels(self, current_shape, current_x, current_y,
                                             x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance):
         # I think this function could be broken down & refactored as well, but I don't need to address it right now.
 
@@ -754,3 +759,6 @@ class DrywallShapeDisplay(Widget):
         else:
             self.l_input_validation_label.opacity = 0
 
+    def on_config_name_change(self, instance, value):
+        Logger.debug("Setting config label to: " + value)
+        self.config_name_label.text = "New Configuration" if value == "temp_config.json" else value
