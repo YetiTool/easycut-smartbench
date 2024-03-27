@@ -333,18 +333,14 @@ class DWTConfig(EventDispatcher):
                 parameter = getattr(parameter, parameter_name)
 
             if getattr(parameter, parameter_names[-1]) != parameter_value:
-                self.__set_new_configuration_label()
+                self.active_config_name = "New Configuration"
 
             setattr(parameter, parameter_names[-1], parameter_value)
         else:
             if getattr(self.active_config, parameter_name) != parameter_value:
-                self.__set_new_configuration_label()
+                self.active_config_name = "New Configuration"
 
             setattr(self.active_config, parameter_name, parameter_value)
 
         # update screen, check bumpers and so on:
         self.screen_drywall_cutter.drywall_shape_display_widget.check_datum_and_extents()
-
-    def __set_new_configuration_label(self):
-        if self.screen_drywall_cutter:
-            self.active_config_name = "New Configuration"
