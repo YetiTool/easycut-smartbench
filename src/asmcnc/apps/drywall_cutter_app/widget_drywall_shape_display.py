@@ -759,7 +759,5 @@ class DrywallShapeDisplay(Widget):
         else:
             self.l_input_validation_label.opacity = 0
 
-
     def on_config_name_change(self, instance, value):
-        Logger.debug("Config name changed to: " + value)
         self.config_name_label.text = "New Config" if value == "temp_config.json" else value
