@@ -375,10 +375,7 @@ class DrywallCutterScreen(Screen):
 
         self.apply_active_config()
 
-        # Set datum when loading a new config
-        dx, dy = self.drywall_shape_display_widget.get_current_x_y(value.datum_position.x,
-                                                                   value.datum_position.y, True)
-        self.m.set_datum(x=dx, y=dy, relative=True)
+        self.m.set_datum(x=value.datum_position.x, y=value.datum_position.y, relative=False)
 
     def apply_active_config(self):
         toolpath_offset = self.dwt_config.active_config.toolpath_offset
