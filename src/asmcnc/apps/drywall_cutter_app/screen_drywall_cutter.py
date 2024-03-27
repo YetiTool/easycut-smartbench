@@ -1,22 +1,17 @@
-import os
-from datetime import datetime
-
+from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen
-from kivy.clock import Clock
 
-from asmcnc.skavaUI import popup_info
-from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
-from asmcnc.apps.drywall_cutter_app import widget_drywall_shape_display
-from asmcnc.apps.drywall_cutter_app.config import config_loader
+from asmcnc.apps.drywall_cutter_app import material_setup_popup
 from asmcnc.apps.drywall_cutter_app import screen_config_filechooser
 from asmcnc.apps.drywall_cutter_app import screen_config_filesaver
-from asmcnc.apps.drywall_cutter_app.image_dropdown import ImageDropDownButton
-from asmcnc.apps.drywall_cutter_app import material_setup_popup
-
+from asmcnc.apps.drywall_cutter_app import widget_drywall_shape_display
+from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
+from asmcnc.apps.drywall_cutter_app.config import config_loader
 from asmcnc.core_UI import scaling_utils
+from asmcnc.skavaUI import popup_info
 
 
 class ImageButton(ButtonBehavior, Image):
@@ -216,6 +211,8 @@ class DrywallCutterScreen(Screen):
                             self.drywall_shape_display_widget.bumper_top_image,
                             self.drywall_shape_display_widget.bumper_left_image]
 
+        self.dwt_config.bind(active_config=self.on_load_config)
+
     def on_pre_enter(self):
         self.apply_active_config()
         self.pulse_poll = Clock.schedule_interval(self.update_pulse_opacity, 0.04)
@@ -349,22 +346,20 @@ class DrywallCutterScreen(Screen):
             self.sm.add_widget(screen_config_filechooser.ConfigFileChooser(name='config_filechooser',
                                                                            screen_manager=self.sm,
                                                                            localization=self.l,
-                                                                           callback=self.load_config))
+                                                                           callback=self.dwt_config.load_config))
         self.sm.current = 'config_filechooser'
 
-    def load_config(self, config_path):
-        # type: (str) -> None
+    def on_load_config(self, instance, value):
         """
-        Used as the callback for the config filechooser screen.
+        Called by the config_loader module when a config is loaded
 
-        :param config_path: The path to the config file, including extension (if present).
+        :return: None
         """
-        self.dwt_config.load_config(config_path)
         self.apply_active_config()
 
         # Set datum when loading a new config
-        dx, dy = self.drywall_shape_display_widget.get_current_x_y(self.dwt_config.active_config.datum_position.x,
-                                                                   self.dwt_config.active_config.datum_position.y, True)
+        dx, dy = self.drywall_shape_display_widget.get_current_x_y(value.datum_position.x,
+                                                                   value.datum_position.y, True)
         self.m.set_datum(x=dx, y=dy, relative=True)
 
     def apply_active_config(self):
