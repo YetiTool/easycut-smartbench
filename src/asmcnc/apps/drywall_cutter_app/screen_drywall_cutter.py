@@ -1,5 +1,4 @@
 import os
-from datetime import datetime
 
 from kivy.lang import Builder
 from kivy.uix.behaviors import ButtonBehavior
@@ -7,8 +6,6 @@ from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
 
-from asmcnc.comms.logging_system.logging_system import Logger
-from asmcnc.job.job_checker import JobChecker
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
 from asmcnc.apps.drywall_cutter_app import widget_drywall_shape_display
@@ -197,7 +194,6 @@ class DrywallCutterScreen(Screen):
         self.kb = kwargs['keyboard']
 
         self.engine = GCodeEngine(self.dwt_config)
-        self.job_checker = JobChecker(self.m, self.l)
 
         # XY move widget
         self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm, localization=self.l)
