@@ -338,6 +338,7 @@ class DWTConfig(EventDispatcher):
         :param parameter_name: The name of the parameter that was changed.
         :param parameter_value: The new value of the parameter.
         """
+        Logger.debug("Parameter changed: " + parameter_name + " = " + str(parameter_value))
 
         if "." in parameter_name:
             parameter_names = parameter_name.split(".")

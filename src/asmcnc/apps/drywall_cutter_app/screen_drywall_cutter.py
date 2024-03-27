@@ -214,6 +214,11 @@ class DrywallCutterScreen(Screen):
                             self.drywall_shape_display_widget.bumper_left_image]
 
         self.dwt_config.bind(active_config=self.on_load_config)
+        self.m.bind(datum_position=self.set_datum_position)
+
+    def set_datum_position(self, instance, value):
+        self.dwt_config.on_parameter_change('datum_position.x', value[0])
+        self.dwt_config.on_parameter_change('datum_position.y', value[1])
 
     def on_pre_enter(self):
         self.apply_active_config()

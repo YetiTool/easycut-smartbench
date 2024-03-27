@@ -23,7 +23,7 @@ from asmcnc.comms import motors
 from asmcnc.skavaUI import popup_info
 
 from kivy.clock import Clock
-from kivy.properties import NumericProperty
+from kivy.properties import NumericProperty, ListProperty
 from kivy.event import EventDispatcher
 import os, time
 
@@ -1749,8 +1749,11 @@ class RouterMachine(EventDispatcher):
 
 # POSITIONAL SETTERS
 
+    datum_position = ListProperty([0, 0, 0])
+
     def set_workzone_to_pos_xy(self):
         self.set_datum(x=0, y=0)
+        self.datum_position = [self.mpos_x, self.mpos_y, self.mpos_z]
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
 
     def set_x_datum(self):
