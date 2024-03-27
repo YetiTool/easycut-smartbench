@@ -1749,15 +1749,11 @@ class RouterMachine(EventDispatcher):
 
 # POSITIONAL SETTERS
 
-    datum_position = ListProperty([0, 0, 0])
+    datum_position = ListProperty([0, 0])
 
     def set_workzone_to_pos_xy(self):
         self.set_datum(x=0, y=0)
-        Logger.debug(self.x_wco())
-        Logger.debug(self.y_wco())
-        Logger.debug(self.wpos_x())
-        Logger.debug(self.wpos_y())
-        self.datum_position = [self.x_wco(), self.y_wco(), self.z_wco()]
+        self.datum_position = [self.s.m_x, self.s.m_y]
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
 
     def set_x_datum(self):
