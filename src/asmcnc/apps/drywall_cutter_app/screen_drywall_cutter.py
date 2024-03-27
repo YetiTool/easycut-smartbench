@@ -10,6 +10,7 @@ from asmcnc.apps.drywall_cutter_app import screen_config_filesaver
 from asmcnc.apps.drywall_cutter_app import widget_drywall_shape_display
 from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
 from asmcnc.apps.drywall_cutter_app.config import config_loader
+from asmcnc.apps.drywall_cutter_app.image_dropdown import ImageDropDownButton
 from asmcnc.core_UI import scaling_utils
 from asmcnc.skavaUI import popup_info
 
@@ -335,7 +336,7 @@ class DrywallCutterScreen(Screen):
             self.sm.add_widget(screen_config_filesaver.ConfigFileSaver(name='config_filesaver',
                                                                        screen_manager=self.sm,
                                                                        localization=self.l,
-                                                                       callback=self.save_config))
+                                                                       callback=self.dwt_config.save_config))
         self.sm.current = 'config_filesaver'
 
     def run(self):
@@ -383,16 +384,6 @@ class DrywallCutterScreen(Screen):
         self.drywall_shape_display_widget.unit_switch.active = self.dwt_config.active_config.units == 'mm'
 
         # Vlad set your text inputs here:
-
-    def save_config(self, file_name):
-        # type: (str) -> None
-        """
-        Saves the active configuration to the configurations directory.
-
-        :param file_name: The name of to save the configuration file as.
-        """
-
-        self.dwt_config.save_config(file_name)
 
     def on_leave(self, *args):
         self.dwt_config.save_temp_config()
