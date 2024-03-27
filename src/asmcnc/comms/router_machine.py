@@ -1753,7 +1753,7 @@ class RouterMachine(EventDispatcher):
 
     def set_workzone_to_pos_xy(self):
         self.set_datum(x=0, y=0)
-        self.datum_position = [self.mpos_x(), self.mpos_y(), self.mpos_z()]
+        self.datum_position = [self.x_wco(), self.y_wco(), self.z_wco()]
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
 
     def set_x_datum(self):
