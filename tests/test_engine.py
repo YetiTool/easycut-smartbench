@@ -2,15 +2,16 @@ import unittest
 import sys
 import os
 
-easycut_dir = os.path.dirname(os.getcwd())
+# Find easycut in cwd
+# easycut_dir = os.path.dirname(os.getcwd())
 sys.path.append(os.path.join(easycut_dir, 'src')) # Alternative to sys.path.append("./src") which didn't work me
 
 from asmcnc.apps.drywall_cutter_app.engine import GCodeEngine
 
 '''
 To run this test,
-from /easyCut-smartbench directory, run:
-python tests/test_engine.py
+from /easyCut-smartbench/tests directory, run:
+python test_engine.py
 '''
 
 class EngineTests(unittest.TestCase):
