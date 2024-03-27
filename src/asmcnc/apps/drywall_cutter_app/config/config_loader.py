@@ -271,11 +271,10 @@ class DWTConfig(EventDispatcher):
             with open(file_path, "r") as f:
                 cutter = json.load(f)
 
-                if 'cutter_description' in cutter and 'image_path' in cutter:
-                    cutters[cutter['cutter_description']] = {
-                        'cutter_path': cutter_file,
-                        'image_path': cutter['image_path']
-                    }
+                cutters[cutter['tool_id']] = {
+                    'cutter_path': cutter_file,
+                    'image_path': cutter['image']
+                }
         return cutters
 
     def save_temp_config(self):
