@@ -1,20 +1,31 @@
 {
-  "cutter_description": "45 °",
-  "units": "degrees",
-  "diameter": 45.0,
+  "tool_id": "Drywalltec  ø -  45° 2 flute V-groove  L19",
+  "manufacturer": "Drywalltec",
+  "type": "V-groove",
+  "dimensions": {
+    "diameter": null,
+    "angle": 45,
+    "units": null
+  },
+  "flutes": {
+    "count": 2,
+    "length": 19
+  },
   "material": "drywall",
-  "cutting_spindle_speed": 21000,
-  "cutting_feedrate": 8000,
-  "plunge_rate": 250,
-  "cutting_direction": "both",
-  "allowable_toolpath_offsets": {
+  "parameters": {
+    "cutting_spindle_speed": 21000,
+    "cutting_feed_rate": 4000,
+    "plunge_feed_rate": 250,
+    "cutting_direction": "both",
+    "recommended_depth_per_pass": 12,
+    "max_depth_total": 12,
+    "step_over": null,
+    "yetipilot_target_power": 640
+  },
+  "toolpath_offsets": {
     "inside": false,
     "outside": false,
     "on": true
   },
-  "max_depth_per_pass": 12.0,
-  "max_depth_total": 12.0,
-  "stepover": null,
-  "yeti_pilot_target_powers": 640,
-  "image_path": "./asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_45deg.png"
+  "image": "./asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_45deg.png"
 }
