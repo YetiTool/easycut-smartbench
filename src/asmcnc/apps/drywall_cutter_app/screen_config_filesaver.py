@@ -376,12 +376,7 @@ class ConfigFileSaver(Screen):
         self.filechooser._update_files()
 
     def display_selected_file(self):
-
-        # display file selected in the filename display label
-        if sys.platform == 'win32':
-            self.file_selected_label.text = self.filechooser.selection[0].split("\\")[-1]
-        else:
-            self.file_selected_label.text = self.filechooser.selection[0].split("/")[-1]
+        self.file_selected_label = self.filechooser.selection[0].split(os.sep)[-1]
 
         with open(self.filechooser.selection[0], 'r') as f:
             json_obj = json.load(f)
