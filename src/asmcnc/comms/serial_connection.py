@@ -1204,6 +1204,9 @@ class SerialConnection(EventDispatcher):
                         if self.spindle_health_check and not self.in_inrush:
                             self.spindle_health_check_data.append(self.digital_spindle_ld_qdA)
 
+                        if not self.in_inrush and self.digital_spindle_ld_qdA < 0:
+                            Logger.debug("Spindle sending invalid data: " + message)
+
                         # Check overload state
                         if self.digital_spindle_kill_time >= 160:
                             overload_mV_equivalent_state = 0
