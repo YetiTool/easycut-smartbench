@@ -13,9 +13,10 @@ CONFIGURATIONS_DIR = os.path.join(CURRENT_DIR, "configurations")
 CUTTERS_DIR = os.path.join(CURRENT_DIR, "cutters")
 TEMP_DIR = os.path.join(CURRENT_DIR, "temp")
 SETTINGS_DIR = os.path.join(CURRENT_DIR, "settings")
+TEMP_CONFIG_FILE_NAME = "temp_config.json"
 
 SETTINGS_PATH = os.path.join(SETTINGS_DIR, "settings.json")
-TEMP_CONFIG_PATH = os.path.join(TEMP_DIR, "temp_config.json")
+TEMP_CONFIG_PATH = os.path.join(TEMP_DIR, TEMP_CONFIG_FILE_NAME)
 
 DEBUG_MODE = False
 INDENT_VALUE = "    "
@@ -23,42 +24,64 @@ INDENT_VALUE = "    "
 
 def get_display_preview(json_obj):
     preview = get_shape_type(json_obj)
-    preview += "Units: " + json_obj['units'] + "\n"
+    preview += "Units: " + json_obj["units"] + "\n"
     # preview += "Rotation: " + json_obj['rotation'] + "\n"
     preview += "Canvas shape dims: \n"
     preview += get_shape_dimensions(json_obj)
-    preview += "Cutter type: " + json_obj['cutter_type'][:-5] + "\n"
-    preview += "Toolpath offset: " + json_obj['toolpath_offset'] + "\n"
+    preview += "Cutter type: " + json_obj["cutter_type"][:-5] + "\n"
+    preview += "Toolpath offset: " + json_obj["toolpath_offset"] + "\n"
     preview += "Cutting depths: \n"
-    preview += INDENT_VALUE + "Material thickness: " + str(json_obj['cutting_depths']['material_thickness']) + "\n"
-    preview += INDENT_VALUE + "Bottom offset: " + str(json_obj['cutting_depths']['bottom_offset']) + "\n"
-    preview += INDENT_VALUE + "Auto pass: " + str(json_obj['cutting_depths']['auto_pass']) + "\n"
-    preview += INDENT_VALUE + "Depth per pass: " + str(json_obj['cutting_depths']['depth_per_pass']) + "\n"
+    preview += (
+        INDENT_VALUE
+        + "Material thickness: "
+        + str(json_obj["cutting_depths"]["material_thickness"])
+        + "\n"
+    )
+    preview += (
+        INDENT_VALUE
+        + "Bottom offset: "
+        + str(json_obj["cutting_depths"]["bottom_offset"])
+        + "\n"
+    )
+    preview += (
+        INDENT_VALUE
+        + "Auto pass: "
+        + str(json_obj["cutting_depths"]["auto_pass"])
+        + "\n"
+    )
+    preview += (
+        INDENT_VALUE
+        + "Depth per pass: "
+        + str(json_obj["cutting_depths"]["depth_per_pass"])
+        + "\n"
+    )
     preview += "Datum position: \n"
-    preview += INDENT_VALUE + "X: " + str(json_obj['datum_position']['x']) + "\n"
-    preview += INDENT_VALUE + "Y: " + str(json_obj['datum_position']['y']) + "\n"
+    preview += INDENT_VALUE + "X: " + str(json_obj["datum_position"]["x"]) + "\n"
+    preview += INDENT_VALUE + "Y: " + str(json_obj["datum_position"]["y"]) + "\n"
     return preview
 
 
 def get_shape_type(json_obj):
-    if json_obj['shape_type'] in ['line', 'rectangle']:
-        return "Shape type: " + json_obj['rotation'] + " " + json_obj['shape_type'] + "\n"
+    if json_obj["shape_type"] in ["line", "rectangle"]:
+        return (
+            "Shape type: " + json_obj["rotation"] + " " + json_obj["shape_type"] + "\n"
+        )
     else:
-        return "Shape type: " + json_obj['shape_type'] + "\n"
+        return "Shape type: " + json_obj["shape_type"] + "\n"
 
 
 def get_shape_dimensions(json_obj):
-    if json_obj['shape_type'] == 'rectangle':
-        dims = INDENT_VALUE + "X: " + str(json_obj['canvas_shape_dims']['x']) + "\n"
-        dims += INDENT_VALUE + "Y: " + str(json_obj['canvas_shape_dims']['y']) + "\n"
-        dims += INDENT_VALUE + "R: " + str(json_obj['canvas_shape_dims']['r']) + "\n"
-    elif json_obj['shape_type'] == 'square':
-        dims = INDENT_VALUE + "Y: " + str(json_obj['canvas_shape_dims']['y']) + "\n"
-        dims += INDENT_VALUE + "R: " + str(json_obj['canvas_shape_dims']['r']) + "\n"
-    elif json_obj['shape_type'] == 'circle':
-        dims = INDENT_VALUE + "D: " + str(json_obj['canvas_shape_dims']['d']) + "\n"
-    elif json_obj['shape_type'] == 'line':
-        dims = INDENT_VALUE + "L: " + str(json_obj['canvas_shape_dims']['l']) + "\n"
+    if json_obj["shape_type"] == "rectangle":
+        dims = INDENT_VALUE + "X: " + str(json_obj["canvas_shape_dims"]["x"]) + "\n"
+        dims += INDENT_VALUE + "Y: " + str(json_obj["canvas_shape_dims"]["y"]) + "\n"
+        dims += INDENT_VALUE + "R: " + str(json_obj["canvas_shape_dims"]["r"]) + "\n"
+    elif json_obj["shape_type"] == "square":
+        dims = INDENT_VALUE + "Y: " + str(json_obj["canvas_shape_dims"]["y"]) + "\n"
+        dims += INDENT_VALUE + "R: " + str(json_obj["canvas_shape_dims"]["r"]) + "\n"
+    elif json_obj["shape_type"] == "circle":
+        dims = INDENT_VALUE + "D: " + str(json_obj["canvas_shape_dims"]["d"]) + "\n"
+    elif json_obj["shape_type"] == "line":
+        dims = INDENT_VALUE + "L: " + str(json_obj["canvas_shape_dims"]["l"]) + "\n"
     else:
         dims = ""
     return dims
@@ -130,7 +153,7 @@ class DWTConfig(EventDispatcher):
         field_count = len(cfg)
 
         valid_field_count = (
-                len(inspect.getargspec(config_classes.Configuration.__init__).args) - 1
+            len(inspect.getargspec(config_classes.Configuration.__init__).args) - 1
         )
 
         if field_count != valid_field_count:
@@ -195,11 +218,11 @@ class DWTConfig(EventDispatcher):
 
         if config_path != TEMP_CONFIG_PATH:
             self.set_most_recent_config(config_path)
+            self.active_config_name = config_path.split(os.sep)[
+                -1
+            ]  # Get the name of the configuration file from the path
 
         self.load_cutter(self.active_config.cutter_type)
-        self.active_config_name = config_path.split(os.sep)[
-            -1
-        ]  # Get the name of the configuration file from the path
 
     def save_config(self, config_path):
         # type (str) -> None
@@ -215,23 +238,24 @@ class DWTConfig(EventDispatcher):
         with open(config_path, "w") as f:
             json.dump(self.active_config, f, indent=4, default=lambda o: o.__dict__)
 
-        config_name = config_path.split(os.sep)[-1]
-        self.active_config_name = config_name
+        if config_path != TEMP_CONFIG_PATH:
+            self.active_config_name = config_path.split(os.sep)[-1]
+            self.set_most_recent_config(config_path)
 
     def cleanup_active_config(self):
-        if self.active_config.shape_type == 'rectangle':
+        if self.active_config.shape_type == "rectangle":
             self.active_config.canvas_shape_dims.d = 0
             self.active_config.canvas_shape_dims.l = 0
-        elif self.active_config.shape_type == 'square':
+        elif self.active_config.shape_type == "square":
             self.active_config.canvas_shape_dims.x = 0
             self.active_config.canvas_shape_dims.d = 0
             self.active_config.canvas_shape_dims.l = 0
-        elif self.active_config.shape_type == 'circle':
+        elif self.active_config.shape_type == "circle":
             self.active_config.canvas_shape_dims.x = 0
             self.active_config.canvas_shape_dims.y = 0
             self.active_config.canvas_shape_dims.r = 0
             self.active_config.canvas_shape_dims.l = 0
-        elif self.active_config.shape_type == 'line':
+        elif self.active_config.shape_type == "line":
             self.active_config.canvas_shape_dims.x = 0
             self.active_config.canvas_shape_dims.y = 0
             self.active_config.canvas_shape_dims.r = 0
@@ -313,7 +337,7 @@ class DWTConfig(EventDispatcher):
         :param parameter_name: The name of the parameter that was changed.
         :param parameter_value: The new value of the parameter.
         """
-        Logger.debug("Parameter change: " + parameter_name + " = " + str(parameter_value))
+        Logger.debug("Parameter changed: " + parameter_name + " = " + str(parameter_value))
 
         if "." in parameter_name:
             parameter_names = parameter_name.split(".")

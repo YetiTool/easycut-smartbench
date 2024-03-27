@@ -183,7 +183,7 @@ class DrywallCutterScreen(Screen):
     def __init__(self, **kwargs):
         self.dwt_config = config_loader.DWTConfig(self)
         self.tool_options = self.dwt_config.get_available_cutter_names()
-
+        self.name = 'drywall_cutter'
         super(DrywallCutterScreen, self).__init__(**kwargs)
 
         self.sm = kwargs['screen_manager']
@@ -194,7 +194,8 @@ class DrywallCutterScreen(Screen):
         self.engine = GCodeEngine(self.dwt_config)
 
         # XY move widget
-        self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm, localization=self.l)
+        self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm,
+                                                                   localization=self.l)
         self.xy_move_container.add_widget(self.xy_move_widget)
 
         self.materials_popup = material_setup_popup.CuttingDepthsPopup(self.l, self.kb, self.dwt_config)
@@ -214,6 +215,17 @@ class DrywallCutterScreen(Screen):
                             self.drywall_shape_display_widget.bumper_left_image]
 
         self.dwt_config.bind(active_config=self.on_load_config)
+        self.m.bind(datum_position=self.set_datum_position)
+
+    def set_datum_position(self, *args):
+        if self.sm.current != self.name:
+            return
+
+        dx, dy = self.drywall_shape_display_widget.get_current_x_y(self.m.datum_position[0],
+                                                                   self.m.datum_position[1], False)
+
+        self.dwt_config.on_parameter_change('datum_position.x', dx)
+        self.dwt_config.on_parameter_change('datum_position.y', dy)
 
     def on_pre_enter(self):
         self.apply_active_config()
@@ -257,7 +269,8 @@ class DrywallCutterScreen(Screen):
         # Convert allowed toolpaths object to dict, then put attributes with True into a list
         allowed_toolpaths = [toolpath for toolpath, allowed in self.dwt_config.active_cutter.toolpath_offsets.__dict__.items() if allowed]
         # Use allowed toolpath list to create a dict of only allowed toolpaths
-        allowed_toolpath_dict = dict([(k, self.toolpath_offset_options_dict[k]) for k in allowed_toolpaths if k in self.toolpath_offset_options_dict])
+        allowed_toolpath_dict = dict([(k, self.toolpath_offset_options_dict[k]) for k in allowed_toolpaths if
+                                      k in self.toolpath_offset_options_dict])
         # Then update dropdown to only show allowed toolpaths
         self.toolpath_selection.image_dict = allowed_toolpath_dict
         # Default to first toolpath, so disabled toolpath is never selected
@@ -301,7 +314,8 @@ class DrywallCutterScreen(Screen):
         else:
             self.rotation = 'horizontal'
 
-        self.drywall_shape_display_widget.select_shape(self.dwt_config.active_config.shape_type, self.rotation, swap_lengths=swap_lengths)
+        self.drywall_shape_display_widget.select_shape(self.dwt_config.active_config.shape_type, self.rotation,
+                                                       swap_lengths=swap_lengths)
         self.select_toolpath(self.dwt_config.active_config.toolpath_offset)
 
         # Need to manually set parameters after internally swapping x and y, because inputs are bound to on_focus
@@ -313,12 +327,14 @@ class DrywallCutterScreen(Screen):
     def select_toolpath(self, toolpath):
         self.dwt_config.on_parameter_change('toolpath_offset', toolpath)
 
-        self.drywall_shape_display_widget.select_toolpath(self.dwt_config.active_config.shape_type, toolpath, self.rotation)
+        self.drywall_shape_display_widget.select_toolpath(self.dwt_config.active_config.shape_type, toolpath,
+                                                          self.rotation)
 
         self.show_toolpath_image()
 
     def show_toolpath_image(self):
-        self.toolpath_selection.source = self.toolpath_offset_options_dict[self.dwt_config.active_config.toolpath_offset]['image_path']
+        self.toolpath_selection.source = \
+        self.toolpath_offset_options_dict[self.dwt_config.active_config.toolpath_offset]['image_path']
 
     def material_setup(self):
         self.materials_popup.open()
@@ -361,7 +377,6 @@ class DrywallCutterScreen(Screen):
 
         self.apply_active_config()
 
-        # Set datum when loading a new config
         dx, dy = self.drywall_shape_display_widget.get_current_x_y(value.datum_position.x,
                                                                    value.datum_position.y, True)
         self.m.set_datum(x=dx, y=dy, relative=True)
