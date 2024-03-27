@@ -365,13 +365,13 @@ If not, check that it's connected and switched on, then retry by pressing the bu
             self.back_button.disabled = False
             self.vacuum_image.source = "./asmcnc/skavaUI/img/vac_off.png"
             Logger.info("vac off")
-            self.m.vac_off()
+            self.m.turn_off_vacuum()
         else:
             Logger.info("vac on")
             self.next_button.disabled = True
             self.back_button.disabled = True
             self.vacuum_image.source = "./asmcnc/skavaUI/img/vac_on.png"
-            self.m.vac_on()
+            self.m.turn_on_vacuum()
             Clock.schedule_once(self.reset_vacuum, 2)
 
     def reset_vacuum(self, dt):
