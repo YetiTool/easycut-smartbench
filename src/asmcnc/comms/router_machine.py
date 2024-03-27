@@ -9,6 +9,7 @@ import traceback
 
 from enum import Enum
 from asmcnc.comms.logging_system.logging_system import Logger
+from asmcnc.comms.model_manager import ModelManagerSingleton, ProductCodes
 
 try:
     import pigpio
@@ -22,19 +23,9 @@ from asmcnc.comms import motors
 from asmcnc.skavaUI import popup_info
 
 from kivy.clock import Clock
-from kivy.properties import NumericProperty, BooleanProperty
+from kivy.properties import NumericProperty
 from kivy.event import EventDispatcher
 import os, time
-
-
-class ProductCodes(Enum):
-    DRYWALLTEC = 06
-    PRECISION_PRO_X = 05
-    PRECISION_PRO_PLUS = 04
-    PRECISION_PRO = 03
-    STANDARD = 02
-    FIRST_VERSION = 01
-    UNKNOWN = 00
 
 
 class Axis(Enum):
@@ -160,6 +151,7 @@ class RouterMachine(EventDispatcher):
         self.sett = settings_manager
         self.l = localization
         self.jd = job
+        self.model_manager = ModelManagerSingleton()
         self.set_jog_limits()
 
         self.win_serial_port = win_serial_port   # Need to save so that serial connection can be reopened (for zhead cycle app)
@@ -181,6 +173,9 @@ class RouterMachine(EventDispatcher):
         self.TMC_motor[TMC_Y1] = motors.motor_class(TMC_Y1)
         self.TMC_motor[TMC_Y2] = motors.motor_class(TMC_Y2)
         self.TMC_motor[TMC_Z] = motors.motor_class(TMC_Z)
+
+        if self.model_manager.is_machine_drywall():
+            self.device_label = 'My SmartCNC'
 
     Z_AXIS_ACCESSIBLE_ABS_HEIGHT = -5
     Z_PROBE_SAFE_PULL_OFF = 1

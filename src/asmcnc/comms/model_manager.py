@@ -1,15 +1,23 @@
 import json
 import os
 import threading
-from datetime import datetime
+from enum import Enum
 from hashlib import md5
 
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy._event import EventDispatcher
-from kivy.clock import Clock
 
-from asmcnc.comms.router_machine import ProductCodes
 from asmcnc.core_UI import path_utils as pu
+
+
+class ProductCodes(Enum):
+    DRYWALLTEC = 06
+    PRECISION_PRO_X = 05
+    PRECISION_PRO_PLUS = 04
+    PRECISION_PRO = 03
+    STANDARD = 02
+    FIRST_VERSION = 01
+    UNKNOWN = 00
 
 
 class ModelManagerSingleton(EventDispatcher):

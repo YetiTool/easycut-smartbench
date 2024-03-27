@@ -27,8 +27,8 @@ from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 
 from asmcnc.comms.grbl_settings_manager import GRBLSettingsManagerSingleton
-from asmcnc.comms.router_machine import ProductCodes
-from asmcnc.core_UI import scaling_utils
+from asmcnc.core_UI import scaling_utils, console_utils
+from asmcnc.comms.model_manager import ProductCodes
 from asmcnc.core_UI.popup_manager import PopupManager
 from asmcnc.comms.model_manager import ModelManagerSingleton
 
@@ -144,9 +144,8 @@ def check_ansible_status():
     # if this comes out empty, run ansible and reboot
     if not ansible_from_easycut:
         # when the playbook fails, it stops the other commands from running as well
-        os.system(
-            "/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh && sudo systemctl restart ansible.service && sudo reboot")
-
+        os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh && sudo systemctl restart ansible.service")
+        console_utils.reboot()
 
 ## Easycut config
 check_and_update_config()
@@ -172,6 +171,10 @@ class SkavaUI(App):
 
     def get_scaled_sp(self, val):
         return scaling_utils.get_scaled_sp(val)
+
+    def get_scaled_tuple(self, tup, orientation="horizontal"):
+        return scaling_utils.get_scaled_tuple(tup, orientation)
+
 
     def build(self):
         Logger.info("Starting App:")
