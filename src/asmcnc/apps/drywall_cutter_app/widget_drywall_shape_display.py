@@ -402,7 +402,6 @@ class DrywallShapeDisplay(Widget):
         self.unit_switch.canvas.children[5].source = "./asmcnc/apps/drywall_cutter_app/img/unit_toggle.png"
         self.unit_switch.bind(active=self.toggle_units)
 
-        self.m.s.bind(m_state=self.display_machine_state)
         self.dwt_config.bind(active_config_name=self.on_config_name_change)
         self.on_config_name_change(self.dwt_config, self.dwt_config.active_config_name)
 
