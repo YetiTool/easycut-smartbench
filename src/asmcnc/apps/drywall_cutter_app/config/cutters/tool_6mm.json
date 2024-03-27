@@ -1,20 +1,30 @@
 {
-  "cutter_description": "ø 6",
-  "units": "mm",
-  "diameter": 8.0,
+  "tool_id": "Drywalltec  ø 6 mm 2 flute End mill Upcut L13",
+  "manufacturer": "Drywalltec",
+  "dimensions": {
+    "diameter": 6,
+    "angle": null,
+    "units": "mm"
+  },
+  "flutes": {
+    "count": 2,
+    "length": 13
+  },
   "material": "drywall",
-  "cutting_spindle_speed": 21000,
-  "cutting_feedrate": 8000,
-  "plunge_rate": 250,
-  "cutting_direction": "both",
-  "allowable_toolpath_offsets": {
+  "parameters": {
+    "cutting_spindle_speed": 21000,
+    "cutting_feed_rate": 8000,
+    "plunge_feed_rate": 250,
+    "cutting_direction": "both",
+    "recommended_depth_per_pass": 12,
+    "max_depth_total": 12,
+    "step_over": 6,
+    "yetipilot_target_power": 590
+  },
+  "toolpath_offsets": {
     "inside": true,
     "outside": true,
     "on": true
   },
-  "max_depth_per_pass": 12.0,
-  "max_depth_total": 12.0,
-  "stepover": 3.0,
-  "yeti_pilot_target_powers": 590,
-  "image_path": "./asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_6mm.png"
+  "image": "./asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_6mm.png"
 }
