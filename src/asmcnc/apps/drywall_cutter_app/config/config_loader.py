@@ -2,6 +2,9 @@ import json
 import os
 import inspect
 
+from kivy.event import EventDispatcher
+from kivy.properties import StringProperty
+
 import config_classes
 from asmcnc.comms.logging_system.logging_system import Logger
 
@@ -10,12 +13,11 @@ CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 CONFIGURATIONS_DIR = os.path.join(CURRENT_DIR, 'configurations')
 CUTTERS_DIR = os.path.join(CURRENT_DIR, 'cutters')
 TEMP_DIR = os.path.join(CURRENT_DIR, 'temp')
+SETTINGS_DIR = os.path.join(CURRENT_DIR, 'settings')
 
-if not os.path.exists(TEMP_DIR):
-    os.mkdir(TEMP_DIR)
-
-SETTINGS_PATH = os.path.join(CURRENT_DIR, 'dwt_settings.json')
+SETTINGS_PATH = os.path.join(SETTINGS_DIR, 'settings.json')
 TEMP_CONFIG_PATH = os.path.join(TEMP_DIR, 'temp_config.json')
+
 DEBUG_MODE = False
 
 
@@ -29,11 +31,13 @@ def debug(func):
     return wrapper
 
 
-class DWTConfig(object):
-    active_config = None  # type: config_classes.Configuration
-    active_cutter = None  # type: config_classes.Cutter
+class DWTConfig(EventDispatcher):
+    active_config_name = StringProperty("")
+    active_config = config_classes.Configuration.default()
+    active_cutter = config_classes.Cutter.default()
 
-    def __init__(self, screen_drywall_cutter=None):
+    def __init__(self, screen_drywall_cutter=None, *args, **kwargs):
+        super(DWTConfig, self).__init__(*args, **kwargs)
         self.screen_drywall_cutter = screen_drywall_cutter
         self.start_up()
 
@@ -54,7 +58,7 @@ class DWTConfig(object):
     @staticmethod
     def get_most_recent_config():
         """
-        Get most recent config from dwt_settings.json
+        Get most recent config from settings.json
         :return: the most recently used config path
         """
         if not os.path.exists(SETTINGS_PATH):
@@ -67,7 +71,7 @@ class DWTConfig(object):
     @staticmethod
     def set_most_recent_config(config_path):
         """
-        Set the most recent config in dwt_settings.json
+        Set the most recent config in settings.json
         :param config_path: the path to the most recently used config
         :return:
         """
@@ -156,8 +160,11 @@ class DWTConfig(object):
         with open(file_path, 'r') as f:
             self.active_config = config_classes.Configuration(**json.load(f))
 
-        self.set_most_recent_config(file_path)
+        if file_path != TEMP_CONFIG_PATH:
+            self.set_most_recent_config(file_path)
+
         self.load_cutter(self.active_config.cutter_type)
+        self.active_config_name = "New Configuration" if file_path == TEMP_CONFIG_PATH else config_name
 
     @debug
     def save_config(self, config_name):
@@ -187,7 +194,7 @@ class DWTConfig(object):
             return
 
         with open(file_path, 'r') as f:
-            self.active_cutter = config_classes.Cutter(**json.load(f))
+            self.active_cutter = config_classes.Cutter.from_json(json.load(f))
 
     @staticmethod
     @debug
@@ -262,4 +269,4 @@ class DWTConfig(object):
 
     def __set_new_configuration_label(self):
         if self.screen_drywall_cutter:
-            self.screen_drywall_cutter.drywall_shape_display_widget.config_name_label.text = "New Configuration"
+            self.active_config_name = "New Configuration"

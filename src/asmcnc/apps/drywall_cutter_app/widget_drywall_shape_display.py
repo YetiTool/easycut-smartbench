@@ -283,6 +283,7 @@ class DrywallShapeDisplay(Widget):
         self.unit_switch.bind(active=self.toggle_units)
 
         self.m.s.bind(m_state=self.display_machine_state)
+        self.dwt_config.bind(active_config_name=self.on_config_name_change)
 
         Clock.schedule_interval(self.poll_position, 0.1)
 
@@ -425,3 +426,6 @@ class DrywallShapeDisplay(Widget):
 
     def display_machine_state(self, obj, value):
         self.machine_state_label.text = value
+
+    def on_config_name_change(self, instance, value):
+        self.config_name_label.text = value
