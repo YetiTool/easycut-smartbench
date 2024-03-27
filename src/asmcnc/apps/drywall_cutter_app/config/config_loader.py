@@ -13,9 +13,10 @@ CONFIGURATIONS_DIR = os.path.join(CURRENT_DIR, "configurations")
 CUTTERS_DIR = os.path.join(CURRENT_DIR, "cutters")
 TEMP_DIR = os.path.join(CURRENT_DIR, "temp")
 SETTINGS_DIR = os.path.join(CURRENT_DIR, "settings")
+TEMP_CONFIG_FILE_NAME = "temp_config.json"
 
 SETTINGS_PATH = os.path.join(SETTINGS_DIR, "settings.json")
-TEMP_CONFIG_PATH = os.path.join(TEMP_DIR, "temp_config.json")
+TEMP_CONFIG_PATH = os.path.join(TEMP_DIR, TEMP_CONFIG_FILE_NAME)
 
 DEBUG_MODE = False
 INDENT_VALUE = "    "
@@ -215,8 +216,7 @@ class DWTConfig(EventDispatcher):
         with open(config_path, "w") as f:
             json.dump(self.active_config, f, indent=4, default=lambda o: o.__dict__)
 
-        config_name = config_path.split(os.sep)[-1]
-        self.active_config_name = config_name
+        self.load_config(config_path)  # Reload the config to update the name
 
     def cleanup_active_config(self):
         if self.active_config.shape_type == 'rectangle':
