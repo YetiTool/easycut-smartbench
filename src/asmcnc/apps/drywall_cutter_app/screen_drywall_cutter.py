@@ -1,22 +1,19 @@
-import os
-from datetime import datetime
-
+from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen
-from kivy.clock import Clock
 
-from asmcnc.skavaUI import popup_info
-from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
-from asmcnc.apps.drywall_cutter_app import widget_drywall_shape_display
-from asmcnc.apps.drywall_cutter_app.config import config_loader
+from asmcnc.apps.drywall_cutter_app import material_setup_popup
 from asmcnc.apps.drywall_cutter_app import screen_config_filechooser
 from asmcnc.apps.drywall_cutter_app import screen_config_filesaver
+from asmcnc.apps.drywall_cutter_app import widget_drywall_shape_display
+from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
+from asmcnc.apps.drywall_cutter_app.config import config_loader
 from asmcnc.apps.drywall_cutter_app.image_dropdown import ImageDropDownButton
-from asmcnc.apps.drywall_cutter_app import material_setup_popup
-
+from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.core_UI import scaling_utils
+from asmcnc.skavaUI import popup_info
 
 
 class ImageButton(ButtonBehavior, Image):
@@ -216,6 +213,8 @@ class DrywallCutterScreen(Screen):
                             self.drywall_shape_display_widget.bumper_top_image,
                             self.drywall_shape_display_widget.bumper_left_image]
 
+        self.dwt_config.bind(active_config=self.on_load_config)
+
     def on_pre_enter(self):
         self.apply_active_config()
         self.pulse_poll = Clock.schedule_interval(self.update_pulse_opacity, 0.04)
@@ -256,7 +255,7 @@ class DrywallCutterScreen(Screen):
         self.dwt_config.load_cutter(cutter_file)
 
         # Convert allowed toolpaths object to dict, then put attributes with True into a list
-        allowed_toolpaths = [toolpath for toolpath, allowed in self.dwt_config.active_cutter.allowable_toolpath_offsets.__dict__.items() if allowed]
+        allowed_toolpaths = [toolpath for toolpath, allowed in self.dwt_config.active_cutter.toolpath_offsets.__dict__.items() if allowed]
         # Use allowed toolpath list to create a dict of only allowed toolpaths
         allowed_toolpath_dict = dict([(k, self.toolpath_offset_options_dict[k]) for k in allowed_toolpaths if k in self.toolpath_offset_options_dict])
         # Then update dropdown to only show allowed toolpaths
@@ -268,7 +267,7 @@ class DrywallCutterScreen(Screen):
         self.dwt_config.on_parameter_change('cutter_type', cutter_file)
 
     def show_tool_image(self):
-        self.tool_selection.source = self.dwt_config.active_cutter.image_path
+        self.tool_selection.source = self.dwt_config.active_cutter.image
 
     def select_shape(self, shape):
         self.dwt_config.on_parameter_change('shape_type', shape.lower())
@@ -338,7 +337,7 @@ class DrywallCutterScreen(Screen):
             self.sm.add_widget(screen_config_filesaver.ConfigFileSaver(name='config_filesaver',
                                                                        screen_manager=self.sm,
                                                                        localization=self.l,
-                                                                       callback=self.save_config))
+                                                                       callback=self.dwt_config.save_config))
         self.sm.current = 'config_filesaver'
 
     def run(self):
@@ -349,28 +348,23 @@ class DrywallCutterScreen(Screen):
             self.sm.add_widget(screen_config_filechooser.ConfigFileChooser(name='config_filechooser',
                                                                            screen_manager=self.sm,
                                                                            localization=self.l,
-                                                                           callback=self.load_config))
+                                                                           callback=self.dwt_config.load_config))
         self.sm.current = 'config_filechooser'
 
-    def load_config(self, config):
-        # type: (str) -> None
+    def on_load_config(self, instance, value):
         """
-        Used as the callback for the config filechooser screen.
+        Called by the config_loader module when a config is loaded
 
-        :param config: The path to the config file, including extension.
+        :return: None
         """
-        self.dwt_config.load_config(config)
-
-        # Show config name
-        file_name = config.rsplit(os.sep, 1)[-1]
-        self.drywall_shape_display_widget.config_name_label.text = file_name
-
-        # Set datum when loading a new config
-        dx, dy = self.drywall_shape_display_widget.get_current_x_y(self.dwt_config.active_config.datum_position.x,
-                                                                   self.dwt_config.active_config.datum_position.y, True)
-        self.m.set_datum(x=dx, y=dy, relative=True)
+        Logger.debug("New config loaded. Applying settings.")
 
         self.apply_active_config()
+
+        # Set datum when loading a new config
+        dx, dy = self.drywall_shape_display_widget.get_current_x_y(value.datum_position.x,
+                                                                   value.datum_position.y, True)
+        self.m.set_datum(x=dx, y=dy, relative=True)
 
     def apply_active_config(self):
         toolpath_offset = self.dwt_config.active_config.toolpath_offset
@@ -390,19 +384,9 @@ class DrywallCutterScreen(Screen):
         self.drywall_shape_display_widget.x_input.text = str(self.dwt_config.active_config.canvas_shape_dims.x)
         self.drywall_shape_display_widget.y_input.text = str(self.dwt_config.active_config.canvas_shape_dims.y)
 
-        self.drywall_shape_display_widget.unit_switch.active = True if self.dwt_config.active_config.units == 'mm' else False
+        self.drywall_shape_display_widget.unit_switch.active = self.dwt_config.active_config.units == 'mm'
 
         # Vlad set your text inputs here:
-
-    def save_config(self, file_name):
-        # type: (str) -> None
-        """
-        Saves the active configuration to the configurations directory.
-
-        :param file_name: The name of to save the configuration file as.
-        """
-
-        self.dwt_config.save_config(file_name)
 
     def on_leave(self, *args):
         self.dwt_config.save_temp_config()
