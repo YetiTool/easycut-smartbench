@@ -511,16 +511,16 @@ class GCodeEngine():
         pass_depths = []
         stepovers = [0]
 
-        is_climb = (self.config.active_cutter.parameters.cutting_direction == CuttingDirection.CLIMB
-                    or self.config.active_cutter.parameters.cutting_direction == CuttingDirection.BOTH)
+        is_climb = (self.config.active_cutter.parameters.cutting_direction == CuttingDirection.CLIMB.value
+                    or self.config.active_cutter.parameters.cutting_direction == CuttingDirection.BOTH.value)
 
         # Calculated parameters
         total_cut_depth = self.config.active_config.cutting_depths.material_thickness + self.config.active_config.cutting_depths.bottom_offset
 
-        if self.config.active_config.shape_type == ShapeType.RECTANGLE or self.config.active_config.shape_type == ShapeType.SQUARE:
+        if self.config.active_config.shape_type == ShapeType.RECTANGLE.value or self.config.active_config.shape_type == ShapeType.SQUARE.value:
             y_rect = self.config.active_config.canvas_shape_dims.y
             x_rect = self.config.active_config.canvas_shape_dims.x \
-                if self.config.active_config.shape_type.lower() == ShapeType.RECTANGLE \
+                if self.config.active_config.shape_type.lower() == ShapeType.RECTANGLE.value \
                 else self.config.active_config.canvas_shape_dims.y
             rect_coordinates = self.rectangle_coordinates(x_rect, y_rect)
             if len(rect_coordinates) != 4:
