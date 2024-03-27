@@ -158,7 +158,7 @@ class DWTConfig(EventDispatcher):
             self.set_most_recent_config(file_path)
 
         self.load_cutter(self.active_config.cutter_type)
-        self.active_config_name = "New Configuration" if file_path == TEMP_CONFIG_PATH else config_name
+        self.active_config_name = config_name
 
     @debug
     def save_config(self, config_name):

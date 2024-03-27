@@ -2,6 +2,8 @@ from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 
+from asmcnc.apps.drywall_cutter_app import config
+from asmcnc.apps.drywall_cutter_app.config import config_loader
 from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.core_UI.components import FloatInput  # Required for the builder string
 import re
@@ -432,4 +434,4 @@ class DrywallShapeDisplay(Widget):
 
     def on_config_name_change(self, instance, value):
         Logger.debug("Config name changed to: " + value)
-        self.config_name_label.text = value
+        self.config_name_label.text = "New Config" if value == "temp_config.json" else value
