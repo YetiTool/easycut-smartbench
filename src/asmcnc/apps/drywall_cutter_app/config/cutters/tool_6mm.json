@@ -1,6 +1,7 @@
 {
   "tool_id": "Drywalltec  ø 6 mm 2 flute End mill Upcut L13",
   "manufacturer": "Drywalltec",
+  "type": "End mill upcut",
   "dimensions": {
     "diameter": 6,
     "angle": null,
@@ -13,12 +14,12 @@
   "material": "drywall",
   "parameters": {
     "cutting_spindle_speed": 21000,
-    "cutting_feed_rate": 8000,
+    "cutting_feed_rate": 4000,
     "plunge_feed_rate": 250,
     "cutting_direction": "both",
     "recommended_depth_per_pass": 12,
     "max_depth_total": 12,
-    "step_over": 6,
+    "step_over": 3,
     "yetipilot_target_power": 590
   },
   "toolpath_offsets": {
