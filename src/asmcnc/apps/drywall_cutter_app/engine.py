@@ -301,6 +301,7 @@ class GCodeEngine():
         
         # Add line cutting gcode
         gcode_lines.append("G0 X{} Y{}".format(start_coordinate[x], start_coordinate[y])) # Move to start position
+
         for depth in pass_depths:
 
             if simulate:
@@ -308,14 +309,14 @@ class GCodeEngine():
             else:
                 gcode_lines.append("G1 Z-{} F{}".format(depth, plungerate)) # Plunge to depth
             
-            for depth in pass_depths:
-                if not(direction_flag):
-                    gcode_lines.append("G1 X{} Y{} F{}".format(start_coordinate[x], start_coordinate[y], feedrate)) # Move to start position
-                else:
-                    gcode_lines.append("G1 X{} Y{} F{}".format(end_coordinate[x], end_coordinate[y], feedrate)) # Move to end position
-                direction_flag = not(direction_flag)
 
-        gcode_lines.append("G0 Z{}".format(z_safe_distance)) # Lift to Z safe distance
+            if not(direction_flag):
+                gcode_lines.append("G1 X{} Y{} F{}".format(start_coordinate[x], start_coordinate[y], feedrate)) # Move to start position
+            else:
+                gcode_lines.append("G1 X{} Y{} F{}".format(end_coordinate[x], end_coordinate[y], feedrate)) # Move to end position
+            direction_flag = not(direction_flag)
+
+        gcode_lines.append("G1 Z{} F{}".format(z_safe_distance, plungerate)) # Lift to Z safe distance
 
         for i in range(len(gcode_lines)):
             gcode_lines[i] = gcode_lines[i] + "\n"
