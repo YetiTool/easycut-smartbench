@@ -16,7 +16,7 @@ class ToolpathOffsetOptions(Enum):
     ON = "on"
 
 
-class ShapeTypeOptions(Enum):
+class ShapeOptions(Enum):
     """Enum to define the shape type options."""
     CIRCLE = "circle"
     RECTANGLE = "rectangle"
