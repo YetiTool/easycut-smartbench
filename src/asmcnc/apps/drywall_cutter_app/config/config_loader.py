@@ -215,6 +215,9 @@ class DWTConfig(EventDispatcher):
         with open(config_path, "w") as f:
             json.dump(self.active_config, f, indent=4, default=lambda o: o.__dict__)
 
+        config_name = config_path.split(os.sep)[-1]
+        self.active_config_name = config_name
+
     def cleanup_active_config(self):
         if self.active_config.shape_type == 'rectangle':
             self.active_config.canvas_shape_dims.d = 0
@@ -262,15 +265,17 @@ class DWTConfig(EventDispatcher):
         for cutter_file in sorted(os.listdir(CUTTERS_DIR)):
             file_path = os.path.join(CUTTERS_DIR, cutter_file)
 
-            if os.path.isfile(file_path):
-                with open(file_path, "r") as f:
-                    cutter = json.load(f)
+            if not os.path.isfile(file_path):
+                continue  # Skip directories
 
-                    if 'cutter_description' in cutter and 'image_path' in cutter:
-                        cutters[cutter['cutter_description']] = {
-                            'cutter_path': cutter_file,
-                            'image_path': cutter['image_path']
-                        }
+            with open(file_path, "r") as f:
+                cutter = json.load(f)
+
+                if 'cutter_description' in cutter and 'image_path' in cutter:
+                    cutters[cutter['cutter_description']] = {
+                        'cutter_path': cutter_file,
+                        'image_path': cutter['image_path']
+                    }
         return cutters
 
     def save_temp_config(self):
