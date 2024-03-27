@@ -1,6 +1,8 @@
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
+
+from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.core_UI.components import FloatInput  # Required for the builder string
 import re
 
@@ -429,4 +431,5 @@ class DrywallShapeDisplay(Widget):
         self.machine_state_label.text = value
 
     def on_config_name_change(self, instance, value):
+        Logger.debug("Config name changed to: " + value)
         self.config_name_label.text = value

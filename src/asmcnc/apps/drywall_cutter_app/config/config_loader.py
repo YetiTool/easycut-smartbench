@@ -39,11 +39,9 @@ class DWTConfig(EventDispatcher):
     def __init__(self, screen_drywall_cutter=None, *args, **kwargs):
         super(DWTConfig, self).__init__(*args, **kwargs)
         self.screen_drywall_cutter = screen_drywall_cutter
-        self.start_up()
 
-    def start_up(self):
-        # Load most recent config
         most_recent_config = self.get_most_recent_config()
+
         if most_recent_config:
             self.load_config(most_recent_config)
         else:
