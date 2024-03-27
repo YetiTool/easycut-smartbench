@@ -35,7 +35,6 @@ class GCodeEngine():
         self.custom_gcode_shapes = ["geberit"]  # List of custom shapes that require gcode files
         self.source_folder_path = pu.get_path("drywall_cutter_app/gcode")  # Path to the gcode files.
 
-
         #Constants
         self.CORNER_RADIUS_THRESHOLD = 0.09  # Minimum corner radius to be considered a corner radius
 
