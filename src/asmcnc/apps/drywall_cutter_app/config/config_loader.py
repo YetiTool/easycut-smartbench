@@ -3,7 +3,7 @@ import os
 import inspect
 
 from kivy.event import EventDispatcher
-from kivy.properties import StringProperty
+from kivy.properties import StringProperty, ObjectProperty
 
 import config_classes
 from asmcnc.comms.logging_system.logging_system import Logger
@@ -33,8 +33,8 @@ def debug(func):
 
 class DWTConfig(EventDispatcher):
     active_config_name = StringProperty("")
-    active_config = config_classes.Configuration.default()
-    active_cutter = config_classes.Cutter.default()
+    active_config = ObjectProperty(config_classes.Configuration.default())
+    active_cutter = ObjectProperty(config_classes.Cutter.default())
 
     def __init__(self, screen_drywall_cutter=None, *args, **kwargs):
         super(DWTConfig, self).__init__(*args, **kwargs)
@@ -44,9 +44,7 @@ class DWTConfig(EventDispatcher):
         if most_recent_config_path:
             self.load_config(most_recent_config_path)
         else:
-            # If no configs, try to load temp config
-            if os.path.exists(TEMP_CONFIG_PATH):
-                self.load_temp_config()
+            self.load_temp_config()
 
     @staticmethod
     def get_most_recent_config():
@@ -55,11 +53,11 @@ class DWTConfig(EventDispatcher):
         :return: the most recently used config path
         """
         if not os.path.exists(SETTINGS_PATH):
-            return None
-        else:
-            with open(SETTINGS_PATH, 'r') as settings_f:
-                j_obj = json.load(settings_f)
-                return j_obj["most_recent_config"]
+            return None  # No settings file, so no most recent config
+
+        with open(SETTINGS_PATH, 'r') as settings_f:
+            j_obj = json.load(settings_f)
+            return j_obj["most_recent_config"]
 
     @staticmethod
     def set_most_recent_config(config_path):
@@ -227,6 +225,12 @@ class DWTConfig(EventDispatcher):
 
         This is used to load the configuration when the Drywall Cutter screen is loaded.
         """
+        if not os.path.exists(TEMP_CONFIG_PATH):
+            Logger.warning("Temporary configuration file doesn't exist! Creating a new one.")
+            self.active_config = config_classes.Configuration.default()
+            self.save_temp_config()
+            return
+
         self.load_config(TEMP_CONFIG_PATH)
 
     @debug

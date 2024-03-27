@@ -279,7 +279,7 @@ class DrywallCutterScreen(Screen):
 
         :param config_path: The path to the config file, including extension (if present).
         """
-        self.dwt_config.load_config(config_path.split(os.sep)[-1])
+        self.dwt_config.load_config(config_path)
         self.apply_active_config()
 
         # Set datum when loading a new config
