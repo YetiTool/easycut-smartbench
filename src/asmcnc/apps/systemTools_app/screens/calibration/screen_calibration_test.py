@@ -1678,7 +1678,7 @@ class CalibrationTesting(Screen):
                 self.sent_data_check.source = self.red_cross
         except:
             self.sent_data_check.source = self.red_cross
-            Logger.info(traceback.format_exc())
+            Logger.error(traceback.format_exc())
         self.data_send_label.text = "Sent data?"
         self.data_send_button.disabled = False
         log_exporter.create_and_send_logs(self.sn_for_db)
@@ -1696,7 +1696,7 @@ class CalibrationTesting(Screen):
                 self.calibration_db.insert_final_test_statistics(*statistics)
                 return True
             except:
-                Logger.info(traceback.format_exc())
+                Logger.error(traceback.format_exc())
                 return False
         finally:
             log_exporter.create_and_send_logs(self.sn_for_db)
@@ -1705,7 +1705,7 @@ class CalibrationTesting(Screen):
         try:
             self.calibration_db.insert_final_test_stage(self.sn_for_db, stage_id)
         except:
-            Logger.info("Could not insert final test stage into DB!!")
-            Logger.info(traceback.format_exc())
+            Logger.error("Could not insert final test stage into DB!!")
+            Logger.error(traceback.format_exc())
             message = "Issue contacting database - if you continue data send may fail!"
             popup_info.PopupError(self.sm, self.l, message)
