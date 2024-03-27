@@ -6,8 +6,6 @@ Data types are not confirmed.
 import json
 import os
 
-from kivy.event import EventDispatcher
-
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 SETTINGS_DIR = os.path.join(CURRENT_DIR, 'settings')
 CUTTERS_DIR = os.path.join(CURRENT_DIR, 'cutters')

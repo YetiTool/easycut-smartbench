@@ -284,6 +284,7 @@ class DrywallShapeDisplay(Widget):
 
         self.m.s.bind(m_state=self.display_machine_state)
         self.dwt_config.bind(active_config_name=self.on_config_name_change)
+        self.on_config_name_change(self.dwt_config, self.dwt_config.active_config_name)
 
         Clock.schedule_interval(self.poll_position, 0.1)
 

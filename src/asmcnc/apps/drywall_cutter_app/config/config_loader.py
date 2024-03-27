@@ -50,10 +50,6 @@ class DWTConfig(EventDispatcher):
             # If no configs, try to load temp config
             if os.path.exists(TEMP_CONFIG_PATH):
                 self.load_temp_config()
-            else:
-                # Otherwise, create new config based on the default configuration
-                self.active_config = config_classes.Configuration.default()
-                self.load_cutter(self.active_config.cutter_type)
 
     @staticmethod
     def get_most_recent_config():
