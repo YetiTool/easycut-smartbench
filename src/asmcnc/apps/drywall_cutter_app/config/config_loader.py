@@ -253,6 +253,7 @@ class DWTConfig(EventDispatcher):
     def get_available_cutter_names():
         # type () -> dict{str: dict{str: str}}
         """
+        TODO: Refactor, it doesn't need the names anymore
         :return: A list of the available cutter names and their file names.
         """
         cutters = {}
