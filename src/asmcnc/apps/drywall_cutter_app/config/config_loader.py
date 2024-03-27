@@ -65,9 +65,9 @@ def get_shape_dimensions(json_obj):
 
 
 class DWTConfig(EventDispatcher):
-    active_config_name = StringProperty("")
-    active_config = ObjectProperty(config_classes.Configuration.default())
-    active_cutter = ObjectProperty(config_classes.Cutter.default())
+    active_config_name = StringProperty("")  # type: str
+    active_config = ObjectProperty(config_classes.Configuration.default())  # type: config_classes.Configuration
+    active_cutter = ObjectProperty(config_classes.Cutter.default())  # type: config_classes.Cutter
 
     def __init__(self, screen_drywall_cutter=None, *args, **kwargs):
         super(DWTConfig, self).__init__(*args, **kwargs)

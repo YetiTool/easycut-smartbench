@@ -1,15 +1,15 @@
 {
-  "tool_id": "Drywalltec  ø 6 mm 2 flute End mill Upcut L13",
+  "tool_id": "Drywalltec  ø -  90° 2 flute V-groove  L19",
   "manufacturer": "Drywalltec",
-  "type": "End mill upcut",
+  "type": "V-groove",
   "dimensions": {
-    "diameter": 6,
-    "angle": null,
-    "units": "mm"
+    "diameter": null,
+    "angle": 90,
+    "units": null
   },
   "flutes": {
     "count": 2,
-    "length": 13
+    "length": 19
   },
   "material": "drywall",
   "parameters": {
@@ -19,13 +19,13 @@
     "cutting_direction": "both",
     "recommended_depth_per_pass": 12,
     "max_depth_total": 12,
-    "step_over": 3,
-    "yetipilot_target_power": 590
+    "step_over": null,
+    "yetipilot_target_power": 640
   },
   "toolpath_offsets": {
     "inside": true,
     "outside": true,
     "on": true
   },
-  "image": "./asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_6mm.png"
+  "image": "./asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_90deg.png"
 }

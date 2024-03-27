@@ -16,39 +16,17 @@ DEFAULT_CUTTER_PATH = os.path.join(CUTTERS_DIR, DEFAULT_CUTTER_NAME)
 
 
 class Cutter(object):
-    def __init__(
-        self,
-        cutter_description,
-        units,
-        diameter,
-        material,
-        cutting_spindle_speed,
-        cutting_feedrate,
-        plunge_rate,
-        cutting_direction,
-        allowable_toolpath_offsets,
-        max_depth_per_pass,
-        max_depth_total,
-        stepover,
-        yeti_pilot_target_powers,
-        image_path,
-    ):
-        self.cutter_description = cutter_description  # type: str
-        self.units = units  # type: str
-        self.diameter = diameter  # type: float
-        self.material = material  # type: str
-        self.cutting_spindle_speed = cutting_spindle_speed  # type: float
-        self.cutting_feedrate = cutting_feedrate  # type: float
-        self.plunge_rate = plunge_rate  # type: float
-        self.cutting_direction = cutting_direction  # type: str
-        self.allowable_toolpath_offsets = AllowableToolpathOffsets(
-            **allowable_toolpath_offsets
-        )  # type: AllowableToolpathOffsets
-        self.max_depth_per_pass = max_depth_per_pass  # type: float
-        self.max_depth_total = max_depth_total  # type: float
-        self.stepover = stepover  # type: float
-        self.yeti_pilot_target_powers = yeti_pilot_target_powers  # type: float
-        self.image_path = image_path  # type: str
+    def __init__(self, tool_id, manufacturer, type, dimensions, flutes,
+                 material, parameters, toolpath_offsets, image):
+        self.tool_id = tool_id.encode("utf-8")  # type: str
+        self.manufacturer = str(manufacturer)  # type: str
+        self.type = str(type)  # type: str
+        self.dimensions = Dimensions(**dimensions)  # type: Dimensions
+        self.flutes = Flutes(**flutes)  # type: Flutes
+        self.material = str(material)  # type: str
+        self.parameters = Parameters(**parameters)  # type: Parameters
+        self.toolpath_offsets = AllowableToolpathOffsets(**toolpath_offsets)  # type: AllowableToolpathOffsets
+        self.image = str(image)  # type: str
 
     @classmethod
     def from_json(cls, json_data):
@@ -60,11 +38,38 @@ class Cutter(object):
             return Cutter.from_json(json.load(f))
 
 
+class Dimensions(object):
+    def __init__(self, diameter, angle, units):
+        self.diameter = diameter  # type: float
+        self.angle = angle  # type: int
+        self.units = str(units)  # type: str
+
+
 class AllowableToolpathOffsets(object):
     def __init__(self, inside, outside, on):
-        self.inside = inside  # type: float
-        self.outside = outside  # type: float
-        self.on = on  # type: float
+        self.inside = inside  # type: bool
+        self.outside = outside  # type: bool
+        self.on = on  # type: bool
+
+
+class Flutes(object):
+    def __init__(self, count, length):
+        self.count = count  # type: int
+        self.length = length  # type: float
+
+
+class Parameters(object):
+    def __init__(self, cutting_spindle_speed, cutting_feed_rate,
+                 plunge_feed_rate, cutting_direction, recommended_depth_per_pass,
+                 max_depth_total, step_over, yetipilot_target_power):
+        self.cutting_spindle_speed = cutting_spindle_speed  # type: int
+        self.cutting_feed_rate = cutting_feed_rate  # type: float
+        self.plunge_feed_rate = plunge_feed_rate  # type: float
+        self.cutting_direction = str(cutting_direction)  # type: str
+        self.recommended_depth_per_pass = recommended_depth_per_pass  # type: float
+        self.max_depth_total = max_depth_total  # type: float
+        self.step_over = step_over  # type: float
+        self.yetipilot_target_power = yetipilot_target_power  # type: int
 
 
 class CanvasShapeDims(object):
@@ -106,14 +111,14 @@ class Configuration(object):
     ):
         super(Configuration, self).__init__(**kwargs)
         self.name = name  # type: str
-        self.shape_type = shape_type  # type: str
-        self.units = units  # type: str
-        self.rotation = rotation
+        self.shape_type = str(shape_type)  # type: str
+        self.units = str(units)  # type: str
+        self.rotation = str(rotation)
         self.canvas_shape_dims = CanvasShapeDims(
             **canvas_shape_dims
         )  # type: CanvasShapeDims
-        self.cutter_type = cutter_type  # type: str
-        self.toolpath_offset = toolpath_offset  # type: str
+        self.cutter_type = str(cutter_type)  # type: str
+        self.toolpath_offset = str(toolpath_offset)  # type: str
         self.cutting_depths = CuttingDepths(**cutting_depths)  # type: CuttingDepths
         self.datum_position = DatumPosition(**datum_position)  # type: DatumPosition
 
@@ -128,5 +133,4 @@ class Configuration(object):
 
 
 if __name__ == "__main__":
-    print(Cutter.default().__dict__)
-    print(Configuration.default().__dict__)
+    print(Cutter.default().tool_id)
