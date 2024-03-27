@@ -604,7 +604,7 @@ class DrywallShapeDisplay(Widget):
 
     def tool_offset_value(self):
         # Account for cutter size
-        cutter_radius = self.dwt_config.active_cutter.dimensions.diameter / 2
+        cutter_radius = (self.dwt_config.active_cutter.dimensions.diameter or 0) / 2  # if angled cutter, get 0
         if self.dwt_config.active_config.toolpath_offset == 'inside':
             tool_offset_value = -cutter_radius
         elif self.dwt_config.active_config.toolpath_offset == 'outside':
