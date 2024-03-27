@@ -22,13 +22,8 @@ import decimal
 import os
 import re
 
-try:
-    from asmcnc.core_UI import path_utils as pu
-    from asmcnc.apps.drywall_cutter_app.config import config_loader
-    from asmcnc.comms.logging_system.logging_system import Logger
-except ImportError:
-    pu = None
-    print("Import fail in engine.py")
+from asmcnc.core_UI import path_utils as pu
+from asmcnc.comms.logging_system.logging_system import Logger
 
 class GCodeEngine():
     def __init__(self, dwt_config):
