@@ -169,6 +169,8 @@ class DWTConfig(EventDispatcher):
         with open(file_path, "w") as f:
             json.dump(cfg, f, indent=4, default=lambda o: o.__dict__)
 
+        Logger.debug("Fixed configuration: " + config_name)
+
         return True
 
     def load_config(self, config_path):
