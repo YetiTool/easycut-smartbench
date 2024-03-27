@@ -38,10 +38,8 @@ class GCodeEngine():
         self.x = 0  # Identifier for use in arrays
         self.y = 1  # Identifier for use in arrays
         self.custom_gcode_shapes = ["geberit"]  # List of custom shapes that require gcode files
-        if pu is not None:
-            self.source_folder_path = pu.get_path("drywall_cutter_app/gcode")  # Path to the gcode files.
-        else:
-            self.source_folder_path = "/gcode/"
+        self.source_folder_path = pu.get_path("drywall_cutter_app/gcode")  # Path to the gcode files.
+
 
         #Constants
         self.CORNER_RADIUS_THRESHOLD = 0.09  # Minimum corner radius to be considered a corner radius
@@ -709,7 +707,6 @@ class GCodeEngine():
 
         # GCODE FILE STRUCTURE
         file_structure_1_shapes = ["rectangle", "square", "circle", "line"]
-        temp = []
         if self.config.active_config.shape_type in file_structure_1_shapes:
             output = "(%s)\nG90\nM3 S%d\nG0 %s\n\n%s\n(End)\nG0 Z%d\nM5\n" % (
                 output_file[output_file.find("/")+1:], self.config.active_cutter.cutting_spindle_speed, safe_start_position, ''.join(cutting_lines), z_safe_distance)

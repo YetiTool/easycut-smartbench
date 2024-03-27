@@ -2,7 +2,8 @@ import unittest
 import sys
 import os
 
-sys.path.append(os.path.join(os.getcwd(), 'src')) # Alternative to sys.path.append("./src") which didn't work me
+easycut_dir = os.path.dirname(os.getcwd())
+sys.path.append(os.path.join(easycut_dir, 'src')) # Alternative to sys.path.append("./src") which didn't work me
 
 from asmcnc.apps.drywall_cutter_app.engine import GCodeEngine
 
