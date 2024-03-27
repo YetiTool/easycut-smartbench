@@ -4,10 +4,6 @@ from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 
-from asmcnc.apps.drywall_cutter_app import config
-from asmcnc.apps.drywall_cutter_app.config import config_loader
-from asmcnc.comms.logging_system.logging_system import Logger
-
 from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.core_UI.components import float_input  # Required for the builder string
 import re

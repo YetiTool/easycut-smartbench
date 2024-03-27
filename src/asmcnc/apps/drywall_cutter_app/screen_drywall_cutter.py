@@ -255,7 +255,7 @@ class DrywallCutterScreen(Screen):
         self.dwt_config.load_cutter(cutter_file)
 
         # Convert allowed toolpaths object to dict, then put attributes with True into a list
-        allowed_toolpaths = [toolpath for toolpath, allowed in self.dwt_config.active_cutter.allowable_toolpath_offsets.__dict__.items() if allowed]
+        allowed_toolpaths = [toolpath for toolpath, allowed in self.dwt_config.active_cutter.toolpath_offsets.__dict__.items() if allowed]
         # Use allowed toolpath list to create a dict of only allowed toolpaths
         allowed_toolpath_dict = dict([(k, self.toolpath_offset_options_dict[k]) for k in allowed_toolpaths if k in self.toolpath_offset_options_dict])
         # Then update dropdown to only show allowed toolpaths
@@ -267,7 +267,7 @@ class DrywallCutterScreen(Screen):
         self.dwt_config.on_parameter_change('cutter_type', cutter_file)
 
     def show_tool_image(self):
-        self.tool_selection.source = self.dwt_config.active_cutter.image_path
+        self.tool_selection.source = self.dwt_config.active_cutter.image
 
     def select_shape(self, shape):
         self.dwt_config.on_parameter_change('shape_type', shape.lower())
