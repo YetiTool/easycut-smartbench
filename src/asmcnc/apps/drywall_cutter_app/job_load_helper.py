@@ -9,6 +9,10 @@ def log(message):
     timestamp = datetime.now()
     print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + message)
 
+"""
+Code taken from screen_file_loading.py and modified to be used in the JobLoader class
+"""
+
 
 class JobLoader():
     load_value = NumericProperty()
