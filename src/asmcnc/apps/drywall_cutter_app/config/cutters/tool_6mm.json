@@ -1,7 +1,7 @@
 {
-  "cutter_description": "45 degree V-bit",
+  "cutter_description": "6mm drywall cutter",
   "units": "mm",
-  "diameter": 8.0,
+  "diameter": 6.0,
   "material": "drywall",
   "cutting_spindle_speed": 2000,
   "cutting_feedrate": 500,
@@ -16,5 +16,5 @@
   "max_depth_total": 10.0,
   "stepover": 1.5,
   "yeti_pilot_target_powers": 700,
-  "image_path": "./asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_45deg.png"
+  "image_path": "./asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_6mm.png"
 }

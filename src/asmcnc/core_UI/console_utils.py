@@ -1,8 +1,15 @@
-import os, sys, json
+import os
+import sys
+
+from asmcnc.comms.grbl_settings_manager import GRBLSettingsManagerSingleton
 
 
 def correct_shutdown(*args):
     correct_shutdown_flag = (os.popen('grep "correct_shutdown" config.txt').read())
+
+    if GRBLSettingsManagerSingleton().has_rig_settings():
+        return True  # Don't show the incorrect shutdown screen if machine is a rig
+
     if 'False' in correct_shutdown_flag:
         return False
     else:

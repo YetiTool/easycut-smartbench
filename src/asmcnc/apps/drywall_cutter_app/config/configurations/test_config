@@ -1,24 +1,24 @@
 {
-  "shape_type": "rectangle",
-  "units": "mm",
-  "rotation": "horizontal",
-  "canvas_shape_dims": {
-    "x": 10,
-    "y": 20,
-    "r": 5,
-    "d": 15,
-    "l": 30
-  },
-  "cutter_type": "test_cutter.json",
-  "toolpath_offset": "inside",
-  "cutting_depths": {
-    "material_thickness": 3.0,
-    "bottom_offset": 0.5,
-    "auto_pass": true,
-    "depth_per_pass": 1.0
-  },
-  "datum_position": {
-    "x": 5,
-    "y": 5
-  }
+    "cutting_depths": {
+        "bottom_offset": 0.5, 
+        "auto_pass": true, 
+        "depth_per_pass": 6.0, 
+        "material_thickness": 12.0
+    }, 
+    "toolpath_offset": "inside", 
+    "canvas_shape_dims": {
+        "y": 1.0, 
+        "x": 0, 
+        "r": 0.0, 
+        "d": 0, 
+        "l": 0
+    }, 
+    "shape_type": "square", 
+    "cutter_type": "tool_6mm.json", 
+    "units": "mm", 
+    "rotation": "horizontal", 
+    "datum_position": {
+        "y": 0.0, 
+        "x": 0.0
+    }
 }
