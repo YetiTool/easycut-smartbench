@@ -1,5 +1,4 @@
 import os, sys
-from datetime import datetime
 
 from kivy.lang import Builder
 from kivy.uix.behaviors import ButtonBehavior
@@ -121,7 +120,7 @@ Builder.load_string("""
                     padding: [dp(0), dp(30)]
                     canvas.before:
                         Color:
-                            rgba: hex('#E5E5E5FF')
+                            rgba: hex('#FFFFFFFF')
                         Rectangle:
                             size: self.size
                             pos: self.pos
@@ -207,7 +206,8 @@ class DrywallCutterScreen(Screen):
                                                                                              screen_manager=self.sm,
                                                                                              dwt_config=self.dwt_config,
                                                                                              engine=self.engine,
-                                                                                             kb=self.kb)
+                                                                                             kb=self.kb,
+                                                                                             localization=self.l)
         self.shape_display_container.add_widget(self.drywall_shape_display_widget)
 
         self.show_tool_image()
@@ -346,17 +346,24 @@ class DrywallCutterScreen(Screen):
         self.sm.current = 'config_filesaver'
 
     def run(self):
-        if True:
-            self.engine.engine_run()
+        if self.materials_popup.validate_inputs() and self.drywall_shape_display_widget.are_inputs_valid():
+            output_file = self.engine.engine_run()
+
             job_loader = job_load_helper.JobLoader(screen_manager=self.sm, machine=self.m, job=self.jd,
                                                    localization=self.l)
-            output_file = "jobCache/" + self.dwt_config.active_config.shape_type + u".nc"
             self.jd.set_job_filename(output_file)
             job_loader.load_gcode_file(output_file)
             self.set_return_screens()
             self.proceed_to_go_screen()
+
         else:
-            popup_info.PopupError(self.sm, self.l, "Please check your inputs are valid, and not too small.")
+            m_popup_steps = self.materials_popup.get_steps_to_validate()
+            s_widget_steps = self.drywall_shape_display_widget.get_steps_to_validate()
+
+            m_popup_steps.extend(s_widget_steps)
+
+            steps_to_validate = "\n".join(m_popup_steps)
+            self.sm.pm.show_job_validation_popup(steps_to_validate)
 
     def are_inputs_valid(self):
         return self.drywall_shape_display_widget.are_inputs_valid() and self.materials_popup.validate_inputs()
@@ -468,7 +475,7 @@ class DrywallCutterScreen(Screen):
         self.drywall_shape_display_widget.x_input.text = str(self.dwt_config.active_config.canvas_shape_dims.x)
         self.drywall_shape_display_widget.y_input.text = str(self.dwt_config.active_config.canvas_shape_dims.y)
 
-        self.drywall_shape_display_widget.unit_switch.active = True if self.dwt_config.active_config.units == 'mm' else False
+        self.drywall_shape_display_widget.unit_switch.active = self.dwt_config.active_config.units == 'mm'
 
         # Vlad set your text inputs here:
 

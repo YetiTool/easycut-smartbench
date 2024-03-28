@@ -250,12 +250,6 @@ class XYMoveDrywall(Widget):
                                                              self.m.y_max_jog_abs_limit,
                                                              y_feed_speed)
 
-        elif self.jogMode == 'plus_0-01':
-            if case == 'X+': self.m.jog_relative('X', 0.01, x_feed_speed)
-            if case == 'X-': self.m.jog_relative('X', -0.01, x_feed_speed)
-            if case == 'Y+': self.m.jog_relative('Y', 0.01, y_feed_speed)
-            if case == 'Y-': self.m.jog_relative('Y', -0.01, y_feed_speed)
-
         elif self.jogMode == 'plus_0-1':
             if case == 'X+': self.m.jog_relative('X', 0.1, x_feed_speed)
             if case == 'X-': self.m.jog_relative('X', -0.1, x_feed_speed)
@@ -277,21 +271,18 @@ class XYMoveDrywall(Widget):
     def jogModeCycled(self):
 
         self.jog_mode_button_press_counter += 1
-        if self.jog_mode_button_press_counter % 5 == 0:
+        if self.jog_mode_button_press_counter % 4 == 0:
             self.jogMode = 'free'
             self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_infinity.png'
-        if self.jog_mode_button_press_counter % 5 == 1:
+        if self.jog_mode_button_press_counter % 4 == 1:
             self.jogMode = 'plus_10'
             self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_10.png'
-        if self.jog_mode_button_press_counter % 5 == 2:
+        if self.jog_mode_button_press_counter % 4 == 2:
             self.jogMode = 'plus_1'
             self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_1.png'
-        if self.jog_mode_button_press_counter % 5 == 3:
+        if self.jog_mode_button_press_counter % 4 == 3:
             self.jogMode = 'plus_0-1'
             self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_0-1.png'
-        if self.jog_mode_button_press_counter % 5 == 4:
-            self.jogMode = 'plus_0-01'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_0-01.png'
 
     def cancelXYJog(self):
         if self.jogMode == 'free':
