@@ -336,7 +336,7 @@ class DrywallCutterScreen(Screen):
         self.sm.current = 'lobby'
 
     def simulate(self):
-        pass
+        self.engine.engine_run(simulate=True)
 
     def save(self):
         if not self.sm.has_screen('config_filesaver'):
