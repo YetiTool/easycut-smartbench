@@ -299,7 +299,8 @@ class XYMoveDrywall(Widget):
 
     def check_zh_at_datum(self, opacity):
         # wpos == 0,0 when zh is at datum
-        if not (round(self.m.wpos_x(), 2) == 0 and round(self.m.wpos_y(), 2) == 0):
+        # allow a deviation of 0.01 due to machine precision
+        if not (abs(self.m.wpos_x()) <= 0.01 and abs(self.m.wpos_y()) <= 0.01):
             self.go_to_datum_button_overlay.opacity = opacity
         else:
             self.go_to_datum_button_overlay.opacity = 0
