@@ -676,10 +676,6 @@ class GCodeEngine():
             gcode_cut_depth, gcode_z_safe_distance = self.extract_cut_depth_and_z_safe_distance(gcode_lines)
             x_size, y_size, x_minus, y_minus  = self.read_in_custom_shape_dimensions(gcode_lines)
 
-            # if self.config.active_config.rotation == "vertical":
-            #     x_size, y_size = y_size, x_size
-            #     x_minus, y_minus = y_minus, x_minus
-
             if simulate:
                 coordinates = self.rectangle_coordinates(float(x_size), float(y_size) + self.config.active_cutter.diameter/2, float(x_minus), float(y_minus))
                 coordinates.append(coordinates[0])
