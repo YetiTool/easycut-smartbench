@@ -2,7 +2,7 @@ from kivy.uix.widget import Widget
 from kivy.lang import Builder
 from asmcnc.core_UI.job_go.popups.popup_yetipilot_settings import PopupYetiPilotSettings
 
-from src.asmcnc.comms.model_manager import ModelManagerSingleton
+from asmcnc.comms.model_manager import ModelManagerSingleton
 
 Builder.load_string(
     """
