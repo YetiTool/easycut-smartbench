@@ -407,6 +407,7 @@ class GoScreen(Screen):
         self.yp = kwargs["yetipilot"]
         # bind on updates:
         self.m.s.bind(on_update_overload_peak=self.update_overload_peak)
+        self.m.s.bind(on_reset_runtime=self.on_reset_runtime)
         self.feedOverride = widget_feed_override.FeedOverride(
             machine=self.m, screen_manager=self.sm, database=self.database
         )
@@ -523,6 +524,10 @@ class GoScreen(Screen):
             )
         if self.temp_suppress_prompts:
             self.temp_suppress_prompts = False
+
+    def on_reset_runtime(self, *args):
+        Logger.debug('total_runtime_seconds has been reset.')
+        self.total_runtime_seconds = 0
 
     def show_hide_yp_container(self, use_sc2):
         if use_sc2:
