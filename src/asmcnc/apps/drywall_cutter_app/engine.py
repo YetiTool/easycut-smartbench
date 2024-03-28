@@ -321,14 +321,15 @@ class GCodeEngine():
         return gcode_lines
 
     #Return lines in appropriate gcode file
-    def find_and_read_gcode_file(self, directory, shape_type, tool_diameter):
+    def find_and_read_gcode_file(self, directory, shape_type, tool_diameter, orientation=None):
         for file in os.listdir(directory):
             filename = file.lower().strip()
-            if shape_type in filename and str(tool_diameter)[:-2] + "mm" in filename:
-                file_path = os.path.join(directory, filename)
+            if shape_type in filename and str(tool_diameter)[:-2] + "mm" in filename and (orientation is None or orientation in filename):
+                file_path = pu.join(directory, filename)
                 if os.path.exists(file_path):
                     try:
                         with open(file_path, 'r') as file:
+                            Logger.debug("Reading {} gcode file: {}".format(shape_type, file_path))
                             return file.readlines()
                     except IOError:
                         Logger.Warning("An error occurred while reading the Gcode file")
@@ -671,13 +672,13 @@ class GCodeEngine():
         elif self.config.active_config.shape_type.lower() == u"geberit":
 
             # Read in data
-            gcode_lines = self.find_and_read_gcode_file(self.source_folder_path, self.config.active_config.shape_type, self.config.active_cutter.diameter)
+            gcode_lines = self.find_and_read_gcode_file(self.source_folder_path, self.config.active_config.shape_type, self.config.active_cutter.diameter, self.config.active_config.rotation)
             gcode_cut_depth, gcode_z_safe_distance = self.extract_cut_depth_and_z_safe_distance(gcode_lines)
             x_size, y_size, x_minus, y_minus  = self.read_in_custom_shape_dimensions(gcode_lines)
 
-            if self.config.active_config.rotation == "vertical":
-                x_size, y_size = y_size, x_size
-                x_minus, y_minus = y_minus, x_minus
+            # if self.config.active_config.rotation == "vertical":
+            #     x_size, y_size = y_size, x_size
+            #     x_minus, y_minus = y_minus, x_minus
 
             if simulate:
                 coordinates = self.rectangle_coordinates(float(x_size), float(y_size) + self.config.active_cutter.diameter/2, float(x_minus), float(y_minus))
