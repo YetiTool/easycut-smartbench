@@ -772,7 +772,7 @@ class GCodeEngine():
         file_structure_1_shapes = ["rectangle", "square", "circle", "line"]
 
         if simulate:
-            output =  output = "(%s)\nM5\nG90\nG0 %s\n\n%s(End)\nG0 Z%d\n" % (
+            output = "(%s)\nM5\nG90\nG0 %s\n\n%s(End)\nG0 Z%d\n" % (
                 output_file[output_file.find("/")+1:], safe_start_position, ''.join(cutting_lines), z_safe_distance)
             
         elif self.config.active_config.shape_type in file_structure_1_shapes:
