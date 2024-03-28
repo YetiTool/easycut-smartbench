@@ -1,5 +1,4 @@
 import os
-from datetime import datetime
 
 from kivy.lang import Builder
 from kivy.uix.behaviors import ButtonBehavior
@@ -205,7 +204,8 @@ class DrywallCutterScreen(Screen):
                                                                                              screen_manager=self.sm,
                                                                                              dwt_config=self.dwt_config,
                                                                                              engine=self.engine,
-                                                                                             kb=self.kb)
+                                                                                             kb=self.kb,
+                                                                                             localization=self.l)
         self.shape_display_container.add_widget(self.drywall_shape_display_widget)
 
         self.show_tool_image()
@@ -342,7 +342,18 @@ class DrywallCutterScreen(Screen):
         self.sm.current = 'config_filesaver'
 
     def run(self):
-        self.engine.engine_run()
+        if self.materials_popup.validate_inputs() and self.drywall_shape_display_widget.are_inputs_valid():
+            output_file = self.engine.engine_run()
+
+            # Run job
+        else:
+            m_popup_steps = self.materials_popup.get_steps_to_validate()
+            s_widget_steps = self.drywall_shape_display_widget.get_steps_to_validate()
+
+            m_popup_steps.extend(s_widget_steps)
+
+            steps_to_validate = "\n".join(m_popup_steps)
+            self.sm.pm.show_job_validation_popup(steps_to_validate)
 
     def open_filechooser(self):
         if not self.sm.has_screen('config_filechooser'):
@@ -390,7 +401,7 @@ class DrywallCutterScreen(Screen):
         self.drywall_shape_display_widget.x_input.text = str(self.dwt_config.active_config.canvas_shape_dims.x)
         self.drywall_shape_display_widget.y_input.text = str(self.dwt_config.active_config.canvas_shape_dims.y)
 
-        self.drywall_shape_display_widget.unit_switch.active = True if self.dwt_config.active_config.units == 'mm' else False
+        self.drywall_shape_display_widget.unit_switch.active = self.dwt_config.active_config.units == 'mm'
 
         # Vlad set your text inputs here:
 
