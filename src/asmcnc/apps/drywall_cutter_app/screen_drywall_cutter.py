@@ -365,9 +365,6 @@ class DrywallCutterScreen(Screen):
             steps_to_validate = "\n".join(m_popup_steps)
             self.sm.pm.show_job_validation_popup(steps_to_validate)
 
-    def are_inputs_valid(self):
-        return self.drywall_shape_display_widget.are_inputs_valid() and self.materials_popup.validate_inputs()
-
     def set_return_screens(self):
         self.sm.get_screen('go').return_to_screen = 'drywall_cutter' if self.sm.get_screen(
             'go').return_to_screen == 'home' else 'home'
