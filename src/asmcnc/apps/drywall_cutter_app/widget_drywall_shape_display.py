@@ -340,7 +340,7 @@ Builder.load_string("""
                 font_size: dp(20)
                 size: self.parent.width, dp(40)
                 size_hint: (None, None)
-                pos: self.parent.pos[0], self.parent.size[1] - self.height + dp(7)
+                pos: self.parent.pos[0] + dp(5), self.parent.size[1] - self.height + dp(5)
                 multiline: False
                 background_color: (0,0,0,0)
                 disabled_foreground_color: (0,0,0,1)
@@ -351,7 +351,7 @@ Builder.load_string("""
                 font_size: dp(20)
                 size: self.texture_size[0], dp(40)
                 size_hint: (None, None)
-                pos: self.parent.pos[0] + self.parent.size[0] - self.texture_size[0] - dp(5), self.parent.size[1] - self.height + dp(10)
+                pos: self.parent.pos[0] + self.parent.size[0] - self.texture_size[0] - dp(10), self.parent.size[1] - self.height + dp(5)
                 text: 'Test'
                 color: 0,0,0,1
 
@@ -443,14 +443,14 @@ class DrywallShapeDisplay(Widget):
                 self.enable_input(self.r_input, (411, 311))
                 self.disable_input(self.x_input)
                 self.enable_input(self.y_input, (238, 327))
-                self.place_widget(self.x_datum_label, (365, 35))
+                self.place_widget(self.x_datum_label, (365, 55))
                 self.place_widget(self.y_datum_label, (398, 113))
             else:
                 if rotation == 'horizontal':
                     self.enable_input(self.r_input, (453, 311))
                     self.enable_input(self.x_input, (33, 175))
                     self.enable_input(self.y_input, (238, 327))
-                    self.place_widget(self.x_datum_label, (397, 35))
+                    self.place_widget(self.x_datum_label, (397, 55))
                     self.place_widget(self.y_datum_label, (416, 114))
                 else:
                     self.enable_input(self.r_input, (409, 333))
@@ -598,8 +598,8 @@ class DrywallShapeDisplay(Widget):
         return current_x, current_y
 
     def set_datum_position_label(self, current_x, current_y):
-        self.x_datum_label.text = 'X: ' + str(current_x)
-        self.y_datum_label.text = 'Y: ' + str(current_y)
+        self.x_datum_label.text = 'X: ' + str(round(current_x,1))
+        self.y_datum_label.text = 'Y: ' + str(round(current_y,1))
 
     def tool_offset_value(self):
         # Account for cutter size
@@ -652,11 +652,17 @@ class DrywallShapeDisplay(Widget):
         self.x_datum_validation_label.opacity = 0
         self.y_datum_validation_label.opacity = 0
 
+        X_MIN = 0
+        X_MAX = 1250
+        Y_MIN = 0
+        Y_MAX = 2500
+
+
         # Set bumper colours based on whether anything crosses a boundary, and show validation labels
         if x_min_clearance < 0:
             self.bumper_bottom_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_bottom_red.png"
             x_datum_min = round(abs(x_min_clearance) + current_x, 2)
-            if x_datum_min > 0:
+            if X_MIN < x_datum_min < X_MAX:
                 self.x_datum_validation_label.text = 'MIN: ' + str(x_datum_min)
                 self.x_datum_validation_label.opacity = 1
         else:
@@ -665,7 +671,7 @@ class DrywallShapeDisplay(Widget):
         if y_min_clearance < 0:
             self.bumper_right_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_right_red.png"
             y_datum_min = round(abs(y_min_clearance) + current_y, 2)
-            if y_datum_min > 0:
+            if Y_MIN < y_datum_min < Y_MAX:
                 self.y_datum_validation_label.text = 'MIN: ' + str(y_datum_min)
                 self.y_datum_validation_label.opacity = 1
         else:
@@ -673,26 +679,24 @@ class DrywallShapeDisplay(Widget):
 
         if x_max_clearance < 0:
             self.bumper_top_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_top_red.png"
-            self.x_datum_validation_label.text = 'MAX: ' + str(round(current_x - abs(x_max_clearance), 2))
-            self.x_datum_validation_label.opacity = 1
+            x_datum_max = round(current_x - abs(x_max_clearance), 2)
+            if X_MIN < x_datum_max < X_MAX:
+                self.x_datum_validation_label.text = 'MAX: ' + str(x_datum_max)
+                self.x_datum_validation_label.opacity = 1
         else:
             self.bumper_top_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_top_green.png"
 
         if y_max_clearance < 0:
             self.bumper_left_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_left_red.png"
-            self.y_datum_validation_label.text = 'MAX: ' + str(round(current_y - abs(y_max_clearance), 2))
-            self.y_datum_validation_label.opacity = 1
+            y_datum_max = round(current_y - abs(y_max_clearance), 2)
+            if Y_MIN < y_datum_max < Y_MAX:
+                self.y_datum_validation_label.text = 'MAX: ' + str(y_datum_max)
+                self.y_datum_validation_label.opacity = 1
         else:
             self.bumper_left_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_left_green.png"
 
-        x_machine_range = self.m.get_dollar_setting(130) - 2 * self.m.limit_switch_safety_distance
-        y_machine_range = self.m.get_dollar_setting(131) - 2 * self.m.limit_switch_safety_distance
-        clearance_between_limit_edge = 1
-        x_practical_range = x_machine_range - 2 * clearance_between_limit_edge
-        y_practical_range = y_machine_range - 2 * clearance_between_limit_edge
-
-        # Now show a message if any dimensions are too big
-        d_limit = min(x_practical_range, y_practical_range)
+       # Now show a message if any dimensions are too big
+        d_limit = X_MAX
         if current_shape == 'circle' and float(self.d_input.text or 0) > d_limit:
             self.d_input_validation_label.text = 'MAX: ' + str(d_limit)
             self.d_input_validation_label.opacity = 1
@@ -700,8 +704,8 @@ class DrywallShapeDisplay(Widget):
             self.d_input_validation_label.opacity = 0
 
         if current_shape in ['square', 'rectangle']:
-            x_limit = x_practical_range
-            y_limit = y_practical_range
+            x_limit = X_MAX
+            y_limit = Y_MAX
             dims = self.dwt_config.active_config.canvas_shape_dims
 
             if current_shape == 'square':
@@ -740,14 +744,14 @@ class DrywallShapeDisplay(Widget):
 
         if current_shape == 'line':
             if "horizontal" in self.dwt_config.active_config.rotation:
-                if float(self.l_input.text or 0) > y_practical_range:
-                    self.l_input_validation_label.text = 'MAX: ' + str(y_practical_range)
+                if float(self.l_input.text or 0) > Y_MAX:
+                    self.l_input_validation_label.text = 'MAX: ' + str(Y_MAX)
                     self.l_input_validation_label.opacity = 1
                 else:
                     self.l_input_validation_label.opacity = 0
             else:
-                if float(self.l_input.text or 0) > x_practical_range:
-                    self.l_input_validation_label.text = 'MAX: ' + str(x_practical_range)
+                if float(self.l_input.text or 0) > X_MAX:
+                    self.l_input_validation_label.text = 'MAX: ' + str(X_MAX)
                     self.l_input_validation_label.opacity = 1
                 else:
                     self.l_input_validation_label.opacity = 0
