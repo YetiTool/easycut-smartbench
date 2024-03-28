@@ -2,6 +2,8 @@ from kivy.uix.widget import Widget
 from kivy.lang import Builder
 from asmcnc.core_UI.job_go.popups.popup_yetipilot_settings import PopupYetiPilotSettings
 
+from asmcnc.comms.model_manager import ModelManagerSingleton
+
 Builder.load_string(
     """
 
@@ -139,6 +141,8 @@ class YetiPilotWidget(Widget):
         self.yetipilot_two_tone.text = "[b][color=1976d2ff]YetiPilot[/b][/color]"
         self.profile_label.text = self.l.get_str("Profile")
 
+        self.model_manager = ModelManagerSingleton()
+
     def toggle_button_img(self, state):
         self.yp_toggle_img.source = "./asmcnc/core_UI/job_go/img/yp_toggle_%s.png" % (
             "on" if state == "down" else "off"
@@ -151,7 +155,8 @@ class YetiPilotWidget(Widget):
     def toggle_yeti_pilot(self, switch):
         if switch.state == "down":
             self.yp.enable()
-            self.open_yp_settings()
+            if not self.model_manager.is_machine_drywall():
+                self.open_yp_settings()
         else:
             self.yp.disable()
         self.toggle_button_img(switch.state)

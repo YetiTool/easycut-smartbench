@@ -6,6 +6,7 @@ Created on 19 Aug 2017
 """
 import kivy
 from asmcnc.comms.logging_system.logging_system import Logger
+from asmcnc.comms.model_manager import ModelManagerSingleton
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, FadeTransition
 from kivy.uix.floatlayout import FloatLayout
@@ -297,6 +298,8 @@ class HomeScreen(Screen):
         self.l = kwargs["localization"]
         self.kb = kwargs["keyboard"]
 
+        self.model_manager = ModelManagerSingleton()
+
         self.m.bind(probe_z_coord=self.dismiss_z_datum_reminder)
 
         # Job tab
@@ -397,37 +400,43 @@ class HomeScreen(Screen):
         else:
             # File label at the top
             self.file_data_label.text = "[color=333333]" + self.jd.job_name + "[/color]"
-        # Check if job recovery (or job redo) is available
-        if self.jd.job_recovery_cancel_line != None:
-            # Cancel on line -1 represents last job completing successfully
-            if self.jd.job_recovery_cancel_line == -1:
-                self.job_recovery_button_image.source = (
-                    "./asmcnc/skavaUI/img/recover_job_disabled.png"
-                )
-            else:
-                self.job_recovery_button_image.source = (
-                    "./asmcnc/skavaUI/img/recover_job.png"
-                )
-            # Line -1 being selected represents no selected line
-            if self.jd.job_recovery_selected_line == -1:
-                if self.jd.job_recovery_from_beginning:
+
+        # Job recovery not available on drywall machines
+        if not self.model_manager.is_machine_drywall():
+            # Check if job recovery (or job redo) is available
+            if self.jd.job_recovery_cancel_line != None:
+                # Cancel on line -1 represents last job completing successfully
+                if self.jd.job_recovery_cancel_line == -1:
+                    self.job_recovery_button_image.source = (
+                        "./asmcnc/skavaUI/img/recover_job_disabled.png"
+                    )
+                else:
+                    self.job_recovery_button_image.source = (
+                        "./asmcnc/skavaUI/img/recover_job.png"
+                    )
+                # Line -1 being selected represents no selected line
+                if self.jd.job_recovery_selected_line == -1:
+                    if self.jd.job_recovery_from_beginning:
+                        self.file_data_label.text += (
+                            "\n[color=FF0000]"
+                            + self.l.get_str("Restart from beginning")
+                            + "[/color]"
+                        )
+                else:
                     self.file_data_label.text += (
                         "\n[color=FF0000]"
-                        + self.l.get_str("Restart from beginning")
+                        + self.l.get_str("From line N").replace(
+                            "N", str(self.jd.job_recovery_selected_line)
+                        )
                         + "[/color]"
                     )
             else:
-                self.file_data_label.text += (
-                    "\n[color=FF0000]"
-                    + self.l.get_str("From line N").replace(
-                        "N", str(self.jd.job_recovery_selected_line)
-                    )
-                    + "[/color]"
+                self.job_recovery_button_image.source = (
+                    "./asmcnc/skavaUI/img/recover_job_disabled.png"
                 )
         else:
-            self.job_recovery_button_image.source = (
-                "./asmcnc/skavaUI/img/recover_job_disabled.png"
-            )
+            self.job_recovery_button.disabled = True
+            self.job_recovery_button.opacity = 0
 
     def on_touch(self):
         for text_input in self.text_inputs:

@@ -1,10 +1,11 @@
 from kivy.clock import Clock
+import os, sys
+
 from kivy.lang import Builder
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen
 
-from asmcnc.apps.drywall_cutter_app import material_setup_popup
 from asmcnc.apps.drywall_cutter_app import screen_config_filechooser
 from asmcnc.apps.drywall_cutter_app import screen_config_filesaver
 from asmcnc.apps.drywall_cutter_app import widget_drywall_shape_display
@@ -12,6 +13,9 @@ from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
 from asmcnc.apps.drywall_cutter_app.config import config_loader
 from asmcnc.apps.drywall_cutter_app.image_dropdown import ImageDropDownButton
 from asmcnc.comms.logging_system.logging_system import Logger
+from asmcnc.apps.drywall_cutter_app import material_setup_popup
+from asmcnc.apps.drywall_cutter_app import job_load_helper
+
 from asmcnc.core_UI import scaling_utils
 from asmcnc.skavaUI import popup_info
 
@@ -117,7 +121,7 @@ Builder.load_string("""
                     padding: [dp(0), dp(30)]
                     canvas.before:
                         Color:
-                            rgba: hex('#E5E5E5FF')
+                            rgba: hex('#FFFFFFFF')
                         Rectangle:
                             size: self.size
                             pos: self.pos
@@ -190,6 +194,7 @@ class DrywallCutterScreen(Screen):
         self.m = kwargs['machine']
         self.l = kwargs['localization']
         self.kb = kwargs['keyboard']
+        self.jd = kwargs['job']
 
         self.engine = GCodeEngine(self.dwt_config)
 
@@ -203,7 +208,8 @@ class DrywallCutterScreen(Screen):
                                                                                              screen_manager=self.sm,
                                                                                              dwt_config=self.dwt_config,
                                                                                              engine=self.engine,
-                                                                                             kb=self.kb)
+                                                                                             kb=self.kb,
+                                                                                             localization=self.l)
         self.shape_display_container.add_widget(self.drywall_shape_display_widget)
 
         self.show_tool_image()
@@ -231,6 +237,7 @@ class DrywallCutterScreen(Screen):
         self.apply_active_config()
         self.pulse_poll = Clock.schedule_interval(self.update_pulse_opacity, 0.04)
         self.kb.set_numeric_pos((scaling_utils.get_scaled_width(565), scaling_utils.get_scaled_height(85)))
+        self.drywall_shape_display_widget.check_datum_and_extents()  # update machine value labels
 
     def on_pre_leave(self):
         if self.pulse_poll:
@@ -344,10 +351,12 @@ class DrywallCutterScreen(Screen):
         popup_info.PopupStop(self.m, self.sm, self.l)
 
     def quit_to_lobby(self):
+        self.set_return_screens()
+        self.jd.reset_values()
         self.sm.current = 'lobby'
 
     def simulate(self):
-        pass
+        self.engine.engine_run(simulate=True)
 
     def save(self):
         if not self.sm.has_screen('config_filesaver'):
@@ -358,7 +367,85 @@ class DrywallCutterScreen(Screen):
         self.sm.current = 'config_filesaver'
 
     def run(self):
-        self.engine.engine_run()
+        if self.materials_popup.validate_inputs() and self.drywall_shape_display_widget.are_inputs_valid():
+            output_file = self.engine.engine_run()
+
+            job_loader = job_load_helper.JobLoader(screen_manager=self.sm, machine=self.m, job=self.jd,
+                                                   localization=self.l)
+            self.jd.set_job_filename(output_file)
+            job_loader.load_gcode_file(output_file)
+            self.set_return_screens()
+            self.proceed_to_go_screen()
+
+        else:
+            m_popup_steps = self.materials_popup.get_steps_to_validate()
+            s_widget_steps = self.drywall_shape_display_widget.get_steps_to_validate()
+
+            m_popup_steps.extend(s_widget_steps)
+
+            steps_to_validate = "\n".join(m_popup_steps)
+            self.sm.pm.show_job_validation_popup(steps_to_validate)
+
+    def set_return_screens(self):
+        self.sm.get_screen('go').return_to_screen = 'drywall_cutter' if self.sm.get_screen(
+            'go').return_to_screen == 'home' else 'home'
+        self.sm.get_screen('go').cancel_to_screen = 'drywall_cutter' if self.sm.get_screen(
+            'go').cancel_to_screen == 'home' else 'home'
+
+    def proceed_to_go_screen(self):
+
+        # NON-OPTIONAL CHECKS (bomb if non-satisfactory)
+
+        # GCode must be loaded.
+        # Machine state must be idle.
+        # Machine must be homed.
+        # Job must be within machine bounds.
+
+        if self.jd.job_gcode == []:
+            info = (
+                    self.format_command(
+                        self.l.get_str('Before running, a file needs to be loaded.')) + '\n\n' + self.format_command(
+                self.l.get_str('Tap the file chooser in the first tab (top left) to load a file.'))
+            )
+
+            popup_info.PopupInfo(self.sm, self.l, 450, info)
+
+        # elif not self.m.state().startswith('Idle'):
+        #     self.sm.current = 'mstate'
+
+        elif self.m.is_machine_homed == False and sys.platform != "win32":
+            self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
+
+        elif self.sm.get_screen('home').z_datum_reminder_flag and not self.sm.get_screen('home').has_datum_been_reset:
+
+            z_datum_reminder_message = (
+                    self.format_command(
+                        self.l.get_str(
+                            'You may need to set a new Z datum before you start a new job!')) + '\n\n' + self.format_command(
+                self.l.get_str('Press Ok to clear this reminder.').replace(self.l.get_str('Ok'), self.l.get_bold('Ok')))
+            )
+
+            popup_info.PopupWarning(self.sm, self.l, z_datum_reminder_message)
+            self.sm.get_screen('home').z_datum_reminder_flag = False
+
+        else:
+            # clear to proceed
+            self.jd.screen_to_return_to_after_job = 'drywall_cutter'
+            self.jd.screen_to_return_to_after_cancel = 'drywall_cutter'
+
+            # Check if stylus option is enabled
+            if self.m.is_stylus_enabled == True:
+                # Display tool selection screen
+                self.sm.current = 'tool_selection'
+
+            else:
+                self.m.stylus_router_choice = 'router'
+
+                # is fw capable of auto Z lift?
+                if self.m.fw_can_operate_zUp_on_pause():
+                    self.sm.current = 'lift_z_on_pause_or_not'
+                else:
+                    self.sm.current = 'jobstart_warning'
 
     def open_filechooser(self):
         if not self.sm.has_screen('config_filechooser'):
