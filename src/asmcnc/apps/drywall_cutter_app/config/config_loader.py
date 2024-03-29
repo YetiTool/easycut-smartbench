@@ -215,17 +215,15 @@ class DWTConfig(EventDispatcher):
                 self.active_config = config_classes.Configuration.default()
                 self.save_temp_config()
 
-        config_name = config_path.split(os.sep)[-1]
-        if config_path == TEMP_CONFIG_PATH:
-            config_name = "New Configuration"
-
         Logger.debug("Loading configuration: " + config_path)
         with open(config_path, "r") as f:
             self.active_config = config_classes.Configuration.from_json(json_data=json.load(f))
 
+        config_name = config_path.split(os.sep)[-1]
+        self.active_config_name = config_name
+
         if config_path != TEMP_CONFIG_PATH:
             self.set_most_recent_config(config_path)
-            self.active_config_name = config_name
 
         self.load_cutter(self.active_config.cutter_type)
 
