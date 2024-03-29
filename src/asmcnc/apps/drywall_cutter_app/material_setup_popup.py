@@ -550,7 +550,7 @@ class CuttingDepthsPopup(Popup):
         depth_per_pass = 0 if self.depth_per_pass.text == '' or self.depth_per_pass.text == '-' else float(
             self.depth_per_pass.text)
 
-        max_cut_depth_per_pass = self.dwt_config.active_cutter.max_depth_per_pass
+        max_cut_depth_per_pass = self.dwt_config.active_cutter.parameters.recommended_depth_per_pass
 
         # Check for negative material thickness
         if material_thickness < 0:
