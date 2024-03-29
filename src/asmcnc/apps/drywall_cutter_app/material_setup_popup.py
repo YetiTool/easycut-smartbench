@@ -500,10 +500,10 @@ class CuttingDepthsPopup(Popup):
         bottom_offset = self.get_safe_float(self.bottom_offset.text)
         depth_per_pass = self.get_safe_float(self.depth_per_pass.text)
 
-        self.dwt_config.active_config.cutting_depths.material_thickness = material_thickness
-        self.dwt_config.active_config.cutting_depths.bottom_offset = bottom_offset
-        self.dwt_config.active_config.cutting_depths.depth_per_pass = depth_per_pass
-        self.dwt_config.active_config.cutting_depths.auto_pass = self.auto_pass_checkbox.active
+        self.dwt_config.on_parameter_change('cutting_depths.material_thickness',material_thickness)
+        self.dwt_config.on_parameter_change('cutting_depths.bottom_offset', bottom_offset)
+        self.dwt_config.on_parameter_change('cutting_depths.depth_per_pass', depth_per_pass)
+        self.dwt_config.on_parameter_change('cutting_depths.auto_pass', self.auto_pass_checkbox.active)
         self.dismiss()
 
     def cancel(self):

@@ -297,6 +297,7 @@ class DrywallCutterScreen(Screen):
 
         self.shape_selection.source = self.shape_options_dict[shape.lower()]['image_path']
 
+        # handle toolpath
         if shape in ['line', 'geberit']:
             # Only on line available for these options
             self.toolpath_selection.disabled = True
@@ -307,16 +308,28 @@ class DrywallCutterScreen(Screen):
             self.select_toolpath(self.dwt_config.active_config.toolpath_offset)
             self.toolpath_selection.disabled = False
 
+        # handle rotate button
         if shape in ['rectangle', 'line', 'geberit']:
             self.rotate_button.disabled = False
         else:
             self.rotate_button.disabled = True
 
-        self.rotation = 'horizontal'
+        self.rotation = self.dwt_config.active_config.rotation
         self.drywall_shape_display_widget.select_shape(shape, self.rotation)
 
         if self.drywall_shape_display_widget.rotation_required():
             self.rotate_shape(swap_lengths=False)
+
+        # handle tool selection for geberit shape:
+        if shape is 'geberit':
+            geberit_cutters = {k: v for k, v in self.tool_options.iteritems() if '8mm' in k or '6mm' in k}
+            geberit_cutter_names = [v['cutter_path'] for v in geberit_cutters.values()]
+            self.tool_selection.image_dict = geberit_cutters
+            # check if valid tool is selected:
+            if self.dwt_config.active_config.cutter_type not in geberit_cutter_names:
+                self.select_tool(geberit_cutter_names[0])
+        else:
+            self.tool_selection.image_dict = self.tool_options
 
     def rotate_shape(self, swap_lengths=True):
         if self.rotation == 'horizontal':
@@ -477,8 +490,8 @@ class DrywallCutterScreen(Screen):
 
         self.select_shape(self.dwt_config.active_config.shape_type)
 
-        if rotation == 'vertical':
-            self.rotate_shape(swap_lengths=False)
+        #if rotation == 'vertical':
+        #    self.rotate_shape(swap_lengths=False)
 
         self.select_tool(self.dwt_config.active_config.cutter_type)
         self.select_toolpath(toolpath_offset)
