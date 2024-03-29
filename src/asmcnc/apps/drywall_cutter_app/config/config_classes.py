@@ -1,8 +1,4 @@
-"""
-This module contains the classes used to store the configuration data for the drywall cutter app.
-
-Data types are not confirmed.
-"""
+"""This module contains the classes used to store the configuration data for the drywall cutter app."""
 import json
 import os
 
@@ -16,8 +12,20 @@ DEFAULT_CUTTER_PATH = os.path.join(CUTTERS_DIR, DEFAULT_CUTTER_NAME)
 
 
 class Cutter(object):
-    def __init__(self, tool_id, manufacturer, type, dimensions, flutes,
-                 material, parameters, toolpath_offsets, image):
+    """Class to store the cutter data."""
+
+    def __init__(
+        self,
+        tool_id,
+        manufacturer,
+        type,
+        dimensions,
+        flutes,
+        material,
+        parameters,
+        toolpath_offsets,
+        image,
+    ):
         self.tool_id = tool_id.encode("utf-8")  # type: str
         self.manufacturer = str(manufacturer)  # type: str
         self.type = str(type)  # type: str
@@ -25,20 +33,26 @@ class Cutter(object):
         self.flutes = Flutes(**flutes)  # type: Flutes
         self.material = str(material)  # type: str
         self.parameters = Parameters(**parameters)  # type: Parameters
-        self.toolpath_offsets = AllowableToolpathOffsets(**toolpath_offsets)  # type: AllowableToolpathOffsets
+        self.toolpath_offsets = AllowableToolpathOffsets(
+            **toolpath_offsets
+        )  # type: AllowableToolpathOffsets
         self.image = str(image)  # type: str
 
     @classmethod
     def from_json(cls, json_data):
+        """Create a Cutter object from a JSON object."""
         return Cutter(**json_data)
 
     @classmethod
     def default(cls):
+        """Get the default cutter."""
         with open(DEFAULT_CUTTER_PATH, "r") as f:
             return Cutter.from_json(json.load(f))
 
 
 class Dimensions(object):
+    """Class to store the cutter dimensions."""
+
     def __init__(self, diameter, angle, units):
         self.diameter = diameter  # type: float
         self.angle = angle  # type: int
@@ -46,6 +60,8 @@ class Dimensions(object):
 
 
 class AllowableToolpathOffsets(object):
+    """Class to store the allowable toolpath offsets."""
+
     def __init__(self, inside, outside, on):
         self.inside = inside  # type: bool
         self.outside = outside  # type: bool
@@ -53,15 +69,27 @@ class AllowableToolpathOffsets(object):
 
 
 class Flutes(object):
+    """Class to store the cutter flutes."""
+
     def __init__(self, count, length):
         self.count = count  # type: int
         self.length = length  # type: float
 
 
 class Parameters(object):
-    def __init__(self, cutting_spindle_speed, cutting_feed_rate,
-                 plunge_feed_rate, cutting_direction, recommended_depth_per_pass,
-                 max_depth_total, step_over, yetipilot_target_power):
+    """Class to store the cutter parameters."""
+
+    def __init__(
+        self,
+        cutting_spindle_speed,
+        cutting_feed_rate,
+        plunge_feed_rate,
+        cutting_direction,
+        recommended_depth_per_pass,
+        max_depth_total,
+        step_over,
+        yetipilot_target_power,
+    ):
         self.cutting_spindle_speed = cutting_spindle_speed  # type: int
         self.cutting_feed_rate = cutting_feed_rate  # type: float
         self.plunge_feed_rate = plunge_feed_rate  # type: float
@@ -73,6 +101,8 @@ class Parameters(object):
 
 
 class CanvasShapeDims(object):
+    """Class to store the canvas shape dimensions."""
+
     def __init__(self, x, y, r, d, l):
         self.x = x  # type: float
         self.y = y  # type: float
@@ -82,6 +112,8 @@ class CanvasShapeDims(object):
 
 
 class CuttingDepths(object):
+    """Class to store the cutting depths."""
+
     def __init__(self, material_thickness, bottom_offset, auto_pass, depth_per_pass):
         self.material_thickness = material_thickness  # type: float
         self.bottom_offset = bottom_offset  # type: float
@@ -90,12 +122,16 @@ class CuttingDepths(object):
 
 
 class DatumPosition(object):
+    """Class to store the datum position."""
+
     def __init__(self, x, y):
         self.x = x  # type: float
         self.y = y  # type: float
 
 
 class Configuration(object):
+    """Class to store the configuration data."""
+
     def __init__(
         self,
         name,
@@ -124,10 +160,12 @@ class Configuration(object):
 
     @classmethod
     def from_json(cls, name, json_data):
+        """Create a Configuration object from a JSON object."""
         return Configuration(name=name, **json_data)
 
     @classmethod
     def default(cls):
+        """Get the default configuration."""
         with open(DEFAULT_CONFIG_PATH, "r") as f:
             return Configuration.from_json("default", json.load(f))
 

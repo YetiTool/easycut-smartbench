@@ -212,15 +212,17 @@ class DWTConfig(EventDispatcher):
                 self.active_config = config_classes.Configuration.default()
                 self.save_temp_config()
 
+        config_name = config_path.split(os.sep)[-1]
+        if config_path == TEMP_CONFIG_PATH:
+            config_name = "New Configuration"
+
         Logger.debug("Loading configuration: " + config_path)
         with open(config_path, "r") as f:
-            self.active_config = config_classes.Configuration(**json.load(f))
+            self.active_config = config_classes.Configuration.from_json(name=config_name, json_data=json.load(f))
 
         if config_path != TEMP_CONFIG_PATH:
             self.set_most_recent_config(config_path)
-            self.active_config_name = config_path.split(os.sep)[
-                -1
-            ]  # Get the name of the configuration file from the path
+            self.active_config_name = config_name
 
         self.load_cutter(self.active_config.cutter_type)
 
@@ -293,7 +295,7 @@ class DWTConfig(EventDispatcher):
                 continue  # Skip directories
 
             with open(file_path, "r") as f:
-                cutter = json.load(f)
+                cutter = config_classes.Cutter.from_json(json.load(f))
 
                 cutters[cutter['tool_id']] = {
                     'cutter_path': cutter_file,
