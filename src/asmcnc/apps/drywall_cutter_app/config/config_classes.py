@@ -134,7 +134,6 @@ class Configuration(object):
 
     def __init__(
         self,
-        name,
         shape_type,
         units,
         rotation,
@@ -146,7 +145,6 @@ class Configuration(object):
         **kwargs
     ):
         super(Configuration, self).__init__(**kwargs)
-        self.name = name  # type: str
         self.shape_type = str(shape_type)  # type: str
         self.units = str(units)  # type: str
         self.rotation = str(rotation)
