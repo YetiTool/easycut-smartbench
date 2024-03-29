@@ -2,10 +2,7 @@ from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 
-from asmcnc.apps.drywall_cutter_app import config
-from asmcnc.apps.drywall_cutter_app.config import config_loader
-from asmcnc.comms.logging_system.logging_system import Logger
-
+from asmcnc.apps.drywall_cutter_app.config.config_options import ToolpathOffsetOptions
 from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.core_UI.components import float_input  # Required for the builder string
 import re
@@ -626,10 +623,10 @@ class DrywallShapeDisplay(Widget):
 
     def tool_offset_value(self):
         # Account for cutter size
-        cutter_radius = self.dwt_config.active_cutter.diameter / 2
-        if self.dwt_config.active_config.toolpath_offset == 'inside':
+        cutter_radius = (self.dwt_config.active_cutter.dimensions.diameter or 0) / 2  # if angled cutter, get 0
+        if self.dwt_config.active_config.toolpath_offset == ToolpathOffsetOptions.INSIDE.value:
             tool_offset_value = -cutter_radius
-        elif self.dwt_config.active_config.toolpath_offset == 'outside':
+        elif self.dwt_config.active_config.toolpath_offset == ToolpathOffsetOptions.OUTSIDE.value:
             tool_offset_value = cutter_radius
         else:
             tool_offset_value = 0

@@ -1,5 +1,5 @@
 from kivy.clock import Clock
-import os, sys
+import sys
 
 from kivy.lang import Builder
 from kivy.uix.behaviors import ButtonBehavior
@@ -275,8 +275,7 @@ class DrywallCutterScreen(Screen):
         self.dwt_config.load_cutter(cutter_file)
 
         # Convert allowed toolpaths object to dict, then put attributes with True into a list
-        allowed_toolpaths = [toolpath for toolpath, allowed in
-                             self.dwt_config.active_cutter.allowable_toolpath_offsets.__dict__.items() if allowed]
+        allowed_toolpaths = [toolpath for toolpath, allowed in self.dwt_config.active_cutter.toolpath_offsets.__dict__.items() if allowed]
         # Use allowed toolpath list to create a dict of only allowed toolpaths
         allowed_toolpath_dict = dict([(k, self.toolpath_offset_options_dict[k]) for k in allowed_toolpaths if
                                       k in self.toolpath_offset_options_dict])
@@ -291,7 +290,7 @@ class DrywallCutterScreen(Screen):
         self.dwt_config.on_parameter_change('cutter_type', cutter_file)
 
     def show_tool_image(self):
-        self.tool_selection.source = self.dwt_config.active_cutter.image_path
+        self.tool_selection.source = self.dwt_config.active_cutter.image
 
     def select_shape(self, shape):
         self.dwt_config.on_parameter_change('shape_type', shape.lower())
@@ -344,8 +343,7 @@ class DrywallCutterScreen(Screen):
         self.show_toolpath_image()
 
     def show_toolpath_image(self):
-        self.toolpath_selection.source = \
-        self.toolpath_offset_options_dict[self.dwt_config.active_config.toolpath_offset]['image_path']
+        self.toolpath_selection.source = self.toolpath_offset_options_dict[self.dwt_config.active_config.toolpath_offset]['image_path']
 
     def material_setup(self):
         self.materials_popup.open()

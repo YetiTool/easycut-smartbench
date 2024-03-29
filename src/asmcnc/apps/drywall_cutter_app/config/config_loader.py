@@ -15,6 +15,9 @@ TEMP_DIR = os.path.join(CURRENT_DIR, "temp")
 SETTINGS_DIR = os.path.join(CURRENT_DIR, "settings")
 TEMP_CONFIG_FILE_NAME = "temp_config.json"
 
+if not os.path.exists(TEMP_DIR):
+    os.makedirs(TEMP_DIR)
+
 SETTINGS_PATH = os.path.join(SETTINGS_DIR, "settings.json")
 TEMP_CONFIG_PATH = os.path.join(TEMP_DIR, TEMP_CONFIG_FILE_NAME)
 
@@ -88,9 +91,9 @@ def get_shape_dimensions(json_obj):
 
 
 class DWTConfig(EventDispatcher):
-    active_config_name = StringProperty("")
-    active_config = ObjectProperty(config_classes.Configuration.default())
-    active_cutter = ObjectProperty(config_classes.Cutter.default())
+    active_config_name = StringProperty("")  # type: str
+    active_config = ObjectProperty(config_classes.Configuration.default())  # type: config_classes.Configuration
+    active_cutter = ObjectProperty(config_classes.Cutter.default())  # type: config_classes.Cutter
 
     def __init__(self, screen_drywall_cutter=None, *args, **kwargs):
         super(DWTConfig, self).__init__(*args, **kwargs)
@@ -214,13 +217,13 @@ class DWTConfig(EventDispatcher):
 
         Logger.debug("Loading configuration: " + config_path)
         with open(config_path, "r") as f:
-            self.active_config = config_classes.Configuration(**json.load(f))
+            self.active_config = config_classes.Configuration.from_json(json_data=json.load(f))
+
+        config_name = config_path.split(os.sep)[-1]
+        self.active_config_name = config_name
 
         if config_path != TEMP_CONFIG_PATH:
             self.set_most_recent_config(config_path)
-            self.active_config_name = config_path.split(os.sep)[
-                -1
-            ]  # Get the name of the configuration file from the path
 
         self.load_cutter(self.active_config.cutter_type)
 
@@ -293,13 +296,12 @@ class DWTConfig(EventDispatcher):
                 continue  # Skip directories
 
             with open(file_path, "r") as f:
-                cutter = json.load(f)
+                cutter = config_classes.Cutter.from_json(json.load(f))
 
-                if "cutter_description" in cutter and "image_path" in cutter:
-                    cutters[cutter["cutter_description"]] = {
-                        "cutter_path": cutter_file,
-                        "image_path": cutter["image_path"],
-                    }
+                cutters[cutter.tool_id] = {
+                    'cutter_path': cutter_file,
+                    'image_path': cutter.image
+                }
         return cutters
 
     def save_temp_config(self):
