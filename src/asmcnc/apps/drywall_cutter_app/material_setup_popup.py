@@ -609,4 +609,12 @@ class CuttingDepthsPopup(Popup):
                 + "\n\n"
             )
 
+        if total_cut_depth > self.dwt_config.active_cutter.parameters.max_depth_total:
+            steps.append(
+                self.l.get_str("Total cut depth exceeds max depth of tool.")
+                + "\n\n"
+                + self.l.get_bold("Try reducing the total cut depth, or use a different tool.")
+                + "\n\n"
+            )
+
         return steps
