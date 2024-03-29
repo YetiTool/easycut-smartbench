@@ -281,8 +281,10 @@ class DrywallCutterScreen(Screen):
                                       k in self.toolpath_offset_options_dict])
         # Then update dropdown to only show allowed toolpaths
         self.toolpath_selection.image_dict = allowed_toolpath_dict
-        # Default to first toolpath, so disabled toolpath is never selected
-        self.select_toolpath(allowed_toolpaths[0])
+        # check if currently selected toolpath is not allowed
+        if self.dwt_config.active_config.toolpath_offset not in allowed_toolpaths:
+            # Default to first toolpath, so disabled toolpath is never selected
+            self.select_toolpath(allowed_toolpaths[0])
 
         self.show_tool_image()
         self.dwt_config.on_parameter_change('cutter_type', cutter_file)
@@ -297,11 +299,12 @@ class DrywallCutterScreen(Screen):
 
         if shape in ['line', 'geberit']:
             # Only on line available for these options
-            new_toolpath = 'on'
             self.toolpath_selection.disabled = True
+            if self.dwt_config.active_config.toolpath_offset is not 'on':
+                # default to 'on'
+                self.select_toolpath('on')
         else:
-            # Default to cut inside line
-            new_toolpath = 'inside'
+            self.select_toolpath(self.dwt_config.active_config.toolpath_offset)
             self.toolpath_selection.disabled = False
 
         if shape in ['rectangle', 'line', 'geberit']:
@@ -311,7 +314,6 @@ class DrywallCutterScreen(Screen):
 
         self.rotation = 'horizontal'
         self.drywall_shape_display_widget.select_shape(shape, self.rotation)
-        self.select_toolpath(new_toolpath)
 
         if self.drywall_shape_display_widget.rotation_required():
             self.rotate_shape(swap_lengths=False)
