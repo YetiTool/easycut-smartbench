@@ -557,7 +557,7 @@ class GCodeEngine():
 
     #Main
     def engine_run(self, simulate=False):
-        temp_gcode_path = pu.get_path('temp_gcode', folders_only=True)
+        temp_gcode_path = pu.get_path('drywall_cutter_app/config/temp', folders_only=True)
         filename = self.config.active_config.shape_type + u".nc"
         output_path = pu.join(temp_gcode_path, filename)
         safe_start_position = u"X0 Y0 Z10"
