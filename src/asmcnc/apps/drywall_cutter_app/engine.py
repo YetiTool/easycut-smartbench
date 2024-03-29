@@ -559,7 +559,7 @@ class GCodeEngine():
 
     #Main
     def engine_run(self, simulate=False):
-        temp_gcode_path = pu.get_path('temp_gcode', folders_only=True)
+        temp_gcode_path = pu.get_path('drywall_cutter_app/config/temp', folders_only=True)
         filename = self.config.active_config.shape_type + u".nc"
         output_path = pu.join(temp_gcode_path, filename)
         safe_start_position = u"X0 Y0 Z10"
@@ -569,7 +569,7 @@ class GCodeEngine():
         pass_depths = []
         stepovers = [0]
         simulation_z_height = 5 #mm
-        simualtion_plunge_rate = 750 #mm/s
+        simulation_plunge_rate = 750 #mm/s
         simulation_feedrate = 6000 #mm/s
 
         is_climb = (self.config.active_cutter.parameters.cutting_direction == CuttingDirectionOptions.CLIMB.value
@@ -599,7 +599,7 @@ class GCodeEngine():
             if simulate:
                 parameters['pass_depth'] = simulation_z_height
                 parameters['feedrate'] = simulation_feedrate
-                parameters['plungerate'] = simualtion_plunge_rate
+                parameters['plungerate'] = simulation_plunge_rate
                 parameters['total_cut_depth'] = simulation_z_height
             return parameters
 
@@ -625,7 +625,7 @@ class GCodeEngine():
             if simulate:
                 parameters['pass_depth'] = simulation_z_height
                 parameters['feedrate'] = simulation_feedrate
-                parameters['plungerate'] = simualtion_plunge_rate
+                parameters['plungerate'] = simulation_plunge_rate
                 parameters['total_cut_depth'] = simulation_z_height
             return parameters
 
@@ -748,7 +748,7 @@ class GCodeEngine():
                 circle_parameters["pass_depth"] = simulation_z_height
                 circle_parameters["total_cut_depth"] = simulation_z_height
                 circle_parameters["feedrate"] = simulation_feedrate
-                circle_parameters["plungerate"] = simualtion_plunge_rate
+                circle_parameters["plungerate"] = simulation_plunge_rate
                 circle = self.cut_rectangle(**circle_parameters)
                 cutting_lines += circle
 
