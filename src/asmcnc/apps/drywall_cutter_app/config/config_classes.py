@@ -141,10 +141,8 @@ class Configuration(object):
         cutter_type,
         toolpath_offset,
         cutting_depths,
-        datum_position,
-        **kwargs
+        datum_position
     ):
-        super(Configuration, self).__init__(**kwargs)
         self.shape_type = str(shape_type)  # type: str
         self.units = str(units)  # type: str
         self.rotation = str(rotation)
