@@ -559,7 +559,9 @@ class GCodeEngine():
 
     #Main
     def engine_run(self, simulate=False):
-        output_file = "jobCache/" + self.config.active_config.shape_type + u".nc"
+        temp_gcode_path = pu.get_path('temp_gcode', folders_only=True)
+        filename = self.config.active_config.shape_type + u".nc"
+        output_path = pu.join(temp_gcode_path, filename)
         safe_start_position = u"X0 Y0 Z10"
         z_safe_distance = 5
         cutting_pass_depth = self.config.active_cutter.parameters.recommended_depth_per_pass if self.config.active_config.cutting_depths.auto_pass else self.config.active_config.cutting_depths.depth_per_pass
@@ -775,16 +777,16 @@ class GCodeEngine():
 
         if simulate:
             output = "(%s)\nM5\nG90\nG0 %s\n\n%s(End)\nG0 Z%d\n" % (
-                output_file[output_file.find("/")+1:], safe_start_position, ''.join(cutting_lines), z_safe_distance)
-
+                filename, safe_start_position, ''.join(cutting_lines), z_safe_distance)
+            
         elif self.config.active_config.shape_type in file_structure_1_shapes:
             output = "(%s)\nG90\nM3 S%d\nG0 %s\n\n%s(End)\nG0 Z%d\nM5\n" % (
-                output_file[output_file.find("/")+1:], self.config.active_cutter.parameters.cutting_spindle_speed, safe_start_position, ''.join(cutting_lines), z_safe_distance)
+                filename, self.config.active_cutter.parameters.cutting_spindle_speed, safe_start_position, ''.join(cutting_lines), z_safe_distance)
         else:
             output = ''.join(cutting_lines)  # Use ''.join() to concatenate lines without spaces
 
-        with open(output_file, 'w+') as out_file:
+        with open(output_path, 'w+') as out_file:
             out_file.write(output.decode('utf-8'))  # Use write() to write the entire output as a single string
 
-            Logger.info("%s written" % output_file)
-            return output_file  # return path to the file
+            Logger.info("%s written" % output_path)
+            return output_path  # return path to the file
