@@ -216,7 +216,7 @@ Builder.load_string("""
 
 """)
 
-configs_dir = path_utils.get_path('configurations') # where job files are cached for selection (for last used history/easy access)
+configs_dir = path_utils.get_path('drywall_cutter_app/config/configurations') # where job files are cached for selection (for last used history/easy access)
 
 
 def date_order_sort(files, filesystem):
