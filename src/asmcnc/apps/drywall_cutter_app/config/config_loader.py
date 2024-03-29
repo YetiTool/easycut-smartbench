@@ -15,6 +15,9 @@ TEMP_DIR = os.path.join(CURRENT_DIR, "temp")
 SETTINGS_DIR = os.path.join(CURRENT_DIR, "settings")
 TEMP_CONFIG_FILE_NAME = "temp_config.json"
 
+if not os.path.exists(TEMP_DIR):
+    os.makedirs(TEMP_DIR)
+
 SETTINGS_PATH = os.path.join(SETTINGS_DIR, "settings.json")
 TEMP_CONFIG_PATH = os.path.join(TEMP_DIR, TEMP_CONFIG_FILE_NAME)
 
