@@ -238,7 +238,7 @@ class DWTConfig(EventDispatcher):
 
         self.cleanup_active_config()
 
-        with open(config_path, "w+") as f:
+        with open(config_path, "w") as f:
             json.dump(self.active_config, f, indent=4, default=lambda o: o.__dict__)
 
         if config_path != TEMP_CONFIG_PATH:
