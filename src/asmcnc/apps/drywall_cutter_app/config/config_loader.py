@@ -300,9 +300,9 @@ class DWTConfig(EventDispatcher):
             with open(file_path, "r") as f:
                 cutter = config_classes.Cutter.from_json(json.load(f))
 
-                cutters[cutter['tool_id']] = {
+                cutters[cutter.tool_id] = {
                     'cutter_path': cutter_file,
-                    'image_path': cutter['image']
+                    'image_path': cutter.image
                 }
         return cutters
 
