@@ -19,6 +19,7 @@ from kivy.uix.screenmanager import Screen
 
 from asmcnc.apps.drywall_cutter_app.config import config_loader
 from asmcnc.comms import usb_storage
+from asmcnc.core_UI import path_utils
 from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
@@ -215,7 +216,7 @@ Builder.load_string("""
 
 """)
 
-configs_dir = './asmcnc/apps/drywall_cutter_app/config/configurations/'  # where job files are cached for selection (for last used history/easy access)
+configs_dir = path_utils.get_path('configurations') # where job files are cached for selection (for last used history/easy access)
 
 
 def date_order_sort(files, filesystem):
