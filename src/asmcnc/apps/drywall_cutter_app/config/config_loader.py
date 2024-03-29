@@ -221,7 +221,7 @@ class DWTConfig(EventDispatcher):
 
         Logger.debug("Loading configuration: " + config_path)
         with open(config_path, "r") as f:
-            self.active_config = config_classes.Configuration.from_json(name=config_name, json_data=json.load(f))
+            self.active_config = config_classes.Configuration.from_json(json_data=json.load(f))
 
         if config_path != TEMP_CONFIG_PATH:
             self.set_most_recent_config(config_path)

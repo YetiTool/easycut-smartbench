@@ -159,15 +159,15 @@ class Configuration(object):
         self.datum_position = DatumPosition(**datum_position)  # type: DatumPosition
 
     @classmethod
-    def from_json(cls, name, json_data):
+    def from_json(cls, json_data):
         """Create a Configuration object from a JSON object."""
-        return Configuration(name=name, **json_data)
+        return Configuration(**json_data)
 
     @classmethod
     def default(cls):
         """Get the default configuration."""
         with open(DEFAULT_CONFIG_PATH, "r") as f:
-            return Configuration.from_json("default", json.load(f))
+            return Configuration.from_json(json.load(f))
 
 
 if __name__ == "__main__":
