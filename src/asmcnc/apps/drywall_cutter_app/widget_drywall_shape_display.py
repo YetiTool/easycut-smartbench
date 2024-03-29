@@ -449,8 +449,8 @@ class DrywallShapeDisplay(Widget):
             self.enable_input(self.d_input, (458, 310))
             self.place_widget(self.x_datum_label, (278, 27))
             self.place_widget(self.y_datum_label, (403, 196))
-            self.place_widget(self.y_datum_validation_label, (self.y_datum_label.pos[0],
-                                                              self.y_datum_label.pos[1] - 35))
+            self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
+                                                              self.y_datum_label.y - 35))
         else:
             self.disable_input(self.d_input)
 
@@ -461,8 +461,8 @@ class DrywallShapeDisplay(Widget):
                 self.enable_input(self.y_input, (238, 327))
                 self.place_widget(self.x_datum_label, (365, 55))
                 self.place_widget(self.y_datum_label, (398, 113))
-                self.place_widget(self.y_datum_validation_label, (self.y_datum_label.pos[0],
-                                                                  self.y_datum_label.pos[1] - 35))
+                self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
+                                                                  self.y_datum_label.y - 35))
             else:
                 if rotation == 'horizontal':
                     self.enable_input(self.r_input, (453, 311))
@@ -470,16 +470,16 @@ class DrywallShapeDisplay(Widget):
                     self.enable_input(self.y_input, (238, 327))
                     self.place_widget(self.x_datum_label, (397, 55))
                     self.place_widget(self.y_datum_label, (416, 114))
-                    self.place_widget(self.y_datum_validation_label, (self.y_datum_label.pos[0],
-                                                                      self.y_datum_label.pos[1] - 35))
+                    self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
+                                                                      self.y_datum_label.y - 35))
                 else:
                     self.enable_input(self.r_input, (409, 333))
                     self.enable_input(self.x_input, (78, 155))
                     self.enable_input(self.y_input, (238, 331))
                     self.place_widget(self.x_datum_label, (235, 20))
                     self.place_widget(self.y_datum_label, (395, 63))
-                    self.place_widget(self.y_datum_validation_label, (self.y_datum_label.pos[0],
-                                                                      self.y_datum_label.pos[1] - 35))
+                    self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
+                                                                      self.y_datum_label.y - 35))
         else:
             self.disable_input(self.r_input)
             self.disable_input(self.x_input)
@@ -490,14 +490,14 @@ class DrywallShapeDisplay(Widget):
                 self.enable_input(self.l_input, (240, 228))
                 self.place_widget(self.x_datum_label, (414, 75))
                 self.place_widget(self.y_datum_label, (422, 195))
-                self.place_widget(self.y_datum_validation_label, (self.y_datum_label.pos[0],
-                                                                  self.y_datum_label.pos[1] - 35))
+                self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
+                                                                  self.y_datum_label.y - 35))
             else:
                 self.enable_input(self.l_input, (158, 173))
                 self.place_widget(self.x_datum_label, (270+5, 20))
                 self.place_widget(self.y_datum_label, (350, 70))
-                self.place_widget(self.y_datum_validation_label, (self.y_datum_label.pos[0],
-                                                                  self.y_datum_label.pos[1] - 20))  # closer to Y_datum
+                self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
+                                                                  self.y_datum_label.y - 20))  # closer to Y_datum
         else:
             self.disable_input(self.l_input)
 
