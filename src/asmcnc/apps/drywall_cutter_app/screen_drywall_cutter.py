@@ -375,6 +375,7 @@ class DrywallCutterScreen(Screen):
                                                    localization=self.l)
             self.jd.set_job_filename(self.drywall_shape_display_widget.config_name_label.text)
             job_loader.load_gcode_file(output_path)
+            os.remove(output_path)
             self.set_return_screens()
             self.proceed_to_go_screen()
 
