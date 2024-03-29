@@ -1,5 +1,5 @@
 from kivy.clock import Clock
-import os, sys
+import sys
 
 from kivy.lang import Builder
 from kivy.uix.behaviors import ButtonBehavior
