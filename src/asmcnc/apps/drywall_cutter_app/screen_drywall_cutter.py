@@ -235,6 +235,7 @@ class DrywallCutterScreen(Screen):
 
     def on_pre_enter(self):
         self.apply_active_config()
+        self.materials_popup.on_open()  # to make sure material values are set correctly
         self.pulse_poll = Clock.schedule_interval(self.update_pulse_opacity, 0.04)
         self.kb.set_numeric_pos((scaling_utils.get_scaled_width(565), scaling_utils.get_scaled_height(85)))
         self.drywall_shape_display_widget.check_datum_and_extents()  # update machine value labels
@@ -368,12 +369,12 @@ class DrywallCutterScreen(Screen):
 
     def run(self):
         if self.materials_popup.validate_inputs() and self.drywall_shape_display_widget.are_inputs_valid():
-            output_file = self.engine.engine_run()
+            output_path = self.engine.engine_run()
 
             job_loader = job_load_helper.JobLoader(screen_manager=self.sm, machine=self.m, job=self.jd,
                                                    localization=self.l)
-            self.jd.set_job_filename(output_file)
-            job_loader.load_gcode_file(output_file)
+            self.jd.set_job_filename(self.drywall_shape_display_widget.config_name_label.text)
+            job_loader.load_gcode_file(output_path)
             self.set_return_screens()
             self.proceed_to_go_screen()
 
