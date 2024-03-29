@@ -340,8 +340,7 @@ class DrywallCutterScreen(Screen):
         self.show_toolpath_image()
 
     def show_toolpath_image(self):
-        self.toolpath_selection.source = \
-        self.toolpath_offset_options_dict[self.dwt_config.active_config.toolpath_offset]['image_path']
+        self.toolpath_selection.source = self.toolpath_offset_options_dict[self.dwt_config.active_config.toolpath_offset]['image_path']
 
     def material_setup(self):
         self.materials_popup.open()
