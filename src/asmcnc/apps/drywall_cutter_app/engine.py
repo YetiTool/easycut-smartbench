@@ -567,7 +567,7 @@ class GCodeEngine():
         pass_depths = []
         stepovers = [0]
         simulation_z_height = 5 #mm
-        simualtion_plunge_rate = 750 #mm/s
+        simulation_plunge_rate = 750 #mm/s
         simulation_feedrate = 6000 #mm/s
 
         is_climb = self.config.active_cutter.cutting_direction.lower() == "climb"
@@ -597,7 +597,7 @@ class GCodeEngine():
             if simulate:
                 parameters['pass_depth'] = simulation_z_height
                 parameters['feedrate'] = simulation_feedrate
-                parameters['plungerate'] = simualtion_plunge_rate
+                parameters['plungerate'] = simulation_plunge_rate
                 parameters['total_cut_depth'] = simulation_z_height
             return parameters
 
@@ -623,7 +623,7 @@ class GCodeEngine():
             if simulate:
                 parameters['pass_depth'] = simulation_z_height
                 parameters['feedrate'] = simulation_feedrate
-                parameters['plungerate'] = simualtion_plunge_rate
+                parameters['plungerate'] = simulation_plunge_rate
                 parameters['total_cut_depth'] = simulation_z_height
             return parameters
 
@@ -746,7 +746,7 @@ class GCodeEngine():
                 circle_parameters["pass_depth"] = simulation_z_height
                 circle_parameters["total_cut_depth"] = simulation_z_height
                 circle_parameters["feedrate"] = simulation_feedrate
-                circle_parameters["plungerate"] = simualtion_plunge_rate
+                circle_parameters["plungerate"] = simulation_plunge_rate
                 circle = self.cut_rectangle(**circle_parameters)
                 cutting_lines += circle
 
