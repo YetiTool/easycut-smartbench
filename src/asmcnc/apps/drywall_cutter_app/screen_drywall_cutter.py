@@ -17,6 +17,7 @@ from asmcnc.apps.drywall_cutter_app import material_setup_popup
 from asmcnc.apps.drywall_cutter_app import job_load_helper
 
 from asmcnc.core_UI import scaling_utils
+from asmcnc.core_UI.new_popups.job_validation_popup import JobValidationPopup
 from asmcnc.skavaUI import popup_info
 
 
@@ -388,7 +389,8 @@ class DrywallCutterScreen(Screen):
             m_popup_steps.extend(s_widget_steps)
 
             steps_to_validate = "\n".join(m_popup_steps)
-            self.sm.pm.show_job_validation_popup(steps_to_validate)
+            popup = JobValidationPopup(steps_to_validate, size_hint=(0.8, 0.8))
+            popup.open()
 
     def set_return_screens(self):
         self.sm.get_screen('go').return_to_screen = 'drywall_cutter' if self.sm.get_screen(
