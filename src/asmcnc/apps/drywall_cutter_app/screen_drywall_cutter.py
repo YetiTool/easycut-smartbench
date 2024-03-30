@@ -389,7 +389,7 @@ class DrywallCutterScreen(Screen):
             m_popup_steps.extend(s_widget_steps)
 
             steps_to_validate = "\n".join(m_popup_steps)
-            popup = JobValidationPopup(steps_to_validate, size_hint=(0.8, 0.8))
+            popup = JobValidationPopup(steps_to_validate, size_hint=(0.8, 0.8), auto_dismiss=False)
             popup.open()
 
     def set_return_screens(self):
