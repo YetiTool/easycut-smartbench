@@ -9,7 +9,8 @@ from asmcnc.core_UI.new_popups.popup_bases import PopupBase, PopupErrorTitle, Po
 
 
 class JobValidationPopup(PopupBase):
-    """Popup that displays a list of issues found while validating a job."""
+    """Popup that displays a list of issues found while validating a job.
+    :param text: The text to display in the popup."""
     def __init__(self, text, **kwargs):
         super(JobValidationPopup, self).__init__(**kwargs)
         localisation = Localization()
