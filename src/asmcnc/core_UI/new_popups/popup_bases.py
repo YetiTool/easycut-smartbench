@@ -15,7 +15,11 @@ from asmcnc.core_UI import scaling_utils
 
 
 class PopupBase(ModalView):
-    """Base class for all popups in the app. This class is meant to be subclassed and not used directly."""
+    """Base class for all popups in the app. This class is meant to be subclassed and not used directly.
+    Add widgets to the root_layout to add content to the popup.
+    Use the PopupTitle class to add a title to the popup.
+
+    :param kwargs: Kwargs to pass to the ModalView constructor."""
 
     def __init__(self, **kwargs):
         super(PopupBase, self).__init__(**kwargs)
