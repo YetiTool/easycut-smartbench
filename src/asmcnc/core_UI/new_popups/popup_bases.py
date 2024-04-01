@@ -1,6 +1,5 @@
 from enum import Enum
-
-from kivy.graphics import Color, Line, Rectangle
+from kivy.graphics import Color, Line
 from kivy.lang import Builder
 from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
@@ -12,14 +11,7 @@ from kivy.uix.rst import RstDocument
 from kivy.uix.scrollview import ScrollView
 from kivy.utils import get_color_from_hex
 
-from asmcnc.comms.localization import Localization
 from asmcnc.core_UI import scaling_utils
-
-
-class PopupType(Enum):
-    INFO = 1
-    ERROR = 2
-    WARNING = 3
 
 
 class PopupBase(ModalView):
@@ -72,8 +64,10 @@ class PopupTitle(BoxLayout):
 
 
 class PopupErrorTitle(PopupTitle):
+    """Title bar for error popups. Contains an icon and a title."""
     def __init__(self, localisation, **kwargs):
-        super(PopupErrorTitle, self).__init__(localisation.get_str("Error!"), "./asmcnc/apps/shapeCutter_app/img/error_icon_scaled_up.png",
+        super(PopupErrorTitle, self).__init__(localisation.get_str("Error!"),
+                                              "./asmcnc/apps/shapeCutter_app/img/error_icon_scaled_up.png",
                                               (1, 0, 0, 1), **kwargs)
 
 
@@ -101,7 +95,7 @@ Builder.load_string(scroll_view_kv)  # Overwrite the default ScrollView styling 
 
 
 class PopupScrollableBody(ScrollView):
-    _bar_color = Color(0, 0, 0, 0.75)
+    """Body of a popup that contains a scrollable text area"""
 
     def __init__(self, text, **kwargs):
         super(PopupScrollableBody, self).__init__(**kwargs)

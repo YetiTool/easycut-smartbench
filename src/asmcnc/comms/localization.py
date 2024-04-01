@@ -31,6 +31,10 @@ builder_font_string = """
 
 
 class Localization(object):
+    """Class for handling localization of the software. This class is a singleton.
+
+    You can access the instance of this class by calling Localization()."""
+
     _lock = threading.Lock()
     _initialized = False
     _instance = None
