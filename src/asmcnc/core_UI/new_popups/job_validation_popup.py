@@ -8,9 +8,19 @@ from asmcnc.core_UI import scaling_utils
 from asmcnc.core_UI.new_popups.popup_bases import PopupBase, PopupErrorTitle, PopupScrollableBody
 
 
+def get_text_from_list(text_list):
+    """Get a string from a list of strings, each string in the list will be on a new line.
+
+    For usage in an RstDocument, where new lines are not automatically added.
+    :param text_list: A list of strings to concatenate.
+    :return: A string with each element of the list on a new line."""
+    return "\n\n".join(text_list)
+
+
 class JobValidationPopup(PopupBase):
     """Popup that displays a list of issues found while validating a job.
     :param text: The text to display in the popup."""
+
     def __init__(self, text, **kwargs):
         super(JobValidationPopup, self).__init__(**kwargs)
         localisation = Localization()
