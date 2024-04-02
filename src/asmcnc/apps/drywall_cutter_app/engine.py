@@ -174,9 +174,13 @@ class GCodeEngine():
 
     #Determine if the cut direction should be clockwise or not
     def determine_cut_direction_clockwise(self, offset_type, climb):
-        if offset_type not in [u"inside", u"outside"]:
-            raise ValueError("Offset type must be 'inside' or 'outside'. Got '{}'.".format(offset_type))
-        return climb and offset_type == u"outside" or not(climb) and offset_type == u"inside"
+        if offset_type == u"on":
+            return climb  # climb cut if on the line. Preferred strategy
+        elif offset_type == u"outside":
+            return climb
+        elif offset_type == u"inside":
+            return not climb
+        raise ValueError("Offset type must be 'on, 'inside' or 'outside'. Got '{}'.".format(offset_type))
 
     #For use when reordering gcode instructions
     def swap_lines_after_keyword(self, input_list, keyword):
