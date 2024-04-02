@@ -334,7 +334,7 @@ class GCodeEngine():
                             return file.readlines()
                     except IOError:
                         Logger.Warning("An error occurred while reading the Gcode file")
-        raise IOError("Gcode file not found")
+        raise IOError("Gcode file not found. Criteria: Shape type: {}, Tool diameter: {}, Orientation: {}".format(shape_type, tool_diameter, orientation))
 
     # Scrape through gcode and replace feedrate, plungerate and spindle speed
     def adjust_feeds_and_speeds(self, gcode_lines, feedrate, plungerate, spindle_speed):
@@ -542,7 +542,7 @@ class GCodeEngine():
     def get_custom_shape_extents(self):
         if self.config.active_config.shape_type.lower() in self.custom_gcode_shapes:
             # Read in data
-            gcode_lines = self.find_and_read_gcode_file(self.source_folder_path, self.config.active_config.shape_type, self.config.active_cutter.diameter, orientation=self.config.active_config.rotation)
+            gcode_lines = self.find_and_read_gcode_file(self.source_folder_path, self.config.active_config.shape_type, self.config.active_cutter.dimensions.diameter, orientation=self.config.active_config.rotation)
             
             # Get dimensions as strings
             x_dim_str, y_dim_str, x_min_str, y_min_str = self.read_in_custom_shape_dimensions(gcode_lines)
@@ -585,7 +585,7 @@ class GCodeEngine():
                 'datum_x': 0,
                 'datum_y': 0,
                 'offset': self.config.active_config.toolpath_offset,
-                'tool_diameter': self.config.active_cutter.dimensions.diameter,
+                'tool_diameter': 0 if self.config.active_cutter.dimensions.diameter is None else self.config.active_cutter.dimensions.diameter,
                 'is_climb': is_climb,
                 'corner_radius': self.config.active_config.canvas_shape_dims.r,
                 'pass_depth': cutting_pass_depth,
@@ -613,7 +613,7 @@ class GCodeEngine():
                 'datum_x': self.config.active_config.datum_position.x,
                 'datum_y': self.config.active_config.datum_position.y,
                 'length': self.config.active_config.canvas_shape_dims.l,
-                'tool_diameter': self.config.active_cutter.dimensions.diameter,
+                'tool_diameter': 0 if self.config.active_cutter.dimensions.diameter is None else self.config.active_cutter.dimensions.diameter,
                 'orientation': self.config.active_config.rotation,
                 'pass_depth': self.config.active_config.cutting_depths.depth_per_pass,
                 'feedrate': self.config.active_cutter.parameters.cutting_feed_rate,
