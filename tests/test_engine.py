@@ -6,6 +6,7 @@ easycut_dir = os.path.dirname(os.getcwd())
 sys.path.append(os.path.join(easycut_dir, 'src')) # Alternative to sys.path.append("./src") which didn't work me
 
 from asmcnc.apps.drywall_cutter_app.engine import GCodeEngine
+from asmcnc.comms.router_machine import RouterMachine
 
 '''
 To run this test,
@@ -29,7 +30,7 @@ class EngineTests(unittest.TestCase):
 
         dummy_cutter = Cutter()
         dummy_config = Config(active_cutter = dummy_cutter)
-        self.engine = GCodeEngine(dummy_config)
+        self.engine = GCodeEngine(RouterMachine, dummy_config)
 
     def test_rectangle_coordinates(self):
         # Case 1, valid input
