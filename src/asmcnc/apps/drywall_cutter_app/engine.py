@@ -662,7 +662,10 @@ class GCodeEngine():
                 roughing_pass = True
                 for stepover in stepovers:
                     # Update these values for each stepover
-                    rectangle_parameters["tool_diameter"] = self.config.active_cutter.dimensions.diameter + (stepover * 2)
+                    if self.config.active_cutter.dimensions.diameter:
+                        rectangle_parameters["tool_diameter"] = self.config.active_cutter.dimensions.diameter + (stepover * 2)
+                    else:
+                        rectangle_parameters["tool_diameter"] = 0
                     rectangle_parameters["pass_depth"] = additional_pass_stepdown if stepover != max(stepovers) else cutting_pass_depth
                     rectangle_parameters["roughing_pass"] = roughing_pass
 
