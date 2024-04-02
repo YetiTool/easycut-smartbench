@@ -397,6 +397,7 @@ class GoScreen(Screen):
     feed_rate_max_percentage = 0
     feed_rate_max_absolute = 0
     total_runtime_seconds = 0
+    dwt_config = None
 
     def __init__(self, **kwargs):
         super(GoScreen, self).__init__(**kwargs)
@@ -552,9 +553,11 @@ class GoScreen(Screen):
 
                 if self.model_manager.is_machine_drywall() and self.return_to_screen == "drywall_cutter":
                     self.yp.enable()
-
-                    dwt_config = config_loader.DWTConfig()
-                    dwt_cutter_diameter = str(int(dwt_config.active_cutter.diameter))
+                    
+                    if self.dwt_config.active_cutter.dimensions.diameter:
+                        dwt_cutter_diameter = str(int(self.dwt_config.active_cutter.dimensions.diameter))
+                    else:
+                        dwt_cutter_diameter = str(int(self.dwt_config.active_cutter.dimensions.angle))
                     available_diameters = self.yp.get_sorted_cutter_diameters(self.yp.filter_available_profiles("Drywall"))
                     cutter_diameter = next((x for x in available_diameters if dwt_cutter_diameter in x), None)
 
