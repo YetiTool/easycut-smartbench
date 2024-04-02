@@ -2,12 +2,22 @@
 class ColorProvider(object):
     """Class for providing colors for the software. This class is a singleton.
 
-    * Usage:
+    * Usage in Python code:
     color_provider = ColorProvider()
     color_provider.get_color("white")
 
     * Usage in Kivy Builder:
     background_color: app.color_provider.get_color("OK_GREEN")
+
+    Attributes:
+        _instance (ColorProvider): The singleton instance of the ColorProvider class.
+        DEFINED_COLORS (dict): A dictionary containing predefined colors as RGBA values.
+
+    Methods:
+        get_color(color_name): Get a color from the color provider.
+        get_color_hex(color_name): Get a color from the color provider as a hex string.
+        get_markup_color_string(color_name, text): Get a markup string for a color.
+
     """
 
     _instance = None
@@ -43,8 +53,7 @@ class ColorProvider(object):
         return "#{:02x}{:02x}{:02x}".format(int(color[0] * 255), int(color[1] * 255), int(color[2] * 255))
 
     def get_markup_color_string(self, color_name, text):
-        """Get a markup string for a color.
-        Format: [color=hex]text[/color]
+        """Get a markup string for a color in the format: [color=hex]text[/color]
         :param color_name: The name of the color to get.
         :param text: The text to apply the color to.
         :return: The text with the color applied."""
