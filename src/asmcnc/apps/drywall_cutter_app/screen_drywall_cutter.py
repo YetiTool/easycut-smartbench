@@ -15,7 +15,6 @@ from asmcnc.apps.drywall_cutter_app.image_dropdown import ImageDropDownButton
 from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.apps.drywall_cutter_app import material_setup_popup
 from asmcnc.apps.drywall_cutter_app import job_load_helper
-
 from asmcnc.core_UI import scaling_utils
 from asmcnc.core_UI.new_popups.job_validation_popup import JobValidationPopup
 from asmcnc.skavaUI import popup_info
@@ -196,8 +195,11 @@ class DrywallCutterScreen(Screen):
         self.l = kwargs['localization']
         self.kb = kwargs['keyboard']
         self.jd = kwargs['job']
+        self.pm = kwargs['popup_manager']
 
-        self.engine = GCodeEngine(self.dwt_config)
+        self.engine = GCodeEngine(self.m, self.dwt_config)
+        self.simulation_started = False
+        self.ignore_state = True
 
         # XY move widget
         self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm,
@@ -373,8 +375,29 @@ class DrywallCutterScreen(Screen):
         self.sm.current = 'lobby'
 
     def simulate(self):
-        self.engine.engine_run(simulate=True)
+        if not self.simulation_started and self.m.s.m_state.lower() == 'idle':
+            self.m_state_bind = self.m.s.bind(m_state=lambda i, value: self.set_simulation_popup_state(value))
+            self.ignore_state = False
+            self.simulation_started = False
+            self.engine.engine_run(simulate=True)
+            self.pm.show_wait_popup(main_string=self.l.get_str('Preparing for simulation') + '...')
 
+    def set_simulation_popup_state(self, state):
+        if not self.ignore_state:  
+            if state.lower() ==  'run':
+                self.sm.pm.close_wait_popup()
+                self.simulation_started = True
+                self.sm.pm.show_simulating_job_popup()
+            elif (state.lower() == 'idle' or self.sm.current != "drywall_cutter") and self.simulation_started:
+                self.sm.pm.close_simulating_job_popup()
+                self.simulation_started = False
+                self.ignore_state = True
+
+        if state.lower() not in ['run', 'idle']:
+            self.sm.pm.close_simulating_job_popup()
+            self.simulation_started = False
+            self.ignore_state = True
+            
     def save(self):
         if not self.sm.has_screen('config_filesaver'):
             self.sm.add_widget(screen_config_filesaver.ConfigFileSaver(name='config_filesaver',
