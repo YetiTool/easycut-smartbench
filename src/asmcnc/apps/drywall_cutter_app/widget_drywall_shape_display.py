@@ -4,10 +4,10 @@ from kivy.clock import Clock
 
 from asmcnc.apps.drywall_cutter_app.config.config_options import ToolpathOffsetOptions
 from asmcnc.comms.logging_system.logging_system import Logger
-from asmcnc.core_UI.components import float_input  # Required for the builder string
 import re
 
 Builder.load_string("""
+#:import FloatInput asmcnc.core_UI.components.text_inputs.float_input.FloatInput
 <DrywallShapeDisplay>
 
     shape_dims_image:shape_dims_image
