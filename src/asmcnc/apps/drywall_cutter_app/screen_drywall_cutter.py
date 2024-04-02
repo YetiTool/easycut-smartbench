@@ -1,5 +1,6 @@
 from kivy.clock import Clock
 import sys
+import os
 
 from kivy.lang import Builder
 from kivy.uix.behaviors import ButtonBehavior
@@ -323,7 +324,7 @@ class DrywallCutterScreen(Screen):
 
         # handle tool selection for geberit shape:
         if shape is 'geberit':
-            geberit_cutters = {k: v for k, v in self.tool_options.iteritems() if '8mm' in k or '6mm' in k}
+            geberit_cutters = {k: v for k, v in self.tool_options.iteritems() if True}
             geberit_cutter_names = [v['cutter_path'] for v in geberit_cutters.values()]
             self.tool_selection.image_dict = geberit_cutters
             # check if valid tool is selected:
