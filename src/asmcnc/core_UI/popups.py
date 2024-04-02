@@ -13,9 +13,11 @@ from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.uix.rst import RstDocument
 from kivy.uix.scrollview import ScrollView
+from kivy.clock import Clock
 
 from asmcnc.core_UI import scaling_utils as utils
 from asmcnc.core_UI.utils.hold_button import WarningHoldButton
+from asmcnc.comms.logging_system.logging_system import Logger
 
 """
 Popup type enum
@@ -1008,3 +1010,56 @@ class JobValidationPopup(BasicPopup):
 
         self.content = self.main_layout
         self.update_font_sizes()
+
+
+class SimulatingJobPopup(ErrorPopup):
+    def __init__(
+        self,
+        main_string,
+        popup_width=500,
+        popup_height=400,
+        button_one_text="Stop",
+        button_one_background_color=[230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0],
+        button_two_text=None,
+        button_two_callback=None,
+        button_two_background_color=None,
+        main_label_padding=(0, 10),
+        main_layout_padding=(40, 20, 40, 20),
+        main_layout_spacing=10,
+        main_label_size_delta=40,
+        main_label_h_align="center",
+        title="Simulating Job",
+        button_layout_padding=(0, 20, 0, 0),
+        button_layout_spacing=10,
+        main_label_size_hint_y=1,
+        **kwargs
+    ):
+        
+        self.m = kwargs['m']
+
+        def stop():
+            Logger.info("User stopped simulation.")
+            self.m.soft_stop()
+            Clock.schedule_once(lambda dt: self.m._grbl_soft_reset(), 0.5)
+
+        super(SimulatingJobPopup, self).__init__(
+            main_string=main_string,
+            popup_width=popup_width,
+            popup_height=popup_height,
+            button_one_text=button_one_text,
+            button_one_callback=stop,
+            button_one_background_color=button_one_background_color,
+            button_two_text=button_two_text,
+            button_two_callback=button_two_callback,
+            button_two_background_color=button_two_background_color,
+            main_label_padding=main_label_padding,
+            main_layout_padding=main_layout_padding,
+            main_layout_spacing=main_layout_spacing,
+            main_label_size_delta=main_label_size_delta,
+            main_label_h_align=main_label_h_align,
+            title=title,
+            button_layout_padding=button_layout_padding,
+            button_layout_spacing=button_layout_spacing,
+            main_label_size_hint_y=main_label_size_hint_y,
+            **kwargs
+        )

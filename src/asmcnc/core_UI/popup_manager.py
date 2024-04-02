@@ -15,7 +15,10 @@ from asmcnc.core_UI.popups import (
     WaitPopup,
     WarningPopup,
     UploadSettingsFromUsbPopup,
-    DownloadSettingsToUsbPopup, SpindleSafetyPopup, JobValidationPopup
+    DownloadSettingsToUsbPopup, 
+    SpindleSafetyPopup, 
+    JobValidationPopup,
+    SimulatingJobPopup
 )
 
 
@@ -81,6 +84,8 @@ class PopupManager:
         self.spindle_safety_popup = SpindleSafetyPopup(sm=self.sm, m=self.m, l=self.l)
 
         self.job_validation_popup = JobValidationPopup(sm=self.sm, m=self.m, l=self.l, main_string="")
+
+        self.simulating_job_popup = SimulatingJobPopup(sm=self.sm, m=self.m, l=self.l, main_string="")
 
     def show_spindle_safety_popup(self, button_one_callback, button_two_callback):
         self.spindle_safety_popup.button_one_callback = button_one_callback
@@ -447,3 +452,10 @@ class PopupManager:
 
     def close_job_validation_popup(self):
         self.job_validation_popup.dismiss()
+
+    def show_simulating_job_popup(self):
+        self.simulating_job_popup.main_label.text = self.l.get_str("Simulating job") + "..."
+        self.simulating_job_popup.open()
+
+    def close_simulating_job_popup(self):
+        self.simulating_job_popup.dismiss()

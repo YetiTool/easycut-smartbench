@@ -27,8 +27,9 @@ from asmcnc.core_UI import path_utils as pu
 from asmcnc.comms.logging_system.logging_system import Logger
 
 class GCodeEngine():
-    def __init__(self, dwt_config):
+    def __init__(self, router_machine, dwt_config):
         self.config = dwt_config
+        self.m = router_machine
 
         #Globals 
         self.x = 0  # Identifier for use in arrays
@@ -230,9 +231,9 @@ class GCodeEngine():
             final_coordinates = final_coordinates[::-1]
     
         if clockwise_cutting:
-            arc_instruction = u"G2"
+            arc_instruction = "G2"
         else:
-            arc_instruction = u"G3"
+            arc_instruction = "G3"
 
         # Time to make some gcode :)
         cutting_lines = []
@@ -772,17 +773,23 @@ class GCodeEngine():
         file_structure_1_shapes = ["rectangle", "square", "circle", "line"]
 
         if simulate:
-            output = "(%s)\nM5\nG90\nG0 %s\n\n%s(End)\nG0 Z%d\n" % (
-                output_file[output_file.find("/")+1:], safe_start_position, ''.join(cutting_lines), z_safe_distance)
+            # output = "(%s)\nM5\nG90\nG0 %s\n\n%s(End)\nG0 Z%d\n" % (
+                # output_file[output_file.find("/")+1:], safe_start_position, ''.join(cutting_lines), z_safe_distance)
+            # self.m.s.run_skeleton_buffer_stuffer(output)
+            cutting_lines.insert(0, "G0 X0 Y0")
+            cutting_lines.insert(0, "G90")
+            cutting_lines.append("G0 X{} Y{}".format(0,0))
+            self.m.s.run_skeleton_buffer_stuffer(cutting_lines)
             
-        elif self.config.active_config.shape_type in file_structure_1_shapes:
-            output = "(%s)\nG90\nM3 S%d\nG0 %s\n\n%s(End)\nG0 Z%d\nM5\n" % (
-                filename, self.config.active_cutter.parameters.cutting_spindle_speed, safe_start_position, ''.join(cutting_lines), z_safe_distance)
         else:
-            output = ''.join(cutting_lines)  # Use ''.join() to concatenate lines without spaces
+            if self.config.active_config.shape_type in file_structure_1_shapes:
+                output = "(%s)\nG90\nM3 S%d\nG0 %s\n\n%s(End)\nG0 Z%d\nM5\n" % (
+                    output_file[output_file.find("/")+1:], self.config.active_cutter.cutting_spindle_speed, safe_start_position, ''.join(cutting_lines), z_safe_distance)
+            else:
+                output = ''.join(cutting_lines)  # Use ''.join() to concatenate lines without spaces
 
-        with open(output_path, 'w+') as out_file:
-            out_file.write(output.decode('utf-8'))  # Use write() to write the entire output as a single string
+            with open(output_file, 'w+') as out_file:
+                out_file.write(output.decode('utf-8'))  # Use write() to write the entire output as a single string
 
-            Logger.info("%s written" % output_path)
-            return output_path  # return path to the file
+                Logger.info("%s written" % output_file)
+                return output_file  # return path to the file
