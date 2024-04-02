@@ -39,8 +39,6 @@ class DigitalSpindleMonitor(object):
         :param value: New value of the digital spindle load raw.
         :return:
         """
-        if not self.__serial_connection.spindle_on:
-            return  # Should this be event driven?
 
         if value < 0:  # TODO: Implement other checks for faulty readings.
             self.__faulty_readings.append({
