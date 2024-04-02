@@ -274,12 +274,12 @@ Builder.load_string("""
                 color: 0,0,0,1
                 halign: 'left'
 
-                canvas.before:
-                    Color:
-                        rgba: hex('#F9F9F988')
-                    Rectangle:
-                        pos: self.x + 15, self.y + 5
-                        size: self.texture_size
+                # canvas.before:
+                #     Color:
+                #         rgba: hex('#F9F9F988')
+                #     Rectangle:
+                #         pos: self.x + 15, self.y + 5
+                #         size: self.texture_size
 
             Label:
                 id: x_datum_validation_label
@@ -505,10 +505,10 @@ class DrywallShapeDisplay(Widget):
                 self.place_widget(self.y_datum_validation_label, (self.y_datum_label.pos[0],
                                                                   self.y_datum_label.pos[1] - 35))
             else:
-                self.place_widget(self.x_datum_label, (360, 19))
-                self.place_widget(self.y_datum_label, (390, 77))
+                self.place_widget(self.x_datum_label, (360, 19+28))
+                self.place_widget(self.y_datum_label, (390, 77+17))
                 self.place_widget(self.y_datum_validation_label, (self.y_datum_label.pos[0],
-                                                                  self.y_datum_label.pos[1] - 35))
+                                                                  self.y_datum_label.pos[1] - 20))
 
         self.dwt_config.on_parameter_change('rotation', rotation)
 
