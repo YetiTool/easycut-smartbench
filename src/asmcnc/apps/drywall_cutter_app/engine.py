@@ -230,9 +230,9 @@ class GCodeEngine():
             final_coordinates = final_coordinates[::-1]
     
         if clockwise_cutting:
-            arc_instruction = u"G2"
+            arc_instruction = "G2"
         else:
-            arc_instruction = u"G3"
+            arc_instruction = "G3"
 
         # Time to make some gcode :)
         cutting_lines = []
@@ -780,7 +780,6 @@ class GCodeEngine():
             cutting_lines.insert(0, "G90")
             cutting_lines.append("G0 X{} Y{}".format(0,0))
             self.m.s.run_skeleton_buffer_stuffer(cutting_lines)
-            
             
         else:
             if self.config.active_config.shape_type in file_structure_1_shapes:
