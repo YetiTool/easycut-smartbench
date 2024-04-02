@@ -1,5 +1,5 @@
 from kivy.clock import Clock
-import sys
+import sys, os
 
 from kivy.lang import Builder
 from kivy.uix.behaviors import ButtonBehavior
@@ -414,6 +414,7 @@ class DrywallCutterScreen(Screen):
             job_loader.load_gcode_file(output_path)
             os.remove(output_path)
             self.set_return_screens()
+            self.sm.get_screen('go').dwt_config = self.dwt_config
             self.proceed_to_go_screen()
 
         else:
