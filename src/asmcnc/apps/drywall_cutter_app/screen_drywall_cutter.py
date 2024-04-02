@@ -345,13 +345,13 @@ class DrywallCutterScreen(Screen):
             self.engine.engine_run(simulate=True)
             self.pm.show_wait_popup(main_string=self.l.get_str('Preparing for simulation') + '...')
 
-    def set_simulation_popup_state(self, state): 
+    def set_simulation_popup_state(self, state):
         if not self.ignore_state:  
             if state.lower() ==  'run':
                 self.sm.pm.close_wait_popup()
                 self.simulation_started = True
                 self.sm.pm.show_simulating_job_popup()
-            elif state.lower() == 'idle' and self.simulation_started:
+            elif (state.lower() == 'idle' or self.sm.current != "drywall_cutter") and self.simulation_started:
                 self.sm.pm.close_simulating_job_popup()
                 self.simulation_started = False
                 self.ignore_state = True
