@@ -2,6 +2,8 @@ from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 
+from asmcnc.apps.drywall_cutter_app.config.config_options import ToolpathOffsetOptions
+from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.core_UI.components import float_input  # Required for the builder string
 import re
 
@@ -399,6 +401,9 @@ class DrywallShapeDisplay(Widget):
         self.unit_switch.canvas.children[5].source = "./asmcnc/apps/drywall_cutter_app/img/unit_toggle.png"
         self.unit_switch.bind(active=self.toggle_units)
 
+        self.dwt_config.bind(active_config_name=self.on_config_name_change)
+        self.on_config_name_change(self.dwt_config, self.dwt_config.active_config_name)
+
     def update_x_datum(self, value):
         """
         Is called when the x datum of the machine changes. E.g. running, jogging, after homing...
@@ -441,6 +446,8 @@ class DrywallShapeDisplay(Widget):
             self.enable_input(self.d_input, (458, 310))
             self.place_widget(self.x_datum_label, (278, 27))
             self.place_widget(self.y_datum_label, (403, 196))
+            self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
+                                                              self.y_datum_label.y - 35))
         else:
             self.disable_input(self.d_input)
 
@@ -451,6 +458,8 @@ class DrywallShapeDisplay(Widget):
                 self.enable_input(self.y_input, (238, 327))
                 self.place_widget(self.x_datum_label, (365, 55))
                 self.place_widget(self.y_datum_label, (398, 113))
+                self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
+                                                                  self.y_datum_label.y - 35))
             else:
                 if rotation == 'horizontal':
                     self.enable_input(self.r_input, (453, 311))
@@ -458,12 +467,16 @@ class DrywallShapeDisplay(Widget):
                     self.enable_input(self.y_input, (238, 327))
                     self.place_widget(self.x_datum_label, (397, 55))
                     self.place_widget(self.y_datum_label, (416, 114))
+                    self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
+                                                                      self.y_datum_label.y - 35))
                 else:
                     self.enable_input(self.r_input, (409, 333))
                     self.enable_input(self.x_input, (78, 155))
                     self.enable_input(self.y_input, (238, 331))
                     self.place_widget(self.x_datum_label, (235, 20))
                     self.place_widget(self.y_datum_label, (395, 63))
+                    self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
+                                                                      self.y_datum_label.y - 35))
         else:
             self.disable_input(self.r_input)
             self.disable_input(self.x_input)
@@ -473,11 +486,15 @@ class DrywallShapeDisplay(Widget):
             if rotation == 'horizontal':
                 self.enable_input(self.l_input, (240, 228))
                 self.place_widget(self.x_datum_label, (414, 75))
-                self.place_widget(self.y_datum_label, (425, 195))
+                self.place_widget(self.y_datum_label, (422, 195))
+                self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
+                                                                  self.y_datum_label.y - 35))
             else:
                 self.enable_input(self.l_input, (158, 173))
-                self.place_widget(self.x_datum_label, (270, 20))
-                self.place_widget(self.y_datum_label, (350, 56))
+                self.place_widget(self.x_datum_label, (270+5, 20))
+                self.place_widget(self.y_datum_label, (350, 70))
+                self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
+                                                                  self.y_datum_label.y - 20))  # closer to Y_datum
         else:
             self.disable_input(self.l_input)
 
@@ -485,9 +502,13 @@ class DrywallShapeDisplay(Widget):
             if rotation == 'horizontal':
                 self.place_widget(self.x_datum_label, (407, 46))
                 self.place_widget(self.y_datum_label, (416, 125))
+                self.place_widget(self.y_datum_validation_label, (self.y_datum_label.pos[0],
+                                                                  self.y_datum_label.pos[1] - 35))
             else:
                 self.place_widget(self.x_datum_label, (360, 19))
                 self.place_widget(self.y_datum_label, (390, 77))
+                self.place_widget(self.y_datum_validation_label, (self.y_datum_label.pos[0],
+                                                                  self.y_datum_label.pos[1] - 35))
 
         self.dwt_config.on_parameter_change('rotation', rotation)
 
@@ -602,10 +623,10 @@ class DrywallShapeDisplay(Widget):
 
     def tool_offset_value(self):
         # Account for cutter size
-        cutter_radius = self.dwt_config.active_cutter.diameter / 2
-        if self.dwt_config.active_config.toolpath_offset == 'inside':
+        cutter_radius = (self.dwt_config.active_cutter.dimensions.diameter or 0) / 2  # if angled cutter, get 0
+        if self.dwt_config.active_config.toolpath_offset == ToolpathOffsetOptions.INSIDE.value:
             tool_offset_value = -cutter_radius
-        elif self.dwt_config.active_config.toolpath_offset == 'outside':
+        elif self.dwt_config.active_config.toolpath_offset == ToolpathOffsetOptions.OUTSIDE.value:
             tool_offset_value = cutter_radius
         else:
             tool_offset_value = 0
@@ -644,7 +665,7 @@ class DrywallShapeDisplay(Widget):
 
         return x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance
 
-    def update_bumpers_and_validation_labels(self, current_shape, current_x, current_y, 
+    def update_bumpers_and_validation_labels(self, current_shape, current_x, current_y,
                                             x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance):
         # I think this function could be broken down & refactored as well, but I don't need to address it right now.
 
@@ -1003,3 +1024,7 @@ class DrywallShapeDisplay(Widget):
                 )
 
         return steps
+
+    def on_config_name_change(self, instance, value):
+        Logger.debug("Setting config label to: " + value)
+        self.config_name_label.text = "New Configuration" if value == "temp_config.json" else value
