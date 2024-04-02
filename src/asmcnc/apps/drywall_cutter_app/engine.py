@@ -679,12 +679,12 @@ class GCodeEngine():
         elif self.config.active_config.shape_type.lower() == u"geberit":
 
             # Read in data
-            gcode_lines = self.find_and_read_gcode_file(self.source_folder_path, self.config.active_config.shape_type, self.config.active_cutter.diameter, orientation=self.config.active_config.rotation)
+            gcode_lines = self.find_and_read_gcode_file(self.source_folder_path, self.config.active_config.shape_type, self.config.active_cutter.dimensions.diameter, orientation=self.config.active_config.rotation)
             gcode_cut_depth, gcode_z_safe_distance = self.extract_cut_depth_and_z_safe_distance(gcode_lines)
             x_size, y_size, x_minus, y_minus  = self.read_in_custom_shape_dimensions(gcode_lines)
 
             if simulate:
-                coordinates = self.rectangle_coordinates(float(x_size), float(y_size) + self.config.active_cutter.diameter/2, float(x_minus), float(y_minus))
+                coordinates = self.rectangle_coordinates(float(x_size), float(y_size) + self.config.active_cutter.dimensions.diameter/2, float(x_minus), float(y_minus))
                 coordinates.append(coordinates[0])
 
                 # Draw a rectangle around the geberit shape
