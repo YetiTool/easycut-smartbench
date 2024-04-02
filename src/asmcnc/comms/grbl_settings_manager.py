@@ -263,3 +263,6 @@ class GRBLSettingsManagerSingleton(object):
             # restore default value:
             self.machine.write_dollar_setting(setting, self._system_default_data[setting])
             Logger.warning('Restored {} to default: {}'.format(descriptions[setting], self._system_default_data[setting]))
+
+    def has_rig_settings(self):
+        return self._machine_saved_data['type'] != "machine"

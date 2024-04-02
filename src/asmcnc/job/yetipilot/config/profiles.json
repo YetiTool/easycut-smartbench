@@ -815,6 +815,86 @@
           "Value": 22500.0
         }
       ]
+      },
+    {
+      "Material Type": "Drywall",
+      "Cutter Diameter": "8 mm",
+      "Cutter Type": "2 flute upcut spiral",
+      "Step Down": "12 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 230
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22500.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Drywall",
+      "Cutter Diameter": "6 mm",
+      "Cutter Type": "2 flute upcut spiral",
+      "Step Down": "12 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 230
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22500.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Drywall",
+      "Cutter Diameter": "45°",
+      "Cutter Type": "2 flute V-cutter",
+      "Step Down": "12 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 270
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22500.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Drywall",
+      "Cutter Diameter": "60°",
+      "Cutter Type": "2 flute V-cutter",
+      "Step Down": "12 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 240
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22500.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Drywall",
+      "Cutter Diameter": "90°",
+      "Cutter Type": "2 flute V-cutter",
+      "Step Down": "12 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 240
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 22500.0
+        }
+      ]
     }  
   ]
 }
