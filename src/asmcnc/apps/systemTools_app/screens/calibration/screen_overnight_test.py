@@ -2,26 +2,16 @@ from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
-from datetime import datetime
 from asmcnc.skavaUI import popup_info
-import math
 import traceback
-from time import sleep
-import threading
 from datetime import datetime
-import json
 from asmcnc.production.database.payload_publisher import DataPublisher
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupCSVOnUSB
 import os
 import glob
 from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupStopOvernightTest
-from kivy.uix.popup import Popup
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.widget import Widget
-from kivy.uix.label import Label
-from kivy.uix.button import Button
-from asmcnc.comms.logging import log_exporter
+from asmcnc.comms.logging_system import log_exporter
 
 Builder.load_string(
     """

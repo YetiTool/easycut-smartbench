@@ -227,7 +227,7 @@ class ScreenTest(App):
             m.theateam = Mock(return_value=True)
             m.smartbench_is_busy = Mock(return_value=False)
 
-            m.s.digital_spindle_ld_qdA = 0
+            m.s.digital_spindle_load_raw = 0
             m.s.spindle_serial_number = 0
             m.s.spindle_serial_number = 0
             m.s.spindle_production_year = 0
@@ -394,7 +394,7 @@ class ScreenTest(App):
             unlock_code = 0
 
             # Set this to -999 to get "no spindle detected"
-            m.s.digital_spindle_ld_qdA = 0
+            m.s.digital_spindle_load_raw = 0
             m.s.spindle_serial_number = 0
 
             # Change this to decide whether to show "already upgraded" screen

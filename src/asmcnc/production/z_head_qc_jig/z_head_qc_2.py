@@ -311,7 +311,7 @@ class ZHeadQC2(Screen):
         if temperature < 0 or temperature > 50:
             fail_report.append("Temperature was " + str(temperature) + ". Should be 0-50")
 
-        load = self.m.s.digital_spindle_ld_qdA
+        load = self.m.s.digital_spindle_load_raw
         Logger.info('Digital Spindle Load: %s' % load)
         if load < 50 or load > 10000:
             fail_report.append("Load was " + str(load) + ". Should be 50-10000")

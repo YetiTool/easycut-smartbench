@@ -26,6 +26,7 @@ from kivy.config import Config
 from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 
+from asmcnc.comms.digital_spindle_monitor import DigitalSpindleMonitor
 from asmcnc.comms.grbl_settings_manager import GRBLSettingsManagerSingleton
 from asmcnc.core_UI import scaling_utils, console_utils
 from asmcnc.comms.model_manager import ProductCodes
@@ -221,6 +222,8 @@ class SkavaUI(App):
 
         # Serial comms needs to access YP
         m.s.yp = yp
+
+        digital_spindle_monitor = DigitalSpindleMonitor(m.s)
 
         # Server connection object
         if ModelManagerSingleton().get_product_code() != ProductCodes.DRYWALLTEC:

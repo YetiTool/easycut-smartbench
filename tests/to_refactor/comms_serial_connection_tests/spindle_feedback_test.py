@@ -178,7 +178,7 @@ class SpindleFeedbackTest(UnitTestBase):
 
     def test_does_serial_read_in_digital_spindle_ld(self):
         self.status_and_PCB_constructor(case=3, digital_spindle_ld_qdA = self.test_digital_spindle_ld_qdA)
-        self.assertEqual(self.serial_module.digital_spindle_ld_qdA, self.test_digital_spindle_ld_qdA), 'Digital spindle ld wrong'
+        self.assertEqual(self.serial_module.digital_spindle_load_raw, self.test_digital_spindle_ld_qdA), 'Digital spindle ld wrong'
 
     def test_does_serial_read_in_digital_spindle_temp(self):
         self.status_and_PCB_constructor(case=3, digital_spindle_temperature = self.test_digital_spindle_temperature)

@@ -457,7 +457,7 @@ class SpindleSettingsWidget(Widget):
     def check_spindle_info(self, dt):
         self.check_info_count += 1
         if (
-                self.m.s.digital_spindle_ld_qdA != -999
+                self.m.s.digital_spindle_load_raw != -999
                 and self.m.s.spindle_serial_number not in [None, -999, 999]
                 or self.check_info_count > 10
         ):
@@ -469,7 +469,7 @@ class SpindleSettingsWidget(Widget):
         self.m.turn_off_spindle()
         self.wait_popup.dismiss()
         if (
-                self.m.s.digital_spindle_ld_qdA != -999
+                self.m.s.digital_spindle_load_raw != -999
                 and self.m.s.spindle_serial_number not in [None, -999, 999]
         ):
             PopupDisplaySpindleData(self.sm, self.l, self.m.s)

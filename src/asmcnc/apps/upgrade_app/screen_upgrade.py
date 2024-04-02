@@ -207,7 +207,7 @@ class UpgradeScreen(Screen):
         self.check_info_count += 1
         # Value of -999 represents disconnected spindle - if detected then stop waiting
         if (
-            self.m.s.digital_spindle_ld_qdA != -999
+            self.m.s.digital_spindle_load_raw != -999
             and self.m.s.spindle_serial_number not in [None, -999, 999]
             or self.check_info_count > 10
         ):
@@ -221,7 +221,7 @@ class UpgradeScreen(Screen):
         # Value of -999 for ld_qdA represents disconnected spindle
         if (
             # Get info was successful, show serial and check code
-            self.m.s.digital_spindle_ld_qdA != -999
+            self.m.s.digital_spindle_load_raw != -999
             and self.m.s.spindle_serial_number not in [None, -999, 999]
         ):
             self.spindle_label.text = (
