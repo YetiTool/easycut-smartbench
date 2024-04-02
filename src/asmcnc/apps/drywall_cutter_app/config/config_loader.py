@@ -360,4 +360,5 @@ class DWTConfig(EventDispatcher):
             setattr(self.active_config, parameter_name, parameter_value)
 
         # update screen, check bumpers and so on:
-        self.screen_drywall_cutter.drywall_shape_display_widget.check_datum_and_extents()
+        if not (self.active_config.shape_type == 'geberit' and self.active_cutter.dimensions.diameter is None):
+            self.screen_drywall_cutter.drywall_shape_display_widget.check_datum_and_extents()

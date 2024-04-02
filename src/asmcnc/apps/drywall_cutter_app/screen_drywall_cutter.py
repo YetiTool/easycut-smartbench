@@ -307,6 +307,8 @@ class DrywallCutterScreen(Screen):
             if self.dwt_config.active_config.toolpath_offset is not 'on':
                 # default to 'on'
                 self.select_toolpath('on')
+            else:
+                self.drywall_shape_display_widget.shape_toolpath_image.opacity = 0
         else:
             self.select_toolpath(self.dwt_config.active_config.toolpath_offset)
             self.toolpath_selection.disabled = False
@@ -325,7 +327,7 @@ class DrywallCutterScreen(Screen):
 
         # handle tool selection for geberit shape:
         if shape is 'geberit':
-            geberit_cutters = {k: v for k, v in self.tool_options.iteritems() if '8mm' in k or '6mm' in k}
+            geberit_cutters = {k: v for k, v in self.tool_options.iteritems() if '8 mm' in k or '6 mm' in k}
             geberit_cutter_names = [v['cutter_path'] for v in geberit_cutters.values()]
             self.tool_selection.image_dict = geberit_cutters
             # check if valid tool is selected:
