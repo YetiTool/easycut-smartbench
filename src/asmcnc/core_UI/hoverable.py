@@ -1,8 +1,10 @@
+from kivy.core.window.window_sdl2 import WindowSDL
 from kivy.event import EventDispatcher
 from kivy.properties import BooleanProperty
 from kivy.core.window import Window
+from kivy.uix.image import Image
 from kivy.uix.label import Label
-from kivy.uix.screenmanager import Screen
+from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.uix.textinput import TextInput
 
 from asmcnc.comms.logging_system.logging_system import Logger
@@ -76,6 +78,8 @@ class InspectorSingleton(EventDispatcher):
             pass
             #  not implemented yet in Screen
             # self.dump_screen()
+        elif keycode == 'h':
+            self.print_help()
 
         # check for arrow keys to move the widget
         if 273 <= key <= 276:
@@ -114,24 +118,38 @@ class InspectorSingleton(EventDispatcher):
     def dump_screen_tsv(self):
         j = self.get_parent_screen().dump_screen()
 
+    def print_help(self):
+        Logger.debug('Walking through the widget tree:')
+        Logger.debug('--------------------------------')
+        Logger.debug('l: (un)locks the selected widget.')
+        Logger.debug('i: inspects the widget and shows its attributes.')
+        Logger.debug('c: switches to the first child.')
+        Logger.debug('s: cycles through siblings. You need to switch to a child first!')
+        Logger.debug('p: switches to the parent.\n')
+        Logger.debug('When a widget is selected, you can use the arrow keys to move it.')
+        Logger.debug("Or just drag'n drop it with the mouse\n")
+
+
     def get_widget_name_class(self, widget):
         """
         Tries to get the name of the given widget. If the widget has no name use 'NO_NAME' instead.
         returns name (class name)
         """
-        try:
-            # check if it is a Layout and has no name
+        # check if it has a name
+        if hasattr(widget, 'name'):
             name = widget.name
-        except AttributeError:
+        elif hasattr(widget, 'id') and widget.id:
+            name = widget.id
+        else:
             name = 'NO_NAME'
         return '{} ({})'.format(name, type(widget).__name__)
 
     def switch_to_sibling(self):
         """
         Switches to the next sibling. If there are no more siblings left it returns to the first one.
-        This onyl works if switched to a child before to get the number of siblings.
+        This only works if switched to a child before to get the number of siblings.
         """
-        if self.child_max > 0:
+        if self.child_max > 1:
             if self.child_index < self.child_max - 1:
                 self.child_index += 1
             else:
@@ -142,9 +160,14 @@ class InspectorSingleton(EventDispatcher):
                 name = self.widget.name
             except AttributeError:
                 name = type(self.widget)
-            Logger.debug('Switched to sibling: {}'.format(self.get_widget_name_class(self.widget)))
+            Logger.debug('Switched to sibling {}/{}: {}'.format(self.child_index,
+                                                                self.child_max,
+                                                                self.get_widget_name_class(self.widget)))
+            self.inspect_widget(short=True)
+        elif self.child_max == 1:
+            Logger.debug('No siblings. Only one child!')
         else:
-            Logger.debug('Not switched to children first...')
+            Logger.warning('Not switched to children first...')
 
     def switch_to_child(self):
         """
@@ -157,29 +180,40 @@ class InspectorSingleton(EventDispatcher):
             self.child_index = 0
             self.child_max = len(children)
             self.widget = children[self.child_index]
-            Logger.debug('Switched to child: {}'.format(self.get_widget_name_class(self.widget)))
+            Logger.debug('Switched to child: {}/{}: {}'.format(self.child_index,
+                                                               self.child_max,
+                                                               self.get_widget_name_class(self.widget)))
+            self.inspect_widget(short=True)
 
     def switch_to_parent(self):
         """Switches to the parent of the currently selected widget."""
+
         self.child_index = -1
         self.child_max = -1
         parent = self.widget.parent
         if parent is None:
             Logger.debug('{} has no parent!'.format(self.get_widget_name_class(self.widget)))
+        elif issubclass(type(parent), WindowSDL):
+            Logger.warning('Orphaned!')
         else:
             self.widget = parent
             Logger.debug('Switched to parent: {}'.format(self.get_widget_name_class(self.widget)))
+            self.inspect_widget(short=True)
 
-    def inspect_widget(self):
+    def inspect_widget(self, short=False):
         """Prints debug information about the currently selected widget."""
-        s = '========================================\n{}:\n'.format(self.get_widget_name_class(self.widget))
-        s += 'pos: {}\tsize:{}\n'.format(self.widget.pos, self.widget.size)
+        Logger.debug('========================================')
+        if not short:
+            Logger.debug(self.get_widget_name_class(self.widget))
+        Logger.debug('pos: {}\t\tsize:{}\t\tchildren: {}'.format(self.widget.pos, self.widget.size, len(self.widget.children)))
         if issubclass(type(self.widget), (Label,TextInput)):
-            s += 'text: "{}"'.format(self.widget.text)
-        Logger.debug(s)
+            Logger.debug('text: "{}"'.format(self.widget.text))
+        if issubclass(type(self.widget), Image):
+            Logger.debug('source: "{}"'.format(self.widget.source))
+        Logger.debug('========================================')
 
     def set_widget(self, w):
-        """Sets the given widget as selected so it can be inspected."""
+        """Sets the given widget as selected, so it can be inspected."""
         self.widget = w
         self.widgetType = type(w)
 
