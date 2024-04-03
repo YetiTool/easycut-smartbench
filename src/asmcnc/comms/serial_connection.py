@@ -1010,12 +1010,15 @@ class SerialConnection(EventDispatcher):
             if not re.search(self.digital_load_pattern, message) or self.digital_spindle_load_raw == 0:
                 self.inrush_counter = 0
                 self.is_spindle_in_inrush_state = True
+                Logger.debug("Spindle inrush reset")
 
             elif self.inrush_counter < self.inrush_max:
                 self.inrush_counter += 1
+                Logger.debug("Spindle inrush: " + str(self.inrush_counter))
 
             elif self.inrush_counter == self.inrush_max and self.is_spindle_in_inrush_state:
                 self.is_spindle_in_inrush_state = False
+                Logger.info("Spindle inrush complete")
 
             # Get machine's status
             self.m_state = status_parts[0]
