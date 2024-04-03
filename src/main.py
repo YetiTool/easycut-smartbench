@@ -7,16 +7,6 @@ YetiTool's UI for SmartBench
 www.yetitool.com
 '''
 import logging
-# config
-# import os
-# os.environ['KIVY_GL_BACKEND'] = 'sdl2'
-
-# try:
-# 	from hanging_threads import start_monitoring
-# 	monitoring_thread = start_monitoring(seconds_frozen=3, test_interval=100)
-# except:
-# 	Logger.info("Could not import hanging_threads")
-
 import os
 import os.path
 import sys
@@ -26,12 +16,20 @@ from kivy.config import Config
 from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 
-from asmcnc.comms.digital_spindle_monitor import DigitalSpindleMonitor
 from asmcnc.comms.grbl_settings_manager import GRBLSettingsManagerSingleton
-from asmcnc.core_UI import scaling_utils, console_utils
-from asmcnc.comms.model_manager import ProductCodes
-from asmcnc.core_UI.popup_manager import PopupManager
 from asmcnc.comms.model_manager import ModelManagerSingleton
+from asmcnc.comms.model_manager import ProductCodes
+from asmcnc.core_UI import scaling_utils, console_utils
+from asmcnc.core_UI.popup_manager import PopupManager
+
+# config
+# import os
+# os.environ['KIVY_GL_BACKEND'] = 'sdl2'
+# try:
+# 	from hanging_threads import start_monitoring
+# 	monitoring_thread = start_monitoring(seconds_frozen=3, test_interval=100)
+# except:
+# 	Logger.info("Could not import hanging_threads")
 
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
 
@@ -222,8 +220,6 @@ class SkavaUI(App):
 
         # Serial comms needs to access YP
         m.s.yp = yp
-
-        digital_spindle_monitor = DigitalSpindleMonitor(m.s)
 
         # Server connection object
         if ModelManagerSingleton().get_product_code() != ProductCodes.DRYWALLTEC:

@@ -16,6 +16,8 @@ class DigitalSpindleMonitor(object):
         """
         :param serial_connection: SerialConnection object to bind to.
         """
+        Logger.info("Starting digital spindle monitor.")
+
         self.__serial_connection = serial_connection
         self.__serial_connection.bind(is_spindle_in_inrush_state=self.on_is_spindle_in_inrush_state_change)
 

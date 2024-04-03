@@ -19,6 +19,7 @@ from kivy.clock import Clock
 from kivy.event import EventDispatcher
 from kivy.properties import StringProperty, NumericProperty, BooleanProperty
 
+from asmcnc.comms.digital_spindle_monitor import DigitalSpindleMonitor
 from asmcnc.comms.logging_system.logging_system import Logger
 # Import managers for GRBL Notification screens (e.g. alarm, error, etc.)
 from asmcnc.core_UI.sequence_alarm import alarm_manager
@@ -116,6 +117,9 @@ class SerialConnection(EventDispatcher):
         # Initialise managers for GRBL Notification screens (e.g. alarm, error, etc.)
         self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m, self.l, self.jd)
         self.FINAL_TEST = False
+
+        self.digital_spindle_monitor = DigitalSpindleMonitor(self)
+
         # Register events to provide data:
         self.register_event_type('on_serial_monitor_update') # new data to show for the serial monitor
         self.register_event_type('on_update_overload_peak') # new overload peak value
