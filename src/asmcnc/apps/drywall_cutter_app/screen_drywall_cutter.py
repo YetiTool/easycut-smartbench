@@ -240,7 +240,7 @@ class DrywallCutterScreen(Screen):
         self.apply_active_config()
         self.materials_popup.on_open()  # to make sure material values are set correctly
         self.pulse_poll = Clock.schedule_interval(self.update_pulse_opacity, 0.04)
-        self.kb.set_numeric_pos((scaling_utils.get_scaled_width(565), scaling_utils.get_scaled_height(85)))
+        self.kb.set_numeric_pos((scaling_utils.get_scaled_width(565), scaling_utils.get_scaled_height(115)))
         self.drywall_shape_display_widget.check_datum_and_extents()  # update machine value labels
 
     def on_pre_leave(self):
