@@ -27,9 +27,10 @@ from asmcnc.core_UI import path_utils as pu
 from asmcnc.comms.logging_system.logging_system import Logger
 
 class GCodeEngine():
-    def __init__(self, router_machine, dwt_config):
+    def __init__(self, router_machine, dwt_config, coordinate_system):
         self.config = dwt_config
         self.m = router_machine
+        self.cs = coordinate_system
 
         # Globals
         self.x = 0  # Identifier for use in arrays

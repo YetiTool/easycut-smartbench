@@ -9,7 +9,7 @@ class CoordinateSystem(object):
         self.m = m # Router machine instance
         self.machine_coordinates = self.MachineCoordinates(self.m)
         self.working_coordinates = self.WorkingCoordinates(self.m)
-        self.drywall_tec_coordinates = self.DrywallTecCoordinates(self.machine_coordinates)
+        self.drywall_tec_coordinates = self.DrywallTecCoordinates(self.working_coordinates, self.m)
         self.drywall_tec_laser_coordinates = self.DrywallTecLaserCoordinates(self.drywall_tec_coordinates)
 
     class MachineCoordinates(object):
@@ -51,20 +51,27 @@ class CoordinateSystem(object):
     class DrywallTecCoordinates(object):
         '''Class to store the drywall tec coordinates.'''
 
-        def __init__(self, machine_coordinates):
-            self.machine_coordinates = machine_coordinates
-            self.x_delta = 0
-            self.y_delta = 0
+        def __init__(self, working_coordinates, m):
+            self.m = m
+            self.working_coordinates = working_coordinates
+            self.x_delta = round(self.m.get_dollar_setting(130)
+                            - self.m.limit_switch_safety_distance
+                            - self.m.laser_offset_tool_clearance_to_access_edge_of_sheet, 2)
+            self.y_delta = round(self.m.get_dollar_setting(131)
+                            - self.m.get_dollar_setting(27), 2)
             self.z_delta = 0
 
+            # self.x_delta = self.x_delta * -1
+            # self.y_delta = self.y_delta * -1
+
         def get_x(self):
-            return self.machine_coordinates.get_x() + self.x_delta
+            return self.working_coordinates.get_x() + self.x_delta
 
         def get_y(self):
-            return self.machine_coordinates.get_y() + self.y_delta
+            return self.working_coordinates.get_y() + self.y_delta
 
         def get_z(self):
-            return self.machine_coordinates.get_z() + self.z_delta
+            return self.working_coordinates.get_z() + self.z_delta
 
         def get_mx_from_dwx(self, dw_x):
             """
