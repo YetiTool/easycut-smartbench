@@ -16,7 +16,7 @@ from kivy.uix.scrollview import ScrollView
 from kivy.clock import Clock
 
 from asmcnc.core_UI import scaling_utils as utils
-from asmcnc.core_UI.utils.hold_button import WarningHoldButton
+from asmcnc.core_UI.components.buttons.hold_button import WarningHoldButton
 from asmcnc.comms.logging_system.logging_system import Logger
 
 """
