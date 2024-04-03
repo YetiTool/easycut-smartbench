@@ -2,6 +2,8 @@
 Class for handling the various coordinate systems we're using in the dwt app
 '''
 
+from asmcnc.comms.logging_system.logging_system import Logger
+
 class CoordinateSystem(object):
     '''Class to store the coordinate system data.'''
 
@@ -11,6 +13,24 @@ class CoordinateSystem(object):
         self.working_coordinates = self.WorkingCoordinates(self.m)
         self.drywall_tec_coordinates = self.DrywallTecCoordinates(self.working_coordinates, self.m)
         self.drywall_tec_laser_coordinates = self.DrywallTecLaserCoordinates(self.drywall_tec_coordinates)
+
+        self.m.s.bind(m_x=lambda i, value: self.log_pos(value))
+        self.m.s.bind(m_y=lambda i, value: self.log_pos(value))
+
+    def log_pos(self, value):
+        Logger.debug("M: {}, {} W: {}, {} DWT: {}, {} DWTL: {}, {} laser offset: {}, {}".format(
+        self.machine_coordinates.get_x(),
+            self.machine_coordinates.get_y(),
+            self.working_coordinates.get_x(),
+            self.working_coordinates.get_y(),
+            self.drywall_tec_coordinates.get_x(),
+            self.drywall_tec_coordinates.get_y(),
+            self.drywall_tec_laser_coordinates.get_x(),
+            self.drywall_tec_laser_coordinates.get_y(),
+            self.m.laser_offset_x_value,
+            self.m.laser_offset_y_value
+        ))
+
 
     class MachineCoordinates(object):
         '''Class to store the machine coordinates.'''
@@ -118,10 +138,10 @@ class CoordinateSystem(object):
             self.laser_delta_y = self.dwt_coordinates.m.laser_offset_y_value
 
         def get_x(self):
-            return self.dwt_coordinates.get_x() + self.m.laser_offset_x_value
+            return self.dwt_coordinates.get_x() + self.dwt_coordinates.m.laser_offset_x_value
 
         def get_y(self):
-            return self.dwt_coordinates.get_y() + self.m.laser_offset_x_value
+            return self.dwt_coordinates.get_y() + self.dwt_coordinates.m.laser_offset_x_value
 
         def get_z(self):
             return self.dwt_coordinates.get_z()

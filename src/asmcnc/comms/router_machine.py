@@ -1930,6 +1930,11 @@ class RouterMachine(EventDispatcher):
         self.s.write_command('G4 P0.1')
         self.s.write_command('G0 G54 X0 Y0')
 
+    def go_xy_datum_with_laser(self):
+        self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
+        self.s.write_command('G4 P0.1')
+        self.s.write_command('G0 G54 X{} Y{}'.format(self.laser_offset_x_value, self.laser_offset_y_value))
+
     def jog_spindle_to_laser_datum(self, axis):
 
         if 'X' in axis:

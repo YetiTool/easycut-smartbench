@@ -204,8 +204,10 @@ class DrywallCutterScreen(Screen):
         self.ignore_state = True
 
         # XY move widget
-        self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm,
-                                                                   localization=self.l)
+        self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m,
+                                                                   screen_manager=self.sm,
+                                                                   localization=self.l,
+                                                                   coordinate_system=self.cs)
         self.xy_move_container.add_widget(self.xy_move_widget)
 
         self.materials_popup = material_setup_popup.CuttingDepthsPopup(self.l, self.kb, self.dwt_config)
