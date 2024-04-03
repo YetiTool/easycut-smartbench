@@ -375,6 +375,10 @@ class DrywallCutterScreen(Screen):
         self.sm.current = 'lobby'
 
     def simulate(self):
+        if not self.is_config_valid():
+            self.show_validation_popup()
+            return
+
         if not self.simulation_started and self.m.s.m_state.lower() == 'idle':
             self.m_state_bind = self.m.s.bind(m_state=lambda i, value: self.set_simulation_popup_state(value))
             self.ignore_state = False
@@ -399,12 +403,19 @@ class DrywallCutterScreen(Screen):
             self.ignore_state = True
             
     def save(self):
+        if not self.is_config_valid():
+            self.show_validation_popup()
+            return
+
         if not self.sm.has_screen('config_filesaver'):
             self.sm.add_widget(screen_config_filesaver.ConfigFileSaver(name='config_filesaver',
                                                                        screen_manager=self.sm,
                                                                        localization=self.l,
                                                                        callback=self.dwt_config.save_config))
         self.sm.current = 'config_filesaver'
+
+    def is_config_valid(self):
+        return self.materials_popup.validate_inputs() and self.drywall_shape_display_widget.are_inputs_valid()
 
     def run(self):
         if self.materials_popup.validate_inputs() and self.drywall_shape_display_widget.are_inputs_valid():
@@ -420,14 +431,17 @@ class DrywallCutterScreen(Screen):
             self.proceed_to_go_screen()
 
         else:
-            m_popup_steps = self.materials_popup.get_steps_to_validate()
-            s_widget_steps = self.drywall_shape_display_widget.get_steps_to_validate()
+            self.show_validation_popup()
 
-            m_popup_steps.extend(s_widget_steps)
+    def show_validation_popup(self):
+        m_popup_steps = self.materials_popup.get_steps_to_validate()
+        s_widget_steps = self.drywall_shape_display_widget.get_steps_to_validate()
 
-            steps_to_validate = "\n".join(m_popup_steps)
-            popup = JobValidationPopup(steps_to_validate, size_hint=(0.8, 0.8), auto_dismiss=False)
-            popup.open()
+        m_popup_steps.extend(s_widget_steps)
+
+        steps_to_validate = "\n".join(m_popup_steps)
+        popup = JobValidationPopup(steps_to_validate, size_hint=(0.8, 0.8), auto_dismiss=False)
+        popup.open()
 
     def set_return_screens(self):
         self.sm.get_screen('go').return_to_screen = 'drywall_cutter' if self.sm.get_screen(
