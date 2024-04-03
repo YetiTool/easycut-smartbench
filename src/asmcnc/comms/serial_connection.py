@@ -362,7 +362,7 @@ class SerialConnection(EventDispatcher):
 
     # "Push" is for messages from GRBL to provide more general feedback on what Grbl is doing (e.g. status)
 
-    VERBOSE_ALL_PUSH_MESSAGES = False
+    VERBOSE_ALL_PUSH_MESSAGES = True
     VERBOSE_ALL_RESPONSE = False
     VERBOSE_STATUS = False
 
