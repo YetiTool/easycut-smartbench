@@ -6,9 +6,16 @@ from asmcnc.core_UI.components.text_inputs.max_length_input import MaxLengthInpu
 class FloatInput(MaxLengthInput):
     """TextInput field with automatic content selection when focused. Text is validated to float when unfocused."""
 
-    def __init__(self, **kwargs):
+    def __init__(self, positive_only=True, **kwargs):
         super(FloatInput, self).__init__(max_length=6, **kwargs)
         self.input_filter = 'float'
+        self.positive_only = positive_only
+
+    def on_text(self, instance, value):
+        """Prevents - to be written to avoid negative numbers"""
+        if self.positive_only:
+            self.text = value.replace("-", "")
+        super(FloatInput, self).on_text(instance, self.text)
 
     def on_focus(self, instance, value):
         """Selects all text when focused. text validation is done when unfocused."""
