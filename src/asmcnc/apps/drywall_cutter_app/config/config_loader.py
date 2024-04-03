@@ -305,13 +305,13 @@ class DWTConfig(EventDispatcher):
                     'type': cutter.type,
                     'size': cutter.dimensions.diameter if cutter.dimensions.diameter else cutter.dimensions.angle
                 }
-        sorted_cutter_list = sorted(cutters.items(), key=lambda x: (x[1]['type'], x[1]['size']))
-        sorted_cutters = OrderedDict(sorted_cutter_list)
+        # sorted_cutter_list = sorted(cutters.items(), key=lambda x: (x[1]['type'], x[1]['size']))
+        # sorted_cutters = OrderedDict(sorted_cutter_list)
         # sorted_cutter_list = sorted(cutters, key=lambda k: (cutters[k]['type'], cutters[k]['size']))
         # sorted_cutters = {}
         # for id in sorted_cutter_list:
         #     sorted_cutters[id] = cutters[id]
-        return sorted_cutters
+        return cutters
 
     def save_temp_config(self):
         # type () -> None
