@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
+
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.core.window import Window
 from kivy.uix.vkeyboard import VKeyboard
 import traceback
@@ -169,6 +171,9 @@ class Keyboard(VKeyboard):
             self.width = scaling_utils.Width / 3.4
             if self.custom_numeric_pos:
                 self.pos = self.custom_numeric_pos
+                if self.text_instance:
+                    if self.collide_widget(self.text_instance):
+                        self.pos = (scaling_utils.Width - self.custom_numeric_pos[0] - self.width, self.custom_numeric_pos[1])
         else:
             self.width = scaling_utils.Width
             if self.custom_qwerty_pos:
@@ -212,7 +217,7 @@ class Keyboard(VKeyboard):
         try: 
             Window.add_widget(self)
         except:
-            print(traceback.format_exc())
+            Logger.info(traceback.format_exc())
 
     # Functions to lower keyboard
     def lower_keyboard_if_not_focused(self):

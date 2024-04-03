@@ -41,7 +41,6 @@
       src: starteasycut.sh
       dest: /home/pi/starteasycut.sh
       mode: '0755'
-
     # Python2 pip and mysqldb are only available on stretch
   - name: Install packages for Raspbian Stretch
     package:

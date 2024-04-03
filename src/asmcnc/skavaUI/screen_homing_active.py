@@ -9,6 +9,7 @@ Squaring decision: manual or auto?
 import sys
 from datetime import datetime
 
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
@@ -86,11 +87,6 @@ Builder.load_string(
 )
 
 
-def log(message):
-    timestamp = datetime.now()
-    print(timestamp.strftime("%H:%M:%S.%f")[:12] + " " + str(message))
-
-
 class HomingScreenActive(Screen):
     return_to_screen = "lobby"
     cancel_to_screen = "lobby"
@@ -105,15 +101,13 @@ class HomingScreenActive(Screen):
         self.update_strings()
 
     def on_pre_enter(self):
-        log("Open homing screen")
+        Logger.info("Open homing screen")
         if self.m.homing_interrupted:
             self.go_to_cancel_to_screen()
             return
 
     def on_enter(self):
-        if sys.platform == "win32" or sys.platform == "darwin":
-            return
-        if self.m.homing_interrupted:
+        if self.m.homing_interrupted or not self.m.is_connected:
             return
         if not self.m.homing_in_progress:
             self.m.do_standard_homing_sequence()
@@ -151,7 +145,7 @@ class HomingScreenActive(Screen):
         self.sm.current = "squaring_active"
 
     def stop_button_press(self):
-        log("Homing cancelled by user")
+        Logger.info("Homing cancelled by user")
         self.cancel_homing()
         self.go_to_cancel_to_screen()
 
@@ -174,5 +168,4 @@ class HomingScreenActive(Screen):
     def windows_cheat_to_procede(self):
         if sys.platform == "win32" or sys.platform == "darwin":
             self.return_to_ec_if_homing_not_in_progress()
-        else:
-            pass
+            self.m.is_machine_homed = True

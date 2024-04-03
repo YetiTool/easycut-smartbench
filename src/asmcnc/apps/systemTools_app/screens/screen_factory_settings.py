@@ -6,6 +6,8 @@ Menu screen for system tools app
 """
 import os
 import sys
+
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -31,8 +33,9 @@ from asmcnc.apps.systemTools_app.screens.calibration import screen_set_threshold
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 from asmcnc.production.database.calibration_database import CalibrationDatabase
 
-from asmcnc.comms.model_manager import ModelManagerSingleton
-from asmcnc.comms.router_machine import ProductCodes
+from asmcnc.comms.model_manager import ModelManagerSingleton, ProductCodes
+
+from asmcnc.core_UI import console_utils
 
 Builder.load_string(
     """
@@ -579,9 +582,9 @@ Builder.load_string(
 class FactorySettingsScreen(Screen):
     latest_machine_model_values = [
         "SmartBench V1.3 PrecisionPro CNC Router",
-        "SmartBench Mini V1.3 PrecisionPro",
-        "SmartBench Mini V1.3 PrecisionPro Plus",
-        "SmartBench Mini V1.3 PrecisionPro X",
+        "SmartBench V1.3 PrecisionPro",
+        "SmartBench V1.3 PrecisionPro Plus",
+        "SmartBench V1.3 PrecisionPro X",
         "DRYWALLTEC SmartCNC",
     ]
     old_machine_model_values = [
@@ -650,10 +653,10 @@ class FactorySettingsScreen(Screen):
                 os.system(
                     "cp /media/usb/credentials.py ./asmcnc/production/database/credentials.py"
                 )
-                print("Credentials file found on USB")
+                Logger.info("Credentials file found on USB")
                 self.calibration_db.set_up_connection()
         except:
-            print("No /media/usb/ folder found")
+            Logger.info("No /media/usb/ folder found")
 
     def go_back(self):
         self.systemtools_sm.back_to_menu()
@@ -783,8 +786,15 @@ class FactorySettingsScreen(Screen):
                 + str(self.product_number_input.text)
             )
             # Do specific tasks for setting up the machine model (e.g. splash screen)
-            self.model_manager.set_machine_type(ProductCodes(int(self.product_number_input.text)), True)
+            pc = ProductCodes(int(self.product_number_input.text))
+            self.model_manager.set_machine_type(pc, True)
             self.m.write_dollar_setting(50, full_serial_number)
+            if pc is ProductCodes.DRYWALLTEC:  # set max z travel to 120mm because of the rubber bellow
+                Logger.info("Z max travel ($132) is set to 120 for Drywalltec machine.")
+                self.m.write_dollar_setting(132, 120)
+            elif pc in [ProductCodes.PRECISION_PRO, ProductCodes.PRECISION_PRO_X, ProductCodes.PRECISION_PRO_PLUS]:
+                Logger.info("Z max travel ($132) is set to 130 for double stack motors.")
+                self.m.write_dollar_setting(132, 130)
             self.machine_serial.text = "updating..."
 
             def update_text_with_serial():
@@ -859,7 +869,7 @@ class FactorySettingsScreen(Screen):
 
         if self.dev_mode:
             if nested_factory_reset():
-                print("doing factory reset...")
+                Logger.info("doing factory reset...")
                 Clock.schedule_once(self.close_sw, 5)
         else:
             try:
@@ -900,7 +910,7 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
                     + "Not doing this may corrupt the warranty registration start up sequence."
                 )
                 popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 700, reset_warning)
-                Clock.schedule_once(self.shutdown_console, 5)
+                Clock.schedule_once(console_utils.shutdown, 5)
             else:
                 warning_message = (
                     "There was an issue doing the factory reset! Get Letty for help."
@@ -909,9 +919,6 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
 
     def close_sw(self, dt):
         sys.exit()
-
-    def shutdown_console(self, dt):
-        os.system("sudo shutdown -h now")
 
     def full_console_update(self):
         try:
@@ -1058,7 +1065,7 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
             + Activation_Code_13
             + Activation_Code_14
         )
-        print(str(Final_Activation_Code) + "\n")
+        Logger.info(str(Final_Activation_Code) + "\n")
         return Final_Activation_Code
 
     def show_sc2_decision_popup(self):
@@ -1140,7 +1147,7 @@ $51 is currently set to """
             serial_number_from_file = str(file.read())
             file.close()
         except:
-            print("Could not get serial number! Please contact YetiTool support!")
+            Logger.info("Could not get serial number! Please contact YetiTool support!")
         return str(serial_number_from_file)
 
     def final_test(self, board):

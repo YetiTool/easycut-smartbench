@@ -2,6 +2,7 @@
 Created on 25 Jan 2022
 @author: Letty
 '''
+from asmcnc.comms.logging_system.logging_system import Logger
 from tests.automated_unit_tests.test_base import UnitTestBase
 
 try:
@@ -10,7 +11,7 @@ try:
     from serial_mock.mock import MockSerial, DummySerial
     from serial_mock.decorators import serial_query
 except:
-    print("Can't import mocking packages, are you on a dev machine?")
+    Logger.info("Can't import mocking packages, are you on a dev machine?")
 
 from time import sleep
 
@@ -114,7 +115,7 @@ class SpindleFeedbackTest(UnitTestBase):
                 str(digital_spindle_kill_time) + "," + \
                 str(digital_spindle_mains_voltage) + ">"
 
-            print(self.status)
+            Logger.info(self.status)
 
 
         # Need to construct mock PCB after the status, otherwise it'll run something else:

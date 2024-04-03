@@ -13,6 +13,7 @@ from shutil import copy
 
 import kivy
 from chardet import detect
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.clock import Clock
 from kivy.graphics import Color, Rectangle
 from kivy.lang import Builder
@@ -23,6 +24,7 @@ from kivy.properties import (
 from kivy.uix.screenmanager import Screen
 
 from asmcnc.comms import usb_storage
+from asmcnc.comms.model_manager import ModelManagerSingleton
 from asmcnc.skavaUI import popup_info
 
 Builder.load_string(
@@ -358,6 +360,7 @@ class LocalFileChooser(Screen):
         self.sm = kwargs["screen_manager"]
         self.jd = kwargs["job"]
         self.l = kwargs["localization"]
+        self.model_manager = ModelManagerSingleton()
         self.usb_stick = usb_storage.USB_storage(self.sm, self.l)
         self.check_for_job_cache_dir()
         self.usb_status_label.text = self.l.get_str(
@@ -419,12 +422,18 @@ class LocalFileChooser(Screen):
                 file.write("*.nc")
                 file.close()
 
+    def on_pre_enter(self):
+        if self.model_manager.is_machine_drywall():
+            self.button_usb.opacity = 0
+            self.usb_status_label.opacity = 0
     def on_enter(self):
         self.filechooser.path = job_cache_dir
-        self.usb_stick.enable()
+        if not self.model_manager.is_machine_drywall():
+            self.usb_stick.enable()
         self.refresh_filechooser()
-        self.check_USB_status(1)
-        self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25)
+        if not self.model_manager.is_machine_drywall():
+            self.check_USB_status(1)
+            self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25)
         self.switch_view()
 
     def on_pre_leave(self):
@@ -432,9 +441,10 @@ class LocalFileChooser(Screen):
             "usb_filechooser"
         ).filechooser_usb.sort_func = self.filechooser.sort_func
         self.sm.get_screen("usb_filechooser").image_sort.source = self.image_sort.source
-        Clock.unschedule(self.poll_USB)
-        if self.sm.current != "usb_filechooser":
-            self.usb_stick.disable()
+        if not self.model_manager.is_machine_drywall():
+            Clock.unschedule(self.poll_USB)
+            if self.sm.current != "usb_filechooser":
+                self.usb_stick.disable()
 
     def on_leave(self):
         self.usb_status_label.size_hint_y = 0
@@ -635,7 +645,7 @@ class LocalFileChooser(Screen):
                 os.remove(filename)
                 self.filechooser.selection = []
             except:
-                print("attempt to delete folder, or undeletable file")
+                Logger.info("attempt to delete folder, or undeletable file")
             self.refresh_filechooser()
 
     def delete_all(self):
@@ -648,7 +658,7 @@ class LocalFileChooser(Screen):
                     if files_in_cache.index(file) + 2 >= len(files_in_cache):
                         self.refresh_filechooser()
                 except:
-                    print("attempt to delete folder, or undeletable file")
+                    Logger.info("attempt to delete folder, or undeletable file")
         self.filechooser.selection = []
         self.refresh_filechooser()
 

@@ -179,6 +179,8 @@ Builder.load_string(
                             min: 1
                             max: 60
                             step: 1
+                            size_hint_y: None
+                            height: app.get_scaled_height(60)
 
                         Label:
                             id: seconds_label
@@ -431,7 +433,7 @@ class SpindleSettingsWidget(Widget):
     def raise_z_then_get_data(self):
         if self.m.state().startswith("Idle"):
             self.wait_popup.open()
-            self.m.zUp()
+            self.m.raise_z_axis_for_collet_access()
             Clock.schedule_once(self.get_spindle_data, 0.4)
         else:
             self.sm.pm.show_error_popup("Please ensure machine is idle before continuing.")
@@ -440,7 +442,7 @@ class SpindleSettingsWidget(Widget):
         if not self.m.smartbench_is_busy():
             self.wait_popup.dismiss()
             self.wait_popup.open()
-            self.m.s.write_command("M3 S0")
+            self.m.turn_on_spindle_for_data_read()
             Clock.schedule_once(self.get_spindle_info, 0.3)
         else:
             Clock.schedule_once(self.get_spindle_data, 0.4)
@@ -464,7 +466,7 @@ class SpindleSettingsWidget(Widget):
             Clock.schedule_once(self.check_spindle_info, 0.3)
 
     def read_restore_info(self):
-        self.m.s.write_command("M5")
+        self.m.turn_off_spindle()
         self.wait_popup.dismiss()
         if (
                 self.m.s.digital_spindle_ld_qdA != -999
