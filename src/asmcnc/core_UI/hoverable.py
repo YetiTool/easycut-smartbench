@@ -4,6 +4,7 @@ from kivy.properties import BooleanProperty
 from kivy.core.window import Window
 from kivy.uix.image import Image
 from kivy.uix.label import Label
+from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.uix.textinput import TextInput
 
@@ -71,6 +72,8 @@ class InspectorSingleton(EventDispatcher):
             self.switch_to_child()
         elif keycode == 's':
             self.switch_to_sibling()
+        elif keycode == 'a':
+            self.switch_to_sibling_bw()
         # [i]nspect widget
         elif keycode == 'i':
             self.inspect_widget()
@@ -80,6 +83,9 @@ class InspectorSingleton(EventDispatcher):
             # self.dump_screen()
         elif keycode == 'h':
             self.print_help()
+        elif keycode == 'q':
+            pass
+            # self.show_popup()
 
         # check for arrow keys to move the widget
         if 273 <= key <= 276:
@@ -88,6 +94,9 @@ class InspectorSingleton(EventDispatcher):
         # Return True to accept the key. Otherwise, it will be used by the system.
         return True
 
+    def show_popup(self):
+        popup = Popup(width=100, height=200, pos=[100, 100])
+        popup.open()
     def move_widget(self, key):
         """
         Moves the selected widget 5 pixels into one direction.
@@ -169,6 +178,31 @@ class InspectorSingleton(EventDispatcher):
         else:
             Logger.warning('Not switched to children first...')
 
+    def switch_to_sibling_bw(self):
+        """
+        Switches to the next sibling. If there are no more siblings left it returns to the first one.
+        This only works if switched to a child before to get the number of siblings.
+        """
+        if self.child_max > 1:
+            if self.child_index > 0:
+                self.child_index -= 1
+            else:
+                self.child_index = self.child_max - 1
+            self.widget = self.widget.parent.children[self.child_index]
+            try:
+                # check if it is a Layout and has no name
+                name = self.widget.name
+            except AttributeError:
+                name = type(self.widget)
+            Logger.debug('Switched to sibling {}/{}: {}'.format(self.child_index,
+                                                                self.child_max,
+                                                                self.get_widget_name_class(self.widget)))
+            self.inspect_widget(short=True)
+        elif self.child_max == 1:
+            Logger.debug('No siblings. Only one child!')
+        else:
+            Logger.warning('Not switched to children first...')
+
     def switch_to_child(self):
         """
         Switches to the first child if the currently selected widget has children.
@@ -205,7 +239,10 @@ class InspectorSingleton(EventDispatcher):
         Logger.debug('========================================')
         if not short:
             Logger.debug(self.get_widget_name_class(self.widget))
-        Logger.debug('pos: {}\t\tsize:{}\t\tchildren: {}'.format(self.widget.pos, self.widget.size, len(self.widget.children)))
+        Logger.debug('pos: {}\t\tsize:{}\t\tchildren: {}\t\topacity: {}'.format(self.widget.pos,
+                                                                                self.widget.size,
+                                                                                len(self.widget.children),
+                                                                                self.widget.opacity))
         if issubclass(type(self.widget), (Label,TextInput)):
             Logger.debug('text: "{}"'.format(self.widget.text))
         if issubclass(type(self.widget), Image):
