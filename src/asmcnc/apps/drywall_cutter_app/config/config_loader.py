@@ -305,9 +305,7 @@ class DWTConfig(EventDispatcher):
                     'size': cutter.dimensions.diameter if cutter.dimensions.diameter else cutter.dimensions.angle
                 }
         sorted_cutter_list = sorted(cutters, key=lambda k: (cutters[k]['type'], cutters[k]['size']))
-        sorted_cutters = {}
-        for id in sorted_cutter_list:
-            sorted_cutters[id] = cutters[id]
+        sorted_cutters = {k: cutters[k] for k in sorted_cutter_list}
         return sorted_cutters
 
     def save_temp_config(self):
