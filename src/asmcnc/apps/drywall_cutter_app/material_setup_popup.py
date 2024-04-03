@@ -121,6 +121,7 @@ Builder.load_string("""
             markup: True
             multiline: False
             text: ''
+            positive_only: False
         
         Image:
             id: total_cut_depth_dims
