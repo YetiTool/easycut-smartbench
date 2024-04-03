@@ -14,8 +14,11 @@ class CoordinateSystem(object):
         self.drywall_tec_coordinates = self.DrywallTecCoordinates(self.working_coordinates, self.m)
         self.drywall_tec_laser_coordinates = self.DrywallTecLaserCoordinates(self.drywall_tec_coordinates)
 
-        self.m.s.bind(m_x=lambda i, value: self.log_pos(value))
-        self.m.s.bind(m_y=lambda i, value: self.log_pos(value))
+        self.debug = False
+
+        if debug:
+            self.m.s.bind(m_x=lambda i, value: self.log_pos(value))
+            self.m.s.bind(m_y=lambda i, value: self.log_pos(value))
 
     def log_pos(self, value):
         Logger.debug("M: {}, {} W: {}, {} DWT: {}, {} DWTL: {}, {} laser offset: {}, {}".format(
