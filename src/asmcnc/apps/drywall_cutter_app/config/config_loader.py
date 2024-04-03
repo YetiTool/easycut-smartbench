@@ -300,9 +300,15 @@ class DWTConfig(EventDispatcher):
 
                 cutters[cutter.tool_id] = {
                     'cutter_path': cutter_file,
-                    'image_path': cutter.image
+                    'image_path': cutter.image,
+                    'type': cutter.type,
+                    'size': cutter.dimensions.diameter if cutter.dimensions.diameter else cutter.dimensions.angle
                 }
-        return cutters
+        sorted_cutter_list = sorted(cutters, key=lambda k: (cutters[k]['type'], cutters[k]['size']))
+        sorted_cutters = {}
+        for id in sorted_cutter_list:
+            sorted_cutters[id] = cutters[id]
+        return sorted_cutters
 
     def save_temp_config(self):
         # type () -> None
