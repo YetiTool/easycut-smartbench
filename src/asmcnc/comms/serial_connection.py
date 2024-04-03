@@ -1006,16 +1006,16 @@ class SerialConnection(EventDispatcher):
 
             # If "Ld:x,x,x,x" is in the status, the spindle is communicating
             # If spindle is not sending data, reset the "inrush" counter, which discards any weird loads from the spindle starting
-            if self.spindle_on:
-                if not re.search(self.digital_load_pattern, message) or self.digital_spindle_load_raw == 0:
-                    self.inrush_counter = 0
-                    self.is_spindle_in_inrush_state = True
+            # if self.spindle_on:
+            if not re.search(self.digital_load_pattern, message) or self.digital_spindle_load_raw == 0:
+                self.inrush_counter = 0
+                self.is_spindle_in_inrush_state = True
 
-                elif self.inrush_counter < self.inrush_max:
-                    self.inrush_counter += 1
+            elif self.inrush_counter < self.inrush_max:
+                self.inrush_counter += 1
 
-                elif self.inrush_counter == self.inrush_max and self.is_spindle_in_inrush_state:
-                    self.is_spindle_in_inrush_state = False
+            elif self.inrush_counter == self.inrush_max and self.is_spindle_in_inrush_state:
+                self.is_spindle_in_inrush_state = False
 
             # Get machine's status
             self.m_state = status_parts[0]
