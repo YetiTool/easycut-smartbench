@@ -115,9 +115,9 @@ class GCodeEngine():
     # Calculate the difference in corner radius depending on offset type
     def calculate_corner_radius_offset(self, offset_type, tool_diamter):
         tool_radius = tool_diamter / 2
-        if offset_type == uinside":
+        if offset_type == u"inside":
             offset_for_rads = -1 * tool_radius
-        elif offset_type == uoutside":
+        elif offset_type == u"outside":
             offset_for_rads = tool_radius
         else:
             offset_for_rads = 0
@@ -131,7 +131,7 @@ class GCodeEngine():
         if offset_type != None:
             tool_radius = tool_diameter / 2
             for coordinate in coordinates:
-                if offset_type == uinside":
+                if offset_type == u"inside":
                     if coordinate[self.x] > shape_centre[self.x]:  # RHS
                         x_offset = -1 * tool_radius  # Move to the left
                     else:  # LHS
@@ -140,7 +140,7 @@ class GCodeEngine():
                         y_offset = -1 * tool_radius  # Move down
                     else:  # Bottom
                         y_offset = tool_radius  # Move up
-                elif offset_type == uoutside":
+                elif offset_type == u"outside":
                     if coordinate[self.x] < shape_centre[self.x]:  # LHS
                         x_offset = -1 * tool_radius  # Move to the left
                     else:  # RHS
@@ -174,11 +174,11 @@ class GCodeEngine():
 
     # Determine if the cut direction should be clockwise or not
     def determine_cut_direction_clockwise(self, offset_type, climb):
-        if offset_type == uon":
+        if offset_type == u"on":
             return climb  # climb cut if on the line. Preferred strategy
-        elif offset_type == uoutside":
+        elif offset_type == u"outside":
             return climb
-        elif offset_type == uinside":
+        elif offset_type == u"inside":
             return not climb
         raise ValueError("Offset type must be 'on, 'inside' or 'outside'. Got '{}'.".format(offset_type))
 
@@ -277,7 +277,7 @@ class GCodeEngine():
             cutting_lines = self.swap_lines_after_keyword(cutting_lines, header)
 
             # Speed up first XY move
-            cutting_lines = self.replace_mode_after_keyword(cutting_lines, header, uG0")
+            cutting_lines = self.replace_mode_after_keyword(cutting_lines, header, u"G0")
 
         return cutting_lines
 
@@ -565,9 +565,9 @@ class GCodeEngine():
     # Main
     def engine_run(self, simulate=False):
         temp_gcode_path = pu.get_path('drywall_cutter_app/config/temp', folders_only=True)
-        filename = self.config.active_config.shape_type + u.nc"
+        filename = self.config.active_config.shape_type + u".nc"
         output_path = pu.join(temp_gcode_path, filename)
-        safe_start_position = uX0 Y0 Z10"
+        safe_start_position = u"X0 Y0 Z10"
         z_safe_distance = 5
         cutting_pass_depth = self.config.active_cutter.parameters.recommended_depth_per_pass if self.config.active_config.cutting_depths.auto_pass else self.config.active_config.cutting_depths.depth_per_pass
         cutting_lines = []
@@ -634,7 +634,7 @@ class GCodeEngine():
                 parameters['total_cut_depth'] = simulation_z_height
             return parameters
 
-        if self.config.active_config.shape_type.lower() == urectangle" or self.config.active_config.shape_type.lower() == usquare":
+        if self.config.active_config.shape_type.lower() == u"rectangle" or self.config.active_config.shape_type.lower() == u"square":
             # Produce coordinate list
             y_rect = self.config.active_config.canvas_shape_dims.y
             x_rect = self.config.active_config.canvas_shape_dims.x \
@@ -643,7 +643,7 @@ class GCodeEngine():
             rect_coordinates = self.rectangle_coordinates(x_rect, y_rect)
 
             if len(rect_coordinates) != 4:
-                raise Exception(uSir, rectangles have 4 sides, not %d" % len(rect_coordinates))
+                raise Exception(u"Sir, rectangles have 4 sides, not %d" % len(rect_coordinates))
 
             # Add first point to end of coordinate list to complete the contour
             coordinates = rect_coordinates
@@ -680,7 +680,7 @@ class GCodeEngine():
 
             cutting_lines += rectangle
 
-        elif self.config.active_config.shape_type.lower() == ugeberit":
+        elif self.config.active_config.shape_type.lower() == u"geberit":
 
             # Read in data
             gcode_lines = self.find_and_read_gcode_file(self.source_folder_path, self.config.active_config.shape_type, self.config.active_cutter.dimensions.diameter, orientation=self.config.active_config.rotation)
@@ -727,7 +727,7 @@ class GCodeEngine():
 
             cutting_lines = gcode_lines
 
-        elif self.config.active_config.shape_type.lower() == ucircle":
+        elif self.config.active_config.shape_type.lower() == u"circle":
             circle_coordinates = self.rectangle_coordinates(self.config.active_config.canvas_shape_dims.d, self.config.active_config.canvas_shape_dims.d) # Circles are secretly rounded rectangles
 
             # Add first point to end of coordinate list to complete the contour
@@ -770,7 +770,7 @@ class GCodeEngine():
                     roughing_pass = False
                     cutting_lines += circle
 
-        elif self.config.active_config.shape_type.lower() == uline":
+        elif self.config.active_config.shape_type.lower() == u"line":
             cutting_lines = self.cut_line(**line_default_parameters(simulate=simulate))
 
         else:
