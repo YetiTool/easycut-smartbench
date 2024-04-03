@@ -246,7 +246,11 @@ class DrywallCutterScreen(Screen):
         self.kb.set_numeric_pos((scaling_utils.get_scaled_width(565), scaling_utils.get_scaled_height(85)))
         self.drywall_shape_display_widget.check_datum_and_extents()  # update machine value labels
 
+    def on_enter(self):
+        self.m.laser_on()
+
     def on_pre_leave(self):
+        self.m.laser_off()
         if self.pulse_poll:
             Clock.unschedule(self.pulse_poll)
         self.kb.set_numeric_pos(None)

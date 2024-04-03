@@ -114,14 +114,14 @@ class CoordinateSystem(object):
 
         def __init__(self, dwt_cooridnates):
             self.dwt_coordinates = dwt_cooridnates
-            self.laser_delta_x = 0
-            self.laser_delta_y = 0
+            self.laser_delta_x = self.dwt_coordinates.m.laser_offset_x_value
+            self.laser_delta_y = self.dwt_coordinates.m.laser_offset_y_value
 
         def get_x(self):
-            return self.dwt_coordinates.get_x() + self.laser_delta_x
+            return self.dwt_coordinates.get_x() + self.m.laser_offset_x_value
 
         def get_y(self):
-            return self.dwt_coordinates.get_y() + self.laser_delta_y
+            return self.dwt_coordinates.get_y() + self.m.laser_offset_x_value
 
         def get_z(self):
             return self.dwt_coordinates.get_z()
