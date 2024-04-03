@@ -16,7 +16,7 @@ class CoordinateSystem(object):
 
         self.debug = False
 
-        if debug:
+        if self.debug:
             self.m.s.bind(m_x=lambda i, value: self.log_pos(value))
             self.m.s.bind(m_y=lambda i, value: self.log_pos(value))
 
