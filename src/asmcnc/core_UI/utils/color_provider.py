@@ -7,7 +7,7 @@ class ColorProvider(object):
     color_provider.get_color("white")
 
     * Usage in Kivy Builder:
-    background_color: app.color_provider.get_color("OK_GREEN")
+    background_color: app.color_provider.get_color("button_green")
 
     Attributes:
         _instance (ColorProvider): The singleton instance of the ColorProvider class.
