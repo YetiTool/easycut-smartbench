@@ -23,8 +23,8 @@
     "yetipilot_target_power": 640
   },
   "toolpath_offsets": {
-    "inside": true,
-    "outside": true,
+    "inside": false,
+    "outside": false,
     "on": true
   },
   "image": "./asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_90deg.png"

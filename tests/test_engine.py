@@ -191,6 +191,25 @@ class EngineTests(unittest.TestCase):
         output = self.engine.determine_cut_direction_clockwise(offset_type, climb)
         self.assertEqual(output, expected_output)
 
+        # Case 5: offset_type="on" default to climb
+        offset_type = "on"
+        climb = False
+        expected_output = False
+        output = self.engine.determine_cut_direction_clockwise(offset_type, climb)
+        self.assertEqual(output, expected_output)
+        climb = True
+        expected_output = True
+        output = self.engine.determine_cut_direction_clockwise(offset_type, climb)
+        self.assertEqual(output, expected_output)
+
+        # Case 6: failure
+        offset_type = "foo"
+        climb = False
+        expected_output = False
+        with self.assertRaises(ValueError):
+            self.engine.determine_cut_direction_clockwise(offset_type, climb)
+
+
     def test_swap_lines_after_keyword(self):
         # Case 1: Keyword exists and there are at least two lines after the keyword
         input_list = ["Line 1", "Keyword", "Line 2", "Line 3"]
