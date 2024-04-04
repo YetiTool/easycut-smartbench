@@ -1,7 +1,7 @@
 import unittest
 
 from kivy.event import EventDispatcher
-from kivy.properties import BooleanProperty, NumericProperty
+from kivy.properties import BooleanProperty, NumericProperty, StringProperty
 
 from asmcnc.comms.digital_spindle_monitor import DigitalSpindleMonitor
 
@@ -11,6 +11,7 @@ class DigitalSpindleMonitorMockSerialConnection(EventDispatcher):
     spindle monitor."""
     is_spindle_in_inrush_state = BooleanProperty(True)
     digital_spindle_load_raw = NumericProperty(0, force_dispatch=True)
+    raw_status = StringProperty("")
 
     def __init__(self):
         super(DigitalSpindleMonitorMockSerialConnection, self).__init__()
