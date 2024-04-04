@@ -1041,8 +1041,8 @@ class SimulatingJobPopup(ErrorPopup):
             Logger.info("User stopped simulation.")
             self.m.s.suppress_error_screens = True
             self.m.soft_stop()
-            self.m.NOT_SKELETON_STUFF = False
-            self.m.end_stream()
+            self.m.s.NOT_SKELETON_STUFF = False
+            self.m.s.end_stream()
             Clock.schedule_once(lambda dt: reset(), 1)
 
         def reset(*args):
