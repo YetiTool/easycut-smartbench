@@ -144,7 +144,7 @@ class CoordinateSystem(object):
             return self.dwt_coordinates.get_x() + self.dwt_coordinates.m.laser_offset_x_value
 
         def get_y(self):
-            return self.dwt_coordinates.get_y() + self.dwt_coordinates.m.laser_offset_x_value
+            return self.dwt_coordinates.get_y() + self.dwt_coordinates.m.laser_offset_y_value
 
         def get_z(self):
             return self.dwt_coordinates.get_z()
