@@ -793,10 +793,10 @@ class GCodeEngine():
                 output = "(%s)\nG90\nM3 S%d\nG0 %s\n\n%s(End)\nG0 Z%d\nM5\n" % (
                     filename, self.config.active_cutter.parameters.cutting_spindle_speed, safe_start_position, ''.join(cutting_lines), z_safe_distance)
             else:
-                output = ''.join(cutting_lines)  # Use ''.join() to concatenate lines without spaces
+                output = '\n'.join(cutting_lines)
 
             with open(output_path, 'w+') as out_file:
-                out_file.write(output)  # Use write() to write the entire output as a single string
+                out_file.write(output)  # Use write() to write the entire output as a single string since we use \n in the string
 
                 Logger.info("%s written" % filename)
                 return output_path  # return path to the file
