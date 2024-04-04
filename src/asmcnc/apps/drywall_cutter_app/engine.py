@@ -577,6 +577,7 @@ class GCodeEngine():
         simulation_z_height = 5 # mm
         simulation_plunge_rate = 750 # mm/s
         simulation_feedrate = 6000 # mm/s
+        geberit_partoff = False
 
         is_climb = (self.config.active_cutter.parameters.cutting_direction == CuttingDirectionOptions.CLIMB.value
                     or self.config.active_cutter.parameters.cutting_direction == CuttingDirectionOptions.BOTH.value)
@@ -719,12 +720,13 @@ class GCodeEngine():
 
                 tool_radius = self.config.active_cutter.dimensions.diameter / 2
 
-                # Add partoff cut
-                partoff_start_coordinate = [(-1 * tool_radius) + self.config.active_config.datum_position.x,
-                                            float(y_size) + tool_radius + self.config.active_config.datum_position.y]
-                partoff_end_coordinate = [tool_radius + float(x_size) + self.config.active_config.datum_position.x,
-                                        tool_radius + float(y_size) + self.config.active_config.datum_position.y]
-                gcode_lines = self.add_partoff(gcode_lines, "M5", partoff_start_coordinate, partoff_end_coordinate, pass_depths, self.config.active_cutter.parameters.cutting_feed_rate, self.config.active_cutter.parameters.plunge_feed_rate, z_safe_distance)
+                if geberit_partoff:
+                    # Add partoff cut
+                    partoff_start_coordinate = [(-1 * tool_radius) + self.config.active_config.datum_position.x,
+                                                float(y_size) + tool_radius + self.config.active_config.datum_position.y]
+                    partoff_end_coordinate = [tool_radius + float(x_size) + self.config.active_config.datum_position.x,
+                                            tool_radius + float(y_size) + self.config.active_config.datum_position.y]
+                    gcode_lines = self.add_partoff(gcode_lines, "M5", partoff_start_coordinate, partoff_end_coordinate, pass_depths, self.config.active_cutter.parameters.cutting_feed_rate, self.config.active_cutter.parameters.plunge_feed_rate, z_safe_distance)
 
             cutting_lines = gcode_lines
 
