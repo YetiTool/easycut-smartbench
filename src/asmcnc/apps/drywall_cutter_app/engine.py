@@ -619,7 +619,7 @@ class GCodeEngine():
                 'datum_x': self.config.active_config.datum_position.x,
                 'datum_y': self.config.active_config.datum_position.y,
                 'length': self.config.active_config.canvas_shape_dims.l,
-                'tool_diameter': self.config.active_cutter.dimensions.diameter,
+                'tool_diameter': 0 if self.config.active_cutter.dimensions.diameter is None else self.config.active_cutter.dimensions.diameter,
                 'orientation': self.config.active_config.rotation,
                 'pass_depth': self.config.active_config.cutting_depths.depth_per_pass,
                 'feedrate': self.config.active_cutter.parameters.cutting_feed_rate,
