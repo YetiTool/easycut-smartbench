@@ -1041,7 +1041,10 @@ class SimulatingJobPopup(ErrorPopup):
             Logger.info("User stopped simulation.")
             self.m.s.suppress_error_screens = True
             self.m.soft_stop()
-            self.m.s.end_stream()
+            self.m.jd.job_gcode_running = []
+            self.m.jd.grbl_mode_tracker = []
+            self.m.grbl_ln = None
+            self.m.jd.percent_thru_job = 100
             Clock.schedule_once(lambda dt: reset(), 1)
 
         def reset(*args):
