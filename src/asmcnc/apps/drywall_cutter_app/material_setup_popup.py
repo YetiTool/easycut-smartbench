@@ -1,5 +1,6 @@
 import math
 
+from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.uix.image import Image
 from kivy.uix.popup import Popup
@@ -305,6 +306,8 @@ class CuttingDepthsPopup(Popup):
         for text_input in self.text_inputs:
             text_input.bind(focus=self.text_on_focus)
         self.depth_per_pass.bind(text=self.warning_pass_depth)
+        self.cut_depth_warning.bind(parent=self.schedule_disable_confirm_button)
+        self.pass_depth_warning.bind(parent=self.schedule_disable_confirm_button)
 
         # Defining the error messages in one place since they need to be changed throughout the popup
         self.pass_depth_warning_cutter_max = "[color=#FF0000]" + self.l.get_str("Max depth per pass for this tool is") \
@@ -337,11 +340,15 @@ class CuttingDepthsPopup(Popup):
         if not value:
             self.update_text()
 
+    def schedule_disable_confirm_button(self, *args):
+        Clock.schedule_once(self.disable_confirm_button)
+
     def load_active_config(self):
         self.material_thickness.text = str(self.dwt_config.active_config.cutting_depths.material_thickness)
         self.bottom_offset.text = str(self.dwt_config.active_config.cutting_depths.bottom_offset)
         self.auto_pass_checkbox.active = self.dwt_config.active_config.cutting_depths.auto_pass
         self.depth_per_pass.text = str(self.dwt_config.active_config.cutting_depths.depth_per_pass)
+        self.update_text()
 
     def update_strings(self):
         self.title_label.text = self.l.get_str("Cutting depths")
@@ -417,8 +424,6 @@ class CuttingDepthsPopup(Popup):
 
         self.update_animations()
 
-        self.disable_confirm_button()
-
     def update_animations(self):
         if self.cut_depth_warning not in self.float_layout.children and self.pass_depth_warning not in self.float_layout.children:
             self.update_cutter_position()
@@ -444,8 +449,7 @@ class CuttingDepthsPopup(Popup):
             else:
                 self.float_layout.remove_widget(self.pass_depth_warning)
 
-
-    def disable_confirm_button(self):
+    def disable_confirm_button(self, *args):
         children = self.float_layout.children
         if self.cut_depth_warning in children or self.pass_depth_warning in children:
             self.confirm_button.disabled = True
@@ -493,12 +497,10 @@ class CuttingDepthsPopup(Popup):
             else:
                 self.depth_per_pass.text = str(round(depth_per_pass, 1))
 
-            self.disable_confirm_button()
             self.generate_pass_depth_lines(number_of_passes)
         else:
             depth_per_pass = self.get_safe_float(self.depth_per_pass.text)
 
-            self.disable_confirm_button()
             number_of_passes = 0 if depth_per_pass == 0 else math.ceil(
                 self.get_safe_float(self.total_cut_depth.text) / depth_per_pass)
             self.generate_pass_depth_lines(number_of_passes)
@@ -518,6 +520,7 @@ class CuttingDepthsPopup(Popup):
 
     def cancel(self):
         self.kb.defocus_all_text_inputs(self.text_inputs)
+        self.load_active_config()
         self.dismiss()
 
     def validate_inputs(self):
