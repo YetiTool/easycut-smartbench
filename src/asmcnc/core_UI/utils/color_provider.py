@@ -32,7 +32,7 @@ Colors : Dict[str, List[float, float, float, float]]
 Supporting Documentation
 -------
 Easycut software colour reference document:
-TODO: Create a Google doc for colour reference.
+https://docs.google.com/document/d/1bxCR3nOPByPlx_WBANi2rIB2xXZaYjnaPVMcbkC5j_0
 
 Information on Kivy's Color class:
 https://kivy.org/doc/stable/api-kivy.graphics.html
