@@ -63,7 +63,8 @@ class Keyboard(VKeyboard):
         self.do_translation = True
         self.width = scaling_utils.Width
         self.height = int(scaling_utils.Height / 2.1)
-        self.pos = (scaling_utils.Width - self.width, 0)
+        self.default_pos = (scaling_utils.Width - self.width, 0)
+        self.pos = self.default_pos
         self.on_key_up = self.key_up
 
     def generic_for_loop_alternative(self, func, list_of_items, i=0, end_func=0):
@@ -238,12 +239,22 @@ class Keyboard(VKeyboard):
             if self.custom_numeric_pos:
                 self.pos = self.custom_numeric_pos
                 if self.text_instance:
-                    if self.collide_widget(self.text_instance):
+                    if self.text_instance and self.collide_widget(self.text_instance):
                         self.pos = (scaling_utils.Width - self.custom_numeric_pos[0] - self.width, self.custom_numeric_pos[1])
+            else:
+                self.pos = self.default_pos
+                if self.text_instance and self.collide_widget(self.text_instance):
+                    self.pos = (scaling_utils.Width - self.default_pos[0] - self.width, self.default_pos[1])
         else:
             self.width = scaling_utils.Width
             if self.custom_qwerty_pos:
                 self.pos = self.custom_qwerty_pos
+                if self.text_instance and self.collide_widget(self.text_instance):
+                    self.pos = (self.custom_qwerty_pos[0], scaling_utils.Height - self.custom_qwerty_pos[1] - self.height)
+            else:
+                self.pos = self.default_pos
+                if self.text_instance and self.collide_widget(self.text_instance):
+                    self.pos = (self.default_pos[0], scaling_utils.Height - self.default_pos[1] - self.height)
 
     # Set custom positions for the keyboard
     def set_numeric_pos(self, pos):
