@@ -5,6 +5,9 @@ from typing import Dict, List
 from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.core_UI.new_popups.spindle_load_alert_popup import SpindleLoadAlertPopup
 
+# TEST_MODE flag can be used to alter valid readings for testing purposes. It must be set to False in production.
+TEST_MODE = False
+
 
 class DigitalSpindleMonitor(object):
     """
@@ -61,7 +64,7 @@ class DigitalSpindleMonitor(object):
         :return:
         """
         # TODO: Implement other checks for faulty readings.
-        if value < 0:
+        if value < 0 or (TEST_MODE and value > 0):
             self.__faulty_readings.append({
                 'timestamp': time.time(),
                 'value': value,
