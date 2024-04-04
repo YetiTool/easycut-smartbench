@@ -1,5 +1,6 @@
 import time
 
+from kivy.clock import Clock
 from typing import Dict, List
 
 from asmcnc.comms.logging_system.logging_system import Logger
@@ -80,7 +81,7 @@ class DigitalSpindleMonitor(object):
             if threshold_exceeded and alert_interval_exceeded:
                 Logger.error("Threshold exceeded and alert interval exceeded. Alerting user.")
                 self.__last_alert_time = time.time()
-                self.__open_alert_popup()
+                Clock.schedule_once(lambda dt: self.__open_alert_popup())
 
     def __open_alert_popup(self):
         """
