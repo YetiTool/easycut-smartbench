@@ -306,8 +306,8 @@ class CuttingDepthsPopup(Popup):
         for text_input in self.text_inputs:
             text_input.bind(focus=self.text_on_focus)
         self.depth_per_pass.bind(text=self.warning_pass_depth)
-        self.cut_depth_warning.bind(parent=Clock.schedule_once(self.disable_confirm_button))
-        self.pass_depth_warning.bind(parent=Clock.schedule_once(self.disable_confirm_button))
+        self.cut_depth_warning.bind(parent=self.schedule_disable_confirm_button)
+        self.pass_depth_warning.bind(parent=self.schedule_disable_confirm_button)
 
         # Defining the error messages in one place since they need to be changed throughout the popup
         self.pass_depth_warning_cutter_max = "[color=#FF0000]" + self.l.get_str("Max depth per pass for this tool is") \
@@ -339,6 +339,9 @@ class CuttingDepthsPopup(Popup):
     def text_on_focus(self, instance, value):
         if not value:
             self.update_text()
+
+    def schedule_disable_confirm_button(self, *args):
+        Clock.schedule_once(self.disable_confirm_button)
 
     def load_active_config(self):
         self.material_thickness.text = str(self.dwt_config.active_config.cutting_depths.material_thickness)
