@@ -50,7 +50,7 @@ class DigitalSpindleMonitor(object):
         :param value: New value of the spindle inrush state.
         :return:
         """
-        Logger.debug('Spindle inrush state changed to: {}'.format(value))
+        Logger.debug("Spindle inrush state changed to: {}".format(value))
         if value:
             self.__serial_connection.unbind(digital_spindle_load_raw=self.on_digital_spindle_load_raw_change)
         else:
@@ -63,6 +63,8 @@ class DigitalSpindleMonitor(object):
         :param value: New value of the digital spindle load raw.
         :return:
         """
+        Logger.debug("Digital spindle load raw changed to: {}".format(value))
+
         # TODO: Implement other checks for faulty readings.
         if value < 0 or (TEST_MODE and value > 0):
             self.__faulty_readings.append({
