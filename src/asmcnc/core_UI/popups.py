@@ -1037,10 +1037,15 @@ class SimulatingJobPopup(ErrorPopup):
         
         self.m = kwargs['m']
 
-        def stop():
+        def stop(*args):
             Logger.info("User stopped simulation.")
+            self.m.s.suppress_error_screens = True
             self.m.soft_stop()
-            Clock.schedule_once(lambda dt: self.m._grbl_soft_reset(), 0.5)
+            Clock.schedule_once(lambda dt: reset(), 1)
+
+        def reset(*args):
+            self.m.s.suppress_error_screens = False
+            self.m._grbl_soft_reset()
 
         super(SimulatingJobPopup, self).__init__(
             main_string=main_string,
