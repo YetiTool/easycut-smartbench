@@ -25,6 +25,7 @@ class ImageButton(ButtonBehavior, Image):
 
 
 from engine import GCodeEngine
+from coordinate_system import CoordinateSystem
 
 Builder.load_string("""
 <DrywallCutterScreen>:
@@ -197,13 +198,16 @@ class DrywallCutterScreen(Screen):
         self.jd = kwargs['job']
         self.pm = kwargs['popup_manager']
 
-        self.engine = GCodeEngine(self.m, self.dwt_config)
+        self.cs = CoordinateSystem(self.m)
+        self.engine = GCodeEngine(self.m, self.dwt_config, self.cs)
         self.simulation_started = False
         self.ignore_state = True
 
         # XY move widget
-        self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm,
-                                                                   localization=self.l)
+        self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m,
+                                                                   screen_manager=self.sm,
+                                                                   localization=self.l,
+                                                                   coordinate_system=self.cs)
         self.xy_move_container.add_widget(self.xy_move_widget)
 
         self.materials_popup = material_setup_popup.CuttingDepthsPopup(self.l, self.kb, self.dwt_config)
@@ -212,7 +216,8 @@ class DrywallCutterScreen(Screen):
                                                                                              dwt_config=self.dwt_config,
                                                                                              engine=self.engine,
                                                                                              kb=self.kb,
-                                                                                             localization=self.l)
+                                                                                             localization=self.l,
+                                                                                             cs=self.cs,)
         self.shape_display_container.add_widget(self.drywall_shape_display_widget)
 
         self.show_tool_image()
@@ -243,7 +248,11 @@ class DrywallCutterScreen(Screen):
         self.kb.set_numeric_pos((scaling_utils.get_scaled_width(565), scaling_utils.get_scaled_height(115)))
         self.drywall_shape_display_widget.check_datum_and_extents()  # update machine value labels
 
+    def on_enter(self):
+        self.m.laser_on()
+
     def on_pre_leave(self):
+        self.m.laser_off()
         if self.pulse_poll:
             Clock.unschedule(self.pulse_poll)
         self.kb.set_numeric_pos(None)
