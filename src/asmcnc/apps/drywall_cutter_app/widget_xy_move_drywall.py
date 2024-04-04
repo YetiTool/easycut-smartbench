@@ -302,7 +302,7 @@ class XYMoveDrywall(Widget):
         x_delta = self.m.wpos_x() + self.m.laser_offset_x_value
         y_delta = self.m.wpos_y() + self.m.laser_offset_y_value
         # allow a deviation of 0.01 due to machine precision
-        if abs(x_delta) > 0.1 or abs(y_delta) > 0.1:
+        if abs(x_delta) > 0.01 or abs(y_delta) > 0.01:
             self.go_to_datum_button_overlay.opacity = opacity
         else:
             self.go_to_datum_button_overlay.opacity = 0
