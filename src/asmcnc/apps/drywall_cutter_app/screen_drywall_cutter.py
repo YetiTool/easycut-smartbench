@@ -400,8 +400,9 @@ class DrywallCutterScreen(Screen):
         if not self.ignore_state:  
             if state.lower() == 'run':
                 self.sm.pm.close_wait_popup()
+                if not self.simulation_started:
+                    self.sm.pm.show_simulating_job_popup()
                 self.simulation_started = True
-                self.sm.pm.show_simulating_job_popup()
             elif (state.lower() == 'idle' or self.sm.current != "drywall_cutter") and self.simulation_started:
                 self.sm.pm.close_simulating_job_popup()
                 Clock.unschedule(self.popup_watchdog)
