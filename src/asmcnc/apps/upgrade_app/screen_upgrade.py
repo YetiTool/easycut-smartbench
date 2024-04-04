@@ -1,3 +1,4 @@
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.core.window import Window
 from datetime import datetime
 from kivy.lang import Builder
@@ -156,11 +157,6 @@ Builder.load_string(
 )
 
 
-def log(message):
-    timestamp = datetime.now()
-    print(timestamp.strftime("%H:%M:%S.%f")[:12] + " " + message)
-
-
 class UpgradeScreen(Screen):
     def __init__(self, **kwargs):
         super(UpgradeScreen, self).__init__(**kwargs)
@@ -197,7 +193,7 @@ class UpgradeScreen(Screen):
     def code_entered(self):
         self.hide_error_message()
         self.show_verifying()
-        self.m.s.write_command("M3 S0")
+        self.m.turn_on_spindle_for_data_read()
         Clock.schedule_once(self.get_restore_info, 0.3)
 
     def get_restore_info(self, dt):
@@ -220,7 +216,7 @@ class UpgradeScreen(Screen):
             Clock.schedule_once(self.check_restore_info, 0.3)
 
     def read_restore_info(self):
-        self.m.s.write_command("M5")
+        self.m.turn_off_spindle()
         self.hide_verifying()
         # Value of -999 for ld_qdA represents disconnected spindle
         if (
@@ -266,7 +262,7 @@ class UpgradeScreen(Screen):
             self.sm.current = "upgrade_successful"
         except:
             ErrorPopup(sm=self.sm, l=self.l, main_string=self.l.get_str("Error!")).open()
-            log("Failed to create SC2 compatibility file!")
+            Logger.info("Failed to create SC2 compatibility file!")
 
     def update_spindle_cooldown_settings(self):
         # Write default SC2 settings, and set voltage to whatever is already selected

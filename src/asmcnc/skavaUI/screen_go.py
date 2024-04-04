@@ -8,6 +8,7 @@ import time
 import traceback
 from datetime import datetime
 
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.lang import Builder
@@ -29,6 +30,8 @@ from asmcnc.skavaUI import (
     widget_z_height,
     popup_info
 )
+from asmcnc.apps.drywall_cutter_app.config import config_loader
+from asmcnc.comms.model_manager import ModelManagerSingleton
 
 Builder.load_string(
     """
@@ -374,11 +377,6 @@ Builder.load_string(
 )
 
 
-def log(message):
-    timestamp = datetime.now()
-    print(timestamp.strftime("%H:%M:%S.%f")[:12] + " " + str(message))
-
-
 class GoScreen(Screen):
     btn_back = ObjectProperty()
     btn_back_img = ObjectProperty()
@@ -399,6 +397,7 @@ class GoScreen(Screen):
     feed_rate_max_percentage = 0
     feed_rate_max_absolute = 0
     total_runtime_seconds = 0
+    dwt_config = None
 
     def __init__(self, **kwargs):
         super(GoScreen, self).__init__(**kwargs)
@@ -409,12 +408,16 @@ class GoScreen(Screen):
         self.l = kwargs["localization"]
         self.database = kwargs["database"]
         self.yp = kwargs["yetipilot"]
+        # bind on updates:
+        self.m.s.bind(on_update_overload_peak=self.update_overload_peak)
+        self.m.s.bind(on_reset_runtime=self.on_reset_runtime)
         self.feedOverride = widget_feed_override.FeedOverride(
             machine=self.m, screen_manager=self.sm, database=self.database
         )
         self.speedOverride = widget_speed_override.SpeedOverride(
             machine=self.m, screen_manager=self.sm, database=self.database
         )
+        self.model_manager = ModelManagerSingleton()
 
         # Graphics commands
 
@@ -467,7 +470,8 @@ class GoScreen(Screen):
                 str(self.m.serial_number()).endswith("03")
                 or self.show_spindle_overload == True
         ) and self.m.stylus_router_choice != "stylus":
-            self.update_overload_label(self.m.s.overload_state)
+            # self.update_overload_label(self.m.s.overload_state)
+            self.update_overload_label(0)
             self.spindle_overload_container.size_hint_y = 0.25
             self.spindle_overload_container.opacity = 1
             self.spindle_overload_container.padding = [0, 0, 0, -10]
@@ -525,6 +529,10 @@ class GoScreen(Screen):
         if self.temp_suppress_prompts:
             self.temp_suppress_prompts = False
 
+    def on_reset_runtime(self, *args):
+        Logger.debug('total_runtime_seconds has been reset.')
+        self.total_runtime_seconds = 0
+
     def show_hide_yp_container(self, use_sc2):
         if use_sc2:
             # Show yetipilot container
@@ -542,6 +550,20 @@ class GoScreen(Screen):
                     self.yetipilot_container.remove_widget(self.disabled_yp_widget)
                 self.yp_widget.switch.disabled = False
                 self.yp_widget.yp_cog_button.disabled = False
+
+                if self.model_manager.is_machine_drywall() and self.return_to_screen == "drywall_cutter":
+                    self.yp.enable()
+                    
+                    if self.dwt_config.active_cutter.dimensions.diameter:
+                        dwt_cutter_diameter = str(int(self.dwt_config.active_cutter.dimensions.diameter))
+                    else:
+                        dwt_cutter_diameter = str(int(self.dwt_config.active_cutter.dimensions.angle))
+                    available_diameters = self.yp.get_sorted_cutter_diameters(self.yp.filter_available_profiles("Drywall"))
+                    cutter_diameter = next((x for x in available_diameters if dwt_cutter_diameter in x), None)
+
+                    chosen_profile = self.yp.filter_available_profiles(cutter_diameter=cutter_diameter,material_type="Drywall")[0]
+                    self.yp.use_profile(chosen_profile)
+                    self.yp_widget.update_profile_selection()
             else:
                 if not self.disabled_yp_widget.parent:
                     self.yetipilot_container.add_widget(self.disabled_yp_widget)
@@ -577,7 +599,7 @@ class GoScreen(Screen):
         )
 
     def get_sc2_brush_data(self):
-        self.m.s.write_command("M3 S0")
+        self.m.turn_on_spindle_for_data_read()
         Clock.schedule_once(self.get_spindle_info, 0.1)
         self.wait_popup = popup_info.PopupWait(self.sm, self.l)
 
@@ -588,7 +610,7 @@ class GoScreen(Screen):
         Clock.schedule_once(self.read_spindle_info, 1)
 
     def read_spindle_info(self, dt):
-        self.m.s.write_command("M5")
+        self.m.turn_off_spindle()
         self.wait_popup.popup.dismiss()
 
         # If info was not obtained successfully, spindle production year will equal 99
@@ -600,7 +622,7 @@ class GoScreen(Screen):
                 )
                 return
             except:
-                print(traceback.format_exc())
+                Logger.info(traceback.format_exc())
         popup_info.PopupError(self.sm, self.l, self.l.get_str("Error!"))
 
     def check_brush_use_and_lifetime(self, use, lifetime):
@@ -682,7 +704,7 @@ class GoScreen(Screen):
 
     ### COMMON SCREEN PREP METHOD
     def reset_go_screen_prior_to_job_start(self):
-        print("RESET GO SCREEN FIRES")
+        Logger.info("RESET GO SCREEN FIRES")
         # Update images
         self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/go.png"
         # Show back button
@@ -719,7 +741,7 @@ class GoScreen(Screen):
     ### GENERAL ACTIONS
 
     def start_or_pause_button_press(self):
-        log("start/pause button pressed")
+        Logger.info("start/pause button pressed")
         if self.is_job_started_already:
             if not self.m.is_machine_paused:
                 self._pause_job()
@@ -803,7 +825,7 @@ class GoScreen(Screen):
             if self.listen_for_pauses != None:
                 self.listen_for_pauses.cancel()
                 self.listen_for_pauses = None
-            log("RAISE PAUSE SCREEN: " + str(self.m.reason_for_machine_pause))
+            Logger.info("RAISE PAUSE SCREEN: " + str(self.m.reason_for_machine_pause))
             self.sm.get_screen(
                 "spindle_shutdown"
             ).reason_for_pause = self.m.reason_for_machine_pause
@@ -821,7 +843,7 @@ class GoScreen(Screen):
         self.btn_back.disabled = True
         self.m.set_pause(False)
         self.is_job_started_already = True
-        log("Starting job...")
+        Logger.info("Starting job...")
 
         # Vac_fix. Not very tidy but will probably work.
         # Also inject zUp-on-pause code if needed
@@ -879,9 +901,9 @@ class GoScreen(Screen):
         self.jd.job_gcode_modified = map(mapGcodes, modified_job_gcode)
         try:
             self.m.s.run_job(self.jd.job_gcode_modified)
-            log("Job started ok from go screen...")
+            Logger.info("Job started ok from go screen...")
         except:
-            log("Job start from go screen failed!")
+            Logger.info("Job start from go screen failed!")
 
     def return_to_app(self):
         if self.m.fw_can_operate_zUp_on_pause():  # precaution
@@ -970,7 +992,6 @@ class GoScreen(Screen):
 
     def poll_for_feeds_and_speeds(self, dt):
         # Spindle speed and feed rate
-        self.speedOverride.update_spindle_speed_label()
         self.speedOverride.update_speed_percentage_override_label()
         self.feedOverride.update_feed_rate_label()
         self.feedOverride.update_feed_percentage_override_label()
@@ -1020,12 +1041,12 @@ class GoScreen(Screen):
                     "[color=C11C17][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
             )
         else:
-            log("Overload state not recognised: " + str(state))
+            Logger.info("Overload state not recognised: " + str(state))
 
-    def update_overload_peak(self, state):
+    def update_overload_peak(self, instance, state):
         if state > self.overload_peak:
             self.overload_peak = state
-            log("New overload peak: " + str(self.overload_peak))
+            Logger.info("New overload peak: " + str(self.overload_peak))
 
     def update_strings(self):
         self.feed_label.text = self.l.get_str("Feed") + "\n" + self.l.get_str("rate")

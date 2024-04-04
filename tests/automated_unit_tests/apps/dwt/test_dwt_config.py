@@ -1,6 +1,8 @@
 import os
 import sys
 
+from asmcnc.comms.logging_system.logging_system import Logger
+
 sys.path.append('./src')
 from asmcnc.apps.drywall_cutter_app.config import config_loader
 
@@ -13,8 +15,8 @@ try:
     from mock import Mock, MagicMock
 
 except Exception as e:
-    print(e)
-    print("Can't import mocking packages, are you on a dev machine?")
+    Logger.info(e)
+    Logger.info("Can't import mocking packages, are you on a dev machine?")
 
 """
 RUN WITH 
@@ -67,7 +69,7 @@ def test_load_cutter():
 
     dwt_config.load_cutter('tool_6mm.json')
 
-    assert dwt_config.active_cutter.cutter_description == 'unique_label'
+    assert dwt_config.active_cutter.cutter_description == '6mm drywall cutter'
 
 
 def test_save_temp_config():

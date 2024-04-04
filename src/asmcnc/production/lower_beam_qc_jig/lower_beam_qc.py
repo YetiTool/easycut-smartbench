@@ -10,6 +10,7 @@ from kivy.uix.button import  Button
 from asmcnc.skavaUI import widget_status_bar, popup_info
 from asmcnc.production.lower_beam_qc_jig.widget_lower_beam_qc_xy_move import LowerBeamQCXYMove
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
+from asmcnc.core_UI import console_utils
 
 import sys, os
 
@@ -131,7 +132,7 @@ Builder.load_string("""
 								halign: 'left'
 								valign: 'middle'
 								padding: [dp(10),0]
-								on_press: root.shutdown_console()
+								on_press: console_utils.shutdown()
 
 							ToggleButton:
 								id: warranty_toggle
@@ -310,9 +311,9 @@ class LowerBeamQC(Screen):
 
 	def set_vac(self):
 		if self.vac_toggle.state == 'normal':
-			self.m.vac_off()
+			self.m.turn_off_vacuum()
 		else:
-			self.m.vac_on()
+			self.m.turn_on_vacuum()
 
 	def update_checkboxes(self, dt):
 		self.y_home_switch()
@@ -329,9 +330,6 @@ class LowerBeamQC(Screen):
 	def enable_alarms(self):
 		self.m.s.write_command('$21 = 1')
 
-	def shutdown_console(self):
-		if sys.platform != 'win32' and sys.platform != 'darwin':
-			os.system('sudo shutdown -h now')
 
 	def switch_screen(self):
 		self.sm.current = 'qcWarranty'

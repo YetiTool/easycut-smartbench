@@ -5,6 +5,7 @@
 
 import sys
 
+from asmcnc.comms.logging_system.logging_system import Logger
 from tests import test_utils
 
 sys.path.append('./src')
@@ -16,7 +17,7 @@ try:
     from mock import Mock
 
 except:
-    print("Can't import mocking packages, are you on a dev machine?")
+    Logger.info("Can't import mocking packages, are you on a dev machine?")
 
 
 from datetime import datetime
@@ -96,5 +97,5 @@ def test_record_stall_event(stall_jig_screen, m):
     m.s.last_stall_motor_step_size = 5
     stall_jig_screen.record_stall_event()
     stall_jig_screen.record_stall_event()
-    print(stall_jig_screen.stall_test_events)
+    Logger.info(stall_jig_screen.stall_test_events)
 

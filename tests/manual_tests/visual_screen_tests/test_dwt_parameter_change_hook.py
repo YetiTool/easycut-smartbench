@@ -1,5 +1,7 @@
 import sys
 
+from asmcnc.comms.logging_system.logging_system import Logger
+
 sys.path.append('./src')
 
 from asmcnc.apps.drywall_cutter_app.config.config_loader import DWTConfig
@@ -12,7 +14,7 @@ try:
     import pytest
     from mock import Mock, MagicMock
 except:
-    print("Can't import mocking packages, are you on a dev machine?")
+    Logger.info("Can't import mocking packages, are you on a dev machine?")
 
 """
 RUN WITH python tests/manual_tests/visual_screen_tests/test_dwt_parameter_change_hook.py FROM EASYCUT-SMARTBENCH DIR

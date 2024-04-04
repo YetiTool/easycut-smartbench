@@ -8,6 +8,7 @@ Spindle cooldown screen
 """
 from math import sqrt, ceil
 
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
@@ -130,6 +131,7 @@ class SpindleHealthCheckActiveScreen(Screen):
     max_seconds = 6
     seconds = 6
     update_timer_event = None
+    health_check_rpm = 24000
 
     def __init__(self, **kwargs):
         super(SpindleHealthCheckActiveScreen, self).__init__(**kwargs)
@@ -188,7 +190,7 @@ class SpindleHealthCheckActiveScreen(Screen):
             return int(ceil(n / 10.0)) * 10
 
         def pass_test(free_load):
-            print("Spindle health check passed - free load: " + str(free_load))
+            Logger.info("Spindle health check passed - free load: " + str(free_load))
             self.m.spindle_health_check_failed = False
             self.m.spindle_health_check_passed = True
             self.m.s.yp.set_free_load(free_load)
@@ -209,7 +211,7 @@ class SpindleHealthCheckActiveScreen(Screen):
                 self.sm.get_screen("go").raise_pause_screens_if_paused(override=True)
 
         def fail_test(reason):
-            print("Spindle health check failed - " + reason)
+            Logger.info("Spindle health check failed - " + reason)
             self.m.spindle_health_check_failed = True
             self.m.spindle_health_check_passed = False
             show_fail_screen(reason)
@@ -232,7 +234,7 @@ class SpindleHealthCheckActiveScreen(Screen):
             pass_test(round_up_to_ten(average_load_w))
 
         def stop_test():
-            self.m.s.write_command("M5")
+            self.m.turn_off_spindle()
             self.m.s.spindle_health_check = False
 
         def start_test():
@@ -241,11 +243,11 @@ class SpindleHealthCheckActiveScreen(Screen):
                 return
             self.start_timer()
             self.m.s.spindle_health_check = True
-            self.m.s.write_command("M3 S24000")
+            self.m.turn_on_spindle(self.health_check_rpm)
             Clock.schedule_once(lambda dt: stop_test(), 6)
             Clock.schedule_once(lambda dt: check_average(), 6)
 
         self.m._grbl_soft_reset()
         self.m.resume_from_a_soft_door()
-        Clock.schedule_once(lambda dt: self.m.zUp(), 1)
+        Clock.schedule_once(lambda dt: self.m.raise_z_axis_for_collet_access(), 1)
         Clock.schedule_once(lambda dt: start_test(), 1)

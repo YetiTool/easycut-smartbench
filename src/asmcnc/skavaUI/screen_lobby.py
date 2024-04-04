@@ -21,6 +21,7 @@ from shutil import copy
 from asmcnc.core_UI import scaling_utils
 from asmcnc.skavaUI import popup_info
 from asmcnc.core_UI.popups import BasicPopup, PopupType
+from asmcnc.core_UI import console_utils
 from kivy.core.window import Window
 
 from asmcnc.comms.model_manager import ModelManagerSingleton
@@ -592,13 +593,10 @@ class LobbyScreen(Screen):
         if self.check_apps_on_pre_enter:
             self.show_desired_apps()
             self.check_apps_on_pre_enter = False
-        # Hide upgrade app if older than V1.3, and only if it has not been hidden already
-        if not ("V1.3" in self.m.smartbench_model()) and not self.upgrade_app_hidden:
-            self.upgrade_app_container.parent.remove_widget(self.upgrade_app_container)
+        # Hide upgrade app if machine is not upgradeable, and only if it has not been hidden already
+        if not self.model_manager.is_machine_upgradeable() and not self.upgrade_app_hidden:
+            self.remove_container_from_parent(self.upgrade_app_container)
             self.upgrade_app_hidden = True
-
-        elif self.upgrade_app_hidden and "V1.3" in self.m.smartbench_model():
-            pass  # reinstate upgrade_app_container, tbc - this is placeholder for now
 
     def on_enter(self):
         if not sys.platform == "win32":
@@ -671,8 +669,6 @@ class LobbyScreen(Screen):
         self.am.start_drywall_cutter_app()
 
     def shutdown_console(self):
-        if sys.platform != 'win32' and sys.platform != 'darwin':
-            os.system('sudo shutdown -h')
         popup_info.PopupShutdown(self.sm, self.l)
 
     def update_strings(self):

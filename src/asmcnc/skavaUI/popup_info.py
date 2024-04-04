@@ -6,6 +6,8 @@ Info pop-up
 
 import kivy
 import os
+
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.popup import Popup
@@ -22,10 +24,8 @@ from kivy.clock import Clock
 from kivy.uix.checkbox import CheckBox
 from datetime import datetime
 from kivy.graphics import Color, Rectangle
+from asmcnc.core_UI import console_utils
 
-def log(message):
-    timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 class PopupWelcome(Widget):
 
@@ -586,7 +586,7 @@ class PopupSoftwareUpdateWarning(Widget):
             elif update_method == "USB":
                 prep_for_sw_update_over_usb()
             else:  # Fail-safe message to make debugging easier in case usb_or_wifi strings are broken
-                log("Error getting update method. Please check screen_update_SW.py" + \
+                Logger.info("Error getting update method. Please check screen_update_SW.py" + \
                          "\nShould be: 'WiFi' or 'USB'" + \
                          "\nBut was: " + update_method)
 
@@ -1103,12 +1103,6 @@ class PopupShutdown(Widget):
         shutdown_string = self.l.get_bold('Shutdown now')
         cancel_string = self.l.get_bold('Cancel')
 
-        def cancel_shutdown(*args):
-            os.system('sudo shutdown -c')
-
-        def shutdown_now(*args):
-            os.system('sudo shutdown -h now')
-
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1.5, text_size=(480, None), halign='center', valign='middle', text=description,
                       color=[0, 0, 0, 1], padding=[0, 0], markup=True)
@@ -1143,8 +1137,8 @@ class PopupShutdown(Widget):
         popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
         popup.separator_height = '4dp'
 
-        ok_button.bind(on_press=shutdown_now)
-        cancel_button.bind(on_press=cancel_shutdown)
+        ok_button.bind(on_press=console_utils.shutdown)
+        cancel_button.bind(on_press=console_utils.cancel_shutdown)
         cancel_button.bind(on_press=popup.dismiss)
 
         popup.open()

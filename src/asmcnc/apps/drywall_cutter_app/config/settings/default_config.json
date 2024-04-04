@@ -1,0 +1,24 @@
+{
+  "shape_type": "rectangle",
+  "units": "mm",
+  "rotation": "horizontal",
+  "canvas_shape_dims": {
+    "x": 10,
+    "y": 20,
+    "r": 5,
+    "d": 15,
+    "l": 30
+  },
+  "cutter_type": "tool_6mm.json",
+  "toolpath_offset": "inside",
+  "cutting_depths": {
+    "material_thickness": 3.0,
+    "bottom_offset": 0.5,
+    "auto_pass": true,
+    "depth_per_pass": 1.0
+  },
+  "datum_position": {
+    "x": 5,
+    "y": 5
+  }
+}

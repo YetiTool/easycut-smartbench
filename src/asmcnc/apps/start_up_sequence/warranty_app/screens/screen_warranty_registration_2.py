@@ -2,6 +2,7 @@
 Created on nov 2020
 @author: Ollie
 """
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
@@ -16,6 +17,7 @@ Builder.load_string(
 	your_serial_number_label : your_serial_number_label
 	serial_number_label : serial_number_label
 	next_button : next_button
+	prev_screen_button:prev_screen_button
 
 	BoxLayout: 
 		size_hint: (None,None)
@@ -104,6 +106,7 @@ Builder.load_string(
 					width: dp(0.305625*app.width)
 					padding:[0, 0, dp(0.230625)*app.width, 0]
 					Button:
+					    id: prev_screen_button
 					    font_size: str(0.01875 * app.width) + 'sp'
 						size_hint: (None,None)
 						height: dp(0.108333333333*app.height)
@@ -169,7 +172,7 @@ class WarrantyScreen2(Screen):
             serial_number_from_file = str(file.read())
             file.close()
         except:
-            print("Could not get serial number! Please contact YetiTool support!")
+            Logger.info("Could not get serial number! Please contact YetiTool support!")
         return str(serial_number_from_file)
 
     def next_screen(self):

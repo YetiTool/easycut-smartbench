@@ -13,6 +13,7 @@ import traceback
 from datetime import datetime
 from functools import partial
 
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.clock import Clock
 from kivy.graphics import Color, Rectangle
 from kivy.lang import Builder
@@ -151,11 +152,6 @@ job_cache_dir = "./jobCache/"
 job_q_dir = "./jobQ/"
 
 
-def log(message):
-    timestamp = datetime.now()
-    print(timestamp.strftime("%H:%M:%S.%f")[:12] + " " + message)
-
-
 class LoadingScreen(Screen):
     load_value = NumericProperty()
     progress_value = StringProperty()
@@ -231,7 +227,7 @@ class LoadingScreen(Screen):
         self.sm.current = "check_job"
 
     def objectifiled(self, job_file_path, dt):
-        log("> LOADING:")
+        Logger.info("> LOADING:")
         with open(job_file_path) as f:
             self.job_file_as_list = f.readlines()
         if len(self.job_file_as_list) == 0:
@@ -247,12 +243,12 @@ class LoadingScreen(Screen):
         self.jd.generate_job_data(self.job_file_as_list)
         self.total_lines_in_job_file_pre_scrubbed = len(self.job_file_as_list)
         self.load_value = 1
-        log(
+        Logger.info(
             "> Job file loaded as list... "
             + str(self.total_lines_in_job_file_pre_scrubbed)
             + " lines"
         )
-        log("> Scrubbing file...")
+        Logger.info("> Scrubbing file...")
         self.preloaded_job_gcode = []
         self.lines_scrubbed = 0
         self.line_threshold_to_pause_and_update_at = self.interrupt_line_threshold
@@ -265,7 +261,7 @@ class LoadingScreen(Screen):
     def _scrub_file_loop(self, dt):
         try:
             if self.total_lines_in_job_file_pre_scrubbed > self.max_lines:
-                log("File exceeds 10 million lines!")
+                Logger.info("File exceeds 10 million lines!")
                 self.update_screen("Could not load - Exceeds 10 million lines")
                 self.jd.reset_values()
                 return
@@ -350,7 +346,7 @@ class LoadingScreen(Screen):
                                             "check_job"
                                         ).as_high_as = float(feed_rate)
                             except:
-                                print(
+                                Logger.info(
                                     "Failed to extract feed rate. Probable G-code error!"
                                 )
                         if "N" in l_block:
@@ -370,19 +366,19 @@ class LoadingScreen(Screen):
                 self.update_screen("Preparing", percentage_progress)
                 Clock.schedule_once(self._scrub_file_loop, self.interrupt_delay)
             else:
-                log("> Finished scrubbing " + str(self.lines_scrubbed) + " lines.")
+                Logger.info("> Finished scrubbing " + str(self.lines_scrubbed) + " lines.")
                 self.jd.job_gcode = self.preloaded_job_gcode
                 self.jd.create_gcode_summary_string()
                 self._get_gcode_preview_and_ranges()
         except:
-            log(traceback.format_exc())
+            Logger.info(traceback.format_exc())
             self.update_screen("Could not load")
             self.jd.reset_values()
 
     def _get_gcode_preview_and_ranges(self):
         self.load_value = 2
         self.gcode_preview_widget = self.sm.get_screen("home").gcode_preview_widget
-        log("> get_non_modal_gcode")
+        Logger.info("> get_non_modal_gcode")
         self.gcode_preview_widget.prep_for_non_modal_gcode(
             self.jd.job_gcode, False, self.sm, 0
         )
@@ -480,4 +476,4 @@ class LoadingScreen(Screen):
         self.sm.get_screen("home").job_box = job_box
         self.sm.get_screen("home").non_modal_gcode_list = non_modal_gcode_list
         self.update_screen("Loaded")
-        log("> END LOAD")
+        Logger.info("> END LOAD")

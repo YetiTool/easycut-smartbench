@@ -8,6 +8,8 @@ Created on 03 August 2020
 import os, sys, subprocess
 from datetime import datetime
 
+from asmcnc.comms.logging_system.logging_system import Logger
+
 try: 
     import pigpio
 
@@ -26,6 +28,7 @@ from asmcnc.skavaUI import popup_info
 from asmcnc.production.z_head_qc_jig import popup_z_head_qc
 
 from asmcnc.skavaUI import widget_status_bar
+from asmcnc.core_UI import console_utils
 
 Builder.load_string("""
 <ZHeadQCWarrantyAfterApr21>:
@@ -335,9 +338,6 @@ Builder.load_string("""
 STATUS_UPDATE_DELAY = 0.4
 TEMP_POWER_POLL = 5
 
-def log(message):
-    timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 class ScrollableLabelStatus(ScrollView):
     text = StringProperty('')
@@ -446,9 +446,9 @@ class ZHeadQCWarrantyAfterApr21(Screen):
 
     def set_spindle(self):
         if self.spindle_toggle.state == 'normal': 
-            self.m.spindle_off()
+            self.m.turn_off_spindle()
         else: 
-            self.m.spindle_on()
+            self.m.turn_on_spindle()
 
     def set_laser(self):
         if self.laser_toggle.state == 'normal': 
@@ -458,9 +458,9 @@ class ZHeadQCWarrantyAfterApr21(Screen):
 
     def set_vac(self):
         if self.vac_toggle.state == 'normal': 
-            self.m.vac_off()
+            self.m.turn_off_vacuum()
         else: 
-            self.m.vac_on()
+            self.m.turn_on_vacuum()
 
     def dust_shoe_red(self):
         self.m.set_led_colour('RED')
@@ -641,7 +641,7 @@ class ZHeadQCWarrantyAfterApr21(Screen):
         Clock.schedule_once(lambda dt: self.spindle_check('M3 S25000', 8500, 10000), 36)
 
         # Spindle off
-        Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 45)
+        Clock.schedule_once(lambda dt: self.m.turn_off_spindle(), 45)
 
 
         def show_outcome():
@@ -660,7 +660,7 @@ class ZHeadQCWarrantyAfterApr21(Screen):
                 self.spindle_pass_fail = True
 
             except:
-                log("Could not show outcome")
+                Logger.info("Could not show outcome")
 
 
         Clock.schedule_once(lambda dt: show_outcome(), 45)
@@ -737,7 +737,7 @@ class ZHeadQCWarrantyAfterApr21(Screen):
         def nested_do_fw_update(dt):
             pi = pigpio.pi()
             pi.set_mode(17, pigpio.ALT3)
-            print(pi.get_mode(17))
+            Logger.info(pi.get_mode(17))
             pi.stop()
 
             cmd = "grbl_file=/media/usb/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
@@ -784,10 +784,6 @@ class ZHeadQCWarrantyAfterApr21(Screen):
 
     def update_status_text(self, dt):
         self.consoleStatusText.text = self.sm.get_screen('home').gcode_monitor_widget.consoleStatusText.text
-
-    def do_reboot(self):
-        if sys.platform != 'win32' and sys.platform != 'darwin':
-            os.system("sudo reboot")
 
     def back_to_choice(self):
         self.sm.current = 'qcWC'

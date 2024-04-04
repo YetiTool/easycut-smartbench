@@ -4,6 +4,7 @@ from kivy.lang import Builder
 from kivy.uix.widget import Widget
 
 from asmcnc.skavaUI import popup_info
+from asmcnc.core_UI.components.buttons import probe_button
 
 Builder.load_string("""
 <XYMoveDrywall>
@@ -28,7 +29,7 @@ Builder.load_string("""
             height: self.width
     
             BoxLayout:
-                padding: 10
+                padding:dp(10)
                 size: self.parent.size
                 pos: self.parent.pos
                 Button:
@@ -59,7 +60,7 @@ Builder.load_string("""
                     root.buttonJogXY('X+')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -70,7 +71,7 @@ Builder.load_string("""
                         allow_stretch: True
     
             BoxLayout:
-                padding: 10
+                padding:dp(10)
                 size: self.parent.size
                 pos: self.parent.pos
                 Button:
@@ -100,7 +101,7 @@ Builder.load_string("""
                     root.buttonJogXY('Y+')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -117,7 +118,7 @@ Builder.load_string("""
                     root.jogModeCycled()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -137,7 +138,7 @@ Builder.load_string("""
                     root.buttonJogXY('Y-')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos  
                     Image:
@@ -150,37 +151,18 @@ Builder.load_string("""
                 padding: 15
                 size: self.parent.size
                 pos: self.parent.pos                 
-                Button:
-                    size_hint_y: 1
-                    background_color: hex('#F4433600')
-                    on_release: 
-                        self.background_color = hex('#F4433600')
-                    on_press: 
-                        root.probe_z()
-                        self.background_color = hex('#F44336FF')
-                    BoxLayout:
-                        padding: 0
-                        size: self.parent.size
-                        pos: self.parent.pos
-                        Image:
-                            source: "./asmcnc/skavaUI/img/z_probe.png"
-                            center_x: self.parent.center_x
-                            y: self.parent.y
-                            size: self.parent.width, self.parent.height
-                            allow_stretch: True
+                id: probe_button_container
             Button:
                 background_color: hex('#F4433600')
                 always_release: True
                 on_release:
-                    print('release')
                     root.cancelXYJog()
                     self.background_color = hex('#F4433600')
                 on_press:
-                    print('press')
                     root.buttonJogXY('X-')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding: 0
+                    padding:dp(0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -190,7 +172,7 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
             BoxLayout:
-                padding: 10
+                padding:dp(10)
                 size: self.parent.size
                 pos: self.parent.pos
                 ToggleButton:
@@ -229,8 +211,10 @@ class XYMoveDrywall(Widget):
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
         self.l=kwargs['localization']
+        self.cs = kwargs['coordinate_system']
 
         self.set_jog_speeds()
+        self.ids.probe_button_container.add_widget(probe_button.ProbeButton(self.m, self.sm, self.l, fast_probe=True))
 
     jogMode = 'free'
     jog_mode_button_press_counter = 0
@@ -267,12 +251,6 @@ class XYMoveDrywall(Widget):
                                                              self.m.y_max_jog_abs_limit,
                                                              y_feed_speed)
 
-        elif self.jogMode == 'plus_0-01':
-            if case == 'X+': self.m.jog_relative('X', 0.01, x_feed_speed)
-            if case == 'X-': self.m.jog_relative('X', -0.01, x_feed_speed)
-            if case == 'Y+': self.m.jog_relative('Y', 0.01, y_feed_speed)
-            if case == 'Y-': self.m.jog_relative('Y', -0.01, y_feed_speed)
-
         elif self.jogMode == 'plus_0-1':
             if case == 'X+': self.m.jog_relative('X', 0.1, x_feed_speed)
             if case == 'X-': self.m.jog_relative('X', -0.1, x_feed_speed)
@@ -294,50 +272,38 @@ class XYMoveDrywall(Widget):
     def jogModeCycled(self):
 
         self.jog_mode_button_press_counter += 1
-        if self.jog_mode_button_press_counter % 5 == 0:
+        if self.jog_mode_button_press_counter % 4 == 0:
             self.jogMode = 'free'
             self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_infinity.png'
-        if self.jog_mode_button_press_counter % 5 == 1:
+        if self.jog_mode_button_press_counter % 4 == 1:
             self.jogMode = 'plus_10'
             self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_10.png'
-        if self.jog_mode_button_press_counter % 5 == 2:
+        if self.jog_mode_button_press_counter % 4 == 2:
             self.jogMode = 'plus_1'
             self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_1.png'
-        if self.jog_mode_button_press_counter % 5 == 3:
+        if self.jog_mode_button_press_counter % 4 == 3:
             self.jogMode = 'plus_0-1'
             self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_0-1.png'
-        if self.jog_mode_button_press_counter % 5 == 4:
-            self.jogMode = 'plus_0-01'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_0-01.png'
 
     def cancelXYJog(self):
         if self.jogMode == 'free':
             self.m.quit_jog()
 
     def probe_z(self):
-        self.m.probe_z()
+        self.m.probe_z(fast_probe=True)
 
     def go_to_datum(self):
         if self.m.is_machine_homed == False and sys.platform != 'win32':
             popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'drywall_cutter', 'drywall_cutter')
         else:
-            self.m.go_xy_datum()
+            self.m.go_xy_datum_with_laser()
 
-    def check_zh_at_datum(self, dt):
-        # wpos == 0,0 when zh is at datum
-        # Round to 1dp instead of 2dp to make up for grbl error
-        if not (round(self.m.wpos_x(), 1) == 0 and round(self.m.wpos_y(), 1) == 0):
-            # Pulse overlay by smoothly alternating between 0 and 1 opacity
-            # Hacky way to track pulsing on or off without a variable by storing that information in the opacity value
-            if self.go_to_datum_button_overlay.opacity <= 0:
-                self.go_to_datum_button_overlay.opacity = 0.01
-            elif self.go_to_datum_button_overlay.opacity >= 1:
-                self.go_to_datum_button_overlay.opacity = 0.98
-            # Check if second decimal place is even or odd
-            elif int(("%.2f" % self.go_to_datum_button_overlay.opacity)[-1]) % 2 == 1:
-                self.go_to_datum_button_overlay.opacity += 0.1
-            else:
-                self.go_to_datum_button_overlay.opacity -= 0.1
+    def check_zh_at_datum(self, opacity):
+        x_delta = self.m.wpos_x() + self.m.laser_offset_x_value
+        y_delta = self.m.wpos_y() + self.m.laser_offset_y_value
+        # allow a deviation of 0.01 due to machine precision
+        if abs(x_delta) > 0.01 or abs(y_delta) > 0.01:
+            self.go_to_datum_button_overlay.opacity = opacity
         else:
             self.go_to_datum_button_overlay.opacity = 0
 

@@ -12,6 +12,7 @@ from shutil import copy
 
 import kivy
 from chardet import detect
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.graphics import Color, Rectangle
 from kivy.lang import Builder
 from kivy.properties import (
@@ -323,7 +324,7 @@ class USBFileChooser(Screen):
         self.usb_path = usb_path
         self.filechooser_usb.rootpath = usb_path
         if verbose:
-            print("Filechooser_usb path: " + self.filechooser_usb.path)
+            Logger.info("Filechooser_usb path: " + self.filechooser_usb.path)
 
     def on_enter(self):
         self.filechooser_usb.path = self.usb_path
@@ -428,7 +429,7 @@ class USBFileChooser(Screen):
 
     def refresh_filechooser(self):
         if verbose:
-            print("Refreshing filechooser")
+            Logger.info("Refreshing filechooser")
         try:
             if self.filechooser_usb.selection[0] != "C":
                 self.display_selected_file()
@@ -518,7 +519,7 @@ class USBFileChooser(Screen):
             copy(file_selection, job_cache_dir)
             file_name = os.path.basename(file_selection)
             new_file_path = job_cache_dir + file_name
-            print(new_file_path)
+            Logger.info(new_file_path)
             self.go_to_loading_screen(new_file_path)
 
     def quit_to_local(self):

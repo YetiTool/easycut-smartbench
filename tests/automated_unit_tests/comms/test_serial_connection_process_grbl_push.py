@@ -4,6 +4,8 @@ Created on 17 Aug 2022
 '''
 
 import sys
+
+from asmcnc.comms.logging_system.logging_system import Logger
 from tests import test_utils
 sys.path.append('./src')
 
@@ -13,7 +15,7 @@ try:
     from mock import Mock, MagicMock
 
 except: 
-    print("Can't import mocking packages, are you on a dev machine?")
+    Logger.info("Can't import mocking packages, are you on a dev machine?")
 
 
 from asmcnc.comms import serial_connection
@@ -189,9 +191,9 @@ def default_pos_values(serial_comms):
     serial_comms.x_change = False
     serial_comms.y_change = False
     serial_comms.z_change = False
-    serial_comms.m_x = '0.000'
-    serial_comms.m_y = '0.000'
-    serial_comms.m_z = '0.000'
+    serial_comms.m_x = 0.0
+    serial_comms.m_y = 0.0
+    serial_comms.m_z = 0.0
 
 def test_value_change_x(sc):
     default_pos_values(sc)
