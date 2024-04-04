@@ -1,5 +1,7 @@
 import time
 
+from typing import Dict, List
+
 from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.core_UI.new_popups.spindle_load_alert_popup import SpindleLoadAlertPopup
 
@@ -7,7 +9,7 @@ from asmcnc.core_UI.new_popups.spindle_load_alert_popup import SpindleLoadAlertP
 class DigitalSpindleMonitor(object):
     __serial_connection = None
 
-    __faulty_readings = []
+    __faulty_readings = []  # type: List[Dict[str, any]]
     __threshold = 20  # type: int
     __last_alert_time = None  # type: time
     __alert_interval = 60  # type: int  # seconds
@@ -41,8 +43,8 @@ class DigitalSpindleMonitor(object):
         :param value: New value of the digital spindle load raw.
         :return:
         """
-
-        if value < 0:  # TODO: Implement other checks for faulty readings.
+        # TODO: Implement other checks for faulty readings.
+        if value < 0:
             self.__faulty_readings.append({
                 'timestamp': time.time(),
                 'value': value,
@@ -63,6 +65,7 @@ class DigitalSpindleMonitor(object):
         Opens the alert popup.
         :return: None
         """
+        # TODO: Add information to the popup.
         spindle_load_alert_popup = SpindleLoadAlertPopup(size_hint=(0.8, 0.8))
         spindle_load_alert_popup.open()
 
