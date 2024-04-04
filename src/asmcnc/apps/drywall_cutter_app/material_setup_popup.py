@@ -357,12 +357,12 @@ class CuttingDepthsPopup(Popup):
         if self.auto_pass_checkbox.active:
             self.depth_per_pass.disabled = True
             self.depth_per_pass.text = str(self.dwt_config.active_cutter.parameters.recommended_depth_per_pass)
-            self.calculate_depth_per_pass()
+            self.update_animations()
         else:
             self.depth_per_pass.disabled = False
             self.depth_per_pass.hint_text = self.depth_per_pass.text
             
-    def update_graphic_position(self):
+    def update_cutter_position(self):
         upper_limit = 0.225  # Value at which the cutter sits at the top of the material
         lower_limit = -0.035  # Value at which the cutter sits at the bottom surface of the material
         range = upper_limit - lower_limit
@@ -415,11 +415,14 @@ class CuttingDepthsPopup(Popup):
         else:
             self.float_layout.remove_widget(self.cut_depth_warning)
 
-        if self.cut_depth_warning not in self.float_layout.children and self.pass_depth_warning not in self.float_layout.children:
-            self.update_graphic_position()
-            self.calculate_depth_per_pass()
+        self.update_animations()
 
         self.disable_confirm_button()
+
+    def update_animations(self):
+        if self.cut_depth_warning not in self.float_layout.children and self.pass_depth_warning not in self.float_layout.children:
+            self.update_cutter_position()
+            self.calculate_depth_per_pass()
 
     def warning_pass_depth(self, *args):
         if self.auto_pass_checkbox.active:
