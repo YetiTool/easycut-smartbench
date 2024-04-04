@@ -1041,8 +1041,8 @@ class SimulatingJobPopup(ErrorPopup):
             Logger.info("User stopped simulation.")
             self.m.s.suppress_error_screens = True
             self.m.soft_stop()
-            self.m.s.cancel_stream()
-            Clock.schedule_once(lambda dt: reset(), 1)
+            # self.m.s.cancel_stream()
+            # Clock.schedule_once(lambda dt: reset(), 1)
 
         # def end_stream():
         #     # Reset flags
