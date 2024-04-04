@@ -7,6 +7,23 @@ from asmcnc.core_UI.new_popups.spindle_load_alert_popup import SpindleLoadAlertP
 
 
 class DigitalSpindleMonitor(object):
+    """
+    A class that monitors the digital spindle load and alerts the user if a faulty reading is detected.
+
+    Methods
+    -------
+    on_is_spindle_in_inrush_state_change(instance, value) -> None
+        Callback for when the spindle inrush state changes.
+    on_digital_spindle_load_raw_change(instance, value) -> None
+        Callback for when the digital spindle load raw value changes.
+    get_faulty_readings() -> List[Dict[str, any]]
+        Returns a list of faulty readings.
+    get_last_alert_time() -> time
+        Returns the last alert time.
+    get_threshold() -> int
+        Returns the threshold.
+    """
+
     __serial_connection = None
 
     __faulty_readings = []  # type: List[Dict[str, any]]
