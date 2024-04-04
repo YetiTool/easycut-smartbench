@@ -396,22 +396,30 @@ class DrywallCutterScreen(Screen):
             self.engine.engine_run(simulate=True)
             self.pm.show_wait_popup(main_string=self.l.get_str('Preparing for simulation') + '...')
 
-    def set_simulation_popup_state(self, state):
-        if not self.ignore_state:  
-            if state.lower() == 'run':
+    def set_simulation_popup_state(self, machine_state):
+        machine_state = machine_state.lower()
+        if not self.ignore_state:
+
+            if machine_state == 'run':
+                # Machine is simulating
                 self.sm.pm.close_wait_popup()
                 if not self.simulation_started:
+                    # If the popup is not already open, open it
                     self.sm.pm.show_simulating_job_popup()
                 self.simulation_started = True
-            elif (state.lower() == 'idle' or self.sm.current != "drywall_cutter") and self.simulation_started:
+
+            elif (machine_state == 'idle' or self.sm.current != "drywall_cutter") and self.simulation_started:
+                # Machine stopped simulating
                 self.sm.pm.close_simulating_job_popup()
                 Clock.unschedule(self.popup_watchdog)
                 self.simulation_started = False
                 self.ignore_state = True
 
-        if state.lower() not in ['run', 'idle']:
+        if machine_state not in ['run', 'idle']:
+            # Machine is in an unknown state, close all popups
             self.sm.pm.close_wait_popup()
             self.sm.pm.close_simulating_job_popup()
+            Clock.unschedule(self.popup_watchdog)
             self.simulation_started = False
             self.ignore_state = True
             
