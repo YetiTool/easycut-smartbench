@@ -187,7 +187,7 @@ class Keyboard(VKeyboard):
                     if not self.text_instance.multiline:
                         self.text_instance.dispatch("on_text_validate")
                         if self.text_instance.text_validate_unfocus:
-                            self.text_instance.focus = False
+                            self.defocus_text_input(self.text_instance)
                     else:
                         self.text_instance.insert_text(u'\n')
                 if keycode == "Han/Yeong":
@@ -195,7 +195,7 @@ class Keyboard(VKeyboard):
                     self.layout = self.qwertyKR_layout if self.layout == self.kr_layout else self.kr_layout
                     self.previous_layout = self.layout
                 if keycode == "escape":
-                    self.text_instance.focus = False
+                    self.defocus_text_input(self.text_instance)
                 if keycode == "backspace":
                     if self.text_instance.selection_text:
                         self.text_instance.delete_selection()
@@ -255,10 +255,8 @@ class Keyboard(VKeyboard):
     # On focus behaviour is bound to all text inputs
     def on_focus_raise_keyboard(self,instance,value):
         if value:
-            try:
-                instance.get_focus_previous().focus = False
-            except:
-                pass
+            if self.text_instance and self.text_instance.focus:
+                self.defocus_text_input(self.text_instance)
             # input_filter can be either None, ‘int’ (string), or ‘float’ (string), or a callable.
             if instance.input_filter:
                 self.layout = self.numeric_layout
@@ -269,6 +267,7 @@ class Keyboard(VKeyboard):
             self.setup_layout()
             self.raise_keyboard_if_none_exists()
         else:
+            self.defocus_text_input(instance)
             self.lower_keyboard_if_not_focused()
 
     # Functions to raise keyboard
@@ -298,3 +297,5 @@ class Keyboard(VKeyboard):
 
     def defocus_text_input(self, text_input):
         text_input.focus = False
+        if self.text_instance == text_input:
+            self.text_instance = None

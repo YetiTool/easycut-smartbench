@@ -27,9 +27,10 @@ from asmcnc.core_UI import path_utils as pu
 from asmcnc.comms.logging_system.logging_system import Logger
 
 class GCodeEngine():
-    def __init__(self, router_machine, dwt_config):
+    def __init__(self, router_machine, dwt_config, coordinate_system):
         self.config = dwt_config
         self.m = router_machine
+        self.cs = coordinate_system
 
         # Globals
         self.x = 0  # Identifier for use in arrays
@@ -782,7 +783,7 @@ class GCodeEngine():
         if simulate:
             cutting_lines.insert(0, "G0 X0 Y0")
             cutting_lines.insert(0, "G90")
-            cutting_lines.append("G0 X{} Y{}".format(0,0))
+            cutting_lines.append("G0 X{} Y{}".format(-self.m.laser_offset_x_value, -self.m.laser_offset_y_value))
             self.m.s.run_skeleton_buffer_stuffer(cutting_lines)
             
         else:
