@@ -1059,7 +1059,7 @@ class SimulatingJobPopup(ErrorPopup):
             popup_width=popup_width,
             popup_height=popup_height,
             button_one_text=button_one_text,
-            button_one_callback=stop,
+            button_one_callback=self.m.stop_from_soft_stop_cancel,
             button_one_background_color=button_one_background_color,
             button_two_text=button_two_text,
             button_two_callback=button_two_callback,
