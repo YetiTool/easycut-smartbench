@@ -415,7 +415,7 @@ class CuttingDepthsPopup(Popup):
         else:
             self.float_layout.remove_widget(self.cut_depth_warning)
 
-        if self.cut_depth_warning not in self.float_layout.children or self.pass_depth_warning not in self.float_layout.children:
+        if self.cut_depth_warning not in self.float_layout.children and self.pass_depth_warning not in self.float_layout.children:
             self.update_graphic_position()
             self.calculate_depth_per_pass()
 
