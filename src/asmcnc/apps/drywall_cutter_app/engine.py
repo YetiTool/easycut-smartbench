@@ -590,7 +590,7 @@ class GCodeEngine():
                 'datum_x': 0,
                 'datum_y': 0,
                 'offset': self.config.active_config.toolpath_offset,
-                'tool_diameter': self.config.active_cutter.dimensions.diameter,
+                'tool_diameter': 0 if self.config.active_cutter.dimensions.diameter is None else self.config.active_cutter.dimensions.diameter,
                 'is_climb': is_climb,
                 'corner_radius': self.config.active_config.canvas_shape_dims.r,
                 'pass_depth': cutting_pass_depth,
