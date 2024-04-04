@@ -6,7 +6,7 @@ from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.core_UI.new_popups.spindle_load_alert_popup import SpindleLoadAlertPopup
 
 # TEST_MODE flag can be used to alter valid readings for testing purposes. It must be set to False in production.
-TEST_MODE = False
+TEST_MODE = True
 
 
 class DigitalSpindleMonitor(object):
