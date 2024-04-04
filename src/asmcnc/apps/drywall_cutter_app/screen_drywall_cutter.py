@@ -384,6 +384,7 @@ class DrywallCutterScreen(Screen):
         self.sm.current = 'lobby'
 
     def simulate(self):
+        self.popup_watchdog = Clock.schedule_interval(self.set_simulation_popup_state(self.m.s.m_state), 1)
         if not self.is_config_valid():
             self.show_validation_popup()
             return
@@ -403,6 +404,7 @@ class DrywallCutterScreen(Screen):
                 self.sm.pm.show_simulating_job_popup()
             elif (state.lower() == 'idle' or self.sm.current != "drywall_cutter") and self.simulation_started:
                 self.sm.pm.close_simulating_job_popup()
+                Clock.unschedule(self.popup_watchdog)
                 self.simulation_started = False
                 self.ignore_state = True
 
