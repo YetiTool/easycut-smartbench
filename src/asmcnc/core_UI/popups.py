@@ -1041,10 +1041,15 @@ class SimulatingJobPopup(ErrorPopup):
             Logger.info("User stopped simulation.")
             self.m.s.suppress_error_screens = True
             self.m.soft_stop()
-            self.m.s.NOT_SKELETON_STUFF = False
-            self.m.s.end_stream()
+            self.m.s.cancel_stream()
             Clock.schedule_once(lambda dt: reset(), 1)
 
+        # def end_stream():
+        #     # Reset flags
+        #     self.m.s.is_job_streaming = False
+        #     self.m.s.is_stream_lines_remaining = False
+        #     self.m.set_pause(False)
+        #     self.m.sset_use_yp(False)
         def reset(*args):
             self.m.s.suppress_error_screens = False
             self.m._grbl_soft_reset()
