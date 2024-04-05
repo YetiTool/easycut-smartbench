@@ -497,6 +497,9 @@ class WifiScreen(Screen):
 
     # Toggles between normal network selection and custom network name input for hidden networks
     def custom_ssid_input(self):
+        if self.network_name_box.parent and self.custom_network_name_box.parent:
+            return  # Prevents the function from running if both are already visible
+
         if self.network_name_box.parent:
             self.network_name_input.remove_widget(self.network_name_box)
             self.network_name_input.add_widget(self.custom_network_name_box)
@@ -1051,11 +1054,15 @@ class WifiScreen(Screen):
         self.password_label.text = self.l.get_bold("Password")
         self.country_label.text = self.l.get_bold("Country")
         self.connect_button.text = self.l.get_str("Connect")
-        self.custom_ssid_input()
         self.custom_network_name.hint_text = self.l.get_str("Enter network name")
         self.update_hint_font_size(self.custom_network_name)
         self.update_button_font_size(self.connect_button, 28.0 / 800.0 * Window.width, 10)
         self.update_button_font_size(self.custom_ssid_button, 20.0 / 800.0 * Window.width, 20)
+
+        if self.custom_ssid_button.state == "normal":
+            self.custom_ssid_button.text = self.l.get_str("Other network")
+        else:
+            self.custom_ssid_button.text = self.l.get_str("Select network")
 
     def update_hint_font_size(self, value):
         if value.hint_text:
