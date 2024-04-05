@@ -313,7 +313,7 @@ class XYMoveDrywall(Widget):
                 ).replace('X-Y', '[b]X-Y[/b]')).replace(self.l.get_str('datum'), self.l.get_bold('datum'))
             )
 
-        popup_info.PopupDatum(self.sm, self.m, self.l, 'XY', warning)
+        popup_info.PopupDatum(self.sm, self.m, self.l, 'XY', warning, jog_after_laser_datum_set=False)
 
     def format_command(self, cmd):
         wrapped_cmd = textwrap.fill(cmd, width=35, break_long_words=False)
