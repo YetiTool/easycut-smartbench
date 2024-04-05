@@ -1768,26 +1768,26 @@ class RouterMachine(EventDispatcher):
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
 
     def set_workzone_to_pos_xy_with_laser(self, jog_to_datum=True):
-        if self.jog_spindle_to_laser_datum('XY'):
+        if jog_to_datum:
+            if self.jog_spindle_to_laser_datum('XY'):
 
-            def wait_for_movement_to_complete(dt):
-                if not self.state() == 'Jog':
-                    Clock.unschedule(xy_poll_for_success)
-                    if jog_to_datum:
+                def wait_for_movement_to_complete(dt):
+                    if not self.state() == 'Jog':
+                        Clock.unschedule(xy_poll_for_success)
                         self.set_workzone_to_pos_xy()
-                    else:
-                        self.set_datum(x=-self.laser_offset_x_value, y=-self.laser_offset_y_value)
 
-            xy_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+                xy_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
 
+            else:
+                error_message = (
+                    self.l.get_str("Laser crosshair is out of bounds!") + \
+                    "\n\n" + \
+                    self.l.get_str("Datum has not been set.") + " " + \
+                    self.l.get_str("Please choose a different datum using the laser crosshair.")
+                    )
+                popup_info.PopupError(self.sm, self.l, error_message)
         else:
-            error_message = (
-                self.l.get_str("Laser crosshair is out of bounds!") + \
-                "\n\n" + \
-                self.l.get_str("Datum has not been set.") + " " + \
-                self.l.get_str("Please choose a different datum using the laser crosshair.")
-                )
-            popup_info.PopupError(self.sm, self.l, error_message)
+            self.set_datum(x=-self.laser_offset_x_value, y=-self.laser_offset_y_value)
 
     def set_x_datum_with_laser(self):
         if self.jog_spindle_to_laser_datum('X'):
