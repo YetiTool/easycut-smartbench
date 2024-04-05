@@ -11,10 +11,10 @@ class CoordinateSystem(object):
         self.m = m # Router machine instance
         self.machine_position = self.MachinePosition(self.m)
         self.working_coordinates = self.WorkingCoordinates(self.m)
-        self.drywall_tec_position = self.DrywallTecPosition(self.working_coordinates, self.m)
+        self.drywall_tec_position = self.DrywallTecPosition(self.machine_position, self.m)
         self.drywall_tec_laser_position = self.DrywallTecLaserPosition(self.drywall_tec_position)
 
-        self.drywall_tec_laser_coordinates = self.DrywallTecLaserCoordinates(self.m, self.machine_position, self.drywall_tec_laser_position)
+        self.laser_position = self.LaserPosition(self.m, self.machine_position, self.drywall_tec_laser_position)
 
         self.debug = True
 
@@ -76,24 +76,33 @@ class CoordinateSystem(object):
     class DrywallTecPosition(object):
         '''Class to store the drywall tec coordinates.'''
 
-        def __init__(self, working_coordinates, m):
+        def __init__(self, machine_position, m):
             self.m = m
-            self.working_coordinates = working_coordinates
-            self.x_delta = round(self.m.get_dollar_setting(130)
-                            - self.m.limit_switch_safety_distance
-                            - self.m.laser_offset_tool_clearance_to_access_edge_of_sheet, 2)
-            self.y_delta = round(self.m.get_dollar_setting(131)
-                            - self.m.get_dollar_setting(27), 2)
+            self.machine_position = machine_position
+
+            self.m.s.bind(setting_130 = lambda i, value: self.update_x_delta(value))
+            self.m.s.bind(setting_131 = lambda i, value: self.update_y_delta(value))
+
+            self.x_delta = 0
+            self.y_delta = 0
             self.z_delta = 0
 
+        def update_x_delta(self, value):
+            self.x_delta = round(value
+                            - self.m.limit_switch_safety_distance
+                            - self.m.laser_offset_tool_clearance_to_access_edge_of_sheet, 2)
+        def update_y_delta(self, value):
+            self.y_delta = round(value
+                            - self.m.limit_switch_safety_distance
+                            - self.m.laser_offset_tool_clearance_to_access_edge_of_sheet, 2)
         def get_x(self):
-            return self.working_coordinates.get_x() + self.x_delta
+            return self.machine_position.get_x() + self.x_delta
 
         def get_y(self):
-            return self.working_coordinates.get_y() + self.y_delta
+            return self.machine_position.get_y() + self.y_delta
 
         def get_z(self):
-            return self.working_coordinates.get_z() + self.z_delta
+            return self.machine_position.get_z() + self.z_delta
 
         def get_mx_from_dwx(self, dw_x):
             """
@@ -186,7 +195,7 @@ class CoordinateSystem(object):
             """
             return self.dwt_coordinates.get_mz_from_dwz(dwlz)
 
-    class DrywallTecLaserCoordinates(object):
+    class LaserPosition(object):
         '''Class to store the drywall tec laser coordinates.'''
 
         def __init__(self, m, machine_position, dwt_laser_position):
@@ -202,7 +211,4 @@ class CoordinateSystem(object):
             return self.machine_position.get_x() + self.laser_offset_x
 
         def get_y(self):
-            return self.machine_position.get_x() + self.laser_offset_x
-
-        def get_z(self):
-            return self.machine_position.get_x() + self.laser_offset_x
+            return self.machine_position.get_y() + self.laser_offset_x

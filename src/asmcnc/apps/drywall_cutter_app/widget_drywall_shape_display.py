@@ -590,7 +590,7 @@ class DrywallShapeDisplay(Widget):
         # Get current x/y values & shape clearances
         current_shape = self.dwt_config.active_config.shape_type.lower()
         current_x, current_y = self.cs.drywall_tec_position.get_x(), self.cs.drywall_tec_position.get_y()
-        current_laser_x, current_laser_y = self.cs.drywall_tec_laser_coordinates.get_x(), self.cs.drywall_tec_laser_coordinates.get_y()
+        current_laser_x, current_laser_y = self.cs.laser_position.get_x(), self.cs.laser_position.get_y()
 
         tool_offset_value = self.tool_offset_value()
         x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance = self.get_x_y_clearances(current_shape, self.x_coord, self.y_coord, tool_offset_value)
