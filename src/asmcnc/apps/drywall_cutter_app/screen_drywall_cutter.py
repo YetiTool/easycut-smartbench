@@ -282,7 +282,6 @@ class DrywallCutterScreen(Screen):
 
     def home(self):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
-        self.m.jog_relative("Y", "-12", "6000")
 
     def select_tool(self, cutter_file, *args):
         self.dwt_config.load_cutter(cutter_file)
