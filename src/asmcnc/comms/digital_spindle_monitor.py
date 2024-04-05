@@ -48,7 +48,9 @@ class DigitalSpindleMonitor(object):
     }  # type: Dict[str, any]
 
     __server = "192.168.86.46"
-    __connection = pika.BlockingConnection(pika.ConnectionParameters(__server))
+    __credentials = pika.PlainCredentials("console", "test1234")
+    __connection = pika.BlockingConnection(pika.ConnectionParameters(__server, 5672, '/',
+                                                                     __credentials))
     __channel = __connection.channel()
     __channel.queue_declare(queue='spindle')
 
