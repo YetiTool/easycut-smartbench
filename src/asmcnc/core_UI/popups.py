@@ -16,7 +16,7 @@ from kivy.uix.scrollview import ScrollView
 from kivy.clock import Clock
 
 from asmcnc.core_UI import scaling_utils as utils
-from asmcnc.core_UI.utils.hold_button import WarningHoldButton
+from asmcnc.core_UI.components.buttons.hold_button import WarningHoldButton
 from asmcnc.comms.logging_system.logging_system import Logger
 
 """
@@ -1037,10 +1037,16 @@ class SimulatingJobPopup(ErrorPopup):
         
         self.m = kwargs['m']
 
-        def stop():
+        def stop(*args):
             Logger.info("User stopped simulation.")
-            self.m.soft_stop()
-            Clock.schedule_once(lambda dt: self.m._grbl_soft_reset(), 0.5)
+            self.m.s.suppress_error_screens = True
+            self.m._grbl_feed_hold()
+            self.m.s.cancel_stream()
+            Clock.schedule_once(lambda dt: reset(), 1)
+
+        def reset(*args):
+            self.m._grbl_soft_reset()
+            self.m.s.suppress_error_screens = False
 
         super(SimulatingJobPopup, self).__init__(
             main_string=main_string,

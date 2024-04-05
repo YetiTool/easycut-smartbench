@@ -384,30 +384,42 @@ class DrywallCutterScreen(Screen):
         self.sm.current = 'lobby'
 
     def simulate(self):
+        self.popup_watchdog = Clock.schedule_interval(lambda dt: self.set_simulation_popup_state(self.m.s.m_state), 1)
         if not self.is_config_valid():
             self.show_validation_popup()
             return
 
         if not self.simulation_started and self.m.s.m_state.lower() == 'idle':
-            self.m_state_bind = self.m.s.bind(m_state=lambda i, value: self.set_simulation_popup_state(value))
+            self.m.s.bind(m_state=lambda i, value: self.set_simulation_popup_state(value))
             self.ignore_state = False
             self.simulation_started = False
             self.engine.engine_run(simulate=True)
             self.pm.show_wait_popup(main_string=self.l.get_str('Preparing for simulation') + '...')
 
-    def set_simulation_popup_state(self, state):
-        if not self.ignore_state:  
-            if state.lower() ==  'run':
+    def set_simulation_popup_state(self, machine_state):
+        machine_state = machine_state.lower()
+        if not self.ignore_state:
+
+            if machine_state == 'run':
+                # Machine is simulating
                 self.sm.pm.close_wait_popup()
+                if not self.simulation_started:
+                    # If the popup is not already open, open it
+                    self.sm.pm.show_simulating_job_popup()
                 self.simulation_started = True
-                self.sm.pm.show_simulating_job_popup()
-            elif (state.lower() == 'idle' or self.sm.current != "drywall_cutter") and self.simulation_started:
+
+            elif (machine_state == 'idle' or self.sm.current != "drywall_cutter") and self.simulation_started:
+                # Machine stopped simulating
                 self.sm.pm.close_simulating_job_popup()
+                Clock.unschedule(self.popup_watchdog)
                 self.simulation_started = False
                 self.ignore_state = True
 
-        if state.lower() not in ['run', 'idle']:
+        if machine_state not in ['run', 'idle']:
+            # Machine is in an unknown state, close all popups
+            self.sm.pm.close_wait_popup()
             self.sm.pm.close_simulating_job_popup()
+            Clock.unschedule(self.popup_watchdog)
             self.simulation_started = False
             self.ignore_state = True
             

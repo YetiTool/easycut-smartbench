@@ -577,6 +577,7 @@ class GCodeEngine():
         simulation_z_height = 5 # mm
         simulation_plunge_rate = 750 # mm/s
         simulation_feedrate = 6000 # mm/s
+        geberit_partoff = False
 
         is_climb = (self.config.active_cutter.parameters.cutting_direction == CuttingDirectionOptions.CLIMB.value
                     or self.config.active_cutter.parameters.cutting_direction == CuttingDirectionOptions.BOTH.value)
@@ -591,7 +592,7 @@ class GCodeEngine():
                 'datum_x': 0,
                 'datum_y': 0,
                 'offset': self.config.active_config.toolpath_offset,
-                'tool_diameter': self.config.active_cutter.dimensions.diameter,
+                'tool_diameter': 0 if self.config.active_cutter.dimensions.diameter is None else self.config.active_cutter.dimensions.diameter,
                 'is_climb': is_climb,
                 'corner_radius': self.config.active_config.canvas_shape_dims.r,
                 'pass_depth': cutting_pass_depth,
@@ -619,7 +620,7 @@ class GCodeEngine():
                 'datum_x': self.config.active_config.datum_position.x,
                 'datum_y': self.config.active_config.datum_position.y,
                 'length': self.config.active_config.canvas_shape_dims.l,
-                'tool_diameter': self.config.active_cutter.dimensions.diameter,
+                'tool_diameter': 0 if self.config.active_cutter.dimensions.diameter is None else self.config.active_cutter.dimensions.diameter,
                 'orientation': self.config.active_config.rotation,
                 'pass_depth': self.config.active_config.cutting_depths.depth_per_pass,
                 'feedrate': self.config.active_cutter.parameters.cutting_feed_rate,
@@ -719,12 +720,13 @@ class GCodeEngine():
 
                 tool_radius = self.config.active_cutter.dimensions.diameter / 2
 
-                # Add partoff cut
-                partoff_start_coordinate = [(-1 * tool_radius) + self.config.active_config.datum_position.x,
-                                            float(y_size) + tool_radius + self.config.active_config.datum_position.y]
-                partoff_end_coordinate = [tool_radius + float(x_size) + self.config.active_config.datum_position.x,
-                                        tool_radius + float(y_size) + self.config.active_config.datum_position.y]
-                gcode_lines = self.add_partoff(gcode_lines, "M5", partoff_start_coordinate, partoff_end_coordinate, pass_depths, self.config.active_cutter.parameters.cutting_feed_rate, self.config.active_cutter.parameters.plunge_feed_rate, z_safe_distance)
+                if geberit_partoff:
+                    # Add partoff cut
+                    partoff_start_coordinate = [(-1 * tool_radius) + self.config.active_config.datum_position.x,
+                                                float(y_size) + tool_radius + self.config.active_config.datum_position.y]
+                    partoff_end_coordinate = [tool_radius + float(x_size) + self.config.active_config.datum_position.x,
+                                            tool_radius + float(y_size) + self.config.active_config.datum_position.y]
+                    gcode_lines = self.add_partoff(gcode_lines, "M5", partoff_start_coordinate, partoff_end_coordinate, pass_depths, self.config.active_cutter.parameters.cutting_feed_rate, self.config.active_cutter.parameters.plunge_feed_rate, z_safe_distance)
 
             cutting_lines = gcode_lines
 
@@ -791,10 +793,10 @@ class GCodeEngine():
                 output = "(%s)\nG90\nM3 S%d\nG0 %s\n\n%s(End)\nG0 Z%d\nM5\n" % (
                     filename, self.config.active_cutter.parameters.cutting_spindle_speed, safe_start_position, ''.join(cutting_lines), z_safe_distance)
             else:
-                output = ''.join(cutting_lines)  # Use ''.join() to concatenate lines without spaces
+                output = '\n'.join(cutting_lines)
 
             with open(output_path, 'w+') as out_file:
-                out_file.write(output)  # Use write() to write the entire output as a single string
+                out_file.write(output)  # Use write() to write the entire output as a single string since we use \n in the string
 
                 Logger.info("%s written" % filename)
                 return output_path  # return path to the file
