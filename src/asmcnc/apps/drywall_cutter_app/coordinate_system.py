@@ -23,7 +23,7 @@ class CoordinateSystem(object):
             self.m.s.bind(m_y=lambda i, value: self.log_pos(value))
 
     def log_pos(self, value):
-        Logger.debug("M: {}, {} W: {}, {} DWT: {}, {} DWTL: {}, {} laser offset: {}, {}".format(
+        Logger.debug("M: {}, {} W: {}, {} DWT: {}, {} DWTL: {}, {} laser offset: {}, {} laser coordinates: {}, {}".format(
         self.machine_position.get_x(),
             self.machine_position.get_y(),
             self.working_coordinates.get_x(),
@@ -34,6 +34,8 @@ class CoordinateSystem(object):
             self.drywall_tec_laser_position.get_y(),
             self.m.laser_offset_x_value,
             self.m.laser_offset_y_value
+            self.laser_position.get_x(),
+            self.laser_position.get_y()
         ))
 
 
