@@ -1776,7 +1776,7 @@ class RouterMachine(EventDispatcher):
                     if jog_to_datum:
                         self.set_workzone_to_pos_xy()
                     else:
-                        self.set_datum(x=self.laser_offset_x_value, y=self.laser_offset_y_value)
+                        self.set_datum(x=-self.laser_offset_x_value, y=-self.laser_offset_y_value)
 
             xy_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
 
