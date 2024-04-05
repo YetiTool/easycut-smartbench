@@ -21,6 +21,7 @@ from asmcnc.comms.yeti_grbl_protocol import protocol
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.comms import motors
 from asmcnc.skavaUI import popup_info
+from asmcnc.comms.model_manager import ModelManagerSingleton
 
 from kivy.clock import Clock
 from kivy.properties import NumericProperty, ListProperty
@@ -153,6 +154,8 @@ class RouterMachine(EventDispatcher):
         self.jd = job
         self.model_manager = ModelManagerSingleton()
         self.set_jog_limits()
+
+        model_manager = ModelManagerSingleton()
 
         self.win_serial_port = win_serial_port   # Need to save so that serial connection can be reopened (for zhead cycle app)
 
@@ -2101,6 +2104,9 @@ class RouterMachine(EventDispatcher):
         if not self.is_laser_enabled: return
         Logger.info("Move to laser offset")
         self.jog_absolute_single_axis('X', float(self.x_min_jog_abs_limit) + 5 - self.laser_offset_x_value, 3000)
+
+        if self.model_manager.is_machine_drywall():
+            self.jog_relative('Y', -12, 3000)
 
     # final component is always complete homing sequence
     def complete_homing_sequence(self, dt=0):

@@ -282,6 +282,7 @@ class DrywallCutterScreen(Screen):
 
     def home(self):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
+        self.m.jog_relative("Y", "-12", "6000")
 
     def select_tool(self, cutter_file, *args):
         self.dwt_config.load_cutter(cutter_file)
@@ -446,7 +447,7 @@ class DrywallCutterScreen(Screen):
                                                    localization=self.l)
             self.jd.set_job_filename(self.drywall_shape_display_widget.config_name_label.text)
             job_loader.load_gcode_file(output_path)
-            os.remove(output_path)
+            # os.remove(output_path)
             self.set_return_screens()
             self.sm.get_screen('go').dwt_config = self.dwt_config
             self.proceed_to_go_screen()
