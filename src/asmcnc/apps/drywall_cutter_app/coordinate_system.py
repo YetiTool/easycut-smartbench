@@ -9,10 +9,12 @@ class CoordinateSystem(object):
 
     def __init__(self, m):
         self.m = m # Router machine instance
-        self.machine_coordinates = self.MachineCoordinates(self.m)
-        self.working_coordinates = self.WorkingCoordinates(self.m)
-        self.drywall_tec_coordinates = self.DrywallTecCoordinates(self.working_coordinates, self.m)
-        self.drywall_tec_laser_coordinates = self.DrywallTecLaserCoordinates(self.drywall_tec_coordinates)
+        self.machine_position = self.MachinePosition(self.m)
+        self.working_position = self.WorkingPosition(self.m)
+        self.drywall_tec_position = self.DrywallTecPosition(self.working_position, self.m)
+        self.drywall_tec_laser_position = self.DrywallTecLaserPosition(self.drywall_tec_position)
+
+        self.drywall_tec_laser_coordinates = self.DrywallTecLaserCoordinates(self.m, self.drywall_tec_laser_position)
 
         self.debug = False
 
@@ -22,21 +24,21 @@ class CoordinateSystem(object):
 
     def log_pos(self, value):
         Logger.debug("M: {}, {} W: {}, {} DWT: {}, {} DWTL: {}, {} laser offset: {}, {}".format(
-        self.machine_coordinates.get_x(),
-            self.machine_coordinates.get_y(),
-            self.working_coordinates.get_x(),
-            self.working_coordinates.get_y(),
-            self.drywall_tec_coordinates.get_x(),
-            self.drywall_tec_coordinates.get_y(),
-            self.drywall_tec_laser_coordinates.get_x(),
-            self.drywall_tec_laser_coordinates.get_y(),
+        self.machine_position.get_x(),
+            self.machine_position.get_y(),
+            self.working_position.get_x(),
+            self.working_position.get_y(),
+            self.drywall_tec_position.get_x(),
+            self.drywall_tec_position.get_y(),
+            self.drywall_tec_laser_position.get_x(),
+            self.drywall_tec_laser_position.get_y(),
             self.m.laser_offset_x_value,
             self.m.laser_offset_y_value
         ))
 
 
-    class MachineCoordinates(object):
-        '''Class to store the machine coordinates.'''
+    class MachinePosition(object):
+        '''Class to store the machine position.'''
 
         def __init__(self, m):
             self.m = m
@@ -53,7 +55,7 @@ class CoordinateSystem(object):
         def get_z(self):
             return self.m.mpos_z()
 
-    class WorkingCoordinates(object):
+    class WorkingPosition(object):
         '''Class to store the working coordinates.'''
 
         def __init__(self, m):
@@ -71,7 +73,7 @@ class CoordinateSystem(object):
         def get_z(self):
             return self.m.wpos_z()
 
-    class DrywallTecCoordinates(object):
+    class DrywallTecPosition(object):
         '''Class to store the drywall tec coordinates.'''
 
         def __init__(self, working_coordinates, m):
@@ -132,7 +134,7 @@ class CoordinateSystem(object):
             """
             return dw_z - self.z_delta
 
-    class DrywallTecLaserCoordinates(object):
+    class DrywallTecLaserPosition(object):
         '''Class to store the drywall tec coordinates (using laser as reference).'''
 
         def __init__(self, dwt_cooridnates):
@@ -186,3 +188,41 @@ class CoordinateSystem(object):
             float: The corresponding machine z-coordinate.
             """
             return self.dwt_coordinates.get_mz_from_dwz(dwlz)
+
+    class MachineCoordinates(object):
+        '''Class to store the machine coordinates.'''
+
+        def __init__(self, m):
+            self.m = m
+            self.x = self.m.mpos_x()
+            self.y = self.m.mpos_y()
+            self.z = self.m.mpos_z()
+
+        def get_x(self):
+            return self.m.mpos_x()
+
+        def get_y(self):
+            return self.m.mpos_y()
+
+        def get_z(self):
+            return self.m.mpos_z()
+
+    class DrywallTecLaserCoordinates(object):
+        '''Class to store the drywall tec laser coordinates.'''
+
+        def __init__(self, m, dwt_laser_position):
+            self.m = m
+            self.dwt_laser_position = dwt_laser_position
+            self.laser_offset_x = self.dwt_laser_position.laser_delta_x
+            self.laser_offset_y = self.dwt_laser_position.laser_delta_y
+            self.x = self.machine_position.get_x() + self.laser_offset_x
+            self.y = self.machine_position.get_y() + self.laser_offset_y
+
+        def get_x(self):
+            return self.machine_position.get_x() + self.laser_offset_x
+
+        def get_y(self):
+            return self.machine_position.get_x() + self.laser_offset_x
+
+        def get_z(self):
+            return self.machine_position.get_x() + self.laser_offset_x
