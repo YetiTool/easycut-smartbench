@@ -409,7 +409,7 @@ class DrywallShapeDisplay(Widget):
         Is called when the x datum of the machine changes. E.g. running, jogging, after homing...
         value has the new x_datum
         """
-        self.x_coord = value + self.laser_offset_x_value
+        self.x_coord = value + self.m.laser_offset_x_value
         Clock.schedule_once(lambda dt: self.check_datum_and_extents(), 0.1)
 
     def update_y_datum(self, value):
@@ -417,7 +417,7 @@ class DrywallShapeDisplay(Widget):
         Is called when the y datum of the machine changes. E.g. running, jogging, after homing...
         value has the new y_datum
         """
-        self.y_coord = value + self.laser_offset_y_value
+        self.y_coord = value + self.m.laser_offset_y_value
         Clock.schedule_once(lambda dt: self.check_datum_and_extents(), 0.1)
 
     def update_state(self, value):
