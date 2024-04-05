@@ -47,7 +47,8 @@ class DigitalSpindleMonitor(object):
         "kill_time": None,
     }  # type: Dict[str, any]
 
-    __connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    __server = "192.168.86.46"
+    __connection = pika.BlockingConnection(pika.ConnectionParameters(__server))
     __channel = __connection.channel()
     __channel.queue_declare(queue='spindle')
 
