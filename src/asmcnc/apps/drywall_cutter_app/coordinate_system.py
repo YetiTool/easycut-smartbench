@@ -10,8 +10,8 @@ class CoordinateSystem(object):
     def __init__(self, m):
         self.m = m # Router machine instance
         self.machine_position = self.MachinePosition(self.m)
-        self.working_position = self.WorkingPosition(self.m)
-        self.drywall_tec_position = self.DrywallTecPosition(self.working_position, self.m)
+        self.working_coordinates = self.WorkingCoordinates(self.m)
+        self.drywall_tec_position = self.DrywallTecPosition(self.working_coordinates, self.m)
         self.drywall_tec_laser_position = self.DrywallTecLaserPosition(self.drywall_tec_position)
 
         self.drywall_tec_laser_coordinates = self.DrywallTecLaserCoordinates(self.m, self.machine_position, self.drywall_tec_laser_position)
@@ -26,8 +26,8 @@ class CoordinateSystem(object):
         Logger.debug("M: {}, {} W: {}, {} DWT: {}, {} DWTL: {}, {} laser offset: {}, {}".format(
         self.machine_position.get_x(),
             self.machine_position.get_y(),
-            self.working_position.get_x(),
-            self.working_position.get_y(),
+            self.working_coordinates.get_x(),
+            self.working_coordinates.get_y(),
             self.drywall_tec_position.get_x(),
             self.drywall_tec_position.get_y(),
             self.drywall_tec_laser_position.get_x(),
@@ -55,7 +55,7 @@ class CoordinateSystem(object):
         def get_z(self):
             return self.m.mpos_z()
 
-    class WorkingPosition(object):
+    class WorkingCoordinates(object):
         '''Class to store the working coordinates.'''
 
         def __init__(self, m):
