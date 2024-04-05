@@ -1517,9 +1517,14 @@ class OvernightTesting(Screen):
         filename = "./asmcnc/apps/systemTools_app/files/" + filename_end + ".gc"
         with open(filename) as f:
             gcode_prescrubbed = f.readlines()
-        if "rectangle" in filename_end and int(self.m.get_dollar_setting(132)) == 130:
+        if "rectangle" in filename_end and int(self.m.get_dollar_setting(132)) == 130:  # double stack motor
             gcode = [
-                self.m.quick_scrub(line).replace("14", "12")
+                self.m.quick_scrub(line).replace("Z149", "Z129").replace("Z-149", "Z-129")
+                for line in gcode_prescrubbed
+            ]
+        elif "rectangle" in filename_end and int(self.m.get_dollar_setting(132)) == 120:  # DWT machine
+            gcode = [
+                self.m.quick_scrub(line).replace("Z149", "Z119").replace("Z-149", "Z-119")
                 for line in gcode_prescrubbed
             ]
         else:
