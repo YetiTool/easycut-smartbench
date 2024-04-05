@@ -14,7 +14,7 @@ class CoordinateSystem(object):
         self.drywall_tec_position = self.DrywallTecPosition(self.working_position, self.m)
         self.drywall_tec_laser_position = self.DrywallTecLaserPosition(self.drywall_tec_position)
 
-        self.drywall_tec_laser_coordinates = self.DrywallTecLaserCoordinates(self.m, self.drywall_tec_laser_position)
+        self.drywall_tec_laser_coordinates = self.DrywallTecLaserCoordinates(self.m, self.machine_position, self.drywall_tec_laser_position)
 
         self.debug = False
 
@@ -189,29 +189,12 @@ class CoordinateSystem(object):
             """
             return self.dwt_coordinates.get_mz_from_dwz(dwlz)
 
-    class MachineCoordinates(object):
-        '''Class to store the machine coordinates.'''
-
-        def __init__(self, m):
-            self.m = m
-            self.x = self.m.mpos_x()
-            self.y = self.m.mpos_y()
-            self.z = self.m.mpos_z()
-
-        def get_x(self):
-            return self.m.mpos_x()
-
-        def get_y(self):
-            return self.m.mpos_y()
-
-        def get_z(self):
-            return self.m.mpos_z()
-
     class DrywallTecLaserCoordinates(object):
         '''Class to store the drywall tec laser coordinates.'''
 
-        def __init__(self, m, dwt_laser_position):
+        def __init__(self, m, machine_position, dwt_laser_position):
             self.m = m
+            self.machine_position = machine_position
             self.dwt_laser_position = dwt_laser_position
             self.laser_offset_x = self.dwt_laser_position.laser_delta_x
             self.laser_offset_y = self.dwt_laser_position.laser_delta_y
