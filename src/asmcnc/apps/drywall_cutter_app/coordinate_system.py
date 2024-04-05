@@ -58,18 +58,18 @@ class CoordinateSystem(object):
 
         def __init__(self, m):
             self.m = m
-            self.x = m.wpos_x()
-            self.y = m.wpos_y()
-            self.z = m.wpos_z()
+            self.x = m.x_wco()
+            self.y = m.y_wco()
+            self.z = m.z_wco()
 
         def get_x(self):
-            return self.m.wpos_x()
+            return self.m.x_wco()
 
         def get_y(self):
-            return self.m.wpos_y()
+            return self.m.y_wco()
 
         def get_z(self):
-            return self.m.wpos_z()
+            return self.m.z_wco()
 
     class DrywallTecCoordinates(object):
         '''Class to store the drywall tec coordinates.'''
@@ -83,9 +83,6 @@ class CoordinateSystem(object):
             self.y_delta = round(self.m.get_dollar_setting(131)
                             - self.m.get_dollar_setting(27), 2)
             self.z_delta = 0
-
-            # self.x_delta = self.x_delta * -1
-            # self.y_delta = self.y_delta * -1
 
         def get_x(self):
             return self.working_coordinates.get_x() + self.x_delta
