@@ -33,7 +33,7 @@ class CoordinateSystem(object):
             self.drywall_tec_laser_position.get_x(),
             self.drywall_tec_laser_position.get_y(),
             self.m.laser_offset_x_value,
-            self.m.laser_offset_y_value
+            self.m.laser_offset_y_value,
             self.laser_position.get_x(),
             self.laser_position.get_y()
         ))
