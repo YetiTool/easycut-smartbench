@@ -14,7 +14,7 @@ class CoordinateSystem(object):
         self.drywall_tec_coordinates = self.DrywallTecCoordinates(self.working_coordinates, self.m)
         self.drywall_tec_laser_coordinates = self.DrywallTecLaserCoordinates(self.drywall_tec_coordinates)
 
-        self.debug = False
+        self.debug = True
 
         if self.debug:
             self.m.s.bind(m_x=lambda i, value: self.log_pos(value))
