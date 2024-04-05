@@ -760,8 +760,7 @@ class PopupDatum(Widget):
                 elif xy == "Y":
                     self.m.set_y_datum_with_laser()
                 elif xy == "XY":
-                    if jog_after_laser_datum_set:
-                        self.m.set_workzone_to_pos_xy_with_laser()
+                    self.m.set_workzone_to_pos_xy_with_laser(jog_after_laser_datum_set)
             else:
                 if xy == "X":
                     self.m.set_x_datum()
