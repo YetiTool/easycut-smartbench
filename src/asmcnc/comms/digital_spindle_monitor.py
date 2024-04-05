@@ -1,5 +1,7 @@
+import threading
 import time
 
+import pika
 from kivy.clock import Clock
 from typing import Dict, List
 
@@ -35,6 +37,22 @@ class DigitalSpindleMonitor(object):
     __last_alert_time = None  # type: time
     __alert_interval = 60  # type: int  # seconds
 
+    __payload = None  # type: Dict[str, any]
+    __stats_skeleton = {
+        "timestamp": None,
+        "load_qda": None,
+        "temperature": None,
+        "speed": None,
+        "voltage": None,
+        "kill_time": None,
+    }  # type: Dict[str, any]
+
+    __connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    __channel = __connection.channel()
+    __channel.queue_declare(queue='spindle')
+
+    __send_thread = None
+
     def __init__(self, serial_connection):
         """
         :param serial_connection: SerialConnection object to bind to.
@@ -43,6 +61,23 @@ class DigitalSpindleMonitor(object):
 
         self.__serial_connection = serial_connection
         self.__serial_connection.bind(is_spindle_in_inrush_state=self.on_is_spindle_in_inrush_state_change)
+
+        self.__payload = {
+            "serial": None,
+            "stats": [
+
+            ]
+        }
+
+        self.__send_thread = threading.Thread(target=self.__send_payload)
+        self.__send_thread.start()
+
+    def __send_payload(self):
+        while True:
+            if len(self.__payload["stats"]) >= 10:
+                self.__channel.basic_publish(exchange='', routing_key='spindle', body=str(self.__payload))
+                self.__payload["stats"] = []
+            time.sleep(1)
 
     def on_is_spindle_in_inrush_state_change(self, instance, value):
         """
@@ -64,9 +99,14 @@ class DigitalSpindleMonitor(object):
         :param value: New value of the digital spindle load raw.
         :return:
         """
-        # TODO: Implement other checks for faulty readings.
-        if value < 0 or (TEST_MODE and value > 0):
-            self.__add_faulty_reading(value)
+        self.__payload["serial"] = "test"
+        self.__stats_skeleton["timestamp"] = time.time()
+        self.__stats_skeleton["load_qda"] = value
+        self.__stats_skeleton["temperature"] = self.__serial_connection.digital_spindle_temperature
+        self.__stats_skeleton["speed"] = self.__serial_connection.spindle_speed
+        self.__stats_skeleton["voltage"] = self.__serial_connection.digital_spindle_mains_voltage
+        self.__stats_skeleton["kill_time"] = self.__serial_connection.digital_spindle_kill_time
+        self.__payload["stats"].append(self.__stats_skeleton.copy())
 
     def __add_faulty_reading(self, value):
         """
