@@ -12,7 +12,7 @@ def connect_to_wifi(ssid, password, country_code):
         Logger.warning("This function is only available on Linux")
         return False
 
-    Logger.info("Connecting to {} with password {} ({})".format(ssid, password, country_code))
+    Logger.info("Connecting to {} ({})".format(ssid, country_code))
 
     config_lines = [
         "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev",
@@ -34,7 +34,7 @@ def connect_to_wifi(ssid, password, country_code):
 
     process = subprocess.Popen(
         ["sudo", "wpa_cli", "-i", "wlan0", "reconfigure"],
-    )
+    )  # sudo wpa_cli -i wlan0 reconfigure
 
     output, error = process.communicate()
 
