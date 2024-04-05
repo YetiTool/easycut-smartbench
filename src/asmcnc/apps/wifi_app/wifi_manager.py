@@ -44,9 +44,11 @@ def connect_to_wifi(ssid, password, country_code):
 
     output, error = process.communicate()
 
-    if error or "fail" in output.lower():
+    if error:
         Logger.error("Error while connecting to wifi: {}".format(error))
         return False
+
+    Logger.debug("Output: {}".format(output))
 
     # Restart the DHCP service to allocate a new IP address on the new network
     os.system("sudo systemctl restart dhcpcd")
