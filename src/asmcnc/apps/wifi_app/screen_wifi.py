@@ -13,6 +13,8 @@ from kivy.uix.spinner import Spinner, SpinnerOption
 from kivy.clock import Clock
 import socket, sys, os
 from kivy.properties import StringProperty, ObjectProperty
+
+from asmcnc.apps.wifi_app import wifi_manager
 from asmcnc.skavaUI import popup_info
 from kivy.core.window import Window
 
@@ -495,21 +497,16 @@ class WifiScreen(Screen):
 
     # Toggles between normal network selection and custom network name input for hidden networks
     def custom_ssid_input(self):
-        if self.custom_ssid_button.state == "normal":
-            try:
-                self.network_name_input.remove_widget(self.custom_network_name_box)
-                self.network_name_input.add_widget(self.network_name_box)
-            except:
-                pass
-            self.custom_ssid_button.text = self.l.get_str("Other network")
-        else:
-            try:
-                self.network_name_input.remove_widget(self.network_name_box)
-                self.network_name_input.add_widget(self.custom_network_name_box)
-                self.custom_network_name.focus = True
-            except:
-                pass
+        if self.network_name_box.parent:
+            self.network_name_input.remove_widget(self.network_name_box)
+            self.network_name_input.add_widget(self.custom_network_name_box)
+            self.custom_network_name.focus = True
             self.custom_ssid_button.text = self.l.get_str("Select network")
+        else:
+            self.network_name_input.remove_widget(self.custom_network_name_box)
+            self.network_name_input.add_widget(self.network_name_box)
+            self.network_name.focus = True
+            self.custom_ssid_button.text = self.l.get_str("Other network")
 
     def on_enter(self):
         self.kb.setup_text_inputs(self.text_inputs)
@@ -575,9 +572,9 @@ class WifiScreen(Screen):
         if len(self.netname) < 1:
             message = self.l.get_str("Please enter a valid network name.")
             popup_info.PopupWarning(self.sm, self.l, message)
-        elif len(self.password) < 8 or len(self.password) > 63:
+        elif len(self.password) > 63:
             message = self.l.get_str(
-                "Please enter a password between 8 and 63 characters."
+                "Please enter a password shorter than 64 characters."
             )
             popup_info.PopupWarning(self.sm, self.l, message)
         else:
@@ -593,6 +590,18 @@ class WifiScreen(Screen):
         return state == "UP"
 
     def connect_wifi(self):
+        self._password.text = ""
+
+        success = wifi_manager.connect_to_wifi(self.netname, self.password, self.country.text)
+
+        if success:
+            message = self.l.get_str("Wifi connected successfully!")
+            popup_info.PopupMiniInfo(self.sm, self.l, message)
+        else:
+            message = self.l.get_str("No WiFi connection!")
+            popup_info.PopupWarning(self.sm, self.l, message)
+
+    def connect_wifi2(self):
         self._password.text = ""
         wait_popup = popup_info.PopupWait(self.sm, self.l)
         
