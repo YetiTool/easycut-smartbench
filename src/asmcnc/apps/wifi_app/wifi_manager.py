@@ -40,4 +40,6 @@ def connect_to_wifi(ssid, password, country_code):
 
     Logger.info("Connected to WiFi")
 
+    subprocess.Popen("sudo systemctl restart dhcpcd", shell=True).wait()
+
     return True
