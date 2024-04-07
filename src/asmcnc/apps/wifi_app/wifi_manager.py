@@ -1,5 +1,6 @@
 import subprocess
 import sys
+import time
 
 from asmcnc.comms.logging_system.logging_system import Logger
 
@@ -13,6 +14,7 @@ def is_connected_to_internet():
     :return:
     """
     response = subprocess.Popen("ping -c 1 8.8.8.8 > /dev/null 2>&1", shell=True).wait()
+    Logger.info("Internet connection status: {}".format(response == 0))
     return response == 0
 
 
@@ -58,5 +60,7 @@ def connect_to_wifi(ssid, password, country_code):
     Logger.info("Connected to WiFi")
 
     subprocess.Popen("sudo systemctl restart dhcpcd", shell=True).wait()
+
+    time.sleep(2)
 
     return is_connected_to_internet()
