@@ -1,21 +1,22 @@
 import subprocess
 import sys
-import time
 
 from asmcnc.comms.logging_system.logging_system import Logger
 
 WPA_SUPPLICANT_PATH = "/etc/wpa_supplicant/wpa_supplicant.conf"
 
 
-def is_connected_to_internet():
+def is_network_connected():
     """
-    Check if the device is connected to the internet.
-    Note, this won't work for networks that aren't connected to the internet.
-    :return:
+    Check if the network is connected.
+    :return: True if the network is connected, False otherwise
     """
-    response = subprocess.Popen("ping -c 1 8.8.8.8 > /dev/null 2>&1", shell=True).wait()
-    Logger.info("Internet connection status: {}".format(response == 0))
-    return response == 0
+    try:
+        result = subprocess.Popen(['ip', 'addr', 'show', 'wlan0'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        output, _ = result.communicate()
+        return "inet" in output.decode("utf-8")
+    except subprocess.CalledProcessError:
+        return False
 
 
 def connect_to_wifi(ssid, password, country_code):
@@ -57,10 +58,11 @@ def connect_to_wifi(ssid, password, country_code):
         Logger.error("Failed to connect to WiFi: {}".format(err))
         return False
 
+    # Check if the network is connected successfully
+    if not is_network_connected():
+        Logger.error("Failed to get IP address for the interface")
+        return False
+
     Logger.info("Connected to WiFi")
 
-    subprocess.Popen("sudo systemctl restart dhcpcd", shell=True).wait()
-
-    time.sleep(2)
-
-    return is_connected_to_internet()
+    return True
