@@ -1,11 +1,9 @@
-import os
 import subprocess
 import sys
 
 from asmcnc.comms.logging_system.logging_system import Logger
 
 WPA_SUPPLICANT_PATH = "/etc/wpa_supplicant/wpa_supplicant.conf"
-WPA_SUPPLICANT_WLAN0_PATH = "/etc/wpa_supplicant/wpa_supplicant-wlan0.conf"
 
 
 def connect_to_wifi(ssid, password, country_code):
@@ -26,36 +24,18 @@ def connect_to_wifi(ssid, password, country_code):
         "}"
     ]
 
-    os.popen("sudo chmod a+w {}".format(WPA_SUPPLICANT_PATH))
-    os.popen("sudo chmod a+w {}".format(WPA_SUPPLICANT_PATH))
-
     with open(WPA_SUPPLICANT_PATH, "w") as f:
         f.write("\n".join(config_lines))
 
-    Logger.info("Configuration written, reconfiguring...")
+    process = subprocess.Popen(["wpa_cli", "-i", "wlan0", "reconfigure"],
+                               stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-    # Flush all the IP addresses from cache
-    os.system("sudo ip addr flush dev wlan0")
+    out, err = process.communicate()
 
-    # Reconfigure the wifi interface
-    process = subprocess.Popen(
-        ["sudo", "wpa_cli", "-i", "wlan0", "reconfigure"],
-    )  # sudo wpa_cli -i wlan0 reconfigure
-
-    output, error = process.communicate()
-
-    if error:
-        Logger.error("Error while connecting to wifi: {}".format(error))
+    if process.returncode != 0:
+        Logger.error("Failed to connect to WiFi: {}".format(err))
         return False
 
-    Logger.debug("Output: {}".format(output))
+    Logger.info("Connected to WiFi")
 
-    # Restart the DHCP service to allocate a new IP address on the new network
-    os.system("sudo systemctl restart dhcpcd")
-
-    Logger.info("Connected to wifi successfully!")
     return True
-
-
-
-
