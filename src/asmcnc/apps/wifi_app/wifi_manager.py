@@ -27,7 +27,7 @@ def connect_to_wifi(ssid, password, country_code):
     with open(WPA_SUPPLICANT_PATH, "w") as f:
         f.write("\n".join(config_lines))
 
-    process = subprocess.Popen(["wpa_cli", "-i", "wlan0", "reconfigure"],
+    process = subprocess.Popen(["sudo", "wpa_cli", "-i", "wlan0", "reconfigure"],
                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     out, err = process.communicate()
