@@ -58,7 +58,8 @@ def connect_to_wifi(ssid, password, country_code):
         Logger.error("Failed to connect to WiFi: {}".format(err))
         return False
 
-    # Check if the network is connected successfully
+    subprocess.Popen("sudo systemctl restart dhcpcd", shell=True).wait()
+
     if not is_network_connected():
         Logger.error("Failed to get IP address for the interface")
         return False
