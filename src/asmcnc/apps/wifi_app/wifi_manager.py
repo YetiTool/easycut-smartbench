@@ -24,7 +24,7 @@ def connect_to_wifi(ssid, password, country_code):
         "}"
     ]
 
-    subprocess.Popen("sudo chmod 600 {}".format(WPA_SUPPLICANT_PATH), shell=True).wait()
+    subprocess.Popen("sudo chmod 666 {}".format(WPA_SUPPLICANT_PATH), shell=True).wait()
 
     with open(WPA_SUPPLICANT_PATH, "w") as f:
         f.write("\n".join(config_lines))
