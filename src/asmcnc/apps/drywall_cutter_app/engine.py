@@ -714,7 +714,7 @@ class GCodeEngine():
 
                 # Apply pass depths
                 pass_depths = self.calculate_pass_depths(total_cut_depth, self.config.active_config.cutting_depths.depth_per_pass)
-                start_condition = next((i for i, s in enumerate(gcode_lines) if re.search(r"T[1-9]", s)), None)
+                start_condition = next((i for i, s in enumerate(gcode_lines) if re.search(r"M3", s)), None)
                 end_condition = next((i for i, s in enumerate(gcode_lines) if re.search(r"M5", s)), None)
                 gcode_lines = self.repeat_for_depths(gcode_lines, pass_depths, start_condition, end_condition)
 
