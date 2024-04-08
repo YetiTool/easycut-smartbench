@@ -167,7 +167,7 @@ class CoordinateSystem(object):
     class DrywallTecLaserPosition(object):
         '''Class to store the drywall tec coordinates (using laser as reference).'''
 
-        def __init__(self, dwt_cooridnates, ):
+        def __init__(self, dwt_cooridnates):
             self.dwt_coordinates = dwt_cooridnates
             self.laser_delta_x = self.dwt_coordinates.m.laser_offset_x_value
             self.laser_delta_y = self.dwt_coordinates.m.laser_offset_y_value
@@ -235,9 +235,9 @@ class CoordinateSystem(object):
             move_command = "G0 G53"
 
             if dwl_x is not None:
-                move_command += " X{}".format(-(self.dwt_coordinates.x_delta - self.laser_delta_x))
+                move_command += " X{}".format(-(self.dwt_coordinates.x_delta - self.dwt_coordinates.m.laser_offset_x_value))
             if dwl_y is not None:
-                move_command += " Y{}".format(-(self.dwt_coordinates.y_delta - self.laser_delta_y))
+                move_command += " Y{}".format(-(self.dwt_coordinates.y_delta - self.dwt_coordinates.m.laser_offset_y_value))
             if dwl_z is not None:
                 move_command += " Z{}".format(self.get_mz_from_dwlz(dwl_z))
 
