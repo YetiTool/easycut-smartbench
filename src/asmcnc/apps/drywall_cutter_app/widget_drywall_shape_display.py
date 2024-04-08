@@ -409,7 +409,7 @@ class DrywallShapeDisplay(Widget):
         Is called when the x datum of the machine changes. E.g. running, jogging, after homing...
         value has the new x_datum
         """
-        self.x_coord = value
+        self.x_coord = value + self.m.laser_offset_x_value
         Clock.schedule_once(lambda dt: self.check_datum_and_extents(), 0.1)
 
     def update_y_datum(self, value):
@@ -417,7 +417,7 @@ class DrywallShapeDisplay(Widget):
         Is called when the y datum of the machine changes. E.g. running, jogging, after homing...
         value has the new y_datum
         """
-        self.y_coord = value
+        self.y_coord = value + self.m.laser_offset_y_value
         Clock.schedule_once(lambda dt: self.check_datum_and_extents(), 0.1)
 
     def update_state(self, value):
@@ -589,14 +589,15 @@ class DrywallShapeDisplay(Widget):
 
         # Get current x/y values & shape clearances
         current_shape = self.dwt_config.active_config.shape_type.lower()
-        current_x, current_y = self.cs.drywall_tec_coordinates.get_x(), self.cs.drywall_tec_coordinates.get_y()
+        current_x, current_y = self.cs.drywall_tec_position.get_x(), self.cs.drywall_tec_position.get_y()
+        current_laser_x, current_laser_y = self.cs.drywall_tec_laser_position.get_x(), self.cs.drywall_tec_laser_position.get_y()
 
         tool_offset_value = self.tool_offset_value()
         x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance = self.get_x_y_clearances(current_shape, self.x_coord, self.y_coord, tool_offset_value)
 
         # Update canvas elements
-        self.set_datum_position_label(current_x, current_y)
-        self.update_bumpers_and_validation_labels(current_shape, current_x, current_y, x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance)
+        self.set_datum_position_label(current_laser_x, current_laser_y)
+        self.update_bumpers_and_validation_labels(current_shape, current_laser_x, current_laser_y, x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance)
 
     # Check_datum_and_extents sub-functions below this comment:
 

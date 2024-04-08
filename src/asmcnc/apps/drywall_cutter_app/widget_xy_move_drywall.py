@@ -3,8 +3,8 @@ import sys, textwrap
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 
-from asmcnc.skavaUI import popup_info
 from asmcnc.core_UI.components.buttons import probe_button
+from asmcnc.core_UI.custom_popups import PopupDatum
 
 Builder.load_string("""
 <XYMoveDrywall>
@@ -313,7 +313,7 @@ class XYMoveDrywall(Widget):
                 ).replace('X-Y', '[b]X-Y[/b]')).replace(self.l.get_str('datum'), self.l.get_bold('datum'))
             )
 
-        popup_info.PopupDatum(self.sm, self.m, self.l, 'XY', warning)
+        PopupDatum(self.sm, self.m, self.l, 'XY', warning, jog_after_laser_datum_set=False)
 
     def format_command(self, cmd):
         wrapped_cmd = textwrap.fill(cmd, width=35, break_long_words=False)

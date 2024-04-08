@@ -25,7 +25,6 @@ class ImageButton(ButtonBehavior, Image):
 
 
 from engine import GCodeEngine
-from coordinate_system import CoordinateSystem
 
 Builder.load_string("""
 <DrywallCutterScreen>:
@@ -197,8 +196,8 @@ class DrywallCutterScreen(Screen):
         self.kb = kwargs['keyboard']
         self.jd = kwargs['job']
         self.pm = kwargs['popup_manager']
+        self.cs = self.m.cs
 
-        self.cs = CoordinateSystem(self.m)
         self.engine = GCodeEngine(self.m, self.dwt_config, self.cs)
         self.simulation_started = False
         self.ignore_state = True
@@ -391,10 +390,10 @@ class DrywallCutterScreen(Screen):
 
         if not self.simulation_started and self.m.s.m_state.lower() == 'idle':
             self.m.s.bind(m_state=lambda i, value: self.set_simulation_popup_state(value))
+            self.pm.show_wait_popup(main_string=self.l.get_str('Preparing for simulation') + '...')
             self.ignore_state = False
             self.simulation_started = False
             self.engine.engine_run(simulate=True)
-            self.pm.show_wait_popup(main_string=self.l.get_str('Preparing for simulation') + '...')
 
     def set_simulation_popup_state(self, machine_state):
         machine_state = machine_state.lower()

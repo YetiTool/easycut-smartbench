@@ -71,6 +71,7 @@ class SerialConnection(EventDispatcher):
     setting_121 = NumericProperty(-1.0)
     setting_122 = NumericProperty(-1.0)
     setting_130 = NumericProperty(-1.0)
+    setting_131 = NumericProperty(-1.0)
     STATUS_INTERVAL = 0.1  # How often to poll general status to update UI (0.04 = 25Hz = smooth animation)
 
     s = None  # Serial comms object
