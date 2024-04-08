@@ -156,8 +156,6 @@ class RouterMachine(EventDispatcher):
         self.model_manager = ModelManagerSingleton()
         self.set_jog_limits()
 
-        model_manager = ModelManagerSingleton()
-
         self.win_serial_port = win_serial_port   # Need to save so that serial connection can be reopened (for zhead cycle app)
 
         # Establish 's'erial comms and initialise
