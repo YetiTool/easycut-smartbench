@@ -18,6 +18,9 @@ from kivy.clock import Clock
 import os, sys
 import socket
 
+from asmcnc.core_UI.components.widgets.coordinate_labels import MachineXCoordinateLabel, MachineYCoordinateLabel, \
+    MachineZCoordinateLabel
+
 Builder.load_string(
     """
 
@@ -26,15 +29,15 @@ Builder.load_string(
 <StatusBar>
 
     grbl_status_label:grbl_status_label
-    grbl_xm_label:grbl_xm_label
-    grbl_ym_label:grbl_ym_label
-    grbl_zm_label:grbl_zm_label
     grbl_xw_label:grbl_xw_label
     grbl_yw_label:grbl_yw_label
     grbl_zw_label:grbl_zw_label
     serial_image:serial_image
     wifi_image:wifi_image
     ip_status_label:ip_status_label
+    m_x_container:m_x_container
+    m_y_container:m_y_container
+    m_z_container:m_z_container
 
     cheeky_color: '#4CAF50FF'
 
@@ -51,26 +54,20 @@ Builder.load_string(
         orientation: "horizontal"
         size: self.parent.size
         pos: self.parent.pos
+        padding: [5, 0, 5, 0]
 
         Image:
             id: serial_image
-            size_hint_x: 0.05
-            source: "./asmcnc/skavaUI/img/serial_on.png"
-            center_x: self.parent.center_x
-            y: self.parent.y
-            size: self.parent.width, self.parent.height
+            size_hint_y: 0.9
             allow_stretch: True
+            source: "./asmcnc/skavaUI/img/serial_on.png"
         Image:
             id: wifi_image
-            size_hint_x: 0.05
-            source: "./asmcnc/skavaUI/img/wifi_on.png"
-            center_x: self.parent.center_x
-            y: self.parent.y
-            size: self.parent.width, self.parent.height
+            size_hint_y: 0.9
             allow_stretch: True
+            source: "./asmcnc/skavaUI/img/wifi_on.png"
         Label:
-            font_size: str(0.01875 * app.width) + 'sp'
-            size_hint_x: 0.2
+            font_size: str(0.0225 * app.width) + 'sp'
             id: ip_status_label
             text_size: self.size
             halign: 'left'
@@ -80,62 +77,43 @@ Builder.load_string(
 #         Label:
 #             size_hint_x: 0.1
 
-        Label:
-            font_size: str(0.01875 * app.width) + 'sp'
-            size_hint_x: 0.1
-            id: grbl_xm_label
-            text: 'mX:\\n-9999.99'
-            text_size: self.size
-            halign: 'left'
-            valign: 'middle'
-            markup: True
-        Label:
-            font_size: str(0.01875 * app.width) + 'sp'
-            size_hint_x: 0.1
-            id: grbl_ym_label
-            text: 'mY:\\n-9999.99'
-            text_size: self.size
-            halign: 'left'
-            valign: 'middle'
-            markup: True
-        Label:
-            font_size: str(0.01875 * app.width) + 'sp'
-            size_hint_x: 0.1
-            id: grbl_zm_label
-            text: 'mZ:\\n-9999.99'
-            text_size: self.size
-            halign: 'left'
-            valign: 'middle'
-            markup: True
+        BoxLayout:
+            id: m_x_container
+            
+        BoxLayout:
+            id: m_y_container
+            
+        BoxLayout:
+            id: m_z_container
 
-
-        Label:
-            font_size: str(0.01875 * app.width) + 'sp'
-            size_hint_x: 0.1
-            id: grbl_xw_label
-            text: 'wX:\\n-9999.99'
-            text_size: self.size
-            halign: 'left'
-            valign: 'middle'
-        Label:
-            font_size: str(0.01875 * app.width) + 'sp'
-            size_hint_x: 0.1
-            id: grbl_yw_label
-            text: 'wY:\\n-9999.99'
-            text_size: self.size
-            halign: 'left'
-            valign: 'middle'
-        Label:
-            font_size: str(0.01875 * app.width) + 'sp'
-            size_hint_x: 0.1
-            id: grbl_zw_label
-            text: 'wZ:\\n-9999.99'
-            text_size: self.size
-            halign: 'left'
-            valign: 'middle'
+        BoxLayout:
+            Label:
+                font_size: str(0.01875 * app.width) + 'sp'
+                id: grbl_xw_label
+                text: 'wX:\\n-9999.99'
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+        BoxLayout:
+            Label:
+                font_size: str(0.01875 * app.width) + 'sp'
+                id: grbl_yw_label
+                text: 'wY:\\n-9999.99'
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+        BoxLayout:
+            Label:
+                font_size: str(0.01875 * app.width) + 'sp'
+                size_hint_x: 0.1
+                id: grbl_zw_label
+                text: 'wZ:\\n-9999.99'
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
 
         Label:
-            font_size: str(0.01875 * app.width) + 'sp'
+            font_size: str((0.0225) * app.width) + 'sp'
             size_hint_x: 0.1
             id: grbl_status_label
             text: 'Status'
@@ -159,6 +137,11 @@ class StatusBar(Widget):
         super(StatusBar, self).__init__(**kwargs)
         self.m = kwargs["machine"]
         self.sm = kwargs["screen_manager"]
+
+        self.m_x_container.add_widget(MachineXCoordinateLabel(self.m.s))
+        self.m_y_container.add_widget(MachineYCoordinateLabel(self.m.s))
+        self.m_z_container.add_widget(MachineZCoordinateLabel(self.m.s))
+
         Clock.schedule_interval(
             self.refresh_grbl_label_values, self.GRBL_REPORT_INTERVAL
         )
@@ -168,45 +151,16 @@ class StatusBar(Widget):
         self.refresh_ip_label_value()
 
     def check_limit_switch(self):
-        if self.m.s.limit_x:
-            self.grbl_xm_label.text = "m[b][color=ff0000]x[/color][/b]:\n" + str(
-                round(self.m.mpos_x(), 2)
-            )
-        elif self.m.s.limit_X:
-            self.grbl_xm_label.text = "m[b][color=ff0000]X[/color][/b]:\n" + str(
-                round(self.m.mpos_x(), 2)
-            )
-        else:
-            self.grbl_xm_label.text = "mX:\n" + str(round(self.m.mpos_x(), 2))
-        if self.m.s.limit_Y_axis:
-            self.grbl_ym_label.text = "m[b][color=ff0000]Y[/color][/b]:\n" + str(
-                round(self.m.mpos_y(), 2)
-            )
-        elif self.m.s.limit_Y:
-            self.grbl_ym_label.text = "m[b][color=ff0000]Y[/color][/b]:\n" + str(
-                round(self.m.mpos_y(), 2)
-            )
-        elif self.m.s.limit_y:
-            self.grbl_ym_label.text = "m[b][color=ff0000]y[/color][/b]:\n" + str(
-                round(self.m.mpos_y(), 2)
-            )
-        else:
-            self.grbl_ym_label.text = "mY:\n" + str(round(self.m.mpos_y(), 2))
-        if self.m.s.limit_z:
-            self.grbl_zm_label.text = "m[b][color=ff0000]Z[/color][/b]:\n" + str(
-                round(self.m.mpos_z(), 2)
-            )
-        else:
-            self.grbl_zm_label.text = "mZ:\n" + str(round(self.m.mpos_z(), 2))
+        pass
 
     def refresh_grbl_label_values(self, dt):
         if self.m.is_connected():
             self.serial_image.source = "./asmcnc/skavaUI/img/serial_on.png"
             self.grbl_status_label.text = self.m.state()
             self.check_limit_switch()
-            self.grbl_xw_label.text = "wX:\n" + str(round(self.m.wpos_x(), 2))
-            self.grbl_yw_label.text = "wY:\n" + str(round(self.m.wpos_y(), 2))
-            self.grbl_zw_label.text = "wZ:\n" + str(round(self.m.wpos_z(), 2))
+            self.grbl_xw_label.text = "wX: " + str(round(self.m.wpos_x(), 2))
+            self.grbl_yw_label.text = "wY: " + str(round(self.m.wpos_y(), 2))
+            self.grbl_zw_label.text = "wZ: " + str(round(self.m.wpos_z(), 2))
         else:
             self.serial_image.source = "./asmcnc/skavaUI/img/serial_off.png"
 

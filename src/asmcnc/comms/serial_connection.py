@@ -836,9 +836,9 @@ class SerialConnection(EventDispatcher):
     z_change = False
 
     # Work co-ordinates
-    w_x = '0.0'
-    w_y = '0.0'
-    w_z = '0.0'
+    w_x = NumericProperty(0.0)
+    w_y = NumericProperty(0.0)
+    w_z = NumericProperty(0.0)
 
     # Work co-ordinate offset
     wco_x = '0.0'
@@ -880,11 +880,11 @@ class SerialConnection(EventDispatcher):
     spindle_freeload = None
 
     # IO Pins for switches etc
-    limit_x = False  # convention: min is lower_case
-    limit_X = False  # convention: MAX is UPPER_CASE
-    limit_y = False
-    limit_Y = False
-    limit_z = False
+    limit_x = BooleanProperty(False)  # convention: min is lower_case  # refactor to better names e.g. x_min_limit
+    limit_X = BooleanProperty(False)  # convention: MAX is UPPER_CASE
+    limit_y = BooleanProperty(False)
+    limit_Y = BooleanProperty(False)
+    limit_z = BooleanProperty(False)
     probe = False
     dust_shoe_cover = False
     spare_door = False

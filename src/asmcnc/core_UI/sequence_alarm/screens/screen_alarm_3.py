@@ -134,11 +134,11 @@ class AlarmScreen3(Screen):
     def __init__(self, **kwargs):
         super(AlarmScreen3, self).__init__(**kwargs)
         self.a = kwargs["alarm_manager"]
-        self.status_bar_widget = widget_status_bar.StatusBar(
-            screen_manager=self.a.sm, machine=self.a.m
-        )
-        self.status_container.add_widget(self.status_bar_widget)
-        self.status_bar_widget.cheeky_color = "#1976d2"
+        # self.status_bar_widget = widget_status_bar.StatusBar(
+        #     screen_manager=self.a.sm, machine=self.a.m
+        # )
+        # self.status_container.add_widget(self.status_bar_widget)
+        # self.status_bar_widget.cheeky_color = "#1976d2"
         self.camera_img.source = "./asmcnc/core_UI/sequence_alarm/img/camera_light.png"
         self.next_button.text = self.a.l.get_str("Next") + "..."
         # self.usb_img.source = "./asmcnc/core_UI/sequence_alarm/img/usb_empty_light.png"
