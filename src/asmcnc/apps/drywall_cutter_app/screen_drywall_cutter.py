@@ -389,11 +389,11 @@ class DrywallCutterScreen(Screen):
             return
 
         if not self.simulation_started and self.m.s.m_state.lower() == 'idle':
+            self.pm.show_wait_popup(main_string=self.l.get_str('Preparing for simulation') + '...')
             self.m.s.bind(m_state=lambda i, value: self.set_simulation_popup_state(value))
             self.ignore_state = False
             self.simulation_started = False
             self.engine.engine_run(simulate=True)
-            self.pm.show_wait_popup(main_string=self.l.get_str('Preparing for simulation') + '...')
 
     def set_simulation_popup_state(self, machine_state):
         machine_state = machine_state.lower()
