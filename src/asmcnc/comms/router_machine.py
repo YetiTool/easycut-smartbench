@@ -2112,9 +2112,6 @@ class RouterMachine(EventDispatcher):
         Logger.info("Move to laser offset")
         self.jog_absolute_single_axis('X', float(self.x_min_jog_abs_limit) + 5 - self.laser_offset_x_value, 3000)
 
-        if self.model_manager.is_machine_drywall():
-            # self.cs.drywall_tec_laser_position.move_to_dwl(dwl_x=0, dwl_y=0)
-
     # final component is always complete homing sequence
     def complete_homing_sequence(self, dt=0):
         self.set_led_colour("GREEN")
