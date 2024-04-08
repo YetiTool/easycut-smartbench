@@ -2122,7 +2122,7 @@ class RouterMachine(EventDispatcher):
 
         if self.model_manager.is_machine_drywall():
             self.cs.drywall_tec_laser_position.move_to_dwl(dwl_x=0, dwl_y=0)
-            Logger.info("Moving laser to 0, 0")
+            Logger.info("Moving laser to machine's 0, 0")
 
     # sequence control variables and functions
     homing_in_progress = False
