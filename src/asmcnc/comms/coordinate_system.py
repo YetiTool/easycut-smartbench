@@ -16,7 +16,7 @@ class CoordinateSystem(object):
 
         self.laser_position = self.LaserPosition(self.m, self.machine_position, self.drywall_tec_laser_position)
 
-        self.debug = True
+        self.debug = False
 
         if self.debug:
             self.m.s.bind(m_x=lambda i, value: self.log_pos(value))
