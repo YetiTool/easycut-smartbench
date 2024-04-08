@@ -793,7 +793,8 @@ class GCodeEngine():
                 output = "(%s)\nG90\nM3 S%d\nG0 %s\n\n%s(End)\nG0 Z%d\nM5\n" % (
                     filename, self.config.active_cutter.parameters.cutting_spindle_speed, safe_start_position, ''.join(cutting_lines), z_safe_distance)
             else:
-                output = '\n'.join(cutting_lines)
+                output = "(%s)\nG90\nM3 S%d\nG0 %s\n" % (filename, self.config.active_cutter.parameters.cutting_spindle_speed, safe_start_position)
+                output += "\n".join(cutting_lines)
 
             with open(output_path, 'w+') as out_file:
                 out_file.write(output)  # Use write() to write the entire output as a single string since we use \n in the string
