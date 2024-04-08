@@ -25,7 +25,6 @@ class ImageButton(ButtonBehavior, Image):
 
 
 from engine import GCodeEngine
-from coordinate_system import CoordinateSystem
 
 Builder.load_string("""
 <DrywallCutterScreen>:
@@ -197,8 +196,8 @@ class DrywallCutterScreen(Screen):
         self.kb = kwargs['keyboard']
         self.jd = kwargs['job']
         self.pm = kwargs['popup_manager']
+        self.cs = self.m.cs
 
-        self.cs = CoordinateSystem(self.m)
         self.engine = GCodeEngine(self.m, self.dwt_config, self.cs)
         self.simulation_started = False
         self.ignore_state = True

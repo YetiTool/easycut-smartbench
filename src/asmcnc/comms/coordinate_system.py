@@ -44,9 +44,9 @@ class CoordinateSystem(object):
 
         def __init__(self, m):
             self.m = m
-            self.x = self.m.mpos_x()
-            self.y = self.m.mpos_y()
-            self.z = self.m.mpos_z()
+            self.x = None
+            self.y = None
+            self.z = None
 
         def get_x(self):
             return self.m.mpos_x()
@@ -62,9 +62,9 @@ class CoordinateSystem(object):
 
         def __init__(self, m):
             self.m = m
-            self.x = m.x_wco()
-            self.y = m.y_wco()
-            self.z = m.z_wco()
+            self.x = None
+            self.y = None
+            self.z = None
 
         def get_x(self):
             return self.m.x_wco()
@@ -90,13 +90,11 @@ class CoordinateSystem(object):
             self.z_delta = 0
 
         def update_x_delta(self, value):
-            self.x_delta = round(value
-                            - self.m.limit_switch_safety_distance
-                            - self.m.laser_offset_tool_clearance_to_access_edge_of_sheet, 2)
+            # The x_delta is the difference between the machine x-coordinate and the drywall tec x-coordinate.
+            self.x_delta = round(value - self.m.limit_switch_safety_distance, 2)
         def update_y_delta(self, value):
-            self.y_delta = round(value
-                            - self.m.limit_switch_safety_distance
-                            - self.m.laser_offset_tool_clearance_to_access_edge_of_sheet, 2)
+            # The y_delta is the difference between the machine y-coordinate and the drywall tec y-coordinate.
+            self.y_delta = round(value - self.m.limit_switch_safety_distance, 2)
         def get_x(self):
             return self.machine_position.get_x() + self.x_delta
 
@@ -141,6 +139,30 @@ class CoordinateSystem(object):
             float: The corresponding machine z-coordinate.
             """
             return dw_z - self.z_delta
+
+        def move_to_dw(self, dw_x=None, dw_y=None, dw_z=None):
+            """
+            Method to move the machine to the drywall tec coordinates.
+
+            Parameters:
+            dw_x (float): The drywall tec x-coordinate.
+            dw_y (float): The drywall tec y-coordinate.
+            dw_z (float): The drywall tec z-coordinate.
+            """
+
+            if dw_x is None and dw_y is None and dw_z is None:
+                return  # No coordinates to move to
+
+            move_command = "$J=G53"
+
+            if dw_x is not None:
+                move_command += " X{}".format(self.get_mx_from_dwx(dw_x))
+            if dw_y is not None:
+                move_command += " Y{}".format(self.get_my_from_dwy(dw_y))
+            if dw_z is not None:
+                move_command += " Z{}".format(self.get_mz_from_dwz(dw_z))
+
+            self.m.s.write_command(move_command)
 
     class DrywallTecLaserPosition(object):
         '''Class to store the drywall tec coordinates (using laser as reference).'''
@@ -197,8 +219,32 @@ class CoordinateSystem(object):
             """
             return self.dwt_coordinates.get_mz_from_dwz(dwlz)
 
+        def move_to_dwl(self, dwl_x=None, dwl_y=None, dwl_z=None):
+            """
+            Method to move the machine to the drywall tec laser coordinates.
+
+            Parameters:
+            dwl_x (float): The drywall tec laser x-coordinate.
+            dwl_y (float): The drywall tec laser y-coordinate.
+            dwl_z (float): The drywall tec laser z-coordinate.
+            """
+
+            if dwl_x is None and dwl_y is None and dwl_z is None:
+                return
+
+            move_command = "$J=G53"
+
+            if dwl_x is not None:
+                move_command += " X{}".format(self.get_mx_from_dwlx(dwl_x))
+            if dwl_y is not None:
+                move_command += " Y{}".format(self.get_my_from_dwly(dwl_y))
+            if dwl_z is not None:
+                move_command += " Z{}".format(self.get_mz_from_dwlz(dwl_z))
+
+            self.dwt_coordinates.m.s.write_command(move_command)  # Router machine instance accessed through dwt_coordinates
+
     class LaserPosition(object):
-        '''Class to store the drywall tec laser coordinates.'''
+        '''Class to store the laser coordinates.'''
 
         def __init__(self, m, machine_position, dwt_laser_position):
             self.m = m
