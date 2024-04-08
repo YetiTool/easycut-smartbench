@@ -1,4 +1,4 @@
-from kivy.clock import Clock
+from kivy.animation import Animation
 from kivy.lang import Builder
 from kivy.properties import BooleanProperty, ObjectProperty
 from kivy.uix.widget import Widget
@@ -29,18 +29,18 @@ class BlinkingWidget(Widget):
 
     def __init__(self, **kwargs):
         super(BlinkingWidget, self).__init__(**kwargs)
-        self.blinking_event = None
+
+        self.animation = (
+            Animation(bg_color=YELLOW, duration=1, step=1/20)
+            + Animation(bg_color=TRANSPARENT_YELLOW, duration=1, step=1/20)
+        )
+        self.animation.repeat = True
+
         self.bind(blinking=self.on_blinking)
 
     def on_blinking(self, *args):
         if self.blinking:
-            self.blinking_event = Clock.schedule_interval(self.update_color, 0.5)
+            self.animation.start(self)
         else:
-            self.blinking_event.cancel()
+            self.animation.cancel(self)
             self.bg_color = TRANSPARENT_YELLOW
-
-    def update_color(self, dt):
-        if self.bg_color == YELLOW:
-            self.bg_color = TRANSPARENT_YELLOW
-        else:
-            self.bg_color = YELLOW
