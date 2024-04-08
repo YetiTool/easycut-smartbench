@@ -67,17 +67,14 @@ class VirtualZ(Widget):
         self.m = kwargs["machine"]
         self.sm = kwargs["screen_manager"]
         self.jd = kwargs["job"]
-        Clock.schedule_interval(self.refresh_widget, self.WIDGET_REFRESH_INTERVAL)
+        self.m.s.bind(wco_z=self.setZones)
+        self.m.s.bind(m_z=self.setBitPos)
 
-    def refresh_widget(self, dt):
-        self.setZones()
-        self.setBitPos()
-
-    def setZones(self):
+    def setZones(self, instance, value):
         if self.sm.has_screen("home"):
             z_max = self.sm.get_screen("home").job_box.range_z[1]
             z_min = self.sm.get_screen("home").job_box.range_z[0]
-            z0_machine_coords = self.m.z_wco()
+            z0_machine_coords = value
             self.z_clear.y = (
                 self.z_clear.parent.y
                 + self.z_clear.parent.size[1]
@@ -99,10 +96,10 @@ class VirtualZ(Widget):
                 )
             self.z_cut.y = self.z_clear.y - self.z_cut.height
 
-    def setBitPos(self):
+    def setBitPos(self, instance, value):
         self.z_bit.y = (
             self.z_bit.parent.y
             + self.z_bit.parent.size[1]
-            - -(self.m.mpos_z() / self.m.grbl_z_max_travel)
+            - -(value / self.m.grbl_z_max_travel)
             * self.z_clear.parent.size[1]
         )

@@ -837,14 +837,14 @@ class SerialConnection(EventDispatcher):
     z_change = False
 
     # Work co-ordinates
-    w_x = '0.0'
-    w_y = '0.0'
-    w_z = '0.0'
+    w_x = NumericProperty(0.0)
+    w_y = NumericProperty(0.0)
+    w_z = NumericProperty(0.0)
 
     # Work co-ordinate offset
-    wco_x = '0.0'
-    wco_y = '0.0'
-    wco_z = '0.0'
+    wco_x = NumericProperty(0.0)
+    wco_y = NumericProperty(0.0)
+    wco_z = NumericProperty(0.0)
 
     # G28 position
     g28_x = '0.0'
