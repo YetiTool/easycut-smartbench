@@ -3,7 +3,6 @@ import sys, textwrap
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 
-from asmcnc.skavaUI import popup_info
 from asmcnc.core_UI.components.buttons import probe_button
 from asmcnc.core_UI.custom_popups import PopupDatum
 
