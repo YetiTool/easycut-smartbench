@@ -31,8 +31,8 @@ class BlinkingWidget(Widget):
         super(BlinkingWidget, self).__init__(**kwargs)
 
         self.animation = (
-            Animation(bg_color=YELLOW, duration=0.5, step=1/30)
-            + Animation(bg_color=TRANSPARENT_YELLOW, duration=0.5, step=1/30)
+            Animation(bg_color=YELLOW, duration=1.0)
+            + Animation(bg_color=TRANSPARENT_YELLOW, duration=1.0)
         )
         self.animation.repeat = True
 
