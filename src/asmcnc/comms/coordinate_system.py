@@ -235,9 +235,9 @@ class CoordinateSystem(object):
             move_command = "G0 G53"
 
             if dwl_x is not None:
-                move_command += " X{}".format(dwl_x - self.laser_delta_x)
+                move_command += " X{}".format(-(self.drywall_tec_position.delta_x - self.laser_delta_x))
             if dwl_y is not None:
-                move_command += " Y{}".format(dwl_y - self.laser_delta_y)
+                move_command += " Y{}".format(-(self.drywall_tec_position.delta_y - self.laser_delta_y))
             if dwl_z is not None:
                 move_command += " Z{}".format(self.get_mz_from_dwlz(dwl_z))
 
