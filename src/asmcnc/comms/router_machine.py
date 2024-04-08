@@ -2113,7 +2113,7 @@ class RouterMachine(EventDispatcher):
         self.jog_absolute_single_axis('X', float(self.x_min_jog_abs_limit) + 5 - self.laser_offset_x_value, 3000)
 
         if self.model_manager.is_machine_drywall():
-            self.cs.drywall_tec_laser_position.move_to_dwl(dwl_x=0, dwl_y=0)
+            # self.cs.drywall_tec_laser_position.move_to_dwl(dwl_x=0, dwl_y=0)
 
     # final component is always complete homing sequence
     def complete_homing_sequence(self, dt=0):
@@ -2125,6 +2125,9 @@ class RouterMachine(EventDispatcher):
         self.homing_in_progress = False
         Logger.info("Complete homing sequence")
 
+        if self.model_manager.is_machine_drywall():
+            self.cs.drywall_tec_laser_position.move_to_dwl(dwl_x=0, dwl_y=0)
+            Logger.info("Moving laser to 0, 0")
 
     # sequence control variables and functions
     homing_in_progress = False
