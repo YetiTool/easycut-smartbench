@@ -272,7 +272,7 @@ class GCodeEngine():
                     cutting_lines.append(gcode_instruction)
             cutting_lines.append("G1 Z%d F%d\n\n" % (z_safe_distance, plungerate))
 
-        gcode_pass_headers = ["New pass", "Roughing pass", "Finishing pass"]
+        gcode_pass_headers = ["New pass", "Roughing pass", "Finishing pass", "Simulation pass"]
         for header in gcode_pass_headers:
             # Correct gcode order
             cutting_lines = self.swap_lines_after_keyword(cutting_lines, header)
