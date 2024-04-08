@@ -153,7 +153,7 @@ class CoordinateSystem(object):
             if dw_x is None and dw_y is None and dw_z is None:
                 return  # No coordinates to move to
 
-            move_command = "$J=G53"
+            move_command = "G0 G53"
 
             if dw_x is not None:
                 move_command += " X{}".format(self.get_mx_from_dwx(dw_x))
@@ -232,7 +232,7 @@ class CoordinateSystem(object):
             if dwl_x is None and dwl_y is None and dwl_z is None:
                 return
 
-            move_command = "$J=G53"
+            move_command = "G0 G53"
 
             if dwl_x is not None:
                 move_command += " X{}".format(self.get_mx_from_dwlx(dwl_x))
