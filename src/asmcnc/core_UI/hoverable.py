@@ -4,11 +4,11 @@ from kivy.properties import BooleanProperty
 from kivy.core.window import Window
 from kivy.uix.image import Image
 from kivy.uix.label import Label
-from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.uix.textinput import TextInput
 
 from asmcnc.comms.logging_system.logging_system import Logger
+from asmcnc.core_UI.ScreenDesigner.add_widget_popup import AddWidgetPopup
 
 INSPECTOR_WIDGET = True
 
@@ -33,6 +33,7 @@ class InspectorSingleton(EventDispatcher):
     widgetType = None
     widget = None
     locked = False
+    edit_mode = False
 
     def __new__(cls):
         if cls._instance is None:
@@ -84,19 +85,24 @@ class InspectorSingleton(EventDispatcher):
         elif keycode == 'h':
             self.print_help()
         elif keycode == 'q':
-            pass
-            # self.show_popup()
+            # pass
+            self.show_popup()
+        elif keycode == 'e':
+            self.edit_mode = not self.edit_mode
+            Logger.debug('edit_mode: {}'.format(self.edit_mode))
 
         # check for arrow keys to move the widget
         if 273 <= key <= 276:
-            self.move_widget(key)
+            if self.edit_mode:
+                self.move_widget(key)
 
         # Return True to accept the key. Otherwise, it will be used by the system.
         return True
 
     def show_popup(self):
-        popup = Popup(width=100, height=200, pos=[100, 100])
+        popup = AddWidgetPopup(widget=self.widget)
         popup.open()
+
     def move_widget(self, key):
         """
         Moves the selected widget 5 pixels into one direction.
@@ -131,6 +137,7 @@ class InspectorSingleton(EventDispatcher):
         Logger.debug('Walking through the widget tree:')
         Logger.debug('--------------------------------')
         Logger.debug('l: (un)locks the selected widget.')
+        Logger.debug('e: (e)dit_mode on/off (enables moving widgets)')
         Logger.debug('i: inspects the widget and shows its attributes.')
         Logger.debug('c: switches to the first child.')
         Logger.debug('s: cycles through siblings. You need to switch to a child first!')
@@ -278,18 +285,21 @@ class HoverBehavior(object):
         super(HoverBehavior, self).__init__(**kwargs)
 
     def on_mouse_press(self, *args):
-        if not self.drag:
-            self.drag = True
+        if self.inspector.edit_mode:
+            if not self.drag:
+                self.drag = True
 
     def on_mouse_release(self, *args):
-        if self.drag:
-            self.drag = False
+        if self.inspector.edit_mode:
+            if self.drag:
+                self.drag = False
 
     def on_move(self, *args):
-        if self.drag:
-            if self.inspector.widget:
-                self.inspector.widget.pos = args[1].pos
-                return True
+        if self.inspector.edit_mode:
+            if self.drag:
+                if self.inspector.widget:
+                    self.inspector.widget.pos = args[1].pos
+                    return True
 
     def on_mouse_pos(self, *args):
         """
