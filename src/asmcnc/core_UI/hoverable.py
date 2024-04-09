@@ -141,8 +141,10 @@ class InspectorSingleton(EventDispatcher):
         Logger.debug('i: inspects the widget and shows its attributes.')
         Logger.debug('c: switches to the first child.')
         Logger.debug('s: cycles through siblings. You need to switch to a child first!')
+        Logger.debug('a: cycles through siblings backwards. You need to switch to a child first!')
         Logger.debug('p: switches to the parent.\n')
-        Logger.debug('When a widget is selected, you can use the arrow keys to move it.')
+        Logger.debug('q: Open popup to add new widgets to the currently selected one.\n')
+        Logger.debug('When a widget is selected and edit_mode = True, you can use the arrow keys to move it.')
         Logger.debug("Or just drag'n drop it with the mouse\n")
 
 
