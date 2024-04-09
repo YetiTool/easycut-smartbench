@@ -12,6 +12,7 @@ from kivy.uix.scrollview import ScrollView
 from kivy.utils import get_color_from_hex
 
 from asmcnc.core_UI import scaling_utils
+from asmcnc.core_UI.utils import color_provider
 
 
 class PopupBase(ModalView):
@@ -69,10 +70,20 @@ class PopupTitle(BoxLayout):
 
 class PopupErrorTitle(PopupTitle):
     """Title bar for error popups. Contains an icon and a title."""
+
     def __init__(self, localisation, **kwargs):
         super(PopupErrorTitle, self).__init__(localisation.get_str("Error!"),
                                               "./asmcnc/apps/shapeCutter_app/img/error_icon_scaled_up.png",
                                               (1, 0, 0, 1), **kwargs)
+
+
+class PopupWarningTitle(PopupTitle):
+    """Title bar for error popups. Contains an icon and a title."""
+
+    def __init__(self, localisation, **kwargs):
+        super(PopupWarningTitle, self).__init__(localisation.get_str("Warning!"),
+                                                "./asmcnc/apps/shapeCutter_app/img/error_icon_scaled_up.png",
+                                                color_provider.get_rgba("red"), **kwargs)
 
 
 scroll_view_kv = """

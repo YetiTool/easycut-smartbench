@@ -49,6 +49,7 @@ Colors = {
     "secondary": [255 / 255., 109 / 255., 0.0, 1.0],
     "secondary_light": [255 / 255., 158 / 255., 64 / 255., 1.0],
     "secondary_dark": [196 / 255., 60 / 255., 0.0, 1.0],
+    "yellow": [240. / 255, 1, 0, 1]
 }  # type: Dict[str, List[float]]  
 
 
