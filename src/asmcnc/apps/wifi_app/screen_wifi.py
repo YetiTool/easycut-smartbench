@@ -575,9 +575,9 @@ class WifiScreen(Screen):
         if len(self.netname) < 1:
             message = self.l.get_str("Please enter a valid network name.")
             popup_info.PopupWarning(self.sm, self.l, message)
-        elif len(self.password) < 8 or len(self.password) > 63:
+        elif len(self.password) > 63:
             message = self.l.get_str(
-                "Please enter a password between 8 and 63 characters."
+                "Please enter a password shorter than 64 characters."
             )
             popup_info.PopupWarning(self.sm, self.l, message)
         else:
