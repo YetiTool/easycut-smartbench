@@ -8,7 +8,7 @@ from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.uix.textinput import TextInput
 
 from asmcnc.comms.logging_system.logging_system import Logger
-from asmcnc.core_UI.ScreenDesigner.add_widget_popup import AddWidgetPopup
+# from asmcnc.core_UI.ScreenDesigner.add_widget_popup import AddWidgetPopup
 
 INSPECTOR_WIDGET = True
 
@@ -16,7 +16,7 @@ INSPECTOR_WIDGET = True
 class InspectorSingleton(EventDispatcher):
     """
     Uses the hoverable behavior to select widgets by hovering.
-    This InspectorSingleton binds to keystrokes [l,p,i], so you can
+    This InspectorSingleton binds to keystrokes, so you can
     [l]ock on the selected widget (hovering will be disabled)
     un[l]ock from a selected widget to hover again
     p = go to parent widget
@@ -30,7 +30,6 @@ class InspectorSingleton(EventDispatcher):
     can be deactivated by global INSPECTOR_WIDGET flag
     """
     _instance = None
-    widgetType = None
     widget = None
     locked = False
     edit_mode = False
@@ -46,7 +45,11 @@ class InspectorSingleton(EventDispatcher):
         self.child_index = -1
         self.child_max = -1
         if INSPECTOR_WIDGET:
+            self.register_event_type('on_show_popup')
             Window.bind(on_key_down=self._on_key_down)
+
+    def on_show_popup(self, *args):
+        pass
 
     def _on_key_down(self, *args, **kwargs):
         """
@@ -86,7 +89,8 @@ class InspectorSingleton(EventDispatcher):
             self.print_help()
         elif keycode == 'q':
             # pass
-            self.show_popup()
+            self.dispatch('on_show_popup')
+            # self.show_popup()
         elif keycode == 'e':
             self.edit_mode = not self.edit_mode
             Logger.debug('edit_mode: {}'.format(self.edit_mode))
@@ -100,8 +104,9 @@ class InspectorSingleton(EventDispatcher):
         return True
 
     def show_popup(self):
-        popup = AddWidgetPopup(widget=self.widget)
-        popup.open()
+        # popup = AddWidgetPopup(widget=self.widget)
+        # popup.open()
+        pass
 
     def move_widget(self, key):
         """
@@ -262,6 +267,7 @@ class InspectorSingleton(EventDispatcher):
         """Sets the given widget as selected, so it can be inspected."""
         self.widget = w
         self.widgetType = type(w)
+        Logger.debug("Selected: {}".format(self.get_widget_name_class(w)))
 
 
 class HoverBehavior(object):
@@ -333,4 +339,3 @@ class HoverBehavior(object):
     def on_enter(self):
         """A new widget has been entered. So safe yourself for later inspection."""
         self.inspector.set_widget(self)
-        Logger.debug("Selected: {}".format(self.inspector.get_widget_name_class(self)))
