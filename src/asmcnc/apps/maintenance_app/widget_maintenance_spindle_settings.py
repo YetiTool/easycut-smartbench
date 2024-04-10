@@ -406,9 +406,11 @@ class SpindleSettingsWidget(Widget):
         self.get_data_button.disabled = False
 
     def show_spindle_data_popup(self):
-        SpindleHealthCheckPopup(self.m, size_hint=(0.8, 0.8), callback=self.raise_z_then_get_data).open()
+        self.shc_popup = SpindleHealthCheckPopup(self.m, size_hint=(0.8, 0.8), callback=self.raise_z_then_get_data)
+        self.shc_popup.open()
 
     def raise_z_then_get_data(self, *args):
+        self.shc_popup.dismiss()
         if self.m.state().startswith("Idle"):
             self.wait_popup.open()
             self.m.raise_z_axis_for_collet_access()
