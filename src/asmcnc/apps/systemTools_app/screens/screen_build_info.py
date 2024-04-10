@@ -635,6 +635,10 @@ class BuildInfoScreen(Screen):
         # Add the IDs of ALL the TextInputs on this screen
         self.text_inputs = [self.smartbench_name_input, self.smartbench_location_input]
 
+        # Hide SSH button if drywall machine (button still works but is hidden)
+        if self.m.model_manager.is_machine_drywall():
+            self.toggle_ssh_button.opacity = 0
+
     ## EXIT BUTTONS
     def go_back(self):
         self.systemtools_sm.back_to_menu()
