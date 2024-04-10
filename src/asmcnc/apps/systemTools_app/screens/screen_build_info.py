@@ -613,6 +613,10 @@ class BuildInfoScreen(Screen):
         self.smartbench_location_formatted = self.l.get_str("SmartBench Location")
         self.update_strings()
         self.language_button.values = self.l.approved_languages
+
+        if ModelManagerSingleton().is_machine_drywall():
+            self.language_button.values = [self.l.gb]
+
         self.smartbench_name_input.bind(focus=self.on_focus)
         self.smartbench_location_input.bind(focus=self.on_focus_location)
         self.sw_version_label.text = self.set.sw_version
