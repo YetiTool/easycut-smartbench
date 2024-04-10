@@ -372,4 +372,8 @@ class SkavaUI(App):
 
 
 if __name__ == '__main__':
+    import cProfile
+    profiler = cProfile.Profile()
+    profiler.enable()
     SkavaUI().run()
+    profiler.disable()
