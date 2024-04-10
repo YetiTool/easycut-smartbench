@@ -114,6 +114,10 @@ class Localization(object):
         # If the original product name is in the string, replace it with the new product name (if it's different)
         if self.ORIGINAL_PRODUCT_NAME in string and self.ORIGINAL_PRODUCT_NAME != self.PRODUCT_NAME:
             string = string.replace(self.ORIGINAL_PRODUCT_NAME, self.PRODUCT_NAME)
+
+        if "PrecisionPro +" in string and self.ORIGINAL_PRODUCT_NAME != self.PRODUCT_NAME:
+            string = string.replace("PrecisionPro +", self.PRODUCT_NAME)
+
         return string
 
     def get_localized_days(self, string):
