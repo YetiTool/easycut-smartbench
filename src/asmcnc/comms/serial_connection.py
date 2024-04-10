@@ -216,7 +216,7 @@ class SerialConnection(EventDispatcher):
         "darwin": [
 
         ],
-        "linux": [
+        "linux2": [
             "/dev/ttyS0"
         ]
     }
