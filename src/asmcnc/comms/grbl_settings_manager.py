@@ -98,16 +98,11 @@ class GRBLSettingsManagerSingleton(object):
                                                                                                     51))
             # serial number and product code:
             self.machine.s.bind(setting_50=lambda instance, value: self.on_setting_50(value))
-            # machine settings (steps/mm):
-            self.machine.s.bind(setting_100=lambda instance, value: self.on_setting_steps_per_mm(instance,
-                                                                                                 value,
+            # machine settings (steps/mm) only one:
+            self.machine.s.bind(setting_100=lambda instance, value: self.on_setting_steps_per_mm(value,
                                                                                                  100))
             self.machine.s.bind(setting_101=lambda instance, value: self.on_setting_steps_per_mm(value,
                                                                                                  101))
-            # Don't do this on z as it will always be default:
-            # self.machine.s.bind(setting_102=lambda instance, value: self.on_setting_steps_per_mm(instance,
-            #                                                                                      value,
-            #                                                                                      102))
 
             # system persistent settings:
             self.machine.s.bind(setting_0=lambda instance, value: self.on_persistent_setting(value, 0))
