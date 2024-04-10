@@ -482,6 +482,7 @@ Builder.load_string(
                         on_press: root.toggle_ssh()
                         color: hex('#f9f9f9ff')
                         markup: True
+                        opacity: 0  # Set opacity to 0 to make the button invisible
 
                     ToggleButton:
                         font_size: str(0.01875 * app.width) + 'sp'
