@@ -217,7 +217,8 @@ class SerialConnection(EventDispatcher):
 
         ],
         "linux2": [
-            "/dev/ttyS0"
+            "/dev/ttyS0",
+            "/dev/ttyUSB0"
         ]
     }
 
