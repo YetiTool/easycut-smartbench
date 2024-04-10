@@ -1,15 +1,23 @@
 import json
 import os
 import threading
-from datetime import datetime
+from enum import Enum
 from hashlib import md5
 
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy._event import EventDispatcher
-from kivy.clock import Clock
 
-from asmcnc.comms.router_machine import ProductCodes
 from asmcnc.core_UI import path_utils as pu
+
+
+class ProductCodes(Enum):
+    DRYWALLTEC = 06
+    PRECISION_PRO_X = 05
+    PRECISION_PRO_PLUS = 04
+    PRECISION_PRO = 03
+    STANDARD = 02
+    FIRST_VERSION = 01
+    UNKNOWN = 00
 
 
 class ModelManagerSingleton(EventDispatcher):
@@ -55,7 +63,7 @@ class ModelManagerSingleton(EventDispatcher):
     def __new__(cls, machine=None):
         with cls._lock:
             if cls._instance is None:
-                Logger.info("Creating new instance of ModelManagerSingleton")
+                Logger.debug("Creating new instance of ModelManagerSingleton")
                 cls._instance = super(ModelManagerSingleton, cls).__new__(cls)
             return cls._instance
 
@@ -88,14 +96,14 @@ class ModelManagerSingleton(EventDispatcher):
     def on_firmware_version(self, instance, value):
         """Is called when the firmware_version is first read. Updates the saved firmware_version if changed."""
         if self._data['fw_version'] != value:
-            Logger.info('Save new firmware version to file: {}'.format(value))
+            Logger.warning('Save new firmware version to file: {}'.format(value))
             self._data['fw_version'] = value
             self.save_model_data_to_file()
 
     def on_hardware_version(self, instance, value):
         """Is called when the hardware_version is first read. Updates the saved hardware_version if changed."""
         if self._data['hw_version'] != value:
-            Logger.info('Save new hardware version to file: {}'.format(value))
+            Logger.warning('Save new hardware version to file: {}'.format(value))
             self._data['hw_version'] = value
             self.save_model_data_to_file()
 
@@ -114,12 +122,13 @@ class ModelManagerSingleton(EventDispatcher):
             pc_value = 0
 
         fixed_product_code = self.fix_wrong_product_code(serial_number, pc_value)
-        if fixed_product_code != ProductCodes.UNKNOWN:
+        if fixed_product_code is not ProductCodes.UNKNOWN:
             # overwrite saved value with fixed product_code
             self.set_machine_type(fixed_product_code, True)
-        elif self._data['product_code'] == ProductCodes.UNKNOWN.value:
+        elif self._data['product_code'] is ProductCodes.UNKNOWN:
             # save product_code to file ONLY when it is still set to default: UNKNOWN!!!
             # !!!Don't override a previously saved proper product_code !!!
+            Logger.info('Initially saved product code to file!')
             self.set_machine_type(ProductCodes(pc_value), True)
         self.__set_default_machine_fields()
 
@@ -132,13 +141,13 @@ class ModelManagerSingleton(EventDispatcher):
         os.remove(self.MIGRATION_FILE_PATH)
         if md5('YS6' + sn).hexdigest() in data['Pro Plus']:
             full_sn = sn + '.04'
-            Logger.info('Old Pro Plus detected. Fixed SN to: {}'.format(full_sn))
+            Logger.warning('Old Pro Plus detected. Fixed SN to: {}'.format(full_sn))
             self.machine.write_dollar_setting(50, full_sn)
             self._data['product_code'] = ProductCodes.PRECISION_PRO_PLUS.value
             return ProductCodes.PRECISION_PRO_PLUS
         elif md5(sn).hexdigest() in data['Pro X']:
             full_sn = sn + '.05'
-            Logger.info('Old Pro X detected. Fixed SN to: {}'.format(full_sn))
+            Logger.warning('Old Pro X detected. Fixed SN to: {}'.format(full_sn))
             self.machine.write_dollar_setting(50, full_sn)
             return ProductCodes.PRECISION_PRO_X
         else:
@@ -165,7 +174,7 @@ class ModelManagerSingleton(EventDispatcher):
             self.save_product_code(pc)
 
         self.__set_splash_screen(pc)
-        Logger.info('Product code set to: {}'.format(pc))
+        Logger.debug('Product code set to: {}'.format(pc))
 
     def __set_splash_screen(self, pc):
         # type: (ProductCodes) ->  None

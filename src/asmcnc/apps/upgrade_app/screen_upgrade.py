@@ -193,7 +193,7 @@ class UpgradeScreen(Screen):
     def code_entered(self):
         self.hide_error_message()
         self.show_verifying()
-        self.m.s.write_command("M3 S0")
+        self.m.turn_on_spindle_for_data_read()
         Clock.schedule_once(self.get_restore_info, 0.3)
 
     def get_restore_info(self, dt):
@@ -216,7 +216,7 @@ class UpgradeScreen(Screen):
             Clock.schedule_once(self.check_restore_info, 0.3)
 
     def read_restore_info(self):
-        self.m.s.write_command("M5")
+        self.m.turn_off_spindle()
         self.hide_verifying()
         # Value of -999 for ld_qdA represents disconnected spindle
         if (

@@ -273,16 +273,16 @@ class ZHeadQC2(Screen):
 
         def compare_info(dt):
             if self.m.s.spindle_brush_run_time_seconds == 0:
-                self.m.s.write_command('M5')
+                self.m.turn_off_spindle()
                 self.test_rpm(fail_report)
             else:
                 fail_report.append("Spindle brush time after reset was " + str(self.m.s.spindle_brush_run_time_seconds) + ". Should be 0")
-                self.m.s.write_command('M5')
+                self.m.turn_off_spindle()
                 self.test_rpm(fail_report)
 
         fail_report = []
         self.brush_reset_test_count += 1
-        self.m.s.write_command('M3 S0')
+        self.m.turn_on_spindle_for_data_read()  # Turn on spindle to read info (at 0 rpm)
 
         Clock.schedule_once(read_info, 1)
 
@@ -295,12 +295,12 @@ class ZHeadQC2(Screen):
             if spindle_rpm < 8000 or spindle_rpm > 12000:
                 fail_report.append("Spindle RPM was " + str(spindle_rpm) + ". Should be 8000-12000")
 
-            self.m.s.write_command('M5')
+            self.m.turn_off_spindle()
             self.continue_digital_spindle_test(fail_report)
 
         rpm_to_run = 10000
 
-        self.m.s.write_command('M3 S' + str(rpm_to_run))
+        self.m.turn_on_spindle(rpm_to_run)
 
         Clock.schedule_once(read_rpm, 3)
 
@@ -357,7 +357,7 @@ class ZHeadQC2(Screen):
         Clock.schedule_once(lambda dt: self.analogue_spindle_check('M3 S25000', 8500, 10000), 36)
 
         # Spindle off
-        Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 45)
+        Clock.schedule_once(lambda dt: self.m.turn_off_spindle(), 45)
 
 
         def show_outcome():

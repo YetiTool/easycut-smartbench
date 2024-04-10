@@ -27,8 +27,8 @@ from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 
 from asmcnc.comms.grbl_settings_manager import GRBLSettingsManagerSingleton
-from asmcnc.comms.router_machine import ProductCodes
-from asmcnc.core_UI import scaling_utils
+from asmcnc.core_UI import scaling_utils, console_utils
+from asmcnc.comms.model_manager import ProductCodes
 from asmcnc.core_UI.popup_manager import PopupManager
 from asmcnc.comms.model_manager import ModelManagerSingleton
 
@@ -104,7 +104,7 @@ from asmcnc.skavaUI import screen_homing_decision
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v2.8.3'
+initial_version = 'v2.8.4'
 
 config_flag = False
 
@@ -144,9 +144,8 @@ def check_ansible_status():
     # if this comes out empty, run ansible and reboot
     if not ansible_from_easycut:
         # when the playbook fails, it stops the other commands from running as well
-        os.system(
-            "/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh && sudo systemctl restart ansible.service && sudo reboot")
-
+        os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh && sudo systemctl restart ansible.service")
+        console_utils.reboot()
 
 ## Easycut config
 check_and_update_config()
@@ -172,6 +171,10 @@ class SkavaUI(App):
 
     def get_scaled_sp(self, val):
         return scaling_utils.get_scaled_sp(val)
+
+    def get_scaled_tuple(self, tup, orientation="horizontal"):
+        return scaling_utils.get_scaled_tuple(tup, orientation)
+
 
     def build(self):
         Logger.info("Starting App:")
@@ -206,8 +209,12 @@ class SkavaUI(App):
         # Create database object to talk to
         db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
 
+        # Popup manager
+        pm = PopupManager(sm, m, l)
+        sm.pm = pm  # store in screen manager for access by screens
+
         # App manager object
-        am = app_manager.AppManagerClass(sm, m, sett, l, kb, jd, db, config_flag, initial_version)
+        am = app_manager.AppManagerClass(sm, m, sett, l, kb, jd, db, config_flag, initial_version, pm)
 
         # Alarm screens are set up in serial comms, need access to the db object
         m.s.alarm.db = db
@@ -218,10 +225,6 @@ class SkavaUI(App):
         # Server connection object
         if ModelManagerSingleton().get_product_code() != ProductCodes.DRYWALLTEC:
             sc = server_connection.ServerConnection(sett)
-
-        # Popup manager
-        pm = PopupManager(sm, m, l)
-        sm.pm = pm  # store in screen manager for access by screens
 
         # initialise the screens (legacy)
         lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager=sm, machine=m, app_manager=am,

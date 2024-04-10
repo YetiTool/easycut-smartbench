@@ -30,6 +30,8 @@ from asmcnc.skavaUI import (
     widget_z_height,
     popup_info
 )
+from asmcnc.apps.drywall_cutter_app.config import config_loader
+from asmcnc.comms.model_manager import ModelManagerSingleton
 
 Builder.load_string(
     """
@@ -395,6 +397,7 @@ class GoScreen(Screen):
     feed_rate_max_percentage = 0
     feed_rate_max_absolute = 0
     total_runtime_seconds = 0
+    dwt_config = None
 
     def __init__(self, **kwargs):
         super(GoScreen, self).__init__(**kwargs)
@@ -407,12 +410,14 @@ class GoScreen(Screen):
         self.yp = kwargs["yetipilot"]
         # bind on updates:
         self.m.s.bind(on_update_overload_peak=self.update_overload_peak)
+        self.m.s.bind(on_reset_runtime=self.on_reset_runtime)
         self.feedOverride = widget_feed_override.FeedOverride(
             machine=self.m, screen_manager=self.sm, database=self.database
         )
         self.speedOverride = widget_speed_override.SpeedOverride(
             machine=self.m, screen_manager=self.sm, database=self.database
         )
+        self.model_manager = ModelManagerSingleton()
 
         # Graphics commands
 
@@ -524,6 +529,10 @@ class GoScreen(Screen):
         if self.temp_suppress_prompts:
             self.temp_suppress_prompts = False
 
+    def on_reset_runtime(self, *args):
+        Logger.debug('total_runtime_seconds has been reset.')
+        self.total_runtime_seconds = 0
+
     def show_hide_yp_container(self, use_sc2):
         if use_sc2:
             # Show yetipilot container
@@ -541,6 +550,20 @@ class GoScreen(Screen):
                     self.yetipilot_container.remove_widget(self.disabled_yp_widget)
                 self.yp_widget.switch.disabled = False
                 self.yp_widget.yp_cog_button.disabled = False
+
+                if self.model_manager.is_machine_drywall() and self.return_to_screen == "drywall_cutter":
+                    self.yp.enable()
+                    
+                    if self.dwt_config.active_cutter.dimensions.diameter:
+                        dwt_cutter_diameter = str(int(self.dwt_config.active_cutter.dimensions.diameter))
+                    else:
+                        dwt_cutter_diameter = str(int(self.dwt_config.active_cutter.dimensions.angle))
+                    available_diameters = self.yp.get_sorted_cutter_diameters(self.yp.filter_available_profiles("Drywall"))
+                    cutter_diameter = next((x for x in available_diameters if dwt_cutter_diameter in x), None)
+
+                    chosen_profile = self.yp.filter_available_profiles(cutter_diameter=cutter_diameter,material_type="Drywall")[0]
+                    self.yp.use_profile(chosen_profile)
+                    self.yp_widget.update_profile_selection()
             else:
                 if not self.disabled_yp_widget.parent:
                     self.yetipilot_container.add_widget(self.disabled_yp_widget)
@@ -576,7 +599,7 @@ class GoScreen(Screen):
         )
 
     def get_sc2_brush_data(self):
-        self.m.s.write_command("M3 S0")
+        self.m.turn_on_spindle_for_data_read()
         Clock.schedule_once(self.get_spindle_info, 0.1)
         self.wait_popup = popup_info.PopupWait(self.sm, self.l)
 
@@ -587,7 +610,7 @@ class GoScreen(Screen):
         Clock.schedule_once(self.read_spindle_info, 1)
 
     def read_spindle_info(self, dt):
-        self.m.s.write_command("M5")
+        self.m.turn_off_spindle()
         self.wait_popup.popup.dismiss()
 
         # If info was not obtained successfully, spindle production year will equal 99

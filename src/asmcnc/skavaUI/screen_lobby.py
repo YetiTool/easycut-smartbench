@@ -21,6 +21,7 @@ from shutil import copy
 from asmcnc.core_UI import scaling_utils
 from asmcnc.skavaUI import popup_info
 from asmcnc.core_UI.popups import BasicPopup, PopupType
+from asmcnc.core_UI import console_utils
 from kivy.core.window import Window
 
 from asmcnc.comms.model_manager import ModelManagerSingleton
@@ -668,8 +669,6 @@ class LobbyScreen(Screen):
         self.am.start_drywall_cutter_app()
 
     def shutdown_console(self):
-        if sys.platform != 'win32' and sys.platform != 'darwin':
-            os.system('sudo shutdown -h')
         popup_info.PopupShutdown(self.sm, self.l)
 
     def update_strings(self):

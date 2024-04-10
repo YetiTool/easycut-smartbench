@@ -17,7 +17,9 @@ from kivy.lang import Builder
 from kivy.properties import ObjectProperty, StringProperty  
 from kivy.uix.screenmanager import Screen
 
+from asmcnc.apps.drywall_cutter_app.config import config_loader
 from asmcnc.comms import usb_storage
+from asmcnc.core_UI import path_utils
 from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
@@ -214,7 +216,7 @@ Builder.load_string("""
 
 """)
 
-configs_dir = './asmcnc/apps/drywall_cutter_app/config/configurations/'  # where job files are cached for selection (for last used history/easy access)
+configs_dir = path_utils.get_path('drywall_cutter_app/config/configurations') # where job files are cached for selection (for last used history/easy access)
 
 
 def date_order_sort(files, filesystem):
@@ -375,36 +377,18 @@ class ConfigFileSaver(Screen):
         self.filechooser._update_files()
 
     def display_selected_file(self):
-
-        # display file selected in the filename display label
-        if sys.platform == 'win32':
-            self.file_selected_label.text = self.filechooser.selection[0].split("\\")[-1]
-        else:
-            self.file_selected_label.text = self.filechooser.selection[0].split("/")[-1]
+        self.file_selected_label.text = self.filechooser.selection[0].split(os.sep)[-1]
 
         with open(self.filechooser.selection[0], 'r') as f:
             json_obj = json.load(f)
 
-        self.metadata_preview.text = self.to_human_readable(json_obj)
+        self.metadata_preview.text = config_loader.get_display_preview(json_obj)
 
         self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
 
-    def to_human_readable(self, json_obj, indent=0):
-        def format_key(json_key):
-            return json_key.replace("_", " ").title()
-
-        result = ''
-
-        for key, value in json_obj.items():
-            if isinstance(value, dict):
-                result += ' ' * indent + format_key(key) + ":\n" + self.to_human_readable(value, indent + 4)
-            else:
-                result += ' ' * indent + format_key(key) + ": " + str(value) + "\n"
-        return result
-
     def save_config_and_return_to_dwt(self):
         if self.validate_file_name(self.file_selected_label.text):
-            self.callback(self.file_selected_label.text)
+            self.callback(os.path.join(configs_dir, self.file_selected_label.text))
 
             self.sm.current = 'drywall_cutter'
         else:

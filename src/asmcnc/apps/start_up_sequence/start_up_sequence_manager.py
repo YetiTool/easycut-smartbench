@@ -7,12 +7,14 @@ screen_reboot_to_apply_settings, \
 screen_release_notes, \
 screen_pro_plus_safety, \
 screen_starting_smartbench, \
-screen_safety_warning
+screen_safety_warning, \
+screen_incorrect_shutdown
 
 from asmcnc.apps.start_up_sequence.warranty_app import screen_manager_warranty
 from asmcnc.apps.start_up_sequence.data_consent_app import screen_manager_data_consent
 from asmcnc.apps.start_up_sequence.welcome_to_smartbench_app import screen_manager_welcome_to_smartbench
 from asmcnc.apps.start_up_sequence.welcome_to_smartbench_app import screen_manager_welcome_to_smartbench
+from asmcnc.core_UI import console_utils
 
 
 class StartUpSequence(object):
@@ -28,6 +30,7 @@ class StartUpSequence(object):
 	starting_smartbench_screen = None
 	warranty_sm = None
 	reboot_to_apply_settings_screen = None
+	incorrect_shutdown_screen = None
 	safety_screen = None
 
 	def __init__(self, app_manager, screen_manager, machine, settings, localization, keyboard, job, database, config_check, version):
@@ -72,6 +75,8 @@ class StartUpSequence(object):
 
 		else:
 			self.prep_starting_smartbench_screen()
+			if not console_utils.correct_shutdown():
+				self.prep_incorrect_shutdown_screen()
 			self.prep_safety_screen()
 
 	## BASIC SEQUENCE NAVIGATION FUNCTIONS
@@ -170,6 +175,13 @@ class StartUpSequence(object):
 
 		if 'starting_smartbench' not in self.screen_sequence:
 			self.screen_sequence.append('starting_smartbench')
+	def prep_incorrect_shutdown_screen(self):
+		if not self.incorrect_shutdown_screen:
+			self.incorrect_shutdown_screen = screen_incorrect_shutdown.IncorrectShutdownScreen(name = 'incorrect_shutdown', start_sequence = self, localization = self.l, screen_manager = self.sm)
+			self.sm.add_widget(self.incorrect_shutdown_screen)
+
+		if 'incorrect_shutdown' not in self.screen_sequence:
+			self.screen_sequence.append('incorrect_shutdown')
 
 	def prep_safety_screen(self):
 		if not self.safety_screen:    		

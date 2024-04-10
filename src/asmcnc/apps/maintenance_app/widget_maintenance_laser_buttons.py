@@ -6,6 +6,9 @@ widget to hold laser datum setting buttons
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 
+from asmcnc.core_UI import scaling_utils
+from asmcnc.core_UI.components.buttons.spindle_button import SpindleButton
+from asmcnc.core_UI.components.buttons.vacuum_button import VacuumButton
 from asmcnc.core_UI.popups import InfoPopup
 from asmcnc.apps.maintenance_app import popup_maintenance
 
@@ -14,10 +17,8 @@ Builder.load_string(
 
 <LaserDatumButtons>
     
-    vacuum_toggle: vacuum_toggle
-    spindle_toggle: spindle_toggle
-    vacuum_image: vacuum_image
-    spindle_image: spindle_image
+    vacuum_button_container:vacuum_button_container
+    spindle_button_container: spindle_button_container
     reset_button: reset_button
     save_button: save_button
     save_button_image: save_button_image
@@ -40,52 +41,14 @@ Builder.load_string(
             BoxLayout: 
                 size: self.parent.size
                 pos: self.parent.pos 
-                ToggleButton:
-                    font_size: str(0.01875 * app.width) + 'sp'
-                    id: vacuum_toggle
-                    on_press: root.set_vacuum()
-                    size_hint: (None,None)
-                    height: dp(0.25*app.height)
-                    width: dp(0.15*app.width)
-                    background_color: [0,0,0,0]
-                    center: self.parent.center
-                    pos: self.parent.pos
-                    BoxLayout:
-                        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
-                        size: self.parent.size
-                        pos: self.parent.pos      
-                        Image:
-                            id: vacuum_image
-                            source: "./asmcnc/apps/maintenance_app/img/extractor_off_120.png"
-                            center_x: self.parent.center_x
-                            y: self.parent.y
-                            size: self.parent.width, self.parent.height
-                            allow_stretch: True  
+                id: vacuum_button_container
+                padding: [dp(app.get_scaled_width(10)), dp(app.get_scaled_height(10))]
 
             BoxLayout: 
                 size: self.parent.size
                 pos: self.parent.pos 
-                ToggleButton:
-                    font_size: str(0.01875 * app.width) + 'sp'
-                    id: spindle_toggle
-                    on_press: root.set_spindle()
-                    size_hint: (None,None)
-                    height: dp(0.25*app.height)
-                    width: dp(0.15*app.width)
-                    background_color: [0,0,0,0]
-                    center: self.parent.center
-                    pos: self.parent.pos
-                    BoxLayout:
-                        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
-                        size: self.parent.size
-                        pos: self.parent.pos      
-                        Image:
-                            id: spindle_image
-                            source: "./asmcnc/apps/maintenance_app/img/spindle_off_120.png"
-                            center_x: self.parent.center_x
-                            y: self.parent.y
-                            size: self.parent.width, self.parent.height
-                            allow_stretch: True 
+                id: spindle_button_container
+                padding: [dp(app.get_scaled_width(10)), dp(app.get_scaled_height(10))]
 
             BoxLayout: 
                 size: self.parent.size
@@ -148,6 +111,24 @@ class LaserDatumButtons(Widget):
         self.m = kwargs["machine"]
         self.sm = kwargs["screen_manager"]
         self.l = kwargs["localization"]
+        self.add_buttons()
+
+    spindle_button = None
+    vacuum_button = None
+
+    def add_buttons(self):
+        self.vacuum_button = VacuumButton(self.m, self.m.s, size_hint=(None, None),
+                                          size=(scaling_utils.get_scaled_dp_width(120),
+                                                scaling_utils.get_scaled_dp_height(120)),
+                                          pos_hint={"center_x": 0.5, "center_y": 0.5})
+        self.vacuum_button_container.add_widget(self.vacuum_button)
+
+        self.spindle_button = SpindleButton(self.m, self.m.s, self.sm,
+                                            size_hint=(None, None),
+                                            size=(scaling_utils.get_scaled_dp_width(120),
+                                                  scaling_utils.get_scaled_dp_height(122)),
+                                            pos_hint={"center_x": 0.5, "center_y": 0.5})
+        self.spindle_button_container.add_widget(self.spindle_button)
 
     def reset_button_press(self):
         popup_maintenance.PopupResetOffset(self.sm, self.l)
@@ -158,13 +139,13 @@ class LaserDatumButtons(Widget):
 
         else:
             main_string = (
-                self.l.get_str("Could not save laser crosshair offset!")
-                + "\n\n"
-                + self.l.get_str(
-                    "You need to line up the laser crosshair with the mark you made with the spindle (press (i) for help)."
-                ).replace("(i)", "[b](i)[/b]")
-                + "\n\n"
-                + self.l.get_str("Please enable laser to set offset.")
+                    self.l.get_str("Could not save laser crosshair offset!")
+                    + "\n\n"
+                    + self.l.get_str(
+                "You need to line up the laser crosshair with the mark you made with the spindle (press (i) for help)."
+            ).replace("(i)", "[b](i)[/b]")
+                    + "\n\n"
+                    + self.l.get_str("Please enable laser to set offset.")
             )
             self.sm.pm.show_error_popup(main_string)
 
@@ -182,15 +163,15 @@ class LaserDatumButtons(Widget):
 
     def save_laser_offset(self):
         self.m.laser_offset_x_value = (
-            self.sm.get_screen("maintenance").laser_datum_reset_coordinate_x
-            - self.m.mpos_x()
+                self.sm.get_screen("maintenance").laser_datum_reset_coordinate_x
+                - self.m.mpos_x()
         )
         self.m.laser_offset_y_value = (
-            self.sm.get_screen("maintenance").laser_datum_reset_coordinate_y
-            - self.m.mpos_y()
+                self.sm.get_screen("maintenance").laser_datum_reset_coordinate_y
+                - self.m.mpos_y()
         )
         if self.m.write_z_head_laser_offset_values(
-            "True", self.m.laser_offset_x_value, self.m.laser_offset_y_value
+                "True", self.m.laser_offset_x_value, self.m.laser_offset_y_value
         ):
             saved_success = self.l.get_str("Settings saved!")
             self.sm.pm.show_mini_info_popup(saved_success)
@@ -200,34 +181,10 @@ class LaserDatumButtons(Widget):
             self.save_button.disabled = True
         else:
             main_string = (
-                self.l.get_str("There was a problem saving your settings.")
-                + "\n\n"
-                + self.l.get_str(
-                    "Please check your settings and try again, or if the problem persists please contact the YetiTool support team."
-                )
+                    self.l.get_str("There was a problem saving your settings.")
+                    + "\n\n"
+                    + self.l.get_str(
+                "Please check your settings and try again, or if the problem persists please contact the YetiTool support team."
+            )
             )
             self.sm.pm.show_error_popup(main_string)
-
-    def set_vacuum(self):
-        if self.vacuum_toggle.state == "normal":
-            self.vacuum_image.source = (
-                "./asmcnc/apps/maintenance_app/img/extractor_off_120.png"
-            )
-            self.m.vac_off()
-        else:
-            self.vacuum_image.source = (
-                "./asmcnc/apps/maintenance_app/img/extractor_on_120.png"
-            )
-            self.m.vac_on()
-
-    def set_spindle(self):
-        if self.spindle_toggle.state == "normal":
-            self.spindle_image.source = (
-                "./asmcnc/apps/maintenance_app/img/spindle_off_120.png"
-            )
-            self.m.spindle_off()
-        else:
-            self.spindle_image.source = (
-                "./asmcnc/apps/maintenance_app/img/spindle_on_120.png"
-            )
-            self.m.spindle_on()

@@ -6,6 +6,7 @@ Module to get and store settings info
 
 import sys, os, subprocess, time, threading
 from time import sleep
+from asmcnc.core_UI import console_utils
 
 from datetime import datetime
 
@@ -314,7 +315,8 @@ class Settings(object):
             else: 
                 # Repair git repo by re-cloning from origin
                 os.system('cd /home/pi/ && sudo rm /home/pi/easycut-smartbench -r && git clone https://github.com/YetiTool/easycut-smartbench.git' + 
-                '&& cd /home/pi/easycut-smartbench/ && git checkout ' + self.latest_sw_version + ' && sudo reboot')
+                '&& cd /home/pi/easycut-smartbench/ && git checkout ' + self.latest_sw_version)
+                console_utils.reboot()
         
         if backup_EC() == True:
             clone_new_EC_and_restart()
@@ -445,14 +447,17 @@ class Settings(object):
         if self.latest_platform_version != self.platform_version:
             os.system("cd /home/pi/console-raspi3b-plus-platform/ && git checkout " + self.latest_platform_version)
             os.system("/home/pi/console-raspi3b-plus-platform/ansible/templates/ansible-start.sh")
-            os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh && sudo systemctl restart ansible.service && sudo reboot")
+            os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh && sudo systemctl restart ansible.service")
+            console_utils.reboot()
 
         else:
-            os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh && sudo systemctl restart ansible.service && sudo reboot")
+            os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh && sudo systemctl restart ansible.service")
+            console_utils.reboot()
 
 
     def ansible_service_run(self):
-        os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh && sudo reboot")
+        os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh")
+        console_utils.reboot()
 
     def ansible_service_run_without_reboot(self):
         os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh")

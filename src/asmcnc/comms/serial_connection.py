@@ -17,7 +17,7 @@ import time
 from enum import Enum
 from kivy.clock import Clock
 from kivy.event import EventDispatcher
-from kivy.properties import StringProperty, NumericProperty
+from kivy.properties import StringProperty, NumericProperty, BooleanProperty
 
 from asmcnc.comms.logging_system.logging_system import Logger
 # Import managers for GRBL Notification screens (e.g. alarm, error, etc.)
@@ -72,6 +72,7 @@ class SerialConnection(EventDispatcher):
     setting_121 = NumericProperty(-1.0)
     setting_122 = NumericProperty(-1.0)
     setting_130 = NumericProperty(-1.0)
+    setting_131 = NumericProperty(-1.0)
     STATUS_INTERVAL = 0.1  # How often to poll general status to update UI (0.04 = 25Hz = smooth animation)
 
     s = None  # Serial comms object
@@ -101,10 +102,14 @@ class SerialConnection(EventDispatcher):
     # Need to disable grbl scanner before closing serial connection, or else causes problems (at least in windows)
     grbl_scanner_running = False
 
+    # This flag is set by the serial connection when it sends M3/M5
+    spindle_on = BooleanProperty(False)
+
+    # This flag is set by the serial connection when it sends AE/AF
+    vacuum_on = BooleanProperty(False)
+
     def __init__(self, machine, screen_manager, settings_manager, localization, job, *args, **kwargs):
         super(SerialConnection, self).__init__(*args, **kwargs)
-
-        super(SerialConnection, self).__init__()
         self.sm = screen_manager
         self.sett = settings_manager
         self.m = machine
@@ -116,6 +121,12 @@ class SerialConnection(EventDispatcher):
         # Register events to provide data:
         self.register_event_type('on_serial_monitor_update') # new data to show for the serial monitor
         self.register_event_type('on_update_overload_peak') # new overload peak value
+        self.register_event_type('on_reset_runtime') # runtime counter will be reset
+        self.register_event_type('on_check_job_finished')
+
+    def on_reset_runtime(self, *args):
+        """Default callback. Needs to exist."""
+        pass
 
     def on_serial_monitor_update(self, *args):
         """Default callback. Needs to exist."""
@@ -125,6 +136,9 @@ class SerialConnection(EventDispatcher):
         """Default callback. Needs to exist."""
         pass
 
+    def on_check_job_finished(self, *args):
+        """Default callback. Needs to exist."""
+        pass
 
     def __del__(self):
         if self.s: self.s.close()
@@ -477,6 +491,7 @@ class SerialConnection(EventDispatcher):
 
     is_job_streaming = False
     is_stream_lines_remaining = False
+    job_to_check = []
 
     g_count = 0  # gcodes processed (ok/error'd) by grbl (gcodes may not get processed immediately after being sent)
     l_count = 0  # lines sent to grbl
@@ -496,6 +511,7 @@ class SerialConnection(EventDispatcher):
 
         Logger.info('Checking job...')
 
+        self.job_to_check = job_object
         self.m.enable_check_mode()
         self.set_use_yp(False)
 
@@ -513,20 +529,11 @@ class SerialConnection(EventDispatcher):
                 # run job as per normal
                 self.run_job(job_object)
 
-                # get error log back to the checking screen when it's ready
-                Clock.schedule_interval(partial(self.return_check_outcome, job_object), 0.1)
-
             else:
                 Clock.schedule_once(lambda dt: check_job_inner_function(), 0.9)
 
         # Sleep to ensure check mode ok isn't included in log, AND to ensure it's enabled before job run
         Clock.schedule_once(lambda dt: check_job_inner_function(), 0.9)
-
-    def return_check_outcome(self, job_object, dt):
-        if len(self.response_log) >= len(job_object):
-            self.suppress_error_screens = False
-            self.sm.get_screen('check_job').error_log = self.response_log
-            return False
 
     def run_job(self, job_object):
 
@@ -586,8 +593,7 @@ class SerialConnection(EventDispatcher):
         self.stream_paused_accumulated_time = 0
         self.stream_start_time = time.time()
 
-        if self.sm.has_screen('go'):
-            self.sm.get_screen('go').total_runtime_seconds = 0
+        self.dispatch('on_reset_runtime')
 
     def set_streaming_flags_to_true(self):
         # self.m.set_pause(False) # moved to go screen for timing reasons
@@ -658,13 +664,14 @@ class SerialConnection(EventDispatcher):
 
     # if 'ok' or 'error' rec'd from GRBL
     def process_grbl_response(self, message):
-        if self.suppress_error_screens == True:
+        # if we are in check mode, append message to add it to error_log later
+        if self.suppress_error_screens:
             self.response_log.append(message)
 
         if message.startswith('error'):
             Logger.info('ERROR from GRBL: ' + message)
 
-            if self.suppress_error_screens == False and self.sm.current != 'errorScreen':
+            if not self.suppress_error_screens and self.sm.current != 'errorScreen':
                 self.sm.get_screen('errorScreen').message = message
 
                 if self.sm.current == 'alarmScreen':
@@ -704,7 +711,7 @@ class SerialConnection(EventDispatcher):
                     self.sm.get_screen('spindle_cooldown').return_screen = 'job_feedback'
                     self.sm.current = 'spindle_cooldown'
                 else:
-                    self.m.spindle_off()
+                    self.m.turn_off_spindle()
                     time.sleep(0.4)
                     self.update_machine_runtime()
                     self.sm.current = 'job_feedback'
@@ -717,6 +724,8 @@ class SerialConnection(EventDispatcher):
                 self.m.disable_check_mode()
                 self.suppress_error_screens = False
                 self._reset_counters()
+                self.job_to_check = []
+                self.dispatch('on_check_job_finished', self.response_log)
 
         else:
             self._reset_counters()
@@ -747,7 +756,7 @@ class SerialConnection(EventDispatcher):
 
             # Move head up        
             Clock.schedule_once(lambda dt: self.m.raise_z_axis_for_collet_access(), 0.5)
-            Clock.schedule_once(lambda dt: self.m.vac_off(), 1)
+            Clock.schedule_once(lambda dt: self.m.turn_off_vacuum(), 1)
 
             # Update time for maintenance reminders
             time.sleep(0.4)
@@ -764,6 +773,8 @@ class SerialConnection(EventDispatcher):
             self.check_streaming_started = False
             self.m.disable_check_mode()
             self.suppress_error_screens = False
+            self.job_to_check = []
+            self.dispatch('on_check_job_finished', self.response_log)
 
             # Flush
             self.FLUSH_FLAG = True
@@ -817,9 +828,9 @@ class SerialConnection(EventDispatcher):
     m_state = StringProperty('Unknown')
 
     # Machine co-ordinates
-    m_x = '0.0'
-    m_y = '0.0'
-    m_z = '0.0'
+    m_x = NumericProperty(0.0)
+    m_y = NumericProperty(0.0)
+    m_z = NumericProperty(0.0)
 
     # Track co-ordinate change in each axis
     x_change = False
@@ -1023,13 +1034,13 @@ class SerialConnection(EventDispatcher):
                         Logger.info("ERROR status parse: Position invalid: " + message)
                         return
 
-                    self.x_change = self.m_x != pos[0]
-                    self.y_change = self.m_y != pos[1]
-                    self.z_change = self.m_z != pos[2]
+                    self.x_change = self.m_x != float(pos[0])
+                    self.y_change = self.m_y != float(pos[1])
+                    self.z_change = self.m_z != float(pos[2])
 
-                    self.m_x = pos[0]
-                    self.m_y = pos[1]
-                    self.m_z = pos[2]
+                    self.m_x = float(pos[0])
+                    self.m_y = float(pos[1])
+                    self.m_z = float(pos[2])
 
                 # Get work's position (may not be displayed, depending on mask)
                 elif part.startswith('WPos:'):
@@ -1272,10 +1283,22 @@ class SerialConnection(EventDispatcher):
                     self.feed_rate = feed_speed[0]
                     # convert spindle speed to int after re-compensating to show the old users value
                     if int(feed_speed[1]) != 0:
-                        if self.setting_51 == 0:  # not an SC2
-                            self.spindle_speed = int(self.m.correct_rpm(int(feed_speed[1]), spindle_voltage=None, revert=True, log=False))
-                        else:
+                        try:
+                            is_spindle_sc2 = self.setting_51 == 1  # Running SC2 spindle
+                        except:
+                            is_spindle_sc2 = False
+
+                        if is_spindle_sc2:  # Running SC2 spindle
                             self.spindle_speed = int(feed_speed[1])
+                        else:
+                            grbl_reported_rpm = int(feed_speed[1]) # Value back from GRBL
+                            current_multiplier = float(self.speed_override_percentage) / 100 # Current override
+                            current_gcode_rpm = self.m.correct_rpm((grbl_reported_rpm / current_multiplier), revert=True, log=False) # Determine gcode rpm at current line
+                            current_running_rpm = current_gcode_rpm * current_multiplier
+                            # Apply limits
+                            if current_running_rpm > self.m.maximum_spindle_speed(): current_running_rpm = self.m.maximum_spindle_speed()
+                            if current_running_rpm < self.m.minimum_spindle_speed(): current_running_rpm = self.m.minimum_spindle_speed()
+                            self.spindle_speed = int(current_running_rpm)
                     else:
                         self.spindle_speed = 0
 
@@ -1532,7 +1555,7 @@ class SerialConnection(EventDispatcher):
                         Logger.info("Could not print calibration output")
 
             if self.VERBOSE_STATUS:
-                Logger.info(self.m_state, self.m_x, self.m_y, self.m_z, self.serial_blocks_available, self.serial_chars_available)
+                Logger.debug(self.m_state, str(self.m_x), str(self.m_y), str(self.m_z), self.serial_blocks_available, self.serial_chars_available)
 
             if self.measure_running_data:
 
@@ -1540,9 +1563,9 @@ class SerialConnection(EventDispatcher):
 
                     self.running_data.append([
                         int(self.measurement_stage),
-                        float(self.m_x),
-                        float(self.m_y),
-                        float(self.m_z),
+                        self.m_x,
+                        self.m_y,
+                        self.m_z,
                         int(self.sg_x_motor_axis),
                         int(self.sg_y_axis),
                         int(self.sg_y1_motor),
@@ -1767,7 +1790,7 @@ class SerialConnection(EventDispatcher):
 
     def start_sequential_stream(self, list_to_stream, reset_grbl_after_stream=False, end_dwell=False):
         if self.is_sequential_streaming:
-            Logger.info('already streaming...try again later')
+            Logger.debug('already streaming...try again later')
             Clock.schedule_once(lambda dt: self.start_sequential_stream(list_to_stream, reset_grbl_after_stream, end_dwell), 0.3)
             return
         self.is_sequential_streaming = True
@@ -1865,8 +1888,24 @@ class SerialConnection(EventDispatcher):
             Logger.info("FAILED to display on CONSOLE: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
 
         # Catch and correct all instances of the spindle speed command "M3 S{RPM}"
-        if 'S' in serialCommand.upper():
-            serialCommand = self.compensate_spindle_speed_command(serialCommand)
+        if "M3" in serialCommand.upper():
+            # Set spindle_on flag
+            self.spindle_on = True
+
+            if "S" in serialCommand.upper():
+                # Correct the spindle speed command
+                serialCommand = self.compensate_spindle_speed_command(serialCommand)
+
+        if "M5" in serialCommand.upper():
+            # Clear spindle_on flag
+            self.spindle_on = False
+
+        # Catch any instances of AE/AF to set the vacuum_on flag
+        if "AE" in serialCommand.upper():
+            self.vacuum_on = True
+
+        if "AF" in serialCommand.upper():
+            self.vacuum_on = False
 
         # Finally issue the command
         if self.s:

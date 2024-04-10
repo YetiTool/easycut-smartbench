@@ -23,6 +23,7 @@ from kivy.uix.widget import Widget
 
 from asmcnc.core_UI.job_go.widgets.widget_load_slider import LoadSliderWidget
 from asmcnc.skavaUI import widget_speed_override
+from asmcnc.comms.model_manager import ModelManagerSingleton
 
 Builder.load_string(
     """
@@ -235,6 +236,14 @@ class PopupYetiPilotSettings(Widget):
                 get_profile()
 
             material_values = self.yp.get_available_material_types()
+
+            self.model_manager = ModelManagerSingleton()
+            if not self.model_manager.is_machine_drywall():
+                try:
+                    material_values.remove("Drywall")
+                except:
+                    pass
+
             if (
                 self.yp.get_active_material_type()
                 and self.yp.get_active_cutter_diameter()
