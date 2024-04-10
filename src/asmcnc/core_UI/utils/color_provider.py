@@ -1,4 +1,9 @@
-from typing import Dict, List
+from asmcnc.comms.logging_system.logging_system import Logger
+
+try:
+    from typing import Dict, List
+except ImportError:
+    Logger.warning("Typing module not available.")
 
 """
 A provider for colours that can be used in the application.
