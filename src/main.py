@@ -164,7 +164,7 @@ class SkavaUI(App):
     width = Window.width
     height = Window.height if Window.height == 480 else Window.height - 32
 
-    designer_popup = AddWidgetPopup(None)
+    designer_popup = None
 
     def get_scaled_width(self, val):
         return scaling_utils.get_scaled_width(val)
@@ -187,6 +187,8 @@ class SkavaUI(App):
 
         # Localization/language object
         l = localization.Localization()
+
+        self.designer_popup = AddWidgetPopup(sm, l, None)
 
         # Keyboard object
         kb = custom_keyboard.Keyboard(localization=l)

@@ -11,13 +11,17 @@ from kivy.properties import ObjectProperty, ListProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.clock import Clock
+
+from asmcnc.core_UI.hoverable import HoverBehavior
 from asmcnc.skavaUI import popup_info
 from kivy.core.window import Window
+import asmcnc.core_UI.path_utils as pu
 
 Builder.load_string(
     """
 
 #:import hex kivy.utils.get_color_from_hex
+#:import pu asmcnc.core_UI.path_utils
 
 <XYMove>
 
@@ -56,7 +60,7 @@ Builder.load_string(
                         size: self.parent.size
                         pos: self.parent.pos  
                         Image:
-                            source: "./asmcnc/skavaUI/img/go_datum_x.png"
+                            source: pu.get_path('go_datum_x.png')
                             center_x: self.parent.center_x
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
@@ -79,7 +83,7 @@ Builder.load_string(
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
-                        source: "./asmcnc/skavaUI/img/xy_arrow_up.png"
+                        source: pu.get_path('xy_arrow_up.png')
                         center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
@@ -102,7 +106,7 @@ Builder.load_string(
                         size: self.parent.size
                         pos: self.parent.pos  
                         Image:
-                            source: "./asmcnc/skavaUI/img/go_datum_y.png"
+                            source: pu.get_path('go_datum_y.png')
                             center_x: self.parent.center_x
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
@@ -123,7 +127,7 @@ Builder.load_string(
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
-                        source: "./asmcnc/skavaUI/img/xy_arrow_left.png"
+                        source: pu.get_path('xy_arrow_left.png')
                         center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
@@ -142,7 +146,7 @@ Builder.load_string(
                     pos: self.parent.pos
                     Image:
                         id: jogModeButtonImage
-                        source: "./asmcnc/skavaUI/img/jog_mode_infinity.png"
+                        source: pu.get_path('jog_mode_infinity.png')
                         center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
@@ -162,7 +166,7 @@ Builder.load_string(
                     size: self.parent.size
                     pos: self.parent.pos  
                     Image:
-                        source: "./asmcnc/skavaUI/img/xy_arrow_right.png"
+                        source: pu.get_path('xy_arrow_right.png')
                         center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
@@ -185,7 +189,7 @@ Builder.load_string(
                         size: self.parent.size
                         pos: self.parent.pos  
                         Image:
-                            source: "./asmcnc/skavaUI/img/set_datum_x.png"
+                            source: pu.get_path('set_datum_x.png')
                             center_x: self.parent.center_x
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
@@ -206,7 +210,7 @@ Builder.load_string(
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
-                        source: "./asmcnc/skavaUI/img/xy_arrow_down.png"
+                        source: pu.get_path('xy_arrow_down.png')
                         center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
@@ -230,7 +234,7 @@ Builder.load_string(
                         size: self.parent.size
                         pos: self.parent.pos  
                         Image:
-                            source: "./asmcnc/skavaUI/img/set_datum_y.png"
+                            source: pu.get_path('set_datum_y.png')
                             center_x: self.parent.center_x
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
@@ -253,7 +257,7 @@ Builder.load_string(
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
-                        source: "./asmcnc/skavaUI/img/set_park.png"
+                        source: pu.get_path('set_park.png')
                         center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
@@ -272,7 +276,7 @@ Builder.load_string(
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
-                        source: "./asmcnc/skavaUI/img/set_jobstart.png"
+                        source: pu.get_path('set_jobstart.png')
                         center_x: self.parent.center_x
                         y: self.parent.y
                         size: self.parent.width, self.parent.height
@@ -282,7 +286,7 @@ Builder.load_string(
 )
 
 
-class XYMove(Widget):
+class XYMove(Widget, HoverBehavior):
     def __init__(self, **kwargs):
         super(XYMove, self).__init__(**kwargs)
         self.m = kwargs["machine"]

@@ -1,8 +1,9 @@
 from kivy.graphics import RoundedRectangle, Color
-from kivy.uix.button import Button
+
+from asmcnc.core_UI.components.buttons.button_base import ButtonBase
 
 
-class RoundedButton(Button):
+class RoundedButton(ButtonBase):
     def __init__(self, **kwargs):
         super(RoundedButton, self).__init__(**kwargs)
 
