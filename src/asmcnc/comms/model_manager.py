@@ -160,6 +160,31 @@ class ModelManagerSingleton(EventDispatcher):
         """
         return self._data['product_code'] is ProductCodes.DRYWALLTEC
 
+    def is_machine_sb(self):
+        # () -> bool
+        """
+        Returns True if the machine is a SmartBench machine, False otherwise.
+        """
+        return self._data['product_code'] in [
+            ProductCodes.PRECISION_PRO_X,
+            ProductCodes.PRECISION_PRO_PLUS,
+            ProductCodes.PRECISION_PRO,
+            ProductCodes.STANDARD,
+            ProductCodes.FIRST_VERSION
+        ]
+
+    def get_machine_type(self):
+        # () -> str
+        """
+        Returns the machine type as a string.
+        """
+        if self.is_machine_drywall():
+            return 'DrywallTec'
+        elif self.is_machine_sb():
+            return 'SmartBench'
+        else:
+            return 'Unknown'
+
     def set_machine_type(self, pc, save=False):
         # type: (ProductCodes, bool) ->  None
         # (bool) -> None
