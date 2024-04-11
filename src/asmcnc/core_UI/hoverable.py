@@ -33,6 +33,7 @@ class InspectorSingleton(EventDispatcher):
     widget = None
     locked = False
     edit_mode = False
+    disabled = False
 
     def __new__(cls):
         if cls._instance is None:
@@ -48,6 +49,14 @@ class InspectorSingleton(EventDispatcher):
             self.register_event_type('on_show_popup')
             Window.bind(on_key_down=self._on_key_down)
 
+    def disable(self):
+        self.disabled = True
+        Logger.info('Inspector disabled')
+
+    def enable(self):
+        self.disabled = False
+        Logger.info('Inspector enabled')
+
     def on_show_popup(self, *args):
         pass
 
@@ -56,6 +65,9 @@ class InspectorSingleton(EventDispatcher):
         Callback being called when a key is pressed.
         Is used for debugging purposes to print debug info about the UI elements.
         """
+        if self.disabled:
+            return
+
         keycode = args[3]
         key = args[1]
 
@@ -221,17 +233,18 @@ class InspectorSingleton(EventDispatcher):
         """
         Switches to the first child if the currently selected widget has children.
         """
-        children = self.widget.children
-        if len(children) == 0:
-            Logger.debug('{} has no children!'.format(self.get_widget_name_class(self.widget)))
-        else:
-            self.child_index = 0
-            self.child_max = len(children)
-            self.widget = children[self.child_index]
-            Logger.debug('Switched to child: {}/{}: {}'.format(self.child_index,
-                                                               self.child_max,
-                                                               self.get_widget_name_class(self.widget)))
-            self.inspect_widget(short=True)
+        if self.widget:
+            children = self.widget.children
+            if len(children) == 0:
+                Logger.debug('{} has no children!'.format(self.get_widget_name_class(self.widget)))
+            else:
+                self.child_index = 0
+                self.child_max = len(children)
+                self.widget = children[self.child_index]
+                Logger.debug('Switched to child: {}/{}: {}'.format(self.child_index,
+                                                                   self.child_max,
+                                                                   self.get_widget_name_class(self.widget)))
+                self.inspect_widget(short=True)
 
     def switch_to_parent(self):
         """Switches to the parent of the currently selected widget."""

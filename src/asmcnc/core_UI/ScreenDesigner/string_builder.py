@@ -24,10 +24,17 @@ CODE_ONLY_ITEMS = {'ProbeButton': ['{} = ProbeButton(None, None, None)  # TODO: 
                               '{}.size = [270.5, 391.6]',
                               'self.children[0].add_widget({})']}
 
+def get_screen_name(widget):
+    screen = widget.parent
+    while not issubclass(type(screen), Screen):
+        screen = screen.parent
+    return screen.name
+
 
 def get_python_code_from_screen(widget):
     # type: (Widget) -> str
     screen = widget.parent
+
     while not issubclass(type(screen), Screen):
         screen = screen.parent
     #  assuming every screen has exactly one child as the main layout!!!
@@ -184,7 +191,7 @@ def get_class_code(screen):
     # type: (Screen) -> str
     s = 'class ' + screen.name + '(Screen):\n'
     s += INDENT + 'def __init__(self, **kwargs):\n'
-    s += INDENT + INDENT + 'super(' + screen.name + ', self).__init__(**kwargs)\n'
+    s += INDENT + INDENT + 'super(' + screen.name + ', self).__init__(name="' + screen.name + '", **kwargs)\n'
     return s
 
 

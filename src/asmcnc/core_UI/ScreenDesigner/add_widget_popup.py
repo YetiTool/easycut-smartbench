@@ -1,11 +1,13 @@
 import re
 
+from kivy.app import App
 from kivy.metrics import dp
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.popup import Popup
 from mock.mock import MagicMock
 
+from asmcnc.comms.localization import Localization
 from asmcnc.core_UI.components.base_label import LabelBase
 from asmcnc.core_UI.components.buttons.probe_button import ProbeButton
 from asmcnc.core_UI.components.buttons.spindle_button import SpindleButton
@@ -18,17 +20,17 @@ from asmcnc.skavaUI.widget_xy_move import XYMove
 GENERATED_FILES_FOLDER = pu.get_path('generated_screens')
 
 class AddWidgetPopup(Popup):
-    def __init__(self, screen_manager, localization, widget):
+    def __init__(self):
         super(AddWidgetPopup, self).__init__(title='Add widget',
                                             size_hint=(None, None),
                                             size=(400, 300),
                                             pos=(200, 150))
         self.counter = 0
-        self.sm = screen_manager
-        self.localization = localization
+        self.sm = App.get_running_app().sm
+        self.localization = Localization()
         self.inspector = InspectorSingleton()
         self.inspector.bind(on_show_popup=self.open_me)
-        self.widget_to_add_to = widget
+        self.widget_to_add_to = None
         self.main_layout = FloatLayout()
         self.add_widget(self.main_layout)
         # Add label button:
@@ -51,6 +53,10 @@ class AddWidgetPopup(Popup):
         self.btn_xy_move_button = Button(size=(70, 50), size_hint=(None, None), pos=(self.x + 80, self.y -50), text='xy_move')
         self.btn_xy_move_button.bind(on_press=self.add_xy_move_button_to_selection)
         self.main_layout.add_widget(self.btn_xy_move_button)
+        # Add back button:
+        self.btn_back_button = Button(size=(70, 50), size_hint=(None, None), pos=(self.x + 220, self.y -50), text='back')
+        self.btn_back_button.bind(on_press=self.back_to_main_screen)
+        self.main_layout.add_widget(self.btn_back_button)
         #  close button:
         self.btn_cancel = Button(size=(70, 50), size_hint=(None, None), pos=(self.x + 320, self.y - 50), text='close')
         self.btn_cancel.bind(on_press=self.dismiss)
@@ -60,17 +66,19 @@ class AddWidgetPopup(Popup):
         self.btn_save.bind(on_press=self.save)
         self.main_layout.add_widget(self.btn_save)
 
+    def back_to_main_screen(self, *args):
+        self.sm.current = 'ScreenDesigner'
+        self.dismiss()
+
     def open_me(self, *args):
         self.open()
 
     def save(self, *args):
         s = sb.get_python_code_from_screen(self.widget_to_add_to)
-        filename = 'new_screen'
-        # screen_name = 'NewScreen'
-        screen_name = re.sub(r'_([a-z])', lambda pat: pat.group(1).upper(), '_' + filename)
+        filename = re.sub(r'([A-Z])', lambda pat: '_' + pat.group(1).lower(), sb.get_screen_name(self.widget_to_add_to))[1:]
         path = pu.join(GENERATED_FILES_FOLDER, filename + '.py')
         with open(path, 'w') as f:
-            f.write(s.replace('template', screen_name))
+            f.write(s)
         self.dismiss()
 
     def add_label_to_selection(self, *args):
