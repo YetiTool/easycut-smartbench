@@ -3,6 +3,7 @@ Created on 31 Jan 2018
 @author: Ed
 Module to manage all serial comms between pi (EasyCut s/w) and realtime arduino chip (GRBL f/w)
 '''
+import glob
 import re
 from datetime import datetime, timedelta
 from functools import partial
@@ -213,9 +214,7 @@ class SerialConnection(EventDispatcher):
         "win32": [
             "COM3",
         ],
-        "darwin": [
-
-        ],
+        "darwin": glob.glob("/dev/tty.usb*"),
         "linux2": [
             "/dev/ttyS0",
             "/dev/ttyUSB0"
