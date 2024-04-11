@@ -1,12 +1,13 @@
 import logging
 
 from kivy.logger import Logger as KivyLogger
+
+from asmcnc.core_UI.screens.startup.starting_smartbench_screen import StartingSmartBenchScreen
+
 KivyLogger.setLevel(logging.INFO)
 
 from kivy.app import App
-from kivy.clock import Clock
-from kivy.uix.label import Label
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
+from kivy.uix.screenmanager import ScreenManager, NoTransition
 
 from asmcnc.apps import app_manager
 from asmcnc.comms import (
@@ -56,27 +57,6 @@ from asmcnc.skavaUI import (
 from settings import settings_manager
 
 
-class LoadScreen(Screen):
-    """The loading screen of the Easycut application."""
-
-    def __init__(self, **kwargs):
-        """Initialize the loading screen."""
-        super(LoadScreen, self).__init__(**kwargs)
-        self.register_event_type("on_loading_screen_open")
-
-        self.name = "load_screen"
-
-        self.add_widget(Label(text="Loading..."))
-
-    def on_enter(self, *args):
-        """When the screen is entered."""
-        Clock.schedule_once(lambda dt: self.dispatch("on_loading_screen_open"), 3)
-
-    def on_loading_screen_open(self, *args):
-        """Event handler for when the loading is complete."""
-        pass
-
-
 class EasycutApp(App):
     """The main class of the Easycut application.
     Access any of the main components of the application through this class:
@@ -113,11 +93,11 @@ class EasycutApp(App):
 
     def build(self):
         """Build the application."""
-        loading_screen = LoadScreen()
+        start_up_screen = StartingSmartBenchScreen()
 
-        loading_screen.bind(on_loading_screen_open=self.on_loading_screen_open)
+        start_up_screen.bind(on_loading_screen_open=self.on_loading_screen_open)
 
-        self.screen_manager.add_widget(loading_screen)
+        self.screen_manager.add_widget(start_up_screen)
 
         return self.screen_manager
 

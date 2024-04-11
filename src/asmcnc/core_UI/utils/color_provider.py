@@ -17,7 +17,7 @@ Python :
 
 Kivy Builder :
     #:import color_provider asmcnc.core_UI.utils.color_provider
-    Label:
+    Label: 
         color: color_provider.get_rgba("green")
 
 Functions
