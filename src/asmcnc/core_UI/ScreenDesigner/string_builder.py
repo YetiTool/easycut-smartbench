@@ -24,7 +24,12 @@ CODE_ONLY_ITEMS = {'ProbeButton': ['{} = ProbeButton(None, None, None)  # TODO: 
                               '{}.size = [270.5, 391.6]',
                               'self.children[0].add_widget({})']}
 
+
 def get_screen_name(widget):
+    # type: (Widget) -> str
+    """
+    Returns the name of the widgets parent screen as string.
+    """
     screen = widget.parent
     while not issubclass(type(screen), Screen):
         screen = screen.parent
@@ -33,6 +38,13 @@ def get_screen_name(widget):
 
 def get_python_code_from_screen(widget):
     # type: (Widget) -> str
+    """
+    widget = entrypoint into the screen's widget tree.
+    Walks through the whole widget tree of the screen and generates either kivy builder string or python code
+    for each widget.
+    Imports are gathered and generated.
+    Basic class code is generated.
+    """
     screen = widget.parent
 
     while not issubclass(type(screen), Screen):
@@ -64,6 +76,10 @@ def get_python_code_from_screen(widget):
     return s
 
 def get_code_for_widgets(widget):
+    # type: (Widget) -> str
+    """
+    Returns python code for the CODE_ONLY_ITEMS.
+    """
     s= ''
     if type(widget).__name__ in CODE_ONLY_ITEMS:
         s += INDENT + INDENT + '# Code for {}:\n'.format(str(widget.id))
@@ -145,14 +161,14 @@ def builder_string_from_widget(widget, indent_level=1, do_children=True):
     # CODE_ONLY_ITEMS will not appear in the BuilderString
     if type(widget).__name__ in CODE_ONLY_ITEMS:
         return ''
+    # setup indentation level:
     base_indent = ''
     for i in range(0, indent_level * len(INDENT)):
         base_indent += ' '
 
     s = base_indent + type(widget).__name__ + ':\n'
+
     # list of attributes that need to be part of the builder string:
-
-
     for attribute in attributes.keys():
         value = getattr(widget, attribute, 'no_attr')
         if value and value != 'no_attr':
@@ -164,6 +180,7 @@ def builder_string_from_widget(widget, indent_level=1, do_children=True):
             kivy_class = type(child).__name__ not in DONT_DO_CHILDREN
             s += builder_string_from_widget(child, indent_level+1, kivy_class)
     return s
+
 
 def get_import_dict_from_widget(widget):
     # type: (Widget) -> dict
@@ -180,6 +197,7 @@ def get_import_dict_from_widget(widget):
     for child in widget.children:
         c = get_import_dict_from_widget(child)
         for k, v in c.items():
+            #check if the same module is needed -> update set:
             if k in ret:
                 ret[k].union(v)
             else:
@@ -187,8 +205,13 @@ def get_import_dict_from_widget(widget):
 
     return ret
 
+
 def get_class_code(screen):
     # type: (Screen) -> str
+    """
+    Returns basic class code (ctor and super call) as string.
+    sets the name attribute of the screen!
+    """
     s = 'class ' + screen.name + '(Screen):\n'
     s += INDENT + 'def __init__(self, **kwargs):\n'
     s += INDENT + INDENT + 'super(' + screen.name + ', self).__init__(name="' + screen.name + '", **kwargs)\n'

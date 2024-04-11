@@ -19,12 +19,18 @@ from asmcnc.skavaUI.widget_xy_move import XYMove
 
 GENERATED_FILES_FOLDER = pu.get_path('generated_screens')
 
-class AddWidgetPopup(Popup):
+
+class ComponentSelectorPopup(Popup):
+    """
+    This popup is shown when [w] is pressed.
+    It offers various options to add widgets to the current screen.
+    saves the screen as python code.
+    """
     def __init__(self):
-        super(AddWidgetPopup, self).__init__(title='Add widget',
-                                            size_hint=(None, None),
-                                            size=(400, 300),
-                                            pos=(200, 150))
+        super(ComponentSelectorPopup, self).__init__(title='Add widget',
+                                                     size_hint=(None, None),
+                                                     size=(400, 300),
+                                                     pos=(200, 150))
         self.counter = 0
         self.sm = App.get_running_app().sm
         self.localization = Localization()
@@ -74,12 +80,16 @@ class AddWidgetPopup(Popup):
         self.open()
 
     def save(self, *args):
+        """
+        Takes generated python code from the StringBuilder and saves it to a file.
+        The filename is converted from CamelCase to snake_case.
+        """
         s = sb.get_python_code_from_screen(self.widget_to_add_to)
+        # e.g. turn "MyFirstScreen" into "my_first_screen":
         filename = re.sub(r'([A-Z])', lambda pat: '_' + pat.group(1).lower(), sb.get_screen_name(self.widget_to_add_to))[1:]
         path = pu.join(GENERATED_FILES_FOLDER, filename + '.py')
         with open(path, 'w') as f:
             f.write(s)
-        self.dismiss()
 
     def add_label_to_selection(self, *args):
         w = self.widget_to_add_to if self.widget_to_add_to else self.inspector.widget

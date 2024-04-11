@@ -99,7 +99,7 @@ class InspectorSingleton(EventDispatcher):
             # self.dump_screen()
         elif keycode == 'h':
             self.print_help()
-        elif keycode == 'q':
+        elif keycode == 'w':
             # pass
             self.dispatch('on_show_popup')
             # self.show_popup()
@@ -160,7 +160,7 @@ class InspectorSingleton(EventDispatcher):
         Logger.debug('s: cycles through siblings. You need to switch to a child first!')
         Logger.debug('a: cycles through siblings backwards. You need to switch to a child first!')
         Logger.debug('p: switches to the parent.\n')
-        Logger.debug('q: Open popup to add new widgets to the currently selected one.\n')
+        Logger.debug('w: Open popup to add new widgets to the currently selected one.\n')
         Logger.debug('When a widget is selected and edit_mode = True, you can use the arrow keys to move it.')
         Logger.debug("Or just drag'n drop it with the mouse\n")
 
@@ -285,16 +285,14 @@ class InspectorSingleton(EventDispatcher):
 
 class HoverBehavior(object):
     """
-    Hover behavior.
-    :Events:
-        `on_enter`
-            Fired when mouse enter the bbox of the widget.
-        `on_leave`
-            Fired when the mouse exit the widget
+    Handles mouse move events. Enables drag'n drop for widgets with left mouse button.
+
     """
     inspector = InspectorSingleton()
     hovered = BooleanProperty(False)
     drag = False
+    offset_x = 0
+    offset_y = 0
 
     def __init__(self, **kwargs):
         if INSPECTOR_WIDGET:
@@ -306,20 +304,34 @@ class HoverBehavior(object):
         super(HoverBehavior, self).__init__(**kwargs)
 
     def on_mouse_press(self, *args):
+        """
+        Start drag with selected widget if Inspector is in edit_mode.
+        Saves offset between mouse position and widget bottom left corner.
+        """
         if self.inspector.edit_mode:
             if not self.drag:
                 self.drag = True
+                self.offset_x = args[1].px - self.inspector.widget.x
+                self.offset_y = args[1].py - self.inspector.widget.y
 
     def on_mouse_release(self, *args):
+        """
+        Drops the dragged widget.
+        """
         if self.inspector.edit_mode:
             if self.drag:
                 self.drag = False
 
     def on_move(self, *args):
+        """
+        Drags the item with the mouse. Offset from mouse click pos to lower left corner
+        of the widget is compensated for smoother user experience.
+        """
         if self.inspector.edit_mode:
             if self.drag:
                 if self.inspector.widget:
-                    self.inspector.widget.pos = args[1].pos
+                    self.inspector.widget.x = args[1].px - self.offset_x
+                    self.inspector.widget.y = args[1].py - self.offset_y
                     return True
 
     def on_mouse_pos(self, *args):

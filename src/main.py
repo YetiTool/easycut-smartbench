@@ -29,7 +29,7 @@ from kivy.uix.boxlayout import BoxLayout
 from asmcnc.comms.grbl_settings_manager import GRBLSettingsManagerSingleton
 from asmcnc.core_UI import scaling_utils, console_utils
 from asmcnc.comms.model_manager import ProductCodes
-from asmcnc.core_UI.ScreenDesigner.add_widget_popup import AddWidgetPopup
+from asmcnc.core_UI.ScreenDesigner.component_selector_popup import ComponentSelectorPopup
 from asmcnc.core_UI.popup_manager import PopupManager
 from asmcnc.comms.model_manager import ModelManagerSingleton
 
@@ -188,7 +188,7 @@ class SkavaUI(App):
         # Localization/language object
         l = localization.Localization()
 
-        self.designer_popup = AddWidgetPopup(sm, l, None)
+        self.designer_popup = ComponentSelectorPopup(sm, l, None)
 
         # Keyboard object
         kb = custom_keyboard.Keyboard(localization=l)
