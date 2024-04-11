@@ -1,12 +1,22 @@
-import cProfile
-
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 
 from asmcnc.apps import app_manager
+from asmcnc.comms import (
+    router_machine,
+    smartbench_flurry_database_connection,
+    localization,
+)
+from asmcnc.comms.grbl_settings_manager import GRBLSettingsManagerSingleton
+from asmcnc.comms.logging_system.logging_system import Logger
+from asmcnc.comms.model_manager import ModelManagerSingleton
 from asmcnc.comms.smart_transfer import server_connection
+from asmcnc.core_UI import popup_manager, scaling_utils
+from asmcnc.job import job_data
+from asmcnc.job.yetipilot import yetipilot
+from asmcnc.keyboard import custom_keyboard
 from asmcnc.skavaUI import (
     screen_homing_decision,
     screen_recovery_decision,
@@ -38,18 +48,6 @@ from asmcnc.skavaUI import (
     screen_home,
     screen_lobby,
 )
-from asmcnc.comms import (
-    router_machine,
-    smartbench_flurry_database_connection,
-    localization,
-)
-from asmcnc.comms.grbl_settings_manager import GRBLSettingsManagerSingleton
-from asmcnc.comms.logging_system.logging_system import Logger
-from asmcnc.comms.model_manager import ModelManagerSingleton
-from asmcnc.core_UI import popup_manager, scaling_utils
-from asmcnc.job import job_data
-from asmcnc.job.yetipilot import yetipilot
-from asmcnc.keyboard import custom_keyboard
 from settings import settings_manager
 
 
@@ -410,7 +408,4 @@ class EasycutApp(App):
 
 
 if __name__ == "__main__":
-    profiler = cProfile.Profile()
-    profiler.enable()
     EasycutApp().run()
-    profiler.disable()
