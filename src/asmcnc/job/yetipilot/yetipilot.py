@@ -7,6 +7,7 @@ import json
 import time
 from math import sqrt
 
+from asmcnc.comms.localization import Localization
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.clock import Clock
 
@@ -69,12 +70,12 @@ class YetiPilot(object):
 
     adjusting_spindle_speed = False
 
-    def __init__(self, **kwargs):
-        self.m = kwargs['machine']
-        self.sm = kwargs['screen_manager']
-        self.jd = kwargs['job_data']
-        self.l = kwargs['localization']
-        self.m = kwargs['machine']
+    def __init__(self, machine, screen_manager, job_data, **kwargs):
+        self.m = machine
+        self.sm = screen_manager
+        self.jd = job_data
+        self.l = Localization()
+        self.m = machine
 
         if kwargs.get('test', False):
             self.profiles_path = 'src/' + self.profiles_path

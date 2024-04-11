@@ -8,6 +8,9 @@ import threading
 import traceback
 
 from enum import Enum
+from kivy.app import App
+
+from asmcnc.comms.localization import Localization
 from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.comms.model_manager import ModelManagerSingleton, ProductCodes
 
@@ -146,21 +149,20 @@ class RouterMachine(EventDispatcher):
 
     trigger_setup = False
 
-    def __init__(self, win_serial_port, screen_manager, settings_manager, localization, job, *args, **kwargs):
-        super(RouterMachine, self).__init__(*args, **kwargs)
-
-        self.sm = screen_manager
-        self.sett = settings_manager
-        self.l = localization
-        self.jd = job
+    def __init__(self, sm, sett, localisation, jd, **kwargs):
+        super(RouterMachine, self).__init__(**kwargs)
+        self.sm = sm
+        self.sett = sett
+        self.l = localisation
+        self.jd = jd
         self.model_manager = ModelManagerSingleton()
         self.set_jog_limits()
 
-        self.win_serial_port = win_serial_port   # Need to save so that serial connection can be reopened (for zhead cycle app)
+        self.win_serial_port = "COM3"   # Need to save so that serial connection can be reopened (for zhead cycle app)
 
         # Establish 's'erial comms and initialise
         self.s = serial_connection.SerialConnection(self, self.sm, self.sett, self.l, self.jd)
-        self.s.establish_connection(win_serial_port)
+        self.s.establish_connection(self.win_serial_port)
 
         # Object to construct and send custom YETI GRBL commands
         self.p = protocol.protocol_v2()

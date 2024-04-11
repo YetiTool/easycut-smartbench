@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys, os
 
+from asmcnc.comms.localization import Localization
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.core.window import Window
 from kivy.uix.label import Label
@@ -25,7 +26,7 @@ class Keyboard(VKeyboard):
     def __init__(self, **kwargs):
         super(Keyboard, self).__init__(**kwargs)
 
-        self.l = kwargs['localization']
+        self.l = Localization()
 
         # For python 2 encoding issues
         reload(sys)

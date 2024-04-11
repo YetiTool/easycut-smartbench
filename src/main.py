@@ -192,10 +192,10 @@ class SkavaUI(App):
         sett = settings_manager.Settings(sm)
 
         # Initialise 'j'ob 'd'ata object
-        jd = job_data.JobData(localization=l, settings_manager=sett)
+        jd = job_data.JobData(sett)
 
         # Initialise 'm'achine object
-        m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
+        m = router_machine.RouterMachine(sm, sett, l, jd)
 
         # initialise ModelManagerSingleton with machine for setting_50 update
         ModelManagerSingleton(m)

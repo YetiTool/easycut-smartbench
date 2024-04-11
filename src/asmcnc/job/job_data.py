@@ -10,6 +10,9 @@ from chardet import detect
 from itertools import takewhile
 import traceback
 
+from kivy.app import App
+
+from asmcnc.comms.localization import Localization
 from asmcnc.comms.logging_system.logging_system import Logger
 
 decode_and_encode = lambda x: (unicode(x, detect(x)['encoding']).encode('utf-8'))
@@ -93,9 +96,9 @@ class JobData(object):
     job_recovery_from_beginning = False
     job_recovery_skip_recovery = False
 
-    def __init__(self, **kwargs):
-        self.l = kwargs['localization']
-        self.set = kwargs['settings_manager']
+    def __init__(self, sett):
+        self.l = Localization()
+        self.set = sett
 
         self.metadata_order = {
 

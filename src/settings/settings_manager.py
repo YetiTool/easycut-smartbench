@@ -6,6 +6,9 @@ Module to get and store settings info
 
 import sys, os, subprocess, time, threading
 from time import sleep
+
+from kivy.app import App
+
 from asmcnc.core_UI import console_utils
 
 from datetime import datetime
@@ -50,8 +53,7 @@ class Settings(object):
     usb_or_wifi = ''
 
     def __init__(self, screen_manager):
-        
-        self.sm = screen_manager
+        self.screen_manager = screen_manager
 
         self.get_public_ip_address()
         self.get_timezone()
