@@ -1,3 +1,8 @@
+import logging
+
+from kivy.logger import Logger as KivyLogger
+KivyLogger.setLevel(logging.INFO)
+
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.uix.label import Label

@@ -167,6 +167,17 @@ class SerialConnection(EventDispatcher):
             Logger.info("Serial comms interrupted but no serial screen - are you in diagnostics mode?")
             Logger.info("Serial error: " + str(serial_error))
 
+    SMARTBENCH_PORTS = {
+        "win32": [
+            "COM3",
+        ],
+        "darwin": glob.glob("/dev/tty.usb*"),
+        "linux2": [
+            "/dev/ttyS0",
+            "/dev/ttyUSB0"
+        ]
+    }
+
     def is_port_smartbench(self, port):
         """
         Check if the port given is a SmartBench
@@ -197,30 +208,6 @@ class SerialConnection(EventDispatcher):
             Logger.debug("Failed to connect to port: {}, {}".format(port, e))
             return False
 
-    def quick_connect(self, available_port):
-        try:
-            Logger.info("Try to connect to: " + available_port)
-            # set up connection
-            self.s = serial.Serial(str(available_port), BAUD_RATE, timeout=6, writeTimeout=20)  # assign
-            self.s.flushInput()
-            self.s.write("\x18")
-            return available_port
-
-        except:
-            Logger.info("Could not connect to given port.")
-            return ''
-
-    SMARTBENCH_PORTS = {
-        "win32": [
-            "COM3",
-        ],
-        "darwin": glob.glob("/dev/tty.usb*"),
-        "linux2": [
-            "/dev/ttyS0",
-            "/dev/ttyUSB0"
-        ]
-    }
-
     def establish_connection(self):
         ports_to_try = self.SMARTBENCH_PORTS[sys.platform]
 
@@ -230,11 +217,20 @@ class SerialConnection(EventDispatcher):
 
         if not self.s:
             Logger.warning("Couldn't find a SmartBench connected to any of the ports: " + str(ports_to_try))
+            Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 5)
             return
 
         Logger.info("Serial connected on port: {}".format(self.s.port))
-        self.write_direct("\r\n\r\n", realtime=False, show_in_sys=False, show_in_console=False)
 
+        try:
+            self.wake_up_smartbench()
+        except Exception as e:
+            Logger.error("Failed to wake up SmartBench: {}".format(e))
+            Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 5)
+
+
+    def wake_up_smartbench(self):
+        self.write_direct("\r\n\r\n", realtime=False, show_in_sys=False, show_in_console=False)
 
 
     # def establish_connection(self, win_port):
