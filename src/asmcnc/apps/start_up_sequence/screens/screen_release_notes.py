@@ -144,6 +144,7 @@ class ReleaseNotesScreen(Screen):
         self.sm = kwargs["screen_manager"]
         self.version = kwargs["version"]
         self.l = kwargs["localization"]
+        self.model_manager = kwargs["router_machine"].model_manager
         # Filename consists of just the version digits followed by .txt, so can be found by filtering out non integers from version name
         # Two dots before filename mean parent directory, as file is at the top of the filetree, not in src
         self.release_notes_filename = "../" + self.version.replace(".", "") + ".txt"
