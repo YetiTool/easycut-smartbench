@@ -31,6 +31,7 @@ Builder.load_string(
     version_number_label : version_number_label
     please_read_label : please_read_label
     scroll_release_notes : scroll_release_notes
+    release_links : release_links
     url_label : url_label
     next_button : next_button
 
@@ -82,6 +83,7 @@ Builder.load_string(
                 id: scroll_release_notes
 
             BoxLayout:
+                id: release_links
                 orientation: 'vertical'
                 size_hint_x: 0.25
                 Image:
@@ -149,6 +151,10 @@ class ReleaseNotesScreen(Screen):
         machine_type = self.model_manager.get_machine_type()
         self.scroll_release_notes.release_notes.source = self.get_release_notes_source(machine_type)
         self.update_strings()
+
+        # Remove the knowledgebase link & QR code if the machine is not a SmartBench
+        if self.model_manager.get_machine_type() != "SmartBench":
+            self.release_links.remove_widget(self.release_links)
 
     def get_release_notes_source(self, type):
         """
