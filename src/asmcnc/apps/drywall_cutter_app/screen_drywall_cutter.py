@@ -196,14 +196,17 @@ class DrywallCutterScreen(Screen):
         self.kb = kwargs['keyboard']
         self.jd = kwargs['job']
         self.pm = kwargs['popup_manager']
+        self.cs = self.m.cs
 
-        self.engine = GCodeEngine(self.m, self.dwt_config)
+        self.engine = GCodeEngine(self.m, self.dwt_config, self.cs)
         self.simulation_started = False
         self.ignore_state = True
 
         # XY move widget
-        self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m, screen_manager=self.sm,
-                                                                   localization=self.l)
+        self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m,
+                                                                   screen_manager=self.sm,
+                                                                   localization=self.l,
+                                                                   coordinate_system=self.cs)
         self.xy_move_container.add_widget(self.xy_move_widget)
 
         self.materials_popup = material_setup_popup.CuttingDepthsPopup(self.l, self.kb, self.dwt_config)
@@ -212,7 +215,8 @@ class DrywallCutterScreen(Screen):
                                                                                              dwt_config=self.dwt_config,
                                                                                              engine=self.engine,
                                                                                              kb=self.kb,
-                                                                                             localization=self.l)
+                                                                                             localization=self.l,
+                                                                                             cs=self.cs,)
         self.shape_display_container.add_widget(self.drywall_shape_display_widget)
 
         self.show_tool_image()
@@ -240,10 +244,14 @@ class DrywallCutterScreen(Screen):
         self.apply_active_config()
         self.materials_popup.on_open()  # to make sure material values are set correctly
         self.pulse_poll = Clock.schedule_interval(self.update_pulse_opacity, 0.04)
-        self.kb.set_numeric_pos((scaling_utils.get_scaled_width(565), scaling_utils.get_scaled_height(85)))
+        self.kb.set_numeric_pos((scaling_utils.get_scaled_width(565), scaling_utils.get_scaled_height(115)))
         self.drywall_shape_display_widget.check_datum_and_extents()  # update machine value labels
 
+    def on_enter(self):
+        self.m.laser_on()
+
     def on_pre_leave(self):
+        self.m.laser_off()
         if self.pulse_poll:
             Clock.unschedule(self.pulse_poll)
         self.kb.set_numeric_pos(None)
@@ -375,36 +383,59 @@ class DrywallCutterScreen(Screen):
         self.sm.current = 'lobby'
 
     def simulate(self):
+        self.popup_watchdog = Clock.schedule_interval(lambda dt: self.set_simulation_popup_state(self.m.s.m_state), 1)
+        if not self.is_config_valid():
+            self.show_validation_popup()
+            return
+
         if not self.simulation_started and self.m.s.m_state.lower() == 'idle':
-            self.m_state_bind = self.m.s.bind(m_state=lambda i, value: self.set_simulation_popup_state(value))
+            self.m.s.bind(m_state=lambda i, value: self.set_simulation_popup_state(value))
+            self.pm.show_wait_popup(main_string=self.l.get_str('Preparing for simulation') + '...')
             self.ignore_state = False
             self.simulation_started = False
             self.engine.engine_run(simulate=True)
-            self.pm.show_wait_popup(main_string=self.l.get_str('Preparing for simulation') + '...')
 
-    def set_simulation_popup_state(self, state):
-        if not self.ignore_state:  
-            if state.lower() ==  'run':
+    def set_simulation_popup_state(self, machine_state):
+        machine_state = machine_state.lower()
+        if not self.ignore_state:
+
+            if machine_state == 'run':
+                # Machine is simulating
                 self.sm.pm.close_wait_popup()
+                if not self.simulation_started:
+                    # If the popup is not already open, open it
+                    self.sm.pm.show_simulating_job_popup()
                 self.simulation_started = True
-                self.sm.pm.show_simulating_job_popup()
-            elif (state.lower() == 'idle' or self.sm.current != "drywall_cutter") and self.simulation_started:
+
+            elif (machine_state == 'idle' or self.sm.current != "drywall_cutter") and self.simulation_started:
+                # Machine stopped simulating
                 self.sm.pm.close_simulating_job_popup()
+                Clock.unschedule(self.popup_watchdog)
                 self.simulation_started = False
                 self.ignore_state = True
 
-        if state.lower() not in ['run', 'idle']:
+        if machine_state not in ['run', 'idle']:
+            # Machine is in an unknown state, close all popups
+            self.sm.pm.close_wait_popup()
             self.sm.pm.close_simulating_job_popup()
+            Clock.unschedule(self.popup_watchdog)
             self.simulation_started = False
             self.ignore_state = True
             
     def save(self):
+        if not self.is_config_valid():
+            self.show_validation_popup()
+            return
+
         if not self.sm.has_screen('config_filesaver'):
             self.sm.add_widget(screen_config_filesaver.ConfigFileSaver(name='config_filesaver',
                                                                        screen_manager=self.sm,
                                                                        localization=self.l,
                                                                        callback=self.dwt_config.save_config))
         self.sm.current = 'config_filesaver'
+
+    def is_config_valid(self):
+        return self.materials_popup.validate_inputs() and self.drywall_shape_display_widget.are_inputs_valid()
 
     def run(self):
         if self.materials_popup.validate_inputs() and self.drywall_shape_display_widget.are_inputs_valid():
@@ -420,14 +451,17 @@ class DrywallCutterScreen(Screen):
             self.proceed_to_go_screen()
 
         else:
-            m_popup_steps = self.materials_popup.get_steps_to_validate()
-            s_widget_steps = self.drywall_shape_display_widget.get_steps_to_validate()
+            self.show_validation_popup()
 
-            m_popup_steps.extend(s_widget_steps)
+    def show_validation_popup(self):
+        m_popup_steps = self.materials_popup.get_steps_to_validate()
+        s_widget_steps = self.drywall_shape_display_widget.get_steps_to_validate()
 
-            steps_to_validate = "\n".join(m_popup_steps)
-            popup = JobValidationPopup(steps_to_validate, size_hint=(0.8, 0.8), auto_dismiss=False)
-            popup.open()
+        m_popup_steps.extend(s_widget_steps)
+
+        steps_to_validate = "\n".join(m_popup_steps)
+        popup = JobValidationPopup(steps_to_validate, size_hint=(0.8, 0.8), auto_dismiss=False)
+        popup.open()
 
     def set_return_screens(self):
         self.sm.get_screen('go').return_to_screen = 'drywall_cutter' if self.sm.get_screen(

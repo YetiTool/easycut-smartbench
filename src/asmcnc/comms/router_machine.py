@@ -21,6 +21,8 @@ from asmcnc.comms.yeti_grbl_protocol import protocol
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.comms import motors
 from asmcnc.skavaUI import popup_info
+from asmcnc.comms.model_manager import ModelManagerSingleton
+from asmcnc.comms.coordinate_system import CoordinateSystem
 
 from kivy.clock import Clock
 from kivy.properties import NumericProperty, ListProperty
@@ -162,6 +164,9 @@ class RouterMachine(EventDispatcher):
 
         # Object to construct and send custom YETI GRBL commands
         self.p = protocol.protocol_v2()
+
+        # Object to handle coordinate systems
+        self.cs = CoordinateSystem(self)
 
         # initialise sb_value files if they don't already exist (to record persistent maintenance values)
         self.check_presence_of_sb_values_files()
@@ -1764,24 +1769,27 @@ class RouterMachine(EventDispatcher):
         self.set_datum(y=0)
         Clock.schedule_once(lambda dt: self.strobe_led_playlist("datum_has_been_set"), 0.2)
 
-    def set_workzone_to_pos_xy_with_laser(self):
-        if self.jog_spindle_to_laser_datum('XY'):
+    def set_workzone_to_pos_xy_with_laser(self, jog_to_datum=True):
+        if jog_to_datum:
+            if self.jog_spindle_to_laser_datum('XY'):
 
-            def wait_for_movement_to_complete(dt):
-                if not self.state() == 'Jog':
-                    Clock.unschedule(xy_poll_for_success)
-                    self.set_workzone_to_pos_xy()
+                def wait_for_movement_to_complete(dt):
+                    if not self.state() == 'Jog':
+                        Clock.unschedule(xy_poll_for_success)
+                        self.set_workzone_to_pos_xy()
 
-            xy_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
+                xy_poll_for_success = Clock.schedule_interval(wait_for_movement_to_complete, 0.5)
 
+            else:
+                error_message = (
+                    self.l.get_str("Laser crosshair is out of bounds!") + \
+                    "\n\n" + \
+                    self.l.get_str("Datum has not been set.") + " " + \
+                    self.l.get_str("Please choose a different datum using the laser crosshair.")
+                    )
+                popup_info.PopupError(self.sm, self.l, error_message)
         else:
-            error_message = (
-                self.l.get_str("Laser crosshair is out of bounds!") + \
-                "\n\n" + \
-                self.l.get_str("Datum has not been set.") + " " + \
-                self.l.get_str("Please choose a different datum using the laser crosshair.")
-                )
-            popup_info.PopupError(self.sm, self.l, error_message)
+            self.set_datum(x=-self.laser_offset_x_value, y=-self.laser_offset_y_value)
 
     def set_x_datum_with_laser(self):
         if self.jog_spindle_to_laser_datum('X'):
@@ -1929,6 +1937,11 @@ class RouterMachine(EventDispatcher):
         self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
         self.s.write_command('G4 P0.1')
         self.s.write_command('G0 G54 X0 Y0')
+
+    def go_xy_datum_with_laser(self):
+        self.s.write_command('G0 G53 Z-' + str(self.limit_switch_safety_distance))
+        self.s.write_command('G4 P0.1')
+        self.s.write_command('G0 G54 X{} Y{}'.format(-self.laser_offset_x_value, -self.laser_offset_y_value))
 
     def jog_spindle_to_laser_datum(self, axis):
 
@@ -2107,6 +2120,9 @@ class RouterMachine(EventDispatcher):
         self.homing_in_progress = False
         Logger.info("Complete homing sequence")
 
+        if self.model_manager.is_machine_drywall():
+            self.cs.drywall_tec_laser_position.move_to_dwl(dwl_x=0, dwl_y=0)
+            Logger.info("Moving laser to machine's 0, 0")
 
     # sequence control variables and functions
     homing_in_progress = False

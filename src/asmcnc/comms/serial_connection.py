@@ -71,6 +71,7 @@ class SerialConnection(EventDispatcher):
     setting_121 = NumericProperty(-1.0)
     setting_122 = NumericProperty(-1.0)
     setting_130 = NumericProperty(-1.0)
+    setting_131 = NumericProperty(-1.0)
     STATUS_INTERVAL = 0.1  # How often to poll general status to update UI (0.04 = 25Hz = smooth animation)
 
     s = None  # Serial comms object
@@ -1788,7 +1789,7 @@ class SerialConnection(EventDispatcher):
 
     def start_sequential_stream(self, list_to_stream, reset_grbl_after_stream=False, end_dwell=False):
         if self.is_sequential_streaming:
-            Logger.info('already streaming...try again later')
+            Logger.debug('already streaming...try again later')
             Clock.schedule_once(lambda dt: self.start_sequential_stream(list_to_stream, reset_grbl_after_stream, end_dwell), 0.3)
             return
         self.is_sequential_streaming = True

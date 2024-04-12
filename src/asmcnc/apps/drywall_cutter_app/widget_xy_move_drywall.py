@@ -3,8 +3,8 @@ import sys, textwrap
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 
-from asmcnc.skavaUI import popup_info
 from asmcnc.core_UI.components.buttons import probe_button
+from asmcnc.core_UI.custom_popups import PopupDatum
 
 Builder.load_string("""
 <XYMoveDrywall>
@@ -211,6 +211,7 @@ class XYMoveDrywall(Widget):
         self.m=kwargs['machine']
         self.sm=kwargs['screen_manager']
         self.l=kwargs['localization']
+        self.cs = kwargs['coordinate_system']
 
         self.set_jog_speeds()
         self.ids.probe_button_container.add_widget(probe_button.ProbeButton(self.m, self.sm, self.l, fast_probe=True))
@@ -295,12 +296,13 @@ class XYMoveDrywall(Widget):
         if self.m.is_machine_homed == False and sys.platform != 'win32':
             popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'drywall_cutter', 'drywall_cutter')
         else:
-            self.m.go_xy_datum()
+            self.m.go_xy_datum_with_laser()
 
     def check_zh_at_datum(self, opacity):
-        # wpos == 0,0 when zh is at datum
+        x_delta = self.m.wpos_x() + self.m.laser_offset_x_value
+        y_delta = self.m.wpos_y() + self.m.laser_offset_y_value
         # allow a deviation of 0.01 due to machine precision
-        if not (abs(self.m.wpos_x()) <= 0.01 and abs(self.m.wpos_y()) <= 0.01):
+        if abs(x_delta) > 0.01 or abs(y_delta) > 0.01:
             self.go_to_datum_button_overlay.opacity = opacity
         else:
             self.go_to_datum_button_overlay.opacity = 0
@@ -311,7 +313,7 @@ class XYMoveDrywall(Widget):
                 ).replace('X-Y', '[b]X-Y[/b]')).replace(self.l.get_str('datum'), self.l.get_bold('datum'))
             )
 
-        popup_info.PopupDatum(self.sm, self.m, self.l, 'XY', warning)
+        PopupDatum(self.sm, self.m, self.l, 'XY', warning, jog_after_laser_datum_set=False)
 
     def format_command(self, cmd):
         wrapped_cmd = textwrap.fill(cmd, width=35, break_long_words=False)

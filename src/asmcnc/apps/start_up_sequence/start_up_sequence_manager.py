@@ -17,6 +17,8 @@ from asmcnc.apps.start_up_sequence.welcome_to_smartbench_app import screen_manag
 from asmcnc.core_UI import console_utils
 
 
+cc_override = False  # set to true to trigger startup sequence
+
 class StartUpSequence(object):
 
 	screen_sequence = []
@@ -53,7 +55,7 @@ class StartUpSequence(object):
 
 	def set_up_sequence(self):
 
-		if self.cc:
+		if self.cc or cc_override:
 
 			if self.welcome_user():
 				self.prep_welcome_app()
@@ -86,7 +88,7 @@ class StartUpSequence(object):
 		self.seq_step = 0
 		self.sm.current = self.screen_sequence[self.seq_step]
 
-	def next_in_sequence(self):
+	def next_in_sequence(self, *args):
 
 		self.seq_step +=1
 		self.sm.current = self.screen_sequence[self.seq_step]
@@ -106,7 +108,7 @@ class StartUpSequence(object):
 	def welcome_user(self):
 		flag = (os.popen('grep "show_user_welcome_app" config.txt').read())
 
-		if ('True' in flag): 
+		if ('True' in flag) or cc_override:
 			self.reboot_in_sequence = True
 			return True
 		else: return False

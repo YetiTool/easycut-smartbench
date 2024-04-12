@@ -59,6 +59,10 @@
     ignore_errors: yes
 
   # Install python2 pip packages
+  - name: Pip install typing==3.10.0.0
+    pip:
+      name: typing==3.10.0.0
+    ignore_errors: yes
   - name: Pip install pika==1.2.0
     pip:
       name: pika==1.2.0
