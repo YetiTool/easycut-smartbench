@@ -31,6 +31,7 @@ Builder.load_string(
     version_number_label : version_number_label
     please_read_label : please_read_label
     scroll_release_notes : scroll_release_notes
+    release_notes_and_links : release_notes_and_links
     release_links : release_links
     url_label : url_label
     next_button : next_button
@@ -76,6 +77,7 @@ Builder.load_string(
                 size: self.texture_size
 
         BoxLayout:
+            id: release_notes_and_links
             padding:[dp(0.01875)*app.width, dp(0.00416666666667)*app.height, dp(0.025)*app.width, 0]
             spacing:dp(0.01875)*app.width
 
@@ -154,7 +156,7 @@ class ReleaseNotesScreen(Screen):
 
         # Remove the knowledgebase link & QR code if the machine is not a SmartBench
         if self.model_manager.get_machine_type() != "SmartBench":
-            self.release_links.remove_widget(self.release_links)
+            self.release_notes_and_links.remove_widget(self.release_links)
 
     def get_release_notes_source(self, type):
         """
