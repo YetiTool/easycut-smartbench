@@ -151,7 +151,7 @@ class ReleaseNotesScreen(Screen):
         self.version = kwargs["version"]
         self.l = kwargs["localization"]
         self.model_manager = kwargs["router_machine"].model_manager
-        machine_type = self.model_manager.get_machine_type().value
+        machine_type = self.model_manager.get_machine_type()
         self.scroll_release_notes.release_notes.source = self.get_release_notes_source(machine_type)
         self.update_strings()
 
@@ -164,7 +164,7 @@ class ReleaseNotesScreen(Screen):
         This method is used to generate the source path for the release notes file.
 
         Parameters:
-        type (str): The type of the machine. If the type is 'unknown', it defaults to looking for a generic release notes file.
+        type (Enum): The type of the machine. If the type is 'unknown', it defaults to looking for a generic release notes file.
         MachineType (Enum): The enum containing the machine types.
 
         Returns:
@@ -178,12 +178,12 @@ class ReleaseNotesScreen(Screen):
         version_string = self.version.replace(".", "")  # v2.9.0 -> v290
         file_extension = ".txt"
 
-        if type == MachineType.UNKNOWN.value or type is None:
+        if type == MachineType.UNKNOWN or type is None:
             # Machine type not found, look for generic release notes
             target_file_name = version_string + file_extension  # v290.txt
         else:
             # Machine type found, look for specific release notes
-            target_file_name = version_string + "_" + type + file_extension  # v290_SmartBench.txt
+            target_file_name = version_string + "_" + type.value + file_extension  # v290_SmartBench.txt
 
         return pu.join(pu.easycut_path, target_file_name) # /home/pi/easycut-smartbench/v290_SmartBench.txt
 
