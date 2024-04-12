@@ -158,6 +158,7 @@ class ScreenDesignerApp(App):
         self.inspector = InspectorSingleton()
         self.inspector.enable()
         self.modifying_screen = False
+        self.icon = pu.get_path('inspection.png')
 
     @staticmethod
     def screenname_to_filename(name_to_convert, reverse=False):
