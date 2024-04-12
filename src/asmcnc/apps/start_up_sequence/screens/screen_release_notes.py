@@ -146,8 +146,6 @@ class ReleaseNotesScreen(Screen):
         self.version = kwargs["version"]
         self.l = kwargs["localization"]
         self.model_manager = kwargs["router_machine"].model_manager
-        # Filename consists of just the version digits followed by .txt, so can be found by filtering out non integers from version name
-        # Two dots before filename mean parent directory, as file is at the top of the filetree, not in src
         machine_type = self.model_manager.get_machine_type()
         self.scroll_release_notes.release_notes.source = self.get_release_notes_source(machine_type)
         self.update_strings()
