@@ -62,7 +62,7 @@ class InspectorSingleton(EventDispatcher):
     def enable_key_input(self):
         """enable the key inputs. Key are used to control the inspector."""
         self.key_input_enabled = True
-        Logger.info('Key input disabled')
+        Logger.info('Key input enabled')
 
     def on_show_popup(self, *args):
         """Default callback. Needed for event creation."""
@@ -79,7 +79,7 @@ class InspectorSingleton(EventDispatcher):
         keycode = args[3]
         key = args[1]
 
-        # Logger.debug('args: {}'.format(args))
+        Logger.debug('args: {}'.format(args))
 
         # [l]ock on widget:
         if keycode == 'l':
@@ -124,9 +124,18 @@ class InspectorSingleton(EventDispatcher):
         elif key in [45, 269]: # '+' keys
             self.step_width -= 1
             Logger.debug('Step width: {}'.format(self.step_width))
+        elif key == 127:  # del key
+            self.delete_widget()
 
         # Return True to accept the key. Otherwise, it will be used by the system.
         return True
+
+    def delete_widget(self):
+        """Deletes the selected widget from the screen."""
+        if self.widget:
+            self.widget.parent.remove_widget(self.widget)
+            self.widget = None
+            Logger.warning('Deleted selected widget!')
 
     def move_widget(self, key):
         """
