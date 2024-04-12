@@ -159,7 +159,7 @@ class ReleaseNotesScreen(Screen):
         if machine_type is not MachineType.SMARTBENCH.value:
             self.release_notes_and_links.remove_widget(self.release_links)
 
-    def get_release_notes_source(self, type, MachineType=MachineType):
+    def get_release_notes_source(self, type=None, MachineType=MachineType):
         """
         This method is used to generate the source path for the release notes file.
 
@@ -178,7 +178,7 @@ class ReleaseNotesScreen(Screen):
         version_string = self.version.replace(".", "")  # v2.9.0 -> v290
         file_extension = ".txt"
 
-        if type == MachineType.UNKNOWN.value:
+        if type == MachineType.UNKNOWN.value or type is None:
             # Machine type not found, look for generic release notes
             target_file_name = version_string + file_extension  # v290.txt
         else:
