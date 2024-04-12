@@ -30,6 +30,7 @@ class ComponentSelectorPopup(Popup):
                                                      size=(400, 300),
                                                      pos=(200, 150))
         self.counter = 0
+        self.is_opened = False
         self.sm = App.get_running_app().sm
         self.localization = Localization()
         self.inspector = InspectorSingleton()
@@ -75,7 +76,11 @@ class ComponentSelectorPopup(Popup):
         self.dismiss()
 
     def open_me(self, *args):
-        self.open()
+        if self.is_opened:
+            self.dismiss()
+        else:
+            self.open()
+        self.is_opened = not self.is_opened
 
     def save(self, *args):
         """

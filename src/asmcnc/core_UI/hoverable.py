@@ -19,6 +19,12 @@ class InspectorSingleton(EventDispatcher):
     p = go to parent widget
     c = goto child widget
     s = goto sibling
+    a = goto sibling backwards
+    w = opens "Add widget" popup (if instantiated)
+    h = prints help
+    e = en-/disable edit_mode to move widgets around
+    +/- = change step width for arrow keys
+    [del] = deletes the selected widget
     arrow keys = move widget around
     [i]nspect the widget to print details on console
     """
@@ -79,7 +85,7 @@ class InspectorSingleton(EventDispatcher):
         keycode = args[3]
         key = args[1]
 
-        Logger.debug('args: {}'.format(args))
+        # Logger.debug('args: {}'.format(args))
 
         # [l]ock on widget:
         if keycode == 'l':
@@ -178,10 +184,12 @@ class InspectorSingleton(EventDispatcher):
         Logger.debug('c: switches to the first child.')
         Logger.debug('s: cycles through siblings. You need to switch to a child first!')
         Logger.debug('a: cycles through siblings backwards. You need to switch to a child first!')
-        Logger.debug('p: switches to the parent.\n')
-        Logger.debug('w: Open popup to add new widgets to the currently selected one.\n')
+        Logger.debug('p: switches to the parent.')
+        Logger.debug('[del]: deletes the selected widget.')
+        Logger.debug('+/-: in-/decreases the step width for moving widgets with arrow keys')
+        Logger.debug('w: Open/Close popup to add new widgets to the currently selected one.')
         Logger.debug('When a widget is selected and edit_mode = True, you can use the arrow keys to move it.')
-        Logger.debug("Or just drag'n drop it with the mouse\n")
+        Logger.debug("Or just drag'n drop it with the mouse")
 
     def get_widget_name_class(self, widget):
         """
