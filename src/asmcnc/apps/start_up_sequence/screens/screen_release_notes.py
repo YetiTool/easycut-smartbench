@@ -156,7 +156,7 @@ class ReleaseNotesScreen(Screen):
         self.update_strings()
 
         # Remove the knowledgebase link & QR code if the machine is not a SmartBench
-        if machine_type is not MachineType.SMARTBENCH.value:
+        if machine_type is not MachineType.SMARTBENCH:
             self.release_notes_and_links.remove_widget(self.release_links)
 
     def get_release_notes_source(self, type=None, MachineType=MachineType):
