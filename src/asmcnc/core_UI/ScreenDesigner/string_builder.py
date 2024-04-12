@@ -97,7 +97,7 @@ def get_python_code_from_screen(widget):
     s += '\n\n'
     s += 'Builder.load_string("""\n\n'
     #:import hex kivy.utils.get_color_from_hex
-    for import_path, import_list in imports_py.items():
+    for import_path, import_list in imports_kivy.items():
         for imp in import_list:
             s += '#:import ' + imp + ' ' + import_path + '\n'
     s += '\n<' + screen.name + '>\n'

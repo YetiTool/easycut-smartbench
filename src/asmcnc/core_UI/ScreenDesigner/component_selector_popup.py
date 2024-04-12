@@ -1,5 +1,3 @@
-import re
-
 from kivy.app import App
 from kivy.metrics import dp
 from kivy.uix.button import Button
@@ -8,7 +6,7 @@ from kivy.uix.popup import Popup
 from mock.mock import MagicMock
 
 from asmcnc.comms.localization import Localization
-from asmcnc.core_UI.components.base_label import LabelBase
+from asmcnc.core_UI.components.labels.base_label import LabelBase
 from asmcnc.core_UI.components.buttons.probe_button import ProbeButton
 from asmcnc.core_UI.components.buttons.spindle_button import SpindleButton
 from asmcnc.core_UI.components.buttons.vacuum_button import VacuumButton

@@ -21,18 +21,14 @@ class InspectorSingleton(EventDispatcher):
     s = goto sibling
     arrow keys = move widget around
     [i]nspect the widget to print details on console
-    
-    
-
-    can be deactivated by INSPECTOR_WIDGET flag
     """
     _instance = None
-    widget = None
-    locked = False
-    edit_mode = False
-    disabled = False
-    step_width = 5
-    INSPECTOR_WIDGET = False
+    widget = None  # the widget that will be inspected
+    locked = False  # locked to a widget. MouseMove doesn't select new one
+    edit_mode = False  # widgets are movable when edit_mode = True
+    enabled = False  # Only reacting/listening to key events when enabled
+    step_width = 5  # stepwidth for moving widgets
+    key_input_enabled = True # disable key input e.g. when keyboard is shown
 
     def __new__(cls):
         if cls._instance is None:
@@ -44,19 +40,32 @@ class InspectorSingleton(EventDispatcher):
         super(EventDispatcher, self).__init__(**kwargs)
         self.child_index = -1
         self.child_max = -1
-        if self.INSPECTOR_WIDGET:
-            self.register_event_type('on_show_popup')
-            Window.bind(on_key_down=self._on_key_down)
+        self.register_event_type('on_show_popup')
+        # self.enable()
 
     def disable(self):
-        self.disabled = True
+        """Disables all inspector functionality."""
+        self.enabled = False
         Logger.info('Inspector disabled')
 
     def enable(self):
-        self.disabled = False
+        """Enables all inspector functionality. """
+        self.enabled = True
+        Window.bind(on_key_down=self._on_key_down)
         Logger.info('Inspector enabled')
 
+    def disable_key_input(self):
+        """disables the key inputs. Useful when a keyboard is open."""
+        self.key_input_enabled = False
+        Logger.info('Key input disabled')
+
+    def enable_key_input(self):
+        """enable the key inputs. Key are used to control the inspector."""
+        self.key_input_enabled = True
+        Logger.info('Key input disabled')
+
     def on_show_popup(self, *args):
+        """Default callback. Needed for event creation."""
         pass
 
     def _on_key_down(self, *args, **kwargs):
@@ -64,7 +73,7 @@ class InspectorSingleton(EventDispatcher):
         Callback being called when a key is pressed.
         Is used for debugging purposes to print debug info about the UI elements.
         """
-        if self.disabled:
+        if not self.enabled or not self.key_input_enabled:
             return
 
         keycode = args[3]
@@ -101,11 +110,9 @@ class InspectorSingleton(EventDispatcher):
         elif keycode == 'w':
             # pass
             self.dispatch('on_show_popup')
-            # self.show_popup()
         elif keycode == 'e':
             self.edit_mode = not self.edit_mode
             Logger.debug('edit_mode: {}'.format(self.edit_mode))
-
 
         # check for arrow keys to move the widget
         if 273 <= key <= 276:
@@ -120,11 +127,6 @@ class InspectorSingleton(EventDispatcher):
 
         # Return True to accept the key. Otherwise, it will be used by the system.
         return True
-
-    def show_popup(self):
-        # popup = AddWidgetPopup(widget=self.widget)
-        # popup.open()
-        pass
 
     def move_widget(self, key):
         """
@@ -146,10 +148,12 @@ class InspectorSingleton(EventDispatcher):
             Logger.error("Failed to move widget!")
 
     def get_parent_screen(self):
+        """Returns the screen object for the selected widget."""
         p = self.widget
         while not issubclass(type(p), Screen):
             p = p.parent
         return p
+
     def dump_screen(self):
         self.get_parent_screen().dump_screen()
 
@@ -170,10 +174,11 @@ class InspectorSingleton(EventDispatcher):
         Logger.debug('When a widget is selected and edit_mode = True, you can use the arrow keys to move it.')
         Logger.debug("Or just drag'n drop it with the mouse\n")
 
-
     def get_widget_name_class(self, widget):
         """
-        Tries to get the name of the given widget. If the widget has no name use 'NO_NAME' instead.
+        Tries to get the name of the given widget.
+        If the widget has no attribute 'name' or 'id' it uses 'NO_NAME' instead.
+
         returns name (class name)
         """
         # check if it has a name
@@ -301,7 +306,7 @@ class HoverBehavior(object):
     offset_y = 0
 
     def __init__(self, **kwargs):
-        if self.inspector.INSPECTOR_WIDGET:
+        if self.inspector.enabled:
             self.register_event_type('on_enter')
             Window.bind(mouse_pos=self.on_mouse_pos)
             Window.bind(on_touch_down=self.on_mouse_press)
@@ -349,11 +354,11 @@ class HoverBehavior(object):
         This is very cpu heavy as every widget will call this function every time the mouse moves.
         Use only for debugging purposes!!!
 
-        (DE-)ACTIVATE with INSPECTOR_WIDGET at the beginning of hoverable.py
+        (DE-)ACTIVATE with InspectorSingleton().en/disable()
         """
         # only active if inspector is not locked to avoid unintended overwriting of the selected widget.
 
-        if self.inspector.locked or self.drag:
+        if self.inspector.locked or self.drag or not self.inspector.enabled:
             return
         if not self.get_root_window():
             return # do proceed if I'm not displayed <=> I have no parent
@@ -368,5 +373,5 @@ class HoverBehavior(object):
             self.dispatch('on_enter')
 
     def on_enter(self):
-        """A new widget has been entered. So safe yourself for later inspection."""
+        """A new widget has been entered. So safe it for later inspection."""
         self.inspector.set_widget(self)

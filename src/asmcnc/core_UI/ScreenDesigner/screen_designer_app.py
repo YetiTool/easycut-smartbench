@@ -59,12 +59,12 @@ class DesignerMainScreen(Screen):
 
     def on_enter(self, *args):
         # disable Inspector to not mess with key inputs while entering filename
-        InspectorSingleton().disable()
+        InspectorSingleton().disable_key_input()
         # reload generated screens, in case one was just created.
         self.load_generated_screens()
 
     def on_leave(self, *args):
-        InspectorSingleton().enable()
+        InspectorSingleton().enable_key_input()
 
     def load_generated_screens(self, *args):
         """
@@ -117,6 +117,7 @@ class DesignerMainScreen(Screen):
                 self.sm.remove_widget(self.sm.get_screen(screen.name))
             self.sm.add_widget(screen)
             self.sm.current = screen.name
+            App.get_running_app().title = "Inspector Widget - " + screen_name
 
             App.get_running_app().update_widget(screen.children[0])
 
@@ -132,6 +133,7 @@ class DesignerMainScreen(Screen):
         main_layout = FloatLayout(id='main_layout')
         new_screen.add_widget(main_layout)
         self.sm.add_widget(new_screen)
+        App.get_running_app().title = "Inspector Widget - " + self.screen_name_input.text
         App.get_running_app().update_widget(main_layout)
 
         self.sm.current = new_screen.name
@@ -154,7 +156,7 @@ class ScreenDesignerApp(App):
         self.sm = ScreenManager(transition=NoTransition())
         self.designer_popup = ComponentSelectorPopup()
         self.inspector = InspectorSingleton()
-        self.inspector.INSPECTOR_WIDGET = True
+        self.inspector.enable()
         self.modifying_screen = False
 
     @staticmethod
@@ -186,6 +188,7 @@ class ScreenDesignerApp(App):
         main_screen = DesignerMainScreen()
 
         self.sm.add_widget(main_screen)
+        self.title = "Inspector Widget"
         return self.sm
 
 

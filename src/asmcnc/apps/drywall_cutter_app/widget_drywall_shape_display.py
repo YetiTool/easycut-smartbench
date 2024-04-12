@@ -8,7 +8,7 @@ import re
 
 Builder.load_string("""
 #:import FloatInput asmcnc.core_UI.components.text_inputs.float_input.FloatInput
-#:import LabelBase asmcnc.core_UI.components.base_label.LabelBase
+#:import LabelBase asmcnc.core_UI.components.labels.base_label.LabelBase
 <DrywallShapeDisplay>
 
     shape_dims_image:shape_dims_image
