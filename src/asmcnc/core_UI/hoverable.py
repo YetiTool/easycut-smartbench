@@ -34,6 +34,7 @@ class InspectorSingleton(EventDispatcher):
     locked = False
     edit_mode = False
     disabled = False
+    step_width = 5
 
     def __new__(cls):
         if cls._instance is None:
@@ -71,7 +72,7 @@ class InspectorSingleton(EventDispatcher):
         keycode = args[3]
         key = args[1]
 
-        #Logger.debug('keycode: {}  | args {}').format(keycode,args)
+        # Logger.debug('args: {}'.format(args))
 
         # [l]ock on widget:
         if keycode == 'l':
@@ -107,10 +108,17 @@ class InspectorSingleton(EventDispatcher):
             self.edit_mode = not self.edit_mode
             Logger.debug('edit_mode: {}'.format(self.edit_mode))
 
+
         # check for arrow keys to move the widget
         if 273 <= key <= 276:
             if self.edit_mode:
                 self.move_widget(key)
+        elif key in [43, 270]: # '+' keys
+            self.step_width += 1
+            Logger.debug('Step width: {}'.format(self.step_width))
+        elif key in [45, 269]: # '+' keys
+            self.step_width -= 1
+            Logger.debug('Step width: {}'.format(self.step_width))
 
         # Return True to accept the key. Otherwise, it will be used by the system.
         return True
@@ -128,13 +136,13 @@ class InspectorSingleton(EventDispatcher):
         """
         try:
             if key == 273:  # up
-                self.widget.pos[1] += 5
+                self.widget.pos[1] += self.step_width
             elif key == 274:  # down
-                self.widget.pos[1] -= 5
+                self.widget.pos[1] -= self.step_width
             elif key == 275:  # right
-                self.widget.pos[0] += 5
+                self.widget.pos[0] += self.step_width
             elif key == 276:  # left
-                self.widget.pos[0] -= 5
+                self.widget.pos[0] -= self.step_width
             Logger.debug('pos: {}'.format(self.widget.pos))
         except Exception as ex:
             Logger.error("Failed to move widget!")
