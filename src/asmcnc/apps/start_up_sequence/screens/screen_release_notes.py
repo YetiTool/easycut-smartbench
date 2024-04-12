@@ -11,6 +11,7 @@ from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty, DictProperty
 from datetime import datetime
 from asmcnc.core_UI import path_utils as pu
+from asmcnc.comms.model_manager import MachineType
 
 Builder.load_string(
     """
@@ -150,15 +151,15 @@ class ReleaseNotesScreen(Screen):
         self.version = kwargs["version"]
         self.l = kwargs["localization"]
         self.model_manager = kwargs["router_machine"].model_manager
-        machine_type = self.model_manager.get_machine_type()
+        machine_type = self.model_manager.get_machine_type().value
         self.scroll_release_notes.release_notes.source = self.get_release_notes_source(machine_type)
         self.update_strings()
 
         # Remove the knowledgebase link & QR code if the machine is not a SmartBench
-        if self.model_manager.get_machine_type() != "SmartBench":
+        if machine_type is not MachineType.SMARTBENCH.value:
             self.release_notes_and_links.remove_widget(self.release_links)
 
-    def get_release_notes_source(self, type):
+    def get_release_notes_source(self, type, MachineType=MachineType):
         """
         This method is used to generate the source path for the release notes file.
 
@@ -176,7 +177,7 @@ class ReleaseNotesScreen(Screen):
         version_string = self.version.replace(".", "")  # v2.9.0 -> v290
         file_extension = ".txt"
 
-        if type.lower() == "unknown":
+        if type == MachineType.UNKNOWN.value:
             # Machine type not found, look for generic release notes
             target_file_name = version_string + file_extension  # v290.txt
         else:

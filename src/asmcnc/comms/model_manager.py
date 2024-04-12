@@ -19,6 +19,10 @@ class ProductCodes(Enum):
     FIRST_VERSION = 01
     UNKNOWN = 00
 
+class MachineType(Enum):
+    SMARTBENCH = "SmartBench"
+    DRYWALLTEC = "DrywallTec"
+    UNKNOWN = "Unknown"
 
 class ModelManagerSingleton(EventDispatcher):
     """
@@ -174,16 +178,21 @@ class ModelManagerSingleton(EventDispatcher):
         ]
 
     def get_machine_type(self):
-        # () -> str
-        """
-        Returns the machine type as a string.
-        """
-        if self.is_machine_drywall():
-            return 'DrywallTec'
-        elif self.is_machine_sb():
-            return 'SmartBench'
-        else:
-            return 'Unknown'
+        if self._data['product_code'] in [
+            ProductCodes.PRECISION_PRO_X,
+            ProductCodes.PRECISION_PRO_PLUS,
+            ProductCodes.PRECISION_PRO,
+            ProductCodes.STANDARD,
+            ProductCodes.FIRST_VERSION
+        ]:
+            return MachineType.SMARTBENCH
+
+        elif self._data['product_code'] in [
+            ProductCodes.DRYWALLTEC
+        ]:
+            return MachineType.DRYWALLTEC
+
+        return MachineType.UNKNOWN
 
     def set_machine_type(self, pc, save=False):
         # type: (ProductCodes, bool) ->  None
