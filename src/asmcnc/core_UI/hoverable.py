@@ -4,13 +4,10 @@ from kivy.properties import BooleanProperty
 from kivy.core.window import Window
 from kivy.uix.image import Image
 from kivy.uix.label import Label
-from kivy.uix.screenmanager import Screen, ScreenManager
+from kivy.uix.screenmanager import Screen
 from kivy.uix.textinput import TextInput
 
 from asmcnc.comms.logging_system.logging_system import Logger
-# from asmcnc.core_UI.ScreenDesigner.add_widget_popup import AddWidgetPopup
-
-INSPECTOR_WIDGET = True
 
 
 class InspectorSingleton(EventDispatcher):
@@ -27,7 +24,7 @@ class InspectorSingleton(EventDispatcher):
     
     
 
-    can be deactivated by global INSPECTOR_WIDGET flag
+    can be deactivated by INSPECTOR_WIDGET flag
     """
     _instance = None
     widget = None
@@ -35,6 +32,7 @@ class InspectorSingleton(EventDispatcher):
     edit_mode = False
     disabled = False
     step_width = 5
+    INSPECTOR_WIDGET = False
 
     def __new__(cls):
         if cls._instance is None:
@@ -46,7 +44,7 @@ class InspectorSingleton(EventDispatcher):
         super(EventDispatcher, self).__init__(**kwargs)
         self.child_index = -1
         self.child_max = -1
-        if INSPECTOR_WIDGET:
+        if self.INSPECTOR_WIDGET:
             self.register_event_type('on_show_popup')
             Window.bind(on_key_down=self._on_key_down)
 
@@ -303,7 +301,7 @@ class HoverBehavior(object):
     offset_y = 0
 
     def __init__(self, **kwargs):
-        if INSPECTOR_WIDGET:
+        if self.inspector.INSPECTOR_WIDGET:
             self.register_event_type('on_enter')
             Window.bind(mouse_pos=self.on_mouse_pos)
             Window.bind(on_touch_down=self.on_mouse_press)

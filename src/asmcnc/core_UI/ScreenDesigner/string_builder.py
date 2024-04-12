@@ -1,39 +1,63 @@
+import re
+
+from kivy.app import App
 from kivy.uix.screenmanager import Screen
 from kivy.uix.widget import Widget
 
+from asmcnc.comms.logging_system.logging_system import Logger
+from asmcnc.core_UI import path_utils as pu
+
+GENERATED_FILES_FOLDER = pu.get_path('generated_screens')
+
 INDENT = '    '
 
-DONT_DO_CHILDREN = ['ProbeButton']
+# Classes that are used in BuilderString but their children will not be processed (like inner BoxLayouts and alike)
+DONT_DO_CHILDREN = ['ProbeButton', 'SpindleButton', 'VacuumButton', 'XYMove']
+
+# Classes that can only be used in code due to their init parameters:
 CODE_ONLY_ITEMS = {'ProbeButton': ['{} = ProbeButton(None, None, None)  # TODO: fill args!',
-                                   '{}.size_hint = [None, None]',
-                                   '{}.size = [70, 70]',
-                                   '{}.disabled = True',
-                                   'self.children[0].add_widget({})'],
-                   'SpindleButton': ['{} = SpindleButton(MagicMock(), MagicMock(), MagicMock())  # TODO: fill args!',
-                                     '{}.size_hint = [None, None]',
-                                     '{}.size = [71, 72]',
-                                     '{}.disabled = True',
-                                     'self.children[0].add_widget({})'],
+                                   '{}.size = [70, 70]'],
+                   'SpindleButton': ['{} = SpindleButton(MagicMock(), MagicMock(), App.get_running_app().sm)  # TODO: fill args!',
+                                     '{}.size = [71, 72]'],
                    'VacuumButton': ['{} = VacuumButton(MagicMock(), MagicMock())  # TODO: fill args!',
-                                    '{}.size_hint = [None, None]',
-                                    '{}.size = [71, 72]',
-                                    '{}.disabled = True',
-                                    'self.children[0].add_widget({})'],
-                   'XYMove': ['{} = XYMove(machine=MagicMock(), screen_manager=MagicMock(), localization=MagicMock())',
-                              '{}.size_hint = [None, None]',
-                              '{}.size = [270.5, 391.6]',
-                              'self.children[0].add_widget({})']}
+                                    '{}.size = [71, 72]'],
+                   'XYMove': ['{} = XYMove(machine=MagicMock(), screen_manager=App.get_running_app().sm, localization=Localization())   # TODO: fill args!',
+                              '{}.size = [270.5, 391.6]']}
 
+# Comment tokens used for search and replace when updating files:
+IMPORTS_START = '# GENERATED_IMPORTS_START'
+IMPORTS_END = '# GENERATED_IMPORTS_END'
+BUILDER_STRING_START = '# BUILDER_STRING_START'
+BUILDER_STRING_END = '# BUILDER_STRING_END'
+CODE_START = '# GENERATED_CODE_START'  # two lines before class code
+CODE_END = '# GENERATED_CODE_END'  # final new line
 
-def get_screen_name(widget):
-    # type: (Widget) -> str
+def get_screen(widget):
+    # type: (Widget) -> Screen
     """
     Returns the name of the widgets parent screen as string.
     """
     screen = widget.parent
     while not issubclass(type(screen), Screen):
         screen = screen.parent
-    return screen.name
+    return screen
+
+
+def get_code_from_file(screen_name):
+    s = ''
+    if App.get_running_app().modifying_screen:
+        filename = App.get_running_app().screenname_to_filename(screen_name)
+        path = pu.join(GENERATED_FILES_FOLDER, filename + '.py')
+        with open(path, 'r') as f:
+            s = f.read()
+    else:
+        s += IMPORTS_START + '\n'
+        s += IMPORTS_END + '\n'
+        s += BUILDER_STRING_START + '\n'
+        s += BUILDER_STRING_END + '\n'
+        s += CODE_START + '\n'
+        s += CODE_END + '\n'
+    return s
 
 
 def get_python_code_from_screen(widget):
@@ -45,61 +69,137 @@ def get_python_code_from_screen(widget):
     Imports are gathered and generated.
     Basic class code is generated.
     """
-    screen = widget.parent
-
-    while not issubclass(type(screen), Screen):
-        screen = screen.parent
+    screen = get_screen(widget)
+    code_from_file = get_code_from_file(screen.name)
     #  assuming every screen has exactly one child as the main layout!!!
     main_layout = screen.children[0]
+    imports_py, code_py, imports_kivy, code_kivy = gather_data_from_widget_tree(main_layout)
     # now make an import string:
-    s = '# IMPORTS:\n\n'
+    s = IMPORTS_START
+    s += '\n\n'
     s += 'from kivy.lang import Builder\n'
     s += 'from kivy.uix.screenmanager import Screen\n'
-    s += 'from mock.mock import MagicMock\n'
-    d = get_import_dict_from_widget(main_layout)
-    for k, v in d.items():
-        imp_list = ','.join(v)
-        s += 'from ' + k + ' import ' + imp_list + '\n'
+    if 'MagicMock()' in code_py:
+        s += 'from mock.mock import MagicMock\n'
+    if 'App.' in code_py:
+        s += 'from kivy.app import App\n\n'
+    if 'Localization()' in code_py:
+        s += 'from asmcnc.comms.localization import Localization\n'
+    for import_path, import_list in imports_py.items():
+        imp_list = ','.join(import_list)
+        s += 'from ' + import_path + ' import ' + imp_list + '\n'
+    s += IMPORTS_END
+    pattern_imports_py = r'{}.*{}'.format(IMPORTS_START, IMPORTS_END)
+    code_from_file = re.sub(pattern_imports_py, s, code_from_file, flags=re.M|re.S)
 
-    s += '\n# BUILDER_STRING:\n\n'
-    s += 'Builder.load_string(\n"""'
-    s += '<' + screen.name + '>\n'
-    s += builder_string_from_widget(main_layout)
-    s += '"""\n)'
+    # builder string:
+    s = BUILDER_STRING_START
+    s += '\n\n'
+    s += 'Builder.load_string("""\n\n'
+    #:import hex kivy.utils.get_color_from_hex
+    for import_path, import_list in imports_py.items():
+        for imp in import_list:
+            s += '#:import ' + imp + ' ' + import_path + '\n'
+    s += '\n<' + screen.name + '>\n'
+    s += code_kivy
+    s += '""")\n'
+    s += BUILDER_STRING_END
+    pattern_builder_string = r'{}.*{}'.format(BUILDER_STRING_START, BUILDER_STRING_END)
+    code_from_file = re.sub(pattern_builder_string, s, code_from_file, flags=re.M|re.S)
 
-    s += '\n# CLASS_CODE:\n\n'
+    # python code:
+    s = CODE_START
+    s += '\n\n\n'  # two new lines before class
     s += get_class_code(screen)
-    s += get_code_for_widgets(screen)
+    s += code_py
+    s += CODE_END
+    pattern_imports_py = r'{}.*{}'.format(CODE_START, CODE_END)
+    code_from_file = re.sub(pattern_imports_py, s, code_from_file, flags=re.M|re.S)
 
-    s += '\n'  # final new line
+    return code_from_file
 
-    return s
 
-def get_code_for_widgets(widget):
+def gather_data_from_widget_tree(widget, indent_level=1):
+    # type: (Widget, int) -> (dict, str, dict, str)
+    """
+    Collects all data for the give widget (imports, builder string, python code).
+    Calls itself to get the data from the children if needed.
+
+    Returns a tuple with: (imports_py, code_py, imports_kivy, code_kivy)
+    """
+    imports_py = {}
+    code_py = ''
+    imports_kivy = {}
+    code_kivy = ''
+
+    if type(widget).__name__ in CODE_ONLY_ITEMS:
+        code_py += get_code_for_widget(widget)
+        imps_widget = get_import_dict_from_widget(widget)
+        for import_path, import_list in imps_widget.items():
+            # check if the same module is needed -> update set:
+            if import_path in imports_py:
+                imports_py[import_path].union(import_list)
+            else:
+                imports_py[import_path] = import_list
+    else:
+        code_kivy += get_builder_string_from_widget(widget, indent_level)
+        imps_widget = get_import_dict_from_widget(widget)
+        try:
+            for import_path, import_list in imps_widget.items():
+                # check if the same module is needed -> update set:
+                if import_path in imports_kivy:
+                    imports_kivy[import_path].union(import_list)
+                else:
+                    imports_kivy[import_path] = import_list
+        except Exception as ex:
+            Logger.exception(ex)
+            Logger.error('BOOM!!!')
+            pass
+        # now handle children if needed:
+        if type(widget).__name__ not in DONT_DO_CHILDREN:
+            for child in widget.children:
+                c_imp_py, c_code_py, c_imp_kivy, c_code_kivy = gather_data_from_widget_tree(child, indent_level+1)
+                # update python imports:
+                for import_path, import_list in c_imp_py.items():
+                    # check if the same module is needed -> update set:
+                    if import_path in imports_py:
+                        imports_py[import_path].union(import_list)
+                    else:
+                        imports_py[import_path] = import_list
+                # update python code:
+                code_py += c_code_py
+                # update kivy imports:
+                for import_path, import_list in c_imp_kivy.items():
+                    # check if the same module is needed -> update set:
+                    if import_path in imports_kivy:
+                        imports_kivy[import_path].union(import_list)
+                    else:
+                        imports_kivy[import_path] = import_list
+                # update kivy code:
+                code_kivy += c_code_kivy
+
+    return (imports_py, code_py, imports_kivy, code_kivy)
+
+
+def get_code_for_widget(widget):
     # type: (Widget) -> str
     """
-    Returns python code for the CODE_ONLY_ITEMS.
+    Returns python code for the given widget.
     """
     s= ''
-    if type(widget).__name__ in CODE_ONLY_ITEMS:
-        s += INDENT + INDENT + '# Code for {}:\n'.format(str(widget.id))
-        # add specific code block:
-        for line in CODE_ONLY_ITEMS[type(widget).__name__]:
-            s += INDENT + INDENT + line.format(widget.id) + '\n'
-        # add position:
-        s += INDENT + INDENT + str(widget.id) + '.pos = ' + str(widget.pos) + '\n'
-        s += INDENT + INDENT + str(widget.id) + '.id = "' + str(widget.id) + '"\n'
-    else:
-        # no do the children
-        for child in widget.children:
-            s += get_code_for_widgets(child)
-    s += '\n'
+    s += INDENT + INDENT + '# Code for {}:\n'.format(str(widget.id))
+    # add specific code block:
+    for line in CODE_ONLY_ITEMS[type(widget).__name__]:
+        s += INDENT + INDENT + line.format(widget.id) + '\n'
+    s += INDENT + INDENT + str(widget.id) + '.pos = ' + str(widget.pos) + '\n'
+    s += INDENT + INDENT + str(widget.id) + '.id = "' + str(widget.id) + '"\n'
+    s += INDENT + INDENT + str(widget.id) + '.size_hint = [None, None]\n'
+    s += INDENT + INDENT + 'self.children[0].add_widget(' + str(widget.id) + ')\n'
     return s
 
 
-
-def builder_string_from_widget(widget, indent_level=1, do_children=True):
-    # type: (Widget, int, bool) -> str
+def get_builder_string_from_widget(widget, indent_level):
+    # type: (Widget, int) -> str
     """
     Returns a generated builder string that represents the given widget.
     """
@@ -158,9 +258,6 @@ def builder_string_from_widget(widget, indent_level=1, do_children=True):
                   # 'width': '{}',
                   'valign':  '"{}"'
                   }
-    # CODE_ONLY_ITEMS will not appear in the BuilderString
-    if type(widget).__name__ in CODE_ONLY_ITEMS:
-        return ''
     # setup indentation level:
     base_indent = ''
     for i in range(0, indent_level * len(INDENT)):
@@ -174,11 +271,6 @@ def builder_string_from_widget(widget, indent_level=1, do_children=True):
         if value and value != 'no_attr':
             s += base_indent + INDENT + attribute + ': ' + attributes[attribute].format(str(value)) + '\n'
     s += '\n'
-    # now handle children
-    if do_children:
-        for child in widget.children:
-            kivy_class = type(child).__name__ not in DONT_DO_CHILDREN
-            s += builder_string_from_widget(child, indent_level+1, kivy_class)
     return s
 
 
@@ -192,17 +284,6 @@ def get_import_dict_from_widget(widget):
     module = klass.__module__
     if module != 'builtins':
         ret = {module: {klass.__name__}}
-
-    # now handle children:
-    for child in widget.children:
-        c = get_import_dict_from_widget(child)
-        for k, v in c.items():
-            #check if the same module is needed -> update set:
-            if k in ret:
-                ret[k].union(v)
-            else:
-                ret[k] = v
-
     return ret
 
 

@@ -79,8 +79,8 @@ class DesignerMainScreen(Screen):
             self.screen_drop_down.remove_widget(c)
         path = pu.get_path('generated_screens')
         for screen_file in os.listdir(path):
-            prepped_filename = screen_file[:-3] # remove ".py"
-            class_name = re.sub(r'_([a-z])', lambda pat: pat.group(1).upper(), '_' + prepped_filename)
+            prepped_filename = screen_file.replace('.py', '')
+            class_name = ScreenDesignerApp.screenname_to_filename(prepped_filename, True)
             import_path = path.replace('/', '.').split('src')[1][1:] + '.' + prepped_filename
             if screen_file.startswith('__init__') or screen_file.endswith('.pyc'):
                 continue
@@ -112,6 +112,7 @@ class DesignerMainScreen(Screen):
         """
         screen = self.create_screen(screen_name)
         if screen:
+            App.get_running_app().modifying_screen = True
             if self.sm.has_screen(screen.name):
                 self.sm.remove_widget(self.sm.get_screen(screen.name))
             self.sm.add_widget(screen)
@@ -126,7 +127,7 @@ class DesignerMainScreen(Screen):
 
         if self.sm.has_screen(self.screen_name_input.text):
             self.sm.remove_widget(self.sm.get_screen(self.screen_name_input.text))
-
+        App.get_running_app().modifying_screen = False
         new_screen = Screen(name=self.screen_name_input.text)
         main_layout = FloatLayout(id='main_layout')
         new_screen.add_widget(main_layout)
@@ -148,10 +149,28 @@ class ScreenDesignerApp(App):
 
     def __init__(self, **kwargs):
         super(ScreenDesignerApp, self).__init__(**kwargs)
+
         self.l = Localization()
         self.sm = ScreenManager(transition=NoTransition())
         self.designer_popup = ComponentSelectorPopup()
         self.inspector = InspectorSingleton()
+        self.inspector.INSPECTOR_WIDGET = True
+        self.modifying_screen = False
+
+    @staticmethod
+    def screenname_to_filename(name_to_convert, reverse=False):
+        # type: (str, bool) -> str
+        """
+        reverse = False:
+            takes a screen name (e.g. MyFirstScreen) and returns the filename (my_first_screen)
+
+        reverse = True:
+            takes a filename (e.g. my_first_screen) and return a screen name (MyFirstScreen)
+        """
+        if reverse:
+            return re.sub(r'_([a-z])', lambda pat: pat.group(1).upper(), '_' + name_to_convert)
+        else:
+            return re.sub(r'([A-Z])', lambda pat: '_' + pat.group(1).lower(), name_to_convert)[1:]
 
     def update_widget(self, widget):
         """

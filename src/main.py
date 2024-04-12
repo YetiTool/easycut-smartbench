@@ -188,8 +188,6 @@ class SkavaUI(App):
         # Localization/language object
         l = localization.Localization()
 
-        self.designer_popup = ComponentSelectorPopup(sm, l, None)
-
         # Keyboard object
         kb = custom_keyboard.Keyboard(localization=l)
 

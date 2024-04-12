@@ -86,7 +86,7 @@ class ComponentSelectorPopup(Popup):
         """
         s = sb.get_python_code_from_screen(self.widget_to_add_to)
         # e.g. turn "MyFirstScreen" into "my_first_screen":
-        filename = re.sub(r'([A-Z])', lambda pat: '_' + pat.group(1).lower(), sb.get_screen_name(self.widget_to_add_to))[1:]
+        filename = App.get_running_app().screenname_to_filename(sb.get_screen(self.widget_to_add_to).name)
         path = pu.join(GENERATED_FILES_FOLDER, filename + '.py')
         with open(path, 'w') as f:
             f.write(s)
