@@ -24,17 +24,21 @@ class InspectorSingleton(EventDispatcher):
     h = prints help
     e = en-/disable edit_mode to move widgets around
     +/- = change step width for arrow keys
+    t = tetris mode. snaps widgets to the closest one in the given direction (with padding)
     [del] = deletes the selected widget
     arrow keys = move widget around
     [i]nspect the widget to print details on console
     """
     _instance = None
-    widget = None  # the widget that will be inspected
+    widget = []  # the widget(s) that will be inspected
     locked = False  # locked to a widget. MouseMove doesn't select new one
     edit_mode = False  # widgets are movable when edit_mode = True
     enabled = False  # Only reacting/listening to key events when enabled
     step_width = 5  # stepwidth for moving widgets
     key_input_enabled = True # disable key input e.g. when keyboard is shown
+    multiselect = False  # select more than one widget at once
+    snap_mode = False  # using arrow keys lets widgets snap to the next one
+    default_padding = 5  # default padding used for snapping widgets
 
     def __new__(cls):
         if cls._instance is None:
@@ -46,7 +50,7 @@ class InspectorSingleton(EventDispatcher):
         super(EventDispatcher, self).__init__(**kwargs)
         self.child_index = -1
         self.child_max = -1
-        self.register_event_type('on_show_popup')
+        self.register_event_type('on_show_component_popup')
         # self.enable()
 
     def disable(self):
@@ -70,7 +74,7 @@ class InspectorSingleton(EventDispatcher):
         self.key_input_enabled = True
         Logger.info('Key input enabled')
 
-    def on_show_popup(self, *args):
+    def on_show_component_popup(self, *args):
         """Default callback. Needed for event creation."""
         pass
 
@@ -85,17 +89,12 @@ class InspectorSingleton(EventDispatcher):
         keycode = args[3]
         key = args[1]
 
-        # Logger.debug('args: {}'.format(args))
+        Logger.debug('args: {}'.format(args))
 
-        # [l]ock on widget:
+        if self.multiselect and keycode and keycode in 'lpcsai':
+            Logger.warning('"{}" not allowed during multi_select!'.format(keycode))
         if keycode == 'l':
-            if not self.locked:
-                Logger.debug('LOCKED to: {}'.format(self.get_widget_name_class(self.widget)))
-                self.locked = True
-            else:
-                Logger.debug('UNLOCKED')
-                self.locked = False
-        # go to [p]arent
+            self.switch_lock_state()
         elif keycode == 'p':
             self.switch_to_parent()
         elif keycode == 'c':
@@ -104,37 +103,62 @@ class InspectorSingleton(EventDispatcher):
             self.switch_to_sibling()
         elif keycode == 'a':
             self.switch_to_sibling_bw()
-        # [i]nspect widget
         elif keycode == 'i':
             self.inspect_widget()
-        elif keycode == 'd':
-            pass
-            #  not implemented yet in Screen
-            # self.dump_screen()
-        elif keycode == 'h':
+        if keycode == 'h':
             self.print_help()
         elif keycode == 'w':
-            # pass
-            self.dispatch('on_show_popup')
+            self.open_close_component_popup()
         elif keycode == 'e':
-            self.edit_mode = not self.edit_mode
-            Logger.debug('edit_mode: {}'.format(self.edit_mode))
-
-        # check for arrow keys to move the widget
-        if 273 <= key <= 276:
-            if self.edit_mode:
+            self.switch_edit_mode()
+        elif keycode == 'm':
+            self.switch_multi_select_state()
+        elif keycode == 't':
+            self.switch_snap_mode()
+        elif 273 <= key <= 276:  # check for arrow keys to move the widget
+            if self.snap_mode:
+                self.snap_widget(key)
+            else:
                 self.move_widget(key)
-        elif key in [43, 270]: # '+' keys
-            self.step_width += 1
-            Logger.debug('Step width: {}'.format(self.step_width))
-        elif key in [45, 269]: # '+' keys
-            self.step_width -= 1
-            Logger.debug('Step width: {}'.format(self.step_width))
+        elif key in [43, 270]:  # '+' keys
+            self.adjust_step_width(1)
+        elif key in [45, 269]:  # '-' keys
+            self.adjust_step_width(-1)
         elif key == 127:  # del key
             self.delete_widget()
+        elif key in [303, 304]:  # shift
+            self.add_remove_widget_to_selection()
 
         # Return True to accept the key. Otherwise, it will be used by the system.
         return True
+
+    def switch_snap_mode(self):
+        self.snap_mode = not self.snap_mode
+        Logger.debug('snap_mode: {}'.format(self.snap_mode))
+    def switch_lock_state(self):
+        if not self.locked:
+            Logger.debug('LOCKED to: {}'.format(self.get_widget_name_class(self.widget)))
+            self.locked = True
+        else:
+            Logger.debug('UNLOCKED')
+            self.locked = False
+
+    def open_close_component_popup(self):
+        self.dispatch('on_show_component_popup')
+
+    def adjust_step_width(self, value):
+        self.step_width += value
+        Logger.debug('Step width: {}'.format(self.step_width))
+
+    def switch_multi_select_state(self):
+        """Switches multiselect mode between True and False."""
+        self.multiselect = not self.multiselect
+        Logger.debug('multiselect: {}'.format(self.multiselect))
+
+    def switch_edit_mode(self):
+        """Switches edit_mode between True and False."""
+        self.edit_mode = not self.edit_mode
+        Logger.debug('edit_mode: {}'.format(self.edit_mode))
 
     def delete_widget(self):
         """Deletes the selected widget from the screen."""
@@ -143,12 +167,96 @@ class InspectorSingleton(EventDispatcher):
             self.widget = None
             Logger.warning('Deleted selected widget!')
 
+    def snap_widget(self, key):
+        """
+        Snaps the selected widget to the closest other widget within the same container.
+        If no widget is in the way, the selected widget will snap to the border.
+
+        Uses default padding.
+        """
+        if not self.widget:
+            return
+        # get all siblings within the same container:
+        widgets_to_check = self.widget.parent.children
+        target_widget = None
+        min_distance = 9999  # used to determine the closes widget
+        w = self.widget
+        # check which widget hits next
+        if key == 274:  # down
+            for t in widgets_to_check:
+                if t is self.widget:
+                    continue
+                #check if widget would collide:
+                if w.x <= t.x <= w.right or w.x <= t.right <= w.right or t.x <= w.x <= t.right:
+                    #check if to the bottom:
+                    distance = w.y - t.top
+                    if distance > 0 and distance < min_distance:  # widget is to the left and closer
+                        min_distance = distance  # keep track in case another widget is even closer
+                        target_widget = t
+            # check if widget was found:
+            if target_widget:
+                w.y -= distance - self.default_padding
+            else:
+                w.y = self.default_padding  # move to bottom border
+        elif key == 273:  # up
+            for t in widgets_to_check:
+                if t is self.widget:
+                    continue
+                #check if widget would collide:
+                if w.x <= t.x <= w.right or w.x <= t.right <= w.right or t.x <= w.x <= t.right:
+                    #check if to the top:
+                    distance = t.y - w.top
+                    if distance > 0 and distance < min_distance:  # widget is to the left and closer
+                        min_distance = distance  # keep track in case another widget is even closer
+                        target_widget = t
+            # check if widget was found:
+            if target_widget:
+                w.y += distance - self.default_padding
+            else:
+                w.top = w.parent.top - self.default_padding  # move to top border
+        elif key == 275:  # right
+            for t in widgets_to_check:
+                if t is self.widget:
+                    continue
+                #check if widget would collide:
+                if w.y <= t.y <= w.top or w.y <= t.top <= w.top or t.y <= w.y <= t.top:
+                    #check if to the right:
+                    distance = t.x - w.right
+                    if distance > 0 and distance < min_distance:  # widget is to the left and closer
+                        min_distance = distance  # keep track in case another widget is even closer
+                        target_widget = t
+            # check if widget was found:
+            if target_widget:
+                w.x += distance - self.default_padding
+            else:
+                w.right = w.parent.right - self.default_padding  # move to right border
+        elif key == 276:  # left
+            for t in widgets_to_check:
+                if t is self.widget:
+                    continue
+                #check if widget would collide:
+                if w.y <= t.y <= w.top or w.y <= t.top <= w.top or t.y <= w.y <= t.top:
+                    #check if to the left:
+                    distance = w.x - t.right
+                    if distance > 0 and distance < min_distance:  # widget is to the left and closer
+                        min_distance = distance  # keep track in case another widget is even closer
+                        target_widget = t
+            # check if widget was found:
+            if target_widget:
+                w.x -= distance - self.default_padding
+            else:
+                w.x = self.default_padding  # move to left border
+
+
+
     def move_widget(self, key):
         """
         Moves the selected widget 5 pixels into one direction.
 
         The direction is determined by the pressed arrow key.
         """
+        if not self.edit_mode or self.widget is None:
+            return
         try:
             if key == 273:  # up
                 self.widget.pos[1] += self.step_width
@@ -188,6 +296,7 @@ class InspectorSingleton(EventDispatcher):
         Logger.debug('[del]: deletes the selected widget.')
         Logger.debug('+/-: in-/decreases the step width for moving widgets with arrow keys')
         Logger.debug('w: Open/Close popup to add new widgets to the currently selected one.')
+        Logger.debug('t: Tetris mode. snaps widgets to the closest one in the given direction (with padding).')
         Logger.debug('When a widget is selected and edit_mode = True, you can use the arrow keys to move it.')
         Logger.debug("Or just drag'n drop it with the mouse")
 

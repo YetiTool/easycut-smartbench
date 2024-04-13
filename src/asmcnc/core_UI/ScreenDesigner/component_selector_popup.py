@@ -34,7 +34,7 @@ class ComponentSelectorPopup(Popup):
         self.sm = App.get_running_app().sm
         self.localization = Localization()
         self.inspector = InspectorSingleton()
-        self.inspector.bind(on_show_popup=self.open_me)
+        self.inspector.bind(on_show_component_popup=self.open_close_me)
         self.widget_to_add_to = None
         self.main_layout = FloatLayout()
         self.add_widget(self.main_layout)
@@ -75,7 +75,10 @@ class ComponentSelectorPopup(Popup):
         self.sm.current = 'ScreenDesigner'
         self.dismiss()
 
-    def open_me(self, *args):
+    def open_close_me(self, *args):
+        """
+        Callback for on_show_component_popup event. Opens or closes self.
+        """
         if self.is_opened:
             self.dismiss()
         else:
