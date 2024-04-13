@@ -180,17 +180,16 @@ class InspectorSingleton(EventDispatcher):
         widgets_to_check = self.widget.parent.children
         target_widget = None
         min_distance = 9999  # used to determine the closes widget
-        w = self.widget
-        # check which widget hits next
+        w = self.widget   # just for readability
         if key == 274:  # down
             for t in widgets_to_check:
                 if t is self.widget:
                     continue
-                #check if widget would collide:
+                # check if widget would collide:
                 if w.x <= t.x <= w.right or w.x <= t.right <= w.right or t.x <= w.x <= t.right:
-                    #check if to the bottom:
+                    # check if to the bottom:
                     distance = w.y - t.top
-                    if distance > 0 and distance < min_distance:  # widget is to the left and closer
+                    if 0 < distance < min_distance:  # widget is to the left and closer
                         min_distance = distance  # keep track in case another widget is even closer
                         target_widget = t
             # check if widget was found:
@@ -202,11 +201,11 @@ class InspectorSingleton(EventDispatcher):
             for t in widgets_to_check:
                 if t is self.widget:
                     continue
-                #check if widget would collide:
+                # check if widget would collide:
                 if w.x <= t.x <= w.right or w.x <= t.right <= w.right or t.x <= w.x <= t.right:
-                    #check if to the top:
+                    # check if to the top:
                     distance = t.y - w.top
-                    if distance > 0 and distance < min_distance:  # widget is to the left and closer
+                    if 0 < distance < min_distance:  # widget is to the left and closer
                         min_distance = distance  # keep track in case another widget is even closer
                         target_widget = t
             # check if widget was found:
@@ -218,11 +217,11 @@ class InspectorSingleton(EventDispatcher):
             for t in widgets_to_check:
                 if t is self.widget:
                     continue
-                #check if widget would collide:
+                # check if widget would collide:
                 if w.y <= t.y <= w.top or w.y <= t.top <= w.top or t.y <= w.y <= t.top:
-                    #check if to the right:
+                    # check if to the right:
                     distance = t.x - w.right
-                    if distance > 0 and distance < min_distance:  # widget is to the left and closer
+                    if 0 < distance < min_distance:  # widget is to the left and closer
                         min_distance = distance  # keep track in case another widget is even closer
                         target_widget = t
             # check if widget was found:
@@ -234,11 +233,11 @@ class InspectorSingleton(EventDispatcher):
             for t in widgets_to_check:
                 if t is self.widget:
                     continue
-                #check if widget would collide:
+                # check if widget would collide:
                 if w.y <= t.y <= w.top or w.y <= t.top <= w.top or t.y <= w.y <= t.top:
-                    #check if to the left:
+                    # check if to the left:
                     distance = w.x - t.right
-                    if distance > 0 and distance < min_distance:  # widget is to the left and closer
+                    if 0 < distance < min_distance:  # widget is to the left and closer
                         min_distance = distance  # keep track in case another widget is even closer
                         target_widget = t
             # check if widget was found:
@@ -246,8 +245,6 @@ class InspectorSingleton(EventDispatcher):
                 w.x -= distance - self.default_padding
             else:
                 w.x = self.default_padding  # move to left border
-
-
 
     def move_widget(self, key):
         """
