@@ -324,11 +324,6 @@ class InspectorSingleton(EventDispatcher):
             else:
                 self.child_index = 0
             self.widget = self.widget.parent.children[self.child_index]
-            try:
-                # check if it is a Layout and has no name
-                name = self.widget.name
-            except AttributeError:
-                name = type(self.widget)
             Logger.debug('Switched to sibling {}/{}: {}'.format(self.child_index,
                                                                 self.child_max,
                                                                 self.get_widget_name_class(self.widget)))
@@ -349,11 +344,6 @@ class InspectorSingleton(EventDispatcher):
             else:
                 self.child_index = self.child_max - 1
             self.widget = self.widget.parent.children[self.child_index]
-            try:
-                # check if it is a Layout and has no name
-                name = self.widget.name
-            except AttributeError:
-                name = type(self.widget)
             Logger.debug('Switched to sibling {}/{}: {}'.format(self.child_index,
                                                                 self.child_max,
                                                                 self.get_widget_name_class(self.widget)))
