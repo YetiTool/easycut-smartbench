@@ -84,7 +84,7 @@ class InspectorSingleton(EventDispatcher):
         Is used for debugging purposes to print debug info about the UI elements.
         """
         if not self.enabled or not self.key_input_enabled:
-            return
+            return True
 
         keycode = args[3]
         key = args[1]
@@ -112,7 +112,8 @@ class InspectorSingleton(EventDispatcher):
         elif keycode == 'e':
             self.switch_edit_mode()
         elif keycode == 'm':
-            self.switch_multi_select_state()
+            pass
+            # self.switch_multi_select_state()
         elif keycode == 't':
             self.switch_snap_mode()
         elif 273 <= key <= 276:  # check for arrow keys to move the widget
@@ -127,15 +128,27 @@ class InspectorSingleton(EventDispatcher):
         elif key == 127:  # del key
             self.delete_widget()
         elif key in [303, 304]:  # shift
-            self.add_remove_widget_to_selection()
+            # self.add_remove_widget_to_selection()
+            pass
 
         # Return True to accept the key. Otherwise, it will be used by the system.
         return True
 
     def switch_snap_mode(self):
+        """
+        En-/Disables snap_mode.
+
+        When enabled, widgets can be snapped to the nearest widget using the arrow keys.
+        """
         self.snap_mode = not self.snap_mode
         Logger.debug('snap_mode: {}'.format(self.snap_mode))
+
     def switch_lock_state(self):
+        """
+        En-/Disables locking to widgets.
+
+        When enabled, a mouse hover event will not select new widgets.
+        """
         if not self.locked:
             Logger.debug('LOCKED to: {}'.format(self.get_widget_name_class(self.widget)))
             self.locked = True
@@ -144,10 +157,16 @@ class InspectorSingleton(EventDispatcher):
             self.locked = False
 
     def open_close_component_popup(self):
+        """
+        Fires the event 'on_show_component_popup' to the widget to open and close it.
+        """
         self.dispatch('on_show_component_popup')
 
     def adjust_step_width(self, value):
+        """Adjusts the step width for moving widgets with the arrow keys by the given amount."""
         self.step_width += value
+        if self.step_width < 1:  # min value of 1
+            self.step_width = 1
         Logger.debug('Step width: {}'.format(self.step_width))
 
     def switch_multi_select_state(self):
