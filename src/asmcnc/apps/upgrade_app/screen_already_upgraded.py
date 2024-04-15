@@ -2,8 +2,9 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety
 
-Builder.load_string(
-    """
+Builder.load_string("""
+#:import LabelBase asmcnc.core_UI.components.labels.base_label
+
 <AlreadyUpgradedScreen>:
 
     title_label:title_label
@@ -22,7 +23,7 @@ Builder.load_string(
                     size: self.size
                     pos: self.pos
 
-            Label:
+            LabelBase:
                 id: title_label
                 text: 'Upgrade SB V1.3 to PrecisionPro +'
                 halign: 'center'
@@ -41,7 +42,7 @@ Builder.load_string(
                     size: self.size
                     pos: self.pos
 
-            Label:
+            LabelBase:
                 id: already_upgraded_label
                 font_size: dp(0.04*app.width)
                 color: 0,0,0,1
