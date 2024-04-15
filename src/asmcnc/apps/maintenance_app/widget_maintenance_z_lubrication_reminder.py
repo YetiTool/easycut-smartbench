@@ -65,7 +65,7 @@ Builder.load_string("""
                 size_hint: (None, None)
                 height: dp(0.25*app.height)
                 width: dp(0.4375*app.width)
-                Label: 
+                LabelBase: 
                     id: hours_since_lubrication
                     color: 0,0,0,1
                     font_size: dp(0.125*app.width)
