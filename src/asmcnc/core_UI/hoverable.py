@@ -1,5 +1,6 @@
 from kivy.core.window.window_sdl2 import WindowSDL
 from kivy.event import EventDispatcher
+from kivy.graphics import InstructionGroup, Color, Line
 from kivy.properties import BooleanProperty
 from kivy.core.window import Window
 from kivy.uix.image import Image
@@ -39,6 +40,7 @@ class InspectorSingleton(EventDispatcher):
     multiselect = False  # select more than one widget at once
     snap_mode = False  # using arrow keys lets widgets snap to the next one
     default_padding = 5  # default padding used for snapping widgets
+    selection_rectangle = None  # reference to the red selection rectange
 
     def __new__(cls):
         if cls._instance is None:
@@ -184,6 +186,7 @@ class InspectorSingleton(EventDispatcher):
         """Deletes the selected widget from the screen."""
         if self.widget:
             self.widget.parent.remove_widget(self.widget)
+            self.remove_selection_rectangle()
             self.widget = None
             Logger.warning('Deleted selected widget!')
 
@@ -196,6 +199,7 @@ class InspectorSingleton(EventDispatcher):
         """
         if not self.widget:
             return
+        self.remove_selection_rectangle()
         # get all siblings within the same container:
         widgets_to_check = self.widget.parent.children
         target_widget = None
@@ -265,6 +269,7 @@ class InspectorSingleton(EventDispatcher):
                 w.x -= distance - self.default_padding
             else:
                 w.x = self.default_padding  # move to left border
+        self.paint_selection_rectangle()
 
     def move_widget(self, key):
         """
@@ -275,6 +280,7 @@ class InspectorSingleton(EventDispatcher):
         if not self.edit_mode or self.widget is None:
             return
         try:
+            self.remove_selection_rectangle()
             if key == 273:  # up
                 self.widget.pos[1] += self.step_width
             elif key == 274:  # down
@@ -286,6 +292,8 @@ class InspectorSingleton(EventDispatcher):
             Logger.debug('pos: {}'.format(self.widget.pos))
         except Exception as ex:
             Logger.error("Failed to move widget!")
+        finally:
+            self.paint_selection_rectangle()
 
     def get_parent_screen(self):
         """Returns the screen object for the selected widget."""
@@ -343,7 +351,7 @@ class InspectorSingleton(EventDispatcher):
                 self.child_index += 1
             else:
                 self.child_index = 0
-            self.widget = self.widget.parent.children[self.child_index]
+            self.set_widget(self.widget.parent.children[self.child_index])
             Logger.debug('Switched to sibling {}/{}: {}'.format(self.child_index,
                                                                 self.child_max,
                                                                 self.get_widget_name_class(self.widget)))
@@ -363,7 +371,7 @@ class InspectorSingleton(EventDispatcher):
                 self.child_index -= 1
             else:
                 self.child_index = self.child_max - 1
-            self.widget = self.widget.parent.children[self.child_index]
+            self.set_widget(self.widget.parent.children[self.child_index])
             Logger.debug('Switched to sibling {}/{}: {}'.format(self.child_index,
                                                                 self.child_max,
                                                                 self.get_widget_name_class(self.widget)))
@@ -384,7 +392,7 @@ class InspectorSingleton(EventDispatcher):
             else:
                 self.child_index = 0
                 self.child_max = len(children)
-                self.widget = children[self.child_index]
+                self.set_widget(children[self.child_index])
                 Logger.debug('Switched to child: {}/{}: {}'.format(self.child_index,
                                                                    self.child_max,
                                                                    self.get_widget_name_class(self.widget)))
@@ -401,7 +409,7 @@ class InspectorSingleton(EventDispatcher):
         elif issubclass(type(parent), WindowSDL):
             Logger.warning('Orphaned!')
         else:
-            self.widget = parent
+            self.set_widget(parent)
             Logger.debug('Switched to parent: {}'.format(self.get_widget_name_class(self.widget)))
             self.inspect_widget(short=True)
 
@@ -420,10 +428,29 @@ class InspectorSingleton(EventDispatcher):
             Logger.debug('source: "{}"'.format(self.widget.source))
         Logger.debug('========================================')
 
+    def paint_selection_rectangle(self):
+        """
+        Paints the red selection rectangle on the selected widget.
+
+        Removes old one if left over."""
+        if self.widget and self.selection_rectangle:
+            self.widget.canvas.remove(self.selection_rectangle)
+        self.selection_rectangle = InstructionGroup()
+        self.selection_rectangle.add(Color(1, 0, 0))
+        self.selection_rectangle.add(Line(rectangle=(self.widget.x, self.widget.y, self.widget.width, self.widget.height)))
+        self.widget.canvas.add(self.selection_rectangle)
+
+    def remove_selection_rectangle(self):
+        """Removes the last painted red selection rectangle."""
+        if self.widget and self.selection_rectangle:
+            self.widget.canvas.remove(self.selection_rectangle)
+
     def set_widget(self, w):
         """Sets the given widget as selected, so it can be inspected."""
+        self.remove_selection_rectangle()
         self.widget = w
         self.widgetType = type(w)
+        self.paint_selection_rectangle()
         Logger.debug("Selected: {}".format(self.get_widget_name_class(w)))
 
 
@@ -439,13 +466,13 @@ class HoverBehavior(object):
     offset_y = 0
 
     def __init__(self, **kwargs):
+        super(HoverBehavior, self).__init__(**kwargs)
         if self.inspector.enabled:
             self.register_event_type('on_enter')
             Window.bind(mouse_pos=self.on_mouse_pos)
             Window.bind(on_touch_down=self.on_mouse_press)
             Window.bind(on_touch_move=self.on_move)
             Window.bind(on_touch_up=self.on_mouse_release)
-        super(HoverBehavior, self).__init__(**kwargs)
 
     def on_mouse_press(self, *args):
         """
@@ -455,6 +482,7 @@ class HoverBehavior(object):
         if self.inspector.edit_mode:
             if not self.drag:
                 self.drag = True
+                self.inspector.remove_selection_rectangle()
                 self.offset_x = args[1].px - self.inspector.widget.x
                 self.offset_y = args[1].py - self.inspector.widget.y
 
@@ -464,19 +492,41 @@ class HoverBehavior(object):
         """
         if self.inspector.edit_mode:
             if self.drag:
+                self.inspector.paint_selection_rectangle()
                 self.drag = False
 
     def on_move(self, *args):
         """
         Drags the item with the mouse. Offset from mouse click pos to lower left corner
         of the widget is compensated for smoother user experience.
+
+        The new position is restricted to the parents frame.
         """
         if self.inspector.edit_mode:
             if self.drag:
                 if self.inspector.widget:
-                    self.inspector.widget.x = args[1].px - self.offset_x
-                    self.inspector.widget.y = args[1].py - self.offset_y
+                    self.inspector.widget.x = self.constrain_x(args[1].px - self.offset_x)
+                    self.inspector.widget.y = self.constrain_y(args[1].py - self.offset_y)
                     return True
+
+    def constrain_x(self, x):
+        """Checks if the widget would leave the parents frame in x direction."""
+        if x < 0:  # left
+            return 0
+        elif x + self.inspector.widget.width > self.inspector.widget.parent.width:  # right
+            return self.inspector.widget.parent.width - self.inspector.widget.width
+        else:
+            return x
+
+
+    def constrain_y(self, y):
+        """Checks if the widget would leave the parents frame in y direction."""
+        if y < 0:  # bottom
+            return 0
+        elif y + self.inspector.widget.height > self.inspector.widget.parent.height:  # top
+            return self.inspector.widget.parent.height - self.inspector.widget.height
+        else:
+            return y
 
     def on_mouse_pos(self, *args):
         """
@@ -491,7 +541,11 @@ class HoverBehavior(object):
         """
         # only active if inspector is not locked to avoid unintended overwriting of the selected widget.
 
+        # check if inspector may change selected widget:
         if self.inspector.locked or self.drag or not self.inspector.enabled:
+            return
+        # should not work on designer items:
+        if self.id and 'DESIGNER' in self.id:
             return
         if not self.get_root_window():
             return # do proceed if I'm not displayed <=> I have no parent

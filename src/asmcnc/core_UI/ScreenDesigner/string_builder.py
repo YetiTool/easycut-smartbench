@@ -15,7 +15,7 @@ INDENT = '    '
 DONT_DO_CHILDREN = ['ProbeButton', 'SpindleButton', 'VacuumButton', 'XYMove']
 
 # Classes that can only be used in code due to their init parameters:
-CODE_ONLY_ITEMS = {'ProbeButton': ['{} = ProbeButton(None, None, None)  # TODO: fill args!',
+CODE_ONLY_ITEMS = {'ProbeButton': ['{} = ProbeButton(MagicMock(), App.get_running_app().sm, Localization())  # TODO: fill args!',
                                    '{}.size = [70, 70]'],
                    'SpindleButton': ['{} = SpindleButton(MagicMock(), MagicMock(), App.get_running_app().sm)  # TODO: fill args!',
                                      '{}.size = [71, 72]'],
@@ -43,10 +43,10 @@ def get_screen(widget):
     return screen
 
 
-def get_code_from_file(screen_name):
+def get_code_from_file():
     s = ''
     if App.get_running_app().modifying_screen:
-        filename = App.get_running_app().screenname_to_filename(screen_name)
+        filename = App.get_running_app().screenname_to_filename(App.get_running_app().current_screen_name)
         path = pu.join(GENERATED_FILES_FOLDER, filename + '.py')
         with open(path, 'r') as f:
             s = f.read()
@@ -69,10 +69,9 @@ def get_python_code_from_screen(widget):
     Imports are gathered and generated.
     Basic class code is generated.
     """
-    screen = get_screen(widget)
-    code_from_file = get_code_from_file(screen.name)
-    #  assuming every screen has exactly one child as the main layout!!!
-    main_layout = screen.children[0]
+    code_from_file = get_code_from_file()
+    #  assuming given class is the main layout!!!
+    main_layout = widget
     imports_py, code_py, imports_kivy, code_kivy = gather_data_from_widget_tree(main_layout)
     # now make an import string:
     s = IMPORTS_START
@@ -100,7 +99,7 @@ def get_python_code_from_screen(widget):
     for import_path, import_list in imports_kivy.items():
         for imp in import_list:
             s += '#:import ' + imp + ' ' + import_path + '\n'
-    s += '\n<' + screen.name + '>\n'
+    s += '\n<' + App.get_running_app().current_screen_name + '>\n'
     s += code_kivy
     s += '""")\n'
     s += BUILDER_STRING_END
@@ -110,7 +109,7 @@ def get_python_code_from_screen(widget):
     # python code:
     s = CODE_START
     s += '\n\n\n'  # two new lines before class
-    s += get_class_code(screen)
+    s += get_class_code(App.get_running_app().current_screen_name)
     s += code_py
     s += CODE_END
     pattern_imports_py = r'{}.*{}'.format(CODE_START, CODE_END)
@@ -287,15 +286,15 @@ def get_import_dict_from_widget(widget):
     return ret
 
 
-def get_class_code(screen):
+def get_class_code(screen_name):
     # type: (Screen) -> str
     """
     Returns basic class code (ctor and super call) as string.
     sets the name attribute of the screen!
     """
-    s = 'class ' + screen.name + '(Screen):\n'
+    s = 'class ' + screen_name + '(Screen):\n'
     s += INDENT + 'def __init__(self, **kwargs):\n'
-    s += INDENT + INDENT + 'super(' + screen.name + ', self).__init__(name="' + screen.name + '", **kwargs)\n'
+    s += INDENT + INDENT + 'super(' + screen_name + ', self).__init__(name="' + screen_name + '", **kwargs)\n'
     return s
 
 

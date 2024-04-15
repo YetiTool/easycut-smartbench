@@ -2,6 +2,8 @@ import os
 import re
 
 from kivy.app import App
+from kivy.config import Config
+from kivy.graphics import Color, Line
 from kivy.uix.dropdown import DropDown
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image
@@ -11,7 +13,7 @@ from kivy.uix.textinput import TextInput
 
 from asmcnc.comms.localization import Localization
 from asmcnc.comms.logging_system.logging_system import Logger
-from asmcnc.core_UI.ScreenDesigner.component_selector_popup import ComponentSelectorPopup
+from asmcnc.core_UI.ScreenDesigner.component_selector_widget import ComponentSelectorWidget
 from asmcnc.core_UI.components.buttons.button_base import ButtonBase
 from asmcnc.core_UI.hoverable import InspectorSingleton
 import asmcnc.core_UI.path_utils as pu
@@ -36,21 +38,21 @@ class DesignerMainScreen(Screen):
         self.main_layout = FloatLayout()
         self.add_widget(self.main_layout)
         # background image
-        self.test_btn = ButtonBase(size=(5, 5), size_hint=(None, None), pos=(368, 40))
+        self.test_btn = ButtonBase(size=(5, 5), size_hint=(None, None), pos=(368, 40), id='DESIGNER')
         self.background_image = Image(source=pu.get_path('Inspector_Widget_old.png'), text='.')
         self.test_btn.bind(on_release=lambda i: setattr(self.background_image,"source",self.background_image.source.replace('_old.', '.')))
         self.test_btn.opacity = 0
         self.main_layout.add_widget(self.background_image)
         self.main_layout.add_widget(self.test_btn)
         # Add new_screen button:
-        self.btn_new_screen = ButtonBase(size=(100, 50), size_hint=(None, None), pos=(690, 10), text='New screen...')
-        self.btn_new_screen.bind(on_release=self.create_new_screen)
+        self.btn_new_screen = ButtonBase(size=(100, 50), size_hint=(None, None), pos=(690, 10), text='New screen...', id='DESIGNER')
+        self.btn_new_screen.bind(on_release=self.new_screen)
         self.main_layout.add_widget(self.btn_new_screen)
         # text input for screen name:
         self.screen_name_input = TextInput(size=(200, 30), size_hint=(None, None), pos=(480, 15), text='ScreenName1')
         self.main_layout.add_widget(self.screen_name_input)
         # screen dropdown:
-        self.screen_drop_down_btn = ButtonBase(size=(200, 50), size_hint=(None, None), pos=(10, 10), text='Select screen...')
+        self.screen_drop_down_btn = ButtonBase(size=(200, 50), size_hint=(None, None), pos=(10, 10), text='Select screen...', id='DESIGNER')
         self.screen_drop_down = DropDown(size=(200, 200), size_hint=(None, None))
         self.main_layout.add_widget(self.screen_drop_down_btn)
         self.screen_drop_down_btn.bind(on_release=self.screen_drop_down.open)
@@ -86,7 +88,7 @@ class DesignerMainScreen(Screen):
             if screen_file.startswith('__init__') or screen_file.endswith('.pyc'):
                 continue
             # fill dropdown with class names
-            btn = ButtonBase(text=class_name, size_hint_y=None, height=40)
+            btn = ButtonBase(text=class_name, size_hint_y=None, height=40, id='DESIGNER')
             btn.bind(on_release=lambda btn: self.screen_drop_down.select(btn.text))
             self.screen_drop_down.add_widget(btn)
             # saves class names (=screen names) and import path for later
@@ -114,27 +116,35 @@ class DesignerMainScreen(Screen):
         screen = self.create_screen(screen_name)
         if screen:
             App.get_running_app().modifying_screen = True
-            if self.sm.has_screen(screen.name):
-                self.sm.remove_widget(self.sm.get_screen(screen.name))
-            self.sm.add_widget(screen)
-            self.sm.current = screen.name
-            App.get_running_app().title = "Inspector Widget - " + screen_name
+            App.get_running_app().current_screen_name = screen_name
+            layout = screen.children[0]
+            screen.remove_widget(layout)
+            self.build_designer_screen(layout)
 
-            App.get_running_app().update_widget(screen.children[0])
+    def new_screen(self, *args):
+        screen_layout = FloatLayout(id='screen_layout', size_hint=[None, None], size=[800, 480])
+        App.get_running_app().current_screen_name = self.screen_name_input.text
+        App.get_running_app().modifying_screen = False
+        self.build_designer_screen(screen_layout)
 
-    def create_new_screen(self, *args):
+    def build_designer_screen(self, layout, *args):
         """
         Creates a new empty screen from scratch.
         """
-
-        if self.sm.has_screen(self.screen_name_input.text):
-            self.sm.remove_widget(self.sm.get_screen(self.screen_name_input.text))
-        App.get_running_app().modifying_screen = False
-        new_screen = Screen(name=self.screen_name_input.text)
+        if self.sm.has_screen(App.get_running_app().current_screen_name):
+            self.sm.remove_widget(self.sm.get_screen(App.get_running_app().current_screen_name))
+        new_screen = Screen(name=App.get_running_app().current_screen_name)
         main_layout = FloatLayout(id='main_layout')
+        main_layout.add_widget(layout)
+        with layout.canvas.before:
+            Color(1, 1, 1)
+            Line(rectangle=(0, 0, layout.width, layout.height))
+        component_widget = ComponentSelectorWidget()
+        component_widget.widget_to_add_to = layout
+        main_layout.add_widget(component_widget)
         new_screen.add_widget(main_layout)
         self.sm.add_widget(new_screen)
-        App.get_running_app().title = "Inspector Widget - " + self.screen_name_input.text
+        App.get_running_app().title = "Inspector Widget - " + App.get_running_app().current_screen_name
         App.get_running_app().update_widget(main_layout)
 
         self.sm.current = new_screen.name
@@ -149,13 +159,13 @@ class ScreenDesignerApp(App):
 
     width = Window.width
     height = Window.height if Window.height == 480 else Window.height - 32
+    current_screen_name = ''
 
     def __init__(self, **kwargs):
         super(ScreenDesignerApp, self).__init__(**kwargs)
 
         self.l = Localization()
         self.sm = ScreenManager(transition=NoTransition())
-        self.designer_popup = ComponentSelectorPopup()
         self.inspector = InspectorSingleton()
         self.inspector.enable()
         self.modifying_screen = False
@@ -181,8 +191,7 @@ class ScreenDesignerApp(App):
         Updates the widget in the designer popup and in the inspector, so it will be the new
         parent for inserted widgets and the inspector can move it around.
         """
-        self.designer_popup.widget_to_add_to = widget
-        self.inspector.widget = widget
+        self.inspector.set_widget(widget)
 
 
 
@@ -196,6 +205,10 @@ class ScreenDesignerApp(App):
 
 if __name__ == '__main__':
     try:
+        Config.set('graphics', 'width', '1200')
+        Config.set('graphics', 'height', '720')
+        Config.write()
+
         ScreenDesignerApp().run()
     except Exception as e:
         Logger.exception(e)
