@@ -62,6 +62,7 @@ class DesignerMainScreen(Screen):
         InspectorSingleton().disable_key_input()
         # reload generated screens, in case one was just created.
         self.load_generated_screens()
+        App.get_running_app().title = "Inspector Widget"
 
     def on_leave(self, *args):
         InspectorSingleton().enable_key_input()

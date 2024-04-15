@@ -89,7 +89,8 @@ class InspectorSingleton(EventDispatcher):
         keycode = args[3]
         key = args[1]
 
-        Logger.debug('args: {}'.format(args))
+        # Uncomment for info about keys. E.g. 'what's the key for "backspace"?'
+        # Logger.debug('args: {}'.format(args))
 
         if self.multiselect and keycode and keycode in 'lpcsai':
             Logger.warning('"{}" not allowed during multi_select!'.format(keycode))
