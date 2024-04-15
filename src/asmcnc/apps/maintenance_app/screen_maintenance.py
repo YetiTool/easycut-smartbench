@@ -25,8 +25,8 @@ from asmcnc.apps.maintenance_app import (
     widget_maintenance_spindle_health_check,
 )
 
-Builder.load_string(
-    """
+Builder.load_string("""
+#:import LabelBase asmcnc.core_UI.components.labels.base_label
 
 <MaintenanceScreenClass>:
 
@@ -126,7 +126,7 @@ Builder.load_string(
                             padding:[dp(0.025)*app.width, 0, dp(0.025)*app.width, 0]
                             orientation: 'horizontal'
 
-                            Label: 
+                            LabelBase: 
                                 id: laser_datum_label
                                 color: 0,0,0,1
                                 font_size: dp(0.0325*app.width)
@@ -270,7 +270,7 @@ Builder.load_string(
                         width: dp(0.95*app.width)
                         padding:[dp(0.0125)*app.width, dp(0.0104166666667)*app.height, dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
                         orientation: 'horizontal'
-                        Label: 
+                        LabelBase: 
                             id: brush_monitor_label
                             color: 0,0,0,1
                             font_size: dp(0.0275*app.width)
