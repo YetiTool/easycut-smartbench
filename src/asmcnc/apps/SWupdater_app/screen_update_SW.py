@@ -16,8 +16,8 @@ from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.SWupdater_app import popup_update_SW
 
-Builder.load_string(
-    """
+Builder.load_string("""
+#:import LabelBase asmcnc.core_UI.components.labels.base_label
 
 <SWUpdateScreen>:
 
@@ -88,7 +88,7 @@ Builder.load_string(
                             source: "./asmcnc/skavaUI/img/qr_release_notes.png"
                         BoxLayout:
                             orientation: "vertical"
-                            Label:
+                            LabelBase:
                                 id: current_version_label
                                 color: 0,0,0,1
                                 font_size: 0.025*app.width
@@ -96,14 +96,14 @@ Builder.load_string(
                                 valign: "bottom"
                                 text_size: self.size
 
-                            Label:
+                            LabelBase:
                                 id: sw_version_label
                                 color: 0,0,0,1
                                 font_size: 0.02875*app.width
                                 markup: True
                                 text_size: self.size
 
-                            Label:
+                            LabelBase:
                                 id: find_release_notes_label
                                 size_hint_y: 1.1
                                 color: 0,0,0,1
@@ -146,7 +146,7 @@ Builder.load_string(
                                         size: self.parent.width, self.parent.height
                                         allow_stretch: True
 
-                        Label: 
+                        LabelBase: 
                             id: latest_software_version_label
                             color: 0,0,0,1
                             font_size: 0.0225*app.width
@@ -211,7 +211,7 @@ Builder.load_string(
                     height: dp(0.0416666666667*app.height)
                     width: dp(0.36875*app.width)
                     # padding: [0,5,0,0]
-                    Label: 
+                    LabelBase: 
                         id: update_using_wifi_label
                         color: 0,0,0,1
                         font_size: 0.0225*app.width
@@ -227,7 +227,7 @@ Builder.load_string(
                     height: dp(0.208333333333*app.height)
                     width: dp(0.36875*app.width)
                     # padding: [0,5,0,0]
-                    Label:
+                    LabelBase:
                         id: update_using_wifi_instructions_label
                         color: 0,0,0,1
                         font_size: 0.02*app.width
@@ -293,7 +293,7 @@ Builder.load_string(
                     size_hint: (None, None)
                     height: dp(0.0416666666667*app.height)
                     width: dp(0.36875*app.width)
-                    Label:
+                    LabelBase:
                         id: update_using_usb_label
                         color: 0,0,0,1
                         font_size: 0.0225*app.width
@@ -308,7 +308,7 @@ Builder.load_string(
                     size_hint: (None, None)
                     height: dp(0.208333333333*app.height)
                     width: dp(0.36875*app.width)
-                    Label:
+                    LabelBase:
                         id: update_using_usb_instructions_label
                         color: 0,0,0,1
                         font_size: 0.02*app.width
