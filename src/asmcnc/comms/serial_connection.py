@@ -1892,8 +1892,7 @@ class SerialConnection(EventDispatcher):
 
             if "S" in serialCommand.upper():
                 # Correct the spindle speed command
-                # serialCommand = self.compensate_spindle_speed_command(serialCommand)
-                pass
+                serialCommand = self.compensate_spindle_speed_command(serialCommand)
 
         if "M5" in serialCommand.upper():
             # Clear spindle_on flag
