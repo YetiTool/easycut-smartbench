@@ -9,8 +9,8 @@ from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from asmcnc.core_UI.scaling_utils import get_scaled_width
 
-Builder.load_string(
-    """
+Builder.load_string("""
+#:import LabelBase asmcnc.core_UI.components.labels.base_label
 
 <ZLubricationReminderWidget>
     
@@ -27,7 +27,7 @@ Builder.load_string(
         padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
         spacing:0.0208333333333*app.height
 
-        Label:
+        LabelBase:
             id: time_since_screw_lubricated_label
             color: 0,0,0,1
             font_size: dp(0.03*app.width)
