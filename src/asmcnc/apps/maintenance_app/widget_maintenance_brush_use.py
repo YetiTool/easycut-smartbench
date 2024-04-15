@@ -10,8 +10,8 @@ widget to hold brush use input and buttons
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 
-Builder.load_string(
-    """
+Builder.load_string("""
+#:import LabelBase asmcnc.core_UI.components.labels.base_label
 
 <BrushUseWidget>
     
@@ -38,7 +38,7 @@ Builder.load_string(
             height: dp(0.208333333333*app.height)
             width: dp(0.35*app.width)         
 
-            Label:
+            LabelBase:
                 id: brush_use_label
                 color: 0,0,0,1
                 font_size: root.default_font_size
@@ -66,7 +66,7 @@ Builder.load_string(
                     input_filter: 'int'
                     multiline: False
 
-                Label:
+                LabelBase:
                     id: hours_label
                     color: 0,0,0,1
                     font_size: dp(0.035*app.width)
