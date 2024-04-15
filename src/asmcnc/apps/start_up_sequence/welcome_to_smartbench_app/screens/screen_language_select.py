@@ -10,6 +10,12 @@ import sys, os
 from kivy.clock import Clock
 from kivy.uix.label import Label
 
+
+"""
+DEPRECATED, NOW USING: src/asmcnc/apps/start_up_sequence/screens/screen_language_selection.py
+"""
+
+
 Builder.load_string(
     """
 

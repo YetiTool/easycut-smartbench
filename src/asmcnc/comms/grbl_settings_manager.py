@@ -61,15 +61,17 @@ class GRBLSettingsManagerSingleton(object):
         110: 8000.000, # X Max rate, mm/min
         111: 6000.000, # Y Max rate, mm/min
         112: 750.000, # Z Max rate, mm/min
-        120: 500.000, # X Acceleration, mm/sec^2
-        121: 500.000, # Y Acceleration, mm/sec^2
+        120: 130.000, # X Acceleration, mm/sec^2
+        121: 130.000, # Y Acceleration, mm/sec^2
         122: 200.000, # Z Acceleration, mm/sec^2
         130: 1300.000 # X Max travel, mm
     }
 
     _system_default_data_rig = {
-        2: 0,
-        5: 0
+        2: 0,  # Step port invert, mask
+        5: 0,  # Limit pins invert, boolean
+        120: 500.000,  # X Acceleration, mm/sec^2
+        121: 500.000   # Y Acceleration, mm/sec^2
     }
 
 
@@ -100,8 +102,6 @@ class GRBLSettingsManagerSingleton(object):
             #                                                                                      102))
 
             # system persistent settings:
-            '''
-            COMMENTED OUT FOR NOW!!! CAUSES GRBL ERROR 9
             self.machine.s.bind(setting_0=lambda instance, value: self.on_persistent_setting(value, 0))
             self.machine.s.bind(setting_1=lambda instance, value: self.on_persistent_setting(value, 1))
             self.machine.s.bind(setting_2=lambda instance, value: self.on_persistent_setting(value, 2))
@@ -130,7 +130,7 @@ class GRBLSettingsManagerSingleton(object):
             self.machine.s.bind(setting_121=lambda instance, value: self.on_persistent_setting(value, 121))
             self.machine.s.bind(setting_122=lambda instance, value: self.on_persistent_setting(value, 122))
             self.machine.s.bind(setting_130=lambda instance, value: self.on_persistent_setting(value, 130))
-            '''
+
 
         if self._initialized:
             return

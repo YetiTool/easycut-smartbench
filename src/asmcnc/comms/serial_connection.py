@@ -71,6 +71,7 @@ class SerialConnection(EventDispatcher):
     setting_121 = NumericProperty(-1.0)
     setting_122 = NumericProperty(-1.0)
     setting_130 = NumericProperty(-1.0)
+    setting_131 = NumericProperty(-1.0)
     STATUS_INTERVAL = 0.1  # How often to poll general status to update UI (0.04 = 25Hz = smooth animation)
 
     s = None  # Serial comms object
@@ -119,6 +120,12 @@ class SerialConnection(EventDispatcher):
         # Register events to provide data:
         self.register_event_type('on_serial_monitor_update') # new data to show for the serial monitor
         self.register_event_type('on_update_overload_peak') # new overload peak value
+        self.register_event_type('on_reset_runtime') # runtime counter will be reset
+        self.register_event_type('on_check_job_finished')
+
+    def on_reset_runtime(self, *args):
+        """Default callback. Needs to exist."""
+        pass
 
     def on_serial_monitor_update(self, *args):
         """Default callback. Needs to exist."""
@@ -128,6 +135,9 @@ class SerialConnection(EventDispatcher):
         """Default callback. Needs to exist."""
         pass
 
+    def on_check_job_finished(self, *args):
+        """Default callback. Needs to exist."""
+        pass
 
     def __del__(self):
         if self.s: self.s.close()
@@ -480,6 +490,7 @@ class SerialConnection(EventDispatcher):
 
     is_job_streaming = False
     is_stream_lines_remaining = False
+    job_to_check = []
 
     g_count = 0  # gcodes processed (ok/error'd) by grbl (gcodes may not get processed immediately after being sent)
     l_count = 0  # lines sent to grbl
@@ -499,6 +510,7 @@ class SerialConnection(EventDispatcher):
 
         Logger.info('Checking job...')
 
+        self.job_to_check = job_object
         self.m.enable_check_mode()
         self.set_use_yp(False)
 
@@ -516,20 +528,11 @@ class SerialConnection(EventDispatcher):
                 # run job as per normal
                 self.run_job(job_object)
 
-                # get error log back to the checking screen when it's ready
-                Clock.schedule_interval(partial(self.return_check_outcome, job_object), 0.1)
-
             else:
                 Clock.schedule_once(lambda dt: check_job_inner_function(), 0.9)
 
         # Sleep to ensure check mode ok isn't included in log, AND to ensure it's enabled before job run
         Clock.schedule_once(lambda dt: check_job_inner_function(), 0.9)
-
-    def return_check_outcome(self, job_object, dt):
-        if len(self.response_log) >= len(job_object):
-            self.suppress_error_screens = False
-            self.sm.get_screen('check_job').error_log = self.response_log
-            return False
 
     def run_job(self, job_object):
 
@@ -589,8 +592,7 @@ class SerialConnection(EventDispatcher):
         self.stream_paused_accumulated_time = 0
         self.stream_start_time = time.time()
 
-        if self.sm.has_screen('go'):
-            self.sm.get_screen('go').total_runtime_seconds = 0
+        self.dispatch('on_reset_runtime')
 
     def set_streaming_flags_to_true(self):
         # self.m.set_pause(False) # moved to go screen for timing reasons
@@ -661,13 +663,14 @@ class SerialConnection(EventDispatcher):
 
     # if 'ok' or 'error' rec'd from GRBL
     def process_grbl_response(self, message):
-        if self.suppress_error_screens == True:
+        # if we are in check mode, append message to add it to error_log later
+        if self.suppress_error_screens:
             self.response_log.append(message)
 
         if message.startswith('error'):
             Logger.info('ERROR from GRBL: ' + message)
 
-            if self.suppress_error_screens == False and self.sm.current != 'errorScreen':
+            if not self.suppress_error_screens and self.sm.current != 'errorScreen':
                 self.sm.get_screen('errorScreen').message = message
 
                 if self.sm.current == 'alarmScreen':
@@ -720,6 +723,8 @@ class SerialConnection(EventDispatcher):
                 self.m.disable_check_mode()
                 self.suppress_error_screens = False
                 self._reset_counters()
+                self.job_to_check = []
+                self.dispatch('on_check_job_finished', self.response_log)
 
         else:
             self._reset_counters()
@@ -767,6 +772,8 @@ class SerialConnection(EventDispatcher):
             self.check_streaming_started = False
             self.m.disable_check_mode()
             self.suppress_error_screens = False
+            self.job_to_check = []
+            self.dispatch('on_check_job_finished', self.response_log)
 
             # Flush
             self.FLUSH_FLAG = True
@@ -1782,7 +1789,7 @@ class SerialConnection(EventDispatcher):
 
     def start_sequential_stream(self, list_to_stream, reset_grbl_after_stream=False, end_dwell=False):
         if self.is_sequential_streaming:
-            Logger.info('already streaming...try again later')
+            Logger.debug('already streaming...try again later')
             Clock.schedule_once(lambda dt: self.start_sequential_stream(list_to_stream, reset_grbl_after_stream, end_dwell), 0.3)
             return
         self.is_sequential_streaming = True

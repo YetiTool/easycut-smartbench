@@ -59,6 +59,10 @@
     ignore_errors: yes
 
   # Install python2 pip packages
+  - name: Pip install typing==3.10.0.0
+    pip:
+      name: typing==3.10.0.0
+    ignore_errors: yes
   - name: Pip install pika==1.2.0
     pip:
       name: pika==1.2.0
@@ -211,21 +215,3 @@
       state: latest
     when: ansible_distribution_major_version == '11'
     ignore_errors: yes
-- name: Install and configure samba
-  hosts: localhost
-  become: true
-  tasks:
-    - name: Install Samba
-      apt:
-        name: samba
-        state: present
-    - name: Copy Samba config
-      template:
-        src: /home/pi/easycut-smartbench/src/asmcnc/comms/smart_transfer/smb.conf
-        dest: /etc/samba/smb.conf
-      notify: restart samba
-  handlers:
-    - name: restart samba
-      service:
-        name: smbd
-        state: restarted

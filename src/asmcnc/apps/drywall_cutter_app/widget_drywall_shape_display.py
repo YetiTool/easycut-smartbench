@@ -1,14 +1,13 @@
-import threading
-
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 
+from asmcnc.apps.drywall_cutter_app.config.config_options import ToolpathOffsetOptions
 from asmcnc.comms.logging_system.logging_system import Logger
-from asmcnc.core_UI.components import float_input  # Required for the builder string
 import re
 
 Builder.load_string("""
+#:import FloatInput asmcnc.core_UI.components.text_inputs.float_input.FloatInput
 <DrywallShapeDisplay>
 
     shape_dims_image:shape_dims_image
@@ -275,13 +274,6 @@ Builder.load_string("""
                 color: 0,0,0,1
                 halign: 'left'
 
-                canvas.before:
-                    Color:
-                        rgba: hex('#F9F9F988')
-                    Rectangle:
-                        pos: self.x + 15, self.y + 5
-                        size: self.texture_size
-
             Label:
                 id: x_datum_validation_label
                 font_size: dp(15)
@@ -340,7 +332,7 @@ Builder.load_string("""
                 font_size: dp(20)
                 size: self.parent.width, dp(40)
                 size_hint: (None, None)
-                pos: self.parent.pos[0], self.parent.size[1] - self.height + dp(7)
+                pos: self.parent.pos[0] + dp(5), self.parent.size[1] - self.height + dp(5)
                 multiline: False
                 background_color: (0,0,0,0)
                 disabled_foreground_color: (0,0,0,1)
@@ -351,7 +343,7 @@ Builder.load_string("""
                 font_size: dp(20)
                 size: self.texture_size[0], dp(40)
                 size_hint: (None, None)
-                pos: self.parent.pos[0] + self.parent.size[0] - self.texture_size[0] - dp(5), self.parent.size[1] - self.height + dp(10)
+                pos: self.parent.pos[0] + self.parent.size[0] - self.texture_size[0] - dp(10), self.parent.size[1] - self.height + dp(5)
                 text: 'Test'
                 color: 0,0,0,1
 
@@ -364,6 +356,12 @@ class DrywallShapeDisplay(Widget):
 
     swapping_lengths = False
 
+    X_MIN = 0
+    X_MAX = 1250
+
+    Y_MIN = 0
+    Y_MAX = 2500
+
     def __init__(self, **kwargs):
         super(DrywallShapeDisplay, self).__init__(**kwargs)
 
@@ -372,10 +370,15 @@ class DrywallShapeDisplay(Widget):
         self.dwt_config = kwargs['dwt_config']
         self.engine = kwargs['engine']
         self.kb = kwargs['kb']
+        self.localization = kwargs['localization']
+        self.cs = kwargs['cs']
 
-        self._check_extent_clock = None
-        self._check_lock = threading.Lock()
+        # machine position and state updates from serial_connection:
+        self.x_coord = 0
+        self.y_coord = 0
         self.m.s.bind(m_state=lambda i, value: self.update_state(value))
+        self.m.s.bind(m_x=lambda i, value: self.update_x_datum(value))
+        self.m.s.bind(m_y=lambda i, value: self.update_y_datum(value))
 
         self.d_input.bind(focus=self.text_input_change) # Diameter of circle
         self.l_input.bind(focus=self.text_input_change) # Length of line
@@ -398,22 +401,30 @@ class DrywallShapeDisplay(Widget):
         self.unit_switch.canvas.children[5].source = "./asmcnc/apps/drywall_cutter_app/img/unit_toggle.png"
         self.unit_switch.bind(active=self.toggle_units)
 
-        # Clock.schedule_interval(self.set_datum_in_config_with_m_wco, 0.1)
+        self.dwt_config.bind(active_config_name=self.on_config_name_change)
+        self.on_config_name_change(self.dwt_config, self.dwt_config.active_config_name)
+
+    def update_x_datum(self, value):
+        """
+        Is called when the x datum of the machine changes. E.g. running, jogging, after homing...
+        value has the new x_datum
+        """
+        self.x_coord = value + self.m.laser_offset_x_value
+        Clock.schedule_once(lambda dt: self.check_datum_and_extents(), 0.1)
+
+    def update_y_datum(self, value):
+        """
+        Is called when the y datum of the machine changes. E.g. running, jogging, after homing...
+        value has the new y_datum
+        """
+        self.y_coord = value + self.m.laser_offset_y_value
+        Clock.schedule_once(lambda dt: self.check_datum_and_extents(), 0.1)
 
     def update_state(self, value):
+        """
+        Updates the machine_state_label with the value from serial_connection
+        """
         self.machine_state_label.text = value
-        if value in ['Jog', 'Run']:
-            self._check_extent_clock = Clock.schedule_interval(lambda dt: self.check_datum_and_extents(), 0.1)
-            Logger.debug('Check_extent_clock ON')
-        else:
-            if self._check_extent_clock is not None:
-                Clock.unschedule(self._check_extent_clock)
-                self._check_extent_clock = None
-                Logger.debug('Check_extent_clock OFF')
-            # check once again to be safe. E.g. after Homing
-            # state change back to idle comes before the last value change
-            # Assumption: state eval happens before position eval in grbl_push in serial_connection
-            Clock.schedule_once(lambda dt: self.check_datum_and_extents(), 0.1)
 
     def select_shape(self, shape, rotation, swap_lengths=False):
         shape = shape.lower() # in case it's a test config with a capital letter
@@ -435,6 +446,8 @@ class DrywallShapeDisplay(Widget):
             self.enable_input(self.d_input, (458, 310))
             self.place_widget(self.x_datum_label, (278, 27))
             self.place_widget(self.y_datum_label, (403, 196))
+            self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
+                                                              self.y_datum_label.y - 35))
         else:
             self.disable_input(self.d_input)
 
@@ -443,21 +456,27 @@ class DrywallShapeDisplay(Widget):
                 self.enable_input(self.r_input, (411, 311))
                 self.disable_input(self.x_input)
                 self.enable_input(self.y_input, (238, 327))
-                self.place_widget(self.x_datum_label, (365, 35))
+                self.place_widget(self.x_datum_label, (365, 55))
                 self.place_widget(self.y_datum_label, (398, 113))
+                self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
+                                                                  self.y_datum_label.y - 35))
             else:
                 if rotation == 'horizontal':
                     self.enable_input(self.r_input, (453, 311))
                     self.enable_input(self.x_input, (33, 175))
                     self.enable_input(self.y_input, (238, 327))
-                    self.place_widget(self.x_datum_label, (397, 35))
+                    self.place_widget(self.x_datum_label, (397, 55))
                     self.place_widget(self.y_datum_label, (416, 114))
+                    self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
+                                                                      self.y_datum_label.y - 35))
                 else:
                     self.enable_input(self.r_input, (409, 333))
                     self.enable_input(self.x_input, (78, 155))
                     self.enable_input(self.y_input, (238, 331))
                     self.place_widget(self.x_datum_label, (235, 20))
                     self.place_widget(self.y_datum_label, (395, 63))
+                    self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
+                                                                      self.y_datum_label.y - 35))
         else:
             self.disable_input(self.r_input)
             self.disable_input(self.x_input)
@@ -467,11 +486,15 @@ class DrywallShapeDisplay(Widget):
             if rotation == 'horizontal':
                 self.enable_input(self.l_input, (240, 228))
                 self.place_widget(self.x_datum_label, (414, 75))
-                self.place_widget(self.y_datum_label, (425, 195))
+                self.place_widget(self.y_datum_label, (422, 195))
+                self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
+                                                                  self.y_datum_label.y - 35))
             else:
                 self.enable_input(self.l_input, (158, 173))
-                self.place_widget(self.x_datum_label, (270, 20))
-                self.place_widget(self.y_datum_label, (350, 56))
+                self.place_widget(self.x_datum_label, (275, 20))
+                self.place_widget(self.y_datum_label, (350, 70))
+                self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
+                                                                  self.y_datum_label.y - 20))  # closer to Y_datum
         else:
             self.disable_input(self.l_input)
 
@@ -479,9 +502,13 @@ class DrywallShapeDisplay(Widget):
             if rotation == 'horizontal':
                 self.place_widget(self.x_datum_label, (407, 46))
                 self.place_widget(self.y_datum_label, (416, 125))
+                self.place_widget(self.y_datum_validation_label, (self.y_datum_label.pos[0],
+                                                                  self.y_datum_label.pos[1] - 35))
             else:
-                self.place_widget(self.x_datum_label, (360, 19))
-                self.place_widget(self.y_datum_label, (390, 77))
+                self.place_widget(self.x_datum_label, (360, 47))
+                self.place_widget(self.y_datum_label, (390, 94))
+                self.place_widget(self.y_datum_validation_label, (self.y_datum_label.pos[0],
+                                                                  self.y_datum_label.pos[1] - 20))
 
         self.dwt_config.on_parameter_change('rotation', rotation)
 
@@ -557,25 +584,20 @@ class DrywallShapeDisplay(Widget):
         # y_coord = self.m.y_wco()
 
         # x and y coord will be retrieved via event
-        if self._check_lock.locked():
-            Logger.debug('LOCKED')
 
-        with self._check_lock:
+        # REST OF THIS FUNCTION
 
-            self.x_coord = self.m.s.m_x
-            self.y_coord = self.m.s.m_y
+        # Get current x/y values & shape clearances
+        current_shape = self.dwt_config.active_config.shape_type.lower()
+        current_x, current_y = self.cs.drywall_tec_position.get_x(), self.cs.drywall_tec_position.get_y()
+        current_laser_x, current_laser_y = self.cs.drywall_tec_laser_position.get_x(), self.cs.drywall_tec_laser_position.get_y()
 
-            # REST OF THIS FUNCTION
+        tool_offset_value = self.tool_offset_value()
+        x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance = self.get_x_y_clearances(current_shape, self.x_coord, self.y_coord, tool_offset_value)
 
-            # Get current x/y values & shape clearances
-            current_shape = self.dwt_config.active_config.shape_type.lower()
-            current_x, current_y = self.get_current_x_y(self.x_coord, self.y_coord)
-            tool_offset_value = self.tool_offset_value()
-            x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance = self.get_x_y_clearances(current_shape, self.x_coord, self.y_coord, tool_offset_value)
-
-            # Update canvas elements
-            self.set_datum_position_label(current_x, current_y)
-            self.update_bumpers_and_validation_labels(current_shape, current_x, current_y, x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance)
+        # Update canvas elements
+        self.set_datum_position_label(current_laser_x, current_laser_y)
+        self.update_bumpers_and_validation_labels(current_shape, current_laser_x, current_laser_y, x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance)
 
     # Check_datum_and_extents sub-functions below this comment:
 
@@ -598,15 +620,15 @@ class DrywallShapeDisplay(Widget):
         return current_x, current_y
 
     def set_datum_position_label(self, current_x, current_y):
-        self.x_datum_label.text = 'X: ' + str(current_x)
-        self.y_datum_label.text = 'Y: ' + str(current_y)
+        self.x_datum_label.text = 'X: ' + str(round(current_x, 1))
+        self.y_datum_label.text = 'Y: ' + str(round(current_y, 1))
 
     def tool_offset_value(self):
         # Account for cutter size
-        cutter_radius = self.dwt_config.active_cutter.diameter / 2
-        if self.dwt_config.active_config.toolpath_offset == 'inside':
+        cutter_radius = (self.dwt_config.active_cutter.dimensions.diameter or 0) / 2  # if angled cutter, get 0
+        if self.dwt_config.active_config.toolpath_offset == ToolpathOffsetOptions.INSIDE.value:
             tool_offset_value = -cutter_radius
-        elif self.dwt_config.active_config.toolpath_offset == 'outside':
+        elif self.dwt_config.active_config.toolpath_offset == ToolpathOffsetOptions.OUTSIDE.value:
             tool_offset_value = cutter_radius
         else:
             tool_offset_value = 0
@@ -645,7 +667,7 @@ class DrywallShapeDisplay(Widget):
 
         return x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance
 
-    def update_bumpers_and_validation_labels(self, current_shape, current_x, current_y, 
+    def update_bumpers_and_validation_labels(self, current_shape, current_x, current_y,
                                             x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance):
         # I think this function could be broken down & refactored as well, but I don't need to address it right now.
 
@@ -656,7 +678,7 @@ class DrywallShapeDisplay(Widget):
         if x_min_clearance < 0:
             self.bumper_bottom_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_bottom_red.png"
             x_datum_min = round(abs(x_min_clearance) + current_x, 2)
-            if x_datum_min > 0:
+            if self.X_MIN < x_datum_min < self.X_MAX:
                 self.x_datum_validation_label.text = 'MIN: ' + str(x_datum_min)
                 self.x_datum_validation_label.opacity = 1
         else:
@@ -665,7 +687,7 @@ class DrywallShapeDisplay(Widget):
         if y_min_clearance < 0:
             self.bumper_right_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_right_red.png"
             y_datum_min = round(abs(y_min_clearance) + current_y, 2)
-            if y_datum_min > 0:
+            if self.Y_MIN < y_datum_min < self.Y_MAX:
                 self.y_datum_validation_label.text = 'MIN: ' + str(y_datum_min)
                 self.y_datum_validation_label.opacity = 1
         else:
@@ -673,26 +695,24 @@ class DrywallShapeDisplay(Widget):
 
         if x_max_clearance < 0:
             self.bumper_top_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_top_red.png"
-            self.x_datum_validation_label.text = 'MAX: ' + str(round(current_x - abs(x_max_clearance), 2))
-            self.x_datum_validation_label.opacity = 1
+            x_datum_max = round(current_x - abs(x_max_clearance), 2)
+            if self.X_MIN < x_datum_max < self.X_MAX:
+                self.x_datum_validation_label.text = 'MAX: ' + str(x_datum_max)
+                self.x_datum_validation_label.opacity = 1
         else:
             self.bumper_top_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_top_green.png"
 
         if y_max_clearance < 0:
             self.bumper_left_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_left_red.png"
-            self.y_datum_validation_label.text = 'MAX: ' + str(round(current_y - abs(y_max_clearance), 2))
-            self.y_datum_validation_label.opacity = 1
+            y_datum_max = round(current_y - abs(y_max_clearance), 2)
+            if self.Y_MIN < y_datum_max < self.Y_MAX:
+                self.y_datum_validation_label.text = 'MAX: ' + str(y_datum_max)
+                self.y_datum_validation_label.opacity = 1
         else:
             self.bumper_left_image.source = "./asmcnc/apps/drywall_cutter_app/img/bumper_left_green.png"
 
-        x_machine_range = self.m.get_dollar_setting(130) - 2 * self.m.limit_switch_safety_distance
-        y_machine_range = self.m.get_dollar_setting(131) - 2 * self.m.limit_switch_safety_distance
-        clearance_between_limit_edge = 1
-        x_practical_range = x_machine_range - 2 * clearance_between_limit_edge
-        y_practical_range = y_machine_range - 2 * clearance_between_limit_edge
-
-        # Now show a message if any dimensions are too big
-        d_limit = min(x_practical_range, y_practical_range)
+       # Now show a message if any dimensions are too big
+        d_limit = self.X_MAX
         if current_shape == 'circle' and float(self.d_input.text or 0) > d_limit:
             self.d_input_validation_label.text = 'MAX: ' + str(d_limit)
             self.d_input_validation_label.opacity = 1
@@ -700,8 +720,8 @@ class DrywallShapeDisplay(Widget):
             self.d_input_validation_label.opacity = 0
 
         if current_shape in ['square', 'rectangle']:
-            x_limit = x_practical_range
-            y_limit = y_practical_range
+            x_limit = self.X_MAX
+            y_limit = self.Y_MAX
             dims = self.dwt_config.active_config.canvas_shape_dims
 
             if current_shape == 'square':
@@ -740,17 +760,291 @@ class DrywallShapeDisplay(Widget):
 
         if current_shape == 'line':
             if "horizontal" in self.dwt_config.active_config.rotation:
-                if float(self.l_input.text or 0) > y_practical_range:
-                    self.l_input_validation_label.text = 'MAX: ' + str(y_practical_range)
+                if float(self.l_input.text or 0) > self.Y_MAX:
+                    self.l_input_validation_label.text = 'MAX: ' + str(self.Y_MAX)
                     self.l_input_validation_label.opacity = 1
                 else:
                     self.l_input_validation_label.opacity = 0
             else:
-                if float(self.l_input.text or 0) > x_practical_range:
-                    self.l_input_validation_label.text = 'MAX: ' + str(x_practical_range)
+                if float(self.l_input.text or 0) > self.X_MAX:
+                    self.l_input_validation_label.text = 'MAX: ' + str(self.X_MAX)
                     self.l_input_validation_label.opacity = 1
                 else:
                     self.l_input_validation_label.opacity = 0
         else:
             self.l_input_validation_label.opacity = 0
 
+    def are_inputs_valid(self):
+        # Logic defined by Benji here https://docs.google.com/spreadsheets/d/1X37CWF8bsXeC0dY-HsbwBu_QR6N510V-5aPTnxwIR6I/edit#gid=1512963755
+
+        # First check if any validation label is visible, meaning something is out of bounds
+        if 1 in [self.d_input_validation_label.opacity,
+                 self.l_input_validation_label.opacity,
+                 self.r_input_validation_label.opacity,
+                 self.x_input_validation_label.opacity,
+                 self.y_input_validation_label.opacity,
+                 self.x_datum_validation_label.opacity,
+                 self.y_datum_validation_label.opacity]:
+            return False
+
+        # Ensure roundedness is not too large
+        if self.dwt_config.active_config.shape_type.lower() == "square":
+            if float(self.r_input.text or 0) > float(self.y_input.text or 0) / 2:
+                return False
+        elif self.dwt_config.active_config.shape_type.lower() == "rectangle":
+            if float(self.r_input.text or 0) > (min(float(self.x_input.text or 0), float(self.y_input.text or 0)) / 2):
+                return False
+
+        # Otherwise check hardcoded min values
+        if self.dwt_config.active_config.shape_type.lower() == "circle":
+            if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
+                return float(self.d_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.dimensions.diameter
+            else:
+                return float(self.d_input.text or 0) >= 0.1
+
+        elif self.dwt_config.active_config.shape_type.lower() == "square":
+            if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
+                return float(self.y_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.dimensions.diameter
+            elif self.dwt_config.active_config.toolpath_offset.lower() == "outside":
+                return float(self.y_input.text or 0) >= 1
+            else:
+                return float(self.y_input.text or 0) >= 0.1
+
+        elif self.dwt_config.active_config.shape_type.lower() == "rectangle":
+            if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
+                return (float(self.x_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.dimensions.diameter) and (
+                            float(self.y_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.dimensions.diameter)
+            elif self.dwt_config.active_config.toolpath_offset.lower() == "outside":
+                return (float(self.x_input.text or 0) >= 1) and (float(self.y_input.text or 0) >= 1)
+            else:
+                return (float(self.x_input.text or 0) >= 0.1) and (float(self.y_input.text or 0) >= 0.1)
+
+        elif self.dwt_config.active_config.shape_type.lower() == "line":
+            return float(self.l_input.text or 0) >= 0.1
+
+        else:
+            return True
+
+    def get_steps_to_validate(self):
+        steps = []
+
+        x_min_clearance, y_min_clearance, x_max_clearance, y_max_clearance = self.get_x_y_clearances(
+            self.dwt_config.active_config.shape_type.lower(), self.x_coord, self.y_coord, self.tool_offset_value())
+
+        if not self.x_input.disabled and float(self.x_input.text or 0) > self.X_MAX:
+            steps.append(
+                self.localization.get_str(
+                    "Your N input is too large."
+                ).replace("N", "X")
+                + "\n\n"
+                + self.localization.get_bold(
+                    "Try reducing the 'N' input."
+                ).replace("N", "X")
+                + "\n\n"
+            )
+
+        if not self.y_input.disabled and float(self.y_input.text or 0) > self.Y_MAX:
+            steps.append(
+                self.localization.get_str(
+                    "Your N input is too large."
+                ).replace("N", "Y")
+                + "\n\n"
+                + self.localization.get_bold(
+                    "Try reducing the 'N' input."
+                ).replace("N", "Y")
+                + "\n\n"
+            )
+
+        if x_min_clearance < 0:
+            steps.append(
+                self.localization.get_str(
+                    "The job extent over-reaches the N axis at the home end."
+                ).replace("N", "X")
+                + "\n\n"
+                + self.localization.get_bold(
+                    "Try positioning the machine's N datum further away from home."
+                ).replace("N", "X")
+                + "\n\n"
+            )
+
+        if y_min_clearance < 0:
+            steps.append(
+                self.localization.get_str(
+                    "The job extent over-reaches the N axis at the home end."
+                ).replace("N", "Y")
+                + "\n\n"
+                + self.localization.get_bold(
+                    "Try positioning the machine's N datum further away from home."
+                ).replace("N", "Y")
+                + "\n\n"
+            )
+
+        if x_max_clearance < 0:
+            steps.append(
+                self.localization.get_str(
+                    "The job extent over-reaches the N axis at the far end."
+                ).replace("N", "X")
+                + "\n\n"
+                + self.localization.get_bold(
+                    "Try positioning the machine's N datum closer to home."
+                ).replace("N", "X")
+                + "\n\n"
+            )
+
+        if y_max_clearance < 0:
+            steps.append(
+                self.localization.get_str(
+                    "The job extent over-reaches the N axis at the far end."
+                ).replace("N", "Y")
+                + "\n\n"
+                + self.localization.get_bold(
+                    "Try positioning the machine's N datum closer to home."
+                ).replace("N", "Y")
+                + "\n\n"
+            )
+
+        if self.dwt_config.active_config.shape_type.lower() == "square":
+            # ensure roundness not too large
+            if float(self.r_input.text or 0) > float(self.y_input.text or 0) / 2:
+                steps.append(
+                    self.localization.get_str(
+                        "The radius value is too large."
+                    )
+                    + "\n\n"
+                    + self.localization.get_bold(
+                        "Try reducing the 'R' input."
+                    )
+                    + "\n\n"
+                )
+
+            # ensure the square is not too small
+            if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
+                if float(self.y_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.diameter:
+                    steps.append(
+                        self.localization.get_str(
+                            "The square is too small."
+                        )
+                        + "\n\n"
+                        + self.localization.get_bold(
+                            "Try increasing the 'Y' input."
+                        )
+                        + "\n\n"
+                    )
+            elif self.dwt_config.active_config.toolpath_offset.lower() == "outside":
+                if float(self.y_input.text or 0) <= 1:
+                    steps.append(
+                        self.localization.get_str(
+                            "The square is too small."
+                        )
+                        + "\n\n"
+                        + self.localization.get_bold(
+                            "Try increasing the 'Y' input."
+                        )
+                        + "\n\n"
+                    )
+            else:
+                if float(self.y_input.text or 0) <= 0.1:
+                    steps.append(
+                        self.localization.get_str(
+                            "The square is too small."
+                        )
+                        + "\n\n"
+                        + self.localization.get_bold(
+                            "Try increasing the 'Y' input."
+                        )
+                        + "\n\n"
+                    )
+        elif self.dwt_config.active_config.shape_type.lower() == "rectangle":
+            if float(self.r_input.text or 0) > (min(float(self.x_input.text or 0), float(self.y_input.text or 0)) / 2):
+                steps.append(
+                    self.localization.get_str(
+                        "The radius value is too large."
+                    )
+                    + "\n\n"
+                    + self.localization.get_bold(
+                        "Try reducing the 'R' input."
+                    )
+                    + "\n\n"
+                )
+
+            if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
+                if (float(self.x_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.diameter) or (
+                        float(self.y_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.diameter):
+                    steps.append(
+                        self.localization.get_str(
+                            "The rectangle's sides are too small."
+                        )
+                        + "\n\n"
+                        + self.localization.get_bold(
+                            "Try increasing the 'X' and 'Y' inputs."
+                        )
+                        + "\n\n"
+                    )
+            elif self.dwt_config.active_config.toolpath_offset.lower() == "outside":
+                if (float(self.x_input.text or 0) <= 1) or (float(self.y_input.text or 0) <= 1):
+                    steps.append(
+                        self.localization.get_str(
+                            "The rectangle's sides are too small."
+                        )
+                        + "\n\n"
+                        + self.localization.get_bold(
+                            "Try increasing the 'X' and 'Y' inputs."
+                        )
+                        + "\n\n"
+                    )
+            else:
+                if (float(self.x_input.text or 0) <= 0.1) or (float(self.y_input.text or 0) <= 0.1):
+                    steps.append(
+                        self.localization.get_str(
+                            "The rectangle's sides are too small."
+                        )
+                        + "\n\n"
+                        + self.localization.get_bold(
+                            "Try increasing the 'X' and 'Y' inputs."
+                        )
+                        + "\n\n"
+                    )
+        elif self.dwt_config.active_config.shape_type.lower() == "circle":
+            if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
+                if float(self.d_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.diameter:
+                    steps.append(
+                        self.localization.get_str(
+                            "The circle's diameter is too small."
+                        )
+                        + "\n\n"
+                        + self.localization.get_bold(
+                            "Try increasing the 'D' input."
+                        )
+                        + "\n\n"
+                    )
+            else:
+                if float(self.d_input.text or 0) <= 0.1:
+                    steps.append(
+                        self.localization.get_str(
+                            "The circle's diameter is too small."
+                        )
+                        + "\n\n"
+                        + self.localization.get_bold(
+                            "Try increasing the 'D' input."
+                        )
+                        + "\n\n"
+                    )
+        elif self.dwt_config.active_config.shape_type.lower() == "line":
+            if float(self.l_input.text or 0) <= 0.1:
+                steps.append(
+                    self.localization.get_str(
+                        "The line is too small."
+                    )
+                    + "\n\n"
+                    + self.localization.get_bold(
+                        "Try increasing the 'L' input."
+                    )
+                    + "\n\n"
+
+                )
+
+        return steps
+
+    def on_config_name_change(self, instance, value):
+        Logger.debug("Setting config label to: " + value)
+        self.config_name_label.text = "New Configuration" if value == "temp_config.json" else value

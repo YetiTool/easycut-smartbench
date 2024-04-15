@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from kivy.metrics import dp
 from kivy.properties import DictProperty, ObjectProperty, StringProperty
 from kivy.uix.behaviors import ButtonBehavior
@@ -32,6 +34,11 @@ class ImageDropDown(DropDown):
     def __init__(self, image_dict, callback, key_name, **kwargs):
         super(ImageDropDown, self).__init__(**kwargs)
 
+        try:
+            sorted_cutter_list = sorted(image_dict.items(), key=lambda x: (x[1]['type'], x[1]['size']))
+            image_dict = OrderedDict(sorted_cutter_list)
+        except KeyError: # working through the wrong dict...wait for the next one
+            pass
         for key in image_dict.keys():
             image = ImageButton(
                 source=image_dict[key]['image_path'],

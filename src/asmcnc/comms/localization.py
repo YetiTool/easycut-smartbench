@@ -2,6 +2,7 @@
 import csv
 import os
 import re
+import threading
 from datetime import datetime
 
 from asmcnc.comms.logging_system.logging_system import Logger
@@ -22,7 +23,6 @@ LabelBase.register(name='KRFont',
 LabelBase.register(name='KRFont-Bold',
                    fn_regular=kr_font_bold_path)
 
-
 builder_font_string = """
 <Widget>:
     font_name: "%s"
@@ -30,8 +30,14 @@ builder_font_string = """
 """
 
 
-
 class Localization(object):
+    """Class for handling localization of the software. This class is a singleton.
+
+    You can access the instance of this class by calling Localization()."""
+
+    _lock = threading.Lock()
+    _initialized = False
+    _instance = None
     dictionary = {}
 
     gb = "English (GB)"
@@ -74,14 +80,23 @@ class Localization(object):
     ORIGINAL_PRODUCT_NAME = "SmartBench"
     PRODUCT_NAME = "SmartBench"
 
-    def __init__(self):
-        if os.path.exists(self.persistent_language_path):
-            self.read_in_language_name()
+    def __new__(cls):
+        with cls._lock:
+            if cls._instance is None:
+                Logger.info("Creating new instance of Localization")
+                cls._instance = super(Localization, cls).__new__(cls)
+            return cls._instance
 
-        self.load_from_dictionary()
-        self.model_manager = ModelManagerSingleton()
-        if self.model_manager.is_machine_drywall():
-            self.PRODUCT_NAME = "SmartCNC"
+    def __init__(self):
+        if not self._initialized:
+            self._initialized = True
+            if os.path.exists(self.persistent_language_path):
+                self.read_in_language_name()
+
+            self.load_from_dictionary()
+            self.model_manager = ModelManagerSingleton()
+            if self.model_manager.is_machine_drywall():
+                self.PRODUCT_NAME = "SmartCNC"
 
     # Getters/formatters
     def get_str(self, string):
@@ -99,6 +114,10 @@ class Localization(object):
         # If the original product name is in the string, replace it with the new product name (if it's different)
         if self.ORIGINAL_PRODUCT_NAME in string and self.ORIGINAL_PRODUCT_NAME != self.PRODUCT_NAME:
             string = string.replace(self.ORIGINAL_PRODUCT_NAME, self.PRODUCT_NAME)
+
+        if "PrecisionPro +" in string and self.ORIGINAL_PRODUCT_NAME != self.PRODUCT_NAME:
+            string = string.replace("PrecisionPro +", self.PRODUCT_NAME)
+
         return string
 
     def get_localized_days(self, string):
@@ -142,7 +161,8 @@ class Localization(object):
             Logger.info("Loading software in " + self.lang)
 
         else:
-            Logger.info("Could not find " + self.lang + " in list of supported_languages, using English (GB) as default")
+            Logger.info(
+                "Could not find " + self.lang + " in list of supported_languages, using English (GB) as default")
             self.lang = self.default_lang
 
     # Save language name

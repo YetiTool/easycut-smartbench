@@ -6,7 +6,6 @@ Created on 25 Feb 2019
 
 This screen checks the users job, and allows them to review any errors 
 """
-from datetime import datetime
 from functools import partial
 
 from asmcnc.comms.logging_system.logging_system import Logger
@@ -228,6 +227,7 @@ class CheckingScreen(Screen):
         self.l = kwargs["localization"]
         self.jd = kwargs["job"]
         self.gcode_preview_widget = widget_gcode_view.GCodeView(job=self.jd)
+        self.m.s.bind(on_check_job_finished=lambda instance, error_log: self.update_error_log(error_log))
 
     def on_pre_enter(self):
         self.toggle_boundary_buttons(True)
@@ -253,6 +253,9 @@ class CheckingScreen(Screen):
                 self.jd.reset_values()
         else:
             self.try_gcode_check()
+
+    def update_error_log(self, error_log):
+        self.error_log = error_log
 
     def try_gcode_check(self):
         try:

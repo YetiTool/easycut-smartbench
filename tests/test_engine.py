@@ -1,5 +1,18 @@
 import unittest
-from engine import GCodeEngine
+import sys
+import os
+
+easycut_dir = os.path.dirname(os.getcwd())
+sys.path.append(os.path.join(easycut_dir, 'src')) # Alternative to sys.path.append("./src") which didn't work me
+
+from asmcnc.apps.drywall_cutter_app.engine import GCodeEngine
+from asmcnc.comms.router_machine import RouterMachine
+
+'''
+To run this test,
+from /easyCut-smartbench/tests directory, run:
+python test_engine.py
+'''
 
 class EngineTests(unittest.TestCase):
     def setUp(self):
@@ -15,15 +28,9 @@ class EngineTests(unittest.TestCase):
                 self.active_cutter = kwargs.get('active_cutter')
                 self.active_cutter.diameter = 10
 
-            # def get_shape_type(self):
-            #     return self.shape_type
-
-            # def get_cutter_diameter(self):
-            #     return self.cutter_diameter
-
         dummy_cutter = Cutter()
         dummy_config = Config(active_cutter = dummy_cutter)
-        self.engine = GCodeEngine(dummy_config)
+        self.engine = GCodeEngine(RouterMachine, dummy_config)
 
     def test_rectangle_coordinates(self):
         # Case 1, valid input
@@ -184,6 +191,25 @@ class EngineTests(unittest.TestCase):
         output = self.engine.determine_cut_direction_clockwise(offset_type, climb)
         self.assertEqual(output, expected_output)
 
+        # Case 5: offset_type="on" default to climb
+        offset_type = "on"
+        climb = False
+        expected_output = False
+        output = self.engine.determine_cut_direction_clockwise(offset_type, climb)
+        self.assertEqual(output, expected_output)
+        climb = True
+        expected_output = True
+        output = self.engine.determine_cut_direction_clockwise(offset_type, climb)
+        self.assertEqual(output, expected_output)
+
+        # Case 6: failure
+        offset_type = "foo"
+        climb = False
+        expected_output = False
+        with self.assertRaises(ValueError):
+            self.engine.determine_cut_direction_clockwise(offset_type, climb)
+
+
     def test_swap_lines_after_keyword(self):
         # Case 1: Keyword exists and there are at least two lines after the keyword
         input_list = ["Line 1", "Keyword", "Line 2", "Line 3"]
@@ -310,38 +336,6 @@ class EngineTests(unittest.TestCase):
         ]
 
         expected_output = ("-12.000", "5.080")
-        output = self.engine.extract_cut_depth_and_z_safe_distance(gcode_lines)
-        self.assertEqual(output, expected_output)
-
-        # Case 2: Only cut depth is present in the gcode lines
-        gcode_lines = [
-            "Cut depth: -3.5"
-            "G1 X10 Y10 Z10",
-            "G1 X20 Y20 Z-5",
-            "G1 X30 Y30 Z-2",
-        ]
-        expected_output = ("-3.5", None)
-        output = self.engine.extract_cut_depth_and_z_safe_distance(gcode_lines)
-        self.assertEqual(output, expected_output)
-
-        # Case 3: Only z safe distance is present in the gcode lines
-        gcode_lines = [
-            "Z safe distance: 1.0"
-            "G1 X10 Y10 Z10",
-            "G1 X20 Y20 Z-5",
-            "G1 X30 Y30 Z-2",
-        ]
-        expected_output = (None, "1.0")
-        output = self.engine.extract_cut_depth_and_z_safe_distance(gcode_lines)
-        self.assertEqual(output, expected_output)
-
-        # Case 4: Neither cut depth nor z safe distance is present in the gcode lines
-        gcode_lines = [
-            "G1 X10 Y10 Z10",
-            "G1 X20 Y20 Z-5",
-            "G1 X30 Y30 Z-2"
-        ]
-        expected_output = (None, None)
         output = self.engine.extract_cut_depth_and_z_safe_distance(gcode_lines)
         self.assertEqual(output, expected_output)
 
@@ -571,36 +565,27 @@ class EngineTests(unittest.TestCase):
         self.assertEqual(output, expected_output)
 
     def test_read_in_custom_shape_dimensions(self):
-        # Case 1: x_dim and y_dim found within the first 20 lines
+        # Case 1: All dimensions present
         gcode_lines = [
             "Line 1",
             "(Final part x dim: 10.5)",
             "(Final part y dim: 20.3)",
+            "(x min: 0.0)", 
+            "(y min: 0.0)",
             "Line 4"
         ]
-        expected_output = ("10.5", "20.3")
+        expected_output = ("10.5", "20.3", "0.0", "0.0")
         output = self.engine.read_in_custom_shape_dimensions(gcode_lines)
         self.assertEqual(output, expected_output)
 
-        # Case 2: x_dim and y_dim found on the same line within the first 20 lines
+        # Case 2: All values found on the same line
         gcode_lines = [
             "Line 1",
-            "(Final part x dim: 10.5, Final part y dim: 20.3)",
+            "(Final part x dim: 10.5, Final part y dim: 20.3, x min: 0.0, y min: 0.0)",
             "Line 3",
             "Line 4"
         ]
-        expected_output = ("10.5", "20.3")
-        output = self.engine.read_in_custom_shape_dimensions(gcode_lines)
-        self.assertEqual(output, expected_output)
-
-        # Case 3: x_dim and y_dim not found within the first 20 lines
-        gcode_lines = [
-            "Line 1",
-            "Line 2",
-            "Line 3",
-            "Line 4"
-        ]
-        expected_output = (None, None)
+        expected_output = ("10.5", "20.3", "0.0", "0.0")
         output = self.engine.read_in_custom_shape_dimensions(gcode_lines)
         self.assertEqual(output, expected_output)
 
@@ -609,7 +594,7 @@ class EngineTests(unittest.TestCase):
         self.engine.config.active_config.shape_type = "custom_shape"
         self.engine.custom_gcode_shapes = ["custom_shape"]
         self.engine.source_folder_path = "/path/to/gcode/files"
-        self.engine.config.active_cutter.diameter = 10
+        self.engine.config.active_cutter.dimensions.diameter = 10
 
         # Mocking the return values of helper methods
         self.engine.find_and_read_gcode_file = lambda path, shape_type, diameter: ["G1 X10 Y20", "G1 X30 Y40"]

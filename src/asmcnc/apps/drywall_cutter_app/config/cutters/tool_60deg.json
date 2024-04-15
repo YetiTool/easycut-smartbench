@@ -1,20 +1,31 @@
 {
-  "cutter_description": "60 degree V-bit",
-  "units": "mm",
-  "diameter": 6.0,
-  "material": "drywall",
-  "cutting_spindle_speed": 2000,
-  "cutting_feedrate": 500,
-  "plunge_rate": 100,
-  "cutting_direction": "climb",
-  "allowable_toolpath_offsets": {
-    "inside": true,
-    "outside": false,
-    "on": false
+  "tool_id": "Drywalltec  ø -  60° 2 flute V-groove  L19",
+  "manufacturer": "Drywalltec",
+  "type": "V-groove",
+  "dimensions": {
+    "diameter": null,
+    "angle": 60,
+    "units": null
   },
-  "max_depth_per_pass": 2.0,
-  "max_depth_total": 10.0,
-  "stepover": 1.5,
-  "yeti_pilot_target_powers": 700,
-  "image_path": "./asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_60deg.png"
+  "flutes": {
+    "count": 2,
+    "length": 19
+  },
+  "material": "drywall",
+  "parameters": {
+    "cutting_spindle_speed": 21000,
+    "cutting_feed_rate": 4000,
+    "plunge_feed_rate": 250,
+    "cutting_direction": "both",
+    "recommended_depth_per_pass": 19,
+    "max_depth_total": 19,
+    "step_over": null,
+    "yetipilot_target_power": 600
+  },
+  "toolpath_offsets": {
+    "inside": false,
+    "outside": false,
+    "on": true
+  },
+  "image": "./asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_60deg.png"
 }
