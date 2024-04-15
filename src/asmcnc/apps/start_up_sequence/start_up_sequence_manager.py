@@ -140,7 +140,7 @@ class StartUpSequence(object):
 
 	def prep_release_notes_screen(self):
 		if not self.release_notes_screen:
-			self.release_notes_screen = screen_release_notes.ReleaseNotesScreen(name = 'release_notes', start_sequence = self, screen_manager = self.sm, localization = self.l, version = self.v, router_machine = self.m)
+			self.release_notes_screen = screen_release_notes.ReleaseNotesScreen(name = 'release_notes', start_sequence = self, screen_manager = self.sm, localization = self.l, version = self.v)
 			self.sm.add_widget(self.release_notes_screen)
 
 		if 'release_notes' not in self.screen_sequence:

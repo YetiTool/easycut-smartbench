@@ -12,6 +12,7 @@ from kivy.properties import StringProperty, DictProperty
 from datetime import datetime
 from asmcnc.core_UI import path_utils as pu
 from asmcnc.comms.model_manager import MachineType
+from asmcnc.comms.model_manager import ModelManagerSingleton
 
 Builder.load_string(
     """
@@ -150,7 +151,7 @@ class ReleaseNotesScreen(Screen):
         self.sm = kwargs["screen_manager"]
         self.version = kwargs["version"]
         self.l = kwargs["localization"]
-        self.model_manager = kwargs["router_machine"].model_manager
+        self.model_manager = ModelManagerSingleton()
         machine_type = self.model_manager.get_machine_type()
         self.scroll_release_notes.release_notes.source = self.get_release_notes_source(machine_type)
         self.update_strings()
