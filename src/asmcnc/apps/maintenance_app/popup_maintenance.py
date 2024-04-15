@@ -1,21 +1,17 @@
-import kivy
-
-from kivy.lang import Builder
-from kivy.uix.gridlayout import GridLayout
 from kivy.uix.popup import Popup
-from kivy.properties import StringProperty  
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.widget import Widget
-from kivy.uix.label import Label
-from kivy.uix.button import  Button
+from kivy.uix.button import Button
 from kivy.uix.image import Image
 from kivy.uix.carousel import Carousel
+
+from asmcnc.core_UI.components.labels.base_label import LabelBase
 
 
 class PopupResetOffset(Widget):
 
-    def __init__(self, screen_manager, localization):
-
+    def __init__(self, screen_manager, localization, **kwargs):
+        super(PopupResetOffset, self).__init__(**kwargs)
         self.sm = screen_manager
         self.l = localization
 
@@ -33,7 +29,7 @@ class PopupResetOffset(Widget):
             self.sm.get_screen('maintenance').laser_datum_buttons_widget.reset_laser_offset()
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1.4, text_size=(460, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,20], markup = True)
+        label = LabelBase(size_hint_y=1.4, text_size=(460, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,20], markup = True)
 
         yes_font_size = 14
         if len(yes_string) > 40:
@@ -95,7 +91,7 @@ class PopupSaveOffset(Widget):
             self.sm.get_screen('maintenance').laser_datum_buttons_widget.save_laser_offset()
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1.4, text_size=(460, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,20], markup = True)
+        label = LabelBase(size_hint_y=1.4, text_size=(460, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,20], markup = True)
 
         ok_button = Button(text=yes_string, markup = True)
         ok_button.background_normal = ''
@@ -166,14 +162,14 @@ class PopupBrushInfo(Widget):  # TODO: MOVE THIS TO A UNIQUE POPUPS FILE
 
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label_top = Label(size_hint_y=1, text_size=(476, self.height), markup=True, halign='left', valign='bottom', text=description_top, color=[0,0,0,1], padding=[0,0], width=476)
-        label_blank = Label(size_hint_y=0.1, text_size=(476, self.height), markup=True, halign='left', valign='bottom', text='', color=[0,0,0,1], padding=[0,0], width=476)
-        label_bottom = Label(text_size=(760, None), markup=True, halign='left', valign='top', text=description_bottom, color=[0,0,0,1], padding=[0,0], width=760)
+        label_top = LabelBase(size_hint_y=1, text_size=(476, self.height), markup=True, halign='left', valign='bottom', text=description_top, color=[0,0,0,1], padding=[0,0], width=476)
+        label_blank = LabelBase(size_hint_y=0.1, text_size=(476, self.height), markup=True, halign='left', valign='bottom', text='', color=[0,0,0,1], padding=[0,0], width=476)
+        label_bottom = LabelBase(text_size=(760, None), markup=True, halign='left', valign='top', text=description_bottom, color=[0,0,0,1], padding=[0,0], width=760)
 
         img_full_brush = Image(source="./asmcnc/apps/maintenance_app/img/brush_long_img.png", allow_stretch=False, size=(68,99))
-        label_full_brush_top = Label(text=self.l.get_bold("NEW"), text_size=(68, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=img_full_brush.width)
-        label_full_brush_length = Label(text="[b]16mm[/b]", text_size=(70, self.height),  size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=img_full_brush.width)
-        label_full_brush_tolerance = Label(text="[b](+/-0.2mm)[/b]", text_size=(70, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=img_full_brush.width)
+        label_full_brush_top = LabelBase(text=self.l.get_bold("NEW"), text_size=(68, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=img_full_brush.width)
+        label_full_brush_length = LabelBase(text="[b]16mm[/b]", text_size=(70, self.height),  size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=img_full_brush.width)
+        label_full_brush_tolerance = LabelBase(text="[b](+/-0.2mm)[/b]", text_size=(70, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=img_full_brush.width)
 
         example_full_length = BoxLayout(orientation = 'vertical', padding = 0, spacing = 5, size_hint_x = None, width=68)
         example_full_length.add_widget(label_full_brush_top)
@@ -182,9 +178,9 @@ class PopupBrushInfo(Widget):  # TODO: MOVE THIS TO A UNIQUE POPUPS FILE
         example_full_length.add_widget(label_full_brush_tolerance)
 
         img_med_brush = Image(source="./asmcnc/apps/maintenance_app/img/brush_med_img.png", allow_stretch=False, size=(68,99))
-        label_med_brush_top = Label(text=self.l.get_bold("LOW"), text_size=(68, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
-        label_med_brush_length = Label(text="[b]10mm[/b]", text_size=(70, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
-        label_med_brush_tolerance = Label(text="[b](+/-0.2mm)[/b]", text_size=(70, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
+        label_med_brush_top = LabelBase(text=self.l.get_bold("LOW"), text_size=(68, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
+        label_med_brush_length = LabelBase(text="[b]10mm[/b]", text_size=(70, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
+        label_med_brush_tolerance = LabelBase(text="[b](+/-0.2mm)[/b]", text_size=(70, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
 
         example_med_length = BoxLayout(orientation = 'vertical', padding = 0, spacing = 5, size_hint_x = None, width=68)
         example_med_length.add_widget(label_med_brush_top)
@@ -193,9 +189,9 @@ class PopupBrushInfo(Widget):  # TODO: MOVE THIS TO A UNIQUE POPUPS FILE
         example_med_length.add_widget(label_med_brush_tolerance)
 
         img_short_brush = Image(source="./asmcnc/apps/maintenance_app/img/brush_short_img.png", allow_stretch=False, size=(68,99))
-        label_short_brush_top = Label(text=self.l.get_bold("SHUT-OFF"), text_size=(88, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=88)
-        label_short_brush_length = Label(text="[b]9.5mm[/b]", text_size=(70, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
-        label_short_brush_tolerance = Label(text="[b](+/-0.2mm)[/b]", text_size=(70, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
+        label_short_brush_top = LabelBase(text=self.l.get_bold("SHUT-OFF"), text_size=(88, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=88)
+        label_short_brush_length = LabelBase(text="[b]9.5mm[/b]", text_size=(70, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
+        label_short_brush_tolerance = LabelBase(text="[b](+/-0.2mm)[/b]", text_size=(70, self.height), size_hint_y=0.1, font_size='12sp', markup=True, halign='left', valign='middle', color=[0,0,0,1], padding=[0,0], width=68)
 
         example_short_length = BoxLayout(orientation = 'vertical', padding = 0, spacing = 5, size_hint_x = None, width=80)
         example_short_length.add_widget(label_short_brush_top)
@@ -277,7 +273,7 @@ class PopupGetSpindleData(Widget):
             self.sm.get_screen('maintenance').spindle_settings_widget.raise_z_then_get_data()
 
         img = Image(size_hint_y=0.7, source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=2, text_size=(680, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
+        label = LabelBase(size_hint_y=2, text_size=(680, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
 
         ok_button = Button(text=yes_string, markup = True)
         ok_button.background_normal = ''
@@ -361,8 +357,8 @@ class PopupDisplaySpindleData(Widget):  # TODO: SCALE AND MOVE TO A UNIQUE POPUP
 
         img = Image(size_hint_y=0.5, source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
 
-        category_label = Label(text_size=(250, None), halign='left', valign='middle', text=category_string, color=[0,0,0,1], padding=[0,0], markup=True, bold=True)
-        value_label = Label(text_size=(250, None), halign='right', valign='middle', text=value_string, color=[0,0,0,1], padding=[0,0], markup=True)
+        category_label = LabelBase(text_size=(250, None), halign='left', valign='middle', text=category_string, color=[0,0,0,1], padding=[0,0], markup=True, bold=True)
+        value_label = LabelBase(text_size=(250, None), halign='right', valign='middle', text=value_string, color=[0,0,0,1], padding=[0,0], markup=True)
 
         label_layout = BoxLayout(orientation='horizontal', size_hint_y=2, padding=[75,0])
         label_layout.add_widget(category_label)
@@ -450,7 +446,7 @@ class PopupSpindleSettingsInfo(Widget):
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
 
         model_info_image = Image(size_hint_x=0.2, source="./asmcnc/apps/maintenance_app/img/spindle_small.png", allow_stretch=False)
-        model_info_label = Label(text_size=(label_width, None), markup=True, halign='left', valign='middle', text=model_info, color=[0,0,0,1], background_color=[0.95,0.95,0.95,1])
+        model_info_label = LabelBase(text_size=(label_width, None), markup=True, halign='left', valign='middle', text=model_info, color=[0,0,0,1], background_color=[0.95,0.95,0.95,1])
         model_info_container = BoxLayout(orientation='horizontal')
         model_info_container.add_widget(model_info_image)
         model_info_container.add_widget(model_info_label)
@@ -459,18 +455,18 @@ class PopupSpindleSettingsInfo(Widget):
         countdown_image = Image(source="./asmcnc/apps/maintenance_app/img/countdown_small.png", allow_stretch=False)
         cooldown_info_image_container.add_widget(speed_dial_image)
         cooldown_info_image_container.add_widget(countdown_image)
-        cooldown_info_label = Label(text_size=(label_width, None), markup=True, halign='left', valign='middle', text=cooldown_info, color=[0,0,0,1], background_color=[0.95,0.95,0.95,1])
+        cooldown_info_label = LabelBase(text_size=(label_width, None), markup=True, halign='left', valign='middle', text=cooldown_info, color=[0,0,0,1], background_color=[0.95,0.95,0.95,1])
         cooldown_info_container = BoxLayout(orientation='horizontal')
         cooldown_info_container.add_widget(cooldown_info_image_container)
         cooldown_info_container.add_widget(cooldown_info_label)
 
         stylus_info_image = Image(size_hint_x=0.2, source="./asmcnc/apps/maintenance_app/img/stylus_mini_logo.png", allow_stretch=False)
-        stylus_info_label = Label(text_size=(label_width, None), markup=True, halign='left', valign='middle', text=stylus_info, color=[0,0,0,1], background_color=[0.95,0.95,0.95,1])
+        stylus_info_label = LabelBase(text_size=(label_width, None), markup=True, halign='left', valign='middle', text=stylus_info, color=[0,0,0,1], background_color=[0.95,0.95,0.95,1])
         stylus_info_container = BoxLayout(orientation='horizontal')
         stylus_info_container.add_widget(stylus_info_image)
         stylus_info_container.add_widget(stylus_info_label)
         get_data_info_image = Image(size_hint_x=0.2, source="./asmcnc/apps/maintenance_app/img/spindle_info.png", allow_stretch=False)
-        get_data_info_label = Label(text_size=(label_width, None), markup=True, halign='left', valign='middle', text=get_data_info, color=[0,0,0,1], background_color=[0.95,0.95,0.95,1])
+        get_data_info_label = LabelBase(text_size=(label_width, None), markup=True, halign='left', valign='middle', text=get_data_info, color=[0,0,0,1], background_color=[0.95,0.95,0.95,1])
         get_data_info_container = BoxLayout(orientation='horizontal')
         get_data_info_container.add_widget(get_data_info_image)
         get_data_info_container.add_widget(get_data_info_label)
