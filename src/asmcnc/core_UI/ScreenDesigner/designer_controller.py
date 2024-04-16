@@ -14,6 +14,9 @@ from asmcnc.core_UI import path_utils as pu
 from asmcnc.core_UI.ScreenDesigner.component_selector_widget import ComponentSelectorWidget
 from asmcnc.core_UI.components.buttons.button_base import ButtonBase
 from asmcnc.core_UI.hoverable import InspectorSingleton
+import asmcnc.core_UI.ScreenDesigner.string_builder as sb
+
+GENERATED_FILES_FOLDER = pu.get_path('generated_screens')
 
 
 class DesignerController(object):
@@ -26,6 +29,7 @@ class DesignerController(object):
     def __init__(self):
         self.inspector = InspectorSingleton()
         self.inspector.enable()
+        self.widget_to_add_to = None
 
         # create designer screen
         self.screen_manager = App.get_running_app().sm
@@ -133,7 +137,7 @@ class DesignerController(object):
         with layout.canvas.before:
             Color(1, 1, 1)
             Line(rectangle=(0, 0, layout.width, layout.height))
-        self.component_widget.widget_to_add_to = layout
+        self.widget_to_add_to = layout
 
     def screen_name_input_focus(self, instance, state):
         if state:
@@ -144,22 +148,22 @@ class DesignerController(object):
     def build_designer_screen(self):
         """Creates the main designer screen and fills it with widgets."""
         self.designer_screen = Screen(name='DesignerScreen')
-        self.component_widget = ComponentSelectorWidget()
+        self.component_widget = ComponentSelectorWidget(self)
         main_layout = FloatLayout(size_hint=[1, 1], id='MainLayout')
 
         main_layout.add_widget(self.component_widget)
         self.designer_screen.add_widget(main_layout)
 
         # Add new_screen button:
-        btn_new_screen = ButtonBase(size=(100, 50), size_hint=(None, None), pos=(220, 650), text='New screen...', id='DESIGNER')
+        btn_new_screen = ButtonBase(size=(100, 50), size_hint=(None, None), pos=(420, 650), text='New screen...', id='DESIGNER')
         btn_new_screen.bind(on_release=self.new_screen)
         main_layout.add_widget(btn_new_screen)
         # text input for screen name:
-        self.screen_name_input = TextInput(size=(200, 30), size_hint=(None, None), pos=(10, 650), text='ScreenName1')
+        self.screen_name_input = TextInput(size=(200, 30), size_hint=(None, None), pos=(210, 650), text='ScreenName1')
         self.screen_name_input.bind(focus=self.screen_name_input_focus)
         main_layout.add_widget(self.screen_name_input)
         # screen dropdown:
-        screen_drop_down_btn = ButtonBase(size=(200, 50), size_hint=(None, None), pos=(10, 600), text='Select screen...', id='DESIGNER')
+        screen_drop_down_btn = ButtonBase(size=(200, 50), size_hint=(None, None), pos=(10, 650), text='Select screen...', id='DESIGNER')
         self.screen_drop_down = DropDown(size=(200, 200), size_hint=(None, None))
         main_layout.add_widget(screen_drop_down_btn)
         screen_drop_down_btn.bind(on_release=self.screen_drop_down.open)
@@ -169,3 +173,18 @@ class DesignerController(object):
 
         self.load_generated_screens()
         self.screen_manager.current = self.designer_screen.name
+
+    def save_to_file(self):
+        """
+        Takes generated python code from the StringBuilder and saves it to a file.
+        The filename is converted from CamelCase to snake_case.
+        """
+        s = sb.get_python_code_from_screen(self.widget_to_add_to, self.modifying_screen)
+        # e.g. turn "MyFirstScreen" into "my_first_screen":
+        filename = App.get_running_app().screenname_to_filename(sb.get_screen(self.widget_to_add_to).name)
+        path = pu.join(GENERATED_FILES_FOLDER, filename + '.py')
+        with open(path, 'w') as f:
+            f.write(s)
+
+    def get_widget_to_add_to(self):
+        return self.widget_to_add_to

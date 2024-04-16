@@ -282,13 +282,13 @@ class InspectorSingleton(EventDispatcher):
         try:
             self.remove_selection_rectangle()
             if key == 273:  # up
-                self.widget.pos[1] += self.step_width
+                self.widget.y = self.constrain_y(self.widget.y + self.step_width)
             elif key == 274:  # down
-                self.widget.pos[1] -= self.step_width
+                self.widget.y = self.constrain_y(self.widget.y - self.step_width)
             elif key == 275:  # right
-                self.widget.pos[0] += self.step_width
+                self.widget.x = self.constrain_x(self.widget.x + self.step_width)
             elif key == 276:  # left
-                self.widget.pos[0] -= self.step_width
+                self.widget.x = self.constrain_x(self.widget.x - self.step_width)
             Logger.debug('pos: {}'.format(self.widget.pos))
         except Exception as ex:
             Logger.error("Failed to move widget!")
@@ -453,6 +453,24 @@ class InspectorSingleton(EventDispatcher):
         self.paint_selection_rectangle()
         Logger.debug("Selected: {}".format(self.get_widget_name_class(w)))
 
+    def constrain_x(self, x):
+        """Checks if the widget would leave the parents frame in x direction."""
+        if x < 0:  # left
+            return 0
+        elif x + self.widget.width > self.widget.parent.width:  # right
+            return self.widget.parent.width - self.widget.width
+        else:
+            return x
+
+    def constrain_y(self, y):
+        """Checks if the widget would leave the parents frame in y direction."""
+        if y < 0:  # bottom
+            return 0
+        elif y + self.widget.height > self.widget.parent.height:  # top
+            return self.widget.parent.height - self.widget.height
+        else:
+            return y
+
 
 class HoverBehavior(object):
     """
@@ -505,28 +523,9 @@ class HoverBehavior(object):
         if self.inspector.edit_mode:
             if self.drag:
                 if self.inspector.widget:
-                    self.inspector.widget.x = self.constrain_x(args[1].px - self.offset_x)
-                    self.inspector.widget.y = self.constrain_y(args[1].py - self.offset_y)
+                    self.inspector.widget.x = self.inspector.constrain_x(args[1].px - self.offset_x)
+                    self.inspector.widget.y = self.inspector.constrain_y(args[1].py - self.offset_y)
                     return True
-
-    def constrain_x(self, x):
-        """Checks if the widget would leave the parents frame in x direction."""
-        if x < 0:  # left
-            return 0
-        elif x + self.inspector.widget.width > self.inspector.widget.parent.width:  # right
-            return self.inspector.widget.parent.width - self.inspector.widget.width
-        else:
-            return x
-
-
-    def constrain_y(self, y):
-        """Checks if the widget would leave the parents frame in y direction."""
-        if y < 0:  # bottom
-            return 0
-        elif y + self.inspector.widget.height > self.inspector.widget.parent.height:  # top
-            return self.inspector.widget.parent.height - self.inspector.widget.height
-        else:
-            return y
 
     def on_mouse_pos(self, *args):
         """
