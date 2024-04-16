@@ -56,24 +56,17 @@ class ComponentSelectorWidget(Widget):
         self.btn_xy_move_button = ButtonBase(size=(70, 50), size_hint=(None, None), pos=(self.x + 80, self.y), id='DESIGNER_1', text='xy_move')
         self.btn_xy_move_button.bind(on_press=self.add_xy_move_button_to_selection)
         self.main_layout.add_widget(self.btn_xy_move_button)
-        # Add back button:
-        self.btn_back_button = ButtonBase(size=(70, 50), size_hint=(None, None), pos=(self.x + 220, self.y), id='DESIGNER_1', text='back')
-        self.btn_back_button.bind(on_press=self.back_to_main_screen)
-        self.main_layout.add_widget(self.btn_back_button)
         #  save button:
         self.btn_save = ButtonBase(size=(70, 50), size_hint=(None, None), pos=(self.x + 150, self.y), id='DESIGNER_1', text='save')
         self.btn_save.bind(on_press=self.save)
         self.main_layout.add_widget(self.btn_save)
 
-    def back_to_main_screen(self, *args):
-        self.sm.current = 'ScreenDesigner'
-
-    def save(self, *args):
+    def save(self, modifying_screen, *args):
         """
         Takes generated python code from the StringBuilder and saves it to a file.
         The filename is converted from CamelCase to snake_case.
         """
-        s = sb.get_python_code_from_screen(self.widget_to_add_to)
+        s = sb.get_python_code_from_screen(self.widget_to_add_to, modifying_screen)
         # e.g. turn "MyFirstScreen" into "my_first_screen":
         filename = App.get_running_app().screenname_to_filename(sb.get_screen(self.widget_to_add_to).name)
         path = pu.join(GENERATED_FILES_FOLDER, filename + '.py')

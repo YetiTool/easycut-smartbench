@@ -218,7 +218,7 @@ class InspectorSingleton(EventDispatcher):
                         target_widget = t
             # check if widget was found:
             if target_widget:
-                w.y -= distance - self.default_padding
+                w.y -= min_distance - self.default_padding
             else:
                 w.y = self.default_padding  # move to bottom border
         elif key == 273:  # up
@@ -234,7 +234,7 @@ class InspectorSingleton(EventDispatcher):
                         target_widget = t
             # check if widget was found:
             if target_widget:
-                w.y += distance - self.default_padding
+                w.y += min_distance - self.default_padding
             else:
                 w.top = w.parent.top - self.default_padding  # move to top border
         elif key == 275:  # right
@@ -250,7 +250,7 @@ class InspectorSingleton(EventDispatcher):
                         target_widget = t
             # check if widget was found:
             if target_widget:
-                w.x += distance - self.default_padding
+                w.x += min_distance - self.default_padding
             else:
                 w.right = w.parent.right - self.default_padding  # move to right border
         elif key == 276:  # left
@@ -266,7 +266,7 @@ class InspectorSingleton(EventDispatcher):
                         target_widget = t
             # check if widget was found:
             if target_widget:
-                w.x -= distance - self.default_padding
+                w.x -= min_distance - self.default_padding
             else:
                 w.x = self.default_padding  # move to left border
         self.paint_selection_rectangle()

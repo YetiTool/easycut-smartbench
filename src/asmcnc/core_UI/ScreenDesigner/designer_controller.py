@@ -24,10 +24,12 @@ class DesignerController(object):
     - handling interaction between widgets
     """
     def __init__(self):
-        # create designer screen
+        self.inspector = InspectorSingleton()
+        self.inspector.enable()
 
+        # create designer screen
         self.screen_manager = App.get_running_app().sm
-        self.component_widget = ComponentSelectorWidget()
+        self.component_widget = None
         self.screen_drop_down = None
         self.screen_name_input = None
 
@@ -36,6 +38,7 @@ class DesignerController(object):
         self.available_screens = {}
         self.modifying_screen = False
         self.current_screen_name = ''
+        self.current_screen_layout = None
 
     def load_generated_screens(self, *args):
         """
@@ -92,8 +95,9 @@ class DesignerController(object):
             Logger.exception(ex)
             return None
 
-    def new_screen(self, screen_name, *args):
+    def new_screen(self, *args):
         """Load a new screen."""
+        screen_name = self.screen_name_input.text
         screen_layout = FloatLayout(id='screen_layout', size_hint=[None, None], size=[800, 480])
         self.modifying_screen = False
         self.current_screen_name = screen_name
@@ -122,8 +126,10 @@ class DesignerController(object):
 
         A rectangle line is drawn to mark the outline of the
         """
-        self.designer_screen.children[0].clear_widgets()
+        if self.current_screen_layout:
+            self.designer_screen.children[0].remove_widget(self.current_screen_layout)
         self.designer_screen.children[0].add_widget(layout)
+        self.current_screen_layout = layout
         with layout.canvas.before:
             Color(1, 1, 1)
             Line(rectangle=(0, 0, layout.width, layout.height))
@@ -138,6 +144,7 @@ class DesignerController(object):
     def build_designer_screen(self):
         """Creates the main designer screen and fills it with widgets."""
         self.designer_screen = Screen(name='DesignerScreen')
+        self.component_widget = ComponentSelectorWidget()
         main_layout = FloatLayout(size_hint=[1, 1], id='MainLayout')
 
         main_layout.add_widget(self.component_widget)
@@ -159,4 +166,6 @@ class DesignerController(object):
         self.screen_drop_down.bind(on_select=self.open_screen)
 
         self.screen_manager.add_widget(self.designer_screen)
-        self.screen_manager.current(self.designer_screen.name)
+
+        self.load_generated_screens()
+        self.screen_manager.current = self.designer_screen.name

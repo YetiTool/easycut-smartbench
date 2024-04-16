@@ -43,9 +43,9 @@ def get_screen(widget):
     return screen
 
 
-def get_code_from_file():
+def get_code_from_file(modifying_screen):
     s = ''
-    if App.get_running_app().modifying_screen:
+    if modifying_screen:
         filename = App.get_running_app().screenname_to_filename(App.get_running_app().current_screen_name)
         path = pu.join(GENERATED_FILES_FOLDER, filename + '.py')
         with open(path, 'r') as f:
@@ -60,7 +60,7 @@ def get_code_from_file():
     return s
 
 
-def get_python_code_from_screen(widget):
+def get_python_code_from_screen(widget, modifying_screen):
     # type: (Widget) -> str
     """
     widget = entrypoint into the screen's widget tree.
@@ -69,7 +69,7 @@ def get_python_code_from_screen(widget):
     Imports are gathered and generated.
     Basic class code is generated.
     """
-    code_from_file = get_code_from_file()
+    code_from_file = get_code_from_file(modifying_screen)
     #  assuming given class is the main layout!!!
     main_layout = widget
     imports_py, code_py, imports_kivy, code_kivy = gather_data_from_widget_tree(main_layout)
