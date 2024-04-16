@@ -1,12 +1,9 @@
-import os
-import re
-
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.config import Config
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, FadeTransition, WipeTransition
+from kivy.uix.screenmanager import ScreenManager, Screen, WipeTransition
 
 from asmcnc.comms.localization import Localization
 from asmcnc.comms.logging_system.logging_system import Logger
@@ -58,6 +55,7 @@ if __name__ == '__main__':
     try:
         Config.set('graphics', 'width', '1200')
         Config.set('graphics', 'height', '720')
+        Config.set('kivy', 'keyboard_mode', 'system')
         Config.write()
 
         ScreenDesignerApp().run()

@@ -52,8 +52,12 @@ class InspectorSingleton(EventDispatcher):
         super(EventDispatcher, self).__init__(**kwargs)
         self.child_index = -1
         self.child_max = -1
-        self.register_event_type('on_show_component_popup')
+        self.register_event_type('on_new_widget_to_add_to')
         # self.enable()
+
+    def on_new_widget_to_add_to(self, *args):
+        """default callback"""
+        pass
 
     def disable(self):
         """Disables all inspector functionality."""
@@ -111,7 +115,7 @@ class InspectorSingleton(EventDispatcher):
         if keycode == 'h':
             self.print_help()
         elif keycode == 'w':
-            self.open_close_component_popup()
+            self.dispatch('on_new_widget_to_add_to', self.widget)
         elif keycode == 'e':
             self.switch_edit_mode()
         elif keycode == 'm':
@@ -158,12 +162,6 @@ class InspectorSingleton(EventDispatcher):
         else:
             Logger.debug('UNLOCKED')
             self.locked = False
-
-    def open_close_component_popup(self):
-        """
-        Fires the event 'on_show_component_popup' to the widget to open and close it.
-        """
-        self.dispatch('on_show_component_popup')
 
     def adjust_step_width(self, value):
         """Adjusts the step width for moving widgets with the arrow keys by the given amount."""

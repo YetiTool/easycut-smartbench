@@ -1,13 +1,13 @@
 import re
 
-from kivy.app import App
 from kivy.uix.screenmanager import Screen
 from kivy.uix.widget import Widget
 
 from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.core_UI import path_utils as pu
 
-GENERATED_FILES_FOLDER = pu.get_path('generated_screens')
+GENERATED_SCREENS_FOLDER = pu.get_path('generated_code/screens')
+GENERATED_WIDGETS_FOLDER = pu.get_path('generated_code/widgets')
 
 INDENT = '    '
 
@@ -32,22 +32,14 @@ BUILDER_STRING_END = '# BUILDER_STRING_END'
 CODE_START = '# GENERATED_CODE_START'  # two lines before class code
 CODE_END = '# GENERATED_CODE_END'  # final new line
 
-def get_screen(widget):
-    # type: (Widget) -> Screen
-    """
-    Returns the name of the widgets parent screen as string.
-    """
-    screen = widget.parent
-    while not issubclass(type(screen), Screen):
-        screen = screen.parent
-    return screen
 
-
-def get_code_from_file(modifying_screen):
+def get_code_from_file(modifying_screen, class_name, filename, base_class):
     s = ''
     if modifying_screen:
-        filename = App.get_running_app().screenname_to_filename(App.get_running_app().current_screen_name)
-        path = pu.join(GENERATED_FILES_FOLDER, filename + '.py')
+        if 'Screen' in base_class:
+            path = pu.join(GENERATED_SCREENS_FOLDER, filename + '.py')
+        elif 'Widget' in base_class:
+            path = pu.join(GENERATED_WIDGETS_FOLDER, filename + '.py')
         with open(path, 'r') as f:
             s = f.read()
     else:
@@ -60,16 +52,21 @@ def get_code_from_file(modifying_screen):
     return s
 
 
-def get_python_code_from_screen(widget, modifying_screen):
-    # type: (Widget) -> str
+def get_python_code_from_screen(widget, modifying_screen, class_name, filename, base_class):
+    # type: (Widget, bool, str, str) -> str
     """
     widget = entrypoint into the screen's widget tree.
+    modifying_screen => True: load code from file. False: create dummy code with comment markers
+    class_name => Name of the screen and class
+    filename => corresponding filename
+    base_class => either 'Screen' or 'Widget'
+
     Walks through the whole widget tree of the screen and generates either kivy builder string or python code
     for each widget.
     Imports are gathered and generated.
     Basic class code is generated.
     """
-    code_from_file = get_code_from_file(modifying_screen)
+    code_from_file = get_code_from_file(modifying_screen, class_name, filename, base_class)
     #  assuming given class is the main layout!!!
     main_layout = widget
     imports_py, code_py, imports_kivy, code_kivy = gather_data_from_widget_tree(main_layout)
@@ -77,7 +74,10 @@ def get_python_code_from_screen(widget, modifying_screen):
     s = IMPORTS_START
     s += '\n\n'
     s += 'from kivy.lang import Builder\n'
-    s += 'from kivy.uix.screenmanager import Screen\n'
+    if base_class == 'Screen':
+        s += 'from kivy.uix.screenmanager import Screen\n'
+    elif base_class == 'Widget':
+        s += 'from kivy.uix.widget import Widget\n'
     if 'MagicMock()' in code_py:
         s += 'from mock.mock import MagicMock\n'
     if 'App.' in code_py:
@@ -99,7 +99,7 @@ def get_python_code_from_screen(widget, modifying_screen):
     for import_path, import_list in imports_kivy.items():
         for imp in import_list:
             s += '#:import ' + imp + ' ' + import_path + '\n'
-    s += '\n<' + App.get_running_app().current_screen_name + '>\n'
+    s += '\n<' + class_name + '>\n'
     s += code_kivy
     s += '""")\n'
     s += BUILDER_STRING_END
@@ -109,11 +109,11 @@ def get_python_code_from_screen(widget, modifying_screen):
     # python code:
     s = CODE_START
     s += '\n\n\n'  # two new lines before class
-    s += get_class_code(App.get_running_app().current_screen_name)
+    s += get_class_code(class_name, base_class)
     s += code_py
     s += CODE_END
-    pattern_imports_py = r'{}.*{}'.format(CODE_START, CODE_END)
-    code_from_file = re.sub(pattern_imports_py, s, code_from_file, flags=re.M|re.S)
+    pattern_class_code = r'{}.*{}'.format(CODE_START, CODE_END)
+    code_from_file = re.sub(pattern_class_code, s, code_from_file, flags=re.M|re.S)
 
     return code_from_file
 
@@ -286,15 +286,15 @@ def get_import_dict_from_widget(widget):
     return ret
 
 
-def get_class_code(screen_name):
-    # type: (Screen) -> str
+def get_class_code(class_name, base_class):
+    # type: (str, str) -> str
     """
     Returns basic class code (ctor and super call) as string.
     sets the name attribute of the screen!
     """
-    s = 'class ' + screen_name + '(Screen):\n'
+    s = 'class ' + class_name + '(' + base_class + '):\n'
     s += INDENT + 'def __init__(self, **kwargs):\n'
-    s += INDENT + INDENT + 'super(' + screen_name + ', self).__init__(name="' + screen_name + '", **kwargs)\n'
+    s += INDENT + INDENT + 'super(' + class_name + ', self).__init__(name="' + class_name + '", **kwargs)\n'
     return s
 
 

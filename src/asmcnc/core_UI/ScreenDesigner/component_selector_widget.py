@@ -1,6 +1,7 @@
 from kivy.app import App
 from kivy.metrics import dp
 from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.textinput import TextInput
 from kivy.uix.widget import Widget
 from mock.mock import MagicMock
 
@@ -49,19 +50,28 @@ class ComponentSelectorWidget(Widget):
         self.btn_xy_move_button = ButtonBase(size=(70, 50), size_hint=(None, None), pos=(self.x + 80, self.y), id='DESIGNER_1', text='xy_move')
         self.btn_xy_move_button.bind(on_press=self.add_xy_move_button_to_selection)
         self.main_layout.add_widget(self.btn_xy_move_button)
+        # Add text_input button:
+        self.btn_text_input = ButtonBase(size=(70, 50), size_hint=(None, None), pos=(self.x + 80, self.y + 50), id='DESIGNER_1', text='input')
+        self.btn_text_input.bind(on_press=self.add_text_input_to_selection)
+        self.main_layout.add_widget(self.btn_text_input)
         #  save button:
         self.btn_save = ButtonBase(size=(70, 50), size_hint=(None, None), pos=(self.x + 150, self.y), id='DESIGNER_1', text='save')
         self.btn_save.bind(on_press=lambda *args: self.controller.save_to_file())
         self.main_layout.add_widget(self.btn_save)
 
+    def add_text_input_to_selection(self, *args):
+        tmp = TextInput(size_hint=(None, None),
+                        size=(100, 30),
+                        pos=(60, 70))
+        self.controller.get_widget_to_add_to().add_widget(tmp)
+
     def add_label_to_selection(self, *args):
-        tmp = LabelBase(text='Inspector Widget was here!',
+        tmp = LabelBase(text=self.controller.text_text_input.text,
                         size_hint=(None, None),
                         size=(250, dp(20)),
                         font_size=dp(20),
                         pos=(60, 70),
-                        # pos=(w.x + 10, w.y + 10),
-                        color=(0.1, 1, 0.1, 1))
+                        color=(1, 1, 1, 1))
         self.controller.get_widget_to_add_to().add_widget(tmp)
 
     def add_probe_button_to_selection(self, *args):

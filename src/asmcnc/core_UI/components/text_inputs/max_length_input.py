@@ -1,9 +1,7 @@
-from kivy.uix.textinput import TextInput
-
-from asmcnc.core_UI.hoverable import HoverBehavior
+from asmcnc.core_UI.components.text_inputs.base_text_input import TextInputBase
 
 
-class MaxLengthInput(TextInput, HoverBehavior):
+class MaxLengthInput(TextInputBase):
     """TextInput field with a maximum length. Text is truncated when the length exceeds the maximum."""
 
     def __init__(self, max_length, **kwargs):
