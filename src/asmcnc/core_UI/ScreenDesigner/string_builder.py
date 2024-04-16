@@ -69,7 +69,7 @@ def get_python_code_from_screen(widget, modifying_screen, class_name, filename, 
     code_from_file = get_code_from_file(modifying_screen, class_name, filename, base_class)
     #  assuming given class is the main layout!!!
     main_layout = widget
-    imports_py, code_py, imports_kivy, code_kivy = gather_data_from_widget_tree(main_layout)
+    imports_py, code_py, imports_kivy, code_kivy = gather_data_from_widget_tree(main_layout, base_class)
     # now make an import string:
     s = IMPORTS_START
     s += '\n\n'
@@ -118,7 +118,7 @@ def get_python_code_from_screen(widget, modifying_screen, class_name, filename, 
     return code_from_file
 
 
-def gather_data_from_widget_tree(widget, indent_level=1):
+def gather_data_from_widget_tree(widget, base_class, indent_level=1):
     # type: (Widget, int) -> (dict, str, dict, str)
     """
     Collects all data for the give widget (imports, builder string, python code).
@@ -132,7 +132,7 @@ def gather_data_from_widget_tree(widget, indent_level=1):
     code_kivy = ''
 
     if type(widget).__name__ in CODE_ONLY_ITEMS:
-        code_py += get_code_for_widget(widget)
+        code_py += get_code_for_widget(widget, base_class)
         imps_widget = get_import_dict_from_widget(widget)
         for import_path, import_list in imps_widget.items():
             # check if the same module is needed -> update set:
@@ -157,7 +157,7 @@ def gather_data_from_widget_tree(widget, indent_level=1):
         # now handle children if needed:
         if type(widget).__name__ not in DONT_DO_CHILDREN:
             for child in widget.children:
-                c_imp_py, c_code_py, c_imp_kivy, c_code_kivy = gather_data_from_widget_tree(child, indent_level+1)
+                c_imp_py, c_code_py, c_imp_kivy, c_code_kivy = gather_data_from_widget_tree(child, base_class, indent_level+1)
                 # update python imports:
                 for import_path, import_list in c_imp_py.items():
                     # check if the same module is needed -> update set:
@@ -180,7 +180,7 @@ def gather_data_from_widget_tree(widget, indent_level=1):
     return (imports_py, code_py, imports_kivy, code_kivy)
 
 
-def get_code_for_widget(widget):
+def get_code_for_widget(widget, base_class):
     # type: (Widget) -> str
     """
     Returns python code for the given widget.
@@ -191,6 +191,9 @@ def get_code_for_widget(widget):
     for line in CODE_ONLY_ITEMS[type(widget).__name__]:
         s += INDENT + INDENT + line.format(widget.id) + '\n'
     s += INDENT + INDENT + str(widget.id) + '.pos = ' + str(widget.pos) + '\n'
+    if 'Widget' in base_class:
+        lambda_string = 'setattr(' + widget.id + ', "pos", [v[0] + ' + str(widget.x) + ', v[1] + ' + str(widget.y) + '])'
+        s += INDENT + INDENT + 'self.children[0].bind(pos=lambda i, v: ' + lambda_string + ')\n'
     s += INDENT + INDENT + str(widget.id) + '.id = "' + str(widget.id) + '"\n'
     s += INDENT + INDENT + str(widget.id) + '.size_hint = [None, None]\n'
     s += INDENT + INDENT + 'self.children[0].add_widget(' + str(widget.id) + ')\n'

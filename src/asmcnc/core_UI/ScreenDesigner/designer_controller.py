@@ -185,6 +185,7 @@ class DesignerController(object):
         screen = self.create_screen(screen_name)
         if screen:
             self.modifying_screen = True
+            self.base_class = 'Screen'
             self.current_class_name = screen_name
             layout = screen.children[0]
             screen.remove_widget(layout)
@@ -198,6 +199,7 @@ class DesignerController(object):
         widget = self.create_widget(widget_name)
         if widget:
             self.modifying_screen = True
+            self.base_class = 'Widget'
             self.current_class_name = widget_name
             layout = widget.children[0]
             widget.remove_widget(layout)

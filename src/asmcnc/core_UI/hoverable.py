@@ -495,7 +495,7 @@ class HoverBehavior(object):
         Start drag with selected widget if Inspector is in edit_mode.
         Saves offset between mouse position and widget bottom left corner.
         """
-        if self.inspector.edit_mode:
+        if self.inspector.edit_mode and self.inspector.widget:
             if not self.drag:
                 self.drag = True
                 self.inspector.remove_selection_rectangle()
@@ -506,7 +506,7 @@ class HoverBehavior(object):
         """
         Drops the dragged widget.
         """
-        if self.inspector.edit_mode:
+        if self.inspector.edit_mode and self.inspector.widget:
             if self.drag:
                 self.inspector.paint_selection_rectangle()
                 self.drag = False
@@ -518,7 +518,7 @@ class HoverBehavior(object):
 
         The new position is restricted to the parents frame.
         """
-        if self.inspector.edit_mode:
+        if self.inspector.edit_mode and self.inspector.widget:
             if self.drag:
                 if self.inspector.widget:
                     self.inspector.widget.x = self.inspector.constrain_x(args[1].px - self.offset_x)
