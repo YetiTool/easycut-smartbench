@@ -241,7 +241,7 @@ class CoordinateSystem(object):
             if dwl_z is not None:
                 move_command += " Z{}".format(self.get_mz_from_dwlz(dwl_z))
 
-            Logger.info("Moving to machine coordinates: {}".format(move_command))
+            Logger.debug("Moving to machine coordinates: {}".format(move_command))
             self.dwt_coordinates.m.s.write_command(move_command)  # Router machine instance accessed through dwt_coordinates
 
     class LaserPosition(object):
