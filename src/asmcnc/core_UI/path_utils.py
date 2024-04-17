@@ -69,7 +69,7 @@ def get_path(target_dir, files_only=False, folders_only=False, first_result_only
     root_path = os.path.abspath(__file__)  # Get the absolute path of the current script
 
     try:
-        # Quick serach in the path of current script
+        # Quick search in the path of current script
         if not files_only:
             target_path_index = root_path.index(target_dir)
             target_path = root_path[:target_path_index + len(target_dir)]

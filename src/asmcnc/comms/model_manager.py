@@ -19,6 +19,10 @@ class ProductCodes(Enum):
     FIRST_VERSION = 01
     UNKNOWN = 00
 
+class MachineType(Enum):
+    SMARTBENCH = "SmartBench"
+    DRYWALLTEC = "DrywallTec"
+    UNKNOWN = "Unknown"
 
 class ModelManagerSingleton(EventDispatcher):
     """
@@ -159,6 +163,36 @@ class ModelManagerSingleton(EventDispatcher):
         Returns True if the machine is a drywalltec machine, False otherwise.
         """
         return self._data['product_code'] is ProductCodes.DRYWALLTEC
+
+    def is_machine_sb(self):
+        # () -> bool
+        """
+        Returns True if the machine is a SmartBench machine, False otherwise.
+        """
+        return self._data['product_code'] in [
+            ProductCodes.PRECISION_PRO_X,
+            ProductCodes.PRECISION_PRO_PLUS,
+            ProductCodes.PRECISION_PRO,
+            ProductCodes.STANDARD,
+            ProductCodes.FIRST_VERSION
+        ]
+
+    def get_machine_type(self):
+        if self._data['product_code'] in [
+            ProductCodes.PRECISION_PRO_X,
+            ProductCodes.PRECISION_PRO_PLUS,
+            ProductCodes.PRECISION_PRO,
+            ProductCodes.STANDARD,
+            ProductCodes.FIRST_VERSION
+        ]:
+            return MachineType.SMARTBENCH
+
+        elif self._data['product_code'] in [
+            ProductCodes.DRYWALLTEC
+        ]:
+            return MachineType.DRYWALLTEC
+
+        return MachineType.UNKNOWN
 
     def set_machine_type(self, pc, save=False):
         # type: (ProductCodes, bool) ->  None
