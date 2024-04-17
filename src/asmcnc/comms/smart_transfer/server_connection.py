@@ -34,7 +34,7 @@ class ServerConnection(object):
 		server_thread.start()
 
 	def __del__(self):
-		Logger.info("Server connection class has been deleted")
+		Logger.debug("Server connection class has been deleted")
 
 	def initialise_server_connection(self):
 
@@ -52,7 +52,7 @@ class ServerConnection(object):
 
 	def set_up_socket(self):
 
-		Logger.info("Attempting to set up socket with IP address: " + str(self.HOST))
+		Logger.debug("Attempting to set up socket with IP address: " + str(self.HOST))
 
 		if sys.platform != 'win32' and sys.platform != 'darwin':
 
@@ -68,17 +68,17 @@ class ServerConnection(object):
 					self.is_socket_available = True
 
 					try: 
-						Logger.info("Thread is alive? " + str(t.is_alive()))
+						Logger.debug("Thread is alive? " + str(t.is_alive()))
 					except:
 						t = threading.Thread(target=self.do_connection_loop)
 						t.daemon = True
 						t.start()
 
 				except Exception as e: 
-					Logger.info("Unable to set up socket, exception: " + str(e))
+					Logger.exception("Unable to set up socket, exception: " + str(e))
 			
 			else:
-				Logger.info("No IP address available to open socket with.")
+				Logger.error("No IP address available to open socket with.")
 
 		else:
 			self.set.get_public_ip_address()
@@ -105,7 +105,7 @@ class ServerConnection(object):
 						self.get_smartbench_name()
 						conn.send(self.smartbench_name)
 					except Exception as e:
-						Logger.warning("Message couldn't be sent: " + str(e))
+						Logger.exception("Message couldn't be sent: " + str(e))
 
 					conn.close()
 				else:
@@ -137,13 +137,13 @@ class ServerConnection(object):
 			self.doing_reconnect = True
 
 			try: 
-				Logger.info("Closing socket before attempting to reconnect...")
+				Logger.debug("Closing socket before attempting to reconnect...")
 				self.is_socket_available = False
 				self.sock.shutdown(socket.SHUT_RDWR)
 				self.sock.close()
 
 			except Exception as e: 
-				Logger.info("Attempted to close socket, but raised exception: " + str(e))
+				Logger.exception("Attempted to close socket, but raised exception: " + str(e))
 
 			Logger.info("Try to reconnect...")
 			sleep(2)
