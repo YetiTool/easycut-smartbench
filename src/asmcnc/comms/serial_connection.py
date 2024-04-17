@@ -968,9 +968,13 @@ class SerialConnection(EventDispatcher):
 
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
+    raw_status = StringProperty('')
+
     def process_grbl_push(self, message):
 
         if self.VERBOSE_ALL_PUSH_MESSAGES: Logger.info(message)
+
+        self.raw_status = message
 
         # If it's a status message, e.g. <Idle|MPos:-1218.001,-2438.002,-2.000|Bf:35,255|FS:0,0>
         if message.startswith('<'):
