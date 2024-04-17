@@ -190,10 +190,10 @@ def get_code_for_widget(widget, base_class):
     # add specific code block:
     for line in CODE_ONLY_ITEMS[type(widget).__name__]:
         s += INDENT + INDENT + line.format(widget.id) + '\n'
-    s += INDENT + INDENT + str(widget.id) + '.pos = ' + str(widget.pos) + '\n'
+    s += INDENT + INDENT + str(widget.id) + '.pos = [' + str(round(widget.pos[0], 2)) + ', ' + str(round(widget.pos[1], 2)) + ']\n'
     if 'Widget' in base_class:
-        lambda_string = 'setattr(' + widget.id + ', "pos", [v[0] + ' + str(widget.x) + ', v[1] + ' + str(widget.y) + '])'
-        s += INDENT + INDENT + 'self.children[0].bind(pos=lambda i, v: ' + lambda_string + ')\n'
+        lambda_string = 'setattr(' + widget.id + ', "pos", [pos[0] + ' + str(widget.x) + ', pos[1] + ' + str(widget.y) + '])'
+        s += INDENT + INDENT + 'self.children[0].bind(pos=lambda i, pos: ' + lambda_string + ')\n'
     s += INDENT + INDENT + str(widget.id) + '.id = "' + str(widget.id) + '"\n'
     s += INDENT + INDENT + str(widget.id) + '.size_hint = [None, None]\n'
     s += INDENT + INDENT + 'self.children[0].add_widget(' + str(widget.id) + ')\n'
