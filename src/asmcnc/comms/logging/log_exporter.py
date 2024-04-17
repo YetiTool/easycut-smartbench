@@ -17,7 +17,7 @@ creds_imported = False
 try:
     import paramiko
 except (ImportWarning, ImportError):
-    Logger.info("Unable to import paramiko")
+    Logger.exception("Unable to import paramiko")
 
 
 def try_import_creds():
@@ -28,13 +28,13 @@ def try_import_creds():
         ftp_username = creds.ftp_username
         ftp_password = creds.ftp_password
         creds_imported = True
-    except Exception:
-        Logger.info("Log exporter not available - no creds file")
+    except Exception as e:
+        Logger.exception("Log exporter not available: " + str(e))
         try:
             from ...production.database import credentials as creds
-            Logger.info('Imported creds from dev path')
+            Logger.debug('Imported creds from dev path')
         except Exception:
-            Logger.info('Creds not available from dev path')
+            Logger.exception('Creds not available from dev path')
 
 
 def create_log_folder():
@@ -99,13 +99,13 @@ def send_logs(log_file_path):
     Logger.info("Sending logs to server")
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    Logger.info('Connecting to: ' + ftp_server)
+    Logger.debug('Connecting to: ' + ftp_server)
     ssh.connect(ftp_server, username=ftp_username, password=ftp_password)
     Logger.info('Connected to: ' + ftp_server)
     sftp = ssh.open_sftp()
 
     file_name = log_file_path.split('/')[-1]
-    Logger.info('Transferring file: ' + file_name)
+    Logger.debug('Transferring file: ' + file_name)
     sftp.put(export_logs_folder + "/" + log_file_path, WORKING_DIR + file_name)
     Logger.info("Done sending logs to server")
 
