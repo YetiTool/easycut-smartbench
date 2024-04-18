@@ -29,6 +29,7 @@ from kivy.uix.boxlayout import BoxLayout
 from asmcnc.comms.grbl_settings_manager import GRBLSettingsManagerSingleton
 from asmcnc.core_UI import scaling_utils, console_utils
 from asmcnc.comms.model_manager import ProductCodes
+from asmcnc.core_UI.ScreenDesigner.component_selector_popup import ComponentSelectorPopup
 from asmcnc.core_UI.popup_manager import PopupManager
 from asmcnc.comms.model_manager import ModelManagerSingleton
 
@@ -162,6 +163,8 @@ class SkavaUI(App):
 
     width = Window.width
     height = Window.height if Window.height == 480 else Window.height - 32
+
+    designer_popup = None
 
     def get_scaled_width(self, val):
         return scaling_utils.get_scaled_width(val)

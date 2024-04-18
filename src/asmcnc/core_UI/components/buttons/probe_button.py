@@ -1,11 +1,11 @@
-from kivy.uix.button import Button
+from asmcnc.core_UI.components.buttons.button_base import ButtonBase
 from asmcnc.skavaUI.screen_probing import ProbingScreen
 from asmcnc.core_UI import path_utils as pu
 from kivy.uix.image import Image
 import os
 
 
-class ProbeButton(Button):
+class ProbeButton(ButtonBase):
     """
     A custom button widget used for probing functionality.
 

@@ -8,6 +8,7 @@ import re
 
 Builder.load_string("""
 #:import FloatInput asmcnc.core_UI.components.text_inputs.float_input.FloatInput
+#:import LabelBase asmcnc.core_UI.components.labels.base_label.LabelBase
 <DrywallShapeDisplay>
 
     shape_dims_image:shape_dims_image
@@ -265,7 +266,7 @@ Builder.load_string("""
                 halign: 'left'
                 opacity: 0
 
-            Label:
+            LabelBase:
                 id: x_datum_label
                 font_size: dp(25)
                 size: dp(150), dp(40)
@@ -274,7 +275,7 @@ Builder.load_string("""
                 color: 0,0,0,1
                 halign: 'left'
 
-            Label:
+            LabelBase:
                 id: x_datum_validation_label
                 font_size: dp(15)
                 size: x_datum_label.size
@@ -284,7 +285,7 @@ Builder.load_string("""
                 halign: 'left'
                 opacity: 0
 
-            Label:
+            LabelBase:
                 id: y_datum_label
                 font_size: dp(25)
                 size: dp(150), dp(40)
@@ -292,7 +293,7 @@ Builder.load_string("""
                 text: 'Y:'
                 color: 0,0,0,1
 
-            Label:
+            LabelBase:
                 id: y_datum_validation_label
                 font_size: dp(15)
                 size: y_datum_label.size
