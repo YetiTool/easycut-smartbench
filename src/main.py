@@ -25,9 +25,10 @@ from kivy import Logger
 from kivy.config import Config
 from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.image import Image
 
 from asmcnc.comms.grbl_settings_manager import GRBLSettingsManagerSingleton
-from asmcnc.core_UI import scaling_utils, console_utils
+from asmcnc.core_UI import scaling_utils, console_utils, path_utils
 from asmcnc.comms.model_manager import ProductCodes
 from asmcnc.core_UI.popup_manager import PopupManager
 from asmcnc.comms.model_manager import ModelManagerSingleton
@@ -49,7 +50,7 @@ Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
 Config.write()
 
 from kivy.app import App
-from kivy.uix.screenmanager import ScreenManager, NoTransition
+from kivy.uix.screenmanager import ScreenManager, NoTransition, Screen
 from kivy.core.window import Window
 
 # COMMS IMPORTS
@@ -371,5 +372,23 @@ class SkavaUI(App):
         return sm
 
 
+class CircleTest(App):
+    def __init__(self, **kwargs):
+        super(CircleTest, self).__init__(**kwargs)
+
+    width = Window.width
+    height = Window.height - 32
+    img = Image(source=path_utils.get_path('circle_dims.png'))
+    scr = Screen(name='test')
+    scr.add_widget(img)
+    sm = ScreenManager()
+    sm.size = (width, height)
+    sm.add_widget(scr)
+    sm.current = 'test'
+
+    def build(self):
+        return self.sm
+
+
 if __name__ == '__main__':
-    SkavaUI().run()
+    CircleTest().run()

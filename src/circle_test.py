@@ -1,3 +1,5 @@
+from Canvas import Window
+
 from kivy.app import App
 from kivy.uix.image import Image
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -12,7 +14,7 @@ class CircleTest(App):
     img = Image(source=path_utils.get_path('circle_dims.png'))
     scr = Screen(name='test')
     scr.add_widget(img)
-    sm = ScreenManager()
+    sm = ScreenManager(width=Window.width, height=Window.height - 32)
     sm.add_widget(scr)
     sm.current = 'test'
 
