@@ -195,7 +195,7 @@ class InspectorSingleton(EventDispatcher):
 
         Uses default padding.
         """
-        if not self.widget:
+        if not self.widget or not self.edit_mode:
             return
         self.remove_selection_rectangle()
         # get all siblings within the same container:

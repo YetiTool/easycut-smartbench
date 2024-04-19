@@ -11,11 +11,8 @@ class ButtonBase(Button, HoverBehavior):
     It offers base functionality that every button needs e.g. setting the size so that every button looks the same.
 
     Base classes:
-     - kivy.uix.Button
-     - HoverBehaviour
-
-    Additional notes:
-    This is an abstract class and must not be instantiated directly!
+     - kivy.uix.button.Button
+     - asmcnc.core_UI.hoverable.HoverBehaviour
     """
     def __init__(self, **kwargs):
         super(ButtonBase, self).__init__(**kwargs)

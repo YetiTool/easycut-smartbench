@@ -22,7 +22,8 @@ CODE_ONLY_ITEMS = {'ProbeButton': ['{} = ProbeButton(MagicMock(), App.get_runnin
                    'VacuumButton': ['{} = VacuumButton(MagicMock(), MagicMock())  # TODO: fill args!',
                                     '{}.size = [71, 72]'],
                    'XYMove': ['{} = XYMove(machine=MagicMock(), screen_manager=App.get_running_app().sm, localization=Localization())   # TODO: fill args!',
-                              '{}.size = [270.5, 391.6]']}
+                              '{}.size = [270.5, 391.6]'],
+                   'Example': ['{} = Example()']}
 
 # Comment tokens used for search and replace when updating files:
 IMPORTS_START = '# GENERATED_IMPORTS_START'
@@ -69,15 +70,16 @@ def get_python_code_from_screen(widget, modifying_screen, class_name, filename, 
     code_from_file = get_code_from_file(modifying_screen, class_name, filename, base_class)
     #  assuming given class is the main layout!!!
     main_layout = widget
-    imports_py, code_py, imports_kivy, code_kivy = gather_data_from_widget_tree(main_layout, base_class)
+    imports_py, code_py, imports_kivy, code_kivy = gather_data_from_widget_tree(main_layout, base_class, is_main_layout=True)
     # now make an import string:
     s = IMPORTS_START
     s += '\n\n'
     s += 'from kivy.lang import Builder\n'
-    if base_class == 'Screen':
+    if 'Screen' in base_class:
         s += 'from kivy.uix.screenmanager import Screen\n'
-    elif base_class == 'Widget':
-        s += 'from kivy.uix.widget import Widget\n'
+    elif 'WidgetBase' in base_class:
+        s += 'from asmcnc.core_UI.components.widgets.base_widget import WidgetBase\n'
+
     if 'MagicMock()' in code_py:
         s += 'from mock.mock import MagicMock\n'
     if 'App.' in code_py:
@@ -109,7 +111,7 @@ def get_python_code_from_screen(widget, modifying_screen, class_name, filename, 
     # python code:
     s = CODE_START
     s += '\n\n\n'  # two new lines before class
-    s += get_class_code(class_name, base_class)
+    s += get_class_code(widget, class_name, base_class)
     s += code_py
     s += CODE_END
     pattern_class_code = r'{}.*{}'.format(CODE_START, CODE_END)
@@ -118,7 +120,7 @@ def get_python_code_from_screen(widget, modifying_screen, class_name, filename, 
     return code_from_file
 
 
-def gather_data_from_widget_tree(widget, base_class, indent_level=1):
+def gather_data_from_widget_tree(widget, base_class, indent_level=1, is_main_layout=False):
     # type: (Widget, int) -> (dict, str, dict, str)
     """
     Collects all data for the give widget (imports, builder string, python code).
@@ -141,7 +143,7 @@ def gather_data_from_widget_tree(widget, base_class, indent_level=1):
             else:
                 imports_py[import_path] = import_list
     else:
-        code_kivy += get_builder_string_from_widget(widget, indent_level)
+        code_kivy += get_builder_string_from_widget(widget, indent_level, base_class, is_main_layout)
         imps_widget = get_import_dict_from_widget(widget)
         try:
             for import_path, import_list in imps_widget.items():
@@ -157,7 +159,7 @@ def gather_data_from_widget_tree(widget, base_class, indent_level=1):
         # now handle children if needed:
         if type(widget).__name__ not in DONT_DO_CHILDREN:
             for child in widget.children:
-                c_imp_py, c_code_py, c_imp_kivy, c_code_kivy = gather_data_from_widget_tree(child, base_class, indent_level+1)
+                c_imp_py, c_code_py, c_imp_kivy, c_code_kivy = gather_data_from_widget_tree(child, base_class, indent_level+1, False)
                 # update python imports:
                 for import_path, import_list in c_imp_py.items():
                     # check if the same module is needed -> update set:
@@ -188,19 +190,20 @@ def get_code_for_widget(widget, base_class):
     s= ''
     s += INDENT + INDENT + '# Code for {}:\n'.format(str(widget.id))
     # add specific code block:
-    for line in CODE_ONLY_ITEMS[type(widget).__name__]:
-        s += INDENT + INDENT + line.format(widget.id) + '\n'
+    if type(widget).__name__ in CODE_ONLY_ITEMS:
+        for line in CODE_ONLY_ITEMS[type(widget).__name__]:
+            s += INDENT + INDENT + line.format(widget.id) + '\n'
+    s += INDENT + INDENT + 'self.children[0].add_widget(' + str(widget.id) + ')\n'
     s += INDENT + INDENT + str(widget.id) + '.pos = [' + str(round(widget.pos[0], 2)) + ', ' + str(round(widget.pos[1], 2)) + ']\n'
     if 'Widget' in base_class:
         lambda_string = 'setattr(' + widget.id + ', "pos", [pos[0] + ' + str(widget.x) + ', pos[1] + ' + str(widget.y) + '])'
-        s += INDENT + INDENT + 'self.children[0].bind(pos=lambda i, pos: ' + lambda_string + ')\n'
+        s += INDENT + INDENT + str(widget.id) +'.parent.bind(pos=lambda i, pos: ' + lambda_string + ')\n'
     s += INDENT + INDENT + str(widget.id) + '.id = "' + str(widget.id) + '"\n'
     s += INDENT + INDENT + str(widget.id) + '.size_hint = [None, None]\n'
-    s += INDENT + INDENT + 'self.children[0].add_widget(' + str(widget.id) + ')\n'
     return s
 
 
-def get_builder_string_from_widget(widget, indent_level):
+def get_builder_string_from_widget(widget, indent_level, base_class, is_main_layout=False):
     # type: (Widget, int) -> str
     """
     Returns a generated builder string that represents the given widget.
@@ -252,8 +255,8 @@ def get_builder_string_from_widget(widget, indent_level):
                   'pos': '{}',
                   'size': '{}',
                   'size_hint': '{}',
-                  'size_hint_x': '{}',
-                  'size_hint_y': '{}',
+                  # 'size_hint_x': '{}',
+                  # 'size_hint_y': '{}',
                   'source': '"{}"',
                   'text': '"{}"',
                   'text_size': '{}',
@@ -269,9 +272,12 @@ def get_builder_string_from_widget(widget, indent_level):
 
     # list of attributes that need to be part of the builder string:
     for attribute in attributes.keys():
-        value = getattr(widget, attribute, 'no_attr')
-        if value and value != 'no_attr':
-            s += base_indent + INDENT + attribute + ': ' + attributes[attribute].format(str(value)) + '\n'
+        if 'Widget' in base_class and attribute == 'pos':  # is_main_layout and
+            s += base_indent + INDENT + 'pos: [self.parent.pos[0] + ' + str(widget.x) + ', self.parent.pos[1] + ' + str(widget.y) + ']\n'
+        else:
+            value = getattr(widget, attribute, 'no_attr')
+            if value and value != 'no_attr':
+                s += base_indent + INDENT + attribute + ': ' + attributes[attribute].format(str(value)) + '\n'
     s += '\n'
     return s
 
@@ -289,15 +295,20 @@ def get_import_dict_from_widget(widget):
     return ret
 
 
-def get_class_code(class_name, base_class):
-    # type: (str, str) -> str
+def get_class_code(widget, class_name, base_class):
+    # type: (Widget, str, str) -> str
     """
     Returns basic class code (ctor and super call) as string.
     sets the name attribute of the screen!
     """
     s = 'class ' + class_name + '(' + base_class + '):\n'
     s += INDENT + 'def __init__(self, **kwargs):\n'
-    s += INDENT + INDENT + 'super(' + class_name + ', self).__init__(name="' + class_name + '", **kwargs)\n'
+    if 'Widget' in base_class:
+        s += INDENT + INDENT + 'super(' + class_name + ', self).__init__(**kwargs)\n'
+        s += INDENT + INDENT + 'self.size_hint = [None, None]\n'
+        s += INDENT + INDENT + 'self.size = ' + str(widget.size) + '\n'
+    else:
+        s += INDENT + INDENT + 'super(' + class_name + ', self).__init__(name="' + class_name + '", **kwargs)\n'
     return s
 
 
