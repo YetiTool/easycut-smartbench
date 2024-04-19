@@ -10,8 +10,8 @@ from kivy.properties import ObjectProperty, StringProperty
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
 from asmcnc.core_UI.popups import WarningPopup
 
-Builder.load_string(
-    """
+Builder.load_string("""
+#:import LabelBase asmcnc.core_UI.components.labels.base_label
 
 <ShapeCutterSaveJobScreenClass>:
     
@@ -34,7 +34,7 @@ Builder.load_string(
             spacing: 0
             orientation: "vertical"       
                 
-            Label:
+            LabelBase:
                 color: 1,1,1,1
                 size_hint: (None,None)
                 height: dp(0.1875*app.height)
@@ -73,7 +73,7 @@ Builder.load_string(
                             orientation: "vertical"
                             spacing:0.0416666666667*app.height
 
-                            Label: 
+                            LabelBase: 
                                 text: ''
                                 color: 0,0,0,1
                                 font_size: 0.025*app.width
