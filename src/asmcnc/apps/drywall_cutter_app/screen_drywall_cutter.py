@@ -58,7 +58,7 @@ class DrywallCutterScreen(Screen):
         self.m.s.bind(m_state=lambda i, value: self.set_machine_state(value))
 
     def set_machine_state(self, value):
-        self.machine_status = value
+        self.machine_status = value.lower()
 
     def start_test(self):
         
@@ -73,19 +73,19 @@ class DrywallCutterScreen(Screen):
 
         for i in self.x_range:
             for n in self.y_range:
-                while self.machine_status == 'run':
+                while self.machine_status == 'jog':
                     pass
                 self.m.jog_absolute_xy(n, i, 4000)
-                while self.machine_status == 'run':
+                while self.machine_status == 'jog':
                     pass
                 self.m.jog_absolute_single_axis('z', -10, 300)  # move to Z measure
-                while self.machine_status == 'run':
+                while self.machine_status == 'jog':
                     pass
                 time.sleep(0.5)
                 self.y_row.append(get_reading())
                 time.sleep(0.5)
                 self.m.jog_absolute_single_axis('z', 10, 300)  # move to Z clearance
-                while self.machine_status == 'run':
+                while self.machine_status == 'jog':
                     pass
             self.z_vals.append(self.y_row)
             self.y_row = []  # clear list "y_row"
