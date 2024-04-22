@@ -21,6 +21,9 @@ Builder.load_string("""
             text: "Start Test"
         Image:
             source: "tabletop.png"
+        Button:
+            on_press: root.exit
+            text: "Exit"
 """)
 
 
@@ -105,3 +108,7 @@ class DrywallCutterScreen(Screen):
 
         # plt.show()
         plt.savefig('tabletop.png')
+
+
+    def exit(self):
+        self.sm.current = "lobby"
