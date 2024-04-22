@@ -82,13 +82,13 @@ class DrywallCutterScreen(Screen):
                 while self.machine_status == 'run':
                     pass
                 time.sleep(0.5)
-                y_row.append(get_reading())
+                self.y_row.append(get_reading())
                 time.sleep(0.5)
                 self.m.jog_absolute_single_axis('z', 10, 300)  # move to Z clearance
                 while self.machine_status == 'run':
                     pass
             self.z_vals.append(y_row)
-            y_row = []  # clear list "y_row"
+            self.y_row = []  # clear list "y_row"
 
     def generate_graph(self):
         fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
