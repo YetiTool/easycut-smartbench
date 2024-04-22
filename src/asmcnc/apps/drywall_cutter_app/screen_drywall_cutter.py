@@ -87,7 +87,7 @@ class DrywallCutterScreen(Screen):
                 self.m.jog_absolute_single_axis('z', 10, 300)  # move to Z clearance
                 while self.machine_status == 'run':
                     pass
-            self.z_vals.append(y_row)
+            self.z_vals.append(self.y_row)
             self.y_row = []  # clear list "y_row"
 
     def generate_graph(self):
