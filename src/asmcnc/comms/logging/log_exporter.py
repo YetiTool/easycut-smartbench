@@ -28,8 +28,8 @@ def try_import_creds():
         ftp_username = creds.ftp_username
         ftp_password = creds.ftp_password
         creds_imported = True
-    except Exception as e:
-        Logger.exception("Log exporter not available: " + str(e))
+    except:
+        Logger.exception("Log exporter not available")
         try:
             from ...production.database import credentials as creds
             Logger.debug('Imported creds from dev path')

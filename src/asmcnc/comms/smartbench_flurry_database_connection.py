@@ -95,8 +95,8 @@ class DatabaseEventManager():
 						self.send_routine_updates_to_database()
 					break
 
-				except Exception as e:
-					Logger.exception("Pika connection exception: " + str(e))
+				except:
+					Logger.exception("Pika connection exception")
 					sleep(10)
 
 			else:
@@ -157,8 +157,8 @@ class DatabaseEventManager():
 						else:
 							self.publish_event_with_routine_updates_channel(self.generate_full_payload_data(), "Routine Full Payload")
 
-					except Exception as e:
-						Logger.exception("Could not send routine update: " + str(e))
+					except:
+						Logger.exception("Could not send routine update")
 
 
 				sleep(10)
@@ -200,8 +200,8 @@ class DatabaseEventManager():
 				self.routine_updates_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
 				if self.VERBOSE: Logger.info(data)
 			
-			except Exception as e:
-				Logger.exception(exception_type + " send exception: " + str(e))
+			except:
+				Logger.exception(exception_type + " sent exception")
 				self.reinstate_channel_or_connection_if_missing()
 
 
@@ -226,8 +226,8 @@ class DatabaseEventManager():
 							if self.VERBOSE: Logger.info(data)
 
 					
-					except Exception as e:
-						Logger.exception(exception_type + " send exception: " + str(e))
+					except:
+						Logger.exception(exception_type + " send exception")
 
 					temp_event_channel.close()
 					break

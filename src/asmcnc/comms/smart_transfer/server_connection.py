@@ -74,8 +74,8 @@ class ServerConnection(object):
 						t.daemon = True
 						t.start()
 
-				except Exception as e: 
-					Logger.exception("Unable to set up socket, exception: " + str(e))
+				except:
+					Logger.exception("Unable to set up socket")
 			
 			else:
 				Logger.error("No IP address available to open socket with.")
@@ -104,8 +104,8 @@ class ServerConnection(object):
 					try: 
 						self.get_smartbench_name()
 						conn.send(self.smartbench_name)
-					except Exception as e:
-						Logger.exception("Message couldn't be sent: " + str(e))
+					except:
+						Logger.exception("Message couldn't be sent")
 
 					conn.close()
 				else:
@@ -142,8 +142,8 @@ class ServerConnection(object):
 				self.sock.shutdown(socket.SHUT_RDWR)
 				self.sock.close()
 
-			except Exception as e: 
-				Logger.exception("Attempted to close socket, but raised exception: " + str(e))
+			except:
+				Logger.exception("Attempted to close socket but failed")
 
 			Logger.info("Try to reconnect...")
 			sleep(2)
