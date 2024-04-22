@@ -17,8 +17,8 @@
     "cutting_feed_rate": 4000,
     "plunge_feed_rate": 250,
     "cutting_direction": "both",
-    "recommended_depth_per_pass": 12,
-    "max_depth_total": 12,
+    "recommended_depth_per_pass": 13,
+    "max_depth_total": 26,
     "step_over": 4,
     "yetipilot_target_power": 590
   },

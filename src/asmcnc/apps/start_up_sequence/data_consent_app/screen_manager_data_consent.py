@@ -2,6 +2,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 import os
 from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1, wifi_and_data_consent_2, wifi_and_data_consent_3
 from asmcnc.core_UI.popups import BasicPopup, PopupType
+from asmcnc.comms.logging_system.logging_system import Logger
 
 class ScreenManagerDataConsent(object):
 

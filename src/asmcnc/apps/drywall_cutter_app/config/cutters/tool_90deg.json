@@ -17,14 +17,14 @@
     "cutting_feed_rate": 4000,
     "plunge_feed_rate": 250,
     "cutting_direction": "both",
-    "recommended_depth_per_pass": 12,
-    "max_depth_total": 12,
+    "recommended_depth_per_pass": 19,
+    "max_depth_total": 19,
     "step_over": null,
-    "yetipilot_target_power": 640
+    "yetipilot_target_power": 600
   },
   "toolpath_offsets": {
-    "inside": true,
-    "outside": true,
+    "inside": false,
+    "outside": false,
     "on": true
   },
   "image": "./asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_90deg.png"

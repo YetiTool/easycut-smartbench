@@ -1,6 +1,7 @@
 from kivy.core.window import Window
 
 from asmcnc.core_UI.custom_popups import PopupDisplaySpindleData
+from asmcnc.core_UI.new_popups.spindle_health_check_popup import SpindleHealthCheckPopup
 from asmcnc.core_UI.popups import ErrorPopup, InfoPopup
 
 """
@@ -405,32 +406,11 @@ class SpindleSettingsWidget(Widget):
         self.get_data_button.disabled = False
 
     def show_spindle_data_popup(self):
-        main_string = (
-                self.l.get_str("SmartBench will lift the spindle motor and attempt to turn it on.") +
-                "\n\n" +
-                self.l.get_str("The spindle motor may spin at high speeds.") +
-                "\n\n" +
-                self.l.get_str(
-                    "Ensure both the power cable and data cable for the spindle motor are securely connected.") +
-                "\n\n" +
-                self.l.get_str(
-                    "Do not proceed until the spindle motor is clamped safely in the Z Head, and the dust shoe plug is fitted.") +
-                "\n\n" +
-                self.l.get_str("Do you want to continue?")
-        )
-        button_one_text = "No"
-        button_two_text = "Yes"
-        ErrorPopup(sm=self.sm, m=self.m, l=self.l,
-                   main_string=main_string,
-                   title="Warning!",
-                   button_one_text=button_one_text,
-                   button_two_text=button_two_text,
-                   button_two_callback=self.raise_z_then_get_data,
-                   button_one_background_color=[230 / 255., 74 / 255., 25 / 255., 1.],
-                   button_two_background_color=[76 / 255., 175 / 255., 80 / 255., 1.],
-                   popup_width=700, popup_height=460).open()
+        self.shc_popup = SpindleHealthCheckPopup(self.m, size_hint=(0.8, 0.8), callback=self.raise_z_then_get_data)
+        self.shc_popup.open()
 
-    def raise_z_then_get_data(self):
+    def raise_z_then_get_data(self, *args):
+        self.shc_popup.dismiss()
         if self.m.state().startswith("Idle"):
             self.wait_popup.open()
             self.m.raise_z_axis_for_collet_access()

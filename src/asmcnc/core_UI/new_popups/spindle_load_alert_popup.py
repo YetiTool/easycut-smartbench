@@ -4,6 +4,7 @@ from kivy.uix.button import Button
 from asmcnc.comms.localization import Localization
 from asmcnc.core_UI import scaling_utils
 from asmcnc.core_UI.new_popups import popup_bases
+from asmcnc.core_UI.utils import color_provider
 
 
 class SpindleLoadAlertPopup(popup_bases.PopupBase):
@@ -12,7 +13,8 @@ class SpindleLoadAlertPopup(popup_bases.PopupBase):
         localisation = Localization()
 
         title = popup_bases.PopupTitle(title_text=localisation.get_bold("Spindle read error"),
-                                       image_path=popup_bases.ERROR_ICON_PATH, separator_colour=color_provider.get_rgba("red"),
+                                       image_path=popup_bases.ERROR_ICON_PATH,
+                                       separator_colour=color_provider.get_rgba("red"),
                                        size_hint_y=0.15, localisation=localisation)
         self.root_layout.add_widget(title)
 

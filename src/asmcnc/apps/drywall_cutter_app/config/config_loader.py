@@ -1,6 +1,7 @@
 import json
 import os
 import inspect
+from collections import OrderedDict
 
 from kivy.event import EventDispatcher
 from kivy.properties import StringProperty, ObjectProperty
@@ -300,7 +301,9 @@ class DWTConfig(EventDispatcher):
 
                 cutters[cutter.tool_id] = {
                     'cutter_path': cutter_file,
-                    'image_path': cutter.image
+                    'image_path': cutter.image,
+                    'type': cutter.type,
+                    'size': cutter.dimensions.diameter if cutter.dimensions.diameter else cutter.dimensions.angle
                 }
         return cutters
 
