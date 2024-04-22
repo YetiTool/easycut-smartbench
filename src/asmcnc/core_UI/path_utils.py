@@ -141,7 +141,11 @@ def join(folder, filename):
     Returns the path with the given folder and filename.
     Can be used for filepaths that don't exist yet.
     """
+    if folder is none or filename is None:
+        return None
+
     return os.path.join(folder, filename).replace("\\", "/")
+
 # Common paths
 easycut_path = get_path("easycut-smartbench") # easycut-smartbench
 root_tests_path = get_path("easycut-smartbench/tests") # easycut-smartbench/tests
