@@ -128,3 +128,4 @@ class PopupScrollableBody(ScrollView):
         rst_doc = RstDocument(text=text, markup=True, font_size=scaling_utils.get_scaled_sp("15sp"),
                               background_color=get_color_from_hex("#f3f3f3"))
         self.add_widget(rst_doc)
+

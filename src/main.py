@@ -203,7 +203,7 @@ class SkavaUI(App):
         GRBLSettingsManagerSingleton(m)
 
         # Initialise yetipilot
-        yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd, localization=l)
+        self.yetipilot = YetiPilot(screen_manager=sm, machine=m, job_data=jd, localization=l)
 
         # Create database object to talk to
         db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
@@ -219,7 +219,7 @@ class SkavaUI(App):
         m.s.alarm.db = db
 
         # Serial comms needs to access YP
-        m.s.yp = yp
+        m.s.yp = self.yetipilot
 
         # Server connection object
         if ModelManagerSingleton().get_product_code() != ProductCodes.DRYWALLTEC:
@@ -235,7 +235,7 @@ class SkavaUI(App):
         usb_filechooser = screen_usb_filechooser.USBFileChooser(name='usb_filechooser', screen_manager=sm, job=jd,
                                                                 localization=l)
         go_screen = screen_go.GoScreen(name='go', screen_manager=sm, machine=m, job=jd, app_manager=am, database=db,
-                                       localization=l, yetipilot=yp)
+                                       localization=l, yetipilot=self.yetipilot)
         jobstart_warning_screen = screen_jobstart_warning.JobstartWarningScreen(name='jobstart_warning',
                                                                                 screen_manager=sm, machine=m,
                                                                                 localization=l)
