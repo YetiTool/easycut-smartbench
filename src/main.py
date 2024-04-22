@@ -194,98 +194,99 @@ class SkavaUI(App):
         jd = job_data.JobData(localization=l, settings_manager=sett)
 
         # Initialise 'm'achine object
-        m = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
+        machine = router_machine.RouterMachine(Cmport, sm, sett, l, jd)
+        self.machine = machine
 
         # initialise ModelManagerSingleton with machine for setting_50 update
-        ModelManagerSingleton(m)
+        ModelManagerSingleton(machine)
 
         # initialise GRBLSettingsManagerSingleton with machine to manage GRBL settings
-        GRBLSettingsManagerSingleton(m)
+        GRBLSettingsManagerSingleton(machine)
 
         # Initialise yetipilot
-        self.yetipilot = YetiPilot(screen_manager=sm, machine=m, job_data=jd, localization=l)
+        self.yetipilot = YetiPilot(screen_manager=sm, machine=machine, job_data=jd, localization=l)
 
         # Create database object to talk to
-        db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
+        db = smartbench_flurry_database_connection.DatabaseEventManager(sm, machine, sett)
 
         # Popup manager
-        pm = PopupManager(sm, m, l)
+        pm = PopupManager(sm, machine, l)
         sm.pm = pm  # store in screen manager for access by screens
 
         # App manager object
-        am = app_manager.AppManagerClass(sm, m, sett, l, kb, jd, db, config_flag, initial_version, pm)
+        am = app_manager.AppManagerClass(sm, machine, sett, l, kb, jd, db, config_flag, initial_version, pm)
 
         # Alarm screens are set up in serial comms, need access to the db object
-        m.s.alarm.db = db
+        machine.s.alarm.db = db
 
         # Serial comms needs to access YP
-        m.s.yp = self.yetipilot
+        machine.s.yp = self.yetipilot
 
         # Server connection object
         if ModelManagerSingleton().get_product_code() != ProductCodes.DRYWALLTEC:
             sc = server_connection.ServerConnection(sett)
 
         # initialise the screens (legacy)
-        lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager=sm, machine=m, app_manager=am,
+        lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager=sm, machine=machine, app_manager=am,
                                                 localization=l)
-        home_screen = screen_home.HomeScreen(name='home', screen_manager=sm, machine=m, job=jd, settings=sett,
+        home_screen = screen_home.HomeScreen(name='home', screen_manager=sm, machine=machine, job=jd, settings=sett,
                                              localization=l, keyboard=kb)
         local_filechooser = screen_local_filechooser.LocalFileChooser(name='local_filechooser', screen_manager=sm,
                                                                       job=jd, localization=l)
         usb_filechooser = screen_usb_filechooser.USBFileChooser(name='usb_filechooser', screen_manager=sm, job=jd,
                                                                 localization=l)
-        go_screen = screen_go.GoScreen(name='go', screen_manager=sm, machine=m, job=jd, app_manager=am, database=db,
+        go_screen = screen_go.GoScreen(name='go', screen_manager=sm, machine=machine, job=jd, app_manager=am, database=db,
                                        localization=l, yetipilot=self.yetipilot)
         jobstart_warning_screen = screen_jobstart_warning.JobstartWarningScreen(name='jobstart_warning',
-                                                                                screen_manager=sm, machine=m,
+                                                                                screen_manager=sm, machine=machine,
                                                                                 localization=l)
-        loading_screen = screen_file_loading.LoadingScreen(name='loading', screen_manager=sm, machine=m, job=jd,
+        loading_screen = screen_file_loading.LoadingScreen(name='loading', screen_manager=sm, machine=machine, job=jd,
                                                            localization=l)
-        checking_screen = screen_check_job.CheckingScreen(name='check_job', screen_manager=sm, machine=m, job=jd,
+        checking_screen = screen_check_job.CheckingScreen(name='check_job', screen_manager=sm, machine=machine, job=jd,
                                                           localization=l)
-        error_screen = screen_error.ErrorScreenClass(name='errorScreen', screen_manager=sm, machine=m, job=jd,
+        error_screen = screen_error.ErrorScreenClass(name='errorScreen', screen_manager=sm, machine=machine, job=jd,
                                                      database=db, localization=l)
-        serial_screen = screen_serial_failure.SerialFailureClass(name='serialScreen', screen_manager=sm, machine=m,
+        serial_screen = screen_serial_failure.SerialFailureClass(name='serialScreen', screen_manager=sm, machine=machine,
                                                                  win_port=Cmport, localization=l)
-        mstate_screen = screen_mstate_warning.WarningMState(name='mstate', screen_manager=sm, machine=m, localization=l)
+        mstate_screen = screen_mstate_warning.WarningMState(name='mstate', screen_manager=sm, machine=machine, localization=l)
         boundary_warning_screen = screen_boundary_warning.BoundaryWarningScreen(name='boundary', screen_manager=sm,
-                                                                                machine=m, localization=l)
+                                                                                machine=machine, localization=l)
         rebooting_screen = screen_rebooting.RebootingScreen(name='rebooting', screen_manager=sm, localization=l)
-        job_feedback_screen = screen_job_feedback.JobFeedbackScreen(name='job_feedback', screen_manager=sm, machine=m,
+        job_feedback_screen = screen_job_feedback.JobFeedbackScreen(name='job_feedback', screen_manager=sm, machine=machine,
                                                                     database=db, job=jd, localization=l, keyboard=kb)
         job_incomplete_screen = screen_job_incomplete.JobIncompleteScreen(name='job_incomplete', screen_manager=sm,
-                                                                          machine=m, database=db, job=jd,
+                                                                          machine=machine, database=db, job=jd,
                                                                           localization=l, keyboard=kb)
-        door_screen = screen_door.DoorScreen(name='door', screen_manager=sm, machine=m, job=jd, database=db,
+        door_screen = screen_door.DoorScreen(name='door', screen_manager=sm, machine=machine, job=jd, database=db,
                                              localization=l)
         squaring_decision_screen = screen_squaring_manual_vs_square.SquaringScreenDecisionManualVsSquare(
-            name='squaring_decision', screen_manager=sm, machine=m, localization=l)
+            name='squaring_decision', screen_manager=sm, machine=machine, localization=l)
         prepare_to_home_screen = screen_homing_prepare.HomingScreenPrepare(name='prepare_to_home', screen_manager=sm,
-                                                                           machine=m, localization=l)
+                                                                           machine=machine, localization=l)
         homing_active_screen = screen_homing_active.HomingScreenActive(name='homing_active', screen_manager=sm,
-                                                                       machine=m, localization=l)
+                                                                       machine=machine, localization=l)
         squaring_active_screen = screen_squaring_active.SquaringScreenActive(name='squaring_active', screen_manager=sm,
-                                                                             machine=m, localization=l)
+                                                                             machine=machine, localization=l)
         spindle_shutdown_screen = screen_spindle_shutdown.SpindleShutdownScreen(name='spindle_shutdown',
-                                                                                screen_manager=sm, machine=m, job=jd,
+                                                                                screen_manager=sm, machine=machine, job=jd,
                                                                                 database=db, localization=l)
         spindle_cooldown_screen = screen_spindle_cooldown.SpindleCooldownScreen(name='spindle_cooldown',
-                                                                                screen_manager=sm, machine=m,
+                                                                                screen_manager=sm, machine=machine,
                                                                                 localization=l)
         stop_or_resume_decision_screen = screen_stop_or_resume_decision.StopOrResumeDecisionScreen(
-            name='stop_or_resume_job_decision', screen_manager=sm, machine=m, job=jd, database=db, localization=l)
+            name='stop_or_resume_job_decision', screen_manager=sm, machine=machine, job=jd, database=db, localization=l)
         lift_z_on_pause_decision_screen = screen_lift_z_on_pause_decision.LiftZOnPauseDecisionScreen(
-            name='lift_z_on_pause_or_not', screen_manager=sm, machine=m, localization=l)
+            name='lift_z_on_pause_or_not', screen_manager=sm, machine=machine, localization=l)
         tool_selection_screen = screen_tool_selection.ToolSelectionScreen(name='tool_selection', screen_manager=sm,
-                                                                          machine=m, localization=l)
-        job_recovery_screen = screen_job_recovery.JobRecoveryScreen(name='job_recovery', screen_manager=sm, machine=m,
+                                                                          machine=machine, localization=l)
+        job_recovery_screen = screen_job_recovery.JobRecoveryScreen(name='job_recovery', screen_manager=sm, machine=machine,
                                                                     job=jd, localization=l, keyboard=kb)
-        nudge_screen = screen_nudge.NudgeScreen(name='nudge', screen_manager=sm, machine=m, job=jd, localization=l)
+        nudge_screen = screen_nudge.NudgeScreen(name='nudge', screen_manager=sm, machine=machine, job=jd, localization=l)
         recovery_decision_screen = screen_recovery_decision.RecoveryDecisionScreen(name='recovery_decision',
-                                                                                   screen_manager=sm, machine=m, job=jd,
+                                                                                   screen_manager=sm, machine=machine, job=jd,
                                                                                    localization=l)
         homing_decision_screen = screen_homing_decision.HomingDecisionScreen(name='homing_decision', screen_manager=sm,
-                                                                             machine=m, localization=l)
+                                                                             machine=machine, localization=l)
 
         # add the screens to screen manager
         sm.add_widget(lobby_screen)
