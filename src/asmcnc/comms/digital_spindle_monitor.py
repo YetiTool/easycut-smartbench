@@ -10,7 +10,7 @@ from asmcnc.core_UI.new_popups.spindle_load_alert_popup import SpindleLoadAlertP
 TEST_MODE = False
 
 
-def __open_alert_popup():
+def open_alert_popup():
     """
     Opens the alert popup.
     Call from main thread to ensure the popup is opened and rendered correctly.
@@ -118,7 +118,7 @@ class DigitalSpindleMonitor(object):
         """
         Logger.error("Invalid data threshold reached, alerting user.")
 
-        Clock.schedule_once(lambda dt: __open_alert_popup())
+        Clock.schedule_once(lambda dt: open_alert_popup())
         self.__faulty_readings = []
 
     def get_faulty_readings(self):
