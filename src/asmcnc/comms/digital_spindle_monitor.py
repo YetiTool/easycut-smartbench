@@ -45,6 +45,7 @@ class DigitalSpindleMonitor(object):
     __faulty_readings = []  # type: List[Dict[str, any]]
     __threshold = 20  # type: int  # Number of faulty readings before alert is triggered.
     __reset_interval = 60 * 10  # type: int  # Time in seconds before the faulty readings are reset.
+    __reset_clock = None  # type: Clock
 
     def __init__(self, serial_connection):
         """
@@ -75,8 +76,21 @@ class DigitalSpindleMonitor(object):
         :param value: New value of the digital spindle load raw.
         :return:
         """
+        if not self.__reset_clock:
+            self.__reset_clock = Clock.schedule_once(self.__reset_faulty_readings, self.__reset_interval)
+
         if value == -999 or (TEST_MODE and value > 0):
             self.__add_faulty_reading(value)
+
+    def __reset_faulty_readings(self, dt):
+        """
+        Resets the list of faulty readings.
+        :param dt: Time in seconds.
+        :return: None
+        """
+        Logger.info("Resetting faulty readings.")
+        self.__faulty_readings = []
+        self.__reset_clock = None
 
     def __add_faulty_reading(self, value):
         """
