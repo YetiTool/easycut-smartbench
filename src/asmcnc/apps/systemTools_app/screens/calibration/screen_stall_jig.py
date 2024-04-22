@@ -973,8 +973,7 @@ class StallJigScreen(Screen):
             self.calibration_db.insert_final_test_stage(self.sn_for_db, 10)
             self.calibration_db.insert_final_test_stage(self.sn_for_db, 11)
         except:
-            Logger.error("Could not insert final test stage into DB!!")
-            Logger.error(traceback.format_exc())
+            Logger.exception("Could not insert final test stage into DB!!")
         data_send_successful = self.calibration_db.send_data_through_publisher(
             self.sn_for_db, 9
         )

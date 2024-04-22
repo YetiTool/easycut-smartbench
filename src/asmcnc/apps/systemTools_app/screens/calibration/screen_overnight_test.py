@@ -898,8 +898,7 @@ class OvernightTesting(Screen):
         try:
             self.calibration_db.insert_final_test_stage(self.sn_for_db, self.stage_id)
         except:
-            Logger.error("Could not insert final test stage into DB!!")
-            Logger.error(traceback.format_exc())
+            Logger.exception("Could not insert final test stage into DB!!")
         self.status_data_dict[self.stage]["Statuses"] = []
         Logger.info("Overnight test, stage: " + str(self.stage))
 
@@ -1108,8 +1107,7 @@ class OvernightTesting(Screen):
         try:
             return min(raw_vals)
         except:
-            Logger.error("Min peak error:")
-            Logger.error(traceback.format_exc())
+            Logger.exception("Min peak error:")
             return None
 
     def read_out_peaks(self, stage):
@@ -1171,7 +1169,7 @@ class OvernightTesting(Screen):
                 peak_list[9],
             ]
         except:
-            Logger.error(traceback.format_exc())
+            Logger.exception("Failed to get statistics")
 
     def back_to_fac_settings(self):
         self.systemtools_sm.open_factory_settings_screen()
@@ -1612,8 +1610,7 @@ class OvernightTesting(Screen):
             log_exporter.create_and_send_logs(self.sn_for_db)
             return done_send
         except:
-            Logger.error("Failed to send data to DB!!")
-            Logger.error(traceback.format_exc())
+            Logger.exception("Failed to send data to DB!!")
             log_exporter.create_and_send_logs(self.sn_for_db)
             return False
 
@@ -1626,8 +1623,7 @@ class OvernightTesting(Screen):
             self.send_calibration_coefficients_for_one_motor(self.zh_serial, 4)
             return True
         except:
-            Logger.error("Failed to send calibration coefficients to DB!!")
-            Logger.error(traceback.format_exc())
+            Logger.exception("Failed to send calibration coefficients to DB!!")
             return False
 
     def send_calibration_coefficients_for_one_motor(self, sub_serial, motor_index):
@@ -1809,5 +1805,5 @@ class OvernightTesting(Screen):
                 return False
             return True
         except:
-            Logger.error(traceback.format_exc())
+            Logger.exception("Check in range failed")
             return False

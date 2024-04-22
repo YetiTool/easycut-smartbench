@@ -374,7 +374,7 @@ class UploadSerialNumbersScreen(Screen):
             )
         except:
             self.error_label.text = "Could not get data"
-            Logger.error(traceback.format_exc())
+            Logger.exception("Could not get data")
 
     def save_calibration_data_to_motor(self, motor_index, data):
         self.m.TMC_motor[motor_index].calibration_dataset_SG_values = data[
