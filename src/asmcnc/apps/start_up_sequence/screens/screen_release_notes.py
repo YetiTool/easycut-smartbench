@@ -13,6 +13,7 @@ from datetime import datetime
 from asmcnc.core_UI import path_utils as pu
 from asmcnc.comms.model_manager import MachineType
 from asmcnc.comms.model_manager import ModelManagerSingleton
+from asmcnc.comms.logging_system.logging_system import Logger
 
 Builder.load_string(
     """
@@ -152,8 +153,17 @@ class ReleaseNotesScreen(Screen):
         self.version = kwargs["version"]
         self.l = kwargs["localization"]
         self.model_manager = ModelManagerSingleton()
+
         machine_type = self.model_manager.get_machine_type()
-        self.scroll_release_notes.release_notes.source = self.get_release_notes_source(machine_type)
+        release_notes_source = self.get_release_notes_source(machine_type)
+        if os.path.exists(release_notes_source):
+            self.scroll_release_notes.release_notes.source = release_notes_source
+        else:
+            self.scroll_release_notes.release_notes.text = self.l.get_str(
+                "No release notes found"
+            )
+            Logger.error("Unable to find release notes for machine type: " + machine_type.value)
+
         self.update_strings()
 
         # Remove the knowledgebase link & QR code if the machine is not a SmartBench
@@ -184,9 +194,9 @@ class ReleaseNotesScreen(Screen):
             target_file_name = version_string + file_extension  # v290.txt
         else:
             # Machine type found, look for specific release notes
-            target_file_name = version_string + "_" + type.value + file_extension  # v290_SmartBench.txt
+            target_file_name = version_string + "_" + type.value + file_extension  # v290_SmartBench.txt or v290_DrywallTec.txt
 
-        return pu.join(pu.easycut_path, target_file_name) # /home/pi/easycut-smartbench/v290_SmartBench.txt
+        return pu.join(pu.easycut_path, target_file_name)  # /home/pi/easycut-smartbench/v290_SmartBench.txt
 
     def update_strings(self):
         self.version_number_label.text = self.l.get_str(
