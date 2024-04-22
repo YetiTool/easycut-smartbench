@@ -656,7 +656,7 @@ class FactorySettingsScreen(Screen):
                 Logger.info("Credentials file found on USB")
                 self.calibration_db.set_up_connection()
         except:
-            Logger.error("No /media/usb/ folder found")
+            Logger.exception("No /media/usb/ folder found")
 
     def go_back(self):
         self.systemtools_sm.back_to_menu()
@@ -1147,7 +1147,7 @@ $51 is currently set to """
             serial_number_from_file = str(file.read())
             file.close()
         except:
-            Logger.error("Could not get serial number! Please contact YetiTool support!")
+            Logger.exception("Could not get serial number! Please contact YetiTool support!")
         return str(serial_number_from_file)
 
     def final_test(self, board):
