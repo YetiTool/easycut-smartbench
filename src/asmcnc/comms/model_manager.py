@@ -89,13 +89,14 @@ class ModelManagerSingleton(EventDispatcher):
 
     def _process_raw_migration_file(self):
         """This function will only run once when a new migration_raw.json file was added."""
-        if os.path.exists(self.MIGRATION_RAW_FILE_PATH):
-            with open(self.MIGRATION_RAW_FILE_PATH, 'r') as f:
-                d = json.load(f)
-                d['Pro Plus'] = [md5(s).hexdigest() for s in d['Pro Plus']]
-                d['Pro X'] = [md5(s).hexdigest() for s in d['Pro X']]
-            with open(self.MIGRATION_FILE_PATH, 'w') as f:
-                json.dump(d, f)
+        if self.MIGRATION_RAW_FILE_PATH is not None:
+            if os.path.exists(self.MIGRATION_RAW_FILE_PATH):
+                with open(self.MIGRATION_RAW_FILE_PATH, 'r') as f:
+                    d = json.load(f)
+                    d['Pro Plus'] = [md5(s).hexdigest() for s in d['Pro Plus']]
+                    d['Pro X'] = [md5(s).hexdigest() for s in d['Pro X']]
+                with open(self.MIGRATION_FILE_PATH, 'w') as f:
+                    json.dump(d, f)
 
     def on_firmware_version(self, instance, value):
         """Is called when the firmware_version is first read. Updates the saved firmware_version if changed."""
