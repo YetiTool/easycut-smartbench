@@ -90,7 +90,7 @@ class DigitalSpindleMonitor(object):
                 "load": value,
                 "temperature": self.__serial_connection.digital_spindle_temperature,
                 "kill_time": self.__serial_connection.digital_spindle_kill_time,
-                "voltage": self.__serial_connection.digital_spindle_voltage,
+                "voltage": self.__serial_connection.digital_spindle_mains_voltage,
             },
             "grbl": {
                 "feed_rate": self.__serial_connection.feed_rate,
