@@ -1,4 +1,6 @@
+import collections
 import time
+import json
 
 from kivy.clock import Clock
 from typing import Dict, List
@@ -42,10 +44,13 @@ class DigitalSpindleMonitor(object):
 
     __serial_connection = None
 
-    __faulty_readings = []  # type: List[Dict[str, any]]
-    __threshold = 20  # type: int  # Number of faulty readings before alert is triggered.
+    __faulty_reading_count = 0  # type: int  # Number of faulty readings.
+    __faulty_reading_trigger = 20  # type: int  # Number of faulty readings before alert is triggered.
+
     __reset_interval = 60 * 10  # type: int  # Time in seconds before the faulty readings are reset.
     __reset_clock = None  # type: Clock
+
+    __spindle_data_stack = collections.deque(maxlen=500)  # type: collections.deque  # List of the last 500 readings.
 
     def __init__(self, serial_connection):
         """
@@ -77,19 +82,33 @@ class DigitalSpindleMonitor(object):
         :return:
         """
         if not self.__reset_clock:
-            self.__reset_clock = Clock.schedule_once(self.__reset_faulty_readings, self.__reset_interval)
+            self.__reset_clock = Clock.schedule_once(self.__reset_faulty_reading_counter, self.__reset_interval)
+
+        self.__spindle_data_stack.append({
+            "time": time.time(),
+            "spindle": {
+                "load": value,
+                "temperature": self.__serial_connection.digital_spindle_temperature,
+                "kill_time": self.__serial_connection.digital_spindle_kill_time,
+                "voltage": self.__serial_connection.digital_spindle_voltage,
+            },
+            "grbl": {
+                "feed_rate": self.__serial_connection.feed_rate,
+                "spindle_speed": self.__serial_connection.spindle_speed,
+            }
+        })
 
         if value == -999 or (TEST_MODE and value > 0):
             self.__add_faulty_reading(value)
 
-    def __reset_faulty_readings(self, dt):
+    def __reset_faulty_reading_counter(self, dt):
         """
-        Resets the list of faulty readings.
-        :param dt: Time in seconds.
+        Resets the faulty reading counter.
+        :param dt: kivy clock time.
         :return: None
         """
-        Logger.info("Resetting faulty readings.")
-        self.__faulty_readings = []
+        Logger.info("Resetting faulty reading counter.")
+        self.__faulty_reading_count = 0
         self.__reset_clock = None
 
     def __add_faulty_reading(self, value):
@@ -100,16 +119,28 @@ class DigitalSpindleMonitor(object):
         """
         Logger.warning('Faulty spindle reading detected: {}'.format(value))
 
-        self.__faulty_readings.append({
-            'timestamp': time.time(),
-            'value': value,
-            'raw_status': self.__serial_connection.raw_status,
-        })
+        self.__faulty_reading_count += 1
 
-        threshold_exceeded = len(self.__faulty_readings) >= self.__threshold
+        threshold_exceeded = self.__faulty_reading_count >= self.__faulty_reading_trigger
 
         if threshold_exceeded:
             self.__trigger_alert()
+            self.export_diagnostics_file()
+
+    def export_diagnostics_file(self):
+        """
+        Exports the faulty readings to a diagnostics file.
+        :return: None
+        """
+        Logger.info("Exporting diagnostics file.")
+
+        skeleton = {
+            "spindle_free_load": self.__serial_connection.spindle_freeload,
+            "spindle_data_stack": self.__spindle_data_stack,
+        }
+
+        with open("diagnostics.json", "w") as f:
+            json.dump(skeleton, f)
 
     def __trigger_alert(self):
         """
@@ -119,18 +150,18 @@ class DigitalSpindleMonitor(object):
         Logger.error("Invalid data threshold reached, alerting user.")
 
         Clock.schedule_once(lambda dt: open_alert_popup())
-        self.__faulty_readings = []
+        self.__faulty_reading_count = 0
 
     def get_faulty_readings(self):
         """
         Returns a list of faulty readings.
         :return: List of faulty readings.
         """
-        return self.__faulty_readings
+        return self.__faulty_reading_count
 
     def get_threshold(self):
         """
         Returns the threshold for the number of faulty readings before an alert is triggered.
         :return: The threshold value.
         """
-        return self.__threshold
+        return self.__faulty_reading_trigger

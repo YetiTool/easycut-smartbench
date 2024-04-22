@@ -23,20 +23,22 @@ MAIN_STRING = (
 
 
 class SpindleLoadAlertPopup(popup_bases.PopupBase):
+    """A popup that appears when the spindle load cannot be read. This popup allows the user to cancel the job or
+    continue without YetiPilot. The user can also export the diagnostics file to a USB."""
     auto_dismiss = False
+    localisation = Localization()
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs):  # TODO: Organise this class
         super(SpindleLoadAlertPopup, self).__init__(**kwargs)
-        localisation = Localization()
         self.machine = App.get_running_app().machine
         self.sm = App.get_running_app().sm
 
         title = popup_bases.PopupTitle(
-            title_text=localisation.get_str("Spindle read error"),
+            title_text=self.localisation.get_str("Spindle read error"),
             image_path=popup_bases.ERROR_ICON_PATH,
             separator_colour=RED,
             size_hint_y=0.15,
-            localisation=localisation,
+            localisation=self.localisation,
         )
         self.root_layout.add_widget(title)
 
@@ -57,7 +59,7 @@ class SpindleLoadAlertPopup(popup_bases.PopupBase):
         qr_code_image = Image(source="./asmcnc/core_UI/image_library/qr_codes/submit_support_ticket_qr.png", size_hint_y=0.65)
         qr_code_layout.add_widget(qr_code_image)
         export_button = Button(
-            text=localisation.get_bold("Export diagnostics file to USB"),
+            text=self.localisation.get_bold("Export diagnostics file to USB"),
             background_color=GREEN,
             background_normal="",
             font_size=scaling_utils.get_scaled_sp("13sp"),
@@ -65,6 +67,7 @@ class SpindleLoadAlertPopup(popup_bases.PopupBase):
             size_hint_y=0.35,
             halign="center",
             valign="center",
+            on_press=self.export_diagnostics_file,
             markup=True,
         )
         qr_code_image.bind(width=export_button.setter("width"))
@@ -82,7 +85,7 @@ class SpindleLoadAlertPopup(popup_bases.PopupBase):
         button_layout = BoxLayout(size_hint_y=0.15, spacing=dp(100))
         button_layout.add_widget(
             Button(
-                text=localisation.get_bold("Cancel job"),
+                text=self.localisation.get_bold("Cancel job"),
                 on_press=self.cancel_job,
                 background_color=RED,
                 background_normal="",
@@ -92,7 +95,7 @@ class SpindleLoadAlertPopup(popup_bases.PopupBase):
         )
         button_layout.add_widget(
             Button(
-                text=localisation.get_bold("Continue without YetiPilot"),
+                text=self.localisation.get_bold("Continue without YetiPilot"),
                 on_press=self.continue_without_yetipilot,
                 background_color=RED,
                 background_normal="",
@@ -113,4 +116,3 @@ class SpindleLoadAlertPopup(popup_bases.PopupBase):
     def continue_without_yetipilot(self, *args):
         App.get_running_app().yetipilot.disable()
         self.dismiss()
-
