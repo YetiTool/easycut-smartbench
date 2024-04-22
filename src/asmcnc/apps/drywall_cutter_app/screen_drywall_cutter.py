@@ -12,18 +12,25 @@ import numpy as np
 
 from matplotlib import cm
 from matplotlib.ticker import LinearLocator
+from asmcnc.skavaUI import widget_status_bar
 
 Builder.load_string("""
 <DrywallCutterScreen>:
+    status_container:status_container
     BoxLayout:
-        Button:
-            on_press: root.start_test
-            text: "Start Test"
-        Image:
-            source: "tabletop.png"
-        Button:
-            on_press: root.exit
-            text: "Exit"
+        orientation: "vertical"
+        BoxLayout:
+            Button:
+                on_press: root.start_test
+                text: "Start Test"
+            Image:
+                source: "tabletop.png"
+            Button:
+                on_press: root.exit
+                text: "Exit"
+        BoxLayout:
+            size_hint_y: 0.08
+            id: status_container
 """)
 
 
@@ -56,6 +63,8 @@ class DrywallCutterScreen(Screen):
         self.ser = serial.Serial(self.PORT, 9600, timeout=5)
 
         self.m.s.bind(m_state=lambda i, value: self.set_machine_state(value))
+
+        self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
 
     def set_machine_state(self, value):
         self.machine_status = value.lower()
