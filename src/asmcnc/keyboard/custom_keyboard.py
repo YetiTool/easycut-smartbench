@@ -187,7 +187,7 @@ class Keyboard(VKeyboard):
                 if keycode == "enter":
                     if not self.text_instance.multiline:
                         self.text_instance.dispatch("on_text_validate")
-                        if self.text_instance.text_validate_unfocus:
+                        if self.text_instance and self.text_instance.text_validate_unfocus:
                             self.defocus_text_input(self.text_instance)
                     else:
                         self.text_instance.insert_text(u'\n')
