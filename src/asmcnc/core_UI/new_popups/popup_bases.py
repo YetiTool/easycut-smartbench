@@ -58,7 +58,7 @@ class PopupTitle(BoxLayout):
         spacer = BoxLayout(size_hint=(0.01, 1))
         image_label_layout.add_widget(spacer)
 
-        self.label = Label(text=title_text, color=get_color_from_hex("#000000"), font_size=20)
+        self.label = Label(text=title_text, color=get_color_from_hex("#000000"), font_size=scaling_utils.get_scaled_sp("20sp"))
         self.label.bind(size=self.on_label_size)
         image_label_layout.add_widget(self.label)
 

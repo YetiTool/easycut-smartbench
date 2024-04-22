@@ -92,7 +92,7 @@ class SpindleLoadAlertPopup(popup_bases.PopupBase):
         )
         button_layout.add_widget(
             Button(
-                text=localisation.get_bold("sContinue without YetiPilot"),
+                text=localisation.get_bold("Continue without YetiPilot"),
                 on_press=self.continue_without_yetipilot,
                 background_color=RED,
                 background_normal="",
