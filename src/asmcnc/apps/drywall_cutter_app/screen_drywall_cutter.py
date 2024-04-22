@@ -24,6 +24,7 @@ Builder.load_string("""
                 on_press: root.start_test()
                 text: "Start Test"
             Image:
+                id: graph
                 source: "tabletop.png"
             Button:
                 on_press: root.exit()
@@ -49,7 +50,7 @@ class DrywallCutterScreen(Screen):
         self.pm = kwargs['popup_manager']
         self.cs = self.m.cs
 
-        self.PORT = 'COM14'
+        self.PORT = 'COM10'
         self.x_max = 1200
         self.y_max = 2400
         self.grid_points_x = 4
@@ -62,42 +63,34 @@ class DrywallCutterScreen(Screen):
         self.y_range = np.arange(0, self.x_max, self.x_increment)
         self.ser = serial.Serial(self.PORT, 9600, timeout=5)
 
-        self.m.s.bind(m_state=lambda i, value: self.set_machine_state(value))
+        self.m.s.bind(m_state=lambda i, value: self.on_state_change(value))
+
+        self.test_running = False
 
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
 
-    def set_machine_state(self, value):
-        self.machine_status = value.lower()
+    def on_state_change(self, value):
+        if self.test_running and value.lower() == 'dwell':
+            self.z_vals.append(self.get_reading())
 
+        if value == "idle":
+            self.generate_graph()
+            self.test_running = False
     def start_test(self):
-        
-        def get_reading():
-            raw_reading = self.ser.read(20)
-            reading = str(raw_reading)
-            try:
-                reading = float(str(reading[10:11]) + str(float(reading[13:21])/(1000)))
-            except:
-                reading = 0
-            return reading
+        self.test_running = True
+        with open('probing_gcode.gcode') as gcode_file:
+            gcode = gcode_file.readlines()
 
-        for i in self.x_range:
-            for n in self.y_range:
-                while self.machine_status == 'jog':
-                    pass
-                self.m.jog_absolute_xy(n, i, 4000)
-                while self.machine_status == 'jog':
-                    pass
-                self.m.jog_absolute_single_axis('z', -10, 300)  # move to Z measure
-                while self.machine_status == 'jog':
-                    pass
-                time.sleep(0.5)
-                self.y_row.append(get_reading())
-                time.sleep(0.5)
-                self.m.jog_absolute_single_axis('z', 10, 300)  # move to Z clearance
-                while self.machine_status == 'jog':
-                    pass
-            self.z_vals.append(self.y_row)
-            self.y_row = []  # clear list "y_row"
+        self.m.s.run_skeleton_buffer_stuffer(gcode)
+        
+    def get_reading(self):
+        raw_reading = self.ser.read(20)
+        reading = str(raw_reading)
+        try:
+            reading = float(str(reading[10:11]) + str(float(reading[13:21])/(1000)))
+        except:
+            reading = 0
+        return reading
 
     def generate_graph(self):
         fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
@@ -115,8 +108,8 @@ class DrywallCutterScreen(Screen):
         # Add a color bar which maps values to colors.
         fig.colorbar(surf, shrink=0.5, aspect=5)
 
-        # plt.show()
         plt.savefig('tabletop.png')
+        self.graph.source = 'tabletop.png'  # Update displayed graph
 
 
     def exit(self):
