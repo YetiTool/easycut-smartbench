@@ -21,12 +21,12 @@ Builder.load_string("""
         orientation: "vertical"
         BoxLayout:
             Button:
-                on_press: root.start_test
+                on_press: root.start_test()
                 text: "Start Test"
             Image:
                 source: "tabletop.png"
             Button:
-                on_press: root.exit
+                on_press: root.exit()
                 text: "Exit"
         BoxLayout:
             size_hint_y: 0.08
