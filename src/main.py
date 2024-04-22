@@ -180,7 +180,7 @@ class SkavaUI(App):
 
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
-
+        self.sm = sm
         # Localization/language object
         l = localization.Localization()
 
