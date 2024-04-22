@@ -14,6 +14,16 @@ from kivy.utils import get_color_from_hex
 from asmcnc.core_UI import scaling_utils
 
 
+ERROR_ICON_PATH = "./asmcnc/apps/shapeCutter_app/img/error_icon_scaled_up.png"
+
+
+class PopupType(Enum):
+    """Enum to define the type of popup to display."""
+    ERROR = 0
+    INFO = 1
+    WARNING = 2
+
+
 class PopupBase(ModalView):
     """Base class for all popups in the app. This class is meant to be subclassed and not used directly.
     Add widgets to the root_layout to add content to the popup.
@@ -30,8 +40,8 @@ class PopupBase(ModalView):
 
 
 class PopupTitle(BoxLayout):
-    """Title bar for popups. Contains an icon and a title. This class is meant to be subclassed and not used
-    directly."""
+    """Title bar for popups. Contains an icon and a title. Use subclasses for different types of popups. Or use this
+    class directly for custom popups."""
 
     def __init__(self, title_text, image_path, separator_colour, **kwargs):
         super(PopupTitle, self).__init__(**kwargs)
@@ -71,8 +81,9 @@ class PopupErrorTitle(PopupTitle):
     """Title bar for error popups. Contains an icon and a title."""
     def __init__(self, localisation, **kwargs):
         super(PopupErrorTitle, self).__init__(localisation.get_str("Error!"),
-                                              "./asmcnc/apps/shapeCutter_app/img/error_icon_scaled_up.png",
+                                              ERROR_ICON_PATH,
                                               (1, 0, 0, 1), **kwargs)
+
 
 
 scroll_view_kv = """

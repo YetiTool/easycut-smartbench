@@ -1,26 +1,23 @@
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
-from kivy.uix.label import Label
 
 from asmcnc.comms.localization import Localization
 from asmcnc.core_UI import scaling_utils
-from asmcnc.core_UI.new_popups.popup_bases import PopupBase, PopupErrorTitle
+from asmcnc.core_UI.new_popups import popup_bases
 
 
-class SpindleLoadAlertPopup(PopupBase):
+class SpindleLoadAlertPopup(popup_bases.PopupBase):
     def __init__(self, **kwargs):
         super(SpindleLoadAlertPopup, self).__init__(**kwargs)
         localisation = Localization()
 
-        title = PopupErrorTitle(size_hint_y=0.15, localisation=localisation)
+        title = popup_bases.PopupTitle(title_text=localisation.get_bold("Spindle read error"),
+                                       image_path=popup_bases.ERROR_ICON_PATH, separator_colour=color_provider.get_rgba("red"),
+                                       size_hint_y=0.15, localisation=localisation)
         self.root_layout.add_widget(title)
 
-        sub_title = Label(text=localisation.get_str("SmartBench has detected that the spindle is not sending valid "
-                                                    "load data. Please check the spindle connection!"),
-                          size_hint_y=0.7, color=(0, 0, 0, 1), font_size=scaling_utils.get_scaled_sp("16sp"),
-                          valign="middle", halign="center")
-        sub_title.bind(size=sub_title.setter("text_size"))
-        self.root_layout.add_widget(sub_title)
+        body_layout = BoxLayout(orientation="vertical", size_hint_y=0.7)
+
 
         button_layout = BoxLayout(size_hint_y=0.15)
         button_layout.add_widget(Button(text=localisation.get_bold("Ok"), on_press=self.dismiss,
