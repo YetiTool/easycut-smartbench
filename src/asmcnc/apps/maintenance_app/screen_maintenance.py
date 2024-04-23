@@ -23,6 +23,7 @@ from asmcnc.apps.maintenance_app import (
     widget_maintenance_touchplate_offset,
     widget_maintenance_z_lubrication_reminder,
     widget_maintenance_spindle_health_check,
+    widget_maintenance_general_settings,
 )
 
 Builder.load_string("""
@@ -60,6 +61,9 @@ Builder.load_string("""
     z_misc_save_container: z_misc_save_container
     touchplate_offset_container: touchplate_offset_container
     z_lubrication_reminder_container: z_lubrication_reminder_container
+
+    # General settings widgets
+    general_settings_container: general_settings_container
 
     # + tab widgets
     plus_tab : plus_tab
@@ -407,6 +411,17 @@ Builder.load_string("""
                         size: self.size
                         pos: self.pos
 
+                BoxLayout: 
+                    id: general_settings_container
+                    height: dp(0.729166666667*app.height)
+                    width: dp(0.95*app.width)
+                    canvas:
+                        Color:
+                            rgba: 1,1,1,1
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
+
         # + Tab
 
         TabbedPanelItem:
@@ -543,6 +558,14 @@ class MaintenanceScreenClass(Screen):
         )
         self.z_lubrication_reminder_container.add_widget(
             self.z_lubrication_reminder_widget
+        )
+        self.general_settings_widget = (
+            widget_maintenance_general_settings.GeneralSettingsWidget(
+                machine=self.m, screen_manager=self.sm, localization=self.l
+            )
+        )
+        self.general_settings_container.add_widget(
+            self.general_settings_widget
         )
         if self.m.theateam():
             self.add_plus_tab()
