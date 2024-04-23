@@ -1,18 +1,13 @@
-'''
+"""
 Created on 17 August 2020
 @author: Letty
 widget to allow user to change touchplate offset
-'''
-
-import kivy
+"""
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
 
-from asmcnc.apps.maintenance_app import popup_maintenance
-from asmcnc.skavaUI import popup_info
-
 Builder.load_string("""
+#:import LabelBase asmcnc.core_UI.components.labels.base_label
 
 <TouchplateOffsetWidget>
 
@@ -22,17 +17,17 @@ Builder.load_string("""
     
     BoxLayout:
         size_hint: (None, None)
-        height: dp(130)
-        width: dp(580)
+        height: dp(0.270833333333*app.height)
+        width: dp(0.725*app.width)
         pos: self.parent.pos
         orientation: 'vertical'
-        padding: 15
-        spacing: 10      
+        padding:[dp(0.01875)*app.width, dp(0.03125)*app.height]
+        spacing:0.0208333333333*app.height
 
-        Label:
+        LabelBase:
             id: touchplate_offset_label
             color: 0,0,0,1
-            font_size: dp(24)
+            font_size: dp(0.03*app.width)
             markup: True
             halign: "left"
             valign: "middle"
@@ -41,18 +36,18 @@ Builder.load_string("""
 
         BoxLayout: 
             orientation: 'horizontal'
-            padding: [0,dp(5),0,0]
-            spacing: 30
+            padding:[0, dp(0.0104166666667)*app.height, 0, 0]
+            spacing:0.0375*app.width
             size_hint: (None, None)
-            height: dp(60)
-            width: dp(580) 
+            height: dp(0.125*app.height)
+            width: dp(0.725*app.width) 
 
             # Put the image here
             BoxLayout: 
                 size_hint: (None, None)
                 # pos: self.parent.pos
-                height: dp(60)
-                width: dp(145)
+                height: dp(0.125*app.height)
+                width: dp(0.18125*app.width)
 
                 Image:
                     id: touchplate_image
@@ -66,15 +61,15 @@ Builder.load_string("""
             TextInput:
                 id: touchplate_offset
                 size_hint: (None, None)
-                height: dp(50)
-                width: dp(120)
-                font_size: dp(28)
+                height: dp(0.104166666667*app.height)
+                width: dp(0.15*app.width)
+                font_size: dp(0.035*app.width)
                 input_filter: 'float'
                 multiline: False
 
-            Label: 
+            LabelBase: 
                 color: 0,0,0,1
-                font_size: dp(28)
+                font_size: dp(0.035*app.width)
                 markup: True
                 halign: "left"
                 valign: "middle"
@@ -82,18 +77,16 @@ Builder.load_string("""
                 text: "mm"
 
 
-""")
+"""
+)
 
 
 class TouchplateOffsetWidget(Widget):
-
     def __init__(self, **kwargs):
-    
         super(TouchplateOffsetWidget, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-        self.l=kwargs['localization']
-
+        self.sm = kwargs["screen_manager"]
+        self.m = kwargs["machine"]
+        self.l = kwargs["localization"]
         self.update_strings()
 
     def update_strings(self):

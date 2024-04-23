@@ -1,16 +1,17 @@
-'''
+"""
 Created on 4 March 2020
 Screen 35 for the Shape Cutter App
 
 @author: Letty
-'''
+"""
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.clock import Clock
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <ShapeCutter35ScreenClass>
 
@@ -22,24 +23,25 @@ Builder.load_string("""
 
     BoxLayout:
         size_hint: (None,None)
-        width: dp(800)
-        height: dp(480)
+        width: dp(1.0*app.width)
+        height: dp(1.0*app.height)
         padding: 0
         spacing: 0
         orientation: "vertical"
 
         BoxLayout:
             size_hint: (None,None)
-            width: dp(800)
-            height: dp(90)
+            width: dp(1.0*app.width)
+            height: dp(0.1875*app.height)
             padding: 0
             spacing: 0
             orientation: "horizontal"
 
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint: (None,None)
-                height: dp(90)
-                width: dp(142)
+                height: dp(0.1875*app.height)
+                width: dp(0.1775*app.width)
                 on_press: root.prepare()
                 BoxLayout:
                     padding: 0
@@ -48,11 +50,12 @@ Builder.load_string("""
                     Image:
                         source: "./asmcnc/apps/shapeCutter_app/img/prepare_tab_blue.png"
                         size: self.parent.size
-                        stretch: True
+                        allow_stretch: True
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint: (None,None)
-                height: dp(90)
-                width: dp(142)
+                height: dp(0.1875*app.height)
+                width: dp(0.1775*app.width)
                 on_press: root.load()
                 BoxLayout:
                     padding: 0
@@ -61,11 +64,12 @@ Builder.load_string("""
                     Image:
                         source: "./asmcnc/apps/shapeCutter_app/img/load_tab_blue.png"
                         size: self.parent.size
-                        stretch: True
+                        allow_stretch: True
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint: (None,None)
-                height: dp(90)
-                width: dp(142)
+                height: dp(0.1875*app.height)
+                width: dp(0.1775*app.width)
                 on_press: root.define()
                 BoxLayout:
                     padding: 0
@@ -78,9 +82,10 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint: (None,None)
-                height: dp(90)
-                width: dp(142)
+                height: dp(0.1875*app.height)
+                width: dp(0.1775*app.width)
                 on_press: root.position()
                 BoxLayout:
                     padding: 0
@@ -93,9 +98,10 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint: (None,None)
-                height: dp(90)
-                width: dp(142)
+                height: dp(0.1875*app.height)
+                width: dp(0.1775*app.width)
                 on_press: root.check()
                 BoxLayout:
                     padding: 0
@@ -108,9 +114,10 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
             Button:
+                font_size: str(0.01875 * app.width) + 'sp'
                 size_hint: (None,None)
-                height: dp(90)
-                width: dp(90)
+                height: dp(0.1875*app.height)
+                width: dp(0.1125*app.width)
                 on_press: root.exit()
                 BoxLayout:
                     padding: 0
@@ -126,8 +133,8 @@ Builder.load_string("""
         BoxLayout:
             size_hint: (None,None)
             padding: 0
-            height: dp(390)
-            width: dp(800)
+            height: dp(0.8125*app.height)
+            width: dp(1.0*app.width)
             canvas:
                 Rectangle: 
                     pos: self.pos
@@ -141,16 +148,16 @@ Builder.load_string("""
                     
                 BoxLayout: #Header
                     size_hint: (None,None)
-                    height: dp(60)
-                    width: dp(800)
-                    padding: (20,0,0,0)
+                    height: dp(0.125*app.height)
+                    width: dp(1.0*app.width)
+                    padding:[dp(0.025)*app.width, 0, 0, 0]
                     orientation: "horizontal"
                     
                     BoxLayout: #Screen number
                         size_hint: (None,None)
                         padding: 0
-                        height: dp(40)
-                        width: dp(40)
+                        height: dp(0.0833333333333*app.height)
+                        width: dp(0.05*app.width)
                         canvas:
                             Rectangle: 
                                 pos: self.pos
@@ -160,21 +167,21 @@ Builder.load_string("""
                             text: root.screen_number
                             valign: "middle"
                             halign: "center"
-                            font_size: 26
+                            font_size: 0.0325*app.width
                             markup: True
                                 
                                 
                         
                     BoxLayout: #Title
                         size_hint: (None,None)
-                        height: dp(60)
-                        width: dp(740)
-                        padding: (20,20,0,0)
+                        height: dp(0.125*app.height)
+                        width: dp(0.925*app.width)
+                        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height, 0, 0]
                         
                         Label:
                             text: root.title_label
                             color: 0,0,0,1
-                            font_size: 28
+                            font_size: 0.035*app.width
                             markup: True
                             halign: "left"
                             valign: "bottom"
@@ -185,23 +192,24 @@ Builder.load_string("""
                     
                 BoxLayout: #Body
                     size_hint: (None,None)
-                    height: dp(330)
-                    width: dp(800)
-                    padding: 0,20,0,0
+                    height: dp(0.6875*app.height)
+                    width: dp(1.0*app.width)
+                    padding:[0, dp(0.0416666666667)*app.height, 0, 0]
                     orientation: "horizontal"
                  
                     BoxLayout: #text box
                         size_hint: (None,None)
-                        height: dp(310)
-                        width: dp(675)
-                        padding: 80,0,0,5
+                        height: dp(0.645833333333*app.height)
+                        width: dp(0.84375*app.width)
+                        padding:[dp(0.1)*app.width, 0, 0, dp(0.0104166666667)*app.height]
                         orientation: "vertical"
                         ToggleButton:
+                            font_size: str(0.01875 * app.width) + 'sp'
                             id: spindle_toggle
                             on_press: root.set_spindle()
                             background_color: 1, 1, 1, 0 
                             BoxLayout:
-                                padding: 10
+                                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                                 size: self.parent.size
                                 pos: self.parent.pos      
                                 Image:
@@ -214,7 +222,7 @@ Builder.load_string("""
                         Label:
                             text: root.user_instructions
                             color: 0,0,0,1
-                            font_size: 18
+                            font_size: 0.0225*app.width
                             markup: True
                             halign: "left"
                             valign: "top"
@@ -224,22 +232,23 @@ Builder.load_string("""
 
                     BoxLayout: #action box
                         size_hint: (None,None)
-                        height: dp(310)
-                        width: dp(125)
-                        padding: 0,0,0,34
-                        spacing: 34
+                        height: dp(0.645833333333*app.height)
+                        width: dp(0.15625*app.width)
+                        padding:[0, 0, 0, dp(0.0708333333333)*app.height]
+                        spacing:0.0708333333333*app.height
                         orientation: "vertical"
                         
                         BoxLayout: 
                             size_hint: (None,None)
-                            height: dp(67)
-                            width: dp(88)
-                            padding: (24,0,24,34)
+                            height: dp(0.139583333333*app.height)
+                            width: dp(0.11*app.width)
+                            padding:[dp(0.03)*app.width, 0, dp(0.03)*app.width, dp(0.0708333333333)*app.height]
                             Button:
+                                font_size: str(0.01875 * app.width) + 'sp'
                                 id: info_button
                                 size_hint: (None,None)
-                                height: dp(40)
-                                width: dp(40)
+                                height: dp(0.0833333333333*app.height)
+                                width: dp(0.05*app.width)
                                 background_color: hex('#F4433600')
                                 opacity: 1
                                 on_press: root.get_info()
@@ -255,10 +264,11 @@ Builder.load_string("""
                                         allow_stretch: True
 
                         Button:
+                            font_size: str(0.01875 * app.width) + 'sp'
                             id: back_button
                             size_hint: (None,None)
-                            height: dp(67)
-                            width: dp(88)
+                            height: dp(0.139583333333*app.height)
+                            width: dp(0.11*app.width)
                             background_color: hex('#F4433600')
                             on_press: root.go_back()
                             BoxLayout:
@@ -272,10 +282,11 @@ Builder.load_string("""
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True
                         Button:
+                            font_size: str(0.01875 * app.width) + 'sp'
                             id: next_button
                             size_hint: (None,None)
-                            height: dp(67)
-                            width: dp(88)
+                            height: dp(0.139583333333*app.height)
+                            width: dp(0.11*app.width)
                             background_color: hex('#F4433600')
                             on_press: root.next_screen()
                             BoxLayout:
@@ -289,22 +300,25 @@ Builder.load_string("""
                                     size: self.parent.width, self.parent.height
                                     allow_stretch: True               
 
-""")
+"""
+)
+
 
 class ShapeCutter35ScreenClass(Screen):
-    
     info_button = ObjectProperty()
     vacuum_toggle = ObjectProperty()
-    
     screen_number = StringProperty("[b]35[/b]")
     title_label = StringProperty("[b]Check spindle power[/b]")
-    user_instructions = StringProperty("Press the button. The spindle should come on for 2 seconds.\n\n" \
-                                       "If not, check that it\'s connected and switched on, then retry by pressing the button again.")
-    
+    user_instructions = StringProperty(
+        """Press the button. The spindle should come on for 2 seconds.
+
+If not, check that it's connected and switched on, then retry by pressing the button again."""
+    )
+
     def __init__(self, **kwargs):
         super(ShapeCutter35ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m=kwargs['machine']
+        self.shapecutter_sm = kwargs["shapecutter"]
+        self.m = kwargs["machine"]
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
@@ -312,10 +326,10 @@ class ShapeCutter35ScreenClass(Screen):
 # Action buttons       
     def get_info(self):
         pass
-    
+
     def go_back(self):
-        self.shapecutter_sm.previous_screen()    
-    
+        self.shapecutter_sm.previous_screen()
+
     def next_screen(self):
         self.shapecutter_sm.next_screen()
     
@@ -323,38 +337,38 @@ class ShapeCutter35ScreenClass(Screen):
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()
-    
+
     def load(self):
         self.shapecutter_sm.load_tab()
-    
+
     def define(self):
         self.shapecutter_sm.define_tab()
-    
+
     def position(self):
         self.shapecutter_sm.position_tab()
-    
+
     def check(self):
         self.shapecutter_sm.check_tab()
-    
+
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
     
 # Screen specific
 
     def set_spindle(self):
-        if self.spindle_toggle.state == 'normal':
+        if self.spindle_toggle.state == "normal":
             self.next_button.disabled = False
             self.back_button.disabled = False
             self.spindle_image.source = "./asmcnc/skavaUI/img/spindle_off.png"
-            self.m.spindle_off()
-        else: 
+            self.m.turn_off_spindle()
+        else:
             self.spindle_image.source = "./asmcnc/skavaUI/img/spindle_on.png"
             self.next_button.disabled = True
             self.back_button.disabled = True
-            self.m.spindle_on()
+            self.m.turn_on_spindle()
             Clock.schedule_once(self.reset_spindle, 2)
 
     def reset_spindle(self, dt):
         #self.m.vac_on()
-        self.spindle_toggle.state = 'normal'
+        self.spindle_toggle.state = "normal"
         self.set_spindle()

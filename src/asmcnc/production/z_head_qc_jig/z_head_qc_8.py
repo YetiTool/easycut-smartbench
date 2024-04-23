@@ -1,3 +1,4 @@
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
@@ -67,13 +68,13 @@ class ZHeadQC8(Screen):
         self.status_container.add_widget(self.status_bar_widget)
 
     def disconnect(self):
-        print("Disconnect button pressed")
+        Logger.debug("Disconnect button pressed")
         self.m.s.grbl_scanner_running = False
         Clock.schedule_once(self.m.close_serial_connection, 0.1)
         self.connect_button.disabled = False
 
     def connect_and_restart(self):
-        print("Connect button pressed")
+        Logger.debug("Connect button pressed")
         if not self.m.starting_serial_connection:
             self.m.starting_serial_connection = True
             self.m.s.grbl_scanner_running = False

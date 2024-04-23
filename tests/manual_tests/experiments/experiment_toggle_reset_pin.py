@@ -8,6 +8,9 @@ python -m tests.manual_tests.experiments.experiment_toggle_reset_pin
 '''
 
 import sys, os, subprocess
+
+from asmcnc.comms.logging_system.logging_system import Logger
+
 sys.path.append('./src')
 os.chdir('./src')
 
@@ -20,25 +23,17 @@ Config.set('graphics', 'maxfps', '60')
 Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
 Config.write()
 
-import unittest
-from mock import Mock, MagicMock, patch
+from mock import Mock
 
-
-import kivy
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.core.window import Window
-from asmcnc.comms import localization
 from kivy.lang import Builder
 
 # COMMS IMPORTS
-from asmcnc.comms import router_machine  # @UnresolvedImport
-from asmcnc.comms import server_connection
-from asmcnc.comms import smartbench_flurry_database_connection
+from asmcnc.comms import router_machine
 
 # NB: router_machine imports serial_connection
-from asmcnc.apps import app_manager # @UnresolvedImport
-from settings import settings_manager # @UnresolvedImport
+from settings import settings_manager
 from asmcnc.comms import localization
 from asmcnc.job import job_data
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
@@ -218,13 +213,13 @@ class TestScreen(Screen):
         else: 
             did_fw_update_succeed = "Update failed."
 
-        print(did_fw_update_succeed)
-        print(str(stdout))
+        Logger.info(did_fw_update_succeed)
+        Logger.info(str(stdout))
 
 
     def test_fw_update(self):
 
-        print("Updating")
+        Logger.info("Updating")
 
         def disconnect_and_update():
             self.m.s.grbl_scanner_running = False
@@ -265,8 +260,8 @@ class TestScreen(Screen):
             else: 
                 did_fw_update_succeed = "Update failed."
 
-            print(did_fw_update_succeed)
-            print(str(self.stdout))
+            Logger.info(did_fw_update_succeed)
+            Logger.info(str(self.stdout))
 
         disconnect_and_update()
 
@@ -302,7 +297,7 @@ class ScreenTest(App):
 
     def build(self):
 
-        print("Starting App:")
+        Logger.info("Starting App:")
 
         # Establish screens
         sm = ScreenManager(transition=NoTransition())

@@ -7,12 +7,13 @@ import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, FadeTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
+from kivy.properties import ObjectProperty, ListProperty, NumericProperty 
 from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.clock import Clock
 from asmcnc.skavaUI import popup_info
+from kivy.core.window import Window
 
 import sys, textwrap
 
@@ -30,7 +31,7 @@ Builder.load_string("""
         pos: self.parent.pos      
 
         padding: 0
-        spacing: 10
+        spacing: 0.0208333333333333*app.height
         orientation: "vertical"
 
         Button:
@@ -168,10 +169,10 @@ class QuickCommands(Widget):
         elif not self.m.state().startswith('Idle'):
             self.sm.current = 'mstate'
                 
-        elif self.is_job_within_bounds() == False and sys.platform != "win32":
+        elif not self.is_job_within_bounds() and sys.platform != "win32":
             self.sm.current = 'boundary'
 
-        elif self.m.is_machine_homed == False and sys.platform != "win32":
+        elif not self.m.is_machine_homed and self.m.is_connected:
             self.m.request_homing_procedure('home','home')
 
         elif self.sm.get_screen('home').z_datum_reminder_flag and not self.sm.get_screen('home').has_datum_been_reset:
@@ -272,6 +273,6 @@ class QuickCommands(Widget):
         else: return True
 
     def format_command(self, cmd):
-        wrapped_cmd = textwrap.fill(cmd, width=50, break_long_words=False)
+        wrapped_cmd = textwrap.fill(cmd, width=0.0625*Window.width, break_long_words=False)
         return wrapped_cmd
         

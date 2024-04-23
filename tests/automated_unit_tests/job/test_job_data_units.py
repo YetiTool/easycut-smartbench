@@ -4,6 +4,9 @@ Created on 22 Feb 2023
 '''
 
 import sys, os
+
+from asmcnc.comms.logging_system.logging_system import Logger
+
 sys.path.append('./src')
 
 try: 
@@ -12,7 +15,7 @@ try:
     from mock import Mock, MagicMock
 
 except: 
-    print("Can't import mocking packages, are you on a dev machine?")
+    Logger.info("Can't import mocking packages, are you on a dev machine?")
 
 from asmcnc.job import job_data
 from asmcnc.comms import localization
@@ -23,7 +26,7 @@ from kivy.clock import Clock
 '''
 ######################################
 RUN FROM easycut-smartbench FOLDER WITH: 
-python -m pytest --show-capture=no --disable-pytest-warnings tests/automated_unit_tests/job/test_job_data_units.py
+python -m pytest tests/automated_unit_tests/job/test_job_data_units.py
 ######################################
 '''
 

@@ -1,3 +1,4 @@
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
@@ -5,6 +6,7 @@ from kivy.lang import Builder
 from kivy.clock import Clock
 
 from asmcnc.production.z_head_qc_jig import popup_z_head_qc
+from asmcnc.core_UI import console_utils
 
 import subprocess
 
@@ -68,7 +70,7 @@ Builder.load_string("""
                     font_size: dp(20)
                     background_color: [1,0,0,1]
                     background_normal: ''
-                    on_press: root.shutdown_console()
+                    on_press: console_utils.shutdown()
 """)
 
 
@@ -90,7 +92,7 @@ class ZHeadQCHome(Screen):
             self.update_usb_button_label()
 
         except:
-            print("Can't get HW version or hex file")
+            Logger.exception("Can't get HW version or hex file")
 
     def go_back_to_pcb_setup(self):
         self.sm.current = "qcpcbsetup"  
@@ -134,7 +136,7 @@ class ZHeadQCHome(Screen):
         def nested_do_fw_update(dt):
             pi = pigpio.pi()
             pi.set_mode(17, pigpio.ALT3)
-            print(pi.get_mode(17))
+            Logger.info(pi.get_mode(17))
             pi.stop()
 
             cmd = "grbl_file=" + self.get_fw_filepath() + " && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
@@ -180,8 +182,3 @@ class ZHeadQCHome(Screen):
 
     def secret_option_c(self):
         self.sm.current = 'qcWC'
-
-    def shutdown_console(self):
-        if sys.platform != 'win32' and sys.platform != 'darwin': 
-            os.system('sudo shutdown -h now')
-

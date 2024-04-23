@@ -10,6 +10,8 @@ from chardet import detect
 from itertools import takewhile
 import traceback
 
+from asmcnc.comms.logging_system.logging_system import Logger
+
 decode_and_encode = lambda x: (unicode(x, detect(x)['encoding']).encode('utf-8'))
 
 def remove_newlines(gcode_line):
@@ -216,7 +218,7 @@ class JobData(object):
             # metadata = [line.split(': ', 1) for line in metadata]
             self.metadata_dict = dict(metadata)
 
-            print(self.metadata_dict)
+            Logger.info(self.metadata_dict)
 
             # Metadata looks like comments so needs to be removed
             gcode_without_metadata = self.job_gcode_raw[0:metadata_start_index] + self.job_gcode_raw[metadata_end_index + 1:-1]
@@ -230,7 +232,7 @@ class JobData(object):
 
     def create_gcode_summary_string(self):
 
-        print("Create summary string")
+        Logger.info("Create summary string")
 
         self.smarttransfer_metadata_into_string()
         self.scraped_feeds_speeds_and_boundaries_into_string()
@@ -249,7 +251,7 @@ class JobData(object):
     def update_changeables_in_gcode_summary_string(self):
 
 
-        print("Update changeable string")
+        Logger.info("Update changeable string")
 
         self.check_info_into_string()
         self.smarttransfer_metadata_into_string()
@@ -280,7 +282,7 @@ class JobData(object):
                 summary_list.sort(key = lambda i: self.metadata_order[i.split('[b]:[/b]')[0]])
 
             except Exception as e:
-                print(str(e))
+                Logger.exception('Failed to sort summary_list!')
 
             summary_list.insert(0, self.l.get_bold("SmartTransfer data"))
             summary_list.insert(1, "")
@@ -380,7 +382,7 @@ class JobData(object):
                     self.metadata_dict["Parts Made So Far"] = str(int(extra_parts_completed))
 
             except:
-                print("Parts Made So Far couldn't be updated.")
+                Logger.exception("Parts Made So Far couldn't be updated.")
 
 
     def update_update_info_in_metadata(self):
@@ -417,16 +419,13 @@ class JobData(object):
                     previewed_file.truncate()
 
         except:
-            print("Could not update file")
-            print(str(traceback.format_exc()))
-
+            Logger.exception("Could not update file")
 
     def post_job_data_update_post_send(self):
 
         self.post_production_notes = ''
         self.batch_number = ''
         self.percent_thru_job = 0
-
 
     def read_from_recovery_file(self):
         try:
@@ -436,11 +435,10 @@ class JobData(object):
             self.job_recovery_filepath = job_recovery_info[0]
             self.job_recovery_cancel_line = int(job_recovery_info[1])
 
-            print("Read recovery info")
+            Logger.info("Read recovery info")
 
         except:
-            print("Could not read recovery info")
-            print(str(traceback.format_exc()))
+            Logger.exception("Could not read recovery info")
 
     def write_to_recovery_file_after_cancel(self, cancel_line, cancel_time):
 
@@ -452,7 +450,7 @@ class JobData(object):
             self.job_recovery_filepath = self.filename
             self.job_recovery_cancel_line = cancel_line
 
-            print("Wrote recovery info")
+            Logger.info("Wrote recovery info")
 
         try:
             # Account for number of lines added in by the software when running file
@@ -468,13 +466,12 @@ class JobData(object):
                 
             # If job was cancelled before it started, no need to store recovery info
             else:
-                print("Job cancelled before start, not writing recovery info")
+                Logger.info("Job cancelled before start, not writing recovery info")
 
             self.reset_recovery()
         
         except:
-            print("Could not write recovery info")
-            print(str(traceback.format_exc()))
+            Logger.exception("Could not write recovery info")
 
     def write_to_recovery_file_after_completion(self):
         try:
@@ -489,12 +486,10 @@ class JobData(object):
             self.job_recovery_cancel_line = cancel_line
             self.reset_recovery()
 
-            print("Wrote recovery info")
+            Logger.info("Wrote recovery info")
 
         except:
-            print("Could not write recovery info")
-            print(str(traceback.format_exc()))
-
+            Logger.exception("Could not write recovery info")
 
     def reset_recovery(self):
         self.job_recovery_selected_line = -1
@@ -609,17 +604,17 @@ class JobData(object):
             # Recover most recent position
             x_line = next((s for s in reversed(processed_gcode[:self.job_recovery_selected_line]) if 'X' in s), None)
             if x_line:
-                x = re.split('(X|Y|Z|F|S|I|J|K|G)', x_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', x_line).index('X') + 1].strip()
+                x = re.split('(X|Y|Z|F|S|I|J|K|G|R)', x_line)[re.split('(X|Y|Z|F|S|I|J|K|G|R)', x_line).index('X') + 1].strip()
             else:
                 x = "0.000"
             y_line = next((s for s in reversed(processed_gcode[:self.job_recovery_selected_line]) if 'Y' in s), None)
             if y_line:
-                y = re.split('(X|Y|Z|F|S|I|J|K|G)', y_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', y_line).index('Y') + 1].strip()
+                y = re.split('(X|Y|Z|F|S|I|J|K|G|R)', y_line)[re.split('(X|Y|Z|F|S|I|J|K|G|R)', y_line).index('Y') + 1].strip()
             else:
                 y = "0.000"
             z_line = next((s for s in reversed(processed_gcode[:self.job_recovery_selected_line]) if 'Z' in s), None)
             if z_line:
-                z = re.split('(X|Y|Z|F|S|I|J|K|G)', z_line)[re.split('(X|Y|Z|F|S|I|J|K|G)', z_line).index('Z') + 1].strip()
+                z = re.split('(X|Y|Z|F|S|I|J|K|G|R)', z_line)[re.split('(X|Y|Z|F|S|I|J|K|G|R)', z_line).index('Z') + 1].strip()
             else:
                 z = "0.000"
 

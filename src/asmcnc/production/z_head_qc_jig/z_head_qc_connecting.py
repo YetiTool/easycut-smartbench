@@ -1,5 +1,6 @@
 import sys
 
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
@@ -41,9 +42,6 @@ Builder.load_string("""
 
 """)
 
-def log(message):
-    timestamp = datetime.now()
-    print ('Z Head Connecting Screen: ' + timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
 
 class ZHeadQCConnecting(Screen):
 
@@ -66,19 +64,19 @@ class ZHeadQCConnecting(Screen):
     def ensure_hw_version_and_registers_are_loaded_in(self):
 
         if not self.m.s.fw_version:
-            log("Waiting to get FW version")
+            Logger.debug("Waiting to get FW version")
             self.connecting_label.text = "Waiting to get FW version"
             Clock.schedule_once(lambda dt: self.ensure_hw_version_and_registers_are_loaded_in(), 0.5)
             return
 
         if not self.m.TMC_registers_have_been_read_in() and (self.m.s.fw_version).startswith("2"):
-            log("Waiting to get TMC registers")
+            Logger.debug("Waiting to get TMC registers")
             self.connecting_label.text = "Waiting to get TMC registers"
             Clock.schedule_once(lambda dt: self.ensure_hw_version_and_registers_are_loaded_in(), 1)
             return
 
         if not self.usb.is_available():
-            log("Getting USB")
+            Logger.debug("Getting USB")
             self.connecting_label.text = "Getting USB"
             Clock.schedule_once(lambda dt: self.ensure_hw_version_and_registers_are_loaded_in(), 1)
             return
@@ -86,5 +84,5 @@ class ZHeadQCConnecting(Screen):
         self.progress_to_next_screen()
 
     def progress_to_next_screen(self):
-        log("Progress to next screen")
+        Logger.debug("Progress to next screen")
         self.sm.current = 'qcpcbsetup'

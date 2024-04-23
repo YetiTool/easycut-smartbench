@@ -4,6 +4,9 @@ Created Aug 2022
 '''
 
 import sys
+
+from asmcnc.comms.logging_system.logging_system import Logger
+from tests import test_utils
 sys.path.append('./src')
 
 try: 
@@ -12,7 +15,7 @@ try:
     from mock import Mock, MagicMock
 
 except: 
-    print("Can't import mocking packages, are you on a dev machine?")
+    Logger.info("Can't import mocking packages, are you on a dev machine?")
 
 
 from asmcnc.comms import serial_connection
@@ -23,8 +26,13 @@ from asmcnc.job import job_data
 ######################################
 RUN FROM easycut-smartbench FOLDER WITH: 
 python -m pytest --show-capture=no --disable-pytest-warnings tests/automated_unit_tests/comms/test_serial_connection_streaming_units.py
+
+For me, this is:
+python -m pytest tests/automated_unit_tests/comms/test_serial_connection_streaming_units.py
 ######################################
 '''
+
+test_utils.create_app()
 
 @pytest.fixture
 def sc():

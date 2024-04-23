@@ -8,7 +8,7 @@ import kivy, textwrap
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
+from kivy.properties import ObjectProperty, ListProperty, NumericProperty 
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from asmcnc.skavaUI import popup_info
@@ -45,7 +45,7 @@ Builder.load_string("""
                 size_hint_x: 1 
                 markup: True
                 color: hex('#ff9800ff')
-                font_size: 20
+                font_size: 20.0 / 800 * app.width
 
             Button:
                 background_color: hex('#F4433600')
@@ -117,7 +117,7 @@ Builder.load_string("""
                 size_hint_x: 1 
                 markup: True
                 color: hex('#4caf50ff')
-                font_size: 20        
+                font_size: 20.0 / 800 * app.width    
             Button:
                 background_color: hex('#F4433600')
                 on_release: 

@@ -1,6 +1,8 @@
 from kivy.uix.screenmanager import ScreenManager, Screen
 import os
-from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1, wifi_and_data_consent_2, wifi_and_data_consent_3, popup_data_wifi_warning
+from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1, wifi_and_data_consent_2, wifi_and_data_consent_3
+from asmcnc.core_UI.popups import BasicPopup, PopupType
+from asmcnc.comms.logging_system.logging_system import Logger
 
 class ScreenManagerDataConsent(object):
 
@@ -58,7 +60,32 @@ class ScreenManagerDataConsent(object):
 		self.exit_data_consent_app()
 
 	def warn_user_before_accepting_decline(self):
-		popup_data_wifi_warning.PopupDataAndWiFiDisableWarning(self, self.l)
+		BasicPopup(
+			sm=self.sm,
+			l=self.l,
+			popup_type=PopupType.ERROR,
+			popup_width=500,
+			popup_height=400,
+			title=self.l.get_str('Warning!') + " " + self.l.get_str("Are you sure?"),
+			main_string=(
+			self.l.get_bold("Are you sure you want to decline the data policy? This will disable the Console Wi-Fi.") + \
+			"\n\n" + \
+			self.l.get_str("You can change your data preferences in the System Tools app at any time.")
+			),
+			button_one_text=self.l.get_bold('No, go back'),
+			button_one_callback=None,
+			button_one_background_color=[76 / 255., 175 / 255., 80 / 255., 1.],
+			button_two_text=self.l.get_bold("Yes, disable Wi-Fi"),
+			button_two_callback=self.decline_terms_and_disable_wifi,
+			button_two_background_color=[230 / 255., 74 / 255., 25 / 255., 1.],
+			main_label_size_hint_y=1.3,
+			main_label_padding=(0,0),
+			main_layout_padding=(10,20,10,20),
+			main_layout_spacing=10,
+			main_label_size_delta=120,
+			button_layout_padding=(20,0,20,0),
+			button_layout_spacing=10,
+		).open()
 
 	def decline_terms_and_disable_wifi(self):
 		os.system('sudo rfkill block wifi')
@@ -87,7 +114,7 @@ class ScreenManagerDataConsent(object):
 	def destroy_screen(self, screen_name):
 		if self.sm.has_screen(screen_name):
 			self.sm.remove_widget(self.sm.get_screen(screen_name))
-			print (screen_name + ' deleted')
+			Logger.info(screen_name + ' deleted')
 
 	def update_seen(self):
 		user_has_seen_privacy_notice = (os.popen('grep "user_has_seen_privacy_notice" /home/pi/easycut-smartbench/src/config.txt').read())

@@ -3,11 +3,10 @@ from datetime import datetime
 import traceback, threading
 import json
 import sys
-from asmcnc.production.database.payload_publisher import DataPublisher
 
-def log(message):
-    timestamp = datetime.now()
-    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
+from asmcnc.comms.logging_system.logging_system import Logger
+
+from asmcnc.production.database.payload_publisher import DataPublisher
 
 
 try: 
@@ -17,12 +16,12 @@ try:
     except:
         import MySQLdb as my_sql_client
 except:
-    log("No MySQLdb or pymysql package installed")
+    Logger.exception("No MySQLdb or pymysql package installed")
 
 try:
     from influxdb import InfluxDBClient
 except:
-    log('Influxdb not installed')
+    Logger.exception('Influxdb not installed')
 
 
 class CalibrationDatabase(object):
@@ -67,35 +66,25 @@ class CalibrationDatabase(object):
         try:
             from asmcnc.production.database import credentials
 
-        except ImportError:
-            if sys.platform != 'win32':
-                log("Can't import credentials (trying to get local folder creds)")
-                import credentials
+            self.conn = my_sql_client.connect(host=credentials.server, db=credentials.database,
+                                              user=credentials.username,
+                                              passwd=credentials.password)
+            Logger.info("Connected to database")
 
-        try:
-            self.conn = my_sql_client.connect(host=credentials.server, db=credentials.database, user=credentials.username,
-                                        passwd=credentials.password)
-            log("Connected to database")
-
-        except:
-            log('Unable to connect to database')
-            print(traceback.format_exc())
-
-        try:
             self.ssh_conn = my_sql_client.connect(host=credentials.server, db='sshdb', user=credentials.username,
                                                   passwd=credentials.password)
-            log('Connected to ssh key db')
-        except:
-            log('Unable to connect to ssh key db')
+            Logger.info('Connected to ssh key db')
 
-        try:
             self.influx_client = InfluxDBClient(credentials.influx_server, credentials.influx_port,
                                                 credentials.influx_username, credentials.influx_password,
                                                 credentials.influx_database)
-            log("Connected to InfluxDB")
+            Logger.info("Connected to InfluxDB")
 
-        except:
-            log("Unable to connect to InfluxDB")
+        except Exception as e:
+            Logger.exception('Failed to import credentials!')
+            if sys.platform != 'win32' and sys.platform != 'darwin':
+                Logger.error("Can't import credentials (trying to get local folder creds)")
+                import credentials
 
     def insert_serial_numbers(self, machine_serial, z_head_serial, lower_beam_serial, upper_beam_serial,
                               console_serial, y_bench_serial, spindle_serial, software_version, firmware_version,
@@ -132,7 +121,7 @@ class CalibrationDatabase(object):
             return cursor.fetchone() is not None
 
     def delete_z_head_coefficients(self, combined_id):
-        log("Deleting existing data from ZHeadCoefficients: " + str(combined_id))
+        Logger.info("Deleting existing data from ZHeadCoefficients: " + str(combined_id))
         with self.conn.cursor() as cursor:
             query = "DELETE FROM ZHeadCoefficients WHERE Id = %s"
 
@@ -143,7 +132,7 @@ class CalibrationDatabase(object):
         self.conn.commit()
 
     def delete_coefficients(self, combined_id):
-        log("Deleting existing data from Coefficients: " + str(combined_id))
+        Logger.info("Deleting existing data from Coefficients: " + str(combined_id))
         with self.conn.cursor() as cursor:
             query = "DELETE FROM Coefficients WHERE SubAssemblyId = %s"
 
@@ -152,7 +141,7 @@ class CalibrationDatabase(object):
         self.conn.commit()
 
     def delete_lower_beam_coefficients(self, combined_id):
-        log("Deleting existing data from LowerBeamCoefficients: " + str(combined_id))
+        Logger.info("Deleting existing data from LowerBeamCoefficients: " + str(combined_id))
         with self.conn.cursor() as cursor:
             query = "DELETE FROM LowerBeamCoefficients WHERE Id = %s"
 
@@ -238,8 +227,8 @@ class CalibrationDatabase(object):
         #         return cursor.fetchone()[0]
         #
         # except:
-        #     log("Could not get stage ID from DB!!")
-        #     print(traceback.format_exc())
+        #     Logger.info("Could not get stage ID from DB!!")
+        #     Logger.info(traceback.format_exc())
         #
         #     # assign from list instead - this is a backup!
         #     # BUT if anything in db changes, it may be wrong!!
@@ -251,7 +240,7 @@ class CalibrationDatabase(object):
             combined_id = str(sub_serial)[2:] + str(stage_id)
 
             if self.does_calibration_check_stage_already_exist(combined_id):
-                log("Calibration check stage already exists for this SN")
+                Logger.warning("Calibration check stage already exists for this SN")
                 return
 
             with self.conn.cursor() as cursor:
@@ -264,7 +253,7 @@ class CalibrationDatabase(object):
             self.conn.commit()
 
         except:
-            log(traceback.format_exc())
+            Logger.exception('Failed to insert calibration check stage!')
 
     def does_calibration_check_stage_already_exist(self, combined_id_only_ints):
 
@@ -286,7 +275,7 @@ class CalibrationDatabase(object):
             combined_id = (machine_serial + str(ft_stage_id))[2:]
 
             if self.does_final_test_stage_already_exist(combined_id):
-                log("Final test stage already exists for this SN")
+                Logger.warning("Final test stage already exists for this SN")
                 return
 
             with self.conn.cursor() as cursor:
@@ -299,7 +288,7 @@ class CalibrationDatabase(object):
             self.conn.commit()
 
         except:
-            log("Final test stage already exists for this SN")
+            Logger.warning("Final test stage already exists for this SN")
 
     def does_final_test_stage_already_exist(self, combined_id_only_ints):
 
@@ -341,7 +330,7 @@ class CalibrationDatabase(object):
     # @lettie please ensure data is input in the correct order according to below
     def insert_final_test_statuses(self, statuses):
 
-        print("Before insert ft status")
+        Logger.debug("Before insert ft status")
 
         try:
             with self.conn.cursor() as cursor:
@@ -355,9 +344,9 @@ class CalibrationDatabase(object):
                 self.conn.commit()
 
         except: 
-            print(traceback.format_exc())
+            Logger.exception('Failed to insert final test statuses!')
 
-        print("After insert ft status")
+        Logger.debug("After insert ft status")
 
     def get_serials_by_machine_serial(self, machine_serial):
         with self.conn.cursor() as cursor:
@@ -393,7 +382,7 @@ class CalibrationDatabase(object):
                     "temp": data[131][0],
                 }
             except:
-                log('Database is empty or incomplete for ' + str(combined_id))
+                Logger.exception('Database is empty or incomplete for ' + str(combined_id))
 
             return parameters
 
@@ -440,7 +429,7 @@ class CalibrationDatabase(object):
         #     stall_coord
         # ]
 
-        print("Before insert stall events")
+        Logger.debug("Before insert stall events")
 
         try:
 
@@ -453,11 +442,8 @@ class CalibrationDatabase(object):
                 return True
 
         except: 
-            print(traceback.format_exc())
+            Logger.exception('Failed to execute query!')
             return False
-
-        print("After insert stall events")
-
 
     processing_running_data = False
     processed_running_data = {
@@ -517,7 +503,7 @@ class CalibrationDatabase(object):
                 self.processed_running_data[str(element[0])][0].append(status)
 
         except:
-            print(traceback.format_exc())
+            Logger.exception('Something failed!')
 
         self.processing_running_data = False
 
@@ -564,11 +550,11 @@ class CalibrationDatabase(object):
         publisher = DataPublisher(sn_for_db)
 
         if not self.processed_running_data[str(stage_id)][0]:
-            log("No status data to send for stage id: " + str(stage_id))
+            Logger.warning("No status data to send for stage id: " + str(stage_id))
             return False
 
         response = publisher.run_data_send(*self.processed_running_data[str(stage_id)])
-        log("Received %s from consumer" % response)
+        Logger.debug("Received %s from consumer" % response)
         return response
 
     def send_ssh_keys(self, serial, key):

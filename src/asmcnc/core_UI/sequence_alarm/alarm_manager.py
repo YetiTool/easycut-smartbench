@@ -1,3 +1,4 @@
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
@@ -111,19 +112,18 @@ class AlarmSequenceManager(object):
 				self.sm.current = 'alarm_1'
 
 		except:
-			print("Kivy fail happened, try everything again")
-			print(traceback.format_exc())
+			Logger.exception("Kivy fail happened, try everything again")
 			self.refire_screen()
 
 		self.handle_alarm_state()
 
 
 	def refire_screen(self):
-		print("Screen refired")
+		Logger.debug("Screen refired")
 		self.sm.current = 'alarm_2'
-		print("alarm 2")
+		Logger.debug("alarm 2")
 		self.sm.current = 'alarm_1'
-		print("alarm 1")
+		Logger.debug("alarm 1")
 		# this is a massive hack to get past random kivy fails
 
 
@@ -361,9 +361,9 @@ class AlarmSequenceManager(object):
 				file.write(self.report_string)
 
 			os.system("sudo cp --no-preserve=mode,ownership " + report_file_path + " /media/usb/ && rm " + report_file_path)
-			print("Alarm report written to file")
+			Logger.info("Alarm report written to file")
 			return True
 
 		except:
-			print("Unable to write alarm report to file")
+			Logger.exception("Unable to write alarm report to file")
 			return False

@@ -1,21 +1,23 @@
 # -*- coding: utf-8 -*-
-'''
+from kivy.core.window import Window
+
+"""
 Created on 18 November 2020
 Menu screen for system tools app
 
 @author: Letty
-'''
-
+"""
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys
 from kivy.clock import Clock
-
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.systemTools_app.screens import popup_system
+from asmcnc.core_UI import scaling_utils
 
-Builder.load_string("""
+Builder.load_string(
+"""
 
 <SystemMenuScreen>
 
@@ -41,8 +43,8 @@ Builder.load_string("""
     GridLayout:
         size: self.parent.size
         pos: self.parent.pos
-        padding: [dp(8.33), dp(60)]
-        spacing: [dp(8.33), dp(60)]
+        padding:[dp(0.0104125)*app.width, dp(0.125)*app.height]
+        spacing:[dp(0.0104125)*app.width, dp(0.125)*app.height]
         cols: 5
         rows: 2
 
@@ -57,8 +59,8 @@ Builder.load_string("""
             on_press: root.go_to_build_info()
             background_normal: "./asmcnc/apps/systemTools_app/img/system_info.png"
             background_down: "./asmcnc/apps/systemTools_app/img/system_info.png"
-            border: [dp(25)]*4
-            padding_y: 5
+            padding_y: 5.0/800.0*app.width
+            border: (0,0,0,0)
 
         Button:
             id: button_reboot
@@ -71,8 +73,8 @@ Builder.load_string("""
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/reboot_console.png"
             background_down: "./asmcnc/apps/systemTools_app/img/reboot_console.png"
-            border: [dp(25)]*4
-            padding_y: 5
+            padding_y: 5.0/800.0*app.width
+            border: (0,0,0,0)
 
         Button:
             id: button_support_menu
@@ -85,8 +87,8 @@ Builder.load_string("""
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/support.png"
             background_down: "./asmcnc/apps/systemTools_app/img/support.png"
-            border: [dp(25)]*4
-            padding_y: 5
+            padding_y: 5.0/800.0*app.width
+            border: (0,0,0,0)
 
         Button:
             id: button_exit_software
@@ -99,8 +101,8 @@ Builder.load_string("""
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/quit_to_console.png"
             background_down: "./asmcnc/apps/systemTools_app/img/quit_to_console.png"
-            border: [dp(25)]*4
-            padding_y: 5
+            padding_y: 5.0/800.0*app.width
+            border: (0,0,0,0)
 
         Button:
             id: button_usb_first_aid
@@ -113,8 +115,8 @@ Builder.load_string("""
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/usb_first_aid.png"
             background_down: "./asmcnc/apps/systemTools_app/img/usb_first_aid.png"
-            border: [dp(25)]*4
-            padding_y: 5
+            padding_y: 5.0/800.0*app.width
+            border: (0,0,0,0)
 
         Button:
             id: button_beta_testing
@@ -127,8 +129,8 @@ Builder.load_string("""
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/beta_testing.png"
             background_down: "./asmcnc/apps/systemTools_app/img/beta_testing.png"
-            border: [dp(25)]*4
-            padding_y: 5
+            padding_y: 5.0/800.0*app.width
+            border: (0,0,0,0)
 
         Button:
             id: button_grbl_settings
@@ -141,8 +143,8 @@ Builder.load_string("""
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/grbl_settings.png"
             background_down: "./asmcnc/apps/systemTools_app/img/grbl_settings.png"
-            border: [dp(25)]*4
-            padding_y: 5
+            padding_y: 5.0/800.0*app.width
+            border: (0,0,0,0)
 
         Button:
             id: button_factory
@@ -155,8 +157,8 @@ Builder.load_string("""
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/factory.png"
             background_down: "./asmcnc/apps/systemTools_app/img/factory.png"
-            border: [dp(25)]*4
-            padding_y: 5
+            padding_y: 5.0/800.0*app.width
+            border: (0,0,0,0)
 
         # Button:
         #     id: button_update_testing
@@ -169,8 +171,8 @@ Builder.load_string("""
         #     text_size: self.size
         #     background_normal: "./asmcnc/apps/systemTools_app/img/update_developer.png"
         #     background_down: "./asmcnc/apps/systemTools_app/img/update_developer.png"
-        #     border: [dp(25)]*4
-        #     padding_y: 5
+        #     padding_y: 5.0/800.0*app.width
+        #     border: (0,0,0,0)
 
 
         Button:
@@ -185,8 +187,8 @@ Builder.load_string("""
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/developer.png"
             background_down: "./asmcnc/apps/systemTools_app/img/developer.png"
-            border: [dp(25)]*4
-            padding_y: 5
+            padding_y: 5.0/800.0*app.width
+            border: (0,0,0,0)
 
         Button:
             id: button_go_back
@@ -199,34 +201,33 @@ Builder.load_string("""
             text_size: self.size
             background_normal: "./asmcnc/apps/systemTools_app/img/exit_system_tools.png"
             background_down: "./asmcnc/apps/systemTools_app/img/exit_system_tools.png"
-            border: [dp(25)]*4
-            padding_y: 5
+            padding_y: 5.0/800.0*app.width
+            border: (0,0,0,0)
 
-""")
+"""
+)
+
 
 class SystemMenuScreen(Screen):
-
-    default_font_size = 16
+    default_font_size = scaling_utils.get_scaled_width(16)
 
     def __init__(self, **kwargs):
         super(SystemMenuScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs['system_tools']
-        self.l = kwargs['localization']
-
+        self.systemtools_sm = kwargs["system_tools"]
+        self.l = kwargs["localization"]
+        self.kb = kwargs["keyboard"]
         self.id_list = [
-        self.button_system_info,
-        self.button_support_menu,
-        self.button_reboot,
-        self.button_exit_software,
-        self.button_usb_first_aid,
-        self.button_beta_testing,
-        self.button_grbl_settings,
-        self.button_factory,
-        # self.button_update_testing,
-        self.button_developer,
-        self.button_go_back
+            self.button_system_info,
+            self.button_support_menu,
+            self.button_reboot,
+            self.button_exit_software,
+            self.button_usb_first_aid,
+            self.button_beta_testing,
+            self.button_grbl_settings,
+            self.button_factory,
+            self.button_developer,
+            self.button_go_back,
         ]
-
         self.update_strings()
 
     def go_back(self):
@@ -251,41 +252,37 @@ class SystemMenuScreen(Screen):
         popup_system.PopupBetaTesting(self.systemtools_sm, self.l)
 
     def grbl_settings(self):
-        popup_system.PopupGRBLSettingsPassword(self.systemtools_sm, self.l)
+        popup_system.PopupGRBLSettingsPassword(self.systemtools_sm, self.l, self.kb)
 
     def factory_settings(self):
-        popup_system.PopupFactorySettingsPassword(self.systemtools_sm, self.l)
-
-    # def update_testing(self):
-    #     popup_system.PopupUpdateTestingPassword(self.systemtools_sm, self.l)
+        popup_system.PopupFactorySettingsPassword(self.systemtools_sm, self.l, self.kb)
 
     def developer(self):
-        popup_system.PopupDeveloperPassword(self.systemtools_sm, self.l)
+        popup_system.PopupDeveloperPassword(self.systemtools_sm, self.l, self.kb)
 
     def update_strings(self):
-        self.button_system_info.text = self.l.get_str('System Info')
-        self.button_support_menu.text = self.l.get_str('Support')
-        self.button_reboot.text = self.l.get_str('Reboot')
-        self.button_exit_software.text = self.l.get_str('Exit Software')
-        self.button_usb_first_aid.text = self.l.get_str('USB First Aid')
-        self.button_beta_testing.text = self.l.get_str('Beta Testing')
-        self.button_grbl_settings.text = self.l.get_str('GRBL Settings')
-        self.button_factory.text = self.l.get_str('Factory')
-        # self.button_update_testing.text = self.l.get_str('Update Testing')
-        self.button_developer.text = self.l.get_str('Developer')
-        self.button_go_back.text = self.l.get_str('Go Back')
-
+        self.button_system_info.text = self.l.get_str("System Info")
+        self.button_support_menu.text = self.l.get_str("Support")
+        self.button_reboot.text = self.l.get_str("Reboot")
+        self.button_exit_software.text = self.l.get_str("Exit Software")
+        self.button_usb_first_aid.text = self.l.get_str("USB First Aid")
+        self.button_beta_testing.text = self.l.get_str("Beta Testing")
+        self.button_grbl_settings.text = self.l.get_str("GRBL Settings")
+        self.button_factory.text = self.l.get_str("Factory")
+        self.button_developer.text = self.l.get_str("Developer")
+        self.button_go_back.text = self.l.get_str("Go Back")
         for id_object in self.id_list:
             self.update_font_size(id_object)
 
     def update_font_size(self, value):
-        if len(value.text) < 16:
+        text_length = self.l.get_text_length(value.text)
+        if text_length < 16:
             value.font_size = self.default_font_size
-        elif len(value.text) > 15: 
-            value.font_size = self.default_font_size - 2
-        if len(value.text) > 19: 
-            value.font_size = self.default_font_size - 4
-        if len(value.text) > 22: 
-            value.font_size = self.default_font_size - 5
-        if len(value.text) > 25: 
-            value.font_size = self.default_font_size - 6
+        elif text_length > 15:
+            value.font_size = self.default_font_size - 0.0025 * Window.width
+        if text_length > 19:
+            value.font_size = self.default_font_size - 0.005 * Window.width
+        if text_length > 22:
+            value.font_size = self.default_font_size - 0.00625 * Window.width
+        if text_length > 25:
+            value.font_size = self.default_font_size - 0.0075 * Window.width

@@ -7,7 +7,7 @@ import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, ListProperty, NumericProperty # @UnresolvedImport
+from kivy.properties import ObjectProperty, ListProperty, NumericProperty 
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.clock import Clock
@@ -169,11 +169,9 @@ Builder.load_string("""
                 background_color: hex('#F4433600')
                 always_release: True
                 on_release:
-                    print('release')
                     root.cancelXYJog()
                     self.background_color = hex('#F4433600')
                 on_press: 
-                    print('press')
                     root.buttonJogXY('X-')
                     self.background_color = hex('#F44336FF')
                 BoxLayout:

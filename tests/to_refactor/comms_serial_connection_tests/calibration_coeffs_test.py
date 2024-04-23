@@ -2,6 +2,7 @@
 Created on 1 Feb 2022
 @author: Letty
 '''
+from asmcnc.comms.logging_system.logging_system import Logger
 
 try: 
     import unittest
@@ -10,7 +11,7 @@ try:
     from serial_mock.decorators import serial_query
 
 except: 
-    print("Can't import mocking packages, are you on a dev machine?")
+    Logger.info("Can't import mocking packages, are you on a dev machine?")
 
 from time import sleep
 
@@ -87,7 +88,7 @@ class SGTest(unittest.TestCase):
                             str(self.test_current_setting) + "," + str(self.test_sgt_setting) + "," \
                             + str(self.test_toff_setting) + "," + str(self.test_temp_at_cal) + ">"
 
-            print(self.status)
+            Logger.info(self.status)
 
 
         # Need to construct mock PCB after the status, otherwise it'll run something else:

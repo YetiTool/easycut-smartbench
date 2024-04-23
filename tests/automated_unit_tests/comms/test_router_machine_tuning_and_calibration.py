@@ -4,15 +4,19 @@ Created on 18 Aug 2022
 '''
 
 import sys
+
+from asmcnc.comms.logging_system.logging_system import Logger
+from tests import test_utils
+
 sys.path.append('./src')
 
 try: 
-    import unittest
-    import pytest
-    from mock import Mock, MagicMock
+	import unittest
+	import pytest
+	from mock import Mock, MagicMock
 
 except: 
-    print("Can't import mocking packages, are you on a dev machine?")
+	Logger.info("Can't import mocking packages, are you on a dev machine?")
 
 
 from asmcnc.comms import router_machine
@@ -21,58 +25,60 @@ from asmcnc.comms import localization
 '''
 ######################################
 RUN FROM easycut-smartbench FOLDER WITH: 
-python -m pytest --show-capture=no --disable-pytest-warnings tests/automated_unit_tests/comms/test_router_machine_tuning_and_calibration.py
+python -m pytest tests/automated_unit_tests/comms/test_router_machine_tuning_and_calibration.py
 ######################################
 '''
 
+test_utils.create_app()
+
 @pytest.fixture
 def m():
-    l = localization.Localization()
-    screen_manager = Mock()
-    settings_manager = Mock()
-    job = Mock()
-    m = router_machine.RouterMachine("COM", screen_manager, settings_manager, l, job)
-    m.s.s = MagicMock()
-    m.temp_sg_array = []
-    return m
+	l = localization.Localization()
+	screen_manager = Mock()
+	settings_manager = Mock()
+	job = Mock()
+	m = router_machine.RouterMachine("COM", screen_manager, settings_manager, l, job)
+	m.s.s = MagicMock()
+	m.temp_sg_array = []
+	return m
 
 def build_tuning_array(machine, sg_z_motor_axis = None, sg_x_motor_axis = None, sg_y_axis = None, sg_y1_motor = None, sg_y2_motor = None, sg_x1_motor = None, sg_x2_motor = None):
-    sg_list = [sg_z_motor_axis, sg_x_motor_axis, sg_y_axis, sg_y1_motor, sg_y2_motor, sg_x1_motor, sg_x2_motor]
-    status = construct_status(*sg_list)
-    machine.s.record_sg_values_flag = True
-    machine.s.process_grbl_push(status)
+	sg_list = [sg_z_motor_axis, sg_x_motor_axis, sg_y_axis, sg_y1_motor, sg_y2_motor, sg_x1_motor, sg_x2_motor]
+	status = construct_status(*sg_list)
+	machine.s.record_sg_values_flag = True
+	machine.s.process_grbl_push(status)
 
 def construct_status(z_motor_axis = None, x_motor_axis = None, y_axis = None, y1_motor = None, y2_motor = None, x1_motor = None, x2_motor = None):
 
-    # Use this to construct the test status passed out by mock serial object
+	# Use this to construct the test status passed out by mock serial object
 
-    if z_motor_axis == None:
+	if z_motor_axis == None:
 
-        status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822|Sp:1,2,3,4,5,6,7>"
+		status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Pn:PxXyYZ|WCO:-166.126,-213.609,-21.822|Sp:1,2,3,4,5,6,7>"
 
-    elif x1_motor == None:
+	elif x1_motor == None:
 
-        status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Ld:0|SG:" + \
-            str(z_motor_axis) + "," + \
-            str(x_motor_axis) + "," + \
-            str(y_axis) + "," + \
-            str(y1_motor) + "," + \
-            str(y2_motor) + \
-            "|Sp:1,2,3,4,5,6,7>"
+		status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Ld:0|SG:" + \
+			str(z_motor_axis) + "," + \
+			str(x_motor_axis) + "," + \
+			str(y_axis) + "," + \
+			str(y1_motor) + "," + \
+			str(y2_motor) + \
+			"|Sp:1,2,3,4,5,6,7>"
 
-    else:
+	else:
 
-        status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Ld:0|SG:" + \
-            str(z_motor_axis) + "," + \
-            str(x_motor_axis) + "," + \
-            str(y_axis) + "," + \
-            str(y1_motor) + "," + \
-            str(y2_motor) + "," + \
-            str(x1_motor) + "," + \
-            str(x2_motor) + \
-            "|Sp:1,2,3,4,5,6,7>"
+		status = "<Idle|MPos:0.000,0.000,0.000|Bf:35,255|FS:0,0|Ld:0|SG:" + \
+			str(z_motor_axis) + "," + \
+			str(x_motor_axis) + "," + \
+			str(y_axis) + "," + \
+			str(y1_motor) + "," + \
+			str(y2_motor) + "," + \
+			str(x1_motor) + "," + \
+			str(x2_motor) + \
+			"|Sp:1,2,3,4,5,6,7>"
 
-    return status
+	return status
 
 
 def test_do_tuning_with_no_x1_x2_vals(m):
@@ -148,7 +154,7 @@ def test_are_sg_values_in_range_after_calibration_fails_as_expected(m):
 	assert values[1] == 5
 	assert values[2] == 2000
 	assert m.checking_calibration_fail_info == ("X SG values out of expected range: 4000| " + \
-                                "Z SG values out of expected range, max: 2000|")
+								"Z SG values out of expected range, max: 2000|")
 
 
 

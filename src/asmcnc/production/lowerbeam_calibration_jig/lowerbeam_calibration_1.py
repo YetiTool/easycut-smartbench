@@ -1,3 +1,4 @@
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
@@ -71,7 +72,7 @@ class LBCalibration1(Screen):
         def count_down(seconds):
             if seconds == 0:
                 if self.sm.current == self.name:
-                    print('entering')
+                    Logger.debug('entering')
                     self.sm.current = 'lbc2'
                     return
             

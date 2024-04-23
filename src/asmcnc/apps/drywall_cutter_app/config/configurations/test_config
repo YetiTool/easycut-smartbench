@@ -1,0 +1,24 @@
+{
+    "cutting_depths": {
+        "bottom_offset": 0.5, 
+        "auto_pass": true, 
+        "depth_per_pass": 6.0, 
+        "material_thickness": 12.0
+    }, 
+    "toolpath_offset": "inside", 
+    "canvas_shape_dims": {
+        "y": 1.0, 
+        "x": 0, 
+        "r": 0.0, 
+        "d": 0, 
+        "l": 0
+    }, 
+    "shape_type": "square", 
+    "cutter_type": "tool_6mm.json", 
+    "units": "mm", 
+    "rotation": "horizontal", 
+    "datum_position": {
+        "y": 0.0, 
+        "x": 0.0
+    }
+}

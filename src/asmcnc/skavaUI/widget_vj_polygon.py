@@ -4,6 +4,7 @@ from kivy.uix.widget import Widget
 from kivy.properties import ObjectProperty, ListProperty
 from kivy.clock import Clock
 
+from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.geometry import geometry
 from asmcnc.gcode_writer import GcodeWriter
 
@@ -261,25 +262,25 @@ class PolygonVJ(Widget):
 
     def on_sides_textinput(self):
         if self.sides_textinput2.text and float(self.sides_textinput2.text) > 2:
-            print ("on_sides_textinput " + str(self.sides_textinput2.text))
+            Logger.debug("on_sides_textinput " + str(self.sides_textinput2.text))
             polygon_vertices = geometry.compute_polygon_points(float(self.sides_textinput2.text), float(self.rad_textinput2.text))
             self.plot_ploygon(polygon_vertices)
 
 
     def on_rad_textinput(self):
         if self.rad_textinput2.text and float(self.rad_textinput2.text) > 0:
-            print ("on_rad_textinput " + str(self.rad_textinput2.text))
+            Logger.debug("on_rad_textinput " + str(self.rad_textinput2.text))
             polygon_vertices = geometry.compute_polygon_points(float(self.sides_textinput2.text), float(self.rad_textinput2.text))
             self.plot_ploygon(polygon_vertices)
 
 
 #    def on_sides_textinput_(self, instance, value):
-#        print ("on_sides_textinput_aa ", value)
+#        Logger.debug("on_sides_textinput_aa ", value)
 #        #geometry.compute_polygon(float(self.sides_textinput_.text), float(self.rad_textinput_.text))
 
 
     def on_ok(self):
-        print ("on_ok")
+        Logger.info("on_ok")
         self.generate_gcode()
 
 

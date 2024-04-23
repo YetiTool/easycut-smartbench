@@ -2,6 +2,7 @@
 Created on 15 Feb 2022
 @author: Letty
 '''
+from asmcnc.comms.logging_system.logging_system import Logger
 
 try: 
     import unittest
@@ -11,7 +12,7 @@ try:
     from random import randint
 
 except: 
-    print("Can't import mocking packages, are you on a dev machine?")
+    Logger.info("Can't import mocking packages, are you on a dev machine?")
 
 from time import sleep
 
@@ -110,7 +111,7 @@ class MotorCommandsTest(unittest.TestCase):
         sleep(3)
         self.m.s.record_sg_values_flag = False
         self.m.are_sg_values_in_range_after_calibration(['X', 'Y', 'Z'])
-        print(self.m.checking_calibration_fail_info)
+        Logger.info(self.m.checking_calibration_fail_info)
         assert(self.m.checking_calibration_fail_info.startswith("All values -999 for idx: 0"))
 
 
@@ -172,13 +173,13 @@ class MotorCommandsTest(unittest.TestCase):
     #     '''get_target_SG_from_current_temperature'''
     #     target = self.m.get_target_SG_from_current_temperature('Y', -100)
     #     # self.assertEqual(target, 500)
-    #     print("SG TARG: " + str(target))
+    #     Logger.info("SG TARG: " + str(target))
 
     # def test_get_another_target(self):
     #     '''get_target_SG_from_current_temperature'''
     #     target = self.m.get_target_SG_from_current_temperature('Y', 100)
     #     # self.assertEqual(target, 500)
-    #     print("SG TARG: " + str(target))
+    #     Logger.info("SG TARG: " + str(target))
 
     # def test_find_combo(self):
 

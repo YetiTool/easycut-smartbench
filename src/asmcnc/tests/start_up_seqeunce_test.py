@@ -2,6 +2,8 @@ from itertools import combinations
 import os 
 import subprocess
 
+from asmcnc.comms.logging_system.logging_system import Logger
+
 smartbench_values_dir = './sb_values/'
 set_up_options_file_path = smartbench_values_dir + 'set_up_options.txt'
 
@@ -73,7 +75,7 @@ for r in range(min_r, max_r):
 
 	for sublist in list(combinations(function_list, r)):
 
-		print(sublist)
+		Logger.info(sublist)
 
 		for i in sublist:
 

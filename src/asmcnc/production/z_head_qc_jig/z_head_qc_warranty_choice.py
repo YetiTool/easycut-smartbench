@@ -1,3 +1,4 @@
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
@@ -129,8 +130,7 @@ class ZHeadWarrantyChoice(Screen):
             if self.poll_for_fw != None: Clock.unschedule(self.poll_for_fw)
         
         except:
-            print("could not detect fw/update label")
-            print(traceback.format_exc())
+            Logger.exception("could not detect fw/update label")
 
     def after_apr21(self):
         self.sm.current = 'qcW136'
@@ -185,7 +185,7 @@ class ZHeadWarrantyChoice(Screen):
                 self.fw_on_usb = re.split('GRBL|\.', str(glob.glob("/media/usb/GRBL*.hex")[0]))[1]
                 self.usb_change_button.text = "FW on USB: " + self.fw_on_usb + "\n\n" + "Change USB?"
             except:
-                print(traceback.format_exc())
+                Logger.exception('Failed to extract firmware name!')
 
             return
 

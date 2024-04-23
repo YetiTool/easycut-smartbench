@@ -1,13 +1,15 @@
-'''
+"""
 Created on nov 2020
 @author: Ollie
-'''
-
+"""
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
 from asmcnc.skavaUI import widget_status_bar
-Builder.load_string("""
+
+Builder.load_string(
+    """
 
 <WarrantyScreen2>:
 
@@ -15,11 +17,12 @@ Builder.load_string("""
 	your_serial_number_label : your_serial_number_label
 	serial_number_label : serial_number_label
 	next_button : next_button
+	prev_screen_button:prev_screen_button
 
 	BoxLayout: 
 		size_hint: (None,None)
-		width: dp(800)
-		height: dp(480)
+		width: dp(1.0*app.width)
+		height: dp(1.0*app.height)
 		orientation: 'vertical'
 
 		canvas:
@@ -47,12 +50,12 @@ Builder.load_string("""
 				Label:
 					id: title_label
 					size_hint: (None,None)
-					height: dp(60)
-					width: dp(800)
+					height: dp(0.125*app.height)
+					width: dp(1.0*app.width)
 					text: "SmartBench Warranty Registration"
 					color: hex('#f9f9f9ff')
 					# color: hex('#333333ff') #grey
-					font_size: dp(30)
+					font_size: dp(0.0375*app.width)
 					halign: "center"
 					valign: "bottom"
 					markup: True
@@ -60,31 +63,30 @@ Builder.load_string("""
 			# BODY
 			BoxLayout:
 				size_hint: (None,None)
-				width: dp(800)
-				height: dp(298)
+				width: dp(1.0*app.width)
+				height: dp(0.620833333333*app.height)
 				orientation: 'vertical'
 				
 				Label:
 					id: your_serial_number_label
-					font_size: '30sp'
+					font_size: str(0.0375*app.width) + 'sp'
 					# text: "[color=333333ff]Your serial number is[/color]"
 					text_size: self.size
 					valign: 'bottom'
 					halign: 'center'
 					markup: 'true'
-					bold: True
 					color: hex('#333333ff')
 
 				BoxLayout:
 					orientation: 'vertical'
-					width: dp(800)
-					height: dp(200)
-					padding: 20
+					width: dp(1.0*app.width)
+					height: dp(0.416666666667*app.height)
+					padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
 					size_hint: (None,None)
 					Label:
 						id: serial_number_label
 						size_hint_y: 1
-						font_size: '30sp'
+						font_size: str(0.0375*app.width) + 'sp'
 						text_size: self.size
 						valign: 'middle'
 						halign: 'center'
@@ -93,20 +95,22 @@ Builder.load_string("""
 
 			# FOOTER
 			BoxLayout: 
-				padding: [10,0,10,10]
+				padding:[dp(0.0125)*app.width, 0, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
 				size_hint: (None, None)
-				height: dp(122)
-				width: dp(800)
+				height: dp(0.254166666667*app.height)
+				width: dp(1.0*app.width)
 				orientation: 'horizontal'
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(122)
-					width: dp(244.5)
-					padding: [0, 0, 184.5, 0]
+					height: dp(0.254166666667*app.height)
+					width: dp(0.305625*app.width)
+					padding:[0, 0, dp(0.230625)*app.width, 0]
 					Button:
+					    id: prev_screen_button
+					    font_size: str(0.01875 * app.width) + 'sp'
 						size_hint: (None,None)
-						height: dp(52)
-						width: dp(60)
+						height: dp(0.108333333333*app.height)
+						width: dp(0.075*app.width)
 						background_color: hex('#F4433600')
 						center: self.parent.center
 						pos: self.parent.pos
@@ -124,64 +128,60 @@ Builder.load_string("""
 
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(122)
-					width: dp(291)
-					padding: [0,0,0,32]
+					height: dp(0.254166666667*app.height)
+					width: dp(0.36375*app.width)
+					padding:[0, 0, 0, dp(0.0666666666667)*app.height]
 					Button:
 						id: next_button
 						background_normal: "./asmcnc/skavaUI/img/next.png"
 						background_down: "./asmcnc/skavaUI/img/next.png"
 						border: [dp(14.5)]*4
 						size_hint: (None,None)
-						width: dp(291)
-						height: dp(79)
+						width: dp(0.36375*app.width)
+						height: dp(0.164583333333*app.height)
 						on_press: root.next_screen()
 						text: 'Next...'
-						font_size: '30sp'
+						font_size: str(0.0375*app.width) + 'sp'
 						color: hex('#f9f9f9ff')
 						markup: True
 						center: self.parent.center
 						pos: self.parent.pos
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(122)
-					width: dp(244.5)
-					padding: [193.5, 0, 0, 0]
-""")
+					height: dp(0.254166666667*app.height)
+					width: dp(0.305625*app.width)
+					padding:[dp(0.241875)*app.width, 0, 0, 0]
+"""
+)
+
 
 class WarrantyScreen2(Screen):
+    def __init__(self, **kwargs):
+        super(WarrantyScreen2, self).__init__(**kwargs)
+        self.start_seq = kwargs["start_sequence"]
+        self.m = kwargs["machine"]
+        self.l = kwargs["localization"]
+        self.serial_number_label.text = self.get_serial_number()
+        self.update_strings()
 
-	def __init__(self, **kwargs):
-		super(WarrantyScreen2, self).__init__(**kwargs)
-		self.start_seq=kwargs['start_sequence']
-		self.m=kwargs['machine']
-		self.l=kwargs['localization']
+    def get_serial_number(self):
+        serial_number_filepath = "/home/pi/smartbench_serial_number.txt"
+        serial_number_from_file = ""
+        try:
+            file = open(serial_number_filepath, "r")
+            serial_number_from_file = str(file.read())
+            file.close()
+        except:
+            Logger.info("Could not get serial number! Please contact YetiTool support!")
+        return str(serial_number_from_file)
 
-		self.serial_number_label.text = self.get_serial_number()
+    def next_screen(self):
+        self.start_seq.next_in_sequence()
 
-		self.update_strings()
+    def prev_screen(self):
+        self.start_seq.prev_in_sequence()
 
-	def get_serial_number(self):
-		serial_number_filepath = "/home/pi/smartbench_serial_number.txt"
-		serial_number_from_file = ''
-
-		try: 
-			file = open(serial_number_filepath, 'r')
-			serial_number_from_file  = str(file.read())
-			file.close()
-
-		except: 
-			print 'Could not get serial number! Please contact YetiTool support!'
-
-		return str(serial_number_from_file)
-
-	def next_screen(self):
-		self.start_seq.next_in_sequence()
-
-	def prev_screen(self):
-		self.start_seq.prev_in_sequence()
-	
-	def update_strings(self):
-		self.title_label.text = self.l.get_str("SmartBench Warranty Registration")
-		self.your_serial_number_label.text = self.l.get_str("Your serial number is")
-		self.next_button.text = self.l.get_str("Next") + "..."
+    def update_strings(self):
+        self.title_label.text = self.l.get_str("SmartBench Warranty Registration")
+        self.your_serial_number_label.text = self.l.get_bold("Your serial number is")
+        self.next_button.text = self.l.get_str("Next") + "..."

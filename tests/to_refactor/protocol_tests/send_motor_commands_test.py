@@ -2,6 +2,7 @@
 Created on 14 Feb 2022
 @author: Letty
 '''
+from asmcnc.comms.logging_system.logging_system import Logger
 
 try: 
     import unittest
@@ -10,7 +11,7 @@ try:
     from serial_mock.decorators import serial_query
 
 except: 
-    print("Can't import mocking packages, are you on a dev machine?")
+    Logger.info("Can't import mocking packages, are you on a dev machine?")
 
 from time import sleep
 
@@ -107,7 +108,7 @@ class MotorCommandsTest(unittest.TestCase):
     # def test_fw_check(self):
     #     """Test handshake with no FW"""
     #     self.status_and_PCB_constructor(ver='2.3.1')
-    #     print("FW VERSION: " + self.m.s.fw_version)
+    #     Logger.info("FW VERSION: " + self.m.s.fw_version)
     #     self.assertEqual(self.m.is_machines_fw_version_equal_to_or_greater_than_version('2.2.8', "just checkin"), True)
 
 if __name__ == "__main__":

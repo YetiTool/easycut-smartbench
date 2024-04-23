@@ -4,11 +4,12 @@ Created for info buttons in the shapecutter app
 '''
 
 import kivy
+from asmcnc.comms.logging_system.logging_system import Logger
 
 from kivy.lang import Builder
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.popup import Popup
-from kivy.properties import StringProperty  # @UnresolvedImport
+from kivy.properties import StringProperty  
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.widget import Widget
 from kivy.uix.checkbox import CheckBox
@@ -44,7 +45,6 @@ class PopupInputError(Widget):
         
         popup = Popup(title='Warning!',
                       title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -79,7 +79,7 @@ class PopupDatum(Widget):
       def set_datum(*args):
 
           if (self.sm.get_screen('home').default_datum_choice == 'laser' and self.m.is_laser_enabled == True):
-            print "setting datum with laser"
+            Logger.info("setting datum with laser")
 
             if xy == 'X':
                 self.m.set_x_datum_with_laser() #testing!!
@@ -90,7 +90,7 @@ class PopupDatum(Widget):
                 self.m.set_workzone_to_pos_xy_with_laser()
 
           else:
-            print "setting datum without laser"
+            Logger.info("setting datum without laser")
 
             if xy == 'X':
                 self.m.set_x_datum()
@@ -138,7 +138,6 @@ class PopupDatum(Widget):
       
       popup = Popup(title='Warning!',
                     title_color=[0, 0, 0, 1],
-                    title_font= 'Roboto-Bold',
                     title_size = '20sp',
                     content=layout_plan,
                     size_hint=(None, None),
@@ -183,7 +182,6 @@ class PopupBoundary(Widget):
         
         popup = Popup(title='Warning!',
                       title_color=[0, 0, 0, 1],
-                      title_font= 'Roboto-Bold',
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),

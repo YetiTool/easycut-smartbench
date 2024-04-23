@@ -15,37 +15,47 @@ from asmcnc.apps.maintenance_app import screen_maintenance
 from asmcnc.apps.systemTools_app import screen_manager_systemtools
 from asmcnc.apps.start_up_sequence import start_up_sequence_manager
 from asmcnc.apps.upgrade_app import screen_upgrade, screen_upgrade_successful, screen_already_upgraded
+from asmcnc.apps.drywall_cutter_app import screen_drywall_cutter
+from asmcnc.comms.model_manager import ModelManagerSingleton
+
 
 # import shape cutter managing object
 
 class AppManagerClass(object):
     
     current_app = ''
+    model_manager = ModelManagerSingleton()
     
-    def __init__(self, screen_manager, machine, settings, localization, job, database, config_check, version):
+    def __init__(self, screen_manager, machine, settings, localization, keyboard, job, database, config_check, version, popup_manager):
 
         self.sm = screen_manager
         self.m = machine
         self.set = settings
         self.jd = job
         self.l = localization
+        self.kb = keyboard
         self.db = database
         self.cc = config_check
         self.v = version
+        self.pm = popup_manager
 
         
         # initialise app screen_manager classes     
-        self.shapecutter_sm = screen_manager_shapecutter.ScreenManagerShapeCutter(self, self.sm, self.m, self.l, self.jd)
-        self.systemtools_sm = screen_manager_systemtools.ScreenManagerSystemTools(self, self.sm, self.m, self.set, self.l)
-        wifi_screen = screen_wifi.WifiScreen(name = 'wifi', screen_manager = self.sm, settings_manager = self.set, localization = self.l)
+        self.shapecutter_sm = screen_manager_shapecutter.ScreenManagerShapeCutter(self, self.sm, self.m, self.l, self.kb, self.jd)
+        self.systemtools_sm = screen_manager_systemtools.ScreenManagerSystemTools(self, self.sm, self.m, self.set, self.l, self.kb)
+        wifi_screen = screen_wifi.WifiScreen(name = 'wifi', screen_manager = self.sm, settings_manager = self.set, localization = self.l, keyboard = self.kb)
         self.sm.add_widget(wifi_screen)
 
         # Set up maintenance screen asap, to avoid long load time on app entry
-        maintenance_screen = screen_maintenance.MaintenanceScreenClass(name = 'maintenance', screen_manager = self.sm, machine = self.m, localization = self.l, job = self.jd)
+        maintenance_screen = screen_maintenance.MaintenanceScreenClass(name = 'maintenance', screen_manager = self.sm, machine = self.m, localization = self.l, keyboard = self.kb, job = self.jd)
         self.sm.add_widget(maintenance_screen)
 
+        if self.model_manager.is_machine_drywall():
+            drywall_cutter_screen = screen_drywall_cutter.DrywallCutterScreen(name = 'drywall_cutter', screen_manager = self.sm, machine = self.m, localization = self.l, keyboard = self.kb, job = self.jd, popup_manager = self.pm)
+            self.sm.add_widget(drywall_cutter_screen)
+
         # Start start up sequence
-        self.start_up = start_up_sequence_manager.StartUpSequence(self, self.sm, self.m, self.set, self.l, self.jd, self.db, self.cc, self.v)
+        self.start_up = start_up_sequence_manager.StartUpSequence(self, self.sm, self.m, self.set, self.l, self.kb, self.jd, self.db, self.cc, self.v)
 
 
     # here are all the functions that might be called in the lobby e.g. 
@@ -94,7 +104,7 @@ class AppManagerClass(object):
 
         if not self.m.theateam():
             if not self.sm.has_screen('upgrade'):
-                upgrade_screen = screen_upgrade.UpgradeScreen(name='upgrade', screen_manager=self.sm, machine=self.m, localization=self.l)
+                upgrade_screen = screen_upgrade.UpgradeScreen(name='upgrade', screen_manager=self.sm, machine=self.m, localization=self.l, keyboard=self.kb)
                 self.sm.add_widget(upgrade_screen)
 
             if not self.sm.has_screen('upgrade_successful'):
@@ -108,3 +118,7 @@ class AppManagerClass(object):
                 self.sm.add_widget(already_upgraded_screen)
 
             self.sm.current = 'already_upgraded'
+
+    def start_drywall_cutter_app(self):
+        self.current_app = 'drywall_cutter'
+        self.sm.current = 'drywall_cutter'

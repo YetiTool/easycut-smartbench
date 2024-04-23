@@ -1,4 +1,7 @@
 import sys, os
+
+from asmcnc.comms.logging_system.logging_system import Logger
+
 sys.path.append('./src')
 
 try: 
@@ -7,7 +10,7 @@ try:
     from mock import Mock, MagicMock
 
 except: 
-    print("Can't import mocking packages, are you on a dev machine?")
+    Logger.info("Can't import mocking packages, are you on a dev machine?")
 
 from asmcnc.job import job_data
 from asmcnc.comms import localization
@@ -18,7 +21,7 @@ from kivy.clock import Clock
 '''
 ######################################
 RUN FROM easycut-smartbench FOLDER WITH: 
-python -m pytest --show-capture=no --disable-pytest-warnings tests/automated_unit_tests/job/test_generate_recovery_gcode.py
+python -m pytest tests/automated_unit_tests/job/test_generate_recovery_gcode.py
 ######################################
 '''
 
@@ -1324,6 +1327,7 @@ def test_ignore_comments(jd):
     jd.job_recovery_selected_line = 3
     success, message = jd.generate_recovery_gcode()
     assert success
+
     assert jd.job_recovery_gcode == [
         "S5000",
         "G0 X0.000 Y0.000",
@@ -1332,3 +1336,24 @@ def test_ignore_comments(jd):
         "M5"
     ]
     assert jd.job_recovery_offset == 1
+
+def test_r_handling(jd):
+    jd.job_gcode = [
+        "G0 X0 Y2.0",
+        "G1 Z-6.0 F400",
+        "G3 X2.0 Y0 R2.0 F8000",
+        "G1 X23.0 Y0"
+    ]
+
+    jd.job_recovery_selected_line = 3
+    success, message = jd.generate_recovery_gcode()
+    assert success
+
+    # Output should not include the R
+    assert jd.job_recovery_gcode == [
+        "G0 X2.0 Y0",
+        'G0 Z-6.0',
+        'G1 F8000',
+        'G1 X23.0 Y0'
+    ]
+    assert jd.job_recovery_offset == 0

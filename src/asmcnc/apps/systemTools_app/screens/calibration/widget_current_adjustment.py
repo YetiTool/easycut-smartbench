@@ -1,4 +1,6 @@
 import traceback
+
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
@@ -109,7 +111,7 @@ class CurrentAdjustmentWidget(Widget):
 
         except:
             popup_info.PopupError(self.systemtools_sm, self.l, "Issue setting current")
-            print(traceback.format_exc())
+            Logger.exception("Error when setting current")
 
         self.current_current_label.text = str(self.current_current)
         self.current_current_label.focus = False
