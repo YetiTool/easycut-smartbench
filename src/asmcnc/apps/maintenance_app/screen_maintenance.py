@@ -28,6 +28,7 @@ from asmcnc.apps.maintenance_app import (
 
 Builder.load_string("""
 #:import LabelBase asmcnc.core_UI.components.labels.base_label
+#:import color_provider asmcnc.core_UI.utils.color_provider
 
 <MaintenanceScreenClass>:
 
@@ -406,7 +407,7 @@ Builder.load_string("""
                 spacing:0.0416666666667*app.height
                 canvas:
                     Color:
-                        rgba: hex('#E5E5E5FF')
+                        rgba: color_provider.get_rgba("grey")
                     Rectangle:
                         size: self.size
                         pos: self.pos
@@ -417,7 +418,7 @@ Builder.load_string("""
                     width: dp(0.95*app.width)
                     canvas:
                         Color:
-                            rgba: 1,1,1,1
+                            rgba: color_provider.get_rgba("white")
                         RoundedRectangle:
                             size: self.size
                             pos: self.pos

@@ -2,6 +2,7 @@ from kivy.lang import Builder
 from kivy.uix.widget import Widget
 
 Builder.load_string("""
+#:import color_provider asmcnc.core_UI.utils.color_provider
 
 <GeneralSettingsWidget>
 
@@ -26,7 +27,7 @@ Builder.load_string("""
 
                 Label:
                     id: dust_shoe_title_label
-                    color: [0,0,0,1]
+                    color: color_provider.get_rgba("black")
                     font_size: str(0.03*app.width) + 'sp'
                     halign: "left"
                     markup: True
@@ -34,7 +35,7 @@ Builder.load_string("""
 
                 Label:
                     id: dust_shoe_info_label
-                    color: [0,0,0,1]
+                    color: color_provider.get_rgba("black")
                     font_size: str(0.0225*app.width) + 'sp'
                     halign: "left"
                     markup: True
