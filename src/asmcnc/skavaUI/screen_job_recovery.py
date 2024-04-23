@@ -594,13 +594,13 @@ class JobRecoveryScreen(Screen):
         popup_info.PopupScrollableInfo(self.sm, self.l, 760, info)
 
     def go_xy(self):
+        if self.using_inches:
+            self.m.set_machine_unit_to_inch()
         # Pick min out of safe z height and limit_switch_safety_distance, in case positive value is calculated, which causes errors
         z_safe_height = min(
             self.m.z_wco() + self.sm.get_screen("home").job_box.range_z[1],
             -self.m.limit_switch_safety_distance,
         )
-        if self.using_inches:
-            self.m.set_machine_unit_to_inch()
         # If Z is below safe height, then raise it up
         if self.m.mpos_z() < z_safe_height:
             self.m.s.write_command("G53 G0 Z%s F750" % z_safe_height)
