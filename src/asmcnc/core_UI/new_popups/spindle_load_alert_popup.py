@@ -112,6 +112,7 @@ class SpindleLoadAlertPopup(popup_bases.PopupBase):
             "cancelled", event_number=False
         )
         self.sm.current = "job_incomplete"
+        self.dismiss()
 
     def continue_without_yetipilot(self, *args):
         App.get_running_app().yetipilot.disable()
