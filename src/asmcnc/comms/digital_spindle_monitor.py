@@ -140,7 +140,7 @@ class DigitalSpindleMonitor(object):
         sm = App.get_running_app().sm
 
         if sm.current == "go":
-            machine.stop_for_a_stream_pause(reason_for_pause="SPINDLE_LOAD_ALERT")
+            machine._grbl_door()
         else:
             machine.turn_off_spindle()  # Turn off spindle (likely on from spindle button)
 
