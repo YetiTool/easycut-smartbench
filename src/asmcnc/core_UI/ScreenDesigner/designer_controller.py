@@ -2,7 +2,7 @@ import os
 import re
 
 from kivy.app import App
-from kivy.graphics import Color, Line, InstructionGroup
+from kivy.graphics import Color, Line, InstructionGroup, Rectangle
 from kivy.uix.dropdown import DropDown
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.screenmanager import Screen
@@ -189,6 +189,10 @@ class DesignerController(object):
         """Load a new screen."""
         screen_name = self.screen_name_input.text
         screen_layout = FloatLayout(id='screen_layout', size_hint=[None, None], size=[800, 480], pos=[0, 0])
+        with screen_layout.canvas.before:
+            Color(1, 1, 1, 1)
+            Rectangle(size=screen_layout.size, pos=screen_layout.pos)
+
         self.modifying_screen = False
         self.base_class = 'Screen'
         self.current_class_name = screen_name
@@ -200,6 +204,9 @@ class DesignerController(object):
         widget_name = self.screen_name_input.text
         widget_layout = FloatLayout(id='widget_layout', size_hint=[None, None], pos=[0, 0])
         widget_layout.size = self.convert_to_value_list(self.widget_size_input.text)
+        with widget_layout.canvas.before:
+            Color(1, 1, 1, 1)
+            Rectangle(size=widget_layout.size, pos=widget_layout.pos)
 
         self.modifying_screen = False
         self.base_class = 'WidgetBase'
@@ -260,9 +267,6 @@ class DesignerController(object):
             self.designer_screen.children[0].remove_widget(self.current_screen_layout)
         self.designer_screen.children[0].add_widget(layout)
         self.current_screen_layout = layout
-        with layout.canvas.before:
-            Color(0.2, 1, 0.2)
-            Line(rectangle=(0, 0, layout.width, layout.height))
         self.set_widget_to_add_to(layout)
 
     def text_input_focus(self, instance, state):
@@ -337,11 +341,13 @@ class DesignerController(object):
         """
         # e.g. turn "MyFirstScreen" into "my_first_screen":
         filename = self.classname_to_filename(self.current_class_name, self.base_class)
+        self.remove_widget_to_add_to_rectangle()
         s = sb.get_python_code_from_screen(self.widget_to_add_to,
                                            self.modifying_screen,
                                            self.current_class_name,
                                            filename,
                                            self.base_class)
+        self.paint_widget_to_add_to_rectangle()
         if self.base_class == 'Screen':
             path = pu.join(GENERATED_SCREENS_FOLDER, filename + '.py')
         else:
@@ -369,13 +375,13 @@ class DesignerController(object):
 
     def paint_widget_to_add_to_rectangle(self):
         """
-        Paints the red selection rectangle on the selected widget.
+        Paints the green selection rectangle on the selected widget.
 
         Removes old one if left over."""
         if self.widget_to_add_to and self.widget_to_add_to_rectangle:
             self.widget_to_add_to.canvas.remove(self.widget_to_add_to_rectangle)
         self.widget_to_add_to_rectangle = InstructionGroup()
-        self.widget_to_add_to_rectangle.add(Color(0.2, 1, 0.2))
+        self.widget_to_add_to_rectangle.add(Color(0.0, 0.5, 0.0))
         self.widget_to_add_to_rectangle.add(Line(rectangle=(self.widget_to_add_to.x,
                                                             self.widget_to_add_to.y,
                                                             self.widget_to_add_to.width,

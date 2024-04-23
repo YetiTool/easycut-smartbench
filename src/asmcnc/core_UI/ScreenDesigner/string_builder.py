@@ -1,5 +1,6 @@
 import re
 
+from kivy.graphics import Rectangle, Color
 from kivy.uix.screenmanager import Screen
 from kivy.uix.widget import Widget
 
@@ -242,6 +243,7 @@ def get_builder_string_from_widget(widget, indent_level, base_class, is_main_lay
     #               'valign':  '"{}"'
     #               }
     attributes = {'allow_stretch': '{}',
+                  'canvas': '{}',
                   'cols': '{}',
                   'background_color': '{}',
                   'background_normal': '"{}"',
@@ -274,6 +276,8 @@ def get_builder_string_from_widget(widget, indent_level, base_class, is_main_lay
     for attribute in attributes.keys():
         if 'Widget' in base_class and attribute == 'pos':  # is_main_layout and
             s += base_indent + INDENT + 'pos: [self.parent.pos[0] + ' + str(widget.x) + ', self.parent.pos[1] + ' + str(widget.y) + ']\n'
+        elif attribute == 'canvas':
+            s += get_canvas_string(widget, indent_level+1)
         else:
             value = getattr(widget, attribute, 'no_attr')
             if value and value != 'no_attr':
@@ -312,4 +316,21 @@ def get_class_code(widget, class_name, base_class):
     return s
 
 
-
+def get_canvas_string(widget, indent_level):
+    # type: (Widget, int) -> str
+    """Creates the builder string for canvas background rectangles of a layout."""
+    base_indent = ''
+    for i in range(0, indent_level * len(INDENT)):
+        base_indent += ' '
+    s = ''
+    if widget.canvas.has_before:
+        s += base_indent + 'canvas.before:\n'
+        for c in widget.canvas.before.children:
+            if isinstance(c, Color):
+                s += base_indent + INDENT + 'Color:\n'
+                s += base_indent + INDENT + INDENT + 'rgba:{},{},{},{}\n'.format(c.r, c.g, c.b, c.a)
+            if isinstance(c, Rectangle):
+                s += base_indent + INDENT + 'Rectangle:\n'
+                s += base_indent + INDENT + INDENT + 'size: self.size\n'
+                s += base_indent + INDENT + INDENT + 'pos: self.pos\n'
+    return s

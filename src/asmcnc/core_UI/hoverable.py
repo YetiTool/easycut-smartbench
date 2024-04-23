@@ -420,7 +420,7 @@ class InspectorSingleton(EventDispatcher):
                                                                                 self.widget.size,
                                                                                 len(self.widget.children),
                                                                                 self.widget.opacity))
-        if issubclass(type(self.widget), (Label,TextInput)):
+        if issubclass(type(self.widget), (Label, TextInput)):
             Logger.debug('text: "{}"'.format(self.widget.text))
         if issubclass(type(self.widget), Image):
             Logger.debug('source: "{}"'.format(self.widget.source))
@@ -434,7 +434,7 @@ class InspectorSingleton(EventDispatcher):
         if self.widget and self.selection_rectangle:
             self.widget.canvas.remove(self.selection_rectangle)
         self.selection_rectangle = InstructionGroup()
-        self.selection_rectangle.add(Color(1, 0, 0))
+        self.selection_rectangle.add(Color(1, 0, 0, 1))
         self.selection_rectangle.add(Line(rectangle=(self.widget.x, self.widget.y, self.widget.width, self.widget.height)))
         self.widget.canvas.add(self.selection_rectangle)
 
