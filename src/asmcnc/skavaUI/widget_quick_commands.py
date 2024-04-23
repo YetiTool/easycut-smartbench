@@ -169,7 +169,7 @@ class QuickCommands(Widget):
         elif not self.m.state().startswith('Idle'):
             self.sm.current = 'mstate'
                 
-        elif not self.is_job_within_bounds() and sys.platform != "win32":
+        elif not self.do_pre_run_checks() and sys.platform != "win32":
             self.sm.current = 'boundary'
 
         elif not self.m.is_machine_homed and self.m.is_connected:
@@ -217,7 +217,7 @@ class QuickCommands(Widget):
             self.l.get_str("Please adjust the spindle speed in your job and try again.")
         )
 
-        if self.jd.job_spindle_speed < minimum_spindle_speed:
+        if self.jd.spindle_speed_min < minimum_spindle_speed:
             self.sm.get_screen("boundary").job_box_details.append(speed_too_low_string)
             return False
 
