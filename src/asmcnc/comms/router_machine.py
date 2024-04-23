@@ -20,8 +20,8 @@ from asmcnc.comms import serial_connection
 from asmcnc.comms.yeti_grbl_protocol import protocol
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.comms import motors
+from asmcnc.comms.grbl_settings_manager import GRBLSettingsManagerSingleton
 from asmcnc.skavaUI import popup_info
-from asmcnc.comms.model_manager import ModelManagerSingleton
 from asmcnc.comms.coordinate_system import CoordinateSystem
 
 from kivy.clock import Clock
@@ -154,6 +154,7 @@ class RouterMachine(EventDispatcher):
         self.l = localization
         self.jd = job
         self.model_manager = ModelManagerSingleton()
+        self.grbl_manager = GRBLSettingsManagerSingleton()
         self.set_jog_limits()
 
         self.win_serial_port = win_serial_port   # Need to save so that serial connection can be reopened (for zhead cycle app)
@@ -780,6 +781,8 @@ class RouterMachine(EventDispatcher):
             '$$'
         ]
         self.s.start_sequential_stream(list_to_stream, reset_grbl_after_stream)
+        if setting_no in self.grbl_manager.settings_to_save:
+            self.grbl_manager.save_console_specific_setting(setting_no, value)
 
     def bake_default_grbl_settings(self, z_head_qc_bake=False):
 
@@ -898,9 +901,12 @@ class RouterMachine(EventDispatcher):
                     '$32=' + str(self.s.setting_32)           #Laser mode, boolean
             ]
 
-        try:
+        if self.get_dollar_setting(50):
             grbl_settings_and_params.append('$50=' + str(self.s.setting_50))     #Yeti custom serial number
+        if self.get_dollar_setting(51) != -1:
             grbl_settings_and_params.append('$51=' + str(self.s.setting_51))     #Enable digital feedback spindle, boolean
+
+        try:
             grbl_settings_and_params.append('$53=' + str(self.s.setting_53))     #Enable stall guard alarm operation, boolean
             grbl_settings_and_params.append('$54=' + str(self.s.setting_54))     #Motor load (SG) values reporting type, boolean
 

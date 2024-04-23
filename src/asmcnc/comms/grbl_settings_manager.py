@@ -24,6 +24,7 @@ class GRBLSettingsManagerSingleton(object):
     _machine_saved_data = {
         SERIAL_ID: '0000.00',  # serial number
         'type': 'machine',
+        51: -1, # SC2
         100: 0,  # x steps/mm
         101: 0,  # y steps/mm
         102: 0  # z steps/mm
@@ -75,6 +76,9 @@ class GRBLSettingsManagerSingleton(object):
     }
 
 
+    # List of settings that are not bound to a function during runtime
+    settings_to_save = [51]
+
     # File paths:
     MACHINE_DATA_FILE_PATH = path_utils.join(path_utils.sb_values_path, "machine_settings.json")
 
@@ -89,17 +93,16 @@ class GRBLSettingsManagerSingleton(object):
         # Always check for call with machine object:
         if self.machine is None and machine is not None:
             self.machine = machine
+            self.machine.s.bind(setting_51=lambda instance, value: self.on_console_specific_setting(instance,
+                                                                                                    value,
+                                                                                                    51))
             # serial number and product code:
             self.machine.s.bind(setting_50=lambda instance, value: self.on_setting_50(value))
-            # machine settings (steps/mm):
+            # machine settings (steps/mm) only one:
             self.machine.s.bind(setting_100=lambda instance, value: self.on_setting_steps_per_mm(value,
                                                                                                  100))
             self.machine.s.bind(setting_101=lambda instance, value: self.on_setting_steps_per_mm(value,
                                                                                                  101))
-            # Don't do this on z as it will always be default:
-            # self.machine.s.bind(setting_102=lambda instance, value: self.on_setting_steps_per_mm(instance,
-            #                                                                                      value,
-            #                                                                                      102))
 
             # system persistent settings:
             self.machine.s.bind(setting_0=lambda instance, value: self.on_persistent_setting(value, 0))
@@ -266,3 +269,36 @@ class GRBLSettingsManagerSingleton(object):
 
     def has_rig_settings(self):
         return self._machine_saved_data['type'] != "machine"
+
+    def on_console_specific_setting(self, instance, value, setting):
+        """
+        Called when a console specific setting is read in.
+
+        Checks if the read in value differs from last recorded value.
+        """
+        descriptions = {
+            51: "SC2 ($51) setting"
+        }
+
+        # If setting has not yet been saved then save it
+        if self._machine_saved_data[setting] == -1:
+            self._machine_saved_data[setting] = value
+            self.save_machine_data_to_file()
+            Logger.info('First startup after update? Setting {} saved to file: {}'.format(descriptions[setting], value))
+        # Otherwise if the value does not match then restore it
+        elif value != self._machine_saved_data[setting]:
+            self.machine.write_dollar_setting(setting, self._machine_saved_data[setting])
+            Logger.warning('Restored {} from file: {}'.format(descriptions[setting], self._machine_saved_data[setting]))
+
+    def save_console_specific_setting(self, setting, value):
+        """
+        Called externally to change a setting which has not been bound to a function.
+        """
+        descriptions = {
+            51: "SC2 ($51) setting"
+        }
+
+        if value != self._machine_saved_data[setting]:
+            self._machine_saved_data[setting] = value
+            self.save_machine_data_to_file()
+            Logger.info('Wrote {} to file: {}'.format(descriptions[setting], value))

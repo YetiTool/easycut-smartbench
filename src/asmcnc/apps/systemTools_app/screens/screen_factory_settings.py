@@ -1078,9 +1078,9 @@ $51 is currently set to """
                 message = """This will enable SC2 compatability, are you sure you want to continue?
 
 $51 is currently set to """
-            try:
+            if self.m.get_dollar_setting(51) != -1:
                 message += str(int(self.m.s.setting_51))
-            except:
+            else:
                 message += "N/A"
             popup_factory_settings.PopupSC2Decision(
                 self.systemtools_sm.sm, self.l, message

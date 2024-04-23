@@ -585,14 +585,11 @@ class MaintenanceScreenClass(Screen):
         self.spindle_settings_widget.spindle_brand.values = (
             self.spindle_settings_widget.brand_list_sc1
         )
-        try:
-            self.m.s.setting_51
+        if self.m.get_dollar_setting(51) != -1:
             if self.m.theateam():
                 self.spindle_settings_widget.spindle_brand.values = (
                     self.spindle_settings_widget.brand_list_sc2
                 )
-        except:
-            pass
         self.touchplate_offset_widget.touchplate_offset.text = str(
             self.m.z_touch_plate_thickness
         )
