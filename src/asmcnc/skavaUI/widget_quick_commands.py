@@ -12,6 +12,8 @@ from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.clock import Clock
+
+from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.skavaUI import popup_info
 from kivy.core.window import Window
 
@@ -217,6 +219,7 @@ class QuickCommands(Widget):
             self.l.get_str("Please adjust the spindle speed in your job and try again.")
         )
 
+        Logger.debug("Spindle speeds: Job: {}, Min: {}".format(self.jd.spindle_speed_min, minimum_spindle_speed))
         if self.jd.spindle_speed_min < minimum_spindle_speed:
             self.sm.get_screen("boundary").job_box_details.append(speed_too_low_string)
             return False
