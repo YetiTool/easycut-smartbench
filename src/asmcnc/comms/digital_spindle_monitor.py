@@ -98,6 +98,9 @@ class DigitalSpindleMonitor(object):
             }
         })
 
+        if self.__serial_connection.spindle_health_check:
+            return
+
         if value == -999 or (TEST_MODE and value > 0):
             self.__add_faulty_reading(value)
 
