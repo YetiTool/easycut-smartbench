@@ -74,17 +74,17 @@ class GCodeView(Widget):
         self.jd = kwargs["job"]
 
     def draw_file_in_xy_plane(self, gcode_list):
-        # Logger.info('len(gcode_list) ' + str(len(gcode_list)))
+        # Logger.debug('len(gcode_list) ' + str(len(gcode_list)))
         self.gCodePreview.canvas.clear()
-        # Logger.info('> set_canvas_scale')
+        # Logger.debug('> set_canvas_scale')
         self.set_canvas_scale(gcode_list)
-        # Logger.info('< set_canvas_scale')
+        # Logger.debug('< set_canvas_scale')
         last_x, last_y = 0, 0
         target_x, target_y = 0, 0
         plane = "G17"
         move = "G0"
         lines_read = 0
-        Logger.info("> for line in gcode_list")
+        Logger.debug("> for line in gcode_list")
         for line in gcode_list:
             lines_read += 1
             if lines_read > self.max_lines_to_read:
@@ -233,8 +233,8 @@ class GCodeView(Widget):
                         )
                     last_x, last_y = target_x, target_y
                 else:
-                    Logger.info("Did not draw: " + line)
-        Logger.info("< for line in gcode_list")
+                    Logger.warning("Did not draw: " + line)
+        Logger.debug("< for line in gcode_list")
 
     def detect_quad_in_xy_plane(self, i, j):
         # quads defined mathematically, i.e. starting top right, counting ccw    .5 represents boundary between <round up/down> quadrants
@@ -290,7 +290,7 @@ class GCodeView(Widget):
         self.feed_rate_list = []
         self.speed_list = []
         self.xy_preview_gcode = []
-        Logger.info("> Getting non modal gcode: process loop...")
+        Logger.debug("> Getting non modal gcode: process loop...")
         self.get_non_modal_gcode(job_file_gcode, line_cap, screen_manager, dt)
 
     def get_non_modal_gcode(self, job_file_gcode, line_cap, screen_manager, dt):
@@ -356,7 +356,7 @@ class GCodeView(Widget):
                                 self.min_x = self.last_x
                             self.last_x = bit[1:]
                         except:
-                            Logger.info(
+                            Logger.exception(
                                 "Line not for preview ("
                                 + str(self.line_number)
                                 + "): "
@@ -371,7 +371,7 @@ class GCodeView(Widget):
                                 self.min_y = self.last_y
                             self.last_y = bit[1:]
                         except:
-                            Logger.info(
+                            Logger.exception(
                                 "Line not for preview ("
                                 + str(self.line_number)
                                 + "): "
@@ -386,7 +386,7 @@ class GCodeView(Widget):
                                 self.min_z = self.last_z
                             self.last_z = bit[1:]
                         except:
-                            Logger.info(
+                            Logger.exception(
                                 "Line not for preview ("
                                 + str(self.line_number)
                                 + "): "
@@ -450,7 +450,7 @@ class GCodeView(Widget):
                     )
                     self.xy_preview_gcode.append(processed_line)
                 else:
-                    Logger.info(
+                    Logger.debug(
                         "Line not for preview ("
                         + str(self.line_number)
                         + self.move
@@ -476,7 +476,7 @@ class GCodeView(Widget):
                 self.interrupt_delay,
             )
         else:
-            Logger.info("> Finished getting non modal gcode")
+            Logger.debug("> Finished getting non modal gcode")
             self.jd.x_max = self.max_x
             self.jd.x_min = self.min_x
             self.jd.y_max = self.max_y

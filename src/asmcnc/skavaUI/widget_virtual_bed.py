@@ -165,7 +165,7 @@ class VirtualBed(Widget):
             * self.m.grbl_y_max_travel
             - self.m.grbl_y_max_travel
         )
-        Logger.info("Y: ", str(touch.y), str(self.touch_zone.y), str(self.touch_zone.pos[1]))
+        Logger.debug("Y: ", str(touch.y), str(self.touch_zone.y), str(self.touch_zone.pos[1]))
         self.m.quit_jog()
         self.m.jog_absolute_xy(machineX, machineY, self.bedWidgetJogFeedrate)
 
