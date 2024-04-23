@@ -2,6 +2,7 @@ import collections
 import json
 import time
 
+from kivy.app import App
 from kivy.clock import Clock
 
 from asmcnc.comms.logging_system.logging_system import Logger
@@ -124,7 +125,6 @@ class DigitalSpindleMonitor(object):
 
         if threshold_exceeded:
             self.__trigger_alert()
-            self.export_diagnostics_file()
 
     def export_diagnostics_file(self):
         """
@@ -148,6 +148,8 @@ class DigitalSpindleMonitor(object):
         """
         Logger.error("Invalid data threshold reached, alerting user.")
 
+        App.get_running_app().machine._grbl_door()
+        self.export_diagnostics_file()
         Clock.schedule_once(lambda dt: open_alert_popup())
         self.__faulty_reading_count = 0
 
