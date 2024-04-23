@@ -23,10 +23,12 @@ from asmcnc.apps.maintenance_app import (
     widget_maintenance_touchplate_offset,
     widget_maintenance_z_lubrication_reminder,
     widget_maintenance_spindle_health_check,
+    widget_maintenance_general_settings,
 )
 
 Builder.load_string("""
 #:import LabelBase asmcnc.core_UI.components.labels.base_label
+#:import color_provider asmcnc.core_UI.utils.color_provider
 
 <MaintenanceScreenClass>:
 
@@ -61,6 +63,9 @@ Builder.load_string("""
     touchplate_offset_container: touchplate_offset_container
     z_lubrication_reminder_container: z_lubrication_reminder_container
 
+    # General settings widgets
+    general_settings_container: general_settings_container
+
     # + tab widgets
     plus_tab : plus_tab
     spindle_health_check_container : spindle_health_check_container
@@ -76,7 +81,7 @@ Builder.load_string("""
         do_default_tab: False
         tab_pos: 'top_left'
         tab_height: dp(90.0/480.0)*app.height
-        tab_width: dp(142.0/800.0)*app.width
+        tab_width: dp((710.0/6.0)/800.0)*app.width
         on_touch_down: root.on_tab_switch()
 
 
@@ -386,6 +391,38 @@ Builder.load_string("""
                             size: self.size
                             pos: self.pos
 
+        # General settings tab
+
+        TabbedPanelItem:
+            id: general_settings_tab
+            background_normal: 'asmcnc/apps/maintenance_app/img/general_settings_tab_blue.png'
+            background_down: 'asmcnc/apps/maintenance_app/img/general_settings_tab_grey.png'
+
+            BoxLayout:
+                size_hint: (None,None)
+                width: dp(1.005*app.width)
+                height: dp(0.8125*app.height)
+                orientation: "vertical" 
+                padding:[dp(0.0275)*app.width, dp(0.0416666666667)*app.height, dp(0.0275)*app.width, dp(0.0416666666667)*app.height]
+                spacing:0.0416666666667*app.height
+                canvas:
+                    Color:
+                        rgba: color_provider.get_rgba("grey")
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+
+                BoxLayout: 
+                    id: general_settings_container
+                    height: dp(0.729166666667*app.height)
+                    width: dp(0.95*app.width)
+                    canvas:
+                        Color:
+                            rgba: color_provider.get_rgba("white")
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
+
         # + Tab
 
         TabbedPanelItem:
@@ -522,6 +559,14 @@ class MaintenanceScreenClass(Screen):
         )
         self.z_lubrication_reminder_container.add_widget(
             self.z_lubrication_reminder_widget
+        )
+        self.general_settings_widget = (
+            widget_maintenance_general_settings.GeneralSettingsWidget(
+                machine=self.m, screen_manager=self.sm, localization=self.l
+            )
+        )
+        self.general_settings_container.add_widget(
+            self.general_settings_widget
         )
         if self.m.theateam():
             self.add_plus_tab()
