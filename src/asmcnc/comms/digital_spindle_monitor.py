@@ -155,7 +155,6 @@ class DigitalSpindleMonitor(object):
         else:
             machine.turn_off_spindle()  # Turn off spindle (likely on from spindle button)
 
-        App.get_running_app().machine.stop_for_a_stream_pause(reason_for_pause="SPINDLE_LOAD_ALERT")
         self.export_diagnostics_file()
         Clock.schedule_once(lambda dt: open_alert_popup())
         self.__faulty_reading_count = 0
