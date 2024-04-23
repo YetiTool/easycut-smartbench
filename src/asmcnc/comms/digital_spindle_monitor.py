@@ -9,7 +9,7 @@ from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.core_UI.new_popups.spindle_load_alert_popup import SpindleLoadAlertPopup
 
 # TEST_MODE flag will make values above 0 be considered faulty readings.
-TEST_MODE = False
+TEST_MODE = True
 
 
 def open_alert_popup():
