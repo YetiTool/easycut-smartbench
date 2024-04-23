@@ -72,7 +72,7 @@ class LBCalibration1(Screen):
         def count_down(seconds):
             if seconds == 0:
                 if self.sm.current == self.name:
-                    Logger.info('entering')
+                    Logger.debug('entering')
                     self.sm.current = 'lbc2'
                     return
             

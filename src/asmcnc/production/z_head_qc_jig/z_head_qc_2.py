@@ -247,7 +247,7 @@ class ZHeadQC2(Screen):
     def run_digital_spindle_test(self):
 
         if self.m.s.m_state == "Idle":
-            Logger.info('testing')
+            Logger.debug('testing')
             self.brush_reset_test_count = 0
             self.initial_run_time = None
             self.spindle_brush_reset()
@@ -333,7 +333,7 @@ class ZHeadQC2(Screen):
             if self.brush_reset_test_count < 5 and (self.initial_run_time == 0 or self.m.s.spindle_brush_run_time_seconds != 0):
                 self.spindle_brush_reset()
             else:
-                Logger.info('Test failed')
+                Logger.warning('Test failed')
                 fail_report_string = "\n".join(fail_report)
                 popup_z_head_qc.PopupTempPowerDiagnosticsInfo(self.sm, fail_report_string)
                 self.digital_spindle_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
@@ -376,7 +376,7 @@ class ZHeadQC2(Screen):
                 self.spindle_pass_fail = True
 
             except:
-                Logger.info("Could not show outcome")
+                Logger.exception("Could not show outcome")
 
 
         Clock.schedule_once(lambda dt: show_outcome(), 45)
