@@ -6,6 +6,9 @@ Created on 16 Nov 2017
 YetiTool's UI for SmartBench
 www.yetitool.com
 '''
+from asmcnc import paths
+paths.create_paths()
+
 import logging
 # config
 # import os
