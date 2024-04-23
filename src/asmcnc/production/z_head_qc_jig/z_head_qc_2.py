@@ -1,3 +1,4 @@
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
@@ -191,9 +192,6 @@ Builder.load_string("""
             pos: self.pos
 """)
 
-def log(message):
-    timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + message)
 
 class ZHeadQC2(Screen):
     def __init__(self, **kwargs):
@@ -249,7 +247,7 @@ class ZHeadQC2(Screen):
     def run_digital_spindle_test(self):
 
         if self.m.s.m_state == "Idle":
-            log('testing')
+            Logger.debug('testing')
             self.brush_reset_test_count = 0
             self.initial_run_time = None
             self.spindle_brush_reset()
@@ -275,16 +273,16 @@ class ZHeadQC2(Screen):
 
         def compare_info(dt):
             if self.m.s.spindle_brush_run_time_seconds == 0:
-                self.m.s.write_command('M5')
+                self.m.turn_off_spindle()
                 self.test_rpm(fail_report)
             else:
                 fail_report.append("Spindle brush time after reset was " + str(self.m.s.spindle_brush_run_time_seconds) + ". Should be 0")
-                self.m.s.write_command('M5')
+                self.m.turn_off_spindle()
                 self.test_rpm(fail_report)
 
         fail_report = []
         self.brush_reset_test_count += 1
-        self.m.s.write_command('M3 S0')
+        self.m.turn_on_spindle_for_data_read()  # Turn on spindle to read info (at 0 rpm)
 
         Clock.schedule_once(read_info, 1)
 
@@ -292,50 +290,50 @@ class ZHeadQC2(Screen):
         def read_rpm(dt):
             spindle_rpm = int(self.m.s.spindle_speed)
 
-            log('Spindle RPM: %s' % spindle_rpm)
+            Logger.info('Spindle RPM: %s' % spindle_rpm)
 
             if spindle_rpm < 8000 or spindle_rpm > 12000:
                 fail_report.append("Spindle RPM was " + str(spindle_rpm) + ". Should be 8000-12000")
 
-            self.m.s.write_command('M5')
+            self.m.turn_off_spindle()
             self.continue_digital_spindle_test(fail_report)
 
-        rpm_to_run = 10000 if self.m.spindle_voltage == 230 else self.m.convert_from_110_to_230(10000)
+        rpm_to_run = 10000
 
-        self.m.s.write_command('M3 S' + str(rpm_to_run))
+        self.m.turn_on_spindle(rpm_to_run)
 
         Clock.schedule_once(read_rpm, 3)
 
     def continue_digital_spindle_test(self, fail_report):
 
         temperature = self.m.s.digital_spindle_temperature
-        log('Digital Spindle Temperature: %s' % temperature)
+        Logger.info('Digital Spindle Temperature: %s' % temperature)
         if temperature < 0 or temperature > 50:
             fail_report.append("Temperature was " + str(temperature) + ". Should be 0-50")
 
         load = self.m.s.digital_spindle_ld_qdA
-        log('Digital Spindle Load: %s' % load)
+        Logger.info('Digital Spindle Load: %s' % load)
         if load < 50 or load > 10000:
             fail_report.append("Load was " + str(load) + ". Should be 50-10000")
 
         killtime = self.m.s.digital_spindle_kill_time
-        log('Digital Spindle KillTime: %s' % killtime)
+        Logger.info('Digital Spindle KillTime: %s' % killtime)
         if killtime != 255:
             fail_report.append("KillTime was " + str(killtime) + ". Should be 255")
 
         voltage = self.m.s.digital_spindle_mains_voltage
-        log('Digital Spindle Voltage: %s' % voltage)
+        Logger.info('Digital Spindle Voltage: %s' % voltage)
         if voltage < 100 or voltage > 255:
             fail_report.append("Voltage was " + str(voltage) + ". Should be 100-255")
 
         if not fail_report:
-            log('Test passed')
+            Logger.info('Test passed')
             self.digital_spindle_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
         else:
             if self.brush_reset_test_count < 5 and (self.initial_run_time == 0 or self.m.s.spindle_brush_run_time_seconds != 0):
                 self.spindle_brush_reset()
             else:
-                log('Test failed')
+                Logger.warning('Test failed')
                 fail_report_string = "\n".join(fail_report)
                 popup_z_head_qc.PopupTempPowerDiagnosticsInfo(self.sm, fail_report_string)
                 self.digital_spindle_check.source = "./asmcnc/skavaUI/img/template_cancel.png"
@@ -359,7 +357,7 @@ class ZHeadQC2(Screen):
         Clock.schedule_once(lambda dt: self.analogue_spindle_check('M3 S25000', 8500, 10000), 36)
 
         # Spindle off
-        Clock.schedule_once(lambda dt: self.m.s.write_command('M5'), 45)
+        Clock.schedule_once(lambda dt: self.m.turn_off_spindle(), 45)
 
 
         def show_outcome():
@@ -378,7 +376,7 @@ class ZHeadQC2(Screen):
                 self.spindle_pass_fail = True
 
             except:
-                log("Could not show outcome")
+                Logger.exception("Could not show outcome")
 
 
         Clock.schedule_once(lambda dt: show_outcome(), 45)

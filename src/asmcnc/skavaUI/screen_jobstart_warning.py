@@ -1,16 +1,17 @@
-'''
+from kivy.core.window import Window
+
+"""
 Created on 1 February 2021
 @author: Letty
 
 Screen to provide user with important safety information prior to every job start.
-'''
-
-import kivy
+"""
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivy.uix.button import Button
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 #:import hex kivy.utils.get_color_from_hex
 #:import Factory kivy.factory.Factory
@@ -35,8 +36,8 @@ Builder.load_string("""
     confirm_button : confirm_button
 
     BoxLayout:
-        height: dp(800)
-        width: dp(480)
+        height: dp(1.0*app.height)
+        width: dp(1.0*app.width)
         canvas.before:
             Color: 
                 rgba: hex('#E5E5E5FF')
@@ -47,7 +48,7 @@ Builder.load_string("""
         BoxLayout:
             padding: 0
             orientation: "vertical"
-            spacing: 10
+            spacing:0.0208333333333*app.height
 
             BoxLayout:
                 padding: 0
@@ -61,11 +62,11 @@ Builder.load_string("""
                 Label:
                     id: header_label
                     size_hint: (None,None)
-                    height: dp(60)
-                    width: dp(800)
+                    height: dp(0.125*app.height)
+                    width: dp(1.0*app.width)
                     text: "Safety Warning"
                     color: hex('#f9f9f9ff')
-                    font_size: 30
+                    font_size: 0.0375*app.width
                     halign: "center"
                     valign: "bottom"
                     markup: True
@@ -73,18 +74,18 @@ Builder.load_string("""
                     
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(800)
-                height: dp(320)
-                padding: [20,10,20,0]
+                width: dp(1.0*app.width)
+                height: dp(0.666666666667*app.height)
+                padding:[dp(0.025)*app.width, dp(0.0208333333333)*app.height, dp(0.025)*app.width, 0]
                 spacing: 0
                 orientation: 'vertical'
              
                 BoxLayout:
                     orientation: 'horizontal'
-                    spacing:10
+                    spacing:0.0125*app.width
                     size_hint_y: 1.22
                     BoxLayout:
-                        padding: 20
+                        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
                         size_hint_x: 0.2
                         Image:
                             keep_ratio: True
@@ -94,13 +95,13 @@ Builder.load_string("""
                     BoxLayout:
                         orientation: 'vertical'
                         size_hint_x: 0.8
-                        padding: [0,0,20,0]
+                        padding:[0, 0, dp(0.025)*app.width, 0]
                         Label:
                             id: risk_of_fire
                             size_hint_y: 0.2
                             markup: True
                             halign: 'left'
-                            font_size: '32sp' 
+                            font_size: str(0.04*app.width) + 'sp' 
                             markup: True
                             valign: 'top'
                             size:self.texture_size
@@ -117,7 +118,7 @@ Builder.load_string("""
                             text_size: self.size
                             color: hex('#333333FF')
                             markup: True
-                            font_size: '20sp' 
+                            font_size: str(0.025*app.width) + 'sp' 
 
                 BoxLayout:
                     orientation: 'horizontal'
@@ -126,7 +127,7 @@ Builder.load_string("""
 
                     BoxLayout:
                         orientation: 'horizontal'
-                        spacing:10
+                        spacing:0.0125*app.width
                         size_hint_x: 0.75
 
                         BoxLayout:
@@ -143,7 +144,7 @@ Builder.load_string("""
                                 id: never_unattended
                                 markup: True
                                 halign: 'left'
-                                font_size: '32sp' 
+                                font_size: str(0.04*app.width) + 'sp' 
                                 markup: True
                                 size:self.size
                                 valign: 'middle'
@@ -166,7 +167,7 @@ Builder.load_string("""
                             size_hint_y: 0.18
                             markup: True
                             halign: 'center'
-                            font_size: '22sp' 
+                            font_size: str(0.0275*app.width) + 'sp' 
                             markup: True
                             size:self.size
                             valign: 'middle'
@@ -177,9 +178,9 @@ Builder.load_string("""
 
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(800)
-                height: dp(80)
-                padding: [dp(250),dp(0), dp(250), dp(10)]
+                width: dp(1.0*app.width)
+                height: dp(0.166666666667*app.height)
+                padding:[dp(0.3125)*app.width, 0, dp(0.3125)*app.width, dp(0.0208333333333)*app.height]
                 orientation: 'horizontal'
 
                 Button:
@@ -189,58 +190,60 @@ Builder.load_string("""
                     background_normal: "./asmcnc/skavaUI/img/next.png"
                     background_down: "./asmcnc/skavaUI/img/next.png"
                     border: [dp(14.5)]*4
-                    width: dp(291)
-                    height: dp(79)
-                    font_size: '28sp'
+                    width: dp(0.36375*app.width)
+                    height: dp(0.164583333333*app.height)
+                    font_size: str(0.035*app.width) + 'sp'
                     color: hex('#f9f9f9ff')
                     markup: True
                     center: self.parent.center
                     pos: self.parent.pos
                   
 
-""")
+"""
+)
+
 
 class RoundedButton(Button):
     pass
 
+
 class JobstartWarningScreen(Screen):
-
     def __init__(self, **kwargs):
-
         super(JobstartWarningScreen, self).__init__(**kwargs)
-        self.m=kwargs['machine']
-        self.sm=kwargs['screen_manager']
-        self.l=kwargs['localization']
-
+        self.m = kwargs["machine"]
+        self.sm = kwargs["screen_manager"]
+        self.l = kwargs["localization"]
         self.update_strings()
 
-
     def continue_to_go_screen(self):
-        # RESET SPINDLE HEALTH CHECK FLAGS
         self.m.spindle_health_check_failed = False
         self.m.spindle_health_check_passed = False
         self.m.s.yp.set_adjusting_spindle_speed(False)
-
-        self.sm.current = 'go'
+        self.sm.current = "go"
 
     def update_strings(self):
-
         self.header_label.text = self.l.get_str("Safety Warning")
         self.risk_of_fire.text = self.l.get_str("Risk of fire")
         self.causes_of_fire.text = (
-                self.l.get_str("Common causes of fire") + ":\n"
-                "- " + self.l.get_str("Processing combustible materials, e.g. woods") + "\n"
-                "- " + self.l.get_str("Using dull cutters which produce heat through friction") + "\n"
-                "- " + self.l.get_str("Variation in extraction") + "\n"
-            )
-        self.never_unattended.text = self.l.get_bold("Never leave CNC machines unattended")
+            self.l.get_str("Common causes of fire")
+            + ":\n- "
+            + self.l.get_str("Processing combustible materials, e.g. woods")
+            + "\n- "
+            + self.l.get_str("Using dull cutters which produce heat through friction")
+            + "\n- "
+            + self.l.get_str("Variation in extraction")
+            + "\n"
+        )
+        self.never_unattended.text = self.l.get_bold(
+            "Never leave CNC machines unattended"
+        )
         self.scan_label.text = self.l.get_bold("SCAN ME")
         self.confirm_button.text = self.l.get_str("I understand")
-
         self.update_font_size(self.scan_label)
 
     def update_font_size(self, value):
-        if len(value.text) > 20:
-            value.font_size = 19
-        else: 
-            value.font_size = 22
+        text_length = self.l.get_text_length(value.text)
+        if text_length > 11:
+            value.font_size = 0.02375 * Window.width
+        else:
+            value.font_size = 0.0275 * Window.width

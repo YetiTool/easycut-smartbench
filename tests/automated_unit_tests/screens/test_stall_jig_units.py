@@ -4,6 +4,10 @@
 '''
 
 import sys
+
+from asmcnc.comms.logging_system.logging_system import Logger
+from tests import test_utils
+
 sys.path.append('./src')
 
 
@@ -13,7 +17,7 @@ try:
     from mock import Mock
 
 except:
-    print("Can't import mocking packages, are you on a dev machine?")
+    Logger.info("Can't import mocking packages, are you on a dev machine?")
 
 
 from datetime import datetime
@@ -29,8 +33,11 @@ from kivy.clock import Clock
 ########################################################
 IMPORTANT!!
 Run from easycut-smartbench folder, with 
-python -m pytest --show-capture=no --disable-pytest-warnings tests/automated_unit_tests/screens/test_stall_jig_units.py
+python -m pytest tests/automated_unit_tests/screens/test_stall_jig_units.py
 '''
+
+test_utils.create_app()
+
 @pytest.fixture(scope="module")
 def sm():
     return Mock()
@@ -90,5 +97,5 @@ def test_record_stall_event(stall_jig_screen, m):
     m.s.last_stall_motor_step_size = 5
     stall_jig_screen.record_stall_event()
     stall_jig_screen.record_stall_event()
-    print(stall_jig_screen.stall_test_events)
+    Logger.info(stall_jig_screen.stall_test_events)
 

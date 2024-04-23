@@ -1,18 +1,16 @@
-'''
+"""
 Created on 17 January 2020
 Warning to remind user to remove their tape measure before homing the machine
 @author: Letty
-'''
-
+"""
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, StringProperty
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 
-# from asmcnc.calibration_app import screen_prep_calibration
-
-Builder.load_string("""
+Builder.load_string(
+    """
 <TapeMeasureScreenClass>:
     
     alert_label:alert_label
@@ -25,7 +23,7 @@ Builder.load_string("""
              
     BoxLayout:
         orientation: 'horizontal'
-        padding: 80,30
+        padding:[dp(0.1)*app.width, dp(0.0625)*app.height]
         spacing: 0
         size_hint_x: 1
         BoxLayout:
@@ -52,7 +50,7 @@ Builder.load_string("""
             Label:
                 id: alert_label
                 text_size: self.size
-                font_size: '24sp'
+                font_size: str(0.03*app.width) + 'sp'
                 halign: 'center'
                 valign: 'middle'
                 text: '[color=455A64]PLEASE REMOVE YOUR TAPE MEASURE FROM THE MACHINE NOW.[/color]'
@@ -61,6 +59,7 @@ Builder.load_string("""
         
             AnchorLayout:
                 Button:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     #size: self.texture_size
                     size_hint_y: 0.8
                     size_hint_x: 0.35
@@ -73,28 +72,30 @@ Builder.load_string("""
                         root.next_screen()
     
                     BoxLayout:
-                        padding: 5
+                        padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
                         size: self.parent.size
                         pos: self.parent.pos
                         
                         Label:
-                            font_size: '26sp'
+                            font_size: str(0.0325*app.width) + 'sp'
                             text: '[color=FFFFFF]Ok, continue...[/color]'
                             markup: 'True'
                 
-""")
+"""
+)
+
 
 class TapeMeasureScreenClass(Screen):
-    
     return_to_screen = StringProperty()
     alert_label = ObjectProperty()
-    
+
     def __init__(self, **kwargs):
         super(TapeMeasureScreenClass, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-        
-        self.alert_label.text = '[color=455A64]\nTAPE MEASURE WARNING!\nPlease remove your tape measure from the machine now.[/color]'
+        self.sm = kwargs["screen_manager"]
+        self.m = kwargs["machine"]
+        self.alert_label.text = """[color=455A64]
+TAPE MEASURE WARNING!
+Please remove your tape measure from the machine now.[/color]"""
 
     def next_screen(self):
         self.sm.current = self.return_to_screen

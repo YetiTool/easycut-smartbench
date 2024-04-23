@@ -1,18 +1,17 @@
-'''
+from kivy.core.window import Window
+
+from asmcnc.core_UI import scaling_utils
+
+"""
 Created on 17 August 2020
 @author: Letty
 widget to hold brush use input and buttons
-'''
-
-import kivy
+"""
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
 
-from asmcnc.apps.maintenance_app import popup_maintenance
-from asmcnc.skavaUI import popup_info
-
 Builder.load_string("""
+#:import LabelBase asmcnc.core_UI.components.labels.base_label
 
 <BrushUseWidget>
     
@@ -25,21 +24,21 @@ Builder.load_string("""
     
     BoxLayout:
         size_hint: (None, None)
-        height: dp(250)
-        width: dp(280)
+        height: dp(0.520833333333*app.height)
+        width: dp(0.35*app.width)
         pos: self.parent.pos
         orientation: 'vertical'
-        padding: [13.3,10,13.3,10]
-        spacing: 10
+        padding:[dp(0.016625)*app.width, dp(0.0208333333333)*app.height, dp(0.016625)*app.width, dp(0.0208333333333)*app.height]
+        spacing:0.0208333333333*app.height
 
         BoxLayout: 
             orientation: 'vertical'
-            spacing: dp(5)
+            spacing:dp(0.0104166666667)*app.height
             size_hint: (None, None)
-            height: dp(100)
-            width: dp(280)         
+            height: dp(0.208333333333*app.height)
+            width: dp(0.35*app.width)         
 
-            Label:
+            LabelBase:
                 id: brush_use_label
                 color: 0,0,0,1
                 font_size: root.default_font_size
@@ -51,26 +50,26 @@ Builder.load_string("""
 
             BoxLayout: 
                 orientation: 'horizontal'
-                padding: [0,dp(5),0,0]
-                spacing: 10
+                padding:[0, dp(0.0104166666667)*app.height, 0, 0]
+                spacing:0.0125*app.width
                 size_hint: (None, None)
-                height: dp(53)
-                width: dp(280) 
+                height: dp(0.110416666667*app.height)
+                width: dp(0.35*app.width) 
 
                 # Text input
                 TextInput:
                     id: brush_use
                     size_hint: (None, None)
-                    height: dp(50)
-                    width: dp(120)
-                    font_size: dp(28)
+                    height: dp(0.104166666667*app.height)
+                    width: dp(0.15*app.width)
+                    font_size: dp(0.035*app.width)
                     input_filter: 'int'
                     multiline: False
 
-                Label:
+                LabelBase:
                     id: hours_label
                     color: 0,0,0,1
-                    font_size: dp(28)
+                    font_size: dp(0.035*app.width)
                     markup: True
                     halign: "left"
                     valign: "middle"
@@ -80,20 +79,21 @@ Builder.load_string("""
         GridLayout:
             cols: 2
             rows: 1
-            spacing: 13.3
+            spacing:0.016625*app.width
             size_hint: (None, None)
-            height: dp(120)
-            width: dp(253.3)
+            height: dp(0.25*app.height)
+            width: dp(0.316625*app.width)
 
             BoxLayout: 
                 size: self.parent.size
                 pos: self.parent.pos
                 ToggleButton:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     id: restore_button
                     on_press: root.restore()
                     size_hint: (None,None)
-                    height: dp(120)
-                    width: dp(120)
+                    height: dp(0.25*app.height)
+                    width: dp(0.15*app.width)
                     background_color: [0,0,0,0]
                     center: self.parent.center
                     pos: self.parent.pos
@@ -112,11 +112,12 @@ Builder.load_string("""
                 size: self.parent.size
                 pos: self.parent.pos
                 ToggleButton:
+                    font_size: str(0.01875 * app.width) + 'sp'
                     id: reset_0
                     on_press: root.reset_to_0()
                     size_hint: (None,None)
-                    height: dp(120)
-                    width: dp(120)
+                    height: dp(0.25*app.height)
+                    width: dp(0.15*app.width)
                     background_color: [0,0,0,0]
                     center: self.parent.center
                     pos: self.parent.pos
@@ -132,50 +133,38 @@ Builder.load_string("""
                             allow_stretch: True 
 
 
-""")
+"""
+)
 
 
 class BrushUseWidget(Widget):
-
-    default_font_size = 24
+    default_font_size = scaling_utils.get_scaled_width(24)
 
     def __init__(self, **kwargs):
-    
         super(BrushUseWidget, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.m=kwargs['machine']
-        self.l=kwargs['localization']
-
+        self.sm = kwargs["screen_manager"]
+        self.m = kwargs["machine"]
+        self.l = kwargs["localization"]
         self.update_strings()
-        
+
     def restore(self):
-        self.brush_use.text = str(int(self.m.spindle_brush_use_seconds/3600)) # convert back to hrs for user
+        self.brush_use.text = str(int(self.m.spindle_brush_use_seconds / 3600))
 
     def reset_to_0(self):
-        self.brush_use.text = '0'
+        self.brush_use.text = "0"
 
     def update_strings(self):
         self.brush_use_label.text = self.l.get_bold("BRUSH USE")
         self.hours_label.text = self.l.get_str("hours")
-
         self.update_font_size(self.brush_use_label)
 
     def update_font_size(self, value):
-        if len(value.text) <= 27:
+        text_length = self.l.get_text_length(value.text)
+        if text_length <= 20:
             value.font_size = self.default_font_size
-        if len(value.text) > 27:
-            value.font_size = self.default_font_size - 3
-        if len(value.text) > 30:
-            value.font_size = self.default_font_size - 6
-        if len(value.text) > 35:
-            value.font_size = self.default_font_size - 7
-
-
-
-
-
-
-
-
-
-
+        if text_length > 20:
+            value.font_size = self.default_font_size - 0.00375 * Window.width
+        if text_length > 23:
+            value.font_size = self.default_font_size - 0.0075 * Window.width
+        if text_length > 28:
+            value.font_size = self.default_font_size - 0.00875 * Window.width

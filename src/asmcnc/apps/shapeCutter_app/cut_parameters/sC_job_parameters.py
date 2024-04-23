@@ -8,6 +8,9 @@ import csv
 import math
 import re
 
+from asmcnc.comms.logging_system.logging_system import Logger
+
+
 class ShapeCutterJobParameters(object):
     
     
@@ -364,7 +367,7 @@ class ShapeCutterJobParameters(object):
            
         material_thickness = float(self.shape_dict["dimensions"]["Z"])*dim_unit_multiplier #??
                 
-        print material_thickness
+        Logger.info(material_thickness)
         
         # RECTANGLE PARAMETERS  
         if shape == "rectangle":
@@ -372,16 +375,16 @@ class ShapeCutterJobParameters(object):
             rect_job_y = float(self.shape_dict["dimensions"]["Y"])*dim_unit_multiplier
             rect_job_rad = float(self.shape_dict["dimensions"]["R"])*dim_unit_multiplier
         
-            print rect_job_x
-            print rect_job_y
-            print rect_job_rad                
+            Logger.info(rect_job_x)
+            Logger.info(rect_job_y)
+            Logger.info(rect_job_rad)
         
         
         # CIRCLE PARAMS
         elif shape == "circle":
             circ_input_diameter = float(self.shape_dict["dimensions"]["D"])*dim_unit_multiplier
        
-            print circ_input_diameter
+            Logger.info(circ_input_diameter)
        
         # TOOL
         cutter_diameter = float(self.parameter_dict["cutter dimensions"]["diameter"])*cutter_unit_multiplier
@@ -473,11 +476,11 @@ class ShapeCutterJobParameters(object):
                     y_rtn_tabs.append(y) 
                     y -= tab_distance
             
-                print "Number of tabs in X axis: " + str(len(x_out_tabs))
-                print "Number of tabs in Y axis: " + str(len(y_out_tabs))
+                Logger.info("Number of tabs in X axis: " + str(len(x_out_tabs)))
+                Logger.info("Number of tabs in Y axis: " + str(len(y_out_tabs)))
         
             else:
-                print "No tabs"
+                Logger.info("No tabs")
         
         # CIRCLE PARAMS
         
@@ -675,7 +678,7 @@ class ShapeCutterJobParameters(object):
         f = open(self.gcode_filename, "w")
         for line in self.gcode_lines:
             f.write(line + "\n")
-        print "Done: " + self.gcode_filename
+        Logger.info("Done: " + self.gcode_filename)
 
     def set_job_envelope(self, lines):
 
@@ -692,20 +695,20 @@ class ShapeCutterJobParameters(object):
             z_values = []
     
             for line in lines:
-                print line
+                Logger.info(line)
                 blocks = str(line).strip().split(" ")
-                print blocks
+                Logger.info(blocks)
                 for part in blocks:
                     try:
                         if part.startswith(('X')): x_values.append(float(part[1:]))
                         if part.startswith(('Y')): y_values.append(float(part[1:]))
                         if part.startswith(('Z')): z_values.append(float(part[1:]))
                     except:
-                        print "Envelope calculator: skipped '" + part + "'"
+                        Logger.info("Envelope calculator: skipped '" + part + "'")
             
-            print x_values
-            print y_values
-            print z_values
+            Logger.info(x_values)
+            Logger.info(y_values)
+            Logger.info(z_values)
             
             self.range_x[0], self.range_x[1] = min(x_values), max(x_values)
             self.range_y[0], self.range_y[1] = min(y_values), max(y_values)
@@ -726,7 +729,7 @@ class ShapeCutterJobParameters(object):
                     try:
                         if part.startswith(('Z')): z_values.append(float(part[1:]))
                     except:
-                        print "Envelope calculator: skipped '" + part + "'"           
+                        Logger.info("Envelope calculator: skipped '" + part + "'")
             
             self.range_z[0], self.range_z[1] = min(z_values), max(z_values)
 

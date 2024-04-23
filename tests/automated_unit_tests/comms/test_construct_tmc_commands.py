@@ -3,12 +3,13 @@
 Created on 1 Feb 2022
 @author: Letty
 '''
+from asmcnc.comms.logging_system.logging_system import Logger
 
 try: 
     import unittest
 
 except: 
-    print("Can't import mocking packages, are you on a dev machine?")
+    Logger.info("Can't import mocking packages, are you on a dev machine?")
 
 import sys
 sys.path.append('./src')
@@ -38,13 +39,13 @@ class ConstructTMCCommandTest(unittest.TestCase):
 
         """sending command to motor:4, cmd:101, val:128"""
         # assert self.constructTMCcommand(101,128, 1), 'not connected'
-        print(list(self.p.constructTMCcommand(101,128, 1)))
+        Logger.info(list(self.p.constructTMCcommand(101,128, 1)))
 
     def testconstructTMCcommand2(self):
 
         """sending command to motor:4, cmd:101, val:128"""
         # assert self.constructTMCcommand(101,128, 1), 'not connected'
-        print(list(self.p.constructTMCcommand(109,67109336, 1)))
+        Logger.info(list(self.p.constructTMCcommand(109,67109336, 1)))
 
 
     def testconstructTMCcommand1(self):

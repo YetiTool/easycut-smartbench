@@ -1,3 +1,4 @@
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
@@ -49,7 +50,7 @@ class ZHeadQCDB2(Screen):
     def do_data_send_when_ready(self):
 
         if self.calibration_db.processing_running_data:
-            print("Poll for sending ZH QC statuses when ready")
+            Logger.info("Poll for sending ZH QC statuses when ready")
             Clock.schedule_once(lambda dt: self.do_data_send_when_ready(), 1)
             return
 
@@ -63,7 +64,7 @@ class ZHeadQCDB2(Screen):
                 return
 
             except:
-                print(traceback.format_exc())
+                Logger.exception('Failed to send calibration payload!')
 
         self.sm.current = 'qcDB4'
 

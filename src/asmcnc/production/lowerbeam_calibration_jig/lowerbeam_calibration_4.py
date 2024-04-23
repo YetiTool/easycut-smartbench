@@ -1,4 +1,6 @@
 import traceback
+
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
@@ -115,7 +117,7 @@ class LBCalibration4(Screen):
         
     def do_data_send_when_ready(self):
         if self.calibration_db.processing_running_data:
-            log("Poll for sending LB QC statuses when ready")
+            Logger.info("Poll for sending LB QC statuses when ready")
             Clock.schedule_once(lambda dt: self.do_data_send_when_ready(), 1)
             return
 
@@ -126,9 +128,9 @@ class LBCalibration4(Screen):
                 self.send_calibration_payload(TMC_Y2, self.serial_number)
                 next_screen_name = 'lbc5'
 
-            except Exception as e:
+            except Exception:
                 next_screen_name = 'lbc6'
-                print(traceback.format_exc())
+                Logger.exception('Failed to send calibration payload!')
 
         else: 
             next_screen_name = 'lbc6'

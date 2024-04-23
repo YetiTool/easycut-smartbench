@@ -34,6 +34,9 @@ Builder.load_string("""
 
 
 class ZHeadMechanicsMonitor(Screen):
+
+    parent_screen = ''
+
     def __init__(self, **kwargs):
         super(ZHeadMechanicsMonitor, self).__init__(**kwargs)
 
@@ -44,4 +47,4 @@ class ZHeadMechanicsMonitor(Screen):
         self.gcode_monitor_container.add_widget(widget_gcode_monitor.GCodeMonitor(machine=self.m, screen_manager=self.sm, localization=self.l))
 
     def back(self):
-        self.sm.current = 'mechanics'
+        self.sm.current = self.parent_screen

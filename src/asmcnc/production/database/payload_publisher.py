@@ -5,15 +5,19 @@ import traceback
 from datetime import datetime
 import os
 
-try: import pika
+from asmcnc.comms.logging_system.logging_system import Logger
+
+try:
+    import pika
 except: 
     pika = None
-    print(traceback.format_exc())
+    Logger.exception("Couldn't import pika")
 
-try: import paramiko
+try:
+    import paramiko
 except: 
     paramiko = None
-    print(traceback.format_exc())
+    Logger.exception("Couldn't import paramiko")
 
 CSV_PATH = './asmcnc/production/database/csvs/'
 QUEUE = 'new_factory_data'
@@ -21,10 +25,6 @@ WORKING_DIR = 'C:\\CalibrationReceiver\\CSVS\\'
 
 if os.getcwd().endswith("easycut-smartbench"): 
     CSV_PATH = './src' + CSV_PATH[1:]
-
-def log(message):
-    timestamp = datetime.now()
-    print(timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
 
 
 def get_unique_file_name(machine_serial, table, stage):
@@ -99,7 +99,7 @@ class DataPublisher(object):
             )
 
         except: 
-            log(traceback.format_exc())
+            Logger.exception('Failed to set pika credentials!')
 
     def send_file_paramiko_sftp(self, file_path):
         ssh = paramiko.SSHClient()
@@ -119,7 +119,7 @@ class DataPublisher(object):
             )
             return True
         except:
-            print(traceback.format_exc())
+            Logger.exception('Failed to publish data!')
             return False
 
     def run_data_send(self, statuses, table, stage):
@@ -128,7 +128,7 @@ class DataPublisher(object):
         try: 
             self.send_file_paramiko_sftp(csv_name)
         except:
-            print(traceback.format_exc())
+            Logger.exception('Failed to send file via sftp!')
             return False
 
         raw_file_name = csv_name.split('/')[-1]

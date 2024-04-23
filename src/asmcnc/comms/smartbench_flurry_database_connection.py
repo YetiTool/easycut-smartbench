@@ -1,3 +1,4 @@
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.clock import Clock
 import json, socket, datetime, time
 from requests import get
@@ -5,16 +6,12 @@ import threading, Queue
 from time import sleep
 import traceback
 
-def log(message):
-	timestamp = datetime.datetime.now()
-	print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
-
 try:
 	import pika
 
 except:
 	pika = None
-	log("Couldn't import pika lib")
+	Logger.error("Couldn't import pika lib")
 
 
 class DatabaseEventManager():
@@ -49,7 +46,7 @@ class DatabaseEventManager():
 
 	def __del__(self):
 
-		log("Database Event Manager closed - garbage collected!")
+		Logger.info("Database Event Manager closed - garbage collected!")
 
 	
 	## SET UP CONNECTION TO DATABASE
@@ -73,7 +70,7 @@ class DatabaseEventManager():
 
 	def set_up_pika_connection(self):
 
-		log("Try to set up pika connection")
+		Logger.info("Try to set up pika connection")
 
 		while True:
 
@@ -86,7 +83,7 @@ class DatabaseEventManager():
 																							'2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb')
 																						))
 
-					log("Connection established")
+					Logger.info("Connection established")
 
 					self.routine_updates_channel = self.connection.channel()
 					self.routine_updates_channel.queue_declare(queue=self.queue)
@@ -98,9 +95,8 @@ class DatabaseEventManager():
 						self.send_routine_updates_to_database()
 					break
 
-				except Exception as e:
-					log("Pika connection exception: " + str(e))
-					log(traceback.format_exc())
+				except:
+					Logger.exception("Pika connection exception")
 					sleep(10)
 
 			else:
@@ -108,28 +104,28 @@ class DatabaseEventManager():
 
 	def reinstate_channel_or_connection_if_missing(self):
 
-		log("Attempt to reinstate channel or connection")
+		Logger.debug("Attempt to reinstate channel or connection")
 
 		try:
 			if self.connection.is_closed:
 
-				log("Connection is closed, set up new connection")
+				Logger.debug("Connection is closed, set up new connection")
 				self.set_up_pika_connection()
 
 			elif self.routine_updates_channel.is_closed:
-				if self.VERBOSE: log("Channel is closed, set up new channel")
+				if self.VERBOSE: Logger.debug("Channel is closed, set up new channel")
 				self.routine_updates_channel = self.connection.channel()
 				self.routine_updates_channel.queue_declare(queue=self.queue)
 
 			else: 
 
 				try:
-					log("Close connection and start again") 
+					Logger.warning("Close connection and start again")
 					self.connection.close()
 					self.set_up_pika_connection()
 
 				except:
-					log("sleep and try reinstating connection again in a minute") 
+					Logger.error("sleep and try reinstating connection again in 10s")
 					sleep(10)
 					self.reinstate_channel_or_connection_if_missing()
 
@@ -161,9 +157,8 @@ class DatabaseEventManager():
 						else:
 							self.publish_event_with_routine_updates_channel(self.generate_full_payload_data(), "Routine Full Payload")
 
-					except Exception as e:
-						log("Could not send routine update:")
-						log(str(e))
+					except:
+						Logger.exception("Could not send routine update")
 
 
 				sleep(10)
@@ -197,22 +192,22 @@ class DatabaseEventManager():
 	##------------------------------------------------------------------------
 	def publish_event_with_routine_updates_channel(self, data, exception_type):
 
-		if self.VERBOSE: log("Publishing data: " + exception_type)
+		if self.VERBOSE: Logger.info("Publishing data: " + exception_type)
 
 		if self.set.wifi_available:
 
 			try: 
 				self.routine_updates_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
-				if self.VERBOSE: log(data)
+				if self.VERBOSE: Logger.info(data)
 			
-			except Exception as e:
-				log(exception_type + " send exception: " + str(e))
+			except:
+				Logger.exception(exception_type + " sent exception")
 				self.reinstate_channel_or_connection_if_missing()
 
 
 	def publish_event_with_temp_channel(self, data, exception_type, timeout):
 
-		log("Publishing data: " + exception_type)
+		Logger.info("Publishing data: " + exception_type)
 
 		while time.time() < timeout and self.set.ip_address:
 
@@ -224,15 +219,15 @@ class DatabaseEventManager():
 
 					try: 
 						temp_event_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
-						if self.VERBOSE: log(data)
+						if self.VERBOSE: Logger.info(data)
 
 						if "Job End" in exception_type:
 							temp_event_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(self.generate_full_payload_data()))
-							if self.VERBOSE: log(data)
+							if self.VERBOSE: Logger.info(data)
 
 					
-					except Exception as e:
-						log(exception_type + " send exception: " + str(e))
+					except:
+						Logger.exception(exception_type + " send exception")
 
 					temp_event_channel.close()
 					break
@@ -498,7 +493,7 @@ class DatabaseEventManager():
 					"public_ip_address": self.set.public_ip_address
 				},
 				"speeds": {
-					"spindle_speed": self.m.spindle_speed(),
+					"spindle_speed": self.m.s.spindle_speed,
 					"spindle_percentage": self.sm.get_screen('go').speedOverride.speed_rate_label.text,
 					"max_spindle_speed_absolute": self.sm.get_screen('go').spindle_speed_max_absolute or '',
 					"max_spindle_speed_percentage": self.sm.get_screen('go').spindle_speed_max_percentage or ''

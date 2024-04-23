@@ -3,6 +3,7 @@ from functools import partial
 import glob
 import os, subprocess
 
+from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
@@ -418,9 +419,6 @@ Builder.load_string("""
             pos: self.pos
 """)
 
-def log(message):
-    timestamp = datetime.now()
-    print ('Z Head Connecting Screen: ' + timestamp.strftime('%H:%M:%S.%f' )[:12] + ' ' + str(message))
 
 class ZHeadPCBSetUp(Screen):
 
@@ -665,15 +663,15 @@ class ZHeadPCBSetUp(Screen):
 
     def print_settings_to_set(self):
 
-        print("FW version " + str(self.firmware_version))
+        Logger.info("FW version " + str(self.firmware_version))
 
-        print("X current: " + str(self.x_current))
-        print("Y current: " + str(self.y_current))
-        print("Z current: " + str(self.z_current))
+        Logger.info("X current: " + str(self.x_current))
+        Logger.info("Y current: " + str(self.y_current))
+        Logger.info("Z current: " + str(self.z_current))
 
-        print("X thermal coefficient: " + str(self.x_thermal_coefficient))
-        print("Y thermal coefficient: " + str(self.y_thermal_coefficient))
-        print("Z thermal coefficient: " + str(self.z_thermal_coefficient))
+        Logger.info("X thermal coefficient: " + str(self.x_thermal_coefficient))
+        Logger.info("Y thermal coefficient: " + str(self.y_thermal_coefficient))
+        Logger.info("Z thermal coefficient: " + str(self.z_thermal_coefficient))
 
 
     ## Z HEAD DISCONNECT/RECONNECT
@@ -809,14 +807,14 @@ class ZHeadPCBSetUp(Screen):
                 Clock.schedule_once(lambda dt: store_params_and_progress(), 1.2)
 
             else:
-                log("Z Head not Idle yet, waiting...")
+                Logger.warning("Z Head not Idle yet, waiting...")
                 Clock.schedule_once(lambda dt: set_currents_and_coeffs(), 0.5)
 
 
         def store_params_and_progress():
 
             self.ok_button.text = "Storing parameters..."
-            log("Storing TMC params...")
+            Logger.info("Storing TMC params...")
             self.m.store_tmc_params_in_eeprom_and_handshake()
             check_registers_are_correct()
 

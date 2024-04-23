@@ -1,17 +1,23 @@
 import os
 
+from asmcnc.comms.logging_system.logging_system import Logger
+
 from asmcnc.apps.start_up_sequence.screens import \
 screen_reboot_to_apply_settings, \
 screen_release_notes, \
 screen_pro_plus_safety, \
 screen_starting_smartbench, \
-screen_safety_warning
+screen_safety_warning, \
+screen_incorrect_shutdown
 
 from asmcnc.apps.start_up_sequence.warranty_app import screen_manager_warranty
 from asmcnc.apps.start_up_sequence.data_consent_app import screen_manager_data_consent
 from asmcnc.apps.start_up_sequence.welcome_to_smartbench_app import screen_manager_welcome_to_smartbench
 from asmcnc.apps.start_up_sequence.welcome_to_smartbench_app import screen_manager_welcome_to_smartbench
+from asmcnc.core_UI import console_utils
 
+
+cc_override = False  # set to true to trigger startup sequence
 
 class StartUpSequence(object):
 
@@ -26,9 +32,10 @@ class StartUpSequence(object):
 	starting_smartbench_screen = None
 	warranty_sm = None
 	reboot_to_apply_settings_screen = None
+	incorrect_shutdown_screen = None
 	safety_screen = None
 
-	def __init__(self, app_manager, screen_manager, machine, settings, localization, job, database, config_check, version):
+	def __init__(self, app_manager, screen_manager, machine, settings, localization, keyboard, job, database, config_check, version):
 
 		self.am = app_manager
 		self.sm = screen_manager
@@ -36,6 +43,7 @@ class StartUpSequence(object):
 		self.set = settings
 		self.jd = job
 		self.l = localization
+		self.kb = keyboard
 		self.db = database
 		self.cc = config_check
 		self.v = version
@@ -47,7 +55,7 @@ class StartUpSequence(object):
 
 	def set_up_sequence(self):
 
-		if self.cc:
+		if self.cc or cc_override:
 
 			if self.welcome_user():
 				self.prep_welcome_app()
@@ -69,6 +77,8 @@ class StartUpSequence(object):
 
 		else:
 			self.prep_starting_smartbench_screen()
+			if not console_utils.correct_shutdown():
+				self.prep_incorrect_shutdown_screen()
 			self.prep_safety_screen()
 
 	## BASIC SEQUENCE NAVIGATION FUNCTIONS
@@ -78,7 +88,7 @@ class StartUpSequence(object):
 		self.seq_step = 0
 		self.sm.current = self.screen_sequence[self.seq_step]
 
-	def next_in_sequence(self):
+	def next_in_sequence(self, *args):
 
 		self.seq_step +=1
 		self.sm.current = self.screen_sequence[self.seq_step]
@@ -98,7 +108,7 @@ class StartUpSequence(object):
 	def welcome_user(self):
 		flag = (os.popen('grep "show_user_welcome_app" config.txt').read())
 
-		if ('True' in flag): 
+		if ('True' in flag) or cc_override:
 			self.reboot_in_sequence = True
 			return True
 		else: return False
@@ -142,7 +152,7 @@ class StartUpSequence(object):
 
 	def prep_warranty_app(self):
 		if not self.warranty_sm:
-			self.warranty_sm = screen_manager_warranty.ScreenManagerWarranty(self, self.sm, self.m, self.l)
+			self.warranty_sm = screen_manager_warranty.ScreenManagerWarranty(self, self.sm, self.m, self.l, self.kb)
 
 	def prep_user_pro_plus_safety(self):
 		if not self.pro_plus_safety_screen:
@@ -167,6 +177,13 @@ class StartUpSequence(object):
 
 		if 'starting_smartbench' not in self.screen_sequence:
 			self.screen_sequence.append('starting_smartbench')
+	def prep_incorrect_shutdown_screen(self):
+		if not self.incorrect_shutdown_screen:
+			self.incorrect_shutdown_screen = screen_incorrect_shutdown.IncorrectShutdownScreen(name = 'incorrect_shutdown', start_sequence = self, localization = self.l, screen_manager = self.sm)
+			self.sm.add_widget(self.incorrect_shutdown_screen)
+
+		if 'incorrect_shutdown' not in self.screen_sequence:
+			self.screen_sequence.append('incorrect_shutdown')
 
 	def prep_safety_screen(self):
 		if not self.safety_screen:    		
@@ -200,13 +217,13 @@ class StartUpSequence(object):
 
 			try:
 				self.sm.remove_widget(self.sm.get_screen(screen_name))
-				print (screen_name + ' deleted')
+				Logger.info(screen_name + ' deleted')
 
 			except: pass
 
 
 	def __del__(self):
-		print 'End of startup sequence'
+		Logger.info('End of startup sequence')
 
 
 

@@ -3,19 +3,23 @@ Created on 31 Jan 2018
 @author: Ed
 Module to manage all serial comms between pi (EasyCut s/w) and realtime arduino chip (GRBL f/w)
 '''
-
-from kivy.config import Config
-from __builtin__ import True
-
-import serial, sys, time, string, threading, serial.tools.list_ports
-from datetime import datetime, timedelta
-from os import listdir
-from kivy.clock import Clock
-
 import re
+from datetime import datetime, timedelta
 from functools import partial
-from serial.serialutil import SerialException
+from os import listdir
 
+import serial
+import serial.tools.list_ports
+import string
+import sys
+import threading
+import time
+from enum import Enum
+from kivy.clock import Clock
+from kivy.event import EventDispatcher
+from kivy.properties import StringProperty, NumericProperty, BooleanProperty
+
+from asmcnc.comms.logging_system.logging_system import Logger
 # Import managers for GRBL Notification screens (e.g. alarm, error, etc.)
 from asmcnc.core_UI.sequence_alarm import alarm_manager
 
@@ -24,12 +28,51 @@ ENABLE_STATUS_REPORTS = True
 GRBL_SCANNER_MIN_DELAY = 0.01  # Delay between checking for response from grbl. Needs to be hi-freq for quick streaming, e.g. 0.01 = 100Hz
 
 
-def log(message):
-    timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + str(message))
+class MachineState(Enum):
+    IDLE = 'Idle'
+    RUN = 'Run'
+    HOLD = 'Hold'
+    JOG = 'Jog'
+    HOME = 'Home'
+    CHECK = 'Check'
+    DOOR_0 = 'Door:0'
 
 
-class SerialConnection(object):
+class SerialConnection(EventDispatcher):
+    setting_0 = NumericProperty(-1.0)
+    setting_1 = NumericProperty(-1.0)
+    setting_2 = NumericProperty(-1.0)
+    setting_4 = NumericProperty(-1.0)
+    setting_5 = NumericProperty(-1.0)
+    setting_6 = NumericProperty(-1.0)
+    setting_10 = NumericProperty(-1.0)
+    setting_11 = NumericProperty(-1.0)
+    setting_12 = NumericProperty(-1.0)
+    setting_13 = NumericProperty(-1.0)
+    setting_20 = NumericProperty(-1.0)
+    setting_21 = NumericProperty(-1.0)
+    setting_22 = NumericProperty(-1.0)
+    setting_23 = NumericProperty(-1.0)
+    setting_24 = NumericProperty(-1.0)
+    setting_25 = NumericProperty(-1.0)
+    setting_26 = NumericProperty(-1.0)
+    setting_27 = NumericProperty(-1.0)
+    setting_30 = NumericProperty(-1.0)
+    setting_31 = NumericProperty(-1.0)
+    setting_32 = NumericProperty(-1.0)
+    setting_50 = NumericProperty(0.0)
+    setting_51 = NumericProperty(-1.0)
+    setting_100 = NumericProperty(0.0)
+    setting_101 = NumericProperty(0.0)
+    setting_102 = NumericProperty(0.0)
+    setting_110 = NumericProperty(-1.0)
+    setting_111 = NumericProperty(-1.0)
+    setting_112 = NumericProperty(-1.0)
+    setting_120 = NumericProperty(-1.0)
+    setting_121 = NumericProperty(-1.0)
+    setting_122 = NumericProperty(-1.0)
+    setting_130 = NumericProperty(-1.0)
+    setting_131 = NumericProperty(-1.0)
     STATUS_INTERVAL = 0.1  # How often to poll general status to update UI (0.04 = 25Hz = smooth animation)
 
     s = None  # Serial comms object
@@ -59,8 +102,14 @@ class SerialConnection(object):
     # Need to disable grbl scanner before closing serial connection, or else causes problems (at least in windows)
     grbl_scanner_running = False
 
-    def __init__(self, machine, screen_manager, settings_manager, localization, job):
+    # This flag is set by the serial connection when it sends M3/M5
+    spindle_on = BooleanProperty(False)
 
+    # This flag is set by the serial connection when it sends AE/AF
+    vacuum_on = BooleanProperty(False)
+
+    def __init__(self, machine, screen_manager, settings_manager, localization, job, *args, **kwargs):
+        super(SerialConnection, self).__init__(*args, **kwargs)
         self.sm = screen_manager
         self.sett = settings_manager
         self.m = machine
@@ -69,10 +118,31 @@ class SerialConnection(object):
         # Initialise managers for GRBL Notification screens (e.g. alarm, error, etc.)
         self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m, self.l, self.jd)
         self.FINAL_TEST = False
+        # Register events to provide data:
+        self.register_event_type('on_serial_monitor_update') # new data to show for the serial monitor
+        self.register_event_type('on_update_overload_peak') # new overload peak value
+        self.register_event_type('on_reset_runtime') # runtime counter will be reset
+        self.register_event_type('on_check_job_finished')
+
+    def on_reset_runtime(self, *args):
+        """Default callback. Needs to exist."""
+        pass
+
+    def on_serial_monitor_update(self, *args):
+        """Default callback. Needs to exist."""
+        pass
+
+    def on_update_overload_peak(self, *args):
+        """Default callback. Needs to exist."""
+        pass
+
+    def on_check_job_finished(self, *args):
+        """Default callback. Needs to exist."""
+        pass
 
     def __del__(self):
         if self.s: self.s.close()
-        log('Serial connection destructor')
+        Logger.info('Serial connection destructor')
 
     def is_use_yp(self):
         if self.yp:
@@ -92,13 +162,13 @@ class SerialConnection(object):
                 self.sm.current = 'serialScreen'
 
         except:
-            log("Serial comms interrupted but no serial screen - are you in diagnostics mode?")
-            log("Serial error: " + str(serial_error))
+            Logger.error("Serial comms interrupted but no serial screen - are you in diagnostics mode?")
+            Logger.error("Serial error: " + str(serial_error))
 
     def is_port_SmartBench(self, available_port):
 
         try:
-            log("Try to connect to: " + available_port)
+            Logger.info("Try to connect to: " + available_port)
             # set up connection
             self.s = serial.Serial(str(available_port), BAUD_RATE, timeout=6, writeTimeout=20)  # assign
 
@@ -115,14 +185,14 @@ class SerialConnection(object):
                 # give it a second to reply
                 time.sleep(1)
                 first_bytes = self.s.inWaiting()
-                log("Is port SmartBench? " + str(available_port) + "| First read: " + str(first_bytes))
+                Logger.info("Is port SmartBench? " + str(available_port) + "| First read: " + str(first_bytes))
 
                 if first_bytes:
 
                     # Read in first input and log it
                     def strip_and_log(input_string):
                         new_string = input_string.strip()
-                        log(new_string)
+                        Logger.info(new_string)
                         return new_string
 
                     stripped_input = map(strip_and_log, self.s.readlines())
@@ -139,16 +209,16 @@ class SerialConnection(object):
                     self.s.close()
 
             except:
-                log("Could not communicate with that port at all")
+                Logger.info("Could not communicate with that port at all")
 
         except:
-            log("Wow definitely not that port")
+            Logger.info("Wow definitely not that port")
 
         return ''
 
     def quick_connect(self, available_port):
         try:
-            log("Try to connect to: " + available_port)
+            Logger.info("Try to connect to: " + available_port)
             # set up connection
             self.s = serial.Serial(str(available_port), BAUD_RATE, timeout=6, writeTimeout=20)  # assign
             self.s.flushInput()
@@ -156,12 +226,12 @@ class SerialConnection(object):
             return available_port
 
         except:
-            log("Could not connect to given port.")
+            Logger.info("Could not connect to given port.")
             return ''
 
     def establish_connection(self, win_port):
 
-        log('Start to establish connection...')
+        Logger.info('Start to establish connection...')
         SmartBench_port = ''
 
         # Parameter 'win'port' only used for windows dev e.g. "COM4"
@@ -178,35 +248,35 @@ class SerialConnection(object):
                 port_list = [port.device for port in serial.tools.list_ports.comports() if
                              'n/a' not in port.description]
 
-                print("Windows port list: ")  # for debugging
-                print(str(port_list))
+                Logger.info("Windows port list: ")  # for debugging
+                Logger.info(str(port_list))
 
                 for comport in port_list:
 
-                    print("Windows port to try: ")
-                    print comport
+                    Logger.info("Windows port to try: ")
+                    Logger.info(comport)
 
                     SmartBench_port = self.is_port_SmartBench(comport)
                     if SmartBench_port: break
 
                 if not SmartBench_port:
-                    log("No arduino connected")
+                    Logger.warning("No arduino connected")
 
         elif sys.platform == "darwin":
             self.suppress_error_screens = True
 
             filesForDevice = listdir('/dev/')  # put all device files into list[]
             for line in filesForDevice:
-                if line.startswith('tty.usbmodem'):  # look for...
+                if line.startswith('tty.usbmodem') or line.startswith('tty.usbserial'):  # look for...
 
-                    print("Mac port to try: ")  # for debugging
-                    print line
+                    Logger.info("Mac port to try: ")  # for debugging
+                    Logger.info(line)
 
                     SmartBench_port = self.is_port_SmartBench('/dev/' + str(line))
                     if SmartBench_port: break
 
             if not SmartBench_port:
-                log("No arduino connected")
+                Logger.warning("No arduino connected")
 
         else:
             try:
@@ -255,11 +325,11 @@ class SerialConnection(object):
                 Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'),
                                     5)  # necessary bc otherwise screens not initialised yet
 
-        log("Serial connection status: " + str(self.is_connected()) + " " + str(SmartBench_port))
+        Logger.info("Serial connection status: " + str(self.is_connected()) + " " + str(SmartBench_port))
 
         try:
             if self.is_connected():
-                log('Initialising grbl...')
+                Logger.info('Initialising grbl...')
                 self.write_direct("\r\n\r\n", realtime=False, show_in_sys=False, show_in_console=False)  # Wakes grbl
 
         except:
@@ -268,16 +338,12 @@ class SerialConnection(object):
 
     # is serial port connected?
     def is_connected(self):
-
-        if self.s != None:
-            return True
-        else:
-            return False
+        return self.s is not None and self.s.isOpen()
 
     # called by first kivy screen when safe to assume kivy processing is completed, to ensure correct clock scheduling
     def start_services(self, dt):
 
-        log('Starting services')
+        Logger.info('Starting services')
         self.s.flushInput()  # Flush startup text in serial input
         self.next_poll_time = time.time()
         self.grbl_scanner_running = True
@@ -304,7 +370,7 @@ class SerialConnection(object):
 
     def grbl_scanner(self, run_grbl_scanner_once=False):
 
-        log('Running grbl_scanner thread')
+        Logger.info('Running grbl_scanner thread')
 
         while self.grbl_scanner_running or run_grbl_scanner_once:
 
@@ -346,7 +412,7 @@ class SerialConnection(object):
                     rec_temp = self.s.readline().strip()  # Block the executing thread indefinitely until a line arrives
 
                 except Exception as e:
-                    log('serial.readline exception:\n' + str(e))
+                    Logger.critical('serial.readline exception:\n' + str(e))
                     rec_temp = ''
                     self.get_serial_screen('Could not read line from serial buffer.')
             else:
@@ -358,15 +424,12 @@ class SerialConnection(object):
                 # if not rec_temp.startswith('<Alarm|MPos:') and not rec_temp.startswith('<Idle|MPos:'):
                 if self.VERBOSE_ALL_RESPONSE:
                     if rec_temp.startswith('<'):
-                        log(rec_temp)
+                        Logger.info(rec_temp)
                     else:
-                        log('< ' + rec_temp)
+                        Logger.info('< ' + rec_temp)
 
-                # Update the gcode monitor (may not be initialised) and console:
-                try:
-                    self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('rec', rec_temp)
-                except:
-                    pass
+                # Update the gcode monitor:
+                self.dispatch('on_serial_monitor_update', 'rec', rec_temp)
 
                 # Process the GRBL response:
                 # NB: Sequential streaming is controlled through process_grbl_response
@@ -379,7 +442,7 @@ class SerialConnection(object):
                         self.process_grbl_push(rec_temp)
 
                 except Exception as e:
-                    log('Process response exception:\n' + str(e))
+                    Logger.critical('Process response exception:\n' + str(e))
                     self.get_serial_screen('Could not process grbl response. Grbl scanner has been stopped.')
                     raise  # HACK allow error to cause serial comms thread to exit
                     # What happens here? 
@@ -416,7 +479,7 @@ class SerialConnection(object):
         # Clock.schedule_once(self.grbl_scanner, GRBL_SCANNER_MIN_DELAY)
 
         # These lines should only be executed when grbl scanner is intentionally killed
-        log('Killed grbl_scanner')
+        Logger.info('Killed grbl_scanner')
         self.m_state = 'Off'
 
     # STREAMING: sending gcode, using character counting protocol described here:
@@ -428,6 +491,7 @@ class SerialConnection(object):
 
     is_job_streaming = False
     is_stream_lines_remaining = False
+    job_to_check = []
 
     g_count = 0  # gcodes processed (ok/error'd) by grbl (gcodes may not get processed immediately after being sent)
     l_count = 0  # lines sent to grbl
@@ -445,8 +509,9 @@ class SerialConnection(object):
 
     def check_job(self, job_object):
 
-        log('Checking job...')
+        Logger.info('Checking job...')
 
+        self.job_to_check = job_object
         self.m.enable_check_mode()
         self.set_use_yp(False)
 
@@ -464,20 +529,11 @@ class SerialConnection(object):
                 # run job as per normal
                 self.run_job(job_object)
 
-                # get error log back to the checking screen when it's ready
-                Clock.schedule_interval(partial(self.return_check_outcome, job_object), 0.1)
-
             else:
                 Clock.schedule_once(lambda dt: check_job_inner_function(), 0.9)
 
         # Sleep to ensure check mode ok isn't included in log, AND to ensure it's enabled before job run
         Clock.schedule_once(lambda dt: check_job_inner_function(), 0.9)
-
-    def return_check_outcome(self, job_object, dt):
-        if len(self.response_log) >= len(job_object):
-            self.suppress_error_screens = False
-            self.sm.get_screen('check_job').error_log = self.response_log
-            return False
 
     def run_job(self, job_object):
 
@@ -485,7 +541,7 @@ class SerialConnection(object):
         self.jd.grbl_mode_tracker = []
         self.jd.job_gcode_running = job_object
 
-        log('Job starting...')
+        Logger.info('Job starting...')
         # SET UP FOR BUFFER STUFFING ONLY: 
         ### (if not initialised - come back to this one later w/ pausing functionality)    
 
@@ -493,14 +549,14 @@ class SerialConnection(object):
             Clock.schedule_once(lambda dt: self.set_streaming_flags_to_true(), 2)
 
         elif not self.jd.job_gcode_running:
-            log('Could not start job: File empty')
+            Logger.info('Could not start job: File empty')
             self.sm.get_screen('go').reset_go_screen_prior_to_job_start()
 
     def initialise_job(self):
 
         if self.m_state != "Check":
             self.m.set_led_colour('GREEN')
-            self.m.zUp()
+            self.m.raise_z_axis_for_collet_access()
 
         self.FLUSH_FLAG = True
         self.NOT_SKELETON_STUFF = True
@@ -515,7 +571,7 @@ class SerialConnection(object):
         self.jd.job_gcode_running = gcode_obj
         self.m.set_pause(False)
 
-        log('Skeleton buffer stuffing starting...')
+        Logger.info('Skeleton buffer stuffing starting...')
         # SET UP FOR BUFFER STUFFING ONLY: 
         ### (if not initialised - come back to this one later w/ pausing functionality)    
 
@@ -537,14 +593,13 @@ class SerialConnection(object):
         self.stream_paused_accumulated_time = 0
         self.stream_start_time = time.time()
 
-        if self.sm.has_screen('go'):
-            self.sm.get_screen('go').total_runtime_seconds = 0
+        self.dispatch('on_reset_runtime')
 
     def set_streaming_flags_to_true(self):
         # self.m.set_pause(False) # moved to go screen for timing reasons
         self.is_stream_lines_remaining = True
         self.is_job_streaming = True  # allow grbl_scanner() to start stuffing buffer
-        log('Job running')
+        Logger.info('Job running')
 
     def stuff_buffer(self):  # attempt to fill GRBLS's serial buffer, if there's room
 
@@ -609,13 +664,14 @@ class SerialConnection(object):
 
     # if 'ok' or 'error' rec'd from GRBL
     def process_grbl_response(self, message):
-        if self.suppress_error_screens == True:
+        # if we are in check mode, append message to add it to error_log later
+        if self.suppress_error_screens:
             self.response_log.append(message)
 
         if message.startswith('error'):
-            log('ERROR from GRBL: ' + message)
+            Logger.error('ERROR from GRBL: ' + message)
 
-            if self.suppress_error_screens == False and self.sm.current != 'errorScreen':
+            if not self.suppress_error_screens and self.sm.current != 'errorScreen':
                 self.sm.get_screen('errorScreen').message = message
 
                 if self.sm.current == 'alarmScreen':
@@ -637,7 +693,7 @@ class SerialConnection(object):
     # After streaming is completed
     def end_stream(self):
 
-        log("Ending stream...")
+        Logger.info("Ending stream...")
 
         # Always switch to mm, in case the job put you in inches
         self.write_command('G21')
@@ -658,7 +714,7 @@ class SerialConnection(object):
                     self.sm.get_screen('spindle_cooldown').return_screen = 'job_feedback'
                     self.sm.current = 'spindle_cooldown'
                 else:
-                    self.m.spindle_off()
+                    self.m.turn_off_spindle()
                     time.sleep(0.4)
                     self.update_machine_runtime()
                     self.sm.current = 'job_feedback'
@@ -671,6 +727,8 @@ class SerialConnection(object):
                 self.m.disable_check_mode()
                 self.suppress_error_screens = False
                 self._reset_counters()
+                self.job_to_check = []
+                self.dispatch('on_check_job_finished', self.response_log)
 
         else:
             self._reset_counters()
@@ -700,8 +758,8 @@ class SerialConnection(object):
             self.FLUSH_FLAG = True
 
             # Move head up        
-            Clock.schedule_once(lambda dt: self.m.zUp(), 0.5)
-            Clock.schedule_once(lambda dt: self.m.vac_off(), 1)
+            Clock.schedule_once(lambda dt: self.m.raise_z_axis_for_collet_access(), 0.5)
+            Clock.schedule_once(lambda dt: self.m.turn_off_vacuum(), 1)
 
             # Update time for maintenance reminders
             time.sleep(0.4)
@@ -718,6 +776,8 @@ class SerialConnection(object):
             self.check_streaming_started = False
             self.m.disable_check_mode()
             self.suppress_error_screens = False
+            self.job_to_check = []
+            self.dispatch('on_check_job_finished', self.response_log)
 
             # Flush
             self.FLUSH_FLAG = True
@@ -725,11 +785,11 @@ class SerialConnection(object):
 
         self.NOT_SKELETON_STUFF = True
 
-        log("G-code streaming cancelled!")
+        Logger.info("G-code streaming cancelled!")
 
     def update_machine_runtime(self):
 
-        log("G-code streaming finished!")
+        Logger.info("G-code streaming finished!")
         self.stream_end_time = time.time()
         time_taken_seconds = int(self.stream_end_time - self.stream_start_time) + 10  # to account for cooldown time
         only_running_time_seconds = time_taken_seconds - self.stream_paused_accumulated_time
@@ -738,9 +798,9 @@ class SerialConnection(object):
         self.jd.total_time = str(timedelta(seconds=time_taken_seconds)).split(".")[0]
         self.jd.actual_runtime = str(timedelta(seconds=only_running_time_seconds)).split(".")[0]
 
-        log("Time elapsed: " + self.jd.total_time)
-        log("Time paused: " + self.jd.pause_duration)
-        log("Actual running time: " + self.jd.actual_runtime)
+        Logger.info("Time elapsed: " + self.jd.total_time)
+        Logger.info("Time paused: " + self.jd.pause_duration)
+        Logger.info("Actual running time: " + self.jd.actual_runtime)
 
         ## UPDATE MAINTENANCE TRACKING
 
@@ -768,12 +828,12 @@ class SerialConnection(object):
 
     # PUSH MESSAGE HANDLING
 
-    m_state = 'Unknown'
+    m_state = StringProperty('Unknown')
 
     # Machine co-ordinates
-    m_x = '0.0'
-    m_y = '0.0'
-    m_z = '0.0'
+    m_x = NumericProperty(0.0)
+    m_y = NumericProperty(0.0)
+    m_z = NumericProperty(0.0)
 
     # Track co-ordinate change in each axis
     x_change = False
@@ -799,7 +859,7 @@ class SerialConnection(object):
     grbl_ln = None
 
     # Feeds and speeds
-    spindle_speed = 0
+    spindle_speed = NumericProperty(0)
     feed_rate = 0
 
     # Feed override feedback
@@ -848,8 +908,8 @@ class SerialConnection(object):
     expecting_probe_result = False
 
     # VERSIONS
-    fw_version = ''
-    hw_version = ''
+    fw_version = StringProperty()
+    hw_version = StringProperty()
 
     # TEMPERATURES
     motor_driver_temp = None
@@ -911,7 +971,7 @@ class SerialConnection(object):
 
     def process_grbl_push(self, message):
 
-        if self.VERBOSE_ALL_PUSH_MESSAGES: print message
+        if self.VERBOSE_ALL_PUSH_MESSAGES: Logger.info(message)
 
         # If it's a status message, e.g. <Idle|MPos:-1218.001,-2438.002,-2.000|Bf:35,255|FS:0,0>
         if message.startswith('<'):
@@ -930,7 +990,7 @@ class SerialConnection(object):
                     status_parts[0] != "Check" and
                     status_parts[0] != "Home" and
                     status_parts[0] != "Sleep"):
-                log("ERROR status parse: Status invalid: " + message)
+                Logger.error("ERROR status parse: Status invalid: " + message)
                 return
 
             # If there is no Pn part in the status, set all limits to defaults.
@@ -974,16 +1034,16 @@ class SerialConnection(object):
                         float(pos[1])
                         float(pos[2])
                     except:
-                        log("ERROR status parse: Position invalid: " + message)
+                        Logger.exception("ERROR status parse: Position invalid: " + message)
                         return
 
-                    self.x_change = self.m_x != pos[0]
-                    self.y_change = self.m_y != pos[1]
-                    self.z_change = self.m_z != pos[2]
+                    self.x_change = self.m_x != float(pos[0])
+                    self.y_change = self.m_y != float(pos[1])
+                    self.z_change = self.m_z != float(pos[2])
 
-                    self.m_x = pos[0]
-                    self.m_y = pos[1]
-                    self.m_z = pos[2]
+                    self.m_x = float(pos[0])
+                    self.m_y = float(pos[1])
+                    self.m_z = float(pos[2])
 
                 # Get work's position (may not be displayed, depending on mask)
                 elif part.startswith('WPos:'):
@@ -993,7 +1053,7 @@ class SerialConnection(object):
                         float(pos[1])
                         float(pos[2])
                     except:
-                        log("ERROR status parse: Position invalid: " + message)
+                        Logger.exception("ERROR status parse: Position invalid: " + message)
                         return
                     self.w_x = pos[0]
                     self.w_y = pos[1]
@@ -1007,7 +1067,7 @@ class SerialConnection(object):
                         float(pos[1])
                         float(pos[2])
                     except:
-                        log("ERROR status parse: Position invalid: " + message)
+                        Logger.exception("ERROR status parse: Position invalid: " + message)
                         return
                     self.wco_x = pos[0]
                     self.wco_y = pos[1]
@@ -1021,7 +1081,7 @@ class SerialConnection(object):
                         int(buffer_info[0])
                         int(buffer_info[1])
                     except:
-                        log("ERROR status parse: Buffer status invalid: " + message)
+                        Logger.exception("ERROR status parse: Buffer status invalid: " + message)
                         return
 
                     # if different from last check
@@ -1047,7 +1107,7 @@ class SerialConnection(object):
                         int(value)
 
                     except:
-                        log("ERROR status parse: Line number invalid: " + message)
+                        Logger.exception("ERROR status parse: Line number invalid: " + message)
                         return
 
                     if self.grbl_ln is not None:
@@ -1115,7 +1175,7 @@ class SerialConnection(object):
                         self.sm.get_screen('door').db.send_event(2, 'Power loss',
                                                                  'Connection loss: Check power and WiFi', 0)
                         self.m.set_pause(True)
-                        log("Power loss or DC power supply")
+                        Logger.critical("Power loss or DC power supply")
                         self.power_loss_detected = True
                         Clock.schedule_once(lambda dt: self.m.resume_from_a_soft_door(), 1)
 
@@ -1125,7 +1185,7 @@ class SerialConnection(object):
                     else:
                         self.m.set_pause(True)  # sets flag is_machine_paused so this stub only gets called once
                         if self.sm.current != 'door':
-                            log("Hard " + self.m_state)
+                            Logger.info("Hard " + self.m_state)
                             self.sm.get_screen('door').return_to_screen = self.sm.current
                             self.sm.current = 'door'
 
@@ -1144,7 +1204,7 @@ class SerialConnection(object):
                             int(digital_spindle_feedback[3])
 
                         except:
-                            log("ERROR status parse: Digital spindle feedback invalid: " + message)
+                            Logger.exception("ERROR status parse: Digital spindle feedback invalid: " + message)
                             return
 
                         self.digital_spindle_ld_qdA = int(digital_spindle_feedback[0])
@@ -1169,7 +1229,7 @@ class SerialConnection(object):
                         elif self.digital_spindle_kill_time < 10:
                             overload_mV_equivalent_state = 100
                         else:
-                            log("Killtime value not recognised")
+                            Logger.error("Killtime value not recognised")
 
                     else:
 
@@ -1177,7 +1237,7 @@ class SerialConnection(object):
                             int(spindle_feedback)
 
                         except:
-                            log("ERROR status parse: Analogue spindle feedback invalid: " + message)
+                            Logger.exception("ERROR status parse: Analogue spindle feedback invalid: " + message)
                             return
 
                         self.spindle_load_voltage = int(spindle_feedback)
@@ -1197,13 +1257,13 @@ class SerialConnection(object):
                         elif self.spindle_load_voltage >= 2500:
                             overload_mV_equivalent_state = 100
                         else:
-                            log("Overload value not recognised")
+                            Logger.error("Overload value not recognised")
 
                     # update stuff if there's a change
                     if overload_mV_equivalent_state != self.overload_state:
                         self.overload_state = overload_mV_equivalent_state
-                        log("Overload state change: " + str(self.overload_state))
-                        log("Load voltage: " + str(self.spindle_load_voltage))
+                        Logger.info("Overload state change: " + str(self.overload_state))
+                        Logger.info("Load voltage: " + str(self.spindle_load_voltage))
 
                         try:
                             self.sm.get_screen('go').update_overload_label(self.overload_state)
@@ -1214,7 +1274,7 @@ class SerialConnection(object):
                                 Clock.schedule_once(self.check_for_sustained_peak, 1)
 
                         except:
-                            log('Unable to update overload state on go screen')
+                            Logger.exception('Unable to update overload state on go screen')
 
                     # if it's max load, activate a timer to check back in a second. The "checking back" is about ensuring the signal wasn't a noise event.
                     if self.overload_state == 100 and self.is_ready_to_assess_spindle_for_shutdown:
@@ -1224,7 +1284,26 @@ class SerialConnection(object):
                 elif part.startswith('FS:'):
                     feed_speed = part[3:].split(',')
                     self.feed_rate = feed_speed[0]
-                    self.spindle_speed = feed_speed[1]
+                    # convert spindle speed to int after re-compensating to show the old users value
+                    if int(feed_speed[1]) != 0:
+                        try:
+                            is_spindle_sc2 = self.setting_51 == 1  # Running SC2 spindle
+                        except:
+                            is_spindle_sc2 = False
+
+                        if is_spindle_sc2:  # Running SC2 spindle
+                            self.spindle_speed = int(feed_speed[1])
+                        else:
+                            grbl_reported_rpm = int(feed_speed[1]) # Value back from GRBL
+                            current_multiplier = float(self.speed_override_percentage) / 100 # Current override
+                            current_gcode_rpm = self.m.correct_rpm((grbl_reported_rpm / current_multiplier), revert=True, log=False) # Determine gcode rpm at current line
+                            current_running_rpm = current_gcode_rpm * current_multiplier
+                            # Apply limits
+                            if current_running_rpm > self.m.maximum_spindle_speed(): current_running_rpm = self.m.maximum_spindle_speed()
+                            if current_running_rpm < self.m.minimum_spindle_speed(): current_running_rpm = self.m.minimum_spindle_speed()
+                            self.spindle_speed = int(current_running_rpm)
+                    else:
+                        self.spindle_speed = 0
 
                 elif part.startswith('Ov:'):
                     values = part[3:].split(',')
@@ -1235,7 +1314,7 @@ class SerialConnection(object):
                         int(values[2])
 
                     except:
-                        log("ERROR status parse: Ov values invalid: " + message)
+                        Logger.exception("ERROR status parse: Ov values invalid: " + message)
                         return
 
                     self.feed_override_percentage = int(values[0])
@@ -1249,7 +1328,7 @@ class SerialConnection(object):
                         float(temps[0])
                         float(temps[1])
                     except:
-                        log("ERROR status parse: Temperature invalid: " + message)
+                        Logger.exception("ERROR status parse: Temperature invalid: " + message)
                         return
 
                     self.motor_driver_temp = float(temps[0])
@@ -1263,7 +1342,7 @@ class SerialConnection(object):
                         pass
 
                     except:
-                        log("ERROR status parse: Temperature invalid: " + message)
+                        Logger.exception("ERROR status parse: Temperature invalid: " + message)
                         return
 
                 # VOLTAGES
@@ -1276,7 +1355,7 @@ class SerialConnection(object):
                         float(voltages[3])
 
                     except:
-                        log("ERROR status parse: Voltage invalid: " + message)
+                        Logger.exception("ERROR status parse: Voltage invalid: " + message)
                         return
 
                     self.microcontroller_mV = float(voltages[0])
@@ -1297,7 +1376,7 @@ class SerialConnection(object):
                         int(sg_values[4])
 
                     except:
-                        log("ERROR status parse: SG values invalid: " + message)
+                        Logger.exception("ERROR status parse: SG values invalid: " + message)
                         return
 
                     self.sg_z_motor_axis = int(sg_values[0])
@@ -1314,7 +1393,7 @@ class SerialConnection(object):
                         pass
 
                     except:
-                        log("ERROR status parse: SG values invalid: " + message)
+                        Logger.exception("ERROR status parse: SG values invalid: " + message)
                         return
 
                     else:
@@ -1358,7 +1437,7 @@ class SerialConnection(object):
                         float(sg_alarm_parts[7])
 
                     except:
-                        log("ERROR status parse: SGALARM pins_info invalid: " + message)
+                        Logger.exception("ERROR status parse: SGALARM pins_info invalid: " + message)
                         return
 
                     self.last_stall_tmc_index = int(sg_alarm_parts[0])
@@ -1386,7 +1465,7 @@ class SerialConnection(object):
                         int(spindle_statistics[6])
 
                     except:
-                        log("ERROR status parse: Sp values invalid: " + message)
+                        Logger.exception("ERROR status parse: Sp values invalid: " + message)
                         return
 
                     self.spindle_serial_number = int(spindle_statistics[0])
@@ -1415,7 +1494,7 @@ class SerialConnection(object):
                         int(tmc_registers[10])
 
                     except:
-                        log("ERROR status parse: TMC registers invalid: " + message)
+                        Logger.exception("ERROR status parse: TMC registers invalid: " + message)
                         return
 
                     self.m.TMC_motor[int(tmc_registers[0])].shadowRegisters[0] = int(tmc_registers[1])
@@ -1434,7 +1513,7 @@ class SerialConnection(object):
                         self.m.print_tmc_registers(int(tmc_registers[0]))
 
                     except:
-                        log("Could not print TMC registers")
+                        Logger.exception("Could not print TMC registers")
 
                 elif part.startswith('TCAL:M'):
 
@@ -1445,7 +1524,7 @@ class SerialConnection(object):
                         map(int, all_cal_data_list)
 
                     except:
-                        log("ERROR status parse: TCAL registers invalid: " + message)
+                        Logger.exception("ERROR status parse: TCAL registers invalid: " + message)
                         return
 
                     self.m.TMC_motor[int(motor_index)].calibration_dataset_SG_values = [int(i) for i in
@@ -1473,13 +1552,13 @@ class SerialConnection(object):
                                 "-------------------------------------"
                         )
 
-                        map(log, calibration_report_string.split("\n"))
+                        map(Logger.info, calibration_report_string.split("\n"))
 
                     except:
-                        log("Could not print calibration output")
+                        Logger.exception("Could not print calibration output")
 
-            if self.VERBOSE_STATUS: print (self.m_state, self.m_x, self.m_y, self.m_z,
-                                           self.serial_blocks_available, self.serial_chars_available)
+            if self.VERBOSE_STATUS:
+                Logger.debug(self.m_state, str(self.m_x), str(self.m_y), str(self.m_z), self.serial_blocks_available, self.serial_chars_available)
 
             if self.measure_running_data:
 
@@ -1487,9 +1566,9 @@ class SerialConnection(object):
 
                     self.running_data.append([
                         int(self.measurement_stage),
-                        float(self.m_x),
-                        float(self.m_y),
-                        float(self.m_z),
+                        self.m_x,
+                        self.m_y,
+                        self.m_z,
                         int(self.sg_x_motor_axis),
                         int(self.sg_y_axis),
                         int(self.sg_y1_motor),
@@ -1509,11 +1588,11 @@ class SerialConnection(object):
 
         elif message.startswith('ALARM:'):
             self.grbl_waiting_for_reset = True
-            log('ALARM from GRBL: ' + message)
+            Logger.warning('ALARM from GRBL: ' + message)
             self.alarm.alert_user(message)
 
         elif message.startswith('$'):
-            log(message)
+            Logger.info(message)
             setting_and_value = message.split("=")
             setting = setting_and_value[0]
             value = float(setting_and_value[1])
@@ -1636,13 +1715,13 @@ class SerialConnection(object):
             # Process a successful probing op [PRB:0.000,0.000,0.000:0]
             elif self.expecting_probe_result and stripped_message.startswith('PRB'):
 
-                log(stripped_message)
+                Logger.info(stripped_message)
 
                 successful_probe = stripped_message.split(':')[2]
 
                 if successful_probe:
                     z_machine_coord_when_probed = stripped_message.split(':')[1].split(',')[2]
-                    log('Probed at machine height: ' + z_machine_coord_when_probed)
+                    Logger.info('Probed at machine height: ' + z_machine_coord_when_probed)
                     self.m.probe_z_detection_event(z_machine_coord_when_probed)
 
                 self.expecting_probe_result = False  # clear flag
@@ -1651,15 +1730,15 @@ class SerialConnection(object):
                 fw_hw_versions = stripped_message.split(';')
                 try:
                     self.fw_version = (fw_hw_versions[1]).split(':')[1]
-                    log('FW version: ' + str(self.fw_version))
+                    Logger.info('FW version: ' + str(self.fw_version))
                 except:
-                    log("Could not retrieve FW version")
+                    Logger.exception("Could not retrieve FW version")
 
                 try:
                     self.hw_version = (fw_hw_versions[2]).split(':')[1]
-                    log('HW version: ' + str(self.hw_version))
+                    Logger.info('HW version: ' + str(self.hw_version))
                 except:
-                    log("Could not retrieve HW version")
+                    Logger.exception("Could not retrieve HW version")
 
         elif re.match(self.grbl_initialisation_message, message):
             # Let sw know that grbl is unlocked now that statuses are being received
@@ -1677,10 +1756,10 @@ class SerialConnection(object):
                 self.sm.current = 'spindle_shutdown'
 
                 try:
-                    self.sm.get_screen('go').update_overload_peak(self.overload_state)
+                    self.dispatch('on_update_overload_peak', self.overload_state)
 
                 except:
-                    log('Unable to update overload peak on go screen')
+                    Logger.exception('Unable to update overload peak on go screen')
 
             else:  # must have just been a noisy blip
 
@@ -1688,17 +1767,12 @@ class SerialConnection(object):
 
         except:
 
-            log("Could not display spindle overload - are you on diagnostics mode?")
+            Logger.exception("Could not display spindle overload - are you on diagnostics mode?")
 
     def check_for_sustained_peak(self, dt):
 
         if self.overload_state >= self.prev_overload_state and self.overload_state != 100:
-
-            try:
-                self.sm.get_screen('go').update_overload_peak(self.prev_overload_state)
-
-            except:
-                log('Unable to update overload peak on go screen')
+            self.dispatch('on_update_overload_peak', self.prev_overload_state)
 
     ## SEQUENTIAL STREAMING
 
@@ -1718,8 +1792,12 @@ class SerialConnection(object):
     _micro_dwell_command = "G4 P" + str(0.01)
 
     def start_sequential_stream(self, list_to_stream, reset_grbl_after_stream=False, end_dwell=False):
+        if self.is_sequential_streaming:
+            Logger.debug('already streaming...try again later')
+            Clock.schedule_once(lambda dt: self.start_sequential_stream(list_to_stream, reset_grbl_after_stream, end_dwell), 0.3)
+            return
         self.is_sequential_streaming = True
-        log("Start_sequential_stream")
+        Logger.info("Start_sequential_stream")
         if reset_grbl_after_stream:
             list_to_stream.append(self._dwell_command)
         elif end_dwell:
@@ -1743,16 +1821,16 @@ class SerialConnection(object):
                     del self._sequential_stream_buffer[0]
 
             except IndexError:
-                log("Sequential streaming buffer empty")
+                Logger.info("Sequential streaming buffer empty")
                 return
 
         else:
             self._process_oks_from_sequential_streaming = False
-            log("Sequential stream ended")
+            Logger.info("Sequential stream ended")
             if self._reset_grbl_after_stream:
                 self._reset_grbl_after_stream = False
                 self.m._grbl_soft_reset()
-                log("GRBL Reset after sequential stream ended")
+                Logger.info("GRBL Reset after sequential stream ended")
             self.is_sequential_streaming = False
 
     def _after_grbl_settings_insert_dwell(self):
@@ -1775,7 +1853,7 @@ class SerialConnection(object):
         if reset_grbl_after_cancel or self._reset_grbl_after_stream:
             self._reset_grbl_after_stream = False
             self.m._grbl_soft_reset()
-            print "GRBL Reset after sequential stream cancelled"
+            Logger.info("GRBL Reset after sequential stream cancelled")
         self.is_sequential_streaming = False
 
     def is_buffer_clear(self):
@@ -1798,21 +1876,41 @@ class SerialConnection(object):
         try:
 
             if not serialCommand.startswith('?') and not protocol:
-                log('> ' + serialCommand)
+                Logger.info('> ' + serialCommand)
 
-            if altDisplayText != None: log('> ' + str(altDisplayText))
+            if altDisplayText != None: Logger.info('> ' + str(altDisplayText))
 
             # Print to console in the UI
             if show_in_console == True and altDisplayText == None:
-                self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', serialCommand)
+                self.dispatch('on_serial_monitor_update', 'snd', serialCommand)
 
             if altDisplayText != None:
-                self.sm.get_screen('home').gcode_monitor_widget.update_monitor_text_buffer('snd', altDisplayText)
+                self.dispatch('on_serial_monitor_update', 'snd', altDisplayText)
 
         except:
-            log("FAILED to display on CONSOLE: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
+            Logger.exception("FAILED to display on CONSOLE: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
 
-        # Finally issue the command        
+        # Catch and correct all instances of the spindle speed command "M3 S{RPM}"
+        if "M3" in serialCommand.upper():
+            # Set spindle_on flag
+            self.spindle_on = True
+
+            if "S" in serialCommand.upper():
+                # Correct the spindle speed command
+                serialCommand = self.compensate_spindle_speed_command(serialCommand)
+
+        if "M5" in serialCommand.upper():
+            # Clear spindle_on flag
+            self.spindle_on = False
+
+        # Catch any instances of AE/AF to set the vacuum_on flag
+        if "AE" in serialCommand.upper():
+            self.vacuum_on = True
+
+        if "AF" in serialCommand.upper():
+            self.vacuum_on = False
+
+        # Finally issue the command
         if self.s:
             try:
 
@@ -1833,17 +1931,17 @@ class SerialConnection(object):
                 try:
 
                     if not protocol:
-                        log("FAILED to write to SERIAL: " + str(serialCommand) + " (Alt text: " + str(
+                        Logger.exception("FAILED to write to SERIAL: " + str(serialCommand) + " (Alt text: " + str(
                             altDisplayText) + ")")
                         self.get_serial_screen('Could not write last command to serial buffer.')
 
                     else:
-                        log("FAILED to write to SERIAL: " + hex(serialCommand) + " (Alt text: " + str(
+                        Logger.exception("FAILED to write to SERIAL: " + hex(serialCommand) + " (Alt text: " + str(
                             altDisplayText) + ")")
                         self.get_serial_screen('Could not write last command to serial buffer.')
 
                 except:
-                    log("FAILED to write to SERIAL: " + "unprintable command!" + " (Alt text: " + str(
+                    Logger.exception("FAILED to write to SERIAL: " + "unprintable command!" + " (Alt text: " + str(
                         altDisplayText) + ")")
                     self.get_serial_screen('Could not write last command to serial buffer.')
 
@@ -1852,15 +1950,15 @@ class SerialConnection(object):
 
             try:
                 if not protocol:
-                    log("No serial! Command lost!: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
+                    Logger.error("No serial! Command lost!: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
                     self.get_serial_screen('Could not write last command to serial buffer.')
 
                 else:
-                    log("No serial! Command lost!: " + hex(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
+                    Logger.error("No serial! Command lost!: " + hex(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
                     self.get_serial_screen('Could not write last command to serial buffer.')
             except:
 
-                log("No serial! Command lost!: " + "unprintable command!" + " (Alt text: " + str(altDisplayText) + ")")
+                Logger.exception("No serial! Command lost!: " + "unprintable command!" + " (Alt text: " + str(altDisplayText) + ")")
                 self.get_serial_screen('Could not write last command to serial buffer.')
 
     def write_command(self, serialCommand, **kwargs):
@@ -1877,3 +1975,31 @@ class SerialConnection(object):
 
         self.write_protocol_buffer.append([serialCommand, altDisplayText])
         return serialCommand
+
+    # Function for correcting spindle speed
+
+    def compensate_spindle_speed_command(self, spindle_speed_line):
+        """
+        Modifies the spindle speed command by correcting the RPM value and replacing it in the command line.
+        Correcting in this case refers to compensating for the conversion that happens from Z Head -> spindle
+
+        Args:
+            spindle_speed_line (str): The original spindle speed command line.
+
+        Returns:
+            str: The modified spindle speed command line with the corrected RPM value.
+        """
+        match = re.search(r'S(\d+(\.\d+)?)', spindle_speed_line.upper()) ## search for spnidle speed definition in the line
+        if match:
+            spindle_speed = float(match.group(1))
+
+        try:
+            corrected_spindle_speed = self.m.correct_rpm(spindle_speed)
+            new_line = re.sub(r'(S\d+(\.\d+)?)', "S" + str(corrected_spindle_speed), spindle_speed_line.upper())
+            Logger.info("Modified spindle command: " + new_line)
+            return new_line
+
+        except:
+            Logger.exception("Spindle speed command could not be modified")
+
+        return spindle_speed_line
