@@ -23,6 +23,11 @@ def correct_shutdown(*args):
 def shutdown(*args):
     if sys.platform != 'win32' and sys.platform != 'darwin':
         os.system('sudo sed -i "s/correct_shutdown=False/correct_shutdown=True/" config.txt')
+        os.system('sudo shutdown -h')
+
+def shutdown_now(*args):
+    if sys.platform != 'win32' and sys.platform != 'darwin':
+        os.system('sudo sed -i "s/correct_shutdown=False/correct_shutdown=True/" config.txt')
         os.system('sudo shutdown -h now')
 
 
