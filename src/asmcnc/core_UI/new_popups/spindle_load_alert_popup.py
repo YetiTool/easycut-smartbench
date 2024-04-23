@@ -116,3 +116,6 @@ class SpindleLoadAlertPopup(popup_bases.PopupBase):
     def continue_without_yetipilot(self, *args):
         App.get_running_app().yetipilot.disable()
         self.dismiss()
+
+    def export_diagnostics_file(self, *args):
+        pass
