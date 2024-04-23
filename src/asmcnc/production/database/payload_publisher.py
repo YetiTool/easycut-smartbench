@@ -11,13 +11,13 @@ try:
     import pika
 except: 
     pika = None
-    Logger.info("Couldn't import pika")
+    Logger.exception("Couldn't import pika")
 
 try:
     import paramiko
 except: 
     paramiko = None
-    Logger.info("Couldn't import paramiko")
+    Logger.exception("Couldn't import paramiko")
 
 CSV_PATH = './asmcnc/production/database/csvs/'
 QUEUE = 'new_factory_data'
@@ -99,7 +99,7 @@ class DataPublisher(object):
             )
 
         except: 
-            Logger.info(traceback.format_exc())
+            Logger.exception('Failed to set pika credentials!')
 
     def send_file_paramiko_sftp(self, file_path):
         ssh = paramiko.SSHClient()
@@ -119,7 +119,7 @@ class DataPublisher(object):
             )
             return True
         except:
-            Logger.info(traceback.format_exc())
+            Logger.exception('Failed to publish data!')
             return False
 
     def run_data_send(self, statuses, table, stage):
@@ -128,7 +128,7 @@ class DataPublisher(object):
         try: 
             self.send_file_paramiko_sftp(csv_name)
         except:
-            Logger.info(traceback.format_exc())
+            Logger.exception('Failed to send file via sftp!')
             return False
 
         raw_file_name = csv_name.split('/')[-1]
