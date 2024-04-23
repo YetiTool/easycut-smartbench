@@ -4,6 +4,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.image import Image
 from kivy.uix.label import Label
+from mock.mock import MagicMock
 
 from asmcnc.comms.localization import Localization
 from asmcnc.core_UI import scaling_utils
@@ -44,7 +45,7 @@ class SpindleLoadAlertPopup(popup_bases.PopupBase):
 
         body_layout = BoxLayout(size_hint_y=0.7, spacing=dp(10))
 
-        text_layout = BoxLayout(size_hint_x=0.8, padding=[0, dp(10), 0, 0])
+        text_layout = BoxLayout(size_hint_x=0.8, padding=[0, scaling_utils.get_scaled_dp_height(10), 0, 0])
         text_label = Label(
             text=MAIN_STRING,
             font_size=scaling_utils.get_scaled_sp("15sp"),
@@ -121,3 +122,14 @@ class SpindleLoadAlertPopup(popup_bases.PopupBase):
 
     def export_diagnostics_file(self, *args):
         pass
+
+
+if __name__ == "__main__":
+    class TestApp(App):
+        sm = MagicMock()
+        machine = MagicMock()
+
+        def build(self):
+            return SpindleLoadAlertPopup(size_hint=(0.8, 0.8))
+
+    TestApp().run()
