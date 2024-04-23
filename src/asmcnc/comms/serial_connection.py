@@ -368,6 +368,10 @@ class SerialConnection(EventDispatcher):
     VERBOSE_ALL_RESPONSE = False
     VERBOSE_STATUS = False
 
+    POLL_TIME_DICT = {
+
+    }
+
     def grbl_scanner(self, run_grbl_scanner_once=False):
 
         Logger.info('Running grbl_scanner thread')
@@ -381,7 +385,15 @@ class SerialConnection(EventDispatcher):
             # Polling 
             if self.next_poll_time < time.time():
                 self.write_direct('?', realtime=True, show_in_sys=False, show_in_console=False)
+
+                if datetime.now().minute in self.POLL_TIME_DICT.keys():
+                    self.POLL_TIME_DICT[datetime.now().minute] += 1
+                else:
+                    self.POLL_TIME_DICT[datetime.now().minute] = 1
+                    print("POLL TIME DICT: " + str(self.POLL_TIME_DICT))
+
                 self.next_poll_time = time.time() + self.STATUS_INTERVAL
+
 
             # Process anything in the write_command and write_realtime lists,
             # i.e. everything else.
