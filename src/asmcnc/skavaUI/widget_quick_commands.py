@@ -205,6 +205,29 @@ class QuickCommands(Widget):
                 else:
                     self.sm.current = 'jobstart_warning'
 
+    def are_spindle_speeds_within_bounds(self):
+        minimum_spindle_speed = 4000 if self.m.spindle_voltage == 230 else 10000
+        speed_too_low_string = (
+            self.l.get_bold("SPINDLE SPEED ERROR") + '\n\n' +
+
+            self.l.get_str("It looks like one of the spindle speeds in your job is too low.") + '\n\n' +
+
+            self.l.get_str("The minimum spindle speed is N rpm").replace("N", minimum_spindle_speed) + '\n\n' +
+
+            self.l.get_str("Please adjust the spindle speed in your job and try again.")
+        )
+
+        if self.jd.job_spindle_speed < minimum_spindle_speed:
+            self.sm.get_screen("boundary").job_box_details.append(speed_too_low_string)
+            return False
+
+        return True
+
+    def do_pre_run_checks(self):
+        if not self.is_job_within_bounds() or not self.are_spindle_speeds_within_bounds():
+            return False
+        else:
+            return True
         
     def is_job_within_bounds(self):
 
