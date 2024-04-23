@@ -227,10 +227,10 @@ class QuickCommands(Widget):
         return True
 
     def do_pre_run_checks(self):
-        if not self.is_job_within_bounds() or not self.are_spindle_speeds_within_bounds():
-            return False
-        else:
-            return True
+        job_in_bounds = self.is_job_within_bounds()
+        spindle_speeds_in_bounds = self.are_spindle_speeds_within_bounds()
+
+        return job_in_bounds and spindle_speeds_in_bounds
         
     def is_job_within_bounds(self):
 
