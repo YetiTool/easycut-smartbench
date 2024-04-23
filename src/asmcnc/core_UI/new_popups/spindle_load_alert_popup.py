@@ -83,7 +83,7 @@ class SpindleLoadAlertPopup(popup_bases.PopupBase):
         self.root_layout.add_widget(body_layout)
 
         button_layout = BoxLayout(size_hint_y=0.15, spacing=dp(100))
-        if self.machine.s.m_state.startswith("Door"):
+        if self.sm.current == "go":
             button_layout.add_widget(
                 Button(
                     text=self.localisation.get_bold("Cancel job"),
