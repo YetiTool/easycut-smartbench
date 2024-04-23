@@ -1,9 +1,8 @@
 import collections
-import time
 import json
+import time
 
 from kivy.clock import Clock
-from typing import Dict, List
 
 from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.core_UI.new_popups.spindle_load_alert_popup import SpindleLoadAlertPopup
@@ -136,7 +135,7 @@ class DigitalSpindleMonitor(object):
 
         skeleton = {
             "spindle_free_load": self.__serial_connection.spindle_freeload,
-            "spindle_data_stack": self.__spindle_data_stack,
+            "spindle_data_stack": list(self.__spindle_data_stack),
         }
 
         with open("diagnostics.json", "w") as f:
