@@ -171,7 +171,7 @@ class QuickCommands(Widget):
         elif not self.m.state().startswith('Idle'):
             self.sm.current = 'mstate'
                 
-        elif not self.do_pre_run_checks() and sys.platform != "win32":
+        elif not self.do_pre_run_checks():
             self.sm.current = 'boundary'
 
         elif not self.m.is_machine_homed and self.m.is_connected:
@@ -214,7 +214,7 @@ class QuickCommands(Widget):
 
             self.l.get_str("It looks like one of the spindle speeds in your job is too low.") + '\n\n' +
 
-            self.l.get_str("The minimum spindle speed is N rpm").replace("N", str(minimum_spindle_speed)) + '\n\n' +
+            self.l.get_str("The minimum spindle speed is N rpm.").replace("N", str(minimum_spindle_speed)) + '\n\n' +
 
             self.l.get_bold("Please adjust the spindle speed in your job and try again.")
         )
