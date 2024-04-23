@@ -76,7 +76,7 @@ Builder.load_string("""
         do_default_tab: False
         tab_pos: 'top_left'
         tab_height: dp(90.0/480.0)*app.height
-        tab_width: dp(142.0/800.0)*app.width
+        tab_width: dp((710.0/6.0)/800.0)*app.width
         on_touch_down: root.on_tab_switch()
 
 
@@ -385,6 +385,27 @@ Builder.load_string("""
                         RoundedRectangle:
                             size: self.size
                             pos: self.pos
+
+        # General settings tab
+
+        TabbedPanelItem:
+            id: general_settings_tab
+            background_normal: 'asmcnc/apps/maintenance_app/img/general_settings_tab_blue.png'
+            background_down: 'asmcnc/apps/maintenance_app/img/general_settings_tab_grey.png'
+
+            BoxLayout:
+                size_hint: (None,None)
+                width: dp(1.005*app.width)
+                height: dp(0.8125*app.height)
+                orientation: "vertical" 
+                padding:[dp(0.0275)*app.width, dp(0.0416666666667)*app.height, dp(0.0275)*app.width, dp(0.0416666666667)*app.height]
+                spacing:0.0416666666667*app.height
+                canvas:
+                    Color:
+                        rgba: hex('#E5E5E5FF')
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
 
         # + Tab
 
