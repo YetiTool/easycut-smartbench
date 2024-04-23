@@ -83,17 +83,16 @@ class SpindleLoadAlertPopup(popup_bases.PopupBase):
         self.root_layout.add_widget(body_layout)
 
         button_layout = BoxLayout(size_hint_y=0.15, spacing=dp(100))
-        if self.sm.current == "go":
-            button_layout.add_widget(
-                Button(
-                    text=self.localisation.get_bold("Cancel job"),
-                    on_press=self.cancel_job,
-                    background_color=RED,
-                    background_normal="",
-                    font_size=scaling_utils.get_scaled_sp("15sp"),
-                    markup=True,
-                )
+        button_layout.add_widget(
+            Button(
+                text=self.localisation.get_bold("Cancel job"),
+                on_press=self.cancel_job,
+                background_color=RED,
+                background_normal="",
+                font_size=scaling_utils.get_scaled_sp("15sp"),
+                markup=True,
             )
+        )
         button_layout.add_widget(
             Button(
                 text=self.localisation.get_bold("Continue without YetiPilot"),

@@ -12,35 +12,8 @@ from asmcnc.core_UI.new_popups.spindle_load_alert_popup import SpindleLoadAlertP
 TEST_MODE = True
 
 
-def open_alert_popup():
-    """
-    Opens the alert popup.
-    Call from main thread to ensure the popup is opened and rendered correctly.
-
-    :return: None
-    """
-    # TODO: Add information to the popup.
-    spindle_load_alert_popup = SpindleLoadAlertPopup(size_hint=(0.8, 0.8))
-    spindle_load_alert_popup.open()
-
-
 class DigitalSpindleMonitor(object):
-    """
-    A class that monitors the digital spindle load and alerts the user if a faulty reading is detected.
-
-    Public Methods
-    -------
-    on_is_spindle_in_inrush_state_change(instance, value) -> None
-        Callback for when the spindle inrush state changes.
-    on_digital_spindle_load_raw_change(instance, value) -> None
-        Callback for when the digital spindle load raw value changes.
-    get_faulty_readings() -> List[Dict[str, any]]
-        Returns a list of faulty readings.
-    get_last_alert_time() -> time
-        Returns the last alert time.
-    get_threshold() -> int
-        Returns the threshold.
-    """
+    """A class that monitors the digital spindle load and alerts the user if a faulty reading is detected."""
 
     __serial_connection = None
 
@@ -51,6 +24,8 @@ class DigitalSpindleMonitor(object):
     __reset_clock = None  # type: Clock
 
     __spindle_data_stack = collections.deque(maxlen=500)  # type: collections.deque  # List of the last 500 readings.
+
+    __spindle_load_alert_popup = None  # type: SpindleLoadAlertPopup
 
     def __init__(self, serial_connection):
         """
@@ -144,6 +119,16 @@ class DigitalSpindleMonitor(object):
         with open("diagnostics.json", "w") as f:
             json.dump(skeleton, f)
 
+    def __open_alert_popup(self, dt):
+        """
+        Opens the alert popup.
+        Call from main thread to ensure the popup is opened and rendered correctly.
+        :return: None
+        """
+        if not self.__spindle_load_alert_popup:
+            self.__spindle_load_alert_popup = SpindleLoadAlertPopup(size_hint=(0.8, 0.8))
+        self.__spindle_load_alert_popup.open()
+
     def __trigger_alert(self):
         """
         When the threshold is exceeded and the alert interval is exceeded, this method is called to alert the user.
@@ -159,7 +144,7 @@ class DigitalSpindleMonitor(object):
             machine.turn_off_spindle()  # Turn off spindle (likely on from spindle button)
 
         self.export_diagnostics_file()
-        Clock.schedule_once(lambda dt: open_alert_popup())
+        Clock.schedule_once(self.__open_alert_popup)
         self.__faulty_reading_count = 0
 
     def get_faulty_readings(self):
