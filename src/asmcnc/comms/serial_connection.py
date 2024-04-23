@@ -696,7 +696,7 @@ class SerialConnection(EventDispatcher):
         Logger.info("Ending stream...")
 
         # Always switch to mm, in case the job put you in inches
-        self.write_command('G21')
+        self.m.set_machine_unit_to_mm()
 
         # Reset flags
         self.is_job_streaming = False

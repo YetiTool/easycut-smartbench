@@ -600,12 +600,12 @@ class JobRecoveryScreen(Screen):
             -self.m.limit_switch_safety_distance,
         )
         if self.using_inches:
-            self.m.s.write_command('G20')
+            self.m.set_machine_unit_to_inch()
         # If Z is below safe height, then raise it up
         if self.m.mpos_z() < z_safe_height:
             self.m.s.write_command("G53 G0 Z%s F750" % z_safe_height)
         self.m.s.write_command('G90 G0 X%s Y%s' % (self.pos_x, self.pos_y))
-        self.m.s.write_command('G21')
+        self.m.set_machine_unit_to_mm()
 
     def back_to_home(self):
         self.jd.reset_recovery()
