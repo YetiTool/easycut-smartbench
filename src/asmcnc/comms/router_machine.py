@@ -340,7 +340,7 @@ class RouterMachine(EventDispatcher):
             return True
 
         except:
-            Logger.info("Unable to read in set up options")
+            Logger.exception("Unable to read in set up options")
             return False
 
     def write_set_up_options(self, value):
@@ -355,7 +355,7 @@ class RouterMachine(EventDispatcher):
             return True
 
         except:
-            Logger.info("Unable to write set up options")
+            Logger.exception("Unable to write set up options")
             return False
 
 
@@ -371,7 +371,7 @@ class RouterMachine(EventDispatcher):
             return True
 
         except:
-            Logger.info("Unable to read in z touch plate thickness")
+            Logger.exception("Unable to read in z touch plate thickness")
             return False
 
     def write_z_touch_plate_thickness(self, value):
@@ -386,7 +386,7 @@ class RouterMachine(EventDispatcher):
             return True
 
         except:
-            Logger.info("Unable to write z touch plate thickness")
+            Logger.exception("Unable to write z touch plate thickness")
             return False
 
 
@@ -406,7 +406,7 @@ class RouterMachine(EventDispatcher):
             return True
 
         except:
-            Logger.info("Unable to read calibration settings")
+            Logger.exception("Unable to read calibration settings")
             return False
 
     def write_calibration_settings(self, since_calibration, remind_time):
@@ -422,7 +422,7 @@ class RouterMachine(EventDispatcher):
             return True
 
         except:
-            Logger.info("Unable to write calibration settings")
+            Logger.exception("Unable to write calibration settings")
             return False
 
     ## Z HEAD MAINTENANCE SETTINGS REMINDER
@@ -438,7 +438,7 @@ class RouterMachine(EventDispatcher):
             return True
 
         except:
-            Logger.info("Unable to read z head maintenance settings")
+            Logger.exception("Unable to read z head maintenance settings")
             return False
 
     def write_z_head_maintenance_settings(self, value):
@@ -454,7 +454,7 @@ class RouterMachine(EventDispatcher):
             return True
 
         except:
-            Logger.info("Unable to write z head maintenance settings")
+            Logger.exception("Unable to write z head maintenance settings")
             return False
 
     ## LASER DATUM OFFSET
@@ -477,7 +477,7 @@ class RouterMachine(EventDispatcher):
             return True
 
         except:
-            Logger.info("Unable to read z head laser offset values")
+            Logger.exception("Unable to read z head laser offset values")
             return False
 
     def write_z_head_laser_offset_values(self, enabled, X, Y):
@@ -493,7 +493,7 @@ class RouterMachine(EventDispatcher):
             return True
 
         except:
-            Logger.info("Unable to write z head laser offset values")
+            Logger.exception("Unable to write z head laser offset values")
             return False
 
     ## SPINDLE BRUSH MONITOR
@@ -512,7 +512,7 @@ class RouterMachine(EventDispatcher):
 
         except:
 
-            Logger.info("Unable to read spindle brush use and lifetime values")
+            Logger.exception("Unable to read spindle brush use and lifetime values")
             return False
 
     def write_spindle_brush_values(self, use, lifetime):
@@ -528,7 +528,7 @@ class RouterMachine(EventDispatcher):
             return True
 
         except:
-            Logger.info("Unable to write spindle brush use and lifetime values")
+            Logger.exception("Unable to write spindle brush use and lifetime values")
             return False
 
     ## SPINDLE COOLDOWN RPM OVERRIDE
@@ -548,7 +548,7 @@ class RouterMachine(EventDispatcher):
             return True
 
         except:
-            Logger.info("Unable to read spindle cooldown override settings")
+            Logger.exception("Unable to read spindle cooldown override settings")
             return False
 
     def write_spindle_cooldown_rpm_override_settings(self, rpm_override):
@@ -567,7 +567,7 @@ class RouterMachine(EventDispatcher):
             return True
 
         except:
-            Logger.info("Unable to write spindle cooldown override settings")
+            Logger.exception("Unable to write spindle cooldown override settings")
             return False
 
     ## SPINDLE COOLDOWN OPTIONS
@@ -606,7 +606,7 @@ class RouterMachine(EventDispatcher):
             return True
 
         except:
-            Logger.info("Unable to read spindle cooldown settings")
+            Logger.exception("Unable to read spindle cooldown settings")
             return False
 
     def write_spindle_cooldown_settings(self, brand, voltage, digital, time_seconds, rpm):
@@ -632,7 +632,7 @@ class RouterMachine(EventDispatcher):
             return True
 
         except:
-            Logger.info("Unable to write spindle cooldown settings")
+            Logger.exception("Unable to write spindle cooldown settings")
             return False
 
     ## STYLUS OPTIONS
@@ -652,7 +652,7 @@ class RouterMachine(EventDispatcher):
             return True
 
         except:
-            Logger.info("Unable to read stylus settings")
+            Logger.exception("Unable to read stylus settings")
             return False
 
     def write_stylus_settings(self, stylus):
@@ -670,7 +670,7 @@ class RouterMachine(EventDispatcher):
             return True
 
         except:
-            Logger.info("Unable to write stylus settings")
+            Logger.exception("Unable to write stylus settings")
             return False
 
     ## SPINDLE HEALTH CHECK OPTIONS
@@ -690,7 +690,7 @@ class RouterMachine(EventDispatcher):
             return True
 
         except:
-            Logger.info("Unable to read spindle health check settings")
+            Logger.exception("Unable to read spindle health check settings")
             return False
 
     def write_spindle_health_check_settings(self, health_check):
@@ -708,7 +708,7 @@ class RouterMachine(EventDispatcher):
             return True
 
         except:
-            Logger.info("Unable to write spindle health check settings")
+            Logger.exception("Unable to write spindle health check settings")
             return False
 
     ## DEVICE LABEL
@@ -723,7 +723,7 @@ class RouterMachine(EventDispatcher):
             return True
 
         except:
-            Logger.info("Unable to read device label")
+            Logger.exception("Unable to read device label")
             return False
 
     def write_device_label(self, value):
@@ -738,7 +738,7 @@ class RouterMachine(EventDispatcher):
             return True
 
         except:
-            Logger.info("Unable to write device label")
+            Logger.exception("Unable to write device label")
             return False
 
     ## DEVICE LOCATION
@@ -753,7 +753,7 @@ class RouterMachine(EventDispatcher):
             return True
 
         except:
-            Logger.info("Unable to read device location")
+            Logger.exception("Unable to read device location")
             return False
 
     def write_device_location(self, value):
@@ -768,7 +768,7 @@ class RouterMachine(EventDispatcher):
             return True
 
         except:
-            Logger.info("Unable to write device location")
+            Logger.exception("Unable to write device location")
             return False
 
     sing_path = '../../multiply.txt'
@@ -945,7 +945,7 @@ class RouterMachine(EventDispatcher):
             return True
 
         except:
-            Logger.info('Could not read from file')
+            Logger.exception('Could not read from file')
             return False
 
 # ABSOLUTE MACHINE LIMITS
@@ -1008,13 +1008,13 @@ class RouterMachine(EventDispatcher):
 
     def hw_can_operate_laser_commands(self):
         output = self.is_machines_hw_version_equal_to_or_greater_than_version(8, 'laser commands AX and AZ') # Update to version 8, but need 6 to test on rig
-        Logger.info('HW version able to operate laser commands AX and AZ: ' + str(output))
+        Logger.debug('HW version able to operate laser commands AX and AZ: ' + str(output))
         return output
 
 
     def fw_can_operate_zUp_on_pause(self):
 
-        Logger.info('FW version able to lift on pause: ' + str(self.is_machines_fw_version_equal_to_or_greater_than_version('1.0.13', 'Z up on pause')))
+        Logger.debug('FW version able to lift on pause: ' + str(self.is_machines_fw_version_equal_to_or_greater_than_version('1.0.13', 'Z up on pause')))
         return self.is_machines_fw_version_equal_to_or_greater_than_version('1.0.13', 'Z up on pause')
 
 
@@ -1031,7 +1031,7 @@ class RouterMachine(EventDispatcher):
         except:
             error_description = "Couldn't process Z head firmware value when checking capability: " + str(capability_decription) + \
             ".\n\n Please check Z Head connection."
-            Logger.info(error_description)
+            Logger.exception(error_description)
 
             return False
 
@@ -1063,7 +1063,7 @@ class RouterMachine(EventDispatcher):
         except:
             error_description = "Couldn't process machine hardware value when checking capability: " + str(capability_decription) + \
             ".\n\n Please check Z Head connection."
-            Logger.info(error_description)
+            Logger.exception(error_description)
 
             return False
 
@@ -1699,7 +1699,7 @@ class RouterMachine(EventDispatcher):
             else:
                 return "SmartBench V1.0 CNC Router"
 
-        Logger.info("SmartBench model detection failed")
+        Logger.error("SmartBench model detection failed")
         return "SmartBench model detection failed"
 
     def get_dollar_setting(self, setting_num):
@@ -2224,12 +2224,12 @@ class RouterMachine(EventDispatcher):
     def set_current_homing_task_complete(self):
         try: self.completed_homing_tasks[self.homing_task_idx] = True
         except:
-            Logger.info("Could not set completed homing task")
+            Logger.exception("Could not set completed homing task")
 
     def get_current_homing_task_complete(self):
         try: return self.completed_homing_tasks[self.homing_task_idx]
         except:
-            Logger.info("Could not get completed homing task")
+            Logger.exception("Could not get completed homing task")
             return False
 
     def cancel_homing_sequence(self):
@@ -2315,7 +2315,7 @@ class RouterMachine(EventDispatcher):
             elif colour_name == 'MAGENTA':  self.s.write_command("*LFF00FF")
             elif colour_name == 'OFF':      self.s.write_command("*L110000")
 
-        else: Logger.info("LED Colour denied because streaming: " + colour_name + "\n")
+        else: Logger.warning("LED Colour denied because streaming: " + colour_name + "\n")
 
 
     def led_restore(self):
@@ -2359,7 +2359,7 @@ class RouterMachine(EventDispatcher):
             end_on_colour = self.led_colour_status
             self._strobe_loop(strobe_colour1, strobe_colour2, colour_1_period, colour_2_period, cycles, end_on_colour)
 
-        else: Logger.info("Strobe situation: " + situation + " not recognised")
+        else: Logger.warning("Strobe situation: " + situation + " not recognised")
 
     strobe_cycle_count = 0
 
@@ -2504,7 +2504,7 @@ class RouterMachine(EventDispatcher):
 
         else:
             # throw an error, command is not valid
-            Logger.info("ERROR: unknown command in send_command_to_motor: " + str(motor) + ", cmd: " + str(command) + ", val: " + hex(value))
+            Logger.error("ERROR: unknown command in send_command_to_motor: " + str(motor) + ", cmd: " + str(command) + ", val: " + hex(value))
 
         return out
 
@@ -2719,7 +2719,7 @@ class RouterMachine(EventDispatcher):
 
         elif (self.time_to_check_for_tuning_prep + 180) < time.time():
             # raise error popup
-            Logger.info("RAW SG VALUES NOT ENABLED")
+            Logger.warning("RAW SG VALUES NOT ENABLED")
             self.calibration_tuning_fail_info = "Raw SG values are still not enabled or reads are bad after 3 mins"
             Clock.schedule_once(self.finish_tuning, 0.1)
 
@@ -2743,7 +2743,7 @@ class RouterMachine(EventDispatcher):
 
         elif (self.time_to_check_for_tuning_prep + 15) < time.time():
             # raise error popup
-            Logger.info("TEMPS AREN'T RIGHT?? TEMP: " + str(self.s.motor_driver_temp))
+            Logger.warning("TEMPS AREN'T RIGHT?? TEMP: " + str(self.s.motor_driver_temp))
             self.calibration_tuning_fail_info = (
                 "Temps aren't in expected range" + \
                 "(" + str(int(self.lower_temp_limit)) + \
@@ -2770,7 +2770,7 @@ class RouterMachine(EventDispatcher):
 
         elif (self.time_to_check_for_tuning_prep + 120) < time.time():
             # raise error popup
-            Logger.info("STILL NOT IDLE ??")
+            Logger.warning("STILL NOT IDLE ??")
             self.calibration_tuning_fail_info = "Machine not IDLE after 2 mins - check for alarms etc"
             Clock.schedule_once(self.finish_tuning, 0.1)
 
@@ -2904,7 +2904,7 @@ class RouterMachine(EventDispatcher):
 
         except:
 
-            Logger.info("Could not complete tuning! Check log for errors")
+            Logger.exception("Could not complete tuning! Check log for errors")
             Clock.unschedule(self.tuning_poll)
             Clock.schedule_once(self.finish_tuning, 0.1)
             return
@@ -3001,7 +3001,7 @@ class RouterMachine(EventDispatcher):
 
         except:
             self.calibration_tuning_fail_info = "Bad temps during tuning!"
-            Logger.info("BAD TEMPERATURES! CAN'T CALIBRATE")
+            Logger.exception("BAD TEMPERATURES! CAN'T CALIBRATE")
 
 
     def find_best_combo_per_motor_or_axis(self, tuning_array, target_SG, idx):
@@ -3049,7 +3049,7 @@ class RouterMachine(EventDispatcher):
 
         if not self.motor_driver_temp_in_range(current_temperature):
 
-            Logger.info("Temperatures out of expected range! Check set-up!")
+            Logger.warning("Temperatures out of expected range! Check set-up!")
             self.calibration_tuning_fail_info = "Temperatures out of expected range! Check set-up!"
             return
 
@@ -3249,7 +3249,7 @@ class RouterMachine(EventDispatcher):
         elif (self.time_to_check_for_calibration_prep + 120) < time.time():
 
             # gives error message to popup
-            Logger.info("MACHINE STILL NOT IDLE OR BUFFER FULL - CAN'T CALIBRATE")
+            Logger.warning("MACHINE STILL NOT IDLE OR BUFFER FULL - CAN'T CALIBRATE")
             self.calibration_tuning_fail_info = "Machine not IDLE after 2 mins - check for alarms etc"
             Clock.schedule_once(lambda dt: self.complete_calibration(), 0.1)
 
@@ -3415,7 +3415,7 @@ class RouterMachine(EventDispatcher):
             upload_cal_thread.start()
 
         elif (self.time_to_check_for_upload_prep + 120) < time.time():
-            Logger.info("PROBLEM! Can't initialise calibration upload")
+            Logger.warning("PROBLEM! Can't initialise calibration upload")
             self.calibration_upload_fail_info = "Machine not IDLE after 2 mins - check for alarms etc"
             Clock.schedule_once(lambda dt: self.complete_calibration_upload(), 0.1)
 
@@ -3687,7 +3687,7 @@ class RouterMachine(EventDispatcher):
         try:
             abs_max_idx = max(just_idx_sgs, key=abs)
         except:
-            Logger.info(traceback.format_exc())
+            Logger.exception("Failed to get abs maximums from sg array")
             self.checking_calibration_fail_info = "All values -999 for idx: " + str(index)
         return abs_max_idx
 
@@ -3813,7 +3813,7 @@ class RouterMachine(EventDispatcher):
             pi.stop()
 
         except:
-            Logger.info("Check pigpio daemon!")
+            Logger.exception("Check pigpio daemon!")
             return False
 
         # Functions that use this function will need to check that serial comms has finished reconnecting after
@@ -3842,7 +3842,7 @@ class RouterMachine(EventDispatcher):
             return int(original_setting) == int(restored_setting) == int(not new_setting)
 
         except:
-            Logger.info("Couldn't toggle reset pin, maybe check the pigio daemon?")
+            Logger.exception("Couldn't toggle reset pin, maybe check the pigio daemon?")
             return False
 
     def set_mode_of_reset_pin(self):
@@ -3859,7 +3859,7 @@ class RouterMachine(EventDispatcher):
             else: return False
 
         except:
-            Logger.info("Couldn't set mode of reset pin, maybe check the pigio daemon?")
+            Logger.exception("Couldn't set mode of reset pin, maybe check the pigio daemon?")
             return False
 
 
