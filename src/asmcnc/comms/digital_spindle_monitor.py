@@ -137,8 +137,9 @@ class DigitalSpindleMonitor(object):
         Logger.error("Invalid data threshold reached, alerting user.")
 
         machine = App.get_running_app().machine
+        sm = App.get_running_app().sm
 
-        if self.__serial_connection.m_state == "Run":
+        if sm.current == "go":
             machine.stop_for_a_stream_pause(reason_for_pause="SPINDLE_LOAD_ALERT")
         else:
             machine.turn_off_spindle()  # Turn off spindle (likely on from spindle button)
