@@ -1,8 +1,8 @@
 import sys, os
 
-from asmcnc.comms.logging_system.logging_system import Logger
-
 sys.path.append('./src')
+
+from asmcnc.comms.logging_system.logging_system import Logger
 
 try: 
     import unittest
