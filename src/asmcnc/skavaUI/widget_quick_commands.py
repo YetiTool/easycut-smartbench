@@ -214,9 +214,9 @@ class QuickCommands(Widget):
 
             self.l.get_str("It looks like one of the spindle speeds in your job is too low.") + '\n\n' +
 
-            self.l.get_str("The minimum spindle speed is N rpm").replace("N", minimum_spindle_speed) + '\n\n' +
+            self.l.get_str("The minimum spindle speed is N rpm").replace("N", str(minimum_spindle_speed)) + '\n\n' +
 
-            self.l.get_str("Please adjust the spindle speed in your job and try again.")
+            self.l.get_bold("Please adjust the spindle speed in your job and try again.")
         )
 
         Logger.debug("Spindle speeds: Job: {}, Min: {}".format(self.jd.spindle_speed_min, minimum_spindle_speed))
