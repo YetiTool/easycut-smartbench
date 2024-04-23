@@ -306,6 +306,10 @@ class StopOrResumeDecisionScreen(Screen):
                 )
             )
             self.qr_source = self.qr_health_check
+
+        if self.reason_for_pause == "SPINDLE_LOAD_ALERT":
+            self.sm.current = "go"  # this case is handled by spindle monitor and popup
+
         self.update_font_size(self.pause_description_label)
 
     def cancel_job(self):
