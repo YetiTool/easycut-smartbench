@@ -324,7 +324,7 @@ class USBFileChooser(Screen):
         self.usb_path = usb_path
         self.filechooser_usb.rootpath = usb_path
         if verbose:
-            Logger.info("Filechooser_usb path: " + self.filechooser_usb.path)
+            Logger.debug("Filechooser_usb path: " + self.filechooser_usb.path)
 
     def on_enter(self):
         self.filechooser_usb.path = self.usb_path
@@ -429,7 +429,7 @@ class USBFileChooser(Screen):
 
     def refresh_filechooser(self):
         if verbose:
-            Logger.info("Refreshing filechooser")
+            Logger.debug("Refreshing filechooser")
         try:
             if self.filechooser_usb.selection[0] != "C":
                 self.display_selected_file()
