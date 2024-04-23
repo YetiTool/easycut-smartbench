@@ -140,7 +140,7 @@ class DigitalSpindleMonitor(object):
         sm = App.get_running_app().sm
 
         if sm.current == "go":
-            machine._grbl_door()
+            machine.soft_stop()
         else:
             machine.turn_off_spindle()  # Turn off spindle (likely on from spindle button)
 
