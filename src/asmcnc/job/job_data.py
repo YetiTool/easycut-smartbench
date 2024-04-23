@@ -282,7 +282,7 @@ class JobData(object):
                 summary_list.sort(key = lambda i: self.metadata_order[i.split('[b]:[/b]')[0]])
 
             except Exception as e:
-                Logger.info(str(e))
+                Logger.exception('Failed to sort summary_list!')
 
             summary_list.insert(0, self.l.get_bold("SmartTransfer data"))
             summary_list.insert(1, "")
@@ -382,7 +382,7 @@ class JobData(object):
                     self.metadata_dict["Parts Made So Far"] = str(int(extra_parts_completed))
 
             except:
-                Logger.info("Parts Made So Far couldn't be updated.")
+                Logger.exception("Parts Made So Far couldn't be updated.")
 
 
     def update_update_info_in_metadata(self):
@@ -419,16 +419,13 @@ class JobData(object):
                     previewed_file.truncate()
 
         except:
-            Logger.info("Could not update file")
-            Logger.info(str(traceback.format_exc()))
-
+            Logger.exception("Could not update file")
 
     def post_job_data_update_post_send(self):
 
         self.post_production_notes = ''
         self.batch_number = ''
         self.percent_thru_job = 0
-
 
     def read_from_recovery_file(self):
         try:
@@ -441,8 +438,7 @@ class JobData(object):
             Logger.info("Read recovery info")
 
         except:
-            Logger.info("Could not read recovery info")
-            Logger.info(str(traceback.format_exc()))
+            Logger.exception("Could not read recovery info")
 
     def write_to_recovery_file_after_cancel(self, cancel_line, cancel_time):
 
@@ -475,8 +471,7 @@ class JobData(object):
             self.reset_recovery()
         
         except:
-            Logger.info("Could not write recovery info")
-            Logger.info(str(traceback.format_exc()))
+            Logger.exception("Could not write recovery info")
 
     def write_to_recovery_file_after_completion(self):
         try:
@@ -494,9 +489,7 @@ class JobData(object):
             Logger.info("Wrote recovery info")
 
         except:
-            Logger.info("Could not write recovery info")
-            Logger.info(str(traceback.format_exc()))
-
+            Logger.exception("Could not write recovery info")
 
     def reset_recovery(self):
         self.job_recovery_selected_line = -1

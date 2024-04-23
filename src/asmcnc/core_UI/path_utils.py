@@ -87,7 +87,7 @@ def get_path(target_dir, files_only=False, folders_only=False, first_result_only
             target_path = search_tree(root, target_dir, files_only, folders_only, first_result_only)
             return target_path
         except:
-            Logger.info("Error: '{}' not found in the path '{}'.".format(target_dir, root_path))
+            Logger.error("'{}' not found in the path '{}'.".format(target_dir, root_path))
             return None
     
 def search_tree(root, target, files_only=False, folders_only=False, first_result_only=False):
@@ -127,7 +127,7 @@ def search_tree(root, target, files_only=False, folders_only=False, first_result
 
 
     if not search_results:
-        Logger.info("Error: '{}' not found in the path '{}'.".format(target, root))
+        Logger.error("'{}' not found in the path '{}'.".format(target, root))
         return None
     
     # Tidy output
