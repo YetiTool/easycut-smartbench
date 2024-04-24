@@ -131,21 +131,19 @@ class BoundaryWarningScreen(Screen):
 
     def on_enter(self):
         self.check_outcome = (
-            self.l.get_bold("WARNING")
+            self.l.get_bold("WARNING") + "!"
             + "[b]:[/b]\n"
-            + self.l.get_bold("Job is not within machine bounds!")
+            + self.l.get_bold("SmartBench has found issues with your job.")
             + "\n\n"
             + self.l.get_str(
-                "Please set datum appropriately, so that job boundaries are within SmartBench limits."
+                "See help notes on the right and adjust your job accordingly."
             )
         )
         self.write_boundary_output()
 
     def write_boundary_output(self):
         self.display_output = (
-            self.l.get_bold("DETAILS OF BOUNDARY CONFLICT")
-            + "\n\n"
-            + "\n\n".join(map(str, self.job_box_details))
+            "\n\n".join(map(str, self.job_box_details))
         )
 
     def quit_to_home(self):
@@ -156,5 +154,5 @@ class BoundaryWarningScreen(Screen):
         self.job_box_details = []
 
     def update_strings(self):
-        self.title_label.text = self.l.get_str("Job Outside Machine Limits")
+        self.title_label.text = self.l.get_str("Issues found with your job")
         self.quit_button.text = self.l.get_str("Return")
