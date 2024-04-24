@@ -131,7 +131,7 @@ class BoundaryWarningScreen(Screen):
 
     def on_enter(self):
         self.check_outcome = (
-            self.l.get_bold("WARNING") + "!"
+            self.l.get_bold("WARNING")
             + "[b]:[/b]\n"
             + self.l.get_bold("SmartBench has found issues with your job.")
             + "\n\n"
