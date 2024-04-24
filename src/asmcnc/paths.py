@@ -39,14 +39,17 @@ Permanent Paths:
 
 Paths that may need to be created:
     SB_VALUES_PATH: Path to the sb_values directory. (easycut-smartbench/src/sb_values)
+    DWT_TEMP_GCODE_PATH: Path to the temp gcode directory in drywall_cutter_app. (easycut-smartbench/src/asmcnc/apps/drywall_cutter_app/gcode/temp)
 
 Functions:
     get_resource(file_name) -> str: Returns the path of a resource file.
+    create_paths() -> None: Creates any necessary directories that may not exist.
 
 Notes:
     - Any resource paths should be registered using resource_add_path.
     - If there are multiple resources with the same name, the first one found will be returned. (Use unique names)
     - This module should be imported first thing in main.py and call create_paths() to create any necessary directories.
+    - Update the create_paths() function if any new paths are added.
     - Update this docstring if any new paths are added.
 """
 
