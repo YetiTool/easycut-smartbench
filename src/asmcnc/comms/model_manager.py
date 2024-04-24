@@ -4,10 +4,9 @@ import threading
 from enum import Enum
 from hashlib import md5
 
+from asmcnc import paths
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy._event import EventDispatcher
-
-from asmcnc.core_UI import path_utils as pu
 
 
 class ProductCodes(Enum):
@@ -46,13 +45,14 @@ class ModelManagerSingleton(EventDispatcher):
     }
 
     # File paths:
-    PC_FILE_PATH = pu.join(pu.sb_values_path, "model_info.json")
-    MIGRATION_FILE_PATH = pu.join(pu.get_path('product_code_migration'), "migration.json")
-    MIGRATION_RAW_FILE_PATH = pu.join(pu.get_path('product_code_migration'), "migration_raw.json")
+    PC_FILE_PATH = os.path.join(paths.SB_VALUES_PATH, "model_info.json")
+    MIGRATION_FOLDER_PATH = os.path.join(paths.COMMS_PATH, "product_code_migration")
+    MIGRATION_FILE_PATH = os.path.join(MIGRATION_FOLDER_PATH, "migration.json")
+    MIGRATION_RAW_FILE_PATH = os.path.join(MIGRATION_FOLDER_PATH, "migration_raw.json")
 
     PLYMOUTH_SPLASH_FILE_PATH = "/usr/share/plymouth/debian-logo.png"
-    YETI_SPLASH_PATH = pu.get_path("yeti_splash_screen.png")
-    DWT_SPLASH_PATH = pu.get_path("dwt_splash_screen.png")
+    YETI_SPLASH_PATH = os.path.join(paths.SKAVA_UI_IMG_PATH, "yeti_splash_screen.png")
+    DWT_SPLASH_PATH = os.path.join(paths.SKAVA_UI_IMG_PATH, "dwt_splash_screen.png")
 
     SMARTBENCH_DEFAULT_NAME = "My SmartBench"
     SMARTBENCH_DEFAULT_LOCATION = "SmartBench location"
