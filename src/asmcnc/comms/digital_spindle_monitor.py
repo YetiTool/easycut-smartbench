@@ -66,10 +66,7 @@ class DigitalSpindleMonitor(object):
                 "temperature": self.__serial_connection.digital_spindle_temperature,
                 "kill_time": self.__serial_connection.digital_spindle_kill_time,
                 "voltage": self.__serial_connection.digital_spindle_mains_voltage,
-            },
-            "grbl": {
-                "feed_rate": self.__serial_connection.feed_rate,
-                "spindle_speed": self.__serial_connection.spindle_speed,
+                "speed": self.__serial_connection.spindle_speed,
             }
         })
 
