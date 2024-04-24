@@ -10,7 +10,8 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty, DictProperty
 from datetime import datetime
-from asmcnc.core_UI import path_utils as pu
+
+from asmcnc import paths
 from asmcnc.comms.model_manager import MachineType
 from asmcnc.comms.model_manager import ModelManagerSingleton
 
@@ -186,7 +187,7 @@ class ReleaseNotesScreen(Screen):
             # Machine type found, look for specific release notes
             target_file_name = version_string + "_" + type.value + file_extension  # v290_SmartBench.txt
 
-        return pu.join(pu.easycut_path, target_file_name) # /home/pi/easycut-smartbench/v290_SmartBench.txt
+        return os.path.join(paths.EASYCUT_SMARTBENCH_PATH, target_file_name) # /home/pi/easycut-smartbench/v290_SmartBench.txt
 
     def update_strings(self):
         self.version_number_label.text = self.l.get_str(

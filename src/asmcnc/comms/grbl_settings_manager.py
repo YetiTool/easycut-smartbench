@@ -2,8 +2,8 @@ import json
 import os
 import threading
 
+from asmcnc import paths
 from asmcnc.comms.logging_system.logging_system import Logger
-from asmcnc.core_UI import path_utils
 
 
 class GRBLSettingsManagerSingleton(object):
@@ -80,7 +80,7 @@ class GRBLSettingsManagerSingleton(object):
     settings_to_save = [51]
 
     # File paths:
-    MACHINE_DATA_FILE_PATH = path_utils.join(path_utils.sb_values_path, "machine_settings.json")
+    MACHINE_DATA_FILE_PATH = os.path.join(paths.SB_VALUES_PATH, "machine_settings.json")
 
     def __new__(cls, machine=None):
         with cls._lock:

@@ -12,14 +12,12 @@ from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
 
+from asmcnc import paths
 from asmcnc.comms.localization import Localization
 from asmcnc.comms.model_manager import ModelManagerSingleton
-from asmcnc.core_UI import path_utils
 from asmcnc.core_UI.utils import color_provider
 
-ASMCNC_PATH = path_utils.asmcnc_path
-SKAVA_UI_IMG_PATH = os.path.join(ASMCNC_PATH, "skavaUI", "img")
-FLAGS_PATH = os.path.join(SKAVA_UI_IMG_PATH, "flags")
+FLAGS_PATH = os.path.join(paths.SKAVA_UI_IMG_PATH, "flags")
 
 WELCOME_STRINGS = [
     "Welcome to SmartBench",
@@ -84,8 +82,8 @@ class LanguageSelectionScreen(Screen):
         self.next_button = Button(text=next_string, size_hint=(None, None), width=dp(291), height=dp(79),
                                   pos_hint={"center_x": 0.5, "center_y": 0.5},
                                   disabled=True, font_size="30sp", opacity=0,
-                                  background_down=os.path.join(SKAVA_UI_IMG_PATH, "next.png"),
-                                  background_normal=os.path.join(SKAVA_UI_IMG_PATH, "next.png"),
+                                  background_down=os.path.join(paths.SKAVA_UI_IMG_PATH, "next.png"),
+                                  background_normal=os.path.join(paths.SKAVA_UI_IMG_PATH, "next.png"),
                                   on_press=self.__next_button_pressed)
         spacer2 = Label(text="", size_hint=(0.3, 0.8))
 

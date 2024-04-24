@@ -3,7 +3,8 @@ Paths for the easycut-smartbench repository.
 This module should sit in the directory below src (currently easycut-smartbench/src/asmcnc/paths.py).
 
 Permanent Paths:
-    ROOT_PATH: Root directory of the repository (easycut-smartbench/src) (working directory)
+    ROOT_PATH: Source root directory of the repository (easycut-smartbench/src) (working directory)
+    EASYCUT_SMARTBENCH_PATH: Root directory of the repository (easycut-smartbench)
     ASMCNC_PATH: Path to the asmcnc directory. (easycut-smartbench/src/asmcnc)
     SKAVA_UI_PATH: Path to the skavaUI directory. (easycut-smartbench/src/asmcnc/skavaUI)
     SKAVA_UI_IMG_PATH: Path to the img directory in skavaUI. (easycut-smartbench/src/asmcnc/skavaUI/img)
@@ -59,7 +60,9 @@ from asmcnc.comms.logging_system.logging_system import Logger
 ROOT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Permanent paths
+EASYCUT_SMARTBENCH_PATH = os.path.dirname(ROOT_PATH)
 ASMCNC_PATH = os.path.join(ROOT_PATH, "asmcnc")
+COMMS_PATH = os.path.join(ASMCNC_PATH, "comms")
 
 SKAVA_UI_PATH = os.path.join(ASMCNC_PATH, "skavaUI")
 SKAVA_UI_IMG_PATH = os.path.join(SKAVA_UI_PATH, "img")
@@ -106,7 +109,7 @@ WELCOME_TO_SMARTBENCH_IMG_PATH = os.path.join(WELCOME_TO_SMARTBENCH_APP_PATH, "i
 
 JOB_GO_IMG_PATH = os.path.join(CORE_UI_PATH, "job_go", "img")
 
-SEQUENCE_ALARM_IMG = os.path.join(CORE_UI_PATH, "sequence_alarm", "img")
+SEQUENCE_ALARM_IMG_PATH = os.path.join(CORE_UI_PATH, "sequence_alarm", "img")
 
 # Paths that may need to be created
 SB_VALUES_PATH = os.path.join(ROOT_PATH, "sb_values")
@@ -122,6 +125,17 @@ def create_paths():
 resource_add_path(SKAVA_UI_IMG_PATH)
 resource_add_path(SHAPE_CUTTER_IMG_PATH)
 resource_add_path(CALIBRATION_IMG_PATH)
+resource_add_path(MAINTENANCE_IMG_PATH)
+resource_add_path(DWT_IMG_PATH)
+resource_add_path(SYSTEM_TOOLS_IMG_PATH)
+resource_add_path(UPGRADE_IMG_PATH)
+resource_add_path(WIFI_IMG_PATH)
+resource_add_path(START_UP_SEQUENCE_IMG)
+resource_add_path(DATA_CONSENT_IMG_PATH)
+resource_add_path(WARRANTY_IMG_PATH)
+resource_add_path(WELCOME_TO_SMARTBENCH_IMG_PATH)
+resource_add_path(JOB_GO_IMG_PATH)
+resource_add_path(SEQUENCE_ALARM_IMG_PATH)
 
 
 # Functions for finding resources
@@ -162,5 +176,5 @@ if __name__ == "__main__":
     print(WELCOME_TO_SMARTBENCH_APP_PATH)
     print(WELCOME_TO_SMARTBENCH_IMG_PATH)
     print(JOB_GO_IMG_PATH)
-    print(SEQUENCE_ALARM_IMG)
+    print(SEQUENCE_ALARM_IMG_PATH)
     print(SB_VALUES_PATH)
