@@ -27,7 +27,7 @@ Permanent Paths:
     WIFI_APP_PATH: Path to the wifi_app directory. (easycut-smartbench/src/asmcnc/apps/wifi_app)
     WIFI_IMG_PATH: Path to the img directory in wifi_app. (easycut-smartbench/src/asmcnc/apps/wifi_app/img)
     START_UP_SEQUENCE_PATH: Path to the start_up_sequence directory. (easycut-smartbench/src/asmcnc/apps/start_up_sequence)
-    START_UP_SEQUENCE_IMG: Path to the img directory in start_up_sequence. (easycut-smartbench/src/asmcnc/apps/start_up_sequence/img)
+    START_UP_SEQUENCE_IMG_PATH: Path to the img directory in start_up_sequence. (easycut-smartbench/src/asmcnc/apps/start_up_sequence/img)
     DATA_CONSENT_APP_PATH: Path to the data_consent_app directory. (easycut-smartbench/src/asmcnc/apps/start_up_sequence/data_consent_app)
     DATA_CONSENT_IMG_PATH: Path to the img directory in data_consent_app. (easycut-smartbench/src/asmcnc/apps/start_up_sequence/data_consent_app/img)
     WARRANTY_APP_PATH: Path to the warranty_app directory. (easycut-smartbench/src/asmcnc/apps/start_up_sequence/warranty_app)
@@ -35,7 +35,7 @@ Permanent Paths:
     WELCOME_TO_SMARTBENCH_APP_PATH: Path to the welcome_to_smartbench_app directory. (easycut-smartbench/src/asmcnc/apps/start_up_sequence/welcome_to_smartbench_app)
     WELCOME_TO_SMARTBENCH_IMG_PATH: Path to the img directory in welcome_to_smartbench_app. (easycut-smartbench/src/asmcnc/apps/start_up_sequence/welcome_to_smartbench_app/img)
     JOB_GO_IMG_PATH: Path to the img directory in job_go. (easycut-smartbench/src/asmcnc/core_UI/job_go/img)
-    SEQUENCE_ALARM_IMG: Path to the img directory in sequence_alarm. (easycut-smartbench/src/asmcnc/core_UI/sequence_alarm/img)
+    SEQUENCE_ALARM_IMG_PATH: Path to the img directory in sequence_alarm. (easycut-smartbench/src/asmcnc/core_UI/sequence_alarm/img)
 
 Paths that may need to be created:
     SB_VALUES_PATH: Path to the sb_values directory. (easycut-smartbench/src/sb_values)
@@ -96,7 +96,7 @@ WIFI_APP_PATH = os.path.join(APPS_PATH, "wifi_app")
 WIFI_IMG_PATH = os.path.join(WIFI_APP_PATH, "img")
 
 START_UP_SEQUENCE_PATH = os.path.join(APPS_PATH, "start_up_sequence")
-START_UP_SEQUENCE_IMG = os.path.join(START_UP_SEQUENCE_PATH, "screens", "img")
+START_UP_SEQUENCE_IMG_PATH = os.path.join(START_UP_SEQUENCE_PATH, "screens", "img")
 
 DATA_CONSENT_APP_PATH = os.path.join(START_UP_SEQUENCE_PATH, "data_consent_app")
 DATA_CONSENT_IMG_PATH = os.path.join(DATA_CONSENT_APP_PATH, "img")
@@ -113,12 +113,16 @@ SEQUENCE_ALARM_IMG_PATH = os.path.join(CORE_UI_PATH, "sequence_alarm", "img")
 
 # Paths that may need to be created
 SB_VALUES_PATH = os.path.join(ROOT_PATH, "sb_values")
+DWT_TEMP_GCODE_PATH = os.path.join(DWT_APP_PATH, "gcode", "temp")
 
 
 def create_paths():
     if not os.path.exists(SB_VALUES_PATH):
-        Logger.info("SB values directory not found, creating...")
+        Logger.warning("SB values directory not found, creating...")
         os.makedirs(SB_VALUES_PATH)
+    if not os.path.exists(DWT_TEMP_GCODE_PATH):
+        Logger.warning("Drywall cutter temp gcode directory not found, creating...")
+        os.makedirs(DWT_TEMP_GCODE_PATH)
 
 
 # Register any paths that contain resources
@@ -130,7 +134,7 @@ resource_add_path(DWT_IMG_PATH)
 resource_add_path(SYSTEM_TOOLS_IMG_PATH)
 resource_add_path(UPGRADE_IMG_PATH)
 resource_add_path(WIFI_IMG_PATH)
-resource_add_path(START_UP_SEQUENCE_IMG)
+resource_add_path(START_UP_SEQUENCE_IMG_PATH)
 resource_add_path(DATA_CONSENT_IMG_PATH)
 resource_add_path(WARRANTY_IMG_PATH)
 resource_add_path(WELCOME_TO_SMARTBENCH_IMG_PATH)
@@ -168,7 +172,7 @@ if __name__ == "__main__":
     print(WIFI_APP_PATH)
     print(WIFI_IMG_PATH)
     print(START_UP_SEQUENCE_PATH)
-    print(START_UP_SEQUENCE_IMG)
+    print(START_UP_SEQUENCE_IMG_PATH)
     print(DATA_CONSENT_APP_PATH)
     print(DATA_CONSENT_IMG_PATH)
     print(WARRANTY_APP_PATH)

@@ -565,9 +565,8 @@ class GCodeEngine(object):
 
     # Main
     def engine_run(self, simulate=False):
-        temp_gcode_path = os.path.join(self.source_folder_path, "temp")
         filename = self.config.active_config.shape_type + ".nc"
-        output_path = os.path.join(temp_gcode_path, filename)
+        output_path = os.path.join(paths.DWT_TEMP_GCODE_PATH, filename)
         safe_start_position = "X0 Y0 Z10"
         z_safe_distance = 5
         cutting_pass_depth = self.config.active_cutter.parameters.recommended_depth_per_pass if self.config.active_config.cutting_depths.auto_pass else self.config.active_config.cutting_depths.depth_per_pass
