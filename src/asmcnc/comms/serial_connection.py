@@ -1555,7 +1555,7 @@ class SerialConnection(EventDispatcher):
                         Logger.exception("Could not print calibration output")
 
             if self.VERBOSE_STATUS:
-                Logger.debug(self.m_state, str(self.m_x), str(self.m_y), str(self.m_z), self.serial_blocks_available, self.serial_chars_available)
+                Logger.debug('state: {} | x: {} | y: {} | z: {} | avail. blocks: {} | avail. chars: {}'.format(self.m_state, str(self.m_x), str(self.m_y), str(self.m_z), self.serial_blocks_available, self.serial_chars_available))
 
             if self.measure_running_data:
 
