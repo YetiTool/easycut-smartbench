@@ -3908,3 +3908,23 @@ class RouterMachine(EventDispatcher):
     def clear_measured_running_data(self):
         self.s.measure_running_data = False
         self.s.running_data = []
+
+    def stop_machine_movement(self):
+        # Don't stop machine movement in final test. Dragos wants this as a feature!
+        if self.s.FINAL_TEST:
+            Logger.warning('Stopping machine movement is disabled in FINAL_TEST!')
+            return
+        spindle_on = self.s.spindle_on
+        if self.state() != 'Idle':
+            Logger.warning('Stopping machine movement!')
+            self.soft_stop()
+            self.stop_from_soft_stop_cancel()
+            self.turn_off_vacuum()
+        if spindle_on:
+            Logger.warning('Stopping spindle and moving up for collet access!')
+            self.turn_off_spindle()
+            self.raise_z_axis_for_collet_access()
+
+
+
+
