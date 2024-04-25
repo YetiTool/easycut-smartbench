@@ -81,7 +81,7 @@ Builder.load_string("""
             size_hint_y: 1                
 
 """
-) # Based on src/asmcnc/skavaUI/screen_homing_active.py
+)  # Based on src/asmcnc/skavaUI/screen_homing_active.py
 
 
 class ProbingScreen(Screen):
@@ -129,14 +129,14 @@ class ProbingScreen(Screen):
             # Machine is running, need to stop it
             Logger.warning("Machine is running, pausing before probing")
             self.m._grbl_feed_hold()
-            Clock.schedule_once(lambda dt: self.m._grbl_soft_reset(), 3.5) # Wait before reseting to avoid alarm
+            Clock.schedule_once(lambda dt: self.m._grbl_soft_reset(), 3.5)  # Wait before resetting to avoid alarm
             delay_time.append(4)
 
         # Probe once machine is ready
         self.probing_event =  Clock.schedule_once(lambda dt: self.probe(), max(delay_time))
         
         if not hasattr(self, "watchdog_event"):
-            # Start watchdog 1 sec after probe requested to give machine time to respond before interigating
+            # Start watchdog 1 sec after probe requested to give machine time to respond before interrogating
             Clock.schedule_once(lambda dt: self.watchdog_clock(), max(delay_time) + 1)
         elif not self.watchdog_event.is_triggered:
             # Watchdog not scheduled, schedule it in 1 sec
@@ -199,7 +199,7 @@ class ProbingScreen(Screen):
             Logger.debug("**** cancel_probing called")
         Clock.unschedule(self.probing_event)
         self.m._grbl_feed_hold()
-        Clock.schedule_once(lambda dt: self.m._grbl_soft_reset(), 0.5) # Wait before reseting to avoid alarm
+        Clock.schedule_once(lambda dt: self.m._grbl_soft_reset(), 0.5)  # Wait before resetting to avoid alarm
 
     def exit(self):
         if self.function_debug:
