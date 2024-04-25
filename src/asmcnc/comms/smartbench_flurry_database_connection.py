@@ -1,10 +1,15 @@
-from asmcnc.comms.logging_system.logging_system import Logger
-from kivy.clock import Clock
-import json, socket, datetime, time
-from requests import get
-import threading, Queue
+import Queue
+import bisect
+import datetime
+import json
+import threading
+import time
 from time import sleep
-import traceback
+
+from kivy.properties import StringProperty
+
+from asmcnc.comms.localization import Localization
+from asmcnc.comms.logging_system.logging_system import Logger
 
 try:
 	import pika
@@ -13,17 +18,19 @@ except:
 	pika = None
 	Logger.error("Couldn't import pika lib")
 
+HOST = 'sm-receiver.yetitool.com'
+HOST = 'localhost'
 
-class DatabaseEventManager():
+class DatabaseEventManager(object):
 
 	z_lube_percent_left_next = 50
 	spindle_brush_percent_left_next = 50
 	calibration_percent_left_next = 50
 	initial_consumable_intervals_found = False
 
-	VERBOSE = False
+	VERBOSE = True
 
-	public_ip_address = ''
+	public_ip_address = StringProperty("")
 
 	routine_updates_channel = None
 	routine_update_thread = None
@@ -32,6 +39,9 @@ class DatabaseEventManager():
 
 	event_send_timeout = 5*60
 
+	GRBL_SETTINGS_QUEUE = "grbl_settings"
+	CONSOLE_QUEUE = "console"
+
 	def __init__(self, screen_manager, machine, settings_manager):
 
 		self.queue = 'machine_data'
@@ -39,6 +49,7 @@ class DatabaseEventManager():
 		self.sm = screen_manager
 		self.jd = self.m.jd
 		self.set = settings_manager
+		self.localisation = Localization()
 
 		self.event_queue = Queue.Queue()
 
@@ -48,7 +59,7 @@ class DatabaseEventManager():
 
 		Logger.info("Database Event Manager closed - garbage collected!")
 
-	
+
 	## SET UP CONNECTION TO DATABASE
 	# This is called from screen_welcome, when all connections are set up
 	##------------------------------------------------------------------------
@@ -77,21 +88,22 @@ class DatabaseEventManager():
 			if self.set.ip_address and self.set.wifi_available:
 
 				try:
-					self.connection = pika.BlockingConnection(pika.ConnectionParameters('sm-receiver.yetitool.com', 5672, '/',
-																						pika.credentials.PlainCredentials(
-																							'console',
-																							'2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb')
-																						))
+					self.connection = pika.BlockingConnection(pika.ConnectionParameters(HOST, 5672, '/'))
+																						# pika.credentials.PlainCredentials(
+																						# 	'console',
+																						# 	'2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb')
+																						# ))
 
 					Logger.info("Connection established")
 
 					self.routine_updates_channel = self.connection.channel()
 					self.routine_updates_channel.queue_declare(queue=self.queue)
 
+					self.send_full_snapshot()
 
-					try: 
+					try:
 						if not self.routine_update_thread.is_alive(): self.send_routine_updates_to_database()
-					except: 
+					except:
 						self.send_routine_updates_to_database()
 					break
 
@@ -117,7 +129,7 @@ class DatabaseEventManager():
 				self.routine_updates_channel = self.connection.channel()
 				self.routine_updates_channel.queue_declare(queue=self.queue)
 
-			else: 
+			else:
 
 				try:
 					Logger.warning("Close connection and start again")
@@ -154,6 +166,7 @@ class DatabaseEventManager():
 					try:
 						if self.m.s.m_state == "Idle":
 							self.send_alive()
+							self.send_parameter_update(self.CONSOLE_QUEUE)
 						else:
 							self.publish_event_with_routine_updates_channel(self.generate_full_payload_data(), "Routine Full Payload")
 
@@ -185,9 +198,6 @@ class DatabaseEventManager():
 		self.thread_for_send_event.daemon = True
 		self.thread_for_send_event.start()
 
-
-
-
 	## PUBLISH EVENT TO DATABASE
 	##------------------------------------------------------------------------
 	def publish_event_with_routine_updates_channel(self, data, exception_type):
@@ -196,16 +206,88 @@ class DatabaseEventManager():
 
 		if self.set.wifi_available:
 
-			try: 
+			try:
 				self.routine_updates_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
 				if self.VERBOSE: Logger.info(data)
-			
+
 			except:
 				Logger.exception(exception_type + " sent exception")
 				self.reinstate_channel_or_connection_if_missing()
 
+	### NEW STUFF
 
-	def publish_event_with_temp_channel(self, data, exception_type, timeout):
+	PENDING_PARAMETER_UPDATES = {
+
+	}  # { "queue_name": [ (parameter_name, parameter_value), ... ] }
+
+	def send_parameter_update(self, queue_name):
+		if pika:
+			data = {
+				"hostname": self.set.console_hostname,
+				"data": self.PENDING_PARAMETER_UPDATES[queue_name],
+			}
+			if data["data"]:
+				self.event_queue.put(
+					(
+						self.publish_event_with_temp_channel,
+						[data, "Parameter Update", time.time() + self.event_send_timeout, queue_name]
+					)  # change this to a partial function
+				)
+
+	def add_parameter_update(self, queue_name, parameter_name, parameter_value):
+		if queue_name not in self.PENDING_PARAMETER_UPDATES:
+			self.PENDING_PARAMETER_UPDATES[queue_name] = []
+
+		if parameter_name in self.PENDING_PARAMETER_UPDATES[queue_name]:
+			self.PENDING_PARAMETER_UPDATES[queue_name].remove(parameter_name)
+
+		self.PENDING_PARAMETER_UPDATES[queue_name].append((parameter_name, parameter_value))
+
+	def on_device_label_change(self, new_label):
+		self.add_parameter_update(self.CONSOLE_QUEUE, "display_name", new_label)
+
+	def get_full_console_payload(self):
+		return {
+			"hostname": self.set.console_hostname,
+			"data": {
+				"display_name": self.m.device_label,
+				"location": self.m.device_location,
+				"local_ip_addr": self.set.ip_address,
+				"public_ip_addr": self.set.public_ip_address,
+				"language": self.localisation.lang,
+				"software_version": self.set.sw_version,
+				"firmware_version": self.set.fw_version,
+			}
+		}
+
+	def get_full_grbl_settings_payload(self):
+		data = {
+			"hostname": self.set.console_hostname,
+			"data": {
+
+			}
+		}  # TODO: Implement
+
+	def send_full_snapshot(self):
+		"""
+		Send a full snapshot of the machine's current state to the database. Use this on startup to ensure that the database
+		has the most up-to-date information about the machine.
+		:return: None
+		"""
+		if pika:
+			self.event_queue.put(
+				(
+					self.publish_event_with_temp_channel,
+					[self.get_full_console_payload(), "Full Console Snapshot", time.time() + self.event_send_timeout, self.CONSOLE_QUEUE]
+				)
+			)
+
+
+	### END NEW STUFF
+
+	def publish_event_with_temp_channel(self, data, exception_type, timeout, queue_name=None):
+		if not queue_name:
+			queue_name = self.queue
 
 		Logger.info("Publishing data: " + exception_type)
 
@@ -213,26 +295,29 @@ class DatabaseEventManager():
 
 			if self.set.wifi_available:
 
-				try: 
+				try:
 					temp_event_channel = self.connection.channel()
-					temp_event_channel.queue_declare(queue=self.queue)
+					temp_event_channel.queue_declare(queue=queue_name)
 
-					try: 
-						temp_event_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
+					try:
+						temp_event_channel.basic_publish(exchange='', routing_key=queue_name, body=json.dumps(data))
 						if self.VERBOSE: Logger.info(data)
 
 						if "Job End" in exception_type:
-							temp_event_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(self.generate_full_payload_data()))
+							temp_event_channel.basic_publish(exchange='', routing_key=queue_name, body=json.dumps(self.generate_full_payload_data()))
 							if self.VERBOSE: Logger.info(data)
 
-					
+						if queue_name != self.queue:
+							if queue_name in self.PENDING_PARAMETER_UPDATES:
+								del self.PENDING_PARAMETER_UPDATES[queue_name]
+
 					except:
 						Logger.exception(exception_type + " send exception")
 
 					temp_event_channel.close()
 					break
 
-				except: 
+				except:
 					sleep(10)
 			else:
 				sleep(10)
@@ -297,10 +382,10 @@ class DatabaseEventManager():
 		# Human readable machine status:
 		status = self.m.state()
 
-		if 'Door' in status: 
+		if 'Door' in status:
 			if '3' in status:
 				status = "Resuming"
-			else: 
+			else:
 				status = "Paused"
 
 		data = {
@@ -338,22 +423,11 @@ class DatabaseEventManager():
 
 
 	def find_initial_consumable_intervals(self, z_lube_percent, spindle_brush_percent, calibration_percent):
-
 		def find_current_interval(value):
-			# This looks stupid but I don't have a better idea without using loops
-			if value < 50:
-				if value < 25:
-					if value < 10:
-						if value < 5:
-							if value < 0:
-								if value < -10:
-									return -25
-								return -10
-							return 0
-						return 5
-					return 10
-				return 25
-			return 50
+			thresholds = [-25, -10, 0, 5, 10, 25, 50]
+			index = bisect.bisect_right(thresholds, value)
+			return thresholds[index - 1] if index else -25
+
 
 		self.z_lube_percent_left_next = find_current_interval(z_lube_percent)
 		self.spindle_brush_percent_left_next = find_current_interval(spindle_brush_percent)
@@ -525,6 +599,10 @@ class DatabaseEventManager():
 			}
 
 			self.event_queue.put( (self.publish_event_with_temp_channel, [data, "Feed rate", time.time() + self.event_send_timeout]) )
+
+	### NEW
+
+
 
 
 	### JOB CRITICAL EVENTS, INCLUDING ALARMS AND ERRORS

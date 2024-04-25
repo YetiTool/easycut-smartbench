@@ -25,7 +25,7 @@ from asmcnc.skavaUI import popup_info
 from asmcnc.comms.coordinate_system import CoordinateSystem
 
 from kivy.clock import Clock
-from kivy.properties import NumericProperty, ListProperty
+from kivy.properties import NumericProperty, ListProperty, StringProperty
 from kivy.event import EventDispatcher
 import os, time
 
@@ -137,10 +137,10 @@ class RouterMachine(EventDispatcher):
     is_spindle_health_check_enabled_as_default = False
 
     ## DEVICE LABEL
-    device_label = "My SmartBench" #TODO needs tying to machine unique ID else all machines will refence this dataseries
+    device_label = StringProperty("My SmartBench") #TODO needs tying to machine unique ID else all machines will refence this dataseries
 
     ## DEVICE LOCATION
-    device_location = 'SmartBench location'
+    device_location = StringProperty('SmartBench location')
 
     reminders_enabled = True
 
