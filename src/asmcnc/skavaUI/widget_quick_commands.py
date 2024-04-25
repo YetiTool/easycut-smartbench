@@ -138,6 +138,7 @@ class QuickCommands(Widget):
         self.l=kwargs['localization']
       
     def quit_to_lobby(self):
+        self.m.stop_machine_movement()
         self.sm.current = 'lobby'
             
     def home(self):

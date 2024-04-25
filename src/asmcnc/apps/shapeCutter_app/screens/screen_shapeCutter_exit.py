@@ -72,4 +72,5 @@ class ShapeCutterExitScreenClass(Screen):
         self.poll_for_success = Clock.schedule_once(self.exit_screen, 1)
 
     def exit_screen(self, dt):
+        self.m.stop_machine_movement()
         self.shapecutter_sm.return_to_EC()

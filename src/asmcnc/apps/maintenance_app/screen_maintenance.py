@@ -578,6 +578,7 @@ class MaintenanceScreenClass(Screen):
         ]
 
     def quit_to_lobby(self):
+        self.m.stop_machine_movement()
         self.on_tab_switch()
         self.sm.current = "lobby"
 
