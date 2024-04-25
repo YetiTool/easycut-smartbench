@@ -1,8 +1,8 @@
 import sys, os
 
-from asmcnc.comms.logging_system.logging_system import Logger
-
 sys.path.append('./src')
+
+from asmcnc.comms.logging_system.logging_system import Logger
 
 try: 
     import unittest
@@ -819,8 +819,8 @@ def test_spindle_speed(jd):
     assert jd.job_recovery_gcode == [
         "S15000",
         "G0 X0.000 Y0.000",
-        "G0 Z0.000",
         "M03",
+        "G0 Z0.000",
         "S10000 M5"
     ]
     assert jd.job_recovery_offset == -5
@@ -831,8 +831,8 @@ def test_spindle_speed(jd):
     assert jd.job_recovery_gcode == [
         "S20000",
         "G0 X0.000 Y0.000",
-        "G0 Z0.000",
         "M03",
+        "G0 Z0.000",
         "S15000 M03",
         "S10000 M5"
     ]
@@ -844,8 +844,8 @@ def test_spindle_speed(jd):
     assert jd.job_recovery_gcode == [
         "S25000",
         "G0 X0.000 Y0.000",
-        "G0 Z0.000",
         "M3",
+        "G0 Z0.000",
         "M03S20000",
         "G4 P4",
         "S15000 M03",
@@ -859,8 +859,8 @@ def test_spindle_speed(jd):
     assert jd.job_recovery_gcode == [
         "S0",
         "G0 X0.000 Y0.000",
-        "G0 Z0.000",
         "M3",
+        "G0 Z0.000",
         "M3 S25000",
         "G4 P4",
         "M03S20000",
@@ -876,8 +876,8 @@ def test_spindle_speed(jd):
     assert jd.job_recovery_gcode == [
         "S5000",
         "G0 X0.000 Y0.000",
-        "G0 Z0.000",
         "M3",
+        "G0 Z0.000",
         "S0",
         "G4 P4",
         "M3 S25000",
@@ -1110,8 +1110,8 @@ def test_spindle_state(jd):
         "M30",
         "S20000",
         "G0 X0.000 Y0.000",
-        "G0 Z0.000",
         "M5",
+        "G0 Z0.000",
         "G1"
     ]
     assert jd.job_recovery_offset == 1
@@ -1124,8 +1124,8 @@ def test_spindle_state(jd):
         "M30",
         "S20000",
         "G0 X0.000 Y0.000",
-        "G0 Z0.000",
         "M04",
+        "G0 Z0.000",
         "M5",
         "G1"
     ]
@@ -1138,8 +1138,8 @@ def test_spindle_state(jd):
         "G90",
         "S20000",
         "G0 X0.000 Y0.000",
-        "G0 Z0.000",
         "M3",
+        "G0 Z0.000",
         "M04",
         "M30",
         "M5",
@@ -1202,9 +1202,9 @@ def test_regular_case(jd):
         "M8",
         "S20000",
         "G0 X547.15 Y263",
+        "M3",
         "G0 Z9",
         "G1 F1000",
-        "M3",
         "M5"
     ]
     assert jd.job_recovery_offset == -12
@@ -1219,8 +1219,8 @@ def test_regular_case(jd):
         "G21",
         "S20000",
         "G0 X0.000 Y0.000",
-        "G0 Z20.000",
         "M3",
+        "G0 Z20.000",
         "G28 G91 Z0",
         "G90",
         "T1",
@@ -1316,6 +1316,27 @@ def test_random_gibberish(jd):
     assert not success
     assert message == 'This job cannot be recovered! Please check your job for errors.'
 
+def test_ignore_comments(jd):
+    jd.job_gcode = [
+        "S5000",
+        "M3;S100",
+        "(S100)",
+        "M5"
+    ]
+
+    jd.job_recovery_selected_line = 3
+    success, message = jd.generate_recovery_gcode()
+    assert success
+
+    assert jd.job_recovery_gcode == [
+        "S5000",
+        "G0 X0.000 Y0.000",
+        "M3",
+        "G0 Z0.000",
+        "M5"
+    ]
+    assert jd.job_recovery_offset == 1
+
 def test_r_handling(jd):
     jd.job_gcode = [
         "G0 X0 Y2.0",
@@ -1327,6 +1348,7 @@ def test_r_handling(jd):
     jd.job_recovery_selected_line = 3
     success, message = jd.generate_recovery_gcode()
     assert success
+
     # Output should not include the R
     assert jd.job_recovery_gcode == [
         "G0 X2.0 Y0",
