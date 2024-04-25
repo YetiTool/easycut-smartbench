@@ -178,7 +178,8 @@ class ProbingScreen(Screen):
             Logger.warning("Probing screen exited due to alarm")
             self.exit()
         if screen == 'probing' and self.not_probing:
-            self.exit()
+            Clock.unschedule(self.watchdog_event)
+            Clock.schedule_once(lambda dt:self.exit(), 2)
 
         if self.variable_debug:
             Logger.debug(("Watchdog:\nMachine state: " + machine_state, "Not probing: " + str(self.not_probing), "Alarm triggered: " + str(self.alarm_triggered)))
