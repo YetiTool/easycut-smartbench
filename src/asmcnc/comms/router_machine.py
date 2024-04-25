@@ -1366,6 +1366,8 @@ class RouterMachine(EventDispatcher):
         Clock.schedule_once(lambda dt: self.led_restore(),0.3)
         Clock.schedule_once(lambda dt: self.set_led_colour('GREEN'),0.5)
 
+        self.s.spindle_on = False
+
     def stop_from_gcode_error(self):
         # Note this should be a implementation of door functionality, but this is a fast implementation since there are multiple possible door calls which we need to manage.
         self._grbl_feed_hold()
