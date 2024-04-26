@@ -7,11 +7,12 @@ YetiTool's UI for SmartBench
 www.yetitool.com
 '''
 from asmcnc import paths
-from asmcnc.comms.user_settings_manager import UserSettingsManager
+
 
 paths.create_paths()
 
 import logging
+from asmcnc.comms.user_settings_manager import UserSettingsManager
 # config
 # import os
 # os.environ['KIVY_GL_BACKEND'] = 'sdl2'

@@ -1,8 +1,6 @@
 import json
 import os
-import threading
 
-from kivy.clock import Clock
 from kivy.event import EventDispatcher
 from kivy.properties import BooleanProperty, StringProperty, NumericProperty
 
@@ -45,22 +43,20 @@ class UserSettingsManager(EventDispatcher):
     settings = {'dust_shoe_detection': {'description': 'When activated, the dust shoe needs to be inserted '
                                                        'when starting the spindle or running jobs.',
                                         'title': 'Dust shoe plug detection',
-                                        'type': 'bool',
                                         'value': True},
                 'interrupt_bars_active': {'description': 'When activated, hitting the interrupt bars will trigger '
                                                          'an alarm! Only deactivate this if your interrupt bar '
                                                          'switches are broken!',
                                           'title': 'Interrupt bars activated',
-                                          'type': 'bool',
                                           'value': True}}
 
     # dynamic property creation (kivy properties must be created at class level and not inside a class function:
     for name, details in settings.items():
-        if details['type'] == 'bool':
+        if type(details['value']) == bool:
             vars()[name] = BooleanProperty(details['value'])
-        elif details['type'] == 'str':
+        elif type(details['value']) == str:
             vars()[name] = StringProperty(details['value'])
-        elif details['type'] == 'float':
+        elif type(details['value']) == float:
             vars()[name] = NumericProperty(details['value'])
 
     def __init__(self, **kwargs):
@@ -77,12 +73,7 @@ class UserSettingsManager(EventDispatcher):
                 self.settings.update(tmp)
             # update properties
             for name, details in self.settings.items():
-                if details['type'] == 'bool':
-                    setattr(self, name, details['value'])
-                elif details['type'] == 'str':
-                    setattr(self, name, details['value'])
-                elif details['type'] == 'float':
-                    setattr(self, name, details['value'])
+                setattr(self, name, details['value'])
 
     def save_settings_to_file(self):
         """Saves the local settings dictionary to a file."""
@@ -96,7 +87,7 @@ class UserSettingsManager(EventDispatcher):
 
     def get_type(self, settings_name):
         """Returns the type of the given settings_name. If no such setting exists a KeyError is raised."""
-        return self.settings[settings_name]['type']
+        return type(self.settings[settings_name]['value'])
 
     def get_description(self, settings_name):
         """Returns the description of the given settings_name. If no such setting exists a KeyError is raised."""
@@ -113,11 +104,9 @@ class UserSettingsManager(EventDispatcher):
         If the value has the wrong type a ValueError is raised.
         """
         # check if type of value matches setting:
-        if ((self.settings[settings_name]['type'] == 'str' and type(value) is not str) or
-                (self.settings[settings_name]['type'] == 'bool' and type(value) is not bool) or
-                (self.settings[settings_name]['type'] == 'float' and type(value) is not float)):
+        if type(self.settings[settings_name]['value']) is not type(value):
             Logger.error('Wrong value type! Expected: {} | Received: {}'.format(
-                self.settings[settings_name]['type'], type(value)))
+                type(self.settings[settings_name]['value']), type(value)))
             raise ValueError
         # check if value has changed:
         if self.settings[settings_name]['value'] != value:
