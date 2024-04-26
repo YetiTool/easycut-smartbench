@@ -1137,7 +1137,7 @@ class PopupShutdown(Widget):
         popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
         popup.separator_height = '4dp'
 
-        ok_button.bind(on_press=console_utils.shutdown)
+        ok_button.bind(on_press=console_utils.shutdown_now)
         cancel_button.bind(on_press=console_utils.cancel_shutdown)
         cancel_button.bind(on_press=popup.dismiss)
 
