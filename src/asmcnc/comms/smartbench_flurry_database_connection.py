@@ -52,6 +52,7 @@ class DatabaseEventManager(object):
 		self.localisation = Localization()
 
 		self.event_queue = Queue.Queue()
+		self.m.bind(device_label=self.on_device_label_change)
 
 
 
@@ -200,14 +201,16 @@ class DatabaseEventManager(object):
 
 	## PUBLISH EVENT TO DATABASE
 	##------------------------------------------------------------------------
-	def publish_event_with_routine_updates_channel(self, data, exception_type):
+	def publish_event_with_routine_updates_channel(self, data, exception_type, queue_name=None):
+		if not queue_name:
+			queue_name = self.queue
 
 		if self.VERBOSE: Logger.info("Publishing data: " + exception_type)
 
 		if self.set.wifi_available:
 
 			try:
-				self.routine_updates_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
+				self.routine_updates_channel.basic_publish(exchange='', routing_key=queue_name, body=json.dumps(data))
 				if self.VERBOSE: Logger.info(data)
 
 			except:
@@ -221,18 +224,20 @@ class DatabaseEventManager(object):
 	}  # { "queue_name": [ (parameter_name, parameter_value), ... ] }
 
 	def send_parameter_update(self, queue_name):
-		if pika:
-			data = {
-				"hostname": self.set.console_hostname,
-				"data": self.PENDING_PARAMETER_UPDATES[queue_name],
-			}
-			if data["data"]:
-				self.event_queue.put(
-					(
-						self.publish_event_with_temp_channel,
-						[data, "Parameter Update", time.time() + self.event_send_timeout, queue_name]
-					)  # change this to a partial function
-				)
+		if not pika:
+			return
+
+		if not queue_name in self.PENDING_PARAMETER_UPDATES:
+			return
+
+		data = {
+			"hostname": self.set.console_hostname,
+			"timestamp": time.time(),
+			"data": self.PENDING_PARAMETER_UPDATES[queue_name],
+		}
+		if data["data"]:
+			print("Sending parameter update: ", data)
+			self.publish_event_with_routine_updates_channel(data, "Parameter Update", queue_name=queue_name)
 
 	def add_parameter_update(self, queue_name, parameter_name, parameter_value):
 		if queue_name not in self.PENDING_PARAMETER_UPDATES:
@@ -242,18 +247,20 @@ class DatabaseEventManager(object):
 			self.PENDING_PARAMETER_UPDATES[queue_name].remove(parameter_name)
 
 		self.PENDING_PARAMETER_UPDATES[queue_name].append((parameter_name, parameter_value))
+		print(self.PENDING_PARAMETER_UPDATES)
 
-	def on_device_label_change(self, new_label):
-		self.add_parameter_update(self.CONSOLE_QUEUE, "display_name", new_label)
+	def on_device_label_change(self, *args):
+		self.add_parameter_update(self.CONSOLE_QUEUE, "display_name", self.m.device_label)
 
 	def get_full_console_payload(self):
 		return {
 			"hostname": self.set.console_hostname,
+			"timestamp": time.time(),
 			"data": {
 				"display_name": self.m.device_label,
 				"location": self.m.device_location,
 				"local_ip_addr": self.set.ip_address,
-				"public_ip_addr": self.set.public_ip_address,
+				"remote_ip_addr": self.set.public_ip_address,
 				"language": self.localisation.lang,
 				"software_version": self.set.sw_version,
 				"firmware_version": self.set.fw_version,
@@ -263,6 +270,7 @@ class DatabaseEventManager(object):
 	def get_full_grbl_settings_payload(self):
 		data = {
 			"hostname": self.set.console_hostname,
+			"timestamp": time.time(),
 			"data": {
 
 			}
