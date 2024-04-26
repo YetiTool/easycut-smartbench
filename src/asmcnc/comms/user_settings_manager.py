@@ -116,6 +116,8 @@ class UserSettingsManager(EventDispatcher):
         if ((self.settings[settings_name]['type'] == 'str' and type(value) is not str) or
                 (self.settings[settings_name]['type'] == 'bool' and type(value) is not bool) or
                 (self.settings[settings_name]['type'] == 'float' and type(value) is not float)):
+            Logger.error('Wrong value type! Expected: {} | Received: {}'.format(
+                self.settings[settings_name]['type'], type(value)))
             raise ValueError
         # check if value has changed:
         if self.settings[settings_name]['value'] != value:
