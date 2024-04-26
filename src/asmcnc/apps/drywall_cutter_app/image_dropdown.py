@@ -25,7 +25,6 @@ The key_name parameter should be the name of the key that you want to be passed 
 Pass 'key' if you want the key to be passed.
 """
 
-
 class ImageButton(ButtonBehavior, Image):
     pass
 
@@ -82,3 +81,50 @@ class ImageDropDownButton(ButtonBehavior, Image):
 
     def on_release(self):
         self.dropdown.open(self)
+
+class ToolSelectionDropDown(ImageDropDownButton):
+    def __init__(self, **kwargs):
+        super(ToolSelectionDropDown, self).__init__(**kwargs)
+        self.source = './asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_6mm.png'
+        self.key_name = 'cutter_path'
+
+class ShapeSelectionDropDown(ImageDropDownButton):
+    def __init__(self, **kwargs):
+        super(ShapeSelectionDropDown, self).__init__(**kwargs)
+        self.source = './asmcnc/apps/drywall_cutter_app/img/square_shape_button.png'
+        self.key_name = 'key'
+        self.image_dict = {
+            'circle': {
+                'image_path': './asmcnc/apps/drywall_cutter_app/img/circle_shape_button.png',
+            },
+            'square': {
+                'image_path': './asmcnc/apps/drywall_cutter_app/img/square_shape_button.png',
+            },
+            'line': {
+                'image_path': './asmcnc/apps/drywall_cutter_app/img/line_shape_button.png',
+            },
+            'geberit': {
+                'image_path': './asmcnc/apps/drywall_cutter_app/img/geberit_shape_button.png',
+            },
+            'rectangle': {
+                'image_path': './asmcnc/apps/drywall_cutter_app/img/rectangle_shape_button.png',
+            },
+        }
+
+class ToolPathSelectionDropDown(ImageDropDownButton):
+    def __init__(self, **kwargs):
+        super(ToolPathSelectionDropDown, self).__init__(**kwargs)
+        self.source = './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_inside_button.png'
+        self.key_name = 'key'
+        self.image_dict = {
+            'inside': {
+                'image_path': './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_inside_button.png',
+            },
+            'outside': {
+                'image_path': './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_outside_button.png',
+            },
+            'on': {
+                'image_path': './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_on_button.png',
+            },
+        }
+

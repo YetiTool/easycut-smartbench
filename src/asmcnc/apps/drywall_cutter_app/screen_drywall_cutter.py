@@ -11,7 +11,7 @@ from asmcnc.apps.drywall_cutter_app import screen_config_filesaver
 from asmcnc.apps.drywall_cutter_app import widget_drywall_shape_display
 from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
 from asmcnc.apps.drywall_cutter_app.config import config_loader
-from asmcnc.apps.drywall_cutter_app.image_dropdown import ImageDropDownButton
+from asmcnc.apps.drywall_cutter_app.image_dropdown import ToolSelectionDropDown, ShapeSelectionDropDown, ToolPathSelectionDropDown
 from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.apps.drywall_cutter_app import material_setup_popup
 from asmcnc.apps.drywall_cutter_app import job_load_helper
@@ -51,22 +51,17 @@ Builder.load_string("""
                 size_hint_x: 7
                 text: 'File'
                 on_press: root.open_filechooser()
-            ImageDropDownButton:
+            ToolSelectionDropDown:
                 id: tool_selection
                 callback: root.select_tool
-                key_name: 'cutter_path'
                 image_dict: root.tool_options
                 size_hint_x: 7
                 allow_stretch: True
-                source: './asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_6mm.png'
-            ImageDropDownButton:
+            ShapeSelectionDropDown:
                 id: shape_selection
                 callback: root.select_shape
-                image_dict: root.shape_options_dict
-                key_name: 'key'
                 size_hint_x: 7
                 allow_stretch: True
-                source: './asmcnc/apps/drywall_cutter_app/img/square_shape_button.png'
             ImageButton:
                 id: rotate_button
                 source: './asmcnc/apps/drywall_cutter_app/img/rotate_button.png'
@@ -74,14 +69,11 @@ Builder.load_string("""
                 size_hint_x: 7
                 text: 'Rotate'
                 on_press: root.rotate_shape()
-            ImageDropDownButton:
+            ToolPathSelectionDropDown:
                 id: toolpath_selection
                 size_hint_x: 7
                 callback: root.select_toolpath
-                key_name: 'key'
-                image_dict: root.toolpath_offset_options_dict
                 allow_stretch: True
-                source: './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_inside_button.png'
             ImageButton:
                 source: './asmcnc/apps/drywall_cutter_app/img/cutting_depths_button.png'
                 allow_stretch: True
