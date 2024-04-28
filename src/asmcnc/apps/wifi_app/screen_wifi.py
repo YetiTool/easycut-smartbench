@@ -5,6 +5,8 @@ Wifi screen
 
 @author: Letty
 """
+import subprocess
+
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -13,6 +15,8 @@ from kivy.uix.spinner import Spinner, SpinnerOption
 from kivy.clock import Clock
 import socket, sys, os
 from kivy.properties import StringProperty, ObjectProperty
+
+from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.skavaUI import popup_info
 from kivy.core.window import Window
 
@@ -756,20 +760,42 @@ class WifiScreen(Screen):
     def quit_to_lobby(self):
         self.sm.current = "lobby"
 
-    def get_available_networks(self):
+    def get_available_networks():
+        """
+        This function uses subprocess to execute the iwlist scan command and parses the output to extract a list of SSIDs.
+        """
+        # Run the command and capture the output using a pipe
+        process = subprocess.Popen(["sudo", "iwlist", "wlan0", "scan"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        # Get the standard output and error output
+        output, error = process.communicate()
 
-        # Scan for networks, select only ESSIDs, remove ESSID from the line, remove any leading whitespaces or tabs.
-        # This leaves each network name in the format "NETWORK NAME" with each of them on their own new line
-        raw_SSID_list = os.popen(
-            'sudo iwlist wlan0 scan | grep "ESSID:" | sed "s/ESSID://g" | sed "s/^[ \t]*//g"'
-        ).read()        
-        SSID_list = raw_SSID_list.replace('"', "").strip().split("\n") # Remove " from network name and split on newline
-        if "" in SSID_list:            
-            SSID_list.remove("") # Remove empty entries
+        # Check if there were any errors
+        if process.returncode != 0:
+            Logger.error("Error running iwlist scan: %s" % error)
+            return []
 
-        # Remove any addresses that contain only NULL bytes and cast it to a set to remove duplicates
-        SSID_list = {x for x in SSID_list if not set(x) <= set("\\x00")}
-        return SSID_list
+        # Decode the output from bytes to string
+        output = output.decode("utf-8")
+
+        # Initialize an empty list to store SSIDs
+        ssids = set()
+
+        # Iterate through each line in the output
+        for line in output.splitlines():
+            # Search for lines containing "ESSID:"
+            if "ESSID:" in line:
+                # Extract the SSID (everything after the colon)
+                ssid = line.split(":")[1].strip()[1:-1]
+
+                if ssid == "":
+                    continue
+
+                # Add the extracted SSID to the list
+                ssids.add(ssid)
+
+        # Return the list of extracted SSIDs
+        Logger.info("Available networks: %s" % ssids)
+        return ssids
 
     def refresh_available_networks(self):
         wait_popup = popup_info.PopupWait(self.sm, self.l)
