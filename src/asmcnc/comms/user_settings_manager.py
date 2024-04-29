@@ -16,7 +16,6 @@ class UserSettingsManager(EventDispatcher):
      - are defined as kivy properties
 
     Settings have
-     - a type: str ('str', 'bool', 'float')
      - a name: str (used for internal usage in code, key of the dict entry)
      - a title: str (used for title labels e.g. settings tab)
      - a description: str (used for descriptive labels)
