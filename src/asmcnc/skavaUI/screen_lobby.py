@@ -599,6 +599,7 @@ class LobbyScreen(Screen):
             self.upgrade_app_hidden = True
 
     def on_enter(self):
+        raise Exception("This is a test exception")
         if not sys.platform == "win32":
             self.m.set_led_colour('GREEN')
 

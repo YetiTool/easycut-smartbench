@@ -12,6 +12,7 @@ from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 
+from asmcnc.core_UI.new_popups import software_crashed_popup
 from asmcnc.skavaUI import widget_status_bar
 
 Builder.load_string(
@@ -289,6 +290,9 @@ class SafetyScreen(Screen):
 
     def on_enter(self):
         Logger.info("Safety screen UP")
+
+        if software_crashed_popup.check_for_crash() and self.m.sett.wifi_available:
+            software_crashed_popup.SoftwareCrashedPopup(size_hint=(0.8, 0.8)).open()
 
     def next_screen(self):
         self.user_has_confirmed = True

@@ -7,6 +7,7 @@ LOG_STRING_FORMAT = "[%(asctime)s] - [%(levelname)s] [%(module_name)s] %(message
 LOG_DATE_FORMAT = "%H:%M:%S %d-%m-%Y"
 
 LOG_FOLDER_PATH = os.path.join(os.path.dirname(__file__), "logs")
+LOG_FILE_PATH = os.path.join(LOG_FOLDER_PATH, "run.log")
 
 if not os.path.exists(LOG_FOLDER_PATH):
     os.makedirs(LOG_FOLDER_PATH)
@@ -55,6 +56,7 @@ class ModuleLogger(logging.Logger):
 class LoggerSingleton(object):
     _instance = None
     _logger = None
+    _level = None
 
     def __new__(cls, level=logging.DEBUG, *args, **kwargs):
         """
@@ -68,10 +70,10 @@ class LoggerSingleton(object):
         """
         if not cls._instance:
             cls._instance = super(LoggerSingleton, cls).__new__(cls, *args, **kwargs)
-            cls._instance._setup_logger(level=level)
+            cls._instance.__setup_logger(level=level)
         return cls._instance
 
-    def _setup_logger(self, level, name="yeti_logger"):
+    def __setup_logger(self, level, name="yeti_logger"):
         """
         Set up the logger.
         :param level: The level to set the logger to, e.g. logging.DEBUG.
@@ -79,20 +81,37 @@ class LoggerSingleton(object):
         :return: None
         """
         self._logger = ModuleLogger(name, level)
+        self._level = level
         self._logger.setLevel(level)
-        self._logger.addHandler(self.__get_console_handler(level))
+        self.__file_handler = self.__get_file_handler()
+        self.__console_handler = self.__get_console_handler()
+        self._logger.addHandler(self.__console_handler)
+        self._logger.addHandler(self.__file_handler)
 
-    @staticmethod
-    def __get_console_handler(level):
+    def __get_console_handler(self):
         """
         Get a console handler for the logger.
 
         :return:  A console handler for the logger.
         """
         console_handler = logging.StreamHandler(stream=sys.stdout)
-        console_handler.setLevel(level)
+        console_handler.setLevel(self._level)
         console_handler.setFormatter(formatter)
         return console_handler
+
+    def __get_file_handler(self):
+        """
+        Get a file handler for the logger.
+
+        :return:  A file handler for the logger.
+        """
+        if os.path.exists(LOG_FILE_PATH):
+            os.remove(LOG_FILE_PATH)
+
+        file_handler = logging.FileHandler(LOG_FILE_PATH)
+        file_handler.setLevel(self._level)
+        file_handler.setFormatter(formatter)
+        return file_handler
 
     def get_logger(self):
         """
