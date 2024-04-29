@@ -190,9 +190,9 @@ class SkavaUI(App):
         except:
             Logger.exception("Unhandled exception while running the app. Exporting logs.")
             if sys.platform.startswith("linux"):
-                path = os.path.abspath(os.path.join(paths.COMMS_PATH, "logging_system", "logs", "run.log"))
+                src = os.path.abspath(os.path.join(paths.COMMS_PATH, "logging_system", "logs", "run.log"))
                 dest = os.path.abspath(os.path.join(paths.COMMS_PATH, "logging_system", "logs", "crash.log"))
-                os.system("cp {} {}".format(path, dest))
+                os.system("cp {} {}".format(src, dest))
                 console_utils.reboot()
 
     def build(self):

@@ -35,6 +35,7 @@ class SoftwareCrashedPopup(PopupBase):
     """This popup is displayed on startup if the software crashed during the last session."""
 
     localisation = Localization()
+    auto_dismiss = False
 
     def __init__(self, **kwargs):
         super(SoftwareCrashedPopup, self).__init__(**kwargs)
