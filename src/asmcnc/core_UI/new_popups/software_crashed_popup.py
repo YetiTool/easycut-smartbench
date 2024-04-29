@@ -1,4 +1,5 @@
 import base64
+import json
 import os
 import socket
 import threading
@@ -106,7 +107,7 @@ class SoftwareCrashedPopup(PopupBase):
                 "log_data": encoded_data,
             }
 
-            channel.basic_publish(exchange="", routing_key="crash_reports", body=str(message))
+            channel.basic_publish(exchange="", routing_key="crash_reports", body=json.dumps(message))
 
             Logger.info("Sent crash report, hostname: {}.".format(socket.gethostname()))
         except Exception:
