@@ -7,14 +7,12 @@ from asmcnc.comms.logging_system.logging_system import Logger
 
 path_to_EC = os.getcwd()
 sys.path.append('./src')
-os.chdir('./src')
+#os.chdir('./src')
 
-import kivy
 from kivy.app import App
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen, ScreenManager
-from kivy.clock import Clock
 from asmcnc.skavaUI import popup_info
 from asmcnc.comms import localization
 
