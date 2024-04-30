@@ -292,7 +292,7 @@ class SafetyScreen(Screen):
         Logger.info("Safety screen UP")
 
         if software_crashed_popup.check_for_crash() and self.m.sett.wifi_available:
-            software_crashed_popup.SoftwareCrashedPopup(size_hint=(0.8, 0.8)).open()
+            software_crashed_popup.SoftwareCrashedPopup(self.m.serial_number(), size_hint=(0.8, 0.8)).open()
 
     def next_screen(self):
         self.user_has_confirmed = True

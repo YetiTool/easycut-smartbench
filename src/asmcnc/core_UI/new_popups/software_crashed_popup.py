@@ -23,9 +23,12 @@ def check_for_crash():
     return os.path.exists(CRASH_LOG)
 
 
-def serialize_log_file():
+def serialize_log_file(serial_number):
     with open(CRASH_LOG, "rb") as log_file:
         log_file_contents = log_file.read()
+
+        # Ensure that the serial number is not included in the crash report for GDPR compliance.
+        log_file_contents = log_file_contents.replace(serial_number.encode(), b"SERIAL_NUMBER")
 
     encoded_data = base64.b64encode(log_file_contents)
     return encoded_data
@@ -36,16 +39,18 @@ class SoftwareCrashedPopup(PopupBase):
 
     localisation = Localization()
     auto_dismiss = False
+    serial_number = None
 
-    def __init__(self, **kwargs):
+    def __init__(self, serial_number, **kwargs):
         super(SoftwareCrashedPopup, self).__init__(**kwargs)
+        self.serial_number = serial_number
 
         title = PopupErrorTitle(size_hint_y=0.15, localisation=self.localisation)
         self.root_layout.add_widget(title)
 
         main_string = (
             "SmartBench has detected that it crashed during the last session.\n\n"
-            "Would you like to send an anonymous crash report to help us diagnose the issue?"
+            "Would you like to send a crash report to YetiTool to help diagnose the issue?"
         )
         body = PopupScrollableBody(size_hint_y=0.6, text=main_string)
         self.root_layout.add_widget(body)
@@ -89,7 +94,7 @@ class SoftwareCrashedPopup(PopupBase):
     def __send_crash_report(self):
         import pika
 
-        encoded_data = serialize_log_file()
+        encoded_data = serialize_log_file(self.serial_number)
 
         try:
             connection = pika.BlockingConnection(
@@ -113,12 +118,15 @@ class SoftwareCrashedPopup(PopupBase):
             Logger.info("Sent crash report, hostname: {}.".format(socket.gethostname()))
         except Exception:
             Logger.exception("Failed to send crash report.")
+        finally:
+            os.remove(CRASH_LOG)
 
     def dont_send_crash_report(self, instance):
         self.dismiss()
+        os.remove(CRASH_LOG)
 
 
 if __name__ == "__main__":
-    popup = SoftwareCrashedPopup(size_hint=(0.8, 0.8))
+    popup = SoftwareCrashedPopup(size_hint=(0.8, 0.8), serial_number="123456")
     popup.open()
     runTouchApp()
