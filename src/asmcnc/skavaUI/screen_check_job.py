@@ -275,6 +275,7 @@ class CheckingScreen(Screen):
 
     def boundary_check(self):
         spindle_speeds_output, job_bounds_output = self.do_pre_run_checks()
+        just_spindle_speeds_invalid = spindle_speeds_output and not job_bounds_output
         if not spindle_speeds_output and not job_bounds_output:
             Logger.info("In bounds...")
             self.check_outcome = self.l.get_str("Job is within bounds.")
@@ -282,7 +283,7 @@ class CheckingScreen(Screen):
         else:
             Logger.info("Out of bounds...")
             self.job_checking_checked = self.l.get_str("Issues found with your job")
-            self.toggle_boundary_buttons(False)
+            self.toggle_boundary_buttons(just_spindle_speeds_invalid)
             self.check_outcome = (
                 self.l.get_bold("WARNING")
                 + "[b]:[/b]\n"
@@ -327,24 +328,27 @@ class CheckingScreen(Screen):
         # Mins
         if -(self.m.x_wco() + job_box.range_x[0]) >= (self.m.grbl_x_max_travel - self.m.limit_switch_safety_distance):
             to_be_appended.append(
+                "\t" +
                 self.l.get_str("The job extent over-reaches the N axis at the home end.").replace('N', 'X') + \
-                '\n\n' + \
+                '\n\n\t' + \
                 self.l.get_bold("Try positioning the machine's N datum further away from home.").replace('N', 'X') + \
                 '\n\n'
             )
 
         if -(self.m.y_wco() + job_box.range_y[0]) >= (self.m.grbl_y_max_travel - self.m.limit_switch_safety_distance):
             to_be_appended.append(
+                "\t" +
                 self.l.get_str("The job extent over-reaches the N axis at the home end.").replace('N', 'Y') + \
-                '\n\n' + \
+                '\n\n\t' + \
                 self.l.get_bold("Try positioning the machine's N datum further away from home.").replace('N', 'Y') + \
                 '\n\n'
             )
 
         if -(self.m.z_wco() + job_box.range_z[0]) >= (self.m.grbl_z_max_travel - self.m.limit_switch_safety_distance):
             to_be_appended.append(
+                "\t" +
                 self.l.get_str("The job extent over-reaches the Z axis at the lower end.") + \
-                '\n\n' + \
+                '\n\n\t' + \
                 self.l.get_bold("Try positioning the machine's Z datum higher up.") + \
                 '\n\n'
             )
@@ -352,24 +356,27 @@ class CheckingScreen(Screen):
 
         if self.m.x_wco() + job_box.range_x[1] >= -self.m.limit_switch_safety_distance:
             to_be_appended.append(
+                "\t" +
                 self.l.get_str("The job extent over-reaches the N axis at the far end.").replace('N', 'X') + \
-                '\n\n' + \
+                '\n\n\t' + \
                 self.l.get_bold("Try positioning the machine's N datum closer to home.").replace('N', 'X') + \
                 '\n\n'
             )
 
         if self.m.y_wco() + job_box.range_y[1] >= -self.m.limit_switch_safety_distance:
             to_be_appended.append(
+                "\t" +
                 self.l.get_str("The job extent over-reaches the N axis at the far end.").replace('N', 'Y') + \
-                '\n\n' + \
+                '\n\n\t' + \
                 self.l.get_bold("Try positioning the machine's N datum closer to home.").replace('N', 'Y') + \
                 '\n\n'
             )
 
         if self.m.z_wco() + job_box.range_z[1] >= -self.m.limit_switch_safety_distance:
             to_be_appended.append(
+                "\t" +
                 self.l.get_str("The job extent over-reaches the Z axis at the upper end.") + \
-                '\n\n' + \
+                '\n\n\t' + \
                 self.l.get_bold("Try positioning the machine's Z datum lower down.") + \
                 '\n\n'
             )
