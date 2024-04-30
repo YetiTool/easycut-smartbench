@@ -182,7 +182,7 @@ class SerialConnection(EventDispatcher):
 
             ser.write(WAKE_UP_CMD.encode())
 
-            time.sleep(1)
+            time.sleep(0.5)
 
             response = ser.read(ser.inWaiting()).decode()
 
