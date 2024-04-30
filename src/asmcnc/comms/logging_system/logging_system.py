@@ -1,6 +1,9 @@
+import base64
 import inspect
+import json
 import logging
 import os
+import socket
 import sys
 
 LOG_STRING_FORMAT = "[%(asctime)s] - [%(levelname)s] [%(module_name)s] %(message)s"
@@ -27,6 +30,62 @@ try:
             )
 except ImportError:
     formatter = logging.Formatter(LOG_STRING_FORMAT, datefmt=LOG_DATE_FORMAT)
+
+
+def serialize_log_file(log_file_path, serial_number):
+    """
+    Serialize the log file to base64 and remove any instances of the serial number.
+    :param log_file_path:
+    :param serial_number:
+    :return:
+    """
+    with open(log_file_path, "rb") as log_file:
+        log_file_contents = log_file.read()
+
+        # Ensure that the serial number is not included in the crash report for GDPR compliance.
+        log_file_contents = log_file_contents.replace(serial_number.encode(), b"SERIAL_NUMBER")
+
+    encoded_data = base64.b64encode(log_file_contents)
+    return encoded_data
+
+
+def send_logs_to_server(log_file_path, serial_number):
+    """
+    Send log file to server, with serial numbers removed. Recommend running this function on a separate
+    thread to not lock up Kivy.
+    :param log_file_path: absolute path to the log file.
+    :param serial_number: the machine's serial number, to be removed to comply with GDPR.
+    :return:
+    """
+    try:
+        import pika
+
+        encoded_data = serialize_log_file(log_file_path, serial_number)
+
+        connection = pika.BlockingConnection(
+            pika.ConnectionParameters('sm-receiver.yetitool.com', 5672, '/',
+                                      pika.PlainCredentials(
+                                          'console',
+                                          '2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb')
+                                      )
+        )
+        channel = connection.channel()
+
+        channel.queue_declare(queue="crash_reports", durable=True)
+
+        hostname = socket.gethostname().split(".")[0]
+
+        message = {
+            "hostname": hostname,
+            "log_data": encoded_data,
+        }
+
+        channel.basic_publish(exchange="", routing_key="crash_reports", body=json.dumps(message))
+
+        Logger.info("Sent crash report, hostname: {}.".format(socket.gethostname()))
+        return True
+    except:
+        Logger.exception("Failed to send crash report.")
 
 
 class ModuleLogger(logging.Logger):

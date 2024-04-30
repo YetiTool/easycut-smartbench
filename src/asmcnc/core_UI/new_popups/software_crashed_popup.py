@@ -1,4 +1,3 @@
-import base64
 import json
 import os
 import socket
@@ -11,6 +10,7 @@ from kivy.uix.button import Button
 
 from asmcnc import paths
 from asmcnc.comms.localization import Localization
+from asmcnc.comms.logging_system import logging_system
 from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.core_UI import scaling_utils
 from asmcnc.core_UI.new_popups.popup_bases import PopupBase, PopupErrorTitle, PopupScrollableBody
@@ -21,17 +21,6 @@ CRASH_LOG = os.path.join(paths.COMMS_PATH, "logging_system", "logs", "crash.log"
 
 def check_for_crash():
     return os.path.exists(CRASH_LOG)
-
-
-def serialize_log_file(serial_number):
-    with open(CRASH_LOG, "rb") as log_file:
-        log_file_contents = log_file.read()
-
-        # Ensure that the serial number is not included in the crash report for GDPR compliance.
-        log_file_contents = log_file_contents.replace(serial_number.encode(), b"SERIAL_NUMBER")
-
-    encoded_data = base64.b64encode(log_file_contents)
-    return encoded_data
 
 
 class SoftwareCrashedPopup(PopupBase):
@@ -92,33 +81,10 @@ class SoftwareCrashedPopup(PopupBase):
         t.start()
 
     def __send_crash_report(self):
-        import pika
+        sent = logging_system.send_logs_to_server(CRASH_LOG, self.serial_number)
 
-        encoded_data = serialize_log_file(self.serial_number)
-
-        try:
-            connection = pika.BlockingConnection(
-                pika.ConnectionParameters('sm-receiver.yetitool.com', 5672, '/',
-                                          pika.PlainCredentials(
-                                              'console',
-                                              '2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb')
-                                          )
-            )
-            channel = connection.channel()
-
-            channel.queue_declare(queue="crash_reports", durable=True)
-
-            message = {
-                "hostname": socket.gethostname(),
-                "log_data": encoded_data,
-            }
-
-            channel.basic_publish(exchange="", routing_key="crash_reports", body=json.dumps(message))
-
-            Logger.info("Sent crash report, hostname: {}.".format(socket.gethostname()))
-        except Exception:
-            Logger.exception("Failed to send crash report.")
-        finally:
+        if sent:
+            Logger.info("Deleting CRASH_LOG file after sending")
             os.remove(CRASH_LOG)
 
     def dont_send_crash_report(self, instance):

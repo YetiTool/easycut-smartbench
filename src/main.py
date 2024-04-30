@@ -109,6 +109,7 @@ Cmport = 'COM3'
 
 # Current version active/working on
 initial_version = 'v2.9.0'
+Logger.info("Starting SmartBench with version: {}".format(initial_version))
 
 config_flag = False
 
