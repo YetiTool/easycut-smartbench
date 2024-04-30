@@ -6,6 +6,7 @@
 ## Checklist
 - [ ] I have completed a self review
 - [ ] I have set the recent milestone
+- [ ] I have tested graphical changes on all languages
 - [ ] I have updated the jira ticket
 - [ ] I have added the relevant labels to this PR
 - [ ] I have updated documentation (if applicable)
