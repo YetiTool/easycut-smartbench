@@ -188,9 +188,9 @@ class SkavaUI(App):
     def run(self):
         try:
             super(SkavaUI, self).run()
-        except:
+        except Exception as e:
             Logger.exception("Unhandled exception while running the app. Exporting logs.")
-            if sys.platform.startswith("linux"):
+            if sys.platform.startswith("linux") and not isinstance(e, KeyboardInterrupt):
                 src = os.path.abspath(os.path.join(paths.COMMS_PATH, "logging_system", "logs", "run.log"))
                 dest = os.path.abspath(os.path.join(paths.COMMS_PATH, "logging_system", "logs", "crash.log"))
                 os.system("cp {} {}".format(src, dest))
