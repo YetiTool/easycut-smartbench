@@ -7,12 +7,10 @@ from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen
 import serial
 import time
-import matplotlib.pyplot as plt
 import numpy as np
-
-from matplotlib import cm
-from matplotlib.ticker import LinearLocator
 from asmcnc.skavaUI import widget_status_bar
+from asmcnc.comms.coordinate_system import CoordinateSystem as cs
+import threading
 
 Builder.load_string("""
 <DrywallCutterScreen>:
@@ -23,9 +21,6 @@ Builder.load_string("""
             Button:
                 on_press: root.start_test()
                 text: "Start Test"
-            Image:
-                id: graph
-                source: "tabletop.png"
             Button:
                 on_press: root.exit()
                 text: "Exit"
@@ -49,19 +44,7 @@ class DrywallCutterScreen(Screen):
         self.jd = kwargs['job']
         self.pm = kwargs['popup_manager']
         self.cs = self.m.cs
-
-        self.PORT = 'COM10'
-        self.x_max = 1200
-        self.y_max = 2400
-        self.grid_points_x = 4
-        self.grid_points_y = 5
-        self.y_increment = self.y_max/self.grid_points_y
-        self.x_increment = self.x_max/self.grid_points_x
         self.z_vals = []
-        self.y_row = []
-        self.x_range = np.arange(0, self.y_max, self.y_increment)
-        self.y_range = np.arange(0, self.x_max, self.x_increment)
-        self.ser = serial.Serial(self.PORT, 9600, timeout=5)
 
         self.m.s.bind(m_state=lambda i, value: self.on_state_change(value))
 
@@ -69,13 +52,29 @@ class DrywallCutterScreen(Screen):
 
         self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
 
-    def on_state_change(self, value):
-        if self.test_running and value.lower() == 'dwell':
-            self.z_vals.append(self.get_reading())
+        self.setup_serial()
 
-        if value == "idle":
-            self.generate_graph()
-            self.test_running = False
+
+        # dti_thread = threading.Thread(target=self.setup_serial)
+        # dti_thread.daemon = True
+        # dti_thread.start()
+
+        reading_thread = threading.Thread(target=self.get_reading)
+        reading_thread.daemon = True
+        reading_thread.start()
+
+    def setup_serial(self):
+        self.PORT = 'COM14'
+        self.ser = serial.Serial(self.PORT, 9600, timeout=5)
+        time.sleep(1)
+        self.ser.flushInput()
+
+    def on_state_change(self, value):
+        if self.test_running and value.lower() == 'idle':
+            self.z_vals.append(self.get_reading())
+            print(self.z_vals)
+
+
     def start_test(self):
         self.test_running = True
         with open('probing_gcode.gcode') as gcode_file:
@@ -83,34 +82,17 @@ class DrywallCutterScreen(Screen):
 
         self.m.s.run_skeleton_buffer_stuffer(gcode)
         
+  
     def get_reading(self):
-        raw_reading = self.ser.read(20)
-        reading = str(raw_reading)
         try:
-            reading = float(str(reading[10:11]) + str(float(reading[13:21])/(1000)))
-        except:
-            reading = 0
-        return reading
-
-    def generate_graph(self):
-        fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
-
-        # Make data.
-        X = self.x_range
-        Y = self.y_range
-        X, Y = np.meshgrid(X, Y)
-        Z = self.z_vals
-
-        # Plot the surface.
-        surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm,
-                            linewidth=0, antialiased=False)
-
-        # Add a color bar which maps values to colors.
-        fig.colorbar(surf, shrink=0.5, aspect=5)
-
-        plt.savefig('tabletop.png')
-        self.graph.source = 'tabletop.png'  # Update displayed graph
-
+            while True:
+                raw_reading = self.ser.read_until(b'\r', 20)
+                reading = float(raw_reading[3:])
+                reading /= 1000.0
+                print(reading)
+                return reading
+        except Exception as e:
+            print(e)
 
     def exit(self):
         self.sm.current = "lobby"
