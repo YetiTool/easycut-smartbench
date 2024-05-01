@@ -277,7 +277,6 @@ class LoadingScreen(Screen):
                         l_block.find("%") == -1
                         and l_block.find("M6") == -1
                         and l_block.find("M06") == -1
-                        and l_block.find("G28") == -1
                         and l_block.find("M30") == -1
                         and l_block.find("M2") == -1
                         and l_block.find("M02") == -1
