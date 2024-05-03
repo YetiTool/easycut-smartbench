@@ -180,7 +180,7 @@ Builder.load_string(
                         
                         Label:
                             text: root.title_label
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             font_size: 0.035*app.width
                             markup: True
                             halign: "left"
@@ -221,7 +221,7 @@ Builder.load_string(
                                     allow_stretch: True  
                         Label:
                             text: root.user_instructions
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             font_size: 0.0225*app.width
                             markup: True
                             halign: "left"

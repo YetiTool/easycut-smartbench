@@ -188,7 +188,7 @@ Builder.load_string(
                         
                         Label:
                             text: root.title_label
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             font_size: 0.035*app.width
                             markup: True
                             halign: "left"
@@ -308,7 +308,7 @@ Builder.load_string(
                                     
                                     Label: 
                                         text: "Stock bottom offset"
-                                        color: 0,0,0,1
+                                        color: color_provider.get_rgba("black")
                                         font_size: 0.025*app.width
                                         markup: True
                                         halign: "left"
@@ -341,7 +341,7 @@ Builder.load_string(
                                         Label: 
                                             id: stock_bottom_offset_units
                                             text: "units"
-                                            color: 0,0,0,1
+                                            color: color_provider.get_rgba("black")
                                             font_size: 0.025*app.width
                                             markup: True
                                             halign: "left"
@@ -359,7 +359,7 @@ Builder.load_string(
                                     
                                     Label: 
                                         text: "Step down"
-                                        color: 0,0,0,1
+                                        color: color_provider.get_rgba("black")
                                         font_size: 0.025*app.width
                                         markup: True
                                         halign: "left"
@@ -391,7 +391,7 @@ Builder.load_string(
                                         padding:[dp(0.0125)*app.width, 0, dp(0.0125)*app.width, 0]
                                         Label: 
                                             id: step_down_units
-                                            color: 0,0,0,1
+                                            color: color_provider.get_rgba("black")
                                             font_size: 0.025*app.width
                                             markup: True
                                             halign: "left"
@@ -408,7 +408,7 @@ Builder.load_string(
                                     
                                     Label: 
                                         text: "Finishing passes"
-                                        color: 0,0,0,1
+                                        color: color_provider.get_rgba("black")
                                         font_size: 0.025*app.width
                                         markup: True
                                         halign: "left"
@@ -440,7 +440,7 @@ Builder.load_string(
                                         padding:[dp(0.0125)*app.width, 0, dp(0.0125)*app.width, 0]
                                         Label: 
                                             text: "passes"
-                                            color: 0,0,0,1
+                                            color: color_provider.get_rgba("black")
                                             font_size: 0.025*app.width
                                             markup: True
                                             halign: "left"
@@ -458,7 +458,7 @@ Builder.load_string(
                                     
                                     Label: 
                                         text: ""
-                                        color: 0,0,0,1
+                                        color: color_provider.get_rgba("black")
                                         font_size: 0.025*app.width
                                         markup: True
                                         halign: "left"

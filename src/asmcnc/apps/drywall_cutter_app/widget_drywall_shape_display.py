@@ -95,7 +95,7 @@ Builder.load_string("""
                 font_size: dp(25)
                 pos: d_input.pos[0] - self.width - 2.5, d_input.pos[1] + dp(3)
                 opacity: d_input.opacity
-                color: 0,0,0,1
+                color: color_provider.get_rgba("black")
                 size: self.texture_size
                 size_hint: (None, None)
 
@@ -134,7 +134,7 @@ Builder.load_string("""
                 font_size: dp(25)
                 pos: l_input.pos[0] - self.width - 2.5, l_input.pos[1] + dp(3)
                 opacity: l_input.opacity
-                color: 0,0,0,1
+                color: color_provider.get_rgba("black")
                 size: self.texture_size
                 size_hint: (None, None)
 
@@ -173,7 +173,7 @@ Builder.load_string("""
                 font_size: dp(25)
                 pos: r_input.pos[0] - self.width - 2.5, r_input.pos[1] + dp(3)
                 opacity: r_input.opacity
-                color: 0,0,0,1
+                color: color_provider.get_rgba("black")
                 size: self.texture_size
                 size_hint: (None, None)
 
@@ -212,7 +212,7 @@ Builder.load_string("""
                 font_size: dp(25)
                 pos: x_input.pos[0] - self.width - 2.5, x_input.pos[1] + dp(3)
                 opacity: x_input.opacity
-                color: 0,0,0,1
+                color: color_provider.get_rgba("black")
                 size: self.texture_size
                 size_hint: (None, None)
 
@@ -251,7 +251,7 @@ Builder.load_string("""
                 font_size: dp(25)
                 pos: y_input.pos[0] - self.width - 2.5, y_input.pos[1] + dp(3)
                 opacity: y_input.opacity
-                color: 0,0,0,1
+                color: color_provider.get_rgba("black")
                 size: self.texture_size
                 size_hint: (None, None)
 
@@ -271,7 +271,7 @@ Builder.load_string("""
                 size: dp(150), dp(40)
                 size_hint: (None, None)
                 text: 'X:'
-                color: 0,0,0,1
+                color: color_provider.get_rgba("black")
                 halign: 'left'
 
             Label:
@@ -290,7 +290,7 @@ Builder.load_string("""
                 size: dp(150), dp(40)
                 size_hint: (None, None)
                 text: 'Y:'
-                color: 0,0,0,1
+                color: color_provider.get_rgba("black")
 
             Label:
                 id: y_datum_validation_label
@@ -345,7 +345,7 @@ Builder.load_string("""
                 size_hint: (None, None)
                 pos: self.parent.pos[0] + self.parent.size[0] - self.texture_size[0] - dp(10), self.parent.size[1] - self.height + dp(5)
                 text: 'Test'
-                color: 0,0,0,1
+                color: color_provider.get_rgba("black")
 
 """)
 

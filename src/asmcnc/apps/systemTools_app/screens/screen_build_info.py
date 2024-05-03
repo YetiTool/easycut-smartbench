@@ -32,7 +32,7 @@ Builder.load_string(
     background_normal: ''
     background_color: [1,1,1,1]
     height: dp(0.0833333333333*app.height)
-    color: 0,0,0,1
+    color: color_provider.get_rgba("black")
     halign: 'left'
     markup: 'True'
     font_size: 0.0225*app.width

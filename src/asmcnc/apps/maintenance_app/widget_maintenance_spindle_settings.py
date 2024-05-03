@@ -24,7 +24,7 @@ Builder.load_string("""
     background_normal: ''
     background_color: [1,1,1,1]
     height: dp(0.0833333333333*app.height)
-    color: 0,0,0,1
+    color: color_provider.get_rgba("black")
     halign: 'left'
     font_size: str(15.0/800.0*app.width) + 'sp'
     markup: 'True'
@@ -87,7 +87,7 @@ Builder.load_string("""
                     font_size: str(0.0375*app.width) + 'sp'
                     text_size: self.size
                     multiline: False
-                    color: 0,0,0,1
+                    color: color_provider.get_rgba("black")
                     values: root.brand_list_sc1
                     option_cls: Factory.get("SpindleSpinner")
                     background_normal: './asmcnc/apps/maintenance_app/img/brand_dropdown.png'
@@ -119,7 +119,7 @@ Builder.load_string("""
                     LabelBase:
                         id: cooldown_settings_label
                         size_hint_y: 0.5
-                        color: 0,0,0,1
+                        color: color_provider.get_rgba("black")
                         font_size: dp(0.03*app.width)
                         halign: "left"
                         valign: "middle"
@@ -150,7 +150,7 @@ Builder.load_string("""
                         LabelBase:
                             id: rpm_label
                             size_hint_x: 1.5
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             font_size: dp(0.0275*app.width)
                             markup: True
                             halign: "center"
@@ -186,7 +186,7 @@ Builder.load_string("""
                         LabelBase:
                             id: seconds_label
                             size_hint_x: 1.5
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             font_size: dp(0.0275*app.width)
                             markup: True
                             halign: "center"
@@ -258,7 +258,7 @@ Builder.load_string("""
 
                         LabelBase:
                             id: get_data_label
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             font_size: dp(0.03625*app.width)
                             halign: "center"
                             valign: "middle"

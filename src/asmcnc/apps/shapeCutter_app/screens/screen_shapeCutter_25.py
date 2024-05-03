@@ -181,7 +181,7 @@ Builder.load_string(
                         
                         Label:
                             text: root.title_label
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             font_size: 0.035*app.width
                             markup: True
                             halign: "left"
@@ -219,7 +219,7 @@ Builder.load_string(
 
 #                                 Label: 
 #                                     text: ""
-#                                     color: 0,0,0,1
+#                                     color: color_provider.get_rgba("black")
 #                                     font_size: 20
 #                                     markup: True
 #                                     halign: "center"
@@ -271,7 +271,7 @@ Builder.load_string(
                                 padding:[0, 0, 0, 0]
                                 Label: 
                                     text: "You can save this profile later after the job too. "
-                                    color: 0,0,0,1
+                                    color: color_provider.get_rgba("black")
                                     font_size: 0.025*app.width
                                     markup: True
                                     halign: "center"

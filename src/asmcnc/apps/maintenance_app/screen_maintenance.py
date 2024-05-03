@@ -133,7 +133,7 @@ Builder.load_string("""
 
                             LabelBase: 
                                 id: laser_datum_label
-                                color: 0,0,0,1
+                                color: color_provider.get_rgba("black")
                                 font_size: dp(0.0325*app.width)
                                 markup: True
                                 halign: "left"
@@ -277,7 +277,7 @@ Builder.load_string("""
                         orientation: 'horizontal'
                         LabelBase: 
                             id: brush_monitor_label
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             font_size: dp(0.0275*app.width)
                             markup: True
                             halign: "left"

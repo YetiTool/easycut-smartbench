@@ -40,7 +40,7 @@ Builder.load_string("""
 
             LabelBase:
                 id: brush_use_label
-                color: 0,0,0,1
+                color: color_provider.get_rgba("black")
                 font_size: root.default_font_size
                 markup: True
                 halign: "left"
@@ -68,7 +68,7 @@ Builder.load_string("""
 
                 LabelBase:
                     id: hours_label
-                    color: 0,0,0,1
+                    color: color_provider.get_rgba("black")
                     font_size: dp(0.035*app.width)
                     markup: True
                     halign: "left"

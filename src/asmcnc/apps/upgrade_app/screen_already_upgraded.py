@@ -45,7 +45,7 @@ Builder.load_string("""
             LabelBase:
                 id: already_upgraded_label
                 font_size: dp(0.04*app.width)
-                color: 0,0,0,1
+                color: color_provider.get_rgba("black")
                 halign: 'center'
                 valign: 'middle'
                 text_size: self.size

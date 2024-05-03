@@ -90,7 +90,7 @@ Builder.load_string("""
                             orientation: "vertical"
                             LabelBase:
                                 id: current_version_label
-                                color: 0,0,0,1
+                                color: color_provider.get_rgba("black")
                                 font_size: 0.025*app.width
                                 markup: True
                                 valign: "bottom"
@@ -98,7 +98,7 @@ Builder.load_string("""
 
                             LabelBase:
                                 id: sw_version_label
-                                color: 0,0,0,1
+                                color: color_provider.get_rgba("black")
                                 font_size: 0.02875*app.width
                                 markup: True
                                 text_size: self.size
@@ -106,7 +106,7 @@ Builder.load_string("""
                             LabelBase:
                                 id: find_release_notes_label
                                 size_hint_y: 1.1
-                                color: 0,0,0,1
+                                color: color_provider.get_rgba("black")
                                 font_size: 0.01625*app.width
                                 markup: True
                                 valign: "middle"
@@ -148,7 +148,7 @@ Builder.load_string("""
 
                         LabelBase: 
                             id: latest_software_version_label
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             font_size: 0.0225*app.width
                             markup: True
                             halign: "center"
@@ -213,7 +213,7 @@ Builder.load_string("""
                     # padding: [0,5,0,0]
                     LabelBase: 
                         id: update_using_wifi_label
-                        color: 0,0,0,1
+                        color: color_provider.get_rgba("black")
                         font_size: 0.0225*app.width
                         markup: True
                         halign: "left"
@@ -229,7 +229,7 @@ Builder.load_string("""
                     # padding: [0,5,0,0]
                     LabelBase:
                         id: update_using_wifi_instructions_label
-                        color: 0,0,0,1
+                        color: color_provider.get_rgba("black")
                         font_size: 0.02*app.width
                         markup: True
                         halign: "left"
@@ -295,7 +295,7 @@ Builder.load_string("""
                     width: dp(0.36875*app.width)
                     LabelBase:
                         id: update_using_usb_label
-                        color: 0,0,0,1
+                        color: color_provider.get_rgba("black")
                         font_size: 0.0225*app.width
                         markup: True
                         halign: "left"
@@ -310,7 +310,7 @@ Builder.load_string("""
                     width: dp(0.36875*app.width)
                     LabelBase:
                         id: update_using_usb_instructions_label
-                        color: 0,0,0,1
+                        color: color_provider.get_rgba("black")
                         font_size: 0.02*app.width
                         markup: True
                         halign: "left"

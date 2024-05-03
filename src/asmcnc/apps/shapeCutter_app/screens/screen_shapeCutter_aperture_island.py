@@ -69,7 +69,7 @@ Builder.load_string(
                         halign: "center"
                         valign: "bottom"
                         text: "Select a shape to define..."
-                        color: 0,0,0,1
+                        color: color_provider.get_rgba("black")
                         font_size: 0.0325*app.width
                         markup: True
     
@@ -159,7 +159,7 @@ Builder.load_string(
                             halign: "center"
                             valign: "middle"
                             text: "Hole (cut an aperture)"
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             font_size: 0.025*app.width
                             markup: True
                     BoxLayout:
@@ -175,7 +175,7 @@ Builder.load_string(
                             halign: "center"
                             valign: "middle"
                             text: "Plate (cut an island)"
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             font_size: 0.025*app.width
                             markup: True
                             

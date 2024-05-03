@@ -164,7 +164,7 @@ Builder.load_string(
                         FloatLayout:
                             Label:
                                 id: gcode_label
-                                color: 0,0,0,1
+                                color: color_provider.get_rgba("black")
                                 font_size: dp(0.02*app.width)
                                 halign: "left"
                                 valign: "top"
@@ -215,7 +215,7 @@ Builder.load_string(
                         Label:
                             id: pos_label
                             text: "wX: | wY: | wZ:"
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             font_size: dp(0.02*app.width)
                             halign: 'left'
                             valign: 'middle'
@@ -224,7 +224,7 @@ Builder.load_string(
                         Label:
                             id: speed_label
                             text: "F: | S:"
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             font_size: dp(0.02*app.width)
                             halign: 'left'
                             valign: 'middle'

@@ -52,7 +52,7 @@ Builder.load_string(
                     halign: "center"
                     valign: "middle"
                     text: "Bye!"
-                    color: 0,0,0,1
+                    color: color_provider.get_rgba("black")
                     font_size: 0.0325*app.width
                     markup: True
 

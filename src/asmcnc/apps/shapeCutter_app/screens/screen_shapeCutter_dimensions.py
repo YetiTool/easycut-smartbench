@@ -72,7 +72,7 @@ Builder.load_string(
                 pos: self.parent.pos
 
                 Label:
-                    color: 0,0,0,1
+                    color: color_provider.get_rgba("black")
                     font_size: 0.03*app.width
                     markup: True
                     halign: "center"
@@ -172,7 +172,7 @@ Builder.load_string(
                                 
                                 Label: 
                                     text: root.dim_1
-                                    color: 0,0,0,1
+                                    color: color_provider.get_rgba("black")
                                     font_size: 0.03*app.width
                                     markup: True
                                     halign: "left"
@@ -208,7 +208,7 @@ Builder.load_string(
                                 
                                 Label: 
                                     text: root.dim_2
-                                    color: 0,0,0,1
+                                    color: color_provider.get_rgba("black")
                                     font_size: 0.03*app.width
                                     markup: True
                                     halign: "left"
@@ -244,7 +244,7 @@ Builder.load_string(
                                 
                                 Label: 
                                     text: root.dim_3
-                                    color: 0,0,0,1
+                                    color: color_provider.get_rgba("black")
                                     font_size: 0.03*app.width
                                     markup: True
                                     halign: "left"
@@ -279,7 +279,7 @@ Builder.load_string(
                                 
                                 Label: 
                                     text: root.dim_4
-                                    color: 0,0,0,1
+                                    color: color_provider.get_rgba("black")
                                     font_size: 0.03*app.width
                                     markup: True
                                     halign: "left"

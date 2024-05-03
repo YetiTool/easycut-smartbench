@@ -52,7 +52,7 @@ Builder.load_string("""
                     halign: "center"
                     valign: "middle"
                     text: "Was your job successful?"
-                    color: 0,0,0,1
+                    color: color_provider.get_rgba("black")
                     font_size: 26
                     markup: True
 

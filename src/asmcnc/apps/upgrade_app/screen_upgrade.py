@@ -93,7 +93,7 @@ Builder.load_string("""
                     id: instruction_label
                     size_hint_y: 2
                     font_size: dp(0.03*app.width)
-                    color: 0,0,0,1
+                    color: color_provider.get_rgba("black")
                     halign: 'center'
                     valign: 'middle'
                     text_size: self.size
@@ -133,7 +133,7 @@ Builder.load_string("""
                             id: support_label
                             size_hint_y: 1.5
                             font_size: dp(0.03*app.width)
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             halign: 'center'
                             valign: 'middle'
                             text_size: self.size
@@ -146,7 +146,7 @@ Builder.load_string("""
                         LabelBase:
                             id: spindle_label
                             font_size: dp(0.025*app.width)
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             halign: 'center'
                             valign: 'middle'
                             text_size: self.size

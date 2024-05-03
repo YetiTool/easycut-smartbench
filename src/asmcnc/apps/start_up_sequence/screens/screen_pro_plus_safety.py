@@ -49,7 +49,7 @@ Builder.load_string(
                 id: context
                 size_hint_y: 0.41
                 font_size: dp(0.0225*app.width)
-                color: 0,0,0,1
+                color: color_provider.get_rgba("black")
                 halign: 'center'
                 valign: 'middle'
                 text_size: self.size
@@ -74,7 +74,7 @@ Builder.load_string(
                 Label:
                     id: clamp_warning_label
                     font_size: dp(0.0225*app.width)
-                    color: 0,0,0,1
+                    color: color_provider.get_rgba("black")
                     halign: 'left'
                     valign: 'middle'
                     text_size: self.size
@@ -93,7 +93,7 @@ Builder.load_string(
                 Label:
                     id: rpm_warning_label
                     font_size: dp(0.0225*app.width)
-                    color: 0,0,0,1
+                    color: color_provider.get_rgba("black")
                     halign: 'left'
                     valign: 'middle'
                     text_size: self.size

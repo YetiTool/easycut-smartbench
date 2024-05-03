@@ -183,7 +183,7 @@ Builder.load_string("""
                         
                         LabelBase:
                             text: root.title_label
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             font_size: 0.035*app.width
                             markup: True
                             halign: "left"
@@ -215,7 +215,7 @@ Builder.load_string("""
                             padding:[dp(0.1)*app.width, 0, 0, 0]
                             LabelBase:
                                 text: root.user_instructions
-                                color: 0,0,0,1
+                                color: color_provider.get_rgba("black")
                                 font_size: 0.025*app.width
                                 markup: True
                                 halign: "left"

@@ -175,7 +175,7 @@ Builder.load_string(
                         
                         Label:
                             text: root.title_label
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             font_size: 0.035*app.width
                             markup: True
                             halign: "left"
@@ -202,7 +202,7 @@ Builder.load_string(
                         
                         Label:
                             text: root.user_instructions
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             font_size: 0.025*app.width
                             markup: True
                             halign: "left"
@@ -232,7 +232,7 @@ Builder.load_string(
                                 
                             Label: 
                                 text: "Clear SmartBench topside"
-                                color: 0,0,0,1
+                                color: color_provider.get_rgba("black")
                                 font_size: 0.025*app.width
                                 markup: True
                                 halign: "left"
@@ -262,7 +262,7 @@ Builder.load_string(
                                 
                             Label: 
                                 text: "Clean SmartBench axes"
-                                color: 0,0,0,1
+                                color: color_provider.get_rgba("black")
                                 font_size: 0.025*app.width
                                 markup: True
                                 halign: "left"
@@ -292,7 +292,7 @@ Builder.load_string(
                                 
                             Label: 
                                 text: "Empty vacuum bag"
-                                color: 0,0,0,1
+                                color: color_provider.get_rgba("black")
                                 font_size: 0.025*app.width
                                 markup: True
                                 halign: "left"
@@ -322,7 +322,7 @@ Builder.load_string(
                                 
                             Label: 
                                 text: "Fit vacuum hose"
-                                color: 0,0,0,1
+                                color: color_provider.get_rgba("black")
                                 font_size: 0.025*app.width
                                 markup: True
                                 halign: "left"
@@ -352,7 +352,7 @@ Builder.load_string(
                                 
                             Label: 
                                 text: "Secure power cords"
-                                color: 0,0,0,1
+                                color: color_provider.get_rgba("black")
                                 font_size: 0.025*app.width
                                 markup: True
                                 halign: "left"
@@ -382,7 +382,7 @@ Builder.load_string(
                                 
                             Label: 
                                 text: "Lock Z head connections"
-                                color: 0,0,0,1
+                                color: color_provider.get_rgba("black")
                                 font_size: 0.025*app.width
                                 markup: True
                                 halign: "left"

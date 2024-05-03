@@ -28,7 +28,7 @@ Builder.load_string(
     background_normal: ''
     background_color: [1,1,1,1]
     height: dp(0.0833333333333*app.height)
-    color: 0,0,0,1
+    color: color_provider.get_rgba("black")
     halign: 'left'
     markup: 'True'
     font_size: sp(app.get_scaled_width(15))
@@ -164,7 +164,7 @@ Builder.load_string(
                             LabelBase:
                                 id: network_name_label
                                 width: dp(0.18875*app.width)
-                                color: 0,0,0,1
+                                color: color_provider.get_rgba("black")
                                 font_size: 0.025*app.width
                                 markup: True
                                 halign: "left"
@@ -233,7 +233,7 @@ Builder.load_string(
                                 font_size: str(0.025*app.width) + 'sp'
                                 text_size: self.size
                                 multiline: False
-                                color: 0,0,0,1
+                                color: color_provider.get_rgba("black")
                                 values: root.SSID_list
                                 option_cls: Factory.get("NetworkSpinner")
                                 background_normal: ''
@@ -285,7 +285,7 @@ Builder.load_string(
                               
                     LabelBase:
                         id: password_label
-                        color: 0,0,0,1
+                        color: color_provider.get_rgba("black")
                         font_size: 0.025*app.width
                         markup: True
                         halign: "left"
@@ -321,7 +321,7 @@ Builder.load_string(
                               
                     LabelBase:
                         id: country_label
-                        color: 0,0,0,1
+                        color: color_provider.get_rgba("black")
                         font_size: 0.025*app.width
                         markup: True
                         halign: "left"
@@ -351,7 +351,7 @@ Builder.load_string(
                             text: 'GB'
                             font_size: str(0.025*app.width) + 'sp'
                             text_size: self.size
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             values: root.values
                             background_color: [1,1,1,0]
                             option_cls: Factory.get("NetworkSpinner")
