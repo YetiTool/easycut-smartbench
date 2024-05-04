@@ -287,7 +287,7 @@ class SafetyScreen(Screen):
         self.status_container.add_widget(self.status_bar_widget)
         self.status_bar_widget.cheeky_color = "#1976d2"
         self.update_strings()
-        self.serial_connection.bind(setting_50=self.open_crash_popup)
+        self.m.s.bind(setting_50=self.open_crash_popup)
 
     def on_enter(self):
         Logger.info("Safety screen UP")
