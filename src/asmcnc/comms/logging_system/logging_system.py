@@ -169,7 +169,7 @@ class LoggerSingleton(object):
 
         file_handler = logging.FileHandler(LOG_FILE_PATH)
         file_handler.setLevel(self._level)
-        file_handler.setFormatter(formatter)
+        file_handler.setFormatter(logging.Formatter(LOG_STRING_FORMAT, datefmt=LOG_DATE_FORMAT))  # No colours.
         return file_handler
 
     def get_logger(self):
