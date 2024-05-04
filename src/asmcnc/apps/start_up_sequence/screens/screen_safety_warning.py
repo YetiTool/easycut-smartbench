@@ -291,6 +291,7 @@ class SafetyScreen(Screen):
     def on_enter(self):
         Logger.info("Safety screen UP")
 
+        Logger.info("Serial number: {}".format(self.m.serial_number()))
         if software_crashed_popup.check_for_crash() and self.m.sett.wifi_available:
             software_crashed_popup.SoftwareCrashedPopup(self.m.serial_number(), size_hint=(0.8, 0.8)).open()
 
