@@ -287,11 +287,12 @@ class SafetyScreen(Screen):
         self.status_container.add_widget(self.status_bar_widget)
         self.status_bar_widget.cheeky_color = "#1976d2"
         self.update_strings()
+        self.serial_connection.bind(setting_50=self.open_crash_popup)
 
     def on_enter(self):
         Logger.info("Safety screen UP")
 
-        Logger.info("Serial number: {}".format(self.m.serial_number()))
+    def open_crash_popup(self, *args):
         if software_crashed_popup.check_for_crash() and self.m.sett.wifi_available:
             software_crashed_popup.SoftwareCrashedPopup(self.m.serial_number(), size_hint=(0.8, 0.8)).open()
 
