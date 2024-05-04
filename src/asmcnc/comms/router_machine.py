@@ -1570,7 +1570,7 @@ class RouterMachine(EventDispatcher):
         if self.s.limit_Y == True: switch_states.append('limit_Y')
         if self.s.limit_z == True: switch_states.append('limit_z')
         if self.s.probe == True: switch_states.append('probe')
-        if self.s.dust_shoe_cover == True: switch_states.append('dust_shoe_cover')
+        if self.s.dust_shoe_cover_on == True: switch_states.append('dust_shoe_cover_on')
         if self.s.spare_door == True: switch_states.append('spare_door')
 
         return switch_states
