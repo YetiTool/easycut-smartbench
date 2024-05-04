@@ -43,6 +43,7 @@ def serialize_log_file(log_file_path, serial_number):
         log_file_contents = log_file.read()
 
         # Ensure that the serial number is not included in the crash report for GDPR compliance.
+        Logger.info("Replacing {} with SERIAL_NUMBER in crash report.".format(serial_number))
         log_file_contents = log_file_contents.replace(str(serial_number), "SERIAL_NUMBER")
 
     encoded_data = base64.b64encode(log_file_contents)
