@@ -11,6 +11,8 @@ from asmcnc.core_UI import console_utils
 from datetime import datetime
 
 from asmcnc.comms.logging_system.logging_system import Logger
+from kivy.event import EventDispatcher
+from kivy.properties import BooleanProperty
 from requests import get
 
 try: 
@@ -22,7 +24,7 @@ import socket
 from kivy.clock import Clock
 
 
-class Settings(object):
+class Settings(EventDispatcher):
     
     wifi_check_thread = None
 
@@ -48,6 +50,7 @@ class Settings(object):
     latest_fw_version = ''
     grbl_mega_dir = '/home/pi/grbl-Mega/' 
     usb_or_wifi = ''
+    interrupt_bars_active = BooleanProperty(True)
 
     def __init__(self, screen_manager):
         
@@ -59,6 +62,8 @@ class Settings(object):
         self.wifi_check_thread = threading.Thread(target=self.check_wifi_and_refresh_ip_address)
         self.wifi_check_thread.daemon = True
         self.wifi_check_thread.start()
+
+        self.read_interrupt_bars_setting()
 
 
 ## WIFI AND CONNECTIONS
@@ -524,5 +529,29 @@ class Settings(object):
             # this will happen on non linux systems
             Logger.info("Couldn't check status of service: " + service)
 
+    def read_interrupt_bars_setting(self):
+        interrupt_bars_setting = os.popen(
+            'grep "interrupt_bars_active" /home/pi/easycut-smartbench/src/config.txt'
+        ).read()
+        if not interrupt_bars_setting:
+            os.system(
+                "sudo sed -i -e '$awifi_connected_before=True' /home/pi/easycut-smartbench/src/config.txt"
+            )
+            self.interrupt_bars_active = True
+        else:
+            self.interrupt_bars_active = interrupt_bars_setting.split("=")[1].strip() == "True"
 
+    def enable_interrupt_bars(self):
+        self.interrupt_bars_active = True
+        os.system(
+            'sudo sed -i "s/wifi_connected_before=False/wifi_connected_before=True/" config.txt'
+        )
+        print("Interrupt bars enabled")
+
+    def disable_interrupt_bars(self):
+        self.interrupt_bars_active = False
+        os.system(
+            'sudo sed -i "s/wifi_connected_before=True/wifi_connected_before=False/" config.txt'
+        )
+        print("Interrupt bars disabled")
             
