@@ -535,7 +535,7 @@ class Settings(EventDispatcher):
         ).read()
         if not interrupt_bars_setting:
             os.system(
-                "sudo sed -i -e '$awifi_connected_before=True' /home/pi/easycut-smartbench/src/config.txt"
+                "sudo sed -i -e '$ainterrupt_bars_active=True' /home/pi/easycut-smartbench/src/config.txt"
             )
             self.interrupt_bars_active = True
         else:
@@ -544,14 +544,14 @@ class Settings(EventDispatcher):
     def enable_interrupt_bars(self):
         self.interrupt_bars_active = True
         os.system(
-            'sudo sed -i "s/wifi_connected_before=False/wifi_connected_before=True/" config.txt'
+            'sudo sed -i "s/interrupt_bars_active=False/interrupt_bars_active=True/" config.txt'
         )
-        print("Interrupt bars enabled")
+        Logger.info("Interrupt bars enabled")
 
     def disable_interrupt_bars(self):
         self.interrupt_bars_active = False
         os.system(
-            'sudo sed -i "s/wifi_connected_before=True/wifi_connected_before=False/" config.txt'
+            'sudo sed -i "s/interrupt_bars_active=True/interrupt_bars_active=False/" config.txt'
         )
-        print("Interrupt bars disabled")
+        Logger.info("Interrupt bars disabled")
             
