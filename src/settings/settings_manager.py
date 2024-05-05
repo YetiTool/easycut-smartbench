@@ -540,6 +540,7 @@ class Settings(EventDispatcher):
             self.interrupt_bars_active = True
         else:
             self.interrupt_bars_active = interrupt_bars_setting.split("=")[1].strip() == "True"
+        Logger.info("Interrupt bars active: " + str(self.interrupt_bars_active))
 
     def enable_interrupt_bars(self):
         self.interrupt_bars_active = True
