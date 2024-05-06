@@ -115,7 +115,7 @@ Builder.load_string(
                 font_size: str(0.0375*app.width) + 'sp'
                 background_normal: "./asmcnc/skavaUI/img/next.png"
                 on_press: root.next_screen()
-                color: hex('f9f9f9ff')
+                color: color_provider.get_rgba("near_white")
 
 """
 )

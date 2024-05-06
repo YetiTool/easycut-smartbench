@@ -90,7 +90,7 @@ Builder.load_string(
                     height: dp(0.125*app.height)
                     width: dp(1.0*app.width)
                     text: "Factory settings"
-                    color: hex('#f9f9f9ff')
+                    color: color_provider.get_rgba("near_white")
                     font_size: 0.0375*app.width
                     halign: "center"
                     valign: "bottom"

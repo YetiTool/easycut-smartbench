@@ -270,7 +270,7 @@ Builder.load_string(
                             id: custom_ssid_button
                             on_release: root.custom_ssid_input()
                             font_size: 0.025*app.width
-                            color: hex('#f9f9f9ff')
+                            color: color_provider.get_rgba("near_white")
                             markup: True
                             background_normal: "./asmcnc/apps/wifi_app/img/CustomSSID_blank.png"
                             background_down: "./asmcnc/apps/wifi_app/img/CustomSSID_blank.png"
@@ -423,7 +423,7 @@ Builder.load_string(
                         on_press: root.check_credentials()
                         # text: 'Connect'
                         font_size: str(0.035*app.width) + 'sp'
-                        color: hex('#f9f9f9ff')
+                        color: color_provider.get_rgba("near_white")
                         markup: True
                         center: self.parent.center
                         pos: self.parent.pos

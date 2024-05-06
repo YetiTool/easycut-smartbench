@@ -44,7 +44,7 @@ Builder.load_string(
                     height: dp(0.125*app.height)
                     width: dp(1.0*app.width)
                     text: "Wi-Fi and Data Consent"
-                    color: hex('#f9f9f9ff')
+                    color: color_provider.get_rgba("near_white")
                     # color: color_provider.get_rgba("dark_grey") #grey
                     font_size: dp(0.0375*app.width)
                     halign: "center"
@@ -62,7 +62,7 @@ Builder.load_string(
                 Label: 
                 	id: user_info
 					size_hint: (1,1)
-                    # color: hex('#f9f9f9ff') # white
+                    # color: color_provider.get_rgba("near_white") # white
                     color: color_provider.get_rgba("dark_grey") #grey
                     font_size: dp(0.0225*app.width)
                     halign: "left"
@@ -118,7 +118,7 @@ Builder.load_string(
 						on_press: root.next_screen()
 						text: 'Next...'
 						font_size: str(0.0375*app.width) + 'sp'
-						color: hex('#f9f9f9ff')
+						color: color_provider.get_rgba("near_white")
 						markup: True
 						center: self.parent.center
 						pos: self.parent.pos

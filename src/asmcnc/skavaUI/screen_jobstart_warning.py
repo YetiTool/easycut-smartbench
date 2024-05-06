@@ -65,7 +65,7 @@ Builder.load_string(
                     height: dp(0.125*app.height)
                     width: dp(1.0*app.width)
                     text: "Safety Warning"
-                    color: hex('#f9f9f9ff')
+                    color: color_provider.get_rgba("near_white")
                     font_size: 0.0375*app.width
                     halign: "center"
                     valign: "bottom"
@@ -193,7 +193,7 @@ Builder.load_string(
                     width: dp(0.36375*app.width)
                     height: dp(0.164583333333*app.height)
                     font_size: str(0.035*app.width) + 'sp'
-                    color: hex('#f9f9f9ff')
+                    color: color_provider.get_rgba("near_white")
                     markup: True
                     center: self.parent.center
                     pos: self.parent.pos

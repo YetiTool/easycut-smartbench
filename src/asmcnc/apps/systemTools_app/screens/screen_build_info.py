@@ -102,7 +102,7 @@ Builder.load_string(
                     height: dp(0.125*app.height)
                     width: dp(1.0*app.width)
                     text: "System Information"
-                    color: hex('#f9f9f9ff')
+                    color: color_provider.get_rgba("near_white")
                     # color: color_provider.get_rgba("dark_grey") #grey
                     font_size: 0.0375*app.width
                     halign: "center"
@@ -448,7 +448,7 @@ Builder.load_string(
                         center: self.parent.center
                         pos: self.parent.pos
                         text: 'Choose language...'
-                        color: hex('#f9f9f9ff')
+                        color: color_provider.get_rgba("near_white")
                         markup: True
                         option_cls: Factory.get("SystemToolsLanguageSpinner")
                         on_text: root.choose_language()
@@ -465,7 +465,7 @@ Builder.load_string(
                         center: self.parent.center
                         pos: self.parent.pos
                         on_press: root.open_data_consent_app()
-                        color: hex('#f9f9f9ff')
+                        color: color_provider.get_rgba("near_white")
                         markup: True
                         
                     ToggleButton:
@@ -480,7 +480,7 @@ Builder.load_string(
                         center: self.parent.center
                         pos: self.parent.pos
                         on_press: root.toggle_ssh()
-                        color: hex('#f9f9f9ff')
+                        color: color_provider.get_rgba("near_white")
                         markup: True
 
                     ToggleButton:
@@ -495,7 +495,7 @@ Builder.load_string(
                         center: self.parent.center
                         pos: self.parent.pos
                         on_press: root.do_show_more_info()
-                        color: hex('#f9f9f9ff')
+                        color: color_provider.get_rgba("near_white")
                         markup: True
 
                     BoxLayout: 

@@ -71,7 +71,7 @@ Builder.load_string(
                     height: dp(0.125*app.height)
                     width: dp(1.0*app.width)
                     text: "Beta Testing"
-                    color: hex('#f9f9f9ff')
+                    color: color_provider.get_rgba("near_white")
                     font_size: 0.0375*app.width
                     halign: "center"
                     valign: "bottom"
@@ -167,7 +167,7 @@ Builder.load_string(
                         center: self.parent.center
                         pos: self.parent.pos
                         text: 'Choose language...'
-                        color: hex('#f9f9f9ff')
+                        color: color_provider.get_rgba("near_white")
                         markup: True
                         option_cls: Factory.get("BetaLanguageSpinner")
                         on_text: root.choose_language()

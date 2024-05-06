@@ -148,7 +148,7 @@ Builder.load_string(
 					height: dp(0.164583333333*app.height)
 					on_press: root.more_info()
 					font_size: root.default_font_size
-					color: hex('#f9f9f9ff')
+					color: color_provider.get_rgba("near_white")
 					markup: True
 					center: self.parent.center
 					pos: self.parent.pos

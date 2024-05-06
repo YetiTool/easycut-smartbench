@@ -69,7 +69,7 @@ Builder.load_string("""
                     height: dp(60)
                     width: dp(800)
                     text: "Update Testing"
-                    color: hex('#f9f9f9ff')
+                    color: color_provider.get_rgba("near_white")
                     font_size: 30
                     halign: "center"
                     valign: "bottom"

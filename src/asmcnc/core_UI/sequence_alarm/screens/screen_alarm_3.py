@@ -95,7 +95,7 @@ Builder.load_string(
                         on_press: root.next_screen()
                         text: 'Next...'
                         font_size: root.default_font_size
-                        color: hex('#f9f9f9ff')
+                        color: color_provider.get_rgba("near_white")
                         markup: True
                         center: self.parent.center
                         pos: self.parent.pos

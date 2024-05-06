@@ -85,7 +85,7 @@ Builder.load_string(
                         width: dp(0.36375*app.width)
                         height: dp(0.164583333333*app.height)
                         font_size: str(0.035*app.width) + 'sp'
-                        color: hex('#f9f9f9ff')
+                        color: color_provider.get_rgba("near_white")
                         markup: True
                         center: self.parent.center
                         pos: self.parent.pos

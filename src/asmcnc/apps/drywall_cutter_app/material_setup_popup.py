@@ -50,7 +50,7 @@ Builder.load_string("""
             pos_hint: {'x': -0.39, 'y': 0.45}
             text: 'Cutting depths'
             font_size: app.get_scaled_sp('20sp')
-            color: hex('#F9F9F9')
+            color: color_provider.get_rgba("near_white")
         
         Label:
             id: Z0

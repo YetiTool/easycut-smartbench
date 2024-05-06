@@ -64,7 +64,7 @@ Builder.load_string("""
                     size_hint: (None,None)
                     width: dp(0.5625*app.width)
                     height: dp(0.125*app.height)
-                    color: hex('#f9f9f9ff')
+                    color: color_provider.get_rgba("near_white")
                     center: self.parent.center
                     pos: self.parent.pos
                     text_size: self.size

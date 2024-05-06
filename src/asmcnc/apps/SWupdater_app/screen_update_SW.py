@@ -270,7 +270,7 @@ Builder.load_string("""
                             on_press: root.prep_for_sw_update("WiFi")
                             # text: 'Update'
                             # font_size: '28sp'
-                            color: hex('#f9f9f9ff')
+                            color: color_provider.get_rgba("near_white")
                             markup: True
                             center: self.parent.center
                             pos: self.parent.pos           
@@ -352,7 +352,7 @@ Builder.load_string("""
                             on_press: root.prep_for_sw_update("USB")
                             # text: 'Update'
                             # font_size: '28sp'
-                            color: hex('#f9f9f9ff')
+                            color: color_provider.get_rgba("near_white")
                             markup: True
                             center: self.parent.center
                             pos: self.parent.pos
