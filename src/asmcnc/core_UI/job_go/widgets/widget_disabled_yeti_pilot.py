@@ -43,7 +43,7 @@ Builder.load_string(
                 Label:
                     id: body_label
                     size_hint_y: None
-                    color: hex('#333333ff')
+                    color: color_provider.get_rgba("dark_grey")
                     markup: True
                     halign: 'left'
                     height: self.texture_size[1]

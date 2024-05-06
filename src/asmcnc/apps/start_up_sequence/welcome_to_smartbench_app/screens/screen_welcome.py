@@ -52,7 +52,7 @@ Builder.load_string(
 					height: dp(0.125*app.height)
 					width: dp(1.0*app.width)
 					color: hex('#f9f9f9ff')
-					# color: hex('#333333ff') #grey
+					# color: color_provider.get_rgba("dark_grey") #grey
 					font_size: dp(0.0375*app.width)
 					halign: "center"
 					valign: "bottom"
@@ -75,7 +75,7 @@ Builder.load_string(
 					valign: 'bottom'
 					halign: 'center'
 					markup: 'true'
-					color: hex('#333333ff')
+					color: color_provider.get_rgba("dark_grey")
 
 				Label:
 					id: next_steps_label
@@ -86,7 +86,7 @@ Builder.load_string(
 					halign: 'center'
 					markup: 'true'
 					multiline: True
-					color: hex('#333333ff')
+					color: color_provider.get_rgba("dark_grey")
 				
 				Label:
 					id: minutes_label
@@ -96,7 +96,7 @@ Builder.load_string(
 					valign: 'top'
 					halign: 'center'
 					markup: 'true'
-					color: hex('#333333ff')
+					color: color_provider.get_rgba("dark_grey")
 
 
 			# FOOTER

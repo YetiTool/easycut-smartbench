@@ -73,7 +73,7 @@ Builder.load_string("""
                         halign: 'center'
                         text_size: self.parent.size
                         markup: True
-                        color: hex('333333ff') 
+                        color: color_provider.get_rgba("dark_grey") 
                 
             # Correct shutdown steps section
             BoxLayout:
@@ -88,7 +88,7 @@ Builder.load_string("""
                         valign: 'middle'
                         text_size: self.parent.size
                         markup: True
-                        color: hex('333333ff')
+                        color: color_provider.get_rgba("dark_grey")
                         line_height: 1.5
                         
                 Image:
@@ -114,7 +114,7 @@ Builder.load_string("""
                         halign: 'center'
                         text_size: self.parent.size
                         markup: True
-                        color: hex('333333ff')
+                        color: color_provider.get_rgba("dark_grey")
                     
         # 'I understand' button
         BoxLayout:

@@ -41,7 +41,7 @@ Builder.load_string(
                     size_hint_x: 3.15
                     text: 'Optional Nudge:'
                     bold: True
-                    color: hex('#333333ff')
+                    color: color_provider.get_rgba("dark_grey")
                     font_size: dp(0.03125*app.width)
                     halign: 'left'
                     valign: 'middle'
@@ -183,7 +183,7 @@ Builder.load_string(
             text: 'XY'
             markup: True
             bold: True
-            color: hex('#333333ff')
+            color: color_provider.get_rgba("dark_grey")
             font_size: dp(0.025*app.width)
 
 """

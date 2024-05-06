@@ -34,7 +34,7 @@ Builder.load_string(
 
     background_normal: ''
     size: self.size
-    color: hex('#333333ff')
+    color: color_provider.get_rgba("dark_grey")
     halign: 'center'
     markup: 'True'
     font_size: 0.0175*app.width
@@ -52,7 +52,7 @@ Builder.load_string(
     option_cls: Factory.get("Options")
     background_normal: ''
     size: self.size
-    color: hex('#333333ff')
+    color: color_provider.get_rgba("dark_grey")
     background_color: color_provider.get_rgba("invisible")
     font_size: 0.0175*app.width
     text_size : self.width, None

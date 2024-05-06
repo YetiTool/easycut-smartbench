@@ -106,7 +106,7 @@ Builder.load_string(
                             valign: 'top'
                             size:self.texture_size
                             text_size: self.size
-                            color: hex('#333333FF')
+                            color: color_provider.get_rgba("dark_grey")
 
                         Label:
                             id: causes_of_fire
@@ -116,7 +116,7 @@ Builder.load_string(
                             valign: 'middle'
                             size: self.texture_size
                             text_size: self.size
-                            color: hex('#333333FF')
+                            color: color_provider.get_rgba("dark_grey")
                             markup: True
                             font_size: str(0.025*app.width) + 'sp' 
 
@@ -150,7 +150,7 @@ Builder.load_string(
                                 valign: 'middle'
                                 size:self.texture_size
                                 text_size: self.size
-                                color: hex('#333333FF')
+                                color: color_provider.get_rgba("dark_grey")
 
                     BoxLayout:
                         orientation: 'vertical'
@@ -173,7 +173,7 @@ Builder.load_string(
                             valign: 'middle'
                             size:self.texture_size
                             text_size: self.size
-                            color: hex('#333333FF')
+                            color: color_provider.get_rgba("dark_grey")
   
 
             BoxLayout:

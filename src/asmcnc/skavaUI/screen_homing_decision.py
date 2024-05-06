@@ -85,7 +85,7 @@ Builder.load_string(
                 halign: 'center'
                 size:self.texture_size
                 text_size: self.size
-                color: hex('#333333ff')
+                color: color_provider.get_rgba("dark_grey")
 
             Label:
                 id: subtitle_label
@@ -96,7 +96,7 @@ Builder.load_string(
                 halign: 'center'
                 size:self.texture_size
                 text_size: self.size
-                color: hex('#333333ff')
+                color: color_provider.get_rgba("dark_grey")
 
         BoxLayout:
             orientation: 'horizontal'

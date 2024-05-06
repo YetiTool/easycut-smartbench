@@ -42,7 +42,7 @@ Builder.load_string(
                 halign: 'center'
                 size:self.texture_size
                 text_size: self.size
-                color: hex('#333333')
+                color: color_provider.get_rgba("dark_grey")
 
         # Buttons
 
@@ -65,7 +65,7 @@ Builder.load_string(
                 text_size: self.size
                 background_normal: "./asmcnc/skavaUI/img/stylus_option.png"
                 padding_y: 30
-                color: hex('#333333')
+                color: color_provider.get_rgba("dark_grey")
 
             # Router button
 
@@ -80,7 +80,7 @@ Builder.load_string(
                 text_size: self.size
                 background_normal: "./asmcnc/skavaUI/img/router_option.png"
                 padding_y: 30
-                color: hex('#333333')
+                color: color_provider.get_rgba("dark_grey")
 
 
 

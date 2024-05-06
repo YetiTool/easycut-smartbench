@@ -61,7 +61,7 @@ Builder.load_string("""
                 halign: 'center'
                 size:self.texture_size
                 text_size: self.size
-                color: hex('#333333ff')
+                color: color_provider.get_rgba("dark_grey")
                         
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'

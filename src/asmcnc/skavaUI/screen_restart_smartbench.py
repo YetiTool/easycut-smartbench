@@ -25,7 +25,7 @@ Builder.load_string("""
         id: restart_label
         padding: [dp(10),dp(0)]
         font_size: '40sp'
-        color: hex('#333333')
+        color: color_provider.get_rgba("dark_grey")
         text_size: self.size
         size: self.texture_size
         halign: "center"

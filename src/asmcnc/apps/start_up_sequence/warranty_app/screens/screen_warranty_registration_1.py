@@ -63,7 +63,7 @@ Builder.load_string(
 					width: dp(1.0*app.width)
 					text: "SmartBench Warranty Registration"
 					color: hex('#f9f9f9ff')
-					# color: hex('#333333ff') #grey
+					# color: color_provider.get_rgba("dark_grey") #grey
 					font_size: dp(0.0375*app.width)
 					halign: "center"
 					valign: "bottom"
@@ -92,7 +92,7 @@ Builder.load_string(
 					valign: 'bottom'
 					halign: 'center'
 					markup: 'true'
-					color: hex('#333333ff')
+					color: color_provider.get_rgba("dark_grey")
 
 				BoxLayout:
 					orientation: 'vertical'
@@ -111,7 +111,7 @@ Builder.load_string(
 						valign: 'middle'
 						halign: 'center'
 						markup: True
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 					BoxLayout:
 						orientation: 'horizontal'
@@ -149,7 +149,7 @@ Builder.load_string(
 								halign: 'left'
 								markup: 'true'
 								multiline: True
-								color: hex('#333333ff')
+								color: color_provider.get_rgba("dark_grey")
 							
 							Label:
 								id: cant_use_web_label
@@ -160,7 +160,7 @@ Builder.load_string(
 								valign: 'bottom'
 								halign: 'left'
 								markup: 'true'
-								color: hex('#333333ff')
+								color: color_provider.get_rgba("dark_grey")
 
 							Label:
 								id: contact_us_at_support
@@ -171,7 +171,7 @@ Builder.load_string(
 								valign: 'middle'
 								halign: 'left'
 								markup: 'true'
-								color: hex('#333333ff')
+								color: color_provider.get_rgba("dark_grey")
 
 			# FOOTER
 			BoxLayout: 

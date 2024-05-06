@@ -72,7 +72,7 @@ Builder.load_string(
                     halign: 'center'
                     size:self.texture_size
                     text_size: self.size
-                    color: hex('#333333ff')
+                    color: color_provider.get_rgba("dark_grey")
                 
             BoxLayout:
                 size_hint_y: 4.1
@@ -100,7 +100,7 @@ Builder.load_string(
                             valign: 'middle'
                             size:self.texture_size
                             text_size: self.size
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
                             
                     BoxLayout:
                         orientation: 'horizontal'
@@ -120,7 +120,7 @@ Builder.load_string(
                             valign: 'middle'
                             size:self.texture_size
                             text_size: self.size
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
         
                 BoxLayout:
                     orientation: 'horizontal'
@@ -142,7 +142,7 @@ Builder.load_string(
                             valign: 'middle'
                             size:self.texture_size
                             text_size: self.size
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
     
                     BoxLayout:
                         orientation: 'horizontal'
@@ -162,7 +162,7 @@ Builder.load_string(
                             valign: 'middle'
                             size:self.texture_size
                             text_size: self.size
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
     
                             
                 BoxLayout:
@@ -185,7 +185,7 @@ Builder.load_string(
                             valign: 'middle'
                             size:self.texture_size
                             text_size: self.size
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
                     BoxLayout:
                         orientation: 'horizontal'
                         spacing:0.025*app.width
@@ -204,7 +204,7 @@ Builder.load_string(
                             size:self.texture_size
                             text_size: self.size
                             halign: 'left'
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
 
                 BoxLayout:
                     orientation: 'horizontal'
@@ -226,7 +226,7 @@ Builder.load_string(
                             valign: 'middle'
                             size:self.texture_size
                             text_size: self.size
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
                     BoxLayout:
                         orientation: 'horizontal'
                         spacing:0.025*app.width
@@ -245,7 +245,7 @@ Builder.load_string(
                             size:self.texture_size
                             text_size: self.size
                             halign: 'left'
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
   
 
             BoxLayout:

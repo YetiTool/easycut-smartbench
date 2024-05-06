@@ -68,7 +68,7 @@ Builder.load_string(
 					width: dp(1.0*app.width)
 					text: "SmartBench Warranty Registration"
 					color: hex('#f9f9f9ff')
-					# color: hex('#333333ff') #grey
+					# color: color_provider.get_rgba("dark_grey") #grey
 					font_size: dp(0.0375*app.width)
 					halign: "center"
 					valign: "bottom"
@@ -89,7 +89,7 @@ Builder.load_string(
 					valign: 'bottom'
 					halign: 'center'
 					markup: 'true'
-					color: hex('#333333ff')
+					color: color_provider.get_rgba("dark_grey")
 
 				BoxLayout:
 					orientation: 'vertical'
@@ -110,7 +110,7 @@ Builder.load_string(
 						multiline: False
 						text: ''
 						input_filter: 'int'
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 				BoxLayout:
 					orientation: 'vertical'
 					width: dp(1.0*app.width)

@@ -61,7 +61,7 @@ Builder.load_string(
                             Label:
                                 id: line_input_header
                                 text: "Go to line:"
-                                color: hex('#333333FF')
+                                color: color_provider.get_rgba("dark_grey")
                                 bold: True
                                 font_size: dp(0.03125*app.width)
 
@@ -205,7 +205,7 @@ Builder.load_string(
                         Label:
                             id: pos_label_header
                             text: "Job resumes at:"
-                            color: hex('#333333FF')
+                            color: color_provider.get_rgba("dark_grey")
                             bold: True
                             font_size: dp(0.01875*app.width)
                             halign: 'left'

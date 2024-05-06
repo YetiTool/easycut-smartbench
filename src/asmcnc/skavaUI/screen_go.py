@@ -134,7 +134,7 @@ Builder.load_string(
                                 halign: 'center'
                                 valign: 'middle'
                                 id: file_data_label
-                                color: hex('#333333ff')
+                                color: color_provider.get_rgba("dark_grey")
                                 
                             Button:
                                 font_size: str(0.01875 * app.width) + 'sp'
@@ -300,7 +300,7 @@ Builder.load_string(
                                 Label:
                                     size_hint_y: 3
                                     id: progress_percentage_label
-                                    color: hex('#333333ff')
+                                    color: color_provider.get_rgba("dark_grey")
                                     text: '0 %'
                                     markup: True                           
                                     font_size: str(0.125*app.width) + 'px' 
@@ -327,7 +327,7 @@ Builder.load_string(
                                     halign: 'left'
                                     size:self.texture_size
                                     text_size: self.size
-                                    color: hex('#333333ff')
+                                    color: color_provider.get_rgba("dark_grey")
 
                 BoxLayout:
                     id: spindle_widgets

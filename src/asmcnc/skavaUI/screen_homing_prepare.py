@@ -75,7 +75,7 @@ Builder.load_string(
             halign: 'center'
             size:self.texture_size
             text_size: self.size
-            color: hex('#333333ff')
+            color: color_provider.get_rgba("dark_grey")
 
         Label:
             id: press_to_home_label
@@ -86,7 +86,7 @@ Builder.load_string(
             halign: 'center'
             size:self.texture_size
             text_size: self.size
-            color: hex('#333333ff')
+            color: color_provider.get_rgba("dark_grey")
 
         # Label:
         #     size_hint_y: 0.1                

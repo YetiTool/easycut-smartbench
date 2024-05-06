@@ -78,7 +78,7 @@ Builder.load_string(
 					width: dp(1.0*app.width)
 					text: "Welcome to SmartBench"
 					color: hex('#f9f9f9ff')
-					# color: hex('#333333ff') #grey
+					# color: color_provider.get_rgba("dark_grey") #grey
 					font_size: dp(0.0375*app.width)
 					halign: "center"
 					valign: "bottom"
@@ -119,13 +119,13 @@ Builder.load_string(
 						text_size: self.size
 						markup: True
 						halign: "left"
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 
 					CheckBox: 
 						group: "language_radio_buttons" 
 						on_press: root.select_language(self, row_1_col_2)
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 	                Image: 
 	                	id: row_1_col_2_image
@@ -138,13 +138,13 @@ Builder.load_string(
 						text_size: self.size
 						markup: True
 						halign: "left"
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 
 					CheckBox: 
 						group: "language_radio_buttons" 
 						on_press: root.select_language(self, row_1_col_3)
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 	                Image: 
 	                	id: row_1_col_3_image
@@ -157,7 +157,7 @@ Builder.load_string(
 						text_size: self.size
 						markup: True
 						halign: "left"
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 
 					# ROW 2
@@ -165,7 +165,7 @@ Builder.load_string(
 					CheckBox: 
 						group: "language_radio_buttons" 
 						on_press: root.select_language(self, row_2_col_1)
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 	                Image: 
 	                	id: row_2_col_1_image
@@ -178,13 +178,13 @@ Builder.load_string(
 						text_size: self.size
 						markup: True
 						halign: "left"
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 
 					CheckBox: 
 						group: "language_radio_buttons" 
 						on_press: root.select_language(self, row_2_col_2)
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 	                Image: 
 	                	id: row_2_col_2_image
@@ -197,13 +197,13 @@ Builder.load_string(
 						text_size: self.size
 						markup: True
 						halign: "left"
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 
 					CheckBox: 
 						group: "language_radio_buttons" 
 						on_press: root.select_language(self, row_2_col_3)
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 	                Image: 
 	                	id: row_2_col_3_image
@@ -216,7 +216,7 @@ Builder.load_string(
 						text_size: self.size
 						markup: True
 						halign: "left"
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 
 					# ROW 3
@@ -224,7 +224,7 @@ Builder.load_string(
 					CheckBox: 
 						group: "language_radio_buttons" 
 						on_press: root.select_language(self, row_3_col_1)
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 	                Image: 
 	                	id: row_3_col_1_image
@@ -237,12 +237,12 @@ Builder.load_string(
 						text_size: self.size
 						markup: True
 						halign: "left"
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 					CheckBox: 
 						group: "language_radio_buttons" 
 						on_press: root.select_language(self, row_3_col_2)
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 	                Image: 
 	                	id: row_3_col_2_image
@@ -255,7 +255,7 @@ Builder.load_string(
 						text_size: self.size
 						markup: True
 						halign: "left"
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 					BoxLayout: 
 					BoxLayout: 
@@ -265,7 +265,7 @@ Builder.load_string(
 					# 	group: "language_radio_buttons" 
 					# 	on_press: root.select_language(self, row_3_col_3)
 					# 	on_press: root.select_language(self)
-					# 	color: hex('#333333ff')
+					# 	color: color_provider.get_rgba("dark_grey")
 
 	    #             Image: 
 	    #             	id: row_3_col_3_image
@@ -279,7 +279,7 @@ Builder.load_string(
 					# 	text_size: self.size
 					# 	markup: True
 					# 	halign: "left"
-					# 	color: hex('#333333ff')
+					# 	color: color_provider.get_rgba("dark_grey")
 
 			# FOOTER
 			BoxLayout: 

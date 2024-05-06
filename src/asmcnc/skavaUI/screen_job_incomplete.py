@@ -91,7 +91,7 @@ Builder.load_string(
                             id: metadata_label
                             size_hint_y: None
                             height: dp(0.1875*app.height)
-                            color: hex('#333333ff') #grey
+                            color: color_provider.get_rgba("dark_grey") #grey
                             font_size: dp(0.025*app.width)
                             markup: True
                             text_size: self.size
@@ -107,7 +107,7 @@ Builder.load_string(
                             Label: 
                                 id: parts_completed_label
                                 size_hint_x: None
-                                color: hex('#333333ff') #grey
+                                color: color_provider.get_rgba("dark_grey") #grey
                                 font_size: dp(0.025*app.width)
                                 markup: True
                                 halign: "left"
@@ -119,7 +119,7 @@ Builder.load_string(
                                 padding:[dp(0.005)*app.width, dp(0.00416666666667)*app.height]
                                 size_hint_x: None
                                 width: dp(0.0625*app.width)
-                                color: hex('#333333ff')
+                                color: color_provider.get_rgba("dark_grey")
                                 text_size: self.size
                                 halign: "left"
                                 valign: "top"
@@ -132,7 +132,7 @@ Builder.load_string(
                             Label: 
                                 id: out_of_total_parts_label
                                 size_hint_x: None
-                                color: hex('#333333ff') #grey
+                                color: color_provider.get_rgba("dark_grey") #grey
                                 font_size: dp(0.025*app.width)
                                 markup: True
                                 halign: "left"
@@ -153,7 +153,7 @@ Builder.load_string(
                             Label:
                                 id: batch_number_label
                                 size_hint_x: 0.45
-                                color: hex('#333333ff') #grey
+                                color: color_provider.get_rgba("dark_grey") #grey
                                 font_size: dp(0.025*app.width)
                                 halign: "left"
                                 valign: "bottom"
@@ -166,8 +166,8 @@ Builder.load_string(
                                 TextInput:
                                     id: batch_number_input
                                     padding:[dp(0.005)*app.width, dp(0.00416666666667)*app.height]
-                                    color: hex('#333333ff')
-                                    # foreground_color: hex('#333333ff')
+                                    color: color_provider.get_rgba("dark_grey")
+                                    # foreground_color: color_provider.get_rgba("dark_grey")
                                     text_size: self.size
                                     size_hint_x: 1
                                     width: dp(0.125*app.width)
@@ -182,7 +182,7 @@ Builder.load_string(
                         Label:
                             id: post_production_notes_label
                             text: "Production notes"
-                            color: hex('#333333ff') #grey
+                            color: color_provider.get_rgba("dark_grey") #grey
                             font_size: dp(0.025*app.width)
                             halign: "left"
                             valign: "top"
@@ -195,8 +195,8 @@ Builder.load_string(
                             height: dp(0.116666666667*app.height)
                             padding:[dp(0.005)*app.width, dp(0.00416666666667)*app.height]
                             text: ""
-                            color: hex('#333333ff')
-                            # foreground_color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
+                            # foreground_color: color_provider.get_rgba("dark_grey")
                             text_size: self.size
                             halign: "left"
                             valign: "top"
@@ -212,7 +212,7 @@ Builder.load_string(
                     height: dp(0.125*app.height)
                     width: dp(1.0*app.width)
                     # color: hex('#f9f9f9ff')
-                    color: hex('#333333ff') #grey
+                    color: color_provider.get_rgba("dark_grey") #grey
                     font_size: dp(0.0375*app.width)
                     halign: "center"
                     valign: "bottom"
@@ -230,7 +230,7 @@ Builder.load_string(
                     Label: 
                         id: event_details_label
                         padding:[dp(0.025)*app.width, 0]
-                        color: hex('#333333ff') #grey
+                        color: color_provider.get_rgba("dark_grey") #grey
                         text_size: self.size
                         halign: "left"
                         valign: "middle"

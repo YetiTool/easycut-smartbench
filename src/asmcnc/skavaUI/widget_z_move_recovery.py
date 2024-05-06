@@ -111,7 +111,7 @@ Builder.load_string("""
             text: 'Z'
             markup: True
             bold: True
-            color: hex('#333333ff')
+            color: color_provider.get_rgba("dark_grey")
             font_size: dp(20)
 
 """)

@@ -43,7 +43,7 @@ Builder.load_string("""
                 id: finishing_install_label
                 text_size: self.size
                 size_hint_y: 0.33
-                color: hex('#333333')
+                color: color_provider.get_rgba("dark_grey")
                 markup: True
                 font_size: '40sp'   
                 valign: 'middle'
@@ -65,7 +65,7 @@ Builder.load_string("""
                 text_size: self.size
                 size: self.texture_size
                 size_hint_y: 0.33
-                color: hex('#333333')
+                color: color_provider.get_rgba("dark_grey")
                 markup: True
                 font_size: '40sp'
                 valign: 'middle'

@@ -43,7 +43,7 @@ Builder.load_string(
             halign: 'center'
             size: self.texture_size
             text_size: self.size
-            color: hex('#333333ff')
+            color: color_provider.get_rgba("dark_grey")
             font_size: str(0.045*app.width) + 'sp'
 
         BoxLayout:
@@ -62,7 +62,7 @@ Builder.load_string(
                     size_hint_y: 3
                     size: self.texture_size
                     text_size: self.size
-                    color: hex('#333333ff')
+                    color: color_provider.get_rgba("dark_grey")
                     font_size: str(0.025*app.width) + 'sp'
                     halign: 'center'
                     valign: 'middle'
