@@ -184,7 +184,7 @@ Builder.load_string("""
             text: ''
             font_size: app.get_scaled_sp('14sp')
             markup: True
-            color: hex('#FF0000')
+            color: color_provider.get_rgba("monochrome_red")
             text_size: (dp(app.get_scaled_width(175)), None)
         
         Label:
@@ -193,7 +193,7 @@ Builder.load_string("""
             text: ''
             font_size: app.get_scaled_sp('14sp')
             markup: True
-            color: hex('#FF0000')
+            color: color_provider.get_rgba("monochrome_red")
             text_size: (dp(app.get_scaled_width(150)), None) 
         
         GridLayout:
