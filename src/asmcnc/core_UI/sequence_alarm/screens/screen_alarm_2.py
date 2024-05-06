@@ -41,7 +41,7 @@ Builder.load_string(
 				id: alarm_title
 				size_hint: (None, None)
 				font_size: str(0.0375*app.width) + 'sp'
-				color: [0,0,0,1]
+				color: color_provider.get_rgba("black")
 				markup: True
 				halign: 'left'
 				height: dp(0.104166666667*app.height)
@@ -99,7 +99,7 @@ Builder.load_string(
 				Label:
 					id: description_label
 					font_size: str(0.025*app.width) + 'sp'
-					color: [0,0,0,1]
+					color: color_provider.get_rgba("black")
 					markup: True
 					halign: 'center'
 					valign: 'middle'

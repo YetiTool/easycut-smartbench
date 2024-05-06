@@ -86,7 +86,7 @@ Builder.load_string(
                     height: dp(0.145833333333*app.height)
                     width: dp(0.975*app.width)
                     text: "Developer"
-                    color: [0,0,0,1]
+                    color: color_provider.get_rgba("black")
                     font_size: 0.0375*app.width
                     halign: "center"
                     valign: "bottom"

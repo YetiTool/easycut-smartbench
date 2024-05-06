@@ -79,7 +79,7 @@ Builder.load_string(
                 id: header_label
                 size_hint: (None, None)
                 font_size: str(0.0375*app.width) + 'sp'
-                color: [0,0,0,1]
+                color: color_provider.get_rgba("black")
                 markup: True
                 halign: 'left'
                 height: dp(0.104166666667*app.height)
@@ -139,7 +139,7 @@ Builder.load_string(
                     id: spindle_raise_label
                     size_hint: (None, None)
                     font_size: str(0.03*app.width) + 'sp'
-                    color: [0,0,0,1]
+                    color: color_provider.get_rgba("black")
                     markup: True
                     halign: 'center'
                     valign: 'middle'

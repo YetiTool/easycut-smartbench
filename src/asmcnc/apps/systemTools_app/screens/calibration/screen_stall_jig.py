@@ -86,7 +86,7 @@ Builder.load_string(
                     size_hint_y: 1
                     background_normal: ""
                     background_down: ""
-                    background_color: [0,0,0,1]
+                    background_color: color_provider.get_rgba("black")
 
                 Button: 
                     id: reset_test_button

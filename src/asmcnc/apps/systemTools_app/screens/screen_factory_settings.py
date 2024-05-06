@@ -160,7 +160,7 @@ Builder.load_string(
                                     Label:
                                         font_size: str(0.01875 * app.width) + 'sp'
                                         text: '[b]Serial number[/b]'
-                                        color: [0,0,0,1]
+                                        color: color_provider.get_rgba("black")
                                         markup: True
                                     BoxLayout: 
                                         orientation: 'horizontal'
@@ -169,7 +169,7 @@ Builder.load_string(
                                             id: serial_prefix
                                             font_size: str(15.0/800.0 * app.width) + 'sp'
                                             text: 'YS6'
-                                            color: [0,0,0,1]
+                                            color: color_provider.get_rgba("black")
                                             markup: True
                                             valign: 'middle'
                                             size_hint_x: 0.3
@@ -177,7 +177,7 @@ Builder.load_string(
                                         Label:
                                             font_size: str(0.01875 * app.width) + 'sp'
                                             text: ''
-                                            color: [0,0,0,1]
+                                            color: color_provider.get_rgba("black")
                                             markup: True
                                             size_hint_x: 0.05
 
@@ -185,7 +185,7 @@ Builder.load_string(
                                             id: serial_number_input
                                             font_size: str(15.0/800.0 * app.width) + 'sp'
                                             text: '0000'
-                                            color: [0,0,0,1]
+                                            color: color_provider.get_rgba("black")
                                             markup: True
                                             valign: 'middle'
                                             size_hint_x: 0.35
@@ -195,7 +195,7 @@ Builder.load_string(
                                         Label:
                                             font_size: str(0.01875 * app.width) + 'sp'
                                             text: '.'
-                                            color: [0,0,0,1]
+                                            color: color_provider.get_rgba("black")
                                             markup: True
                                             size_hint_x: 0.05
 
@@ -203,7 +203,7 @@ Builder.load_string(
                                             id: product_number_input
                                             font_size: str(15.0/800.0 * app.width) + 'sp'
                                             text: '00'
-                                            color: [0,0,0,1]
+                                            color: color_provider.get_rgba("black")
                                             markup: True
                                             valign: 'middle'
                                             size_hint_x: 0.25
@@ -219,7 +219,7 @@ Builder.load_string(
                                         font_size: str(0.01875 * app.width) + 'sp'
                                         id: machine_serial
                                         text: 'machine serial'
-                                        color: [0,0,0,1]
+                                        color: color_provider.get_rgba("black")
                                         markup: True
 
                             BoxLayout: 
@@ -237,13 +237,13 @@ Builder.load_string(
                                     Label:
                                         font_size: str(0.01875 * app.width) + 'sp'
                                         text: '[b]Touchplate offset[/b]'
-                                        color: [0,0,0,1]
+                                        color: color_provider.get_rgba("black")
                                         markup: True
                                     TextInput:
                                         id: z_touch_plate_entry
                                         font_size: str(15.0/800.0 * app.width) + 'sp'
                                         text: ''
-                                        color: [0,0,0,1]
+                                        color: color_provider.get_rgba("black")
                                         markup: True
                                         valign: 'middle'
                                         input_filter: 'float'
@@ -257,7 +257,7 @@ Builder.load_string(
                                         font_size: str(0.01875 * app.width) + 'sp'
                                         id: machine_touchplate_thickness
                                         text: 'machine_tp'
-                                        color: [0,0,0,1]
+                                        color: color_provider.get_rgba("black")
                                         markup: True
 
                         BoxLayout:
@@ -281,7 +281,7 @@ Builder.load_string(
                                 id: setting_54_label
                                 size_hint_x: 0.7
                                 text: '$54 = N/A'
-                                color: [0,0,0,1]
+                                color: color_provider.get_rgba("black")
 
 
                     BoxLayout:
@@ -316,19 +316,19 @@ Builder.load_string(
                                 Label:
                                     font_size: str(0.01875 * app.width) + 'sp'
                                     text: 'Current'
-                                    color: [0,0,0,1]
+                                    color: color_provider.get_rgba("black")
                                     markup: True
                                 Label:
                                     font_size: str(0.01875 * app.width) + 'sp'
                                     id: software_version_label
                                     text: 'SW'
-                                    color: [0,0,0,1]
+                                    color: color_provider.get_rgba("black")
                                     markup: True
                                 Label:
                                     font_size: str(0.01875 * app.width) + 'sp'
                                     id: platform_version_label
                                     text: 'PL'
-                                    color: [0,0,0,1]
+                                    color: color_provider.get_rgba("black")
                                     markup: True
                             GridLayout: 
                                 size: self.parent.size
@@ -340,19 +340,19 @@ Builder.load_string(
                                 Label:
                                     font_size: str(0.01875 * app.width) + 'sp'
                                     text: 'Available'
-                                    color: [0,0,0,1]
+                                    color: color_provider.get_rgba("black")
                                     markup: True
                                 Label:
                                     font_size: str(0.01875 * app.width) + 'sp'
                                     id: latest_software_version
                                     text: 'SW'
-                                    color: [0,0,0,1]
+                                    color: color_provider.get_rgba("black")
                                     markup: True
                                 Label:
                                     font_size: str(0.01875 * app.width) + 'sp'
                                     id: latest_platform_version
                                     text: 'PL'
-                                    color: [0,0,0,1]
+                                    color: color_provider.get_rgba("black")
                                     markup: True
 
                 GridLayout:

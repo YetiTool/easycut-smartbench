@@ -19,7 +19,7 @@ Builder.load_string(
     Label:
         font_size: str(0.01875 * app.width) + 'sp'
         id: text_container
-        color: [0, 0, 0, 1]
+        color: color_provider.get_rgba("black")
         size_hint_y: None
         height: self.texture_size[1]
         text_size: self.width, None

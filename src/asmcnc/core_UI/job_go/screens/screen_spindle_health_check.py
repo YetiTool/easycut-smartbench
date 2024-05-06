@@ -49,7 +49,7 @@ Builder.load_string(
             Label:
                 id: cool_down_label
                 size_hint_y: 1
-                color: [0,0,0,1]
+                color: color_provider.get_rgba("black")
                 markup: True
                 font_size: str(0.0375*app.width) + 'px' 
                 valign: 'middle'
@@ -101,7 +101,7 @@ Builder.load_string(
                         size:self.texture_size
                         text_size: self.size  
                         text: '10'
-                        color: [0,0,0,1]
+                        color: color_provider.get_rgba("black")
 
                 BoxLayout: 
                     spacing: 0

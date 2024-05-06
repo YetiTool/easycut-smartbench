@@ -42,7 +42,7 @@ Builder.load_string(
                 Label:
                     id: description_label
                     font_size: str(0.02*app.width) + 'sp'
-                    color: [0,0,0,1]
+                    color: color_provider.get_rgba("black")
                     markup: True
                     halign: 'left'
                     valign: 'top'

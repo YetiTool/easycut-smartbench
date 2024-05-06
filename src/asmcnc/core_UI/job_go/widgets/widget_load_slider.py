@@ -35,7 +35,7 @@ Builder.load_string(
             markup: True
             halign: "center" 
             valign: "middle"
-            color: 0, 0, 0, 1
+            color: color_provider.get_rgba("black")
             font_size: str(0.0275*app.width) + 'sp'
             size_hint_y: 0.3
 
@@ -46,7 +46,7 @@ Builder.load_string(
 
             Label: 
                 id: min_label
-                color: 0, 0, 0, 1
+                color: color_provider.get_rgba("black")
                 markup: True
                 halign: "center" 
                 valign: "middle"
@@ -62,7 +62,7 @@ Builder.load_string(
 
             Label: 
                 id: max_label
-                color: 0, 0, 0, 1
+                color: color_provider.get_rgba("black")
                 markup: True
                 halign: "center" 
                 valign: "middle"

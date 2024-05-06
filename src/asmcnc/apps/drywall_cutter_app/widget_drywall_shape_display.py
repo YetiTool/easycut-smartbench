@@ -335,7 +335,7 @@ Builder.load_string("""
                 pos: self.parent.pos[0] + dp(5), self.parent.size[1] - self.height + dp(5)
                 multiline: False
                 background_color: (0,0,0,0)
-                disabled_foreground_color: (0,0,0,1)
+                disabled_foreground_color: color_provider.get_rgba("black")
                 disabled: True
 
             Label:

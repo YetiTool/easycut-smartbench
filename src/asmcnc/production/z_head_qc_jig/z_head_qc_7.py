@@ -48,7 +48,7 @@ Builder.load_string("""
                     text: 'Home'
                     background_color: [1,1,0,1]
                     background_normal: ''
-                    color: [0,0,0,1]
+                    color: color_provider.get_rgba("black")
                     font_size: dp(30)
                     on_press: root.home()
 
@@ -56,7 +56,7 @@ Builder.load_string("""
                     text: 'Reset'
                     background_color: [1,1,0,1]
                     background_normal: ''
-                    color: [0,0,0,1]
+                    color: color_provider.get_rgba("black")
                     font_size: dp(30)
                     on_press: root.resume_from_alarm()
 
@@ -65,7 +65,7 @@ Builder.load_string("""
                     text: 'Cycle Z (3x)'
                     background_color: [0,1,0,1]
                     background_normal: ''
-                    color: [0,0,0,1]
+                    color: color_provider.get_rgba("black")
                     font_size: dp(30)
                     on_press: root.do_cycle()
 

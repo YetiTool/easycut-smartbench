@@ -24,7 +24,7 @@ Builder.load_string("""
                 id: title_text
                 size_hint_y: 0.15
                 text: "Spindle motor health check"
-                color: [0,0,0,1]
+                color: color_provider.get_rgba("black")
                 font_size: str(0.03*app.width) + 'sp'
                 halign: "left"
                 # valign: "top"
@@ -35,7 +35,7 @@ Builder.load_string("""
                 id: body_text
                 size_hint_y: 0.85
                 text: ""
-                color: [0,0,0,1]
+                color: color_provider.get_rgba("black")
                 font_size: str(0.0225*app.width) + 'sp'
                 halign: "left"
                 valign: "top"

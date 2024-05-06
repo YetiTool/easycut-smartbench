@@ -102,7 +102,7 @@ Builder.load_string(
 
                         Label
                             text: 'Run developer branch:'
-                            color: [0,0,0,1]
+                            color: color_provider.get_rgba("black")
                             font_size: 0.025*app.width
                             halign: "left"
                             markup: True
@@ -128,7 +128,7 @@ Builder.load_string(
 
                         Label:
                             text: 'Latest beta version:'
-                            color: [0,0,0,1]
+                            color: color_provider.get_rgba("black")
                             font_size: 0.025*app.width
                             markup: True
                             halign: "left"
@@ -136,7 +136,7 @@ Builder.load_string(
                         Label:
                             id: beta_version
                             text: 'beta_version_no'
-                            color: [0,0,0,1]
+                            color: color_provider.get_rgba("black")
                             font_size: 0.025*app.width
                             markup: True
                             halign: "left"
