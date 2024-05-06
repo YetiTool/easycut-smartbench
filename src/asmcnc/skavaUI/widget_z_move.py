@@ -25,12 +25,12 @@ Builder.load_string(
 
         size: self.parent.size
         pos: self.parent.pos      
-        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
-        spacing:0.0125*app.width
+        padding: app.get_scaled_tuple([20.0, 20.0])
+        spacing: app.get_scaled_width(10.0)
         orientation: 'horizontal'
         
         BoxLayout:
-            spacing:0.0208333333333*app.height
+            spacing: app.get_scaled_width(9.99999999998)
             orientation: "vertical"
             
             BoxLayout:
@@ -38,7 +38,7 @@ Builder.load_string(
                 id: virtual_z_container
                 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 
@@ -61,11 +61,11 @@ Builder.load_string(
     
     
         BoxLayout:
-            spacing:0.0208333333333*app.height
+            spacing: app.get_scaled_width(9.99999999998)
             orientation: "vertical"
             
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release:
@@ -86,7 +86,7 @@ Builder.load_string(
                         allow_stretch: True   
 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 
@@ -107,12 +107,12 @@ Builder.load_string(
                         allow_stretch: True   
                         
             BoxLayout:
-                padding: 0, dp(10)
+                padding: app.get_scaled_tuple([0.0, 10.0])
                 size_hint_y: 1              
                 id: probe_button_container
                         
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 
@@ -137,13 +137,13 @@ Builder.load_string(
             x: 0.8275*app.width
             y: 0.875*app.height
             size_hint: None, None            
-            height: dp(30.0/480.0)*app.height
-            width: 0.0375*app.width
+            height: app.get_scaled_height(30.0)
+            width: app.get_scaled_width(30.0)
             text: 'Z'
             markup: True
             bold: True
             color: 0,0,0,0.2
-            font_size: 0.025*app.width     
+            font_size: app.get_scaled_width(20.0)
         
 """
 )

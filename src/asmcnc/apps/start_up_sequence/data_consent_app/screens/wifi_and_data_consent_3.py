@@ -15,7 +15,7 @@ Builder.load_string(
 
 	RstDocument:
 		id: privacy_notice
-		base_font_size: dp(0.0375)*app.width
+		base_font_size: app.get_scaled_width(30.0)
 		underline_color: 'e5e5e5'
 		colors: root.color_dict
 
@@ -29,8 +29,8 @@ Builder.load_string(
 	accept_button : accept_button
 
 	BoxLayout:
-		height: dp(1.66666666667*app.height)
-		width: dp(0.6*app.width)
+		height: app.get_scaled_height(800.000000002)
+		width: app.get_scaled_width(480.0)
 		canvas.before:
 			Color: 
 				rgba: hex('#e5e5e5ff')
@@ -56,12 +56,12 @@ Builder.load_string(
 				Label:
 					id: header_label
 					size_hint: (None,None)
-					height: dp(0.125*app.height)
-					width: dp(1.0*app.width)
+					height: app.get_scaled_height(60.0)
+					width: app.get_scaled_width(800.0)
 					text: "Wi-Fi and Data Consent"
 					color: hex('#f9f9f9ff')
 					# color: hex('#333333ff') #grey
-					font_size: dp(0.0375*app.width)
+					font_size: app.get_scaled_width(30.0)
 					halign: "center"
 					valign: "bottom"
 					markup: True
@@ -69,10 +69,10 @@ Builder.load_string(
 			# BODY
 			BoxLayout:
 				size_hint: (None,None)
-				width: dp(1.0*app.width)
-				height: dp(0.6*app.height)
-				padding:[dp(0.01875)*app.width, dp(0.0104166666667)*app.height, dp(0.01875)*app.width, dp(0.0104166666667)*app.height]
-				spacing:0.0104166666667*app.height
+				width: app.get_scaled_width(800.0)
+				height: app.get_scaled_height(288.0)
+				padding: app.get_scaled_tuple([15.0, 5.0, 15.0, 5.0])
+				spacing: app.get_scaled_width(5.00000000002)
 				orientation: 'vertical'
 
 				BoxLayout: 
@@ -83,14 +83,14 @@ Builder.load_string(
 						Rectangle:
 							pos: self.pos
 							size: self.size
-					padding:[dp(0.00125)*app.width, dp(0.00208333333333)*app.height]
+					padding: app.get_scaled_tuple([1.0, 1.0])
 					ScrollPrivacyNotice:
 						id: scroll_privacy_notice
 
 				BoxLayout: 
 					size_hint: (1,1)
 					orientation: 'horizontal'
-					padding:[dp(0.025)*app.width, 0]
+					padding: app.get_scaled_tuple([20.0, 0.0])
 					# canvas:
 					#	# Test to see box
 					#     Color:
@@ -104,7 +104,7 @@ Builder.load_string(
 						size_hint: (0.7,1)
 						# color: hex('#f9f9f9ff') # white
 						color: hex('#333333ff') #grey
-						font_size: dp(0.0225*app.width)
+						font_size: app.get_scaled_width(18.0)
 						halign: "center"
 						valign: "middle"
 						markup: True
@@ -120,21 +120,21 @@ Builder.load_string(
 
 			# FOOTER
 			BoxLayout: 
-				padding:[dp(0.0125)*app.width, 0, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+				padding: app.get_scaled_tuple([10.0, 0.0, 10.0, 10.0])
 				size_hint: (None, None)
-				height: dp(0.275*app.height)
-				width: dp(1.0*app.width)
+				height: app.get_scaled_height(132.0)
+				width: app.get_scaled_width(800.0)
 				orientation: 'horizontal'
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(0.254166666667*app.height)
-					width: dp(0.075*app.width)
-					# padding: [0, 0, 184.5, 0]
+					height: app.get_scaled_height(122.0)
+					width: app.get_scaled_width(60.0)
+					# padding: app.get_scaled_tuple([0.0, 0.0, 184.5, 0.0])
 					Button:
-					    font_size: str(0.01875 * app.width) + 'sp'
+					    font_size: app.get_scaled_sp('15.0sp')
 						size_hint: (None,None)
-						height: dp(0.108333333333*app.height)
-						width: dp(0.075*app.width)
+						height: app.get_scaled_height(51.9999999998)
+						width: app.get_scaled_width(60.0)
 						background_color: hex('#F4433600')
 						center: self.parent.center
 						pos: self.parent.pos
@@ -151,21 +151,21 @@ Builder.load_string(
 								allow_stretch: True
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(0.254166666667*app.height)
-					width: dp(0.825*app.width)
-					padding:[dp(0.0075)*app.width, 0, dp(0.0075)*app.width, dp(0.0875)*app.height]
-					spacing:dp(0.0825)*app.width
+					height: app.get_scaled_height(122.0)
+					width: app.get_scaled_width(660.0)
+					padding: app.get_scaled_tuple([6.0, 0.0, 6.0, 42.0])
+					spacing: app.get_scaled_width(66.0)
 					Button:
 						id: decline_button
 						background_normal: "./asmcnc/skavaUI/img/next.png"
 						background_down: "./asmcnc/skavaUI/img/next.png"
 						background_disabled_normal: "./asmcnc/apps/start_up_sequence/data_consent_app/img/standard_button_disabled.png"
-						border: [dp(14.5)]*4
+						border: app.get_scaled_tuple([14.5, 14.5, 14.5, 14.5])
 						size_hint: (None,None)
-						width: dp(0.36375*app.width)
-						height: dp(0.164583333333*app.height)
+						width: app.get_scaled_width(291.0)
+						height: app.get_scaled_height(78.9999999998)
 						on_press: root.decline_terms()
-						font_size: str(0.0375*app.width) + 'sp'
+						font_size: app.get_scaled_sp('30.0sp')
 						color: hex('#f9f9f9ff')
 						markup: True
 						center: self.parent.center
@@ -176,12 +176,12 @@ Builder.load_string(
 						background_normal: "./asmcnc/skavaUI/img/next.png"
 						background_down: "./asmcnc/skavaUI/img/next.png"
 						background_disabled_normal: "./asmcnc/apps/start_up_sequence/data_consent_app/img/standard_button_disabled.png"
-						border: [dp(14.5)]*4
+						border: app.get_scaled_tuple([14.5, 14.5, 14.5, 14.5])
 						size_hint: (None,None)
-						width: dp(0.36375*app.width)
-						height: dp(0.164583333333*app.height)
+						width: app.get_scaled_width(291.0)
+						height: app.get_scaled_height(78.9999999998)
 						on_press: root.accept_terms()
-						font_size: str(0.0375*app.width) + 'sp'
+						font_size: app.get_scaled_sp('30.0sp')
 						color: hex('#f9f9f9ff')
 						markup: True
 						center: self.parent.center
@@ -189,9 +189,9 @@ Builder.load_string(
 
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(0.254166666667*app.height)
-					width: dp(0.075*app.width)
-					# padding: [193.5, 0, 0, 0]
+					height: app.get_scaled_height(122.0)
+					width: app.get_scaled_width(60.0)
+					# padding: app.get_scaled_tuple([193.5, 0.0, 0.0, 0.0])
 
 """
 )

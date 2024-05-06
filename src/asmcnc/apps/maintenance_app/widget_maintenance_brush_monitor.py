@@ -35,7 +35,7 @@ Builder.load_string("""
     LabelBase: 
         id: percentage
         color: 1,1,1,1
-        font_size: dp(0.0625*app.width)
+        font_size: app.get_scaled_width(50.0)
         markup: True
         halign: "right"
         valign: "middle"

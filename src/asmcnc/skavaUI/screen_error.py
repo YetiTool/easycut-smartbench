@@ -83,20 +83,20 @@ Builder.load_string(
              
     BoxLayout:
         orientation: 'horizontal'
-        padding:[dp(0.05)*app.width, dp(0.0833333333333)*app.height]
-        spacing:0.0625*app.height
+        padding: app.get_scaled_tuple([40.0, 40.0])
+        spacing: app.get_scaled_width(30.0)
         size_hint_x: 1
 
         BoxLayout:
             orientation: 'vertical'
             size_hint_x: 1
-            spacing:0.0416666666667*app.height
+            spacing: app.get_scaled_width(20.0)
              
             Label:
                 id: error_header
                 size_hint_y: 0.6
                 text_size: self.size
-                font_size: str(0.03*app.width) + 'sp'
+                font_size: app.get_scaled_sp('24.0sp')
                 markup: True
                 halign: 'left'
                 vallign: 'top'
@@ -104,7 +104,7 @@ Builder.load_string(
             Label:
                 size_hint_y: 1.2
                 text_size: self.size
-                font_size: str(0.0275*app.width) + 'sp'
+                font_size: app.get_scaled_sp('22.0sp')
                 halign: 'left'
                 valign: 'middle'
                 text: root.error_description 
@@ -112,18 +112,18 @@ Builder.load_string(
             Label:
                 id: user_instruction
                 size_hint_y: 0.6
-                font_size: str(0.0275*app.width) + 'sp'
+                font_size: app.get_scaled_sp('22.0sp')
                 text_size: self.size
                 halign: 'left'
                 valign: 'middle'
                 
             BoxLayout:
                 orientation: 'horizontal'
-                padding:[dp(0.1625)*app.width, 0]
+                padding: app.get_scaled_tuple([130.0, 0.0])
                 size_hint_y: 0.8
             
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: app.get_scaled_sp('15.0sp')
                     size_hint_y:0.9
                     id: getout_button
                     size: self.texture_size
@@ -135,13 +135,13 @@ Builder.load_string(
                         root.button_press()
                         
                     BoxLayout:
-                        padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                        padding: app.get_scaled_tuple([5.0, 5.0])
                         size: self.parent.size
                         pos: self.parent.pos
                         
                         Label:
                             id: return_label
-                            font_size: str(0.025*app.width) + 'sp'
+                            font_size: app.get_scaled_sp('20.0sp')
                             text: 'Return'
                         
   

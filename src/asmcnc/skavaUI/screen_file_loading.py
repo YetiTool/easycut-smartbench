@@ -54,7 +54,7 @@ Builder.load_string(
         size_hint_x: 1
 
         Label:
-            font_size: str(0.01875 * app.width) + 'sp'
+            font_size: app.get_scaled_sp('15.0sp')
             id: usb_status_label
             canvas.before:
                 Color:
@@ -64,15 +64,15 @@ Builder.load_string(
                     pos: self.pos
             size_hint_y: 0.7
             markup: True
-            font_size: str(0.0225*app.width) + 'sp'   
+            font_size: app.get_scaled_sp('18.0sp')
             valign: 'middle'
             halign: 'left'
             text_size: self.size
-            padding:[dp(0.0125)*app.width, 0]
+            padding: app.get_scaled_tuple([10.0, 0.0])
 
         BoxLayout: 
             spacing: 0
-            padding:[dp(0.025)*app.width, 0, dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+            padding: app.get_scaled_tuple([20.0, 0.0, 20.0, 20.0])
             orientation: 'vertical'
             size_hint_y: 7.81
              
@@ -85,12 +85,12 @@ Builder.load_string(
                 size: self.texture_size
                 text_size: self.size
                 color: hex('#333333ff')
-                font_size: str(0.05*app.width) + 'sp'
+                font_size: app.get_scaled_sp('40.0sp')
                 text: root.progress_value          
 
             Label:
                 id: filename_label
-                font_size: str(0.025*app.width) + 'sp'
+                font_size: app.get_scaled_sp('20.0sp')
                 size_hint_y: 0.5
                 markup: True
                 valign: 'top'
@@ -102,7 +102,7 @@ Builder.load_string(
                 
             Label:
                 id: warning_body_label
-                font_size: str(0.0275*app.width) + 'sp'
+                font_size: app.get_scaled_sp('22.0sp')
                 halign: 'center'
                 valign: 'center'
                 size_hint_y: 1.7
@@ -113,8 +113,8 @@ Builder.load_string(
 
             BoxLayout:
                 orientation: 'horizontal'
-                padding:[dp(0.025)*app.width, dp(0.0208333333333)*app.height, dp(0.025)*app.width, dp(0.0208333333333)*app.height]
-                spacing:0.075*app.width
+                padding: app.get_scaled_tuple([20.0, 10.0, 20.0, 10.0])
+                spacing: app.get_scaled_width(60.0)
                 size_hint_y: 3
 
                 Button:
@@ -128,8 +128,8 @@ Builder.load_string(
                     background_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                     background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                     background_disabled_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
-                    border: [dp(30)]*4
-                    padding:[dp(0.0375)*app.width, dp(0.0625)*app.height]
+                    border: app.get_scaled_tuple([30.0, 30.0, 30.0, 30.0])
+                    padding: app.get_scaled_tuple([30.0, 30.0])
                     on_press: root.quit_to_home()
 
                 Button:
@@ -144,8 +144,8 @@ Builder.load_string(
                     background_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                     background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                     background_disabled_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
-                    border: [dp(30)]*4
-                    padding:[dp(0.0375)*app.width, dp(0.0625)*app.height]
+                    border: app.get_scaled_tuple([30.0, 30.0, 30.0, 30.0])
+                    padding: app.get_scaled_tuple([30.0, 30.0])
 """
 )
 job_cache_dir = "./jobCache/"

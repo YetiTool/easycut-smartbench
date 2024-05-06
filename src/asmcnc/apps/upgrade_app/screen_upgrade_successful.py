@@ -28,7 +28,7 @@ Builder.load_string("""
                 text: 'Upgrade SB V1.3 to PrecisionPro +'
                 halign: 'center'
                 valign: 'middle'
-                font_size: dp(0.0375*app.width)
+                font_size: app.get_scaled_width(30.0)
                 text_size: self.size
 
         BoxLayout:
@@ -44,7 +44,7 @@ Builder.load_string("""
 
             LabelBase:
                 id: success_label
-                font_size: dp(0.04*app.width)
+                font_size: app.get_scaled_width(32.0)
                 color: 0,0,0,1
                 halign: 'center'
                 valign: 'middle'
@@ -52,18 +52,18 @@ Builder.load_string("""
 
             BoxLayout:
                 size_hint_y: 0.25
-                padding:[dp(0.21875)*app.width, 0, dp(0.21875)*app.width, dp(0.229166666667)*app.height]
+                padding: app.get_scaled_tuple([175.0, 0.0, 175.0, 110.0])
 
                 Button:
                     id: continue_button
                     on_press: root.next_screen()
-                    font_size: dp(0.0375*app.width)
+                    font_size: app.get_scaled_width(30.0)
                     background_normal: "./asmcnc/skavaUI/img/next.png"
                     background_down: "./asmcnc/skavaUI/img/next.png"
-                    border: [dp(14.5)]*4
+                    border: app.get_scaled_tuple([14.5, 14.5, 14.5, 14.5])
                     size_hint: (None,None)
-                    width: dp(0.5625*app.width)
-                    height: dp(0.125*app.height)
+                    width: app.get_scaled_width(450.0)
+                    height: app.get_scaled_height(60.0)
                     color: hex('#f9f9f9ff')
                     center: self.parent.center
                     pos: self.parent.pos

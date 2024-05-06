@@ -39,32 +39,32 @@ Builder.load_string(
             orientation: "horizontal"
 
             Label:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 text: 'LED ring:'
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 text: 'Red'
                 on_press: root.led('RED')
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 text: 'Green'
                 on_press: root.led('GREEN')
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 text: 'Blue'
                 on_press: root.led('BLUE')
 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 text: 'OFF'
                 on_press: root.led('off')
 
             Label:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 id: probe_label
                 text: 'Probe'
             Label:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 id: dust_shoe_cover_label
                 text: 'Dust cover'
                 
@@ -74,22 +74,22 @@ Builder.load_string(
             orientation: "horizontal"
 
             Label:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 text: 'X axis:'
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 text: '-'
                 on_press: root.move('x-')
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 text: '+'
                 on_press: root.move('x+')
             Label:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 id: limit_x_label
                 text: 'X Min'
             Label:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 id: limit_X_label
                 text: 'X Max'
 
@@ -99,22 +99,22 @@ Builder.load_string(
             orientation: "horizontal"
 
             Label:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 text: 'Y axis:'
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 text: '-'
                 on_press: root.move('y-')
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 text: '+'
                 on_press: root.move('y+')
             Label:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 id: limit_y_label
                 text: 'Y Min'
             Label:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 id: limit_Y_label
                 text: 'Y Max'
 
@@ -124,26 +124,26 @@ Builder.load_string(
             orientation: "horizontal"
 
             Label:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 text: 'Z axis:'
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 text: '-'
                 on_press: root.move('z-')
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 text: '+'
                 on_press: root.move('z+')
             Label:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 id: limit_z_label
                 text: 'Z Min'
             Label:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 text: ''
 
         Button:
-            font_size: str(0.01875 * app.width) + 'sp'
+            font_size: app.get_scaled_sp('15.0sp')
             text: 'Return to factory settings'
             on_press: root.return_to_home()
             

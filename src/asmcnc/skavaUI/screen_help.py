@@ -48,7 +48,7 @@ Builder.load_string("""
                     root.quit_to_home()
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding: 15
+                    padding: app.get_scaled_width(15)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -61,7 +61,7 @@ Builder.load_string("""
 
         BoxLayout:
             size_hint_x: 8
-            padding: 10
+            padding: app.get_scaled_width(10)
             VideoPlayer:
                 id: video_player
 #                 state: "stop"

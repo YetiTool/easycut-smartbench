@@ -64,13 +64,13 @@ Builder.load_string(
 
     BoxLayout:
         padding: 0
-        spacing:0.0208333333333*app.height
+        spacing: app.get_scaled_width(9.99999999998)
         orientation: "vertical"
 
         BoxLayout:
             size_hint_y: 0.9
             padding: 0
-            spacing:0.0125*app.width
+            spacing: app.get_scaled_width(10.0)
             orientation: "horizontal"
 
             BoxLayout:
@@ -82,16 +82,16 @@ Builder.load_string(
                     pos_hint: {'center_x': .5, 'center_y': .5}
                     do_default_tab: False
                     tab_pos: 'left_top'
-                    tab_height: 0.1875*app.height
-                    tab_width: 0.1125*app.width
+                    tab_height: app.get_scaled_height(90.0)
+                    tab_width: app.get_scaled_width(90.0)
 
                     TabbedPanelItem:
                         background_normal: 'asmcnc/skavaUI/img/tab_set_normal.png'
                         background_down: 'asmcnc/skavaUI/img/tab_set_up.png'
                         on_press: root.m.laser_off()
                         BoxLayout:
-                            padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
-                            spacing:0.025*app.width
+                            padding: app.get_scaled_tuple([20.0, 20.0])
+                            spacing: app.get_scaled_width(20.0)
                             canvas:
                                 Color:
                                     rgba: hex('#E5E5E5FF')
@@ -110,8 +110,8 @@ Builder.load_string(
                         on_press: root.m.laser_on()
                         BoxLayout:
                             orientation: 'horizontal'
-                            padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
-                            spacing:0.025*app.width
+                            padding: app.get_scaled_tuple([20.0, 20.0])
+                            spacing: app.get_scaled_width(20.0)
                             canvas:
                                 Color:
                                     rgba: hex('#E5E5E5FF')
@@ -151,8 +151,8 @@ Builder.load_string(
                         on_press: root.m.laser_on()
                         BoxLayout:
                             orientation: 'vertical'
-                            padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
-                            spacing:0.0416666666667*app.height
+                            padding: app.get_scaled_tuple([20.0, 20.0])
+                            spacing: app.get_scaled_width(20.0)
                             canvas:
                                 Color:
                                     rgba: hex('#E5E5E5FF')
@@ -162,7 +162,7 @@ Builder.load_string(
 
                             BoxLayout:
                                 size_hint_y: 5
-                                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                                padding: app.get_scaled_tuple([10.0, 10.0])
                                 canvas:
                                     Color:
                                         rgba: 1,1,1,1
@@ -183,8 +183,8 @@ Builder.load_string(
                         id: home_tab
                         BoxLayout:
                             orientation: 'vertical'
-                            padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
-                            spacing:0.0416666666667*app.height
+                            padding: app.get_scaled_tuple([20.0, 20.0])
+                            spacing: app.get_scaled_width(20.0)
                             id: job_container
                             canvas:
                                 Color:
@@ -195,8 +195,8 @@ Builder.load_string(
 
                             BoxLayout:
                                 size_hint_y: 1
-                                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
-                                spacing:0.0125*app.width
+                                padding: app.get_scaled_tuple([10.0, 10.0])
+                                spacing: app.get_scaled_width(10.0)
                                 orientation: 'horizontal'
                                 canvas:
                                     Color:
@@ -206,7 +206,7 @@ Builder.load_string(
                                         pos: self.pos
 
                                 Button:
-                                    font_size: str(0.01875 * app.width) + 'sp'
+                                    font_size: app.get_scaled_sp('15.0sp')
                                     size_hint_x: 1
                                     background_color: hex('#F4433600')
                                     on_press:
@@ -223,7 +223,7 @@ Builder.load_string(
                                             allow_stretch: True
 
                                 Button:
-                                    font_size: str(0.01875 * app.width) + 'sp'
+                                    font_size: app.get_scaled_sp('15.0sp')
                                     id: job_recovery_button
                                     size_hint_x: 1
                                     background_color: hex('#F4433600')
@@ -245,7 +245,7 @@ Builder.load_string(
                                     id: file_data_label
                                     size_hint_x: 4
                                     text_size: self.size
-                                    font_size: str(0.025*app.width) + 'sp'
+                                    font_size: app.get_scaled_sp('20.0sp')
                                     markup: True
                                     text: '[color=333333]Load a file...[/color]'
                                     halign: 'center'
@@ -253,7 +253,7 @@ Builder.load_string(
 
                             BoxLayout:
                                 size_hint_y: 3
-                                padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                                padding: app.get_scaled_tuple([20.0, 20.0])
                                 orientation: 'horizontal'
                                 canvas:
                                     Color:

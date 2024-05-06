@@ -23,12 +23,12 @@ Builder.load_string("""
 
             Label:
                 text: 'Calibration complete!'
-                font_size: dp(50)
+                font_size: app.get_scaled_width(50)
             
             Button:
                 on_press: root.enter_next_screen()
                 text: 'OK'
-                font_size: dp(30)
+                font_size: app.get_scaled_width(30)
                 size_hint_y: 0.2
                 size_hint_x: 0.3
 

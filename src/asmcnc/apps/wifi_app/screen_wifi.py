@@ -27,7 +27,7 @@ Builder.load_string(
 
     background_normal: ''
     background_color: [1,1,1,1]
-    height: dp(0.0833333333333*app.height)
+    height: app.get_scaled_height(40.0)
     color: 0,0,0,1
     halign: 'left'
     markup: 'True'
@@ -58,8 +58,8 @@ Builder.load_string(
     
     BoxLayout:
         size_hint: (None, None)
-        height: dp(1.0*app.height)
-        width: dp(1.0*app.width)
+        height: app.get_scaled_height(480.0)
+        width: app.get_scaled_width(800.0)
         orientation: 'vertical'
         canvas:
             Color:
@@ -70,20 +70,20 @@ Builder.load_string(
         
         BoxLayout:
             size_hint: (None, None)
-            height: dp(0.395833333333*app.height)
-            width: dp(1.0*app.width)
-            padding:[dp(0.0375)*app.width, dp(0.0625)*app.height, dp(0.0375)*app.width, dp(0.0416666666667)*app.height]
-            spacing:0.0375*app.width
+            height: app.get_scaled_height(190.0)
+            width: app.get_scaled_width(800.0)
+            padding: app.get_scaled_tuple([30.0, 30.0, 30.0, 20.0])
+            spacing: app.get_scaled_width(30.0)
             orientation: 'horizontal'
             
             # Status indicator            
             BoxLayout: 
                 size_hint: (None, None)
-                height: dp(0.291666666667*app.height)
-                width: dp(0.1875*app.width)
+                height: app.get_scaled_height(140.0)
+                width: app.get_scaled_width(150.0)
                 orientation: 'vertical'
-                padding:[0, dp(0.0729166666667)*app.height, 0, dp(0.0208333333333)*app.height]
-                spacing:0.0208333333333*app.height
+                padding: app.get_scaled_tuple([0.0, 35.0, 0.0, 10.0])
+                spacing: app.get_scaled_width(9.99999999998)
                 canvas:
                     Color:
                         rgba: root.status_color
@@ -92,8 +92,8 @@ Builder.load_string(
                         size: self.size
                 BoxLayout: 
                     size_hint: (None, None)
-                    height: dp(0.0520833333333*app.height)
-                    width: dp(0.1875*app.width)
+                    height: app.get_scaled_height(25.0)
+                    width: app.get_scaled_width(150.0)
                     Image:
                         id: wifi_image
                         source: "./asmcnc/skavaUI/img/wifi_on.png"
@@ -104,13 +104,13 @@ Builder.load_string(
 
                 BoxLayout: 
                     size_hint: (None, None)
-                    height: dp(0.125*app.height)
-                    width: dp(0.1875*app.width)
+                    height: app.get_scaled_height(60.0)
+                    width: app.get_scaled_width(150.0)
                     orientation: 'vertical'
                     LabelBase:
                         id: ip_address_label
                         color: 1,1,1,1
-                        font_size: 0.0225*app.width
+                        font_size: app.get_scaled_width(18.0)
                         markup: True
                         halign: "center"
                         valign: "middle"
@@ -121,7 +121,7 @@ Builder.load_string(
                     LabelBase:
                         id: ip_status_label
                         color: 1,1,1,1
-                        font_size: 0.0225*app.width
+                        font_size: app.get_scaled_width(18.0)
                         markup: True
                         halign: "center"
                         valign: "middle"
@@ -132,10 +132,10 @@ Builder.load_string(
             # Text Entry Area
             BoxLayout: 
                 size_hint: (None, None)
-                height: dp(0.291666666667*app.height)
-                width: dp(0.7*app.width)
-                padding:[dp(0.0125)*app.width, dp(0.0416666666667)*app.height, dp(0.0125)*app.width, dp(0.0625)*app.height]
-                spacing:0.0125*app.width
+                height: app.get_scaled_height(140.0)
+                width: app.get_scaled_width(560.0)
+                padding: app.get_scaled_tuple([10.0, 20.0, 10.0, 30.0])
+                spacing: app.get_scaled_width(10.0)
                 canvas:
                     Color:
                         rgba: [1,1,1,1]
@@ -145,27 +145,27 @@ Builder.load_string(
                 # SSID
                 BoxLayout: 
                     size_hint: (None, None)
-                    height: dp(0.208333333333*app.height)
-                    width: dp(0.275*app.width)
+                    height: app.get_scaled_height(99.9999999998)
+                    width: app.get_scaled_width(220.0)
                     pos_hint: {'top': 0.66}
                     orientation: "vertical"
-                    padding:[dp(0.0125)*app.width, 0, dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                    padding: app.get_scaled_tuple([10.0, 0.0, 20.0, 20.0])
                     
                     BoxLayout: 
                         size_hint: (None, None) 
                         orientation: "horizontal"
-                        width: dp(0.2625*app.width)
-                        height: dp(0.0833333333333*app.height)
+                        width: app.get_scaled_width(210.0)
+                        height: app.get_scaled_height(40.0)
                         BoxLayout: 
                             size_hint: (None, None) 
                             orientation: "vertical"
-                            width: dp(0.18875*app.width)
-                            height: dp(0.0833333333333*app.height)
+                            width: app.get_scaled_width(151.0)
+                            height: app.get_scaled_height(40.0)
                             LabelBase:
                                 id: network_name_label
-                                width: dp(0.18875*app.width)
+                                width: app.get_scaled_width(151.0)
                                 color: 0,0,0,1
-                                font_size: 0.025*app.width
+                                font_size: app.get_scaled_width(20.0)
                                 markup: True
                                 halign: "left"
                                 valign: "middle"
@@ -176,14 +176,14 @@ Builder.load_string(
                         BoxLayout: 
                             size_hint: (None, None) 
                             orientation: "vertical"
-                            width: dp(0.04875*app.width)
-                            height: dp(0.0833333333333*app.height)
-                            padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height, dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                            width: app.get_scaled_width(39.0)
+                            height: app.get_scaled_height(40.0)
+                            padding: app.get_scaled_tuple([5.0, 5.0, 5.0, 5.0])
                             Button:
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 size_hint: (None,None)
-                                height: dp(0.0625*app.height)
-                                width: dp(0.03625*app.width)
+                                height: app.get_scaled_height(30.0)
+                                width: app.get_scaled_width(29.0)
                                 background_color: hex('#F4433600')
                                 center: self.parent.center
                                 pos: self.parent.pos
@@ -201,18 +201,18 @@ Builder.load_string(
 
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(0.0833333333333*app.height)
-                        width: dp(0.2625*app.width)
-                        padding:[0, 0, 0, 0]
+                        height: app.get_scaled_height(40.0)
+                        width: app.get_scaled_width(210.0)
+                        padding: app.get_scaled_tuple([0.0, 0.0, 0.0, 0.0])
                         orientation: 'horizontal'
                         id: network_name_input
                         
                         # The Spinner with the background image, grouped together in this BoxLayout
                         BoxLayout:
                             size_hint: (None,None)
-                            height: dp(0.0833333333333*app.height)
-                            width: dp(0.2625*app.width)
-                            padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height, dp(0.00625)*app.width, dp(0.0166666666667)*app.height]
+                            height: app.get_scaled_height(40.0)
+                            width: app.get_scaled_width(210.0)
+                            padding: app.get_scaled_tuple([5.0, 5.0, 5.0, 8.0])
                             id: network_name_box
                             
                             canvas:
@@ -230,7 +230,7 @@ Builder.load_string(
                                 size_hint: (None, None)
                                 size: 200.0/800*app.width, 24.0/480*app.height
                                 text: ''
-                                font_size: str(0.025*app.width) + 'sp'
+                                font_size: app.get_scaled_sp('20.0sp')
                                 text_size: self.size
                                 multiline: False
                                 color: 0,0,0,1
@@ -242,9 +242,9 @@ Builder.load_string(
                         # The TextInput for the custom network name, very similar to the Password BoxLayout
                         BoxLayout:
                             size_hint: (None,None)
-                            height: dp(0.0833333333333*app.height)
-                            width: dp(0.2625*app.width)
-                            padding:[0, 0, 0, 0]
+                            height: app.get_scaled_height(40.0)
+                            width: app.get_scaled_width(210.0)
+                            padding: app.get_scaled_tuple([0.0, 0.0, 0.0, 0.0])
                             id: custom_network_name_box
                             
                             TextInput: 
@@ -253,7 +253,7 @@ Builder.load_string(
                                 padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
                                 halign: 'center'
                                 text_size: self.size
-                                font_size: str(0.025*app.width) + 'sp'
+                                font_size: app.get_scaled_sp('20.0sp')
                                 markup: True
                                 multiline: False
                                 text: ''
@@ -263,13 +263,13 @@ Builder.load_string(
                     BoxLayout: 
                         size_hint: (None, None) 
                         orientation: "horizontal"
-                        width: dp(0.2625*app.width)
-                        height: dp(0.0833333333333*app.height)
-                        padding:[0, dp(0.0104166666667)*app.height, 0, dp(0.0104166666667)*app.height]
+                        width: app.get_scaled_width(210.0)
+                        height: app.get_scaled_height(40.0)
+                        padding: app.get_scaled_tuple([0.0, 5.0, 0.0, 5.0])
                         ToggleButton:
                             id: custom_ssid_button
                             on_release: root.custom_ssid_input()
-                            font_size: 0.025*app.width
+                            font_size: app.get_scaled_width(20.0)
                             color: hex('#f9f9f9ff')
                             markup: True
                             background_normal: "./asmcnc/apps/wifi_app/img/CustomSSID_blank.png"
@@ -278,15 +278,15 @@ Builder.load_string(
                 #Password
                 BoxLayout: 
                     size_hint: (None, None)
-                    height: dp(0.208333333333*app.height)
-                    width: dp(0.2625*app.width)
+                    height: app.get_scaled_height(99.9999999998)
+                    width: app.get_scaled_width(210.0)
                     orientation: "vertical"
-                    padding:[0, 0, 0, dp(0.0416666666667)*app.height]
+                    padding: app.get_scaled_tuple([0.0, 0.0, 0.0, 20.0])
                               
                     LabelBase:
                         id: password_label
                         color: 0,0,0,1
-                        font_size: 0.025*app.width
+                        font_size: app.get_scaled_width(20.0)
                         markup: True
                         halign: "left"
                         valign: "middle"
@@ -296,16 +296,16 @@ Builder.load_string(
 
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(0.0833333333333*app.height)
-                        width: dp(0.2625*app.width)
-                        padding:[0, 0, 0, 0]
+                        height: app.get_scaled_height(40.0)
+                        width: app.get_scaled_width(210.0)
+                        padding: app.get_scaled_tuple([0.0, 0.0, 0.0, 0.0])
                                     
                         TextInput: 
                             id: _password
                             valign: 'middle'
                             halign: 'center'
                             text_size: self.size
-                            font_size: str(0.025*app.width) + 'sp'
+                            font_size: app.get_scaled_sp('20.0sp')
                             markup: True
                             multiline: False
                             text: ''
@@ -314,15 +314,15 @@ Builder.load_string(
                 #Country Code
                 BoxLayout: 
                     size_hint: (None, None)
-                    height: dp(0.208333333333*app.height)
-                    width: dp(0.1125*app.width)
+                    height: app.get_scaled_height(99.9999999998)
+                    width: app.get_scaled_width(90.0)
                     orientation: 'vertical'
-                    padding:[0, 0, dp(0.0125)*app.width, dp(0.0416666666667)*app.height]
+                    padding: app.get_scaled_tuple([0.0, 0.0, 10.0, 20.0])
                               
                     LabelBase:
                         id: country_label
                         color: 0,0,0,1
-                        font_size: 0.025*app.width
+                        font_size: app.get_scaled_width(20.0)
                         markup: True
                         halign: "left"
                         valign: "middle"
@@ -332,9 +332,9 @@ Builder.load_string(
 
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(0.0833333333333*app.height)
-                        width: dp(0.1*app.width)
-                        padding:[dp(0.025)*app.width, 0, dp(0.00625)*app.width, 0]
+                        height: app.get_scaled_height(40.0)
+                        width: app.get_scaled_width(80.0)
+                        padding: app.get_scaled_tuple([20.0, 0.0, 5.0, 0.0])
                         orientation: 'horizontal'
                         canvas:
                             Rectangle:
@@ -349,7 +349,7 @@ Builder.load_string(
                             markup: True
                             size: 55.0/800*app.width, 40.0/480*app.height
                             text: 'GB'
-                            font_size: str(0.025*app.width) + 'sp'
+                            font_size: app.get_scaled_sp('20.0sp')
                             text_size: self.size
                             color: 0,0,0,1
                             values: root.values
@@ -358,17 +358,17 @@ Builder.load_string(
 
         BoxLayout:
             size_hint: (None, None)
-            height: dp(0.604166666667*app.height)
-            width: dp(1.0*app.width)
-            padding:[dp(0.0375)*app.width, 0, dp(0.0375)*app.width, dp(0.0625)*app.height]
-            spacing:0.0125*app.width
+            height: app.get_scaled_height(290.0)
+            width: app.get_scaled_width(800.0)
+            padding: app.get_scaled_tuple([30.0, 0.0, 30.0, 30.0])
+            spacing: app.get_scaled_width(10.0)
             
             # Doc viewer
             BoxLayout: 
                 size_hint: (None, None)
-                height: dp(0.541666666667*app.height)
-                width: dp(0.7125*app.width)
-                padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                height: app.get_scaled_height(260.0)
+                width: app.get_scaled_width(570.0)
+                padding: app.get_scaled_tuple([20.0, 20.0])
                 canvas:
                     Color:
                         rgba: [1,1,1,1]
@@ -385,15 +385,15 @@ Builder.load_string(
                     RstDocument:
                         id: connection_instructions_rst
                         background_color: hex('#FFFFFF')
-                        base_font_size: 26.0 / 800 * app.width
+                        base_font_size: app.get_scaled_width(26.0)
                         underline_color: '000000'
                                                                                    
             BoxLayout: 
                 size_hint: (None, None)
-                height: dp(0.541666666667*app.height)
-                width: dp(0.2*app.width)
+                height: app.get_scaled_height(260.0)
+                width: app.get_scaled_width(160.0)
                 orientation: 'vertical'
-                spacing:0.0625*app.height
+                spacing: app.get_scaled_width(30.0)
                 canvas:
                     Color:
                         rgba: [226 / 255., 226 / 255., 226 / 255., 1.]
@@ -402,9 +402,9 @@ Builder.load_string(
                         size: self.size
                 BoxLayout: 
                     size_hint: (None, None)
-                    height: dp(0.239583333333*app.height)
-                    width: dp(0.2*app.width)
-                    padding:[dp(0.0025)*app.width, 0, 0, 0]
+                    height: app.get_scaled_height(115.0)
+                    width: app.get_scaled_width(160.0)
+                    padding: app.get_scaled_tuple([2.0, 0.0, 0.0, 0.0])
                     canvas:
                         Color:
                             rgba: [226 / 255., 226 / 255., 226 / 255., 1.]
@@ -416,13 +416,13 @@ Builder.load_string(
                         id: connect_button
                         background_normal: "./asmcnc/apps/wifi_app/img/connect_blank.png"
                         background_down: "./asmcnc/apps/wifi_app/img/connect_blank.png"
-                        border: [dp(14.5)]*4
+                        border: app.get_scaled_tuple([14.5, 14.5, 14.5, 14.5])
                         size_hint: (None,None)
-                        height: dp(0.239583333333*app.height)
-                        width: dp(0.1975*app.width)
+                        height: app.get_scaled_height(115.0)
+                        width: app.get_scaled_width(158.0)
                         on_press: root.check_credentials()
                         # text: 'Connect'
-                        font_size: str(0.035*app.width) + 'sp'
+                        font_size: app.get_scaled_sp('28.0sp')
                         color: hex('#f9f9f9ff')
                         markup: True
                         center: self.parent.center
@@ -431,14 +431,14 @@ Builder.load_string(
 
                 BoxLayout: 
                     size_hint: (None, None)
-                    height: dp(0.233333333333*app.height)
-                    width: dp(0.2*app.width)
-                    padding:[dp(0.035)*app.width, 0, dp(0.025)*app.width, 0]
+                    height: app.get_scaled_height(112.0)
+                    width: app.get_scaled_width(160.0)
+                    padding: app.get_scaled_tuple([28.0, 0.0, 20.0, 0.0])
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         size_hint: (None,None)
-                        height: dp(0.233333333333*app.height)
-                        width: dp(0.14*app.width)
+                        height: app.get_scaled_height(112.0)
+                        width: app.get_scaled_width(112.0)
                         background_color: hex('#F4433600')
                         center: self.parent.center
                         pos: self.parent.pos

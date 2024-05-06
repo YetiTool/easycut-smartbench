@@ -18,31 +18,31 @@ Builder.load_string("""
             cols: 1
             rows: 4
 
-            spacing: 50
+            spacing: app.get_scaled_width(50)
 
             GridLayout:
                 cols: 1
                 rows: 1
 
-                padding: [200, 0]
+                padding: app.get_scaled_tuple([200.0, 0.0])
 
                 TextInput:
                     id: serial_no_input
-                    font_size: dp(50)
+                    font_size: app.get_scaled_width(50)
                     multiline: False
 
             Label:
                 text: '^ Enter ZH Serial number: ^'
-                font_size: dp(50)
+                font_size: app.get_scaled_width(50)
 
             Label:
                 id: error_label
-                font_size: dp(30)
+                font_size: app.get_scaled_width(30)
 
             Button:
                 on_press: root.enter_next_screen()
                 text: 'OK'
-                font_size: dp(30)
+                font_size: app.get_scaled_width(30)
                 size_hint_y: 0.6
 
 """)

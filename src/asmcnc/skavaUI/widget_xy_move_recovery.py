@@ -12,8 +12,8 @@ Builder.load_string("""
         size: self.parent.size
         pos: self.parent.pos
         orientation: 'vertical'
-        padding: 10
-        spacing: 10
+        padding: app.get_scaled_width(10)
+        spacing: app.get_scaled_width(10)
 
         GridLayout:
             cols: 3
@@ -24,7 +24,7 @@ Builder.load_string("""
 
 
             BoxLayout:
-                padding: 10
+                padding: app.get_scaled_width(10)
                 size: self.parent.size
                 pos: self.parent.pos
 
@@ -49,7 +49,7 @@ Builder.load_string("""
                         allow_stretch: True
 
             BoxLayout:
-                padding: 10
+                padding: app.get_scaled_width(10)
                 size: self.parent.size
                 pos: self.parent.pos
 
@@ -112,7 +112,7 @@ Builder.load_string("""
                         allow_stretch: True
 
             BoxLayout:
-                padding: 10
+                padding: app.get_scaled_width(10)
                 size: self.parent.size
                 pos: self.parent.pos
 
@@ -137,7 +137,7 @@ Builder.load_string("""
                         allow_stretch: True
 
             BoxLayout:
-                padding: 10
+                padding: app.get_scaled_width(10)
                 size: self.parent.size
                 pos: self.parent.pos
 """)

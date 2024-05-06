@@ -35,7 +35,7 @@ Builder.load_string("""
                     markup: 'True'
                     halign: 'center'
                     valign: 'bottom'
-                    font_size: dp(30)
+                    font_size: app.get_scaled_width(30)
 
                 Label: 
                     id: fw_version_label
@@ -45,14 +45,14 @@ Builder.load_string("""
                     markup: 'True'
                     halign: 'center'
                     valign: 'middle'
-                    font_size: dp(24)
+                    font_size: app.get_scaled_width(24)
 
             GridLayout: 
                 cols: 2
 
                 Button:
                     text: root.after_label
-                    font_size: dp(20)
+                    font_size: app.get_scaled_width(20)
                     color: 1,1,1,1
                     text_size: self.size
                     markup: 'True'
@@ -62,7 +62,7 @@ Builder.load_string("""
 
                 Button:
                     text: root.before_label
-                    font_size: dp(20)
+                    font_size: app.get_scaled_width(20)
                     color: 1,1,1,1
                     text_size: self.size
                     markup: 'True'
@@ -75,20 +75,20 @@ Builder.load_string("""
 
                 Button: 
                     text: '<<< Back'
-                    font_size: dp(20)
+                    font_size: app.get_scaled_width(20)
                     on_press: root.back_to_home()
 
                 ToggleButton: 
                     id: connection_button
                     text: "Disconnect Z Head"
-                    font_size: dp(20)
+                    font_size: app.get_scaled_width(20)
                     on_press: root.toggle_connection_to_z_head()
 
 
                 ToggleButton:
                     id: usb_change_button
                     text: 'FW on USB: vx.x.x'
-                    font_size: dp(20)
+                    font_size: app.get_scaled_width(20)
                     on_press: root.toggle_usb_mounted()
                     markup: True
                     halign: "center"

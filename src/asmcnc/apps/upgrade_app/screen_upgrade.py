@@ -40,26 +40,26 @@ Builder.load_string("""
                     pos: self.pos
 
             BoxLayout:
-                padding:[dp(0.075)*app.width, 0, 0, 0]
+                padding: app.get_scaled_tuple([60.0, 0.0, 0.0, 0.0])
 
                 LabelBase:
                     id: title_label
                     text: 'Upgrade SB V1.3 to PrecisionPro +'
                     halign: 'center'
                     valign: 'middle'
-                    font_size: dp(0.0375*app.width)
+                    font_size: app.get_scaled_width(30.0)
                     text_size: self.size
 
             BoxLayout:
                 size_hint_x: 0.08
-                padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                padding: app.get_scaled_tuple([5.0, 5.0])
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: app.get_scaled_sp('15.0sp')
                     id: exit_button
                     size_hint: (None,None)
-                    height: dp(0.104166666667*app.height)
-                    width: dp(0.0625*app.width)
+                    height: app.get_scaled_height(50.0000000002)
+                    width: app.get_scaled_width(50.0)
                     background_color: [0,0,0,0]
                     opacity: 1
                     on_press: root.quit_to_lobby()
@@ -77,7 +77,7 @@ Builder.load_string("""
         BoxLayout:
             orientation: 'vertical'
             size_hint_y: 7
-            padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+            padding: app.get_scaled_tuple([10.0, 10.0])
 
             canvas: 
                 Color:
@@ -92,18 +92,18 @@ Builder.load_string("""
                 LabelBase:
                     id: instruction_label
                     size_hint_y: 2
-                    font_size: dp(0.03*app.width)
+                    font_size: app.get_scaled_width(24.0)
                     color: 0,0,0,1
                     halign: 'center'
                     valign: 'middle'
                     text_size: self.size
 
                 BoxLayout:
-                    padding:[dp(0.25)*app.width, 0, dp(0.25)*app.width, dp(0.0416666666667)*app.height]
+                    padding: app.get_scaled_tuple([200.0, 0.0, 200.0, 20.0])
 
                     TextInput:
                         id: upgrade_code_input
-                        font_size: dp(0.0375*app.width)
+                        font_size: app.get_scaled_width(30.0)
                         multiline: False
                         valign: 'middle'
                         halign: 'center'
@@ -120,7 +120,7 @@ Builder.load_string("""
                         id: error_label
                         size_hint_y: 0
                         height: 0
-                        font_size: dp(0.02875*app.width)
+                        font_size: app.get_scaled_width(23.0)
                         color: 1,0,0,1
                         halign: 'center'
                         valign: 'middle'
@@ -132,7 +132,7 @@ Builder.load_string("""
                         LabelBase:
                             id: support_label
                             size_hint_y: 1.5
-                            font_size: dp(0.03*app.width)
+                            font_size: app.get_scaled_width(24.0)
                             color: 0,0,0,1
                             halign: 'center'
                             valign: 'middle'
@@ -145,7 +145,7 @@ Builder.load_string("""
 
                         LabelBase:
                             id: spindle_label
-                            font_size: dp(0.025*app.width)
+                            font_size: app.get_scaled_width(20.0)
                             color: 0,0,0,1
                             halign: 'center'
                             valign: 'middle'

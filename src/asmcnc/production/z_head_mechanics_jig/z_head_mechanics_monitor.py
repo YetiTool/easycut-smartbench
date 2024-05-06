@@ -10,13 +10,13 @@ Builder.load_string("""
 
     BoxLayout:
         orientation: 'vertical'
-        padding: dp(10)
-        spacing: dp(10)
+        padding: app.get_scaled_width(10)
+        spacing: app.get_scaled_width(10)
 
         Button:
             text: 'Back'
             bold: True
-            font_size: dp(25)
+            font_size: app.get_scaled_width(25)
             on_press: root.back()
 
         BoxLayout:

@@ -22,12 +22,12 @@ Builder.load_string(
 
         size: self.parent.size
         pos: self.parent.pos      
-        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
-        spacing:0.0125*app.width
+        padding: app.get_scaled_tuple([20.0, 20.0])
+        spacing: app.get_scaled_width(10.0)
         orientation: 'horizontal'
         
         BoxLayout:
-            spacing:0.0208333333333*app.height
+            spacing: app.get_scaled_width(9.99999999998)
             orientation: "vertical"
             
             BoxLayout:
@@ -36,11 +36,11 @@ Builder.load_string(
                 id: virtual_z_container
 
         BoxLayout:
-            spacing:0.0208333333333*app.height
+            spacing: app.get_scaled_width(9.99999999998)
             orientation: "vertical"
             
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release:
@@ -61,7 +61,7 @@ Builder.load_string(
                         allow_stretch: True   
 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 
@@ -83,7 +83,7 @@ Builder.load_string(
                         allow_stretch: True   
                         
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 

@@ -14,8 +14,8 @@ Builder.load_string(
 
 <GRBLSettingsScreen>
     BoxLayout:
-        height: dp(1.66666666667*app.height)
-        width: dp(0.6*app.width)
+        height: app.get_scaled_height(800.000000002)
+        width: app.get_scaled_width(480.0)
         canvas.before:
             Color: 
                 rgba: hex('#f9f9f9ff')
@@ -25,7 +25,7 @@ Builder.load_string(
 
         BoxLayout:
             padding: 0
-            spacing:0.0208333333333*app.height
+            spacing: app.get_scaled_width(9.99999999998)
             orientation: "vertical"
             BoxLayout:
                 padding: 0
@@ -38,20 +38,20 @@ Builder.load_string(
                         size: self.size
                 Label:
                     size_hint: (None,None)
-                    height: dp(0.125*app.height)
-                    width: dp(1.0*app.width)
+                    height: app.get_scaled_height(60.0)
+                    width: app.get_scaled_width(800.0)
                     text: "GRBL settings"
                     color: hex('#f9f9f9ff')
-                    font_size: 0.0375*app.width
+                    font_size: app.get_scaled_width(30.0)
                     halign: "center"
                     valign: "bottom"
                     markup: True
                    
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.0*app.width)
-                height: dp(0.666666666667*app.height)
-                padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                width: app.get_scaled_width(800.0)
+                height: app.get_scaled_height(320.0)
+                padding: app.get_scaled_tuple([20.0, 20.0])
                 spacing: 0
                 orientation: 'vertical'
 
@@ -63,74 +63,74 @@ Builder.load_string(
                     size_hint_y: 0.67
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         text: 'Download to USB'
                         on_press: root.download_grbl_settings()
                                 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         text: 'Save to file'
                         on_press: root.save_grbl_settings()
                                    
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         text: ''
                         
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         text: 'Restore from USB'
                         on_press: root.restore_grbl_settings_from_usb()
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         text: 'Restore from file'
                         on_press: root.restore_grbl_settings_from_file()
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         text: 'Bake defaults'
                         on_press: root.bake_default_settings()
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         text: '$RST=$'
                         on_press: root.send_rst_dollar()
                                    
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         text: '$RST=*'
                         on_press: root.send_rst_star()
                         
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         text: '$RST=#'
                         on_press: root.send_rst_hash()
 
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.0*app.width)
-                height: dp(0.166666666667*app.height)
+                width: app.get_scaled_width(800.0)
+                height: app.get_scaled_height(80.0000000002)
                 padding: 0
-                spacing:0.0125*app.width
+                spacing: app.get_scaled_width(10.0)
                 orientation: 'horizontal'
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.1*app.width)
-                    height: dp(0.166666666667*app.height)
+                    width: app.get_scaled_width(80.0)
+                    height: app.get_scaled_height(80.0000000002)
                     padding: 0
                     spacing: 0
 
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(0.166666666667*app.height)
-                        width: dp(0.1*app.width)
-                        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                        height: app.get_scaled_height(80.0000000002)
+                        width: app.get_scaled_width(80.0)
+                        padding: app.get_scaled_tuple([10.0, 10.0, 10.0, 10.0])
                         Button:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: app.get_scaled_sp('15.0sp')
                             size_hint: (None,None)
-                            height: dp(0.108333333333*app.height)
-                            width: dp(0.075*app.width)
+                            height: app.get_scaled_height(51.9999999998)
+                            width: app.get_scaled_width(60.0)
                             background_color: hex('#F4433600')
                             center: self.parent.center
                             pos: self.parent.pos
@@ -148,29 +148,29 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.775*app.width)
-                    height: dp(0.166666666667*app.height)
-                    padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                    width: app.get_scaled_width(620.0)
+                    height: app.get_scaled_height(80.0000000002)
+                    padding: app.get_scaled_tuple([10.0, 10.0])
                     spacing: 0
                     orientation: 'vertical'
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.1*app.width)
-                    height: dp(0.166666666667*app.height)
+                    width: app.get_scaled_width(80.0)
+                    height: app.get_scaled_height(80.0000000002)
                     padding: 0
                     spacing: 0
 
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(0.166666666667*app.height)
-                        width: dp(0.1*app.width)
-                        padding:[dp(0.02375)*app.width, dp(0.0208333333333)*app.height, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                        height: app.get_scaled_height(80.0000000002)
+                        width: app.get_scaled_width(80.0)
+                        padding: app.get_scaled_tuple([19.0, 10.0, 10.0, 10.0])
                         Button:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: app.get_scaled_sp('15.0sp')
                             size_hint: (None,None)
-                            height: dp(0.125*app.height)
-                            width: dp(0.06375*app.width)
+                            height: app.get_scaled_height(60.0)
+                            width: app.get_scaled_width(51.0)
                             background_color: hex('#F4433600')
                             center: self.parent.center
                             pos: self.parent.pos

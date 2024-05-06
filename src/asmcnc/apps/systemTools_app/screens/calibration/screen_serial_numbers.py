@@ -45,12 +45,12 @@ Builder.load_string(
                 markup: 'True'
                 halign: 'left'
                 valign: 'middle'
-                padding:[dp(0.0125)*app.width, 0]
+                padding: app.get_scaled_tuple([10.0, 0.0])
                 size_hint_x: 0.5
-                font_size: dp(0.025*app.width)
+                font_size: app.get_scaled_width(20.0)
 
             BoxLayout:
-                padding:[dp(0.0125)*app.width, 0]
+                padding: app.get_scaled_tuple([10.0, 0.0])
                 size_hint_x: 0.5
                 orientation: 'horizontal'
 
@@ -60,11 +60,11 @@ Builder.load_string(
                     markup: 'True'
                     halign: 'left'
                     valign: 'middle'
-                    font_size: dp(0.03125*app.width)
+                    font_size: app.get_scaled_width(25.0)
 
                 TextInput:
                     id: squareness_input
-                    font_size: dp(0.0375*app.width)
+                    font_size: app.get_scaled_width(30.0)
                     multiline: False
 
         GridLayout:
@@ -79,11 +79,11 @@ Builder.load_string(
 
                 Label:
                     text: 'ZHead Serial'
-                    font_size: dp(0.03125*app.width)
+                    font_size: app.get_scaled_width(25.0)
 
                 TextInput:
                     id: zhead_serial_input
-                    font_size: dp(0.0375*app.width)
+                    font_size: app.get_scaled_width(30.0)
                     multiline: False
 
             GridLayout:
@@ -92,11 +92,11 @@ Builder.load_string(
 
                 Label:
                     text: 'LB Serial'
-                    font_size: dp(0.03125*app.width)
+                    font_size: app.get_scaled_width(25.0)
 
                 TextInput:
                     id: lb_serial_input
-                    font_size: dp(0.0375*app.width)
+                    font_size: app.get_scaled_width(30.0)
                     multiline: False
 
             GridLayout:
@@ -105,11 +105,11 @@ Builder.load_string(
 
                 Label:
                     text: 'UB Serial'
-                    font_size: dp(0.03125*app.width)
+                    font_size: app.get_scaled_width(25.0)
 
                 TextInput:
                     id: ub_serial_input
-                    font_size: dp(0.0375*app.width)
+                    font_size: app.get_scaled_width(30.0)
                     multiline: False
 
             GridLayout:
@@ -118,11 +118,11 @@ Builder.load_string(
 
                 Label:
                     text: 'Console Serial'
-                    font_size: dp(0.03125*app.width)
+                    font_size: app.get_scaled_width(25.0)
 
                 TextInput:
                     id: console_serial_input
-                    font_size: dp(0.0375*app.width)
+                    font_size: app.get_scaled_width(30.0)
                     multiline: False
 
             GridLayout:
@@ -131,11 +131,11 @@ Builder.load_string(
 
                 Label:
                     text: 'YBench Serial'
-                    font_size: dp(0.03125*app.width)
+                    font_size: app.get_scaled_width(25.0)
 
                 TextInput:
                     id: ybench_serial_input
-                    font_size: dp(0.0375*app.width)
+                    font_size: app.get_scaled_width(30.0)
                     multiline: False
 
             GridLayout:
@@ -144,11 +144,11 @@ Builder.load_string(
 
                 Label:
                     text: 'Spindle Serial'
-                    font_size: dp(0.03125*app.width)
+                    font_size: app.get_scaled_width(25.0)
 
                 TextInput:
                     id: spindle_serial_input
-                    font_size: dp(0.0375*app.width)
+                    font_size: app.get_scaled_width(30.0)
                     multiline: False
 
 
@@ -156,14 +156,14 @@ Builder.load_string(
         Label:
             id: error_label
             text: 'Ensure all fields are entered accurately'
-            font_size: dp(0.0375*app.width)
+            font_size: app.get_scaled_width(30.0)
             size_hint_y: 0.3
 
         Button:
             id: main_button
             on_press: root.validate_and_download()
             text: 'Download'
-            font_size: dp(0.0375*app.width)
+            font_size: app.get_scaled_width(30.0)
             size_hint_y: 0.2
                 
 

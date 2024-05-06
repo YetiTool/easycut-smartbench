@@ -17,8 +17,8 @@ Builder.load_string(
 <ShapeCutterLandingScreenClass>:
     
     BoxLayout:
-        height: dp(1.66666666667*app.height)
-        width: dp(0.6*app.width)
+        height: app.get_scaled_height(800.000000002)
+        width: app.get_scaled_width(480.0)
         canvas:
             Rectangle: 
                 pos: self.pos
@@ -32,10 +32,10 @@ Builder.load_string(
                 
             Label:
                 size_hint: (None,None)
-                height: dp(0.1875*app.height)
-                width: dp(1.0*app.width)
+                height: app.get_scaled_height(90.0)
+                width: app.get_scaled_width(800.0)
                 text: "Welcome to Shape Cutter"
-                font_size: 0.0375*app.width
+                font_size: app.get_scaled_width(30.0)
                 halign: "center"
                 valign: "bottom"
                 markup: True
@@ -43,43 +43,43 @@ Builder.load_string(
                     
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.0*app.width)
-                height: dp(0.291666666667*app.height)
+                width: app.get_scaled_width(800.0)
+                height: app.get_scaled_height(140.0)
                 padding: 0
                 spacing: 0
                 Label:
                     size_hint: (None,None)
-                    height: dp(0.354166666667*app.height)
-                    width: dp(1.0*app.width)
+                    height: app.get_scaled_height(170.0)
+                    width: app.get_scaled_width(800.0)
                     halign: "center"
                     valign: "middle"
                     text: "Select a shape to cut..."
                     color: 0,0,0,1
-                    font_size: 0.0325*app.width
+                    font_size: app.get_scaled_width(26.0)
                     markup: True
 
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.0*app.width)
-                height: dp(0.354166666667*app.height)
-                padding:[dp(0.225)*app.width, 0, dp(0.225)*app.width, dp(0.0625)*app.height]
+                width: app.get_scaled_width(800.0)
+                height: app.get_scaled_height(170.0)
+                padding: app.get_scaled_tuple([180.0, 0.0, 180.0, 30.0])
                 spacing: 0
                 orientation: 'horizontal'
                 pos: self.parent.pos                
                 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.275*app.width)
-                    height: dp(0.354166666667*app.height)
-                    padding:[dp(0.03125)*app.width, 0, dp(0.03375)*app.width, 0]
+                    width: app.get_scaled_width(220.0)
+                    height: app.get_scaled_height(170.0)
+                    padding: app.get_scaled_tuple([25.0, 0.0, 27.0, 0.0])
                     pos: self.parent.pos
                     
                     # Circle button
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         size_hint: (None,None)
-                        height: dp(0.35*app.height)
-                        width: dp(0.21*app.width)
+                        height: app.get_scaled_height(168.0)
+                        width: app.get_scaled_width(168.0)
                         background_color: hex('#F4433600')
                         center: self.parent.center
                         pos: self.parent.pos
@@ -96,17 +96,17 @@ Builder.load_string(
                                 allow_stretch: True
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.275*app.width)
-                    height: dp(0.354166666667*app.height)
-                    padding:[dp(0.03375)*app.width, 0, dp(0.03125)*app.width, 0]
+                    width: app.get_scaled_width(220.0)
+                    height: app.get_scaled_height(170.0)
+                    padding: app.get_scaled_tuple([27.0, 0.0, 25.0, 0.0])
                     pos: self.parent.pos
                     
                     # rectangle button
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         size_hint: (None,None)
-                        height: dp(0.35*app.height)
-                        width: dp(0.21*app.width)
+                        height: app.get_scaled_height(168.0)
+                        width: app.get_scaled_width(168.0)
                         background_color: hex('#F4433600')
                         center: self.parent.center
                         pos: self.parent.pos
@@ -124,18 +124,18 @@ Builder.load_string(
             # Info button
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.0*app.width)
-                height: dp(0.166666666667*app.height)
-                padding:[dp(0.025)*app.width, 0, 0, dp(0.0416666666667)*app.height]
-                spacing:0.85*app.width
+                width: app.get_scaled_width(800.0)
+                height: app.get_scaled_height(80.0000000002)
+                padding: app.get_scaled_tuple([20.0, 0.0, 0.0, 20.0])
+                spacing: app.get_scaled_width(680.0)
                 orientation: 'horizontal'
                 pos: self.parent.pos
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: app.get_scaled_sp('15.0sp')
                     id: info_button
                     size_hint: (None,None)
-                    height: dp(0.0833333333333*app.height)
-                    width: dp(0.05*app.width)
+                    height: app.get_scaled_height(40.0)
+                    width: app.get_scaled_width(40.0)
                     background_color: hex('#F4433600')
                     opacity: 1
                     on_press: root.get_info()
@@ -150,11 +150,11 @@ Builder.load_string(
                             size: self.parent.width, self.parent.height
                             allow_stretch: True
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: app.get_scaled_sp('15.0sp')
                     id: exit_button
                     size_hint: (None,None)
-                    height: dp(0.0833333333333*app.height)
-                    width: dp(0.05*app.width)
+                    height: app.get_scaled_height(40.0)
+                    width: app.get_scaled_width(40.0)
                     background_color: hex('#F4433600')
                     opacity: 1
                     on_press: root.exit()

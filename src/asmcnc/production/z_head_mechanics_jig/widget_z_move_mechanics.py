@@ -14,12 +14,12 @@ Builder.load_string("""
 
         size: self.parent.size
         pos: self.parent.pos
-        padding: 10
-        spacing: 10
+        padding: app.get_scaled_width(10)
+        spacing: app.get_scaled_width(10)
         orientation: 'horizontal'
 
         BoxLayout:
-            spacing: 10
+            spacing: app.get_scaled_width(10)
             orientation: "vertical"
 
             ToggleButton:
@@ -56,7 +56,7 @@ Builder.load_string("""
                         allow_stretch: True
 
         BoxLayout:
-            spacing: 10
+            spacing: app.get_scaled_width(10)
             orientation: "vertical"
 
             Button:
@@ -106,13 +106,13 @@ Builder.load_string("""
             x: up_button.pos[0] + up_button.size[0] * 0.75
             y: up_button.pos[1] + up_button.size[1] * 0.75
             size_hint: None, None
-            height: dp(30)
-            width: dp(30)
+            height: app.get_scaled_height(30)
+            width: app.get_scaled_width(30)
             text: 'Z'
             markup: True
             bold: True
             color: hex('#333333ff')
-            font_size: dp(20)
+            font_size: app.get_scaled_width(20)
 
 """)
     
