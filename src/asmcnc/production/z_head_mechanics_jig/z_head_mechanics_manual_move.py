@@ -78,7 +78,7 @@ Builder.load_string("""
                     text: 'Set power high'
                     font_size: dp(25)
                     bold: True
-                    background_color: color_provider.get_rgba("monochrome_blue"),1,1]
+                    background_color: color_provider.get_rgba("monochrome_blue")
                     background_normal: ''
                     on_press: root.set_power_high()
 

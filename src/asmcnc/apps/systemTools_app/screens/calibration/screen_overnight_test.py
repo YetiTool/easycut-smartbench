@@ -110,7 +110,7 @@ Builder.load_string(
                         font_size: str(0.01875 * app.width) + 'sp'
                         text: 'Home'
                         on_press: root.home()
-                        background_color: color_provider.get_rgba("monochrome_blue"),1,1]
+                        background_color: color_provider.get_rgba("monochrome_blue")
 
                     Button:
                         id: overnight_test_button
