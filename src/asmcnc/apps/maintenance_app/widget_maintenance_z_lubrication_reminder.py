@@ -86,7 +86,7 @@ Builder.load_string("""
                     size_hint: (None,None)
                     height: dp(0.25*app.height)
                     width: dp(0.15*app.width)
-                    background_color: [0,0,0,0]
+                    background_color: color_provider.get_rgba("invisible")
                     BoxLayout:
                         size: self.parent.size
                         pos: self.parent.pos      

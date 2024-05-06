@@ -111,7 +111,7 @@ Builder.load_string(
                                 font_size: str(0.01875 * app.width) + 'sp'
                                 id: btn_back
                                 size_hint_x: 1
-                                background_color: hex('#F4433600')
+                                background_color: color_provider.get_rgba("invisible")
                                 on_press:
                                     root.return_to_app()
                                 BoxLayout:
@@ -141,7 +141,7 @@ Builder.load_string(
                                 id: stop_start
                                 size_hint_x: 1
                                 disabled: False
-                                background_color: hex('#F4433600')
+                                background_color: color_provider.get_rgba("invisible")
 
                                 on_press:
                                     root.start_or_pause_button_press()

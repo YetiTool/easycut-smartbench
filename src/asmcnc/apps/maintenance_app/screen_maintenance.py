@@ -466,7 +466,7 @@ Builder.load_string("""
             size_hint: (None,None)
             height: dp(0.1875*app.height)
             width: dp(0.1125*app.width)
-            background_color: [0,0,0,0]
+            background_color: color_provider.get_rgba("invisible")
             center: self.parent.center
             pos: self.parent.pos
             on_press: root.quit_to_lobby()

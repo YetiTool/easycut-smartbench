@@ -88,7 +88,7 @@ Builder.load_string("""
                         font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y: 8
                         disabled: False
-                        background_color: hex('#FFFFFF00')
+                        background_color: color_provider.get_rgba("invisible")
                         on_release: 
                             self.background_color = hex('#FFFFFF00')
                         on_press:
@@ -124,7 +124,7 @@ Builder.load_string("""
                         
                         disabled: False
                         size_hint_y: 8
-                        background_color: hex('#FFFFFF00')
+                        background_color: color_provider.get_rgba("invisible")
                         on_release:                 
                             self.background_color = hex('#FFFFFF00')
                         on_press:
@@ -157,7 +157,7 @@ Builder.load_string("""
                         font_size: str(0.01875 * app.width) + 'sp'
                         disabled: False
                         size_hint_y: 8
-                        background_color: hex('#FFFFFF00')
+                        background_color: color_provider.get_rgba("invisible")
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
@@ -185,7 +185,7 @@ Builder.load_string("""
                         font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y: 8
                         disabled: False
-                        background_color: hex('#FFFFFF00')
+                        background_color: color_provider.get_rgba("invisible")
                         on_release:
                             self.background_color = hex('#FFFFFF00')
                         on_press:
@@ -223,7 +223,7 @@ Builder.load_string("""
                         font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y: 8
                         disabled: False
-                        background_color: hex('#FFFFFF00')
+                        background_color: color_provider.get_rgba("invisible")
                         on_release: 
                             self.background_color = hex('#FFFFFF00')
                         on_press:
@@ -256,7 +256,7 @@ Builder.load_string("""
                         font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y: 8
                         disabled: False
-                        background_color: hex('#FFFFFF00')
+                        background_color: color_provider.get_rgba("invisible")
                         on_release: 
                             self.background_color = hex('#FFFFFF00')
                         on_press:
@@ -295,7 +295,7 @@ Builder.load_string("""
                         font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y: 8
                         disabled: False
-                        background_color: hex('#FFFFFF00')
+                        background_color: color_provider.get_rgba("invisible")
                         on_release: 
                             self.background_color = hex('#FFFFFF00')
                         on_press:
@@ -328,7 +328,7 @@ Builder.load_string("""
                         font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y: 8
                         disabled: False
-                        background_color: hex('#FFFFFF00')
+                        background_color: color_provider.get_rgba("invisible")
                         on_release: 
                             self.background_color = hex('#FFFFFF00')
                         on_press:
@@ -367,7 +367,7 @@ Builder.load_string("""
                         font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y: 8
                         disabled: False
-                        background_color: hex('#FFFFFF00')
+                        background_color: color_provider.get_rgba("invisible")
                         on_release: 
                             self.background_color = hex('#FFFFFF00')
                         on_press:
@@ -400,7 +400,7 @@ Builder.load_string("""
                         font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y: 8
                         disabled: False
-                        background_color: hex('#FFFFFF00')
+                        background_color: color_provider.get_rgba("invisible")
                         on_release: 
                             self.background_color = hex('#FFFFFF00')
                         on_press:
@@ -447,7 +447,7 @@ Builder.load_string("""
                     font_size: str(0.01875 * app.width) + 'sp'
                     disabled: False
                     size_hint_y: 1
-                    background_color: hex('#FFFFFF00')
+                    background_color: color_provider.get_rgba("invisible")
                     on_release: 
                         carousel.load_previous()
                         self.background_color = hex('#FFFFFF00')
@@ -471,7 +471,7 @@ Builder.load_string("""
                     font_size: str(0.01875 * app.width) + 'sp'
                     id: shutdown_button
                     size_hint_y: 1
-                    background_color: hex('#FFFFFF00')
+                    background_color: color_provider.get_rgba("invisible")
                     on_press: root.shutdown_console()
 
                     BoxLayout:
@@ -494,7 +494,7 @@ Builder.load_string("""
                     id: load_button
                     disabled: False
                     size_hint_y: 1
-                    background_color: hex('#FFFFFF00')
+                    background_color: color_provider.get_rgba("invisible")
                     on_release: 
                         carousel.load_next(mode='next')
                         self.background_color = hex('#FFFFFF00')
@@ -519,7 +519,7 @@ Builder.load_string("""
                 Button:
                     font_size: str(0.01875 * app.width) + 'sp'
                     disabled: False
-                    background_color: hex('#FFFFFF00')
+                    background_color: color_provider.get_rgba("invisible")
                     on_press: root.help_popup()
                     BoxLayout:
                         size: self.parent.size

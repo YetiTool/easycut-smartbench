@@ -61,7 +61,7 @@ Builder.load_string(
                 id: health_check_button
                 size_hint_x: 1
                 disabled: False
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
 
                 on_press:
                     root.run_spindle_health_check()

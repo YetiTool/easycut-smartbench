@@ -88,7 +88,7 @@ Builder.load_string("""
                     multiline: False
                     size: self.parent.size
                     pos: self.parent.pos
-                    background_color: (0,0,0,0)
+                    background_color: color_provider.get_rgba("invisible")
 
             Label:
                 text: 'D'
@@ -127,7 +127,7 @@ Builder.load_string("""
                     multiline: False
                     size: self.parent.size
                     pos: self.parent.pos
-                    background_color: (0,0,0,0)
+                    background_color: color_provider.get_rgba("invisible")
 
             Label:
                 text: 'L'
@@ -166,7 +166,7 @@ Builder.load_string("""
                     multiline: False
                     size: self.parent.size
                     pos: self.parent.pos
-                    background_color: (0,0,0,0)
+                    background_color: color_provider.get_rgba("invisible")
 
             Label:
                 text: 'R'
@@ -205,7 +205,7 @@ Builder.load_string("""
                     multiline: False
                     size: self.parent.size
                     pos: self.parent.pos
-                    background_color: (0,0,0,0)
+                    background_color: color_provider.get_rgba("invisible")
 
             Label:
                 text: 'X'
@@ -244,7 +244,7 @@ Builder.load_string("""
                     multiline: False
                     size: self.parent.size
                     pos: self.parent.pos
-                    background_color: (0,0,0,0)
+                    background_color: color_provider.get_rgba("invisible")
 
             Label:
                 text: 'Y'
@@ -334,7 +334,7 @@ Builder.load_string("""
                 size_hint: (None, None)
                 pos: self.parent.pos[0] + dp(5), self.parent.size[1] - self.height + dp(5)
                 multiline: False
-                background_color: (0,0,0,0)
+                background_color: color_provider.get_rgba("invisible")
                 disabled_foreground_color: color_provider.get_rgba("black")
                 disabled: True
 

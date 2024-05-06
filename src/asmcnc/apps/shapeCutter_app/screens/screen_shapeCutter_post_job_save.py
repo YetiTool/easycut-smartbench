@@ -111,7 +111,7 @@ Builder.load_string("""
                                 height: dp(0.35*app.height)
                                 width: dp(0.21*app.width)
                                 on_press: root.save_file()
-                                background_color: hex('#F4433600')
+                                background_color: color_provider.get_rgba("invisible")
                                 BoxLayout:
                                     padding: 0
                                     size: self.parent.size
@@ -162,7 +162,7 @@ Builder.load_string("""
                             size_hint: (None,None)
                             height: dp(0.0833333333333*app.height)
                             width: dp(0.05*app.width)
-                            background_color: hex('#F4433600')
+                            background_color: color_provider.get_rgba("invisible")
                             opacity: 0
                             on_press: root.get_info()
                             BoxLayout:
@@ -181,7 +181,7 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(0.139583333333*app.height)
                         width: dp(0.11*app.width)
-                        background_color: hex('#F4433600')
+                        background_color: color_provider.get_rgba("invisible")
                         opacity: 0
                         BoxLayout:
                             padding: 0
@@ -198,7 +198,7 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(0.139583333333*app.height)
                         width: dp(0.11*app.width)
-                        background_color: hex('#F4433600')
+                        background_color: color_provider.get_rgba("invisible")
                         on_press: root.next_screen()
                         BoxLayout:
                             padding: 0

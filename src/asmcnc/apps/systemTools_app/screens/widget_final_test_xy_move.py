@@ -36,7 +36,7 @@ Builder.load_string("""
             size_hint_y: 1
 
             Button:
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 size_hint_y: 1
                 on_release:
                     root.quit_jog_z()
@@ -80,7 +80,7 @@ Builder.load_string("""
                 pos: self.parent.pos           
             
             Button:
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 always_release: True
                 on_release: 
                     root.cancelXYJog()
@@ -104,7 +104,7 @@ Builder.load_string("""
 
                             
             Button:
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 always_release: True
                 on_release: 
                     root.cancelXYJog()
@@ -123,7 +123,7 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True                                    
             Button:
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 on_release: 
                     self.background_color = hex('#F4433600')
                 on_press:
@@ -141,7 +141,7 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True  
             Button:
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 always_release: True
                 on_release: 
                     root.cancelXYJog()
@@ -166,7 +166,7 @@ Builder.load_string("""
 
 
             Button:
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 always_release: True
                 on_release:
                     root.cancelXYJog()
@@ -197,7 +197,7 @@ Builder.load_string("""
 
             Button:
                 size_hint_y: 1
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 on_release: 
                     root.quit_jog_z()
                     self.background_color = hex('#F4433600')
@@ -229,7 +229,7 @@ Builder.load_string("""
                 ToggleButton:
                     id: speed_toggle
                     on_press: root.set_jog_speeds()
-                    background_color: 1, 1, 1, 0 
+                    background_color: color_provider.get_rgba("invisible")
                     size_hint_y: 1
                     BoxLayout:
                         size: self.parent.size

@@ -208,7 +208,7 @@ Builder.load_string(
                                 Button:
                                     font_size: str(0.01875 * app.width) + 'sp'
                                     size_hint_x: 1
-                                    background_color: hex('#F4433600')
+                                    background_color: color_provider.get_rgba("invisible")
                                     on_press:
                                         root.manager.current = 'local_filechooser'
                                     BoxLayout:
@@ -226,7 +226,7 @@ Builder.load_string(
                                     font_size: str(0.01875 * app.width) + 'sp'
                                     id: job_recovery_button
                                     size_hint_x: 1
-                                    background_color: hex('#F4433600')
+                                    background_color: color_provider.get_rgba("invisible")
                                     on_press:
                                         root.manager.current = 'recovery_decision'
                                     BoxLayout:

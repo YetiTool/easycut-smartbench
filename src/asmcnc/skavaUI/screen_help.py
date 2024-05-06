@@ -41,7 +41,7 @@ Builder.load_string("""
             Button:
                 disabled: False
                 size_hint_y: 1
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("invisible")
                 on_release: 
                     self.background_color = hex('#FFFFFF00')
                 on_press:

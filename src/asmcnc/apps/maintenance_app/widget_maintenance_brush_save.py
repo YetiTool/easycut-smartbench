@@ -23,7 +23,7 @@ Builder.load_string(
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
                 on_press: root.get_info()
-                background_color: [0,0,0,0]
+                background_color: color_provider.get_rgba("invisible")
                 BoxLayout:
                     size: self.parent.size
                     pos: self.parent.pos
@@ -40,7 +40,7 @@ Builder.load_string(
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
                 on_press: root.save()
-                background_color: [0,0,0,0]
+                background_color: color_provider.get_rgba("invisible")
                 BoxLayout:
                     size: self.parent.size
                     pos: self.parent.pos

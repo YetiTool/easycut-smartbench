@@ -48,7 +48,7 @@ Builder.load_string("""
                 font_size: 20.0 / 800 * app.width
 
             Button:
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 on_release: 
                     self.background_color = hex('#F4433600')
                 on_press: 
@@ -66,7 +66,7 @@ Builder.load_string("""
                         allow_stretch: True
     
             Button:
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 on_release: 
                     self.background_color = hex('#F4433600')
                 on_press: 
@@ -119,7 +119,7 @@ Builder.load_string("""
                 color: hex('#4caf50ff')
                 font_size: 20.0 / 800 * app.width    
             Button:
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 on_release: 
                     self.background_color = hex('#F4433600')
                 on_press: 
@@ -136,7 +136,7 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                       
             Button:
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 on_release: 
                     self.background_color = hex('#F4433600')
                 on_press: 

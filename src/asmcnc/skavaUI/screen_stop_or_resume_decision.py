@@ -74,7 +74,7 @@ Builder.load_string(
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_x: 1
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("invisible")
                 on_press: root.cancel_job()
                 BoxLayout:
                     size: self.parent.size
@@ -87,7 +87,7 @@ Builder.load_string(
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_x: 0.3
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("invisible")
                 on_press: root.popup_help()
                 BoxLayout:
                     size: self.parent.size
@@ -100,7 +100,7 @@ Builder.load_string(
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_x: 1
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("invisible")
                 on_press: root.resume_job()
                 BoxLayout:
                     size: self.parent.size

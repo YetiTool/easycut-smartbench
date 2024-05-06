@@ -77,7 +77,7 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(171)
                         width: dp(172)
-                        background_color: hex('#F4433600')
+                        background_color: color_provider.get_rgba("invisible")
                         center: self.parent.center
                         pos: self.parent.pos
                         on_press: root.thumbs_up()
@@ -103,7 +103,7 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(171)
                         width: dp(172)
-                        background_color: hex('#F4433600')
+                        background_color: color_provider.get_rgba("invisible")
                         center: self.parent.center
                         pos: self.parent.pos
                         on_press: root.thumbs_down()

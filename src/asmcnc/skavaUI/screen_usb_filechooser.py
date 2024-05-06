@@ -123,7 +123,7 @@ Builder.load_string(
                 id: toggle_view_button
                 size_hint_x: 1
                 on_press: root.switch_view()
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("invisible")
                 BoxLayout:
                     padding:[dp(0.03125)*app.width, dp(0.0520833333333)*app.height]
                     size: self.parent.size
@@ -141,7 +141,7 @@ Builder.load_string(
                 id: sort_button
                 size_hint_x: 1
                 on_press: root.switch_sort()
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("invisible")
                 BoxLayout:
                     padding:[dp(0.03125)*app.width, dp(0.0520833333333)*app.height]
                     size: self.parent.size
@@ -158,7 +158,7 @@ Builder.load_string(
                 font_size: str(0.01875 * app.width) + 'sp'
                 disabled: False
                 size_hint_x: 1
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("invisible")
                 on_release: 
                     root.refresh_filechooser() 
                     self.background_color = hex('#FFFFFF00')
@@ -180,7 +180,7 @@ Builder.load_string(
                 font_size: str(0.01875 * app.width) + 'sp'
                 disabled: False
                 size_hint_x: 1
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("invisible")
                 on_release: 
                     self.background_color = hex('#FFFFFF00')
                 on_press:
@@ -202,7 +202,7 @@ Builder.load_string(
                 id: load_button
                 disabled: True
                 size_hint_x: 1
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("invisible")
                 on_release: 
                     root.import_usb_file()
                     self.background_color = hex('#FFFFFF00')

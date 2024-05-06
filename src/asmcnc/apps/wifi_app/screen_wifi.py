@@ -184,7 +184,7 @@ Builder.load_string(
                                 size_hint: (None,None)
                                 height: dp(0.0625*app.height)
                                 width: dp(0.03625*app.width)
-                                background_color: hex('#F4433600')
+                                background_color: color_provider.get_rgba("invisible")
                                 center: self.parent.center
                                 pos: self.parent.pos
                                 on_press: root.refresh_available_networks()
@@ -237,7 +237,7 @@ Builder.load_string(
                                 values: root.SSID_list
                                 option_cls: Factory.get("NetworkSpinner")
                                 background_normal: ''
-                                background_color: [1,1,1,0]
+                                background_color: color_provider.get_rgba("invisible")
                         
                         # The TextInput for the custom network name, very similar to the Password BoxLayout
                         BoxLayout:
@@ -353,7 +353,7 @@ Builder.load_string(
                             text_size: self.size
                             color: color_provider.get_rgba("black")
                             values: root.values
-                            background_color: [1,1,1,0]
+                            background_color: color_provider.get_rgba("invisible")
                             option_cls: Factory.get("NetworkSpinner")
 
         BoxLayout:
@@ -439,7 +439,7 @@ Builder.load_string(
                         size_hint: (None,None)
                         height: dp(0.233333333333*app.height)
                         width: dp(0.14*app.width)
-                        background_color: hex('#F4433600')
+                        background_color: color_provider.get_rgba("invisible")
                         center: self.parent.center
                         pos: self.parent.pos
                         on_press: root.quit_to_lobby()

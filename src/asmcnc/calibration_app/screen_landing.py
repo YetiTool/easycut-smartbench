@@ -132,7 +132,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 height: dp(0.0833333333333*app.height)
                 width: dp(0.05*app.width)
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 opacity: 1
                 on_press: root.skip_to_lobby()
                 BoxLayout:

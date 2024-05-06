@@ -80,7 +80,7 @@ Builder.load_string(
                         size_hint: (None,None)
                         height: dp(0.35*app.height)
                         width: dp(0.21*app.width)
-                        background_color: hex('#F4433600')
+                        background_color: color_provider.get_rgba("invisible")
                         center: self.parent.center
                         pos: self.parent.pos
                         on_press: root.cut_circle()
@@ -107,7 +107,7 @@ Builder.load_string(
                         size_hint: (None,None)
                         height: dp(0.35*app.height)
                         width: dp(0.21*app.width)
-                        background_color: hex('#F4433600')
+                        background_color: color_provider.get_rgba("invisible")
                         center: self.parent.center
                         pos: self.parent.pos
                         on_press: root.cut_rectangle()
@@ -136,7 +136,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     height: dp(0.0833333333333*app.height)
                     width: dp(0.05*app.width)
-                    background_color: hex('#F4433600')
+                    background_color: color_provider.get_rgba("invisible")
                     opacity: 1
                     on_press: root.get_info()
                     BoxLayout:
@@ -155,7 +155,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     height: dp(0.0833333333333*app.height)
                     width: dp(0.05*app.width)
-                    background_color: hex('#F4433600')
+                    background_color: color_provider.get_rgba("invisible")
                     opacity: 1
                     on_press: root.exit()
                     BoxLayout:

@@ -80,7 +80,7 @@ Builder.load_string(
                                     halign: 'center'
                                     input_filter: 'int'
                                     multiline: False
-                                    background_color: (0,0,0,0)
+                                    background_color: color_provider.get_rgba("invisible")
                                     hint_text: "Enter #"
 
                         BoxLayout:
@@ -91,7 +91,7 @@ Builder.load_string(
 
                             Button:
                                 font_size: str(0.01875 * app.width) + 'sp'
-                                background_color: [0,0,0,0]
+                                background_color: color_provider.get_rgba("invisible")
                                 on_press:
                                     root.start_scrolling_up()
                                     self.background_color = hex('#F44336FF')
@@ -111,7 +111,7 @@ Builder.load_string(
 
                             Button:
                                 font_size: str(0.01875 * app.width) + 'sp'
-                                background_color: [0,0,0,0]
+                                background_color: color_provider.get_rgba("invisible")
                                 on_press:
                                     root.start_scrolling_down()
                                     self.background_color = hex('#F44336FF')
@@ -242,7 +242,7 @@ Builder.load_string(
                         padding:[dp(0.01875)*app.width, dp(0.03125)*app.height, 0, dp(0.03125)*app.height]
                         Button:
                             font_size: str(0.01875 * app.width) + 'sp'
-                            background_color: [0,0,0,0]
+                            background_color: color_provider.get_rgba("invisible")
                             on_press: root.get_info()
                             BoxLayout:
                                 size: self.parent.size
@@ -256,7 +256,7 @@ Builder.load_string(
 
                     Button:
                         font_size: str(0.01875 * app.width) + 'sp'
-                        background_color: [0,0,0,0]
+                        background_color: color_provider.get_rgba("invisible")
                         on_press: root.back_to_home()
                         BoxLayout:
                             size: self.parent.size
@@ -290,7 +290,7 @@ Builder.load_string(
 
                         Button:
                             font_size: str(0.01875 * app.width) + 'sp'
-                            background_color: [0,0,0,0]
+                            background_color: color_provider.get_rgba("invisible")
                             on_press: root.next_screen()
                             size_hint: (None, None)
                             height: dp(0.139583333333*app.height)

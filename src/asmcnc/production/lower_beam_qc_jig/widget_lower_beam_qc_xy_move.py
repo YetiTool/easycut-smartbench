@@ -36,7 +36,7 @@ Builder.load_string("""
                 pos: self.parent.pos                               
 
             Button:
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 always_release: True
                 on_release: 
                     root.cancelXYJog()
@@ -61,7 +61,7 @@ Builder.load_string("""
                 pos: self.parent.pos                 
                             
             Button:
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 always_release: True
                 on_release: 
                     root.cancelXYJog()
@@ -80,7 +80,7 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True                                    
             Button:
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 on_release: 
                     self.background_color = hex('#F4433600')
                 on_press:
@@ -98,7 +98,7 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True  
             Button:
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 always_release: True
                 on_release: 
                     root.cancelXYJog()
@@ -123,7 +123,7 @@ Builder.load_string("""
                 pos: self.parent.pos  
 
             Button:
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 always_release: True
                 on_release:
                     root.cancelXYJog()

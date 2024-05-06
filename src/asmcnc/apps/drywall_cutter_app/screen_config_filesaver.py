@@ -107,7 +107,7 @@ Builder.load_string("""
                 id: toggle_view_button
                 size_hint_x: 1
                 on_press: root.switch_view()
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("invisible")
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
@@ -124,7 +124,7 @@ Builder.load_string("""
                 id: sort_button
                 size_hint_x: 1
                 on_press: root.switch_sort()
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("invisible")
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
@@ -140,7 +140,7 @@ Builder.load_string("""
             Button:
                 disabled: True
                 size_hint_x: 1
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("invisible")
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
@@ -149,7 +149,7 @@ Builder.load_string("""
             Button:
                 disabled: True
                 size_hint_x: 1
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("invisible")
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
@@ -158,7 +158,7 @@ Builder.load_string("""
             Button:
                 disabled: True
                 size_hint_x: 1
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("invisible")
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
@@ -166,7 +166,7 @@ Builder.load_string("""
             Button:
                 disabled: True
                 size_hint_x: 1
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("invisible")
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
@@ -174,7 +174,7 @@ Builder.load_string("""
             Button:
                 disabled: False
                 size_hint_x: 1
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("invisible")
                 on_release: 
                     root.quit_to_home()
                     self.background_color = hex('#FFFFFF00')

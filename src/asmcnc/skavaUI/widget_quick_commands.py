@@ -36,7 +36,7 @@ Builder.load_string("""
 
         Button:
             size_hint_y: 1
-            background_color: hex('#F4433600')
+            background_color: color_provider.get_rgba("invisible")
             on_press: root.quit_to_lobby()
             BoxLayout:
                 padding: 0
@@ -59,7 +59,7 @@ Builder.load_string("""
 #                size_hint: None, None
                 center: self.parent.center
     
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 on_press: root.home()
                 BoxLayout:
                     padding: 0
@@ -75,7 +75,7 @@ Builder.load_string("""
 
         Button:
             size_hint_y: 1
-            background_color: hex('#F4433600')
+            background_color: color_provider.get_rgba("invisible")
             on_press: root.reset()
             BoxLayout:
                 padding: 0
@@ -90,7 +90,7 @@ Builder.load_string("""
         
         Button:
             size_hint_y: 1
-            background_color: hex('#F4433600')
+            background_color: color_provider.get_rgba("invisible")
             on_press:
                 root.proceed_to_go_screen()
             BoxLayout:
@@ -106,7 +106,7 @@ Builder.load_string("""
   
         Button:
             size_hint_y: 1
-            background_color: hex('#F4433600')
+            background_color: color_provider.get_rgba("invisible")
             on_press: root.stop()
             BoxLayout:
                 padding: 0

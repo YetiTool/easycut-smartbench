@@ -48,7 +48,7 @@ Builder.load_string(
                 pos: self.parent.pos                 
                 Button:
                     font_size: str(0.01875 * app.width) + 'sp'
-                    background_color: hex('#F4433600')
+                    background_color: color_provider.get_rgba("invisible")
                     on_release: 
                         self.background_color = hex('#F4433600')
                     on_press: 
@@ -68,7 +68,7 @@ Builder.load_string(
 
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 always_release: True
                 on_release: 
                     root.cancelXYJog()
@@ -94,7 +94,7 @@ Builder.load_string(
                 pos: self.parent.pos                 
                 Button:
                     font_size: str(0.01875 * app.width) + 'sp'
-                    background_color: hex('#F4433600')
+                    background_color: color_provider.get_rgba("invisible")
                     on_release: 
                         self.background_color = hex('#F4433600')
                     on_press:
@@ -112,7 +112,7 @@ Builder.load_string(
                             
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 always_release: True
                 on_release: 
                     root.cancelXYJog()
@@ -132,7 +132,7 @@ Builder.load_string(
                         allow_stretch: True                                    
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 on_release: 
                     self.background_color = hex('#F4433600')
                 on_press: 
@@ -151,7 +151,7 @@ Builder.load_string(
                         allow_stretch: True  
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 always_release: True
                 on_release: 
                     root.cancelXYJog()
@@ -177,7 +177,7 @@ Builder.load_string(
                 pos: self.parent.pos                 
                 Button:
                     font_size: str(0.01875 * app.width) + 'sp'
-                    background_color: hex('#F4433600')
+                    background_color: color_provider.get_rgba("invisible")
                     on_release: 
                         self.background_color = hex('#F4433600')
                     on_press:
@@ -195,7 +195,7 @@ Builder.load_string(
 
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 always_release: True
                 on_release:
                     root.cancelXYJog()
@@ -221,7 +221,7 @@ Builder.load_string(
                 pos: self.parent.pos
                 Button:
                     font_size: str(0.01875 * app.width) + 'sp'
-                    background_color: hex('#F4433600')
+                    background_color: color_provider.get_rgba("invisible")
                     on_release: 
                         self.background_color = hex('#F4433600')
                     on_press:
@@ -244,7 +244,7 @@ Builder.load_string(
 
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 on_release: 
                     self.background_color = hex('#F4433600')
                 on_press:
@@ -266,7 +266,7 @@ Builder.load_string(
                     font_size: str(0.01875 * app.width) + 'sp'
                     id: speed_toggle
                     on_press: root.set_jog_speeds()
-                    background_color: 1, 1, 1, 0 
+                    background_color: color_provider.get_rgba("invisible")
                     BoxLayout:
                         padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                         size: self.parent.size
@@ -280,7 +280,7 @@ Builder.load_string(
                             allow_stretch: True
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 on_release: 
                     self.background_color = hex('#F4433600')
                 on_press:

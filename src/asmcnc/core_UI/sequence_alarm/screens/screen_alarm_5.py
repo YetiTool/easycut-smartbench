@@ -119,7 +119,7 @@ Builder.load_string(
 					size_hint: (None,None)
 					height: dp(0.108333333333*app.height)
 					width: dp(0.075*app.width)
-					background_color: hex('#F4433600')
+					background_color: color_provider.get_rgba("invisible")
 					center: self.parent.center
 					pos: self.parent.pos
 					on_press: root.prev_screen()
@@ -164,7 +164,7 @@ Builder.load_string(
 					size_hint: (None,None)
 					height: dp(0.125*app.height)
 					width: dp(0.06375*app.width)
-					background_color: hex('#F4433600')
+					background_color: color_provider.get_rgba("invisible")
 					center: self.parent.center
 					pos: self.parent.pos
 					on_press: root.next_screen()

@@ -40,7 +40,7 @@ Builder.load_string(
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y: 1
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 on_release: 
                     self.background_color = hex('#F4433600')
                 on_press: 
@@ -67,7 +67,7 @@ Builder.load_string(
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y: 1
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 on_release:
                     root.quit_jog_z()
                     self.background_color = hex('#F4433600')
@@ -88,7 +88,7 @@ Builder.load_string(
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y: 1
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 on_release: 
                     root.quit_jog_z()
                     self.background_color = hex('#F4433600')
@@ -114,7 +114,7 @@ Builder.load_string(
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y: 1
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("invisible")
                 on_release: 
                     self.background_color = hex('#F4433600')
                 on_press: 
