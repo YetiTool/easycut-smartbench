@@ -300,7 +300,7 @@ Builder.load_string("""
             size_hint: None, None
             height: dp(0.0625*app.height)
             width: dp(0.0375*app.width)
-            color: hex('#888888ff')
+            color: color_provider.get_rgba("grey")
             font_size: dp(0.01625*app.width)
 
         LabelBase:
@@ -310,7 +310,7 @@ Builder.load_string("""
             size_hint: None, None
             height: dp(0.0625*app.height)
             width: dp(0.0375*app.width)
-            color: hex('#888888ff')
+            color: color_provider.get_rgba("grey")
             font_size: dp(0.01625*app.width)
 
         LabelBase:
@@ -320,7 +320,7 @@ Builder.load_string("""
             size_hint: None, None
             height: dp(0.0625*app.height)
             width: dp(0.0375*app.width)
-            color: hex('#888888ff')
+            color: color_provider.get_rgba("grey")
             font_size: dp(0.01625*app.width)
 
         LabelBase:
@@ -330,7 +330,7 @@ Builder.load_string("""
             size_hint: None, None
             height: dp(0.0625*app.height)
             width: dp(0.0375*app.width)
-            color: hex('#888888ff')
+            color: color_provider.get_rgba("grey")
             font_size: dp(0.01625*app.width)
 
 
