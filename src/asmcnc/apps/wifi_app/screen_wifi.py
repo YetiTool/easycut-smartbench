@@ -26,7 +26,7 @@ Builder.load_string(
 <NetworkSpinner@SpinnerOption>
 
     background_normal: ''
-    background_color: [1,1,1,1]
+    background_color: color_provider.get_rgba("white")
     height: dp(0.0833333333333*app.height)
     color: color_provider.get_rgba("black")
     halign: 'left'
@@ -109,7 +109,7 @@ Builder.load_string(
                     orientation: 'vertical'
                     LabelBase:
                         id: ip_address_label
-                        color: 1,1,1,1
+                        color: color_provider.get_rgba("white")
                         font_size: 0.0225*app.width
                         markup: True
                         halign: "center"
@@ -120,7 +120,7 @@ Builder.load_string(
 
                     LabelBase:
                         id: ip_status_label
-                        color: 1,1,1,1
+                        color: color_provider.get_rgba("white")
                         font_size: 0.0225*app.width
                         markup: True
                         halign: "center"

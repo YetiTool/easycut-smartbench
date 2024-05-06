@@ -263,7 +263,7 @@ Builder.load_string(
 #                                         Label:
 #                                             id: unit_label
 #                                             text: "mm"
-#                                             color: 1,1,1,1
+#                                             color: color_provider.get_rgba("white")
 #                                             font_size: 20
 #                                             markup: True
 #                                             halign: "center"

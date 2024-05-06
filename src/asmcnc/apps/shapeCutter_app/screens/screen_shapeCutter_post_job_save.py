@@ -35,7 +35,7 @@ Builder.load_string("""
             orientation: "vertical"       
                 
             LabelBase:
-                color: 1,1,1,1
+                color: color_provider.get_rgba("white")
                 size_hint: (None,None)
                 height: dp(0.1875*app.height)
                 width: dp(1.0*app.width)

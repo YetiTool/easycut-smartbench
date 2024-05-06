@@ -34,7 +34,7 @@ Builder.load_string("""
 
             Label: 
                 text: 'Have you just updated the FW on this Z Head?'
-                color: 1,1,1,1
+                color: color_provider.get_rgba("white")
                 text_size: self.size
                 markup: 'True'
                 halign: 'center'

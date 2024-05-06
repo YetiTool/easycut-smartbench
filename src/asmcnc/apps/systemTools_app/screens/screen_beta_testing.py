@@ -25,7 +25,7 @@ Builder.load_string(
 <BetaLanguageSpinner@SpinnerOption>
 
     background_normal: ''
-    background_color: [1,1,1,1]
+    background_color: color_provider.get_rgba("white")
     height: dp(0.0833333333333*app.height)
     color: color_provider.get_rgba("black")
     halign: 'left'

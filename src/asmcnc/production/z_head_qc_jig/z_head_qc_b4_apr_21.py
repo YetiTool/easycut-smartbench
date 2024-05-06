@@ -61,7 +61,7 @@ Builder.load_string("""
                     cols: 2
                     Label:
                         text: '  1. FW Version: '
-                        color: 1,1,1,1
+                        color: color_provider.get_rgba("white")
                         text_size: self.size
                         markup: 'True'
                         halign: 'left'
@@ -69,12 +69,12 @@ Builder.load_string("""
                     Label:
                         id: fw_version_label
                         text: 'fw version 1.etc.'
-                        color: 1,1,1,1
+                        color: color_provider.get_rgba("white")
                 GridLayout:
                     cols: 4
                     Label: 
                         text: '  9. Dust Shoe'
-                        color: 1,1,1,1
+                        color: color_provider.get_rgba("white")
                         text_size: self.size
                         markup: 'True'
                         halign: 'left'
@@ -154,7 +154,7 @@ Builder.load_string("""
                     cols: 2
                     Label: 
                         text: '  11. X Home'
-                        color: 1,1,1,1
+                        color: color_provider.get_rgba("white")
                         text_size: self.size
                         markup: 'True'
                         halign: 'left'
@@ -181,7 +181,7 @@ Builder.load_string("""
                     cols: 3
                     Label: 
                         text: ' 4. X motors'
-                        color: 1,1,1,1
+                        color: color_provider.get_rgba("white")
                     Button: 
                         text: 'Up'
                         on_press: root.x_motor_up()
@@ -194,7 +194,7 @@ Builder.load_string("""
                     cols: 2
                     Label: 
                         text: '  12. X Max'
-                        color: 1,1,1,1
+                        color: color_provider.get_rgba("white")
                         text_size: self.size
                         markup: 'True'
                         halign: 'left'
@@ -219,7 +219,7 @@ Builder.load_string("""
                     cols: 3
                     Label: 
                         text: ' 5. Z motors'
-                        color: 1,1,1,1
+                        color: color_provider.get_rgba("white")
                         text_size: self.size
                         markup: 'True'
                         halign: 'left'
@@ -236,7 +236,7 @@ Builder.load_string("""
                     cols: 2
                     Label: 
                         text: '  13. Z Home'
-                        color: 1,1,1,1
+                        color: color_provider.get_rgba("white")
                         text_size: self.size
                         markup: 'True'
                         halign: 'left'
@@ -251,7 +251,7 @@ Builder.load_string("""
                 Button: 
                     text: '  <<< Back'
                     on_press: root.back_to_choice()
-                    color: 1,1,1,1
+                    color: color_provider.get_rgba("white")
                     text_size: self.size
                     markup: 'True'
                     halign: 'left'
@@ -288,7 +288,7 @@ Builder.load_string("""
                     cols: 2
                     Label: 
                         text: '  14. Probe'
-                        color: 1,1,1,1
+                        color: color_provider.get_rgba("white")
                         text_size: self.size
                         markup: 'True'
                         halign: 'left'

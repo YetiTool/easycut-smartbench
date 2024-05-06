@@ -30,7 +30,7 @@ Builder.load_string("""
 
                 Label: 
                     text: 'How old is this Z Head?'
-                    color: 1,1,1,1
+                    color: color_provider.get_rgba("white")
                     text_size: self.size
                     markup: 'True'
                     halign: 'center'
@@ -40,7 +40,7 @@ Builder.load_string("""
                 Label: 
                     id: fw_version_label
                     text: 'Detecting FW version...'
-                    color: 1,1,1,1
+                    color: color_provider.get_rgba("white")
                     text_size: self.size
                     markup: 'True'
                     halign: 'center'
@@ -53,7 +53,7 @@ Builder.load_string("""
                 Button:
                     text: root.after_label
                     font_size: dp(20)
-                    color: 1,1,1,1
+                    color: color_provider.get_rgba("white")
                     text_size: self.size
                     markup: 'True'
                     halign: 'center'
@@ -63,7 +63,7 @@ Builder.load_string("""
                 Button:
                     text: root.before_label
                     font_size: dp(20)
-                    color: 1,1,1,1
+                    color: color_provider.get_rgba("white")
                     text_size: self.size
                     markup: 'True'
                     halign: 'center'
