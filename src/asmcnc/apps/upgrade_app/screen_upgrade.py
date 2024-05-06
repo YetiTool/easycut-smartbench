@@ -121,7 +121,7 @@ Builder.load_string("""
                         size_hint_y: 0
                         height: 0
                         font_size: dp(0.02875*app.width)
-                        color: 1,0,0,1
+                        color: color_provider.get_rgba("monochrome_red")
                         halign: 'center'
                         valign: 'middle'
                         text_size: self.size

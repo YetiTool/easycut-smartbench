@@ -183,7 +183,7 @@ Builder.load_string(
                         Label:
                             id: stopped_on_label
                             size_hint_y: 0.13
-                            color: 1,0,0,1
+                            color: color_provider.get_rgba("monochrome_red")
                             font_size: dp(0.02*app.width)
                             halign: "left"
                             valign: "top"
@@ -320,7 +320,7 @@ Builder.load_string(
 
             Label:
                 id: arc_movement_error_label
-                color: 1,0,0,1
+                color: color_provider.get_rgba("monochrome_red")
                 font_size: dp(0.0175*app.width)
                 halign: "left"
                 valign: "top"

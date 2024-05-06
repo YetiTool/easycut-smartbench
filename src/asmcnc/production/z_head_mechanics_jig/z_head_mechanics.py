@@ -173,7 +173,7 @@ Builder.load_string("""
                 text: 'STOP'
                 bold: True
                 font_size: dp(20)
-                background_color: [1,0,0,1]
+                background_color: color_provider.get_rgba("monochrome_red")
                 background_normal: ''
                 on_press: root.stop()
 

@@ -68,7 +68,7 @@ Builder.load_string("""
                 Button:
                     text: 'Shut down'
                     font_size: dp(20)
-                    background_color: [1,0,0,1]
+                    background_color: color_provider.get_rgba("monochrome_red")
                     background_normal: ''
                     on_press: console_utils.shutdown()
 """)

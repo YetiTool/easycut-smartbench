@@ -96,7 +96,7 @@ Builder.load_string("""
                     halign: 'center'
                     valign: 'middle'
                     on_press: root.stop()
-                    background_color: [1,0,0,1]
+                    background_color: color_provider.get_rgba("monochrome_red")
                     background_normal: ''
         # Row 2
                 GridLayout:

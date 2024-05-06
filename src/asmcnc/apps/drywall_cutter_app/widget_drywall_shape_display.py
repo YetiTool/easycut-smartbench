@@ -105,7 +105,7 @@ Builder.load_string("""
                 size: d_input.size
                 size_hint: (None, None)
                 pos: d_input.pos[0], d_input.pos[1] - dp(30)
-                color: 1,0,0,1
+                color: color_provider.get_rgba("monochrome_red")
                 halign: 'left'
                 opacity: 0
 
@@ -144,7 +144,7 @@ Builder.load_string("""
                 size: l_input.size
                 size_hint: (None, None)
                 pos: l_input.pos[0], l_input.pos[1] - dp(30)
-                color: 1,0,0,1
+                color: color_provider.get_rgba("monochrome_red")
                 halign: 'left'
                 opacity: 0
 
@@ -183,7 +183,7 @@ Builder.load_string("""
                 size: r_input.size
                 size_hint: (None, None)
                 pos: r_input.pos[0], r_input.pos[1] - dp(30)
-                color: 1,0,0,1
+                color: color_provider.get_rgba("monochrome_red")
                 halign: 'left'
                 opacity: 0
 
@@ -222,7 +222,7 @@ Builder.load_string("""
                 size: x_input.size
                 size_hint: (None, None)
                 pos: x_input.pos[0], x_input.pos[1] - dp(30)
-                color: 1,0,0,1
+                color: color_provider.get_rgba("monochrome_red")
                 halign: 'left'
                 opacity: 0
 
@@ -261,7 +261,7 @@ Builder.load_string("""
                 size: y_input.size
                 size_hint: (None, None)
                 pos: y_input.pos[0], y_input.pos[1] - dp(30)
-                color: 1,0,0,1
+                color: color_provider.get_rgba("monochrome_red")
                 halign: 'left'
                 opacity: 0
 
@@ -280,7 +280,7 @@ Builder.load_string("""
                 size: x_datum_label.size
                 size_hint: (None, None)
                 pos: x_datum_label.pos[0], x_datum_label.pos[1] - dp(20)
-                color: 1,0,0,1
+                color: color_provider.get_rgba("monochrome_red")
                 halign: 'left'
                 opacity: 0
 
@@ -298,7 +298,7 @@ Builder.load_string("""
                 size: y_datum_label.size
                 size_hint: (None, None)
                 pos: y_datum_label.pos[0], y_datum_label.pos[1] - dp(35)
-                color: 1,0,0,1
+                color: color_provider.get_rgba("monochrome_red")
                 halign: 'left'
                 opacity: 0
 

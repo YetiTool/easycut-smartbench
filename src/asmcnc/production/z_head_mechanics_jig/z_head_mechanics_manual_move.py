@@ -102,7 +102,7 @@ Builder.load_string("""
                     text: 'De-energise motor'
                     font_size: dp(25)
                     bold: True
-                    background_color: [1,0,0,1]
+                    background_color: color_provider.get_rgba("monochrome_red")
                     background_normal: ''
                     on_press: root.de_energise_motor()
 

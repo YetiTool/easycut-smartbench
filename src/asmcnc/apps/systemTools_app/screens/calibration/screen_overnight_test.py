@@ -130,7 +130,7 @@ Builder.load_string(
                         id: stop_button
                         font_size: str(0.01875 * app.width) + 'sp'
                         text: 'STOP'
-                        background_color: [1,0,0,1]
+                        background_color: color_provider.get_rgba("monochrome_red")
                         on_press: root.stop()
                         background_normal: ''
 

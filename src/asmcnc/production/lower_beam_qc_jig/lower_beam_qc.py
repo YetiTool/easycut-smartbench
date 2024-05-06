@@ -150,7 +150,7 @@ Builder.load_string("""
 						valign: 'middle'
 						padding: [dp(10),0]
 						text: 'STOP'
-						background_color: [1,0,0,1]
+						background_color: color_provider.get_rgba("monochrome_red")
 						background_normal: ''
 						size_hint_y: 0.25
 						on_press: root.stop()
