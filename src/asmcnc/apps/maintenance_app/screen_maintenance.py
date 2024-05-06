@@ -407,7 +407,7 @@ Builder.load_string("""
                 spacing:0.0416666666667*app.height
                 canvas:
                     Color:
-                        rgba: color_provider.get_rgba("grey")
+                        rgba: color_provider.get_rgba("light_grey")
                     Rectangle:
                         size: self.size
                         pos: self.pos

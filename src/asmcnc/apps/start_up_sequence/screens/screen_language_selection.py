@@ -146,7 +146,7 @@ class LanguageSelectionScreen(Screen):
     def __update_body(self, *args):
         self.body.canvas.before.clear()
         with self.body.canvas.before:
-            Color(*color_provider.get_rgba("grey"))
+            Color(*color_provider.get_rgba("light_grey"))
             Rectangle(size=self.body.size, pos=self.body.pos)
 
     def __update_header(self, *args):
@@ -158,5 +158,5 @@ class LanguageSelectionScreen(Screen):
     def __update_footer(self, *args):
         self.footer.canvas.before.clear()
         with self.footer.canvas.before:
-            Color(*color_provider.get_rgba("grey"))
+            Color(*color_provider.get_rgba("light_grey"))
             Rectangle(size=self.footer.size, pos=self.footer.pos)
