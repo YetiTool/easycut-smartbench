@@ -94,7 +94,7 @@ Builder.load_string("""
                     text: 'Energise motor'
                     font_size: dp(25)
                     bold: True
-                    background_color: color_provider.get_rgba("monochrome_green"),0,1]
+                    background_color: color_provider.get_rgba("monochrome_green")
                     background_normal: ''
                     on_press: root.energise_motor()
 

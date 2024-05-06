@@ -63,7 +63,7 @@ Builder.load_string("""
                 Button:
                     id: cycle_button
                     text: 'Cycle Z (3x)'
-                    background_color: color_provider.get_rgba("monochrome_green"),0,1]
+                    background_color: color_provider.get_rgba("monochrome_green")
                     background_normal: ''
                     color: color_provider.get_rgba("black")
                     font_size: dp(30)
