@@ -76,7 +76,7 @@ Builder.load_string("""
 
                 canvas.before:
                     Color:
-                        rgba: hex('#E5E5E5FF')
+                        rgba: color_provider.get_rgba("light_grey")
                     Rectangle:
                         pos: self.x + 2.5, self.y + 5
                         size: self.width - 5, self.height - 10
@@ -115,7 +115,7 @@ Builder.load_string("""
 
                 canvas.before:
                     Color:
-                        rgba: hex('#E5E5E5FF')
+                        rgba: color_provider.get_rgba("light_grey")
                     Rectangle:
                         pos: self.x + 2.5, self.y + 5
                         size: self.width - 5, self.height - 10
@@ -154,7 +154,7 @@ Builder.load_string("""
 
                 canvas.before:
                     Color:
-                        rgba: hex('#E5E5E5FF')
+                        rgba: color_provider.get_rgba("light_grey")
                     Rectangle:
                         pos: self.x + 2.5, self.y + 5
                         size: self.width - 5, self.height - 10
@@ -193,7 +193,7 @@ Builder.load_string("""
 
                 canvas.before:
                     Color:
-                        rgba: hex('#E5E5E5FF')
+                        rgba: color_provider.get_rgba("light_grey")
                     Rectangle:
                         pos: self.x + 2.5, self.y + 5
                         size: self.width - 5, self.height - 10
@@ -232,7 +232,7 @@ Builder.load_string("""
 
                 canvas.before:
                     Color:
-                        rgba: hex('#E5E5E5FF')
+                        rgba: color_provider.get_rgba("light_grey")
                     Rectangle:
                         pos: self.x + 2.5, self.y + 5
                         size: self.width - 5, self.height - 10

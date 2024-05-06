@@ -38,7 +38,7 @@ Builder.load_string(
         width: dp(0.6*app.width)
         canvas.before:
             Color: 
-                rgba: hex('#e5e5e5ff')
+                rgba: color_provider.get_rgba("light_grey")
             Rectangle: 
                 size: self.size
                 pos: self.pos
@@ -126,7 +126,7 @@ Builder.load_string(
                                 markup: True
                                 font_size: dp(0.025*app.width)
                                 multiline: False
-                                background_color: hex('#e5e5e5ff')
+                                background_color: color_provider.get_rgba("light_grey")
                                 input_filter: 'int'
 
                             Label: 
@@ -176,7 +176,7 @@ Builder.load_string(
                                     markup: True
                                     font_size: dp(0.025*app.width)
                                     multiline: False
-                                    background_color: hex('#e5e5e5ff')
+                                    background_color: color_provider.get_rgba("light_grey")
 
 
                         Label:
@@ -203,7 +203,7 @@ Builder.load_string(
                             markup: True
                             font_size: dp(0.025*app.width)
                             multiline: True
-                            background_color: hex('#e5e5e5ff')
+                            background_color: color_provider.get_rgba("light_grey")
 
                 # EVENT DETAILS
                 Label:

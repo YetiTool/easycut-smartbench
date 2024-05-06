@@ -78,7 +78,7 @@ Builder.load_string(
         width: dp(0.6*app.width)
         canvas.before:
             Color: 
-                rgba: hex('#e5e5e5ff')
+                rgba: color_provider.get_rgba("light_grey")
             Rectangle: 
                 size: self.size
                 pos: self.pos
@@ -128,7 +128,7 @@ Builder.load_string(
                     Button:
                         font_size: str(0.01875 * app.width) + 'sp'
                         id: smartbench_name
-                        background_color: hex('#e5e5e5ff')
+                        background_color: color_provider.get_rgba("light_grey")
                         background_normal: ""
                         background_down: ""
                         opacity: 1
@@ -200,7 +200,7 @@ Builder.load_string(
                         id: smartbench_location
                         size_hint_x: None
                         width: dp(0.625*app.width)
-                        background_color: hex('#e5e5e5ff')
+                        background_color: color_provider.get_rgba("light_grey")
                         background_normal: ""
                         background_down: ""
                         size_hint_y: None

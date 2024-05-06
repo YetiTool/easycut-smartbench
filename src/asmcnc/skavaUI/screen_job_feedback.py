@@ -33,7 +33,7 @@ Builder.load_string(
         width: dp(0.6*app.width)
         canvas.before:
             Color: 
-                rgba: hex('#e5e5e5ff')
+                rgba: color_provider.get_rgba("light_grey")
             Rectangle: 
                 size: self.size
                 pos: self.pos
@@ -147,7 +147,7 @@ Builder.load_string(
                                     markup: True
                                     font_size: dp(0.025*app.width)
                                     multiline: False
-                                    background_color: hex('#e5e5e5ff')
+                                    background_color: color_provider.get_rgba("light_grey")
 
 
                         Label:
@@ -174,7 +174,7 @@ Builder.load_string(
                             markup: True
                             font_size: dp(0.025*app.width)
                             multiline: True
-                            background_color: hex('#e5e5e5ff')
+                            background_color: color_provider.get_rgba("light_grey")
 
                 # FEEDBACK
                 Label:
@@ -212,7 +212,7 @@ Builder.load_string(
                             size_hint: (None,None)
                             height: dp(0.416666666667*app.height)
                             width: dp(0.2525*app.width)
-                            background_color: hex('#e5e5e5ff')
+                            background_color: color_provider.get_rgba("light_grey")
                             background_normal: ""
                             on_press: root.confirm_job_unsuccessful()
                             BoxLayout:
@@ -230,7 +230,7 @@ Builder.load_string(
                             size_hint: (None,None)
                             height: dp(0.416666666667*app.height)
                             width: dp(0.2525*app.width)
-                            background_color: hex('#e5e5e5ff')
+                            background_color: color_provider.get_rgba("light_grey")
                             background_normal: ""
                             on_press: root.confirm_job_successful()
                             BoxLayout:

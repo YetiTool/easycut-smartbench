@@ -36,7 +36,7 @@ Builder.load_string(
 
 		canvas:
 			Color:
-				rgba: hex('##e5e5e5')
+				rgba: color_provider.get_rgba("light_grey")
 			Rectangle:
 				size: self.size
 				pos: self.pos
@@ -81,7 +81,7 @@ Builder.load_string(
 				    font_size: str(0.01875 * app.width) + 'sp'
 					size_hint_x: None
 					width: dp(0.065*app.width)
-					background_color: hex('##e5e5e5')
+					background_color: color_provider.get_rgba("light_grey")
 					background_normal: ''
 					on_press: root.go_to_factory_settings()
 
@@ -240,7 +240,7 @@ Builder.load_string(
 						size_hint: (None,None)
 						height: dp(0.108333333333*app.height)
 						width: dp(0.065*app.width)
-						background_color: hex('##e5e5e5')
+						background_color: color_provider.get_rgba("light_grey")
 						background_normal: ''
 						on_press: root.quit_to_console()
 
