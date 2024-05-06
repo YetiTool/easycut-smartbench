@@ -147,9 +147,9 @@ Builder.load_string("""
                     #size: [50,50]
                     background_color: color_provider.get_rgba("invisible")
                     on_release:
-                        self.background_color = hex('#FFFFFF00')
+                        self.background_color = color_provider.get_rgba("invisible")
                     on_press:
-                        self.background_color = hex('#FFFFFFFF')
+                        self.background_color = color_provider.get_rgba("white")
                         root.on_ok()
                     BoxLayout:
                         padding: 20
@@ -172,10 +172,10 @@ Builder.load_string("""
                     background_color: color_provider.get_rgba("invisible")
                     on_release:
 #                        root.manager.current = 'lobby'
-                        self.background_color = hex('#FFFFFF00')
+                        self.background_color = color_provider.get_rgba("invisible")
                     on_press:
                         root.sm.current = 'lobby'
-                        self.background_color = hex('#FFFFFFFF')
+                        self.background_color = color_provider.get_rgba("white")
                     BoxLayout:
                         padding: 20
                         size: self.parent.size
@@ -196,10 +196,10 @@ Builder.load_string("""
                     on_release:
 #                        carousel.load_previous()
 #                        root.manager.current = 'template'
-                        self.background_color = hex('#FFFFFF00')
+                        self.background_color = color_provider.get_rgba("invisible")
                     on_press:
                         root.sm.current = 'template'
-                        self.background_color = hex('#FFFFFFFF')
+                        self.background_color = color_provider.get_rgba("white")
                     BoxLayout:
                         padding: 10
                         size: self.parent.size
@@ -219,10 +219,10 @@ Builder.load_string("""
                     background_color: color_provider.get_rgba("invisible")
                     on_release:
 #                        carousel.load_next(mode='next')
-                        self.background_color = hex('#FFFFFF00')
+                        self.background_color = color_provider.get_rgba("invisible")
                     on_press:
                         root.sm.current = 'template'
-                        self.background_color = hex('#FFFFFFFF')
+                        self.background_color = color_provider.get_rgba("white")
                     BoxLayout:
                         padding: 10
                         size: self.parent.size

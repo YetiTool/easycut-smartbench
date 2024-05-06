@@ -384,7 +384,7 @@ Builder.load_string(
                     scroll_type: ['content']
                     RstDocument:
                         id: connection_instructions_rst
-                        background_color: hex('#FFFFFF')
+                        background_color: color_provider.get_rgba("white")
                         base_font_size: 26.0 / 800 * app.width
                         underline_color: '000000'
                                                                                    

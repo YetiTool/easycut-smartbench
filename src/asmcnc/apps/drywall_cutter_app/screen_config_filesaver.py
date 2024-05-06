@@ -59,7 +59,7 @@ Builder.load_string("""
                 size_hint_y: 1
                 text: root.filename_selected_label_text
                 markup: True
-                color: hex('#FFFFFFFF')
+                color: color_provider.get_rgba("white")
                 font_size: '18sp'   
                 valign: 'middle'
                 halign: 'center'
@@ -177,9 +177,9 @@ Builder.load_string("""
                 background_color: color_provider.get_rgba("invisible")
                 on_release: 
                     root.quit_to_home()
-                    self.background_color = hex('#FFFFFF00')
+                    self.background_color = color_provider.get_rgba("invisible")
                 on_press:
-                    self.background_color = hex('#FFFFFFFF')
+                    self.background_color = color_provider.get_rgba("white")
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
@@ -196,10 +196,10 @@ Builder.load_string("""
                 disabled: False
                 size_hint_x: 1
                 on_release: 
-                    self.background_color = hex('#FFFFFF00')
+                    self.background_color = color_provider.get_rgba("invisible")
                 on_press:
                     root.save_config_and_return_to_dwt()
-                    self.background_color = hex('#FFFFFFFF')
+                    self.background_color = color_provider.get_rgba("white")
                 BoxLayout:
                     padding: 25
                     size: self.parent.size

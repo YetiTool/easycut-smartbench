@@ -123,7 +123,7 @@ Builder.load_string(
                     
                     RstDocument:
                         text: root.preparation_list
-                        background_color: hex('#FFFFFF')
+                        background_color: color_provider.get_rgba("white")
                         base_font_size: str(31.0/800.0*app.width) + 'sp'
 
             BoxLayout:

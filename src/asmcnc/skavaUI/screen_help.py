@@ -43,10 +43,10 @@ Builder.load_string("""
                 size_hint_y: 1
                 background_color: color_provider.get_rgba("invisible")
                 on_release: 
-                    self.background_color = hex('#FFFFFF00')
+                    self.background_color = color_provider.get_rgba("invisible")
                 on_press:
                     root.quit_to_home()
-                    self.background_color = hex('#FFFFFFFF')
+                    self.background_color = color_provider.get_rgba("white")
                 BoxLayout:
                     padding: 15
                     size: self.parent.size

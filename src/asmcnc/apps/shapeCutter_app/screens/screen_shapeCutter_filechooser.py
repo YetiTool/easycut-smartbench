@@ -81,10 +81,10 @@ Builder.load_string(
                 size_hint_x: 1
                 background_color: color_provider.get_rgba("invisible")
                 on_release: 
-                    self.background_color = hex('#FFFFFF00')
+                    self.background_color = color_provider.get_rgba("invisible")
                 on_press:
                     root.refresh_filechooser() 
-                    self.background_color = hex('#FFFFFFFF')
+                    self.background_color = color_provider.get_rgba("white")
                 BoxLayout:
                     padding:[dp(0.03125)*app.width, dp(0.0520833333333)*app.height]
                     size: self.parent.size
@@ -103,11 +103,11 @@ Builder.load_string(
                 size_hint_x: 1
                 background_color: color_provider.get_rgba("invisible")
                 on_release: 
-                    self.background_color = hex('#FFFFFF00')
+                    self.background_color = color_provider.get_rgba("invisible")
                 on_press:
                     root.delete_popup(file_selection = filechooser_sc_params.selection[0])
                     # root.delete_selected(filechooser_sc_params.selection[0])
-                    self.background_color = hex('#FFFFFFFF')
+                    self.background_color = color_provider.get_rgba("white")
                 BoxLayout:
                     padding:[dp(0.03125)*app.width, dp(0.0520833333333)*app.height]
                     size: self.parent.size
@@ -126,10 +126,10 @@ Builder.load_string(
                 size_hint_x: 1
                 background_color: color_provider.get_rgba("invisible")
                 on_release: 
-                    self.background_color = hex('#FFFFFF00')
+                    self.background_color = color_provider.get_rgba("invisible")
                 on_press:
                     root.delete_popup(file_selection = 'all')
-                    self.background_color = hex('#FFFFFFFF')
+                    self.background_color = color_provider.get_rgba("white")
                 BoxLayout:
                     padding:[dp(0.03125)*app.width, dp(0.0520833333333)*app.height]
                     size: self.parent.size
@@ -147,10 +147,10 @@ Builder.load_string(
                 size_hint_x: 1
                 background_color: color_provider.get_rgba("invisible")
                 on_release: 
-                    self.background_color = hex('#FFFFFF00')
+                    self.background_color = color_provider.get_rgba("invisible")
                 on_press:
                     root.quit_to_home()
-                    self.background_color = hex('#FFFFFFFF')
+                    self.background_color = color_provider.get_rgba("white")
                 BoxLayout:
                     padding:[dp(0.03125)*app.width, dp(0.0520833333333)*app.height]
                     size: self.parent.size
@@ -168,10 +168,10 @@ Builder.load_string(
                 disabled: True
                 size_hint_x: 1
                 on_release: 
-                    self.background_color = hex('#FFFFFF00')
+                    self.background_color = color_provider.get_rgba("invisible")
                 on_press:
                     root.return_to_SC17(filechooser_sc_params.selection[0])
-                    self.background_color = hex('#FFFFFFFF')
+                    self.background_color = color_provider.get_rgba("white")
                 BoxLayout:
                     padding:[dp(0.03125)*app.width, dp(0.0520833333333)*app.height]
                     size: self.parent.size

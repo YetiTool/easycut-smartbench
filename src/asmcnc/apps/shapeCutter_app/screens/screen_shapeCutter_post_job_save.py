@@ -141,7 +141,7 @@ Builder.load_string("""
                             scroll_type: ['content']
                             RstDocument:
                                 text: root.display_profile
-                                background_color: hex('#FFFFFF')                 
+                                background_color: color_provider.get_rgba("white")                 
                                 base_font_size: str(31.0/800.0*app.width) + 'sp'
                 BoxLayout: #action box
                     size_hint: (None,None)

@@ -170,9 +170,9 @@ Builder.load_string("""
                 background_color: color_provider.get_rgba("invisible")
                 on_release: 
                     root.delete_popup(file_selection = filechooser.selection[0])
-                    self.background_color = hex('#FFFFFF00')
+                    self.background_color = color_provider.get_rgba("invisible")
                 on_press:
-                    self.background_color = hex('#FFFFFFFF')
+                    self.background_color = color_provider.get_rgba("white")
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
@@ -190,10 +190,10 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: color_provider.get_rgba("invisible")
                 on_release: 
-                    self.background_color = hex('#FFFFFF00')
+                    self.background_color = color_provider.get_rgba("invisible")
                 on_press:
                     root.delete_popup(file_selection = 'all')
-                    self.background_color = hex('#FFFFFFFF')
+                    self.background_color = color_provider.get_rgba("white")
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
@@ -211,9 +211,9 @@ Builder.load_string("""
                 background_color: color_provider.get_rgba("invisible")
                 on_release: 
                     root.quit_to_home()
-                    self.background_color = hex('#FFFFFF00')
+                    self.background_color = color_provider.get_rgba("invisible")
                 on_press:
-                    self.background_color = hex('#FFFFFFFF')
+                    self.background_color = color_provider.get_rgba("white")
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
@@ -230,10 +230,10 @@ Builder.load_string("""
                 disabled: True
                 size_hint_x: 1
                 on_release: 
-                    self.background_color = hex('#FFFFFF00')
+                    self.background_color = color_provider.get_rgba("invisible")
                 on_press:
                     root.load_config_and_return_to_dwt()
-                    self.background_color = hex('#FFFFFFFF')
+                    self.background_color = color_provider.get_rgba("white")
                 BoxLayout:
                     padding: 25
                     size: self.parent.size

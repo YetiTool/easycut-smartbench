@@ -90,10 +90,10 @@ Builder.load_string("""
                         disabled: False
                         background_color: color_provider.get_rgba("invisible")
                         on_release: 
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("invisible")
                         on_press:
                             root.pro_app()
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("invisible")
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
@@ -126,10 +126,10 @@ Builder.load_string("""
                         size_hint_y: 8
                         background_color: color_provider.get_rgba("invisible")
                         on_release:                 
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("invisible")
                         on_press:
                             root.shapecutter_app()
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("invisible")
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
@@ -187,10 +187,10 @@ Builder.load_string("""
                         disabled: False
                         background_color: color_provider.get_rgba("invisible")
                         on_release:
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("invisible")
                         on_press:
                             root.drywall_cutter_app()
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("invisible")
                         BoxLayout:
                             size: self.parent.size
                             pos: self.parent.pos
@@ -225,10 +225,10 @@ Builder.load_string("""
                         disabled: False
                         background_color: color_provider.get_rgba("invisible")
                         on_release: 
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("invisible")
                         on_press:
                             root.wifi_app()
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("invisible")
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
@@ -258,10 +258,10 @@ Builder.load_string("""
                         disabled: False
                         background_color: color_provider.get_rgba("invisible")
                         on_release: 
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("invisible")
                         on_press:
                             root.calibrate_smartbench()
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("invisible")
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
@@ -297,10 +297,10 @@ Builder.load_string("""
                         disabled: False
                         background_color: color_provider.get_rgba("invisible")
                         on_release: 
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("invisible")
                         on_press:
                             root.update_app()
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("invisible")
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
@@ -330,10 +330,10 @@ Builder.load_string("""
                         disabled: False
                         background_color: color_provider.get_rgba("invisible")
                         on_release: 
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("invisible")
                         on_press:
                             root.maintenance_app()
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("invisible")
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
@@ -369,10 +369,10 @@ Builder.load_string("""
                         disabled: False
                         background_color: color_provider.get_rgba("invisible")
                         on_release: 
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("invisible")
                         on_press:
                             root.upgrade_app()
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("invisible")
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
@@ -402,10 +402,10 @@ Builder.load_string("""
                         disabled: False
                         background_color: color_provider.get_rgba("invisible")
                         on_release: 
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("invisible")
                         on_press:
                             root.developer_app()
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("invisible")
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
@@ -450,9 +450,9 @@ Builder.load_string("""
                     background_color: color_provider.get_rgba("invisible")
                     on_release: 
                         carousel.load_previous()
-                        self.background_color = hex('#FFFFFF00')
+                        self.background_color = color_provider.get_rgba("invisible")
                     on_press:
-                        self.background_color = hex('#FFFFFF00')
+                        self.background_color = color_provider.get_rgba("invisible")
                     BoxLayout:
                         size: self.parent.size
                         pos: self.parent.pos
@@ -497,9 +497,9 @@ Builder.load_string("""
                     background_color: color_provider.get_rgba("invisible")
                     on_release: 
                         carousel.load_next(mode='next')
-                        self.background_color = hex('#FFFFFF00')
+                        self.background_color = color_provider.get_rgba("invisible")
                     on_press:
-                        self.background_color = hex('#FFFFFF00')
+                        self.background_color = color_provider.get_rgba("invisible")
                     BoxLayout:
                         size: self.parent.size
                         pos: self.parent.pos
