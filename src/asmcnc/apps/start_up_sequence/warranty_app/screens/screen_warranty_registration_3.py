@@ -125,7 +125,7 @@ Builder.load_string(
 						valign: 'bottom'
 						halign: 'center'
 						markup: 'true'
-						color: hex('#e64a19ff')
+						color: color_provider.get_rgba("red")
 						opacity: 0
 					Label:
 						id: error_message_bottom
@@ -135,7 +135,7 @@ Builder.load_string(
 						valign: 'bottom'
 						halign: 'center'
 						markup: 'true'
-						color: hex('#e64a19ff')
+						color: color_provider.get_rgba("red")
 						opacity: 0
 
 			# FOOTER
