@@ -59,6 +59,9 @@ Colors = {
     "blue": [25 / 255., 118 / 255., 210 / 255., 1.0],
     "dark_grey": [51 / 255., 51 / 255., 51 / 255., 1.0],
     "invisible": [0.0, 0.0, 0.0, 0.0],
+    "monochrome_red": [1.0, 0.0, 0.0, 1.0],
+    "monochrome_green": [0.0, 1.0, 0.0, 1.0],
+    "monochrome_blue": [0.0, 0.0, 1.0, 1.0],
 }  # type: Dict[str, List[float]]  
 
 

@@ -117,7 +117,7 @@ Builder.load_string(
                         font_size: str(0.01875 * app.width) + 'sp'
                         text: 'START'
                         on_press: root.start_full_overnight_test()
-                        background_color: [0,1,0,1]
+                        background_color: color_provider.get_rgba("monochrome_green"),0,1]
 
                     Button:
                         id: cal_and_post_button
