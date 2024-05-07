@@ -1,7 +1,7 @@
 import os
 import threading
 
-from kivy.base import runTouchApp
+from kivy.app import App
 from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
@@ -12,6 +12,7 @@ from asmcnc import paths
 from asmcnc.comms.localization import Localization
 from asmcnc.comms.logging_system import logging_system
 from asmcnc.comms.logging_system.logging_system import Logger
+from asmcnc.comms.user_settings_manager import UserSettingsManager
 from asmcnc.core_UI import scaling_utils
 from asmcnc.core_UI.new_popups.popup_bases import PopupBase, PopupErrorTitle
 from asmcnc.core_UI.utils import color_provider
@@ -38,12 +39,13 @@ class SoftwareCrashedPopup(PopupBase):
         self.root_layout.add_widget(title)
 
         main_string = (
-            self.localisation.get_str("SmartBench has detected that the software crashed during the last session.")
-            + " "
-            "Would you like to send a crash report to help diagnose the issue?"
+                self.localisation.get_str("SmartBench has detected that the software crashed during the last session.")
+                + " "
+                  "Would you like to send a crash report to help diagnose the issue?"
         )
         body = BoxLayout(size_hint_y=0.5, padding=[0, dp(10), 0, 0])
-        main_label = Label(text=main_string, font_size=scaling_utils.get_scaled_sp("15sp"), color=color_provider.get_rgba("black"),
+        main_label = Label(text=main_string, font_size=scaling_utils.get_scaled_sp("15sp"),
+                           color=color_provider.get_rgba("black"),
                            valign="top")
         main_label.bind(size=main_label.setter("text_size"))
         body.add_widget(main_label)
@@ -96,8 +98,8 @@ class SoftwareCrashedPopup(PopupBase):
     def send_crash_report(self, instance):
         self.dismiss()
 
-        if self.checkbox.value:
-            pass
+        if self.checkbox.active:
+            self.usm.set_setting("send_crash_report", True)
 
         try:
             import pika
@@ -121,6 +123,11 @@ class SoftwareCrashedPopup(PopupBase):
 
 
 if __name__ == "__main__":
-    popup = SoftwareCrashedPopup(size_hint=(0.8, 0.8), serial_number="123456")
-    popup.open()
-    runTouchApp()
+    class TestApp(App):
+        usm = UserSettingsManager()
+
+        def build(self):
+            return SoftwareCrashedPopup(size_hint=(0.8, 0.8), serial_number="123456")
+
+
+    TestApp().run()
