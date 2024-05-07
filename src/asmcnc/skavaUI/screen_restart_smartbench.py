@@ -23,8 +23,8 @@ Builder.load_string("""
 
     Label:
         id: restart_label
-        padding: [dp(10),dp(0)]
-        font_size: '40sp'
+        padding: app.get_scaled_tuple([10.0, 0.0])
+        font_size: app.get_scaled_sp('40sp')
         color: hex('#333333')
         text_size: self.size
         size: self.texture_size
@@ -35,10 +35,10 @@ Builder.load_string("""
     BoxLayout:
         valign: 'bottom'
         halign: 'left'
-        padding: dp(30)
+        padding: app.get_scaled_width(30)
 
         Button:
-            size: dp(80), dp(70) # Slightly bigger than image size, but image is tiny and I think slightly bigger looks fine
+            size: app.get_scaled_tuple([80.0, 70.0])
             size_hint: None, None
             background_color: 0,0,0,0
             on_press: root.switch_screen()

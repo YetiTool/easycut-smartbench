@@ -24,11 +24,11 @@ def get_scaled_width(width):
         return None
     if width is 0:
         return 0
-    return float(width) / 800.0 * Width
+    return dp(float(width) / 800.0 * Width)
 
 
-def get_scaled_dp_width(width):
-    return dp(get_scaled_width(width))
+def get_scaled_dp_width(width):  # no longer required, but will keep for now
+    return get_scaled_width(width)
 
 
 def get_scaled_height(height):
@@ -41,11 +41,11 @@ def get_scaled_height(height):
         return None
     if height is 0:
         return 0
-    return float(height) / 480.0 * Height
+    return dp(float(height) / 480.0 * Height)
 
 
 def get_scaled_dp_height(height):
-    return dp(get_scaled_height(height))
+    return get_scaled_height(height)  # no longer required, but will keep for now
 
 
 def get_scaled_tuple(tup, orientation="horizontal"):

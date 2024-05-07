@@ -31,11 +31,11 @@ Builder.load_string(
 
     BoxLayout: 
         spacing: 0
-        padding:[dp(0.05)*app.width, dp(0.0833333333333)*app.height]
+        padding: app.get_scaled_tuple([40.0, 40.0])
         orientation: 'vertical'
 
         Label:
-            font_size: str(0.01875 * app.width) + 'sp'
+            font_size: app.get_scaled_sp('15.0sp')
             size_hint_y: 1 
             
         Label:
@@ -61,11 +61,11 @@ Builder.load_string(
             color: hex('#333333ff')
 
         Label:
-            font_size: str(0.01875 * app.width) + 'sp'
+            font_size: app.get_scaled_sp('15.0sp')
             size_hint_y: 1                        
 
         Button:
-            font_size: str(0.01875 * app.width) + 'sp'
+            font_size: app.get_scaled_sp('15.0sp')
             size_hint_y: 4
             background_color: hex('#FFFFFF00')
             BoxLayout:
@@ -77,7 +77,7 @@ Builder.load_string(
                     allow_stretch: True 
                         
         Label:
-            font_size: str(0.01875 * app.width) + 'sp'
+            font_size: app.get_scaled_sp('15.0sp')
             size_hint_y: 1                
 
 """

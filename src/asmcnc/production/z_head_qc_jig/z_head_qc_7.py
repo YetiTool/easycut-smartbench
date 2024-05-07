@@ -19,7 +19,7 @@ Builder.load_string("""
         BoxLayout:
             orientation: 'vertical'
             size_hint_y: 0.92
-            spacing: dp(15)
+            spacing: app.get_scaled_width(15)
 
             GridLayout:
                 cols: 2
@@ -34,22 +34,22 @@ Builder.load_string("""
                     markup: 'True'
                     halign: 'left'
                     valign: 'middle'
-                    padding: [dp(10),0]
-                    font_size: dp(20)
+                    padding: app.get_scaled_tuple([10.0, 0.0])
+                    font_size: app.get_scaled_width(20)
 
                 Label:
                     text: ''
 
             GridLayout:
                 cols: 3
-                spacing: dp(5)
+                spacing: app.get_scaled_width(5)
 
                 Button:
                     text: 'Home'
                     background_color: [1,1,0,1]
                     background_normal: ''
                     color: [0,0,0,1]
-                    font_size: dp(30)
+                    font_size: app.get_scaled_width(30)
                     on_press: root.home()
 
                 Button:
@@ -57,7 +57,7 @@ Builder.load_string("""
                     background_color: [1,1,0,1]
                     background_normal: ''
                     color: [0,0,0,1]
-                    font_size: dp(30)
+                    font_size: app.get_scaled_width(30)
                     on_press: root.resume_from_alarm()
 
                 Button:
@@ -66,13 +66,13 @@ Builder.load_string("""
                     background_color: [0,1,0,1]
                     background_normal: ''
                     color: [0,0,0,1]
-                    font_size: dp(30)
+                    font_size: app.get_scaled_width(30)
                     on_press: root.do_cycle()
 
             Button:
                 id: disconnect_button
                 text: 'Cycle finished - go to next screen'
-                font_size: dp(30)
+                font_size: app.get_scaled_width(30)
                 size_hint_y: 0.55
                 disabled: True
                 on_press: root.enter_next_screen()

@@ -24,42 +24,42 @@ Builder.load_string("""
             markup: 'True'
             halign: 'left'
             valign: 'middle'
-            padding: [dp(10),0]
+            padding: app.get_scaled_tuple([10.0, 0.0])
             size_hint_y: 0.2
             size_hint_x: 0.5
-            font_size: dp(20)
+            font_size: app.get_scaled_width(20)
 
         GridLayout:
             cols: 1
             rows: 4
 
-            spacing: 50
+            spacing: app.get_scaled_width(50)
 
             GridLayout:
                 cols: 1
                 rows: 1
 
-                padding: [200, 0]
+                padding: app.get_scaled_tuple([200.0, 0.0])
 
                 TextInput:
                     id: serial_no_input
-                    font_size: dp(50)
+                    font_size: app.get_scaled_width(50)
                     multiline: False
 
 
             Label:
                 text: '^ Enter LB serial number: ^'
-                font_size: dp(50)
+                font_size: app.get_scaled_width(50)
 
             Label:
                 id: error_label
-                font_size: dp(30)
+                font_size: app.get_scaled_width(30)
 
             Button:
                 id: ok_button
                 on_press: root.enter_next_screen()
                 text: 'OK'
-                font_size: dp(30)
+                font_size: app.get_scaled_width(30)
                 size_hint_y: 0.6
                 disabled: False
 

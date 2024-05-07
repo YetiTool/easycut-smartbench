@@ -21,13 +21,13 @@ Builder.load_string(
         orientation: 'horizontal'
         size: self.parent.size
         pos: self.parent.pos
-        padding:[dp(0.0125)*app.width, dp(0.0166666666667)*app.height, dp(0.0125)*app.width, dp(0.0166666666667)*app.height]
+        padding: app.get_scaled_tuple([10.0, 8.0, 10.0, 8.0])
 
         
         BoxLayout:
             orientation: 'vertical'
             size_hint_x: 0.25
-            spacing:0.0208333333333*app.height
+            spacing: app.get_scaled_width(9.99999999998)
 
             Label:
                 id: yetipilot_two_tone
@@ -35,19 +35,19 @@ Builder.load_string(
                 markup: True
                 halign: 'center'
                 text_size: self.size
-                font_size: str(0.025*app.width) + 'sp'
+                font_size: app.get_scaled_sp('20.0sp')
                 valign: "bottom"
 
             BoxLayout: 
                 id: bl
                 size_hint_y: 0.5
-                padding:[dp(0.017620614025)*app.width, 0]
+                padding: app.get_scaled_tuple([14.1, 0.0])
 
                 ToggleButton:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: app.get_scaled_sp('15.0sp')
                     id: switch
                     size_hint: (None, None)
-                    size: (dp(64.0/800)*app.width, dp(29.0/480)*app.height)
+                    size: app.get_scaled_tuple([64.0, 29.0])
                     background_normal: ''
                     background_down: ''
                     on_press: root.toggle_yeti_pilot(self)
@@ -63,12 +63,12 @@ Builder.load_string(
                             allow_stretch: False
 
         BoxLayout:
-            padding:[0, 0]
+            padding: app.get_scaled_tuple([0.0, 0.0])
             size_hint_x: 0.025
             
             BoxLayout:
                 size_hint_x: None
-                width: 0.0025*app.width
+                width: app.get_scaled_width(2.0)
                 canvas:
                     Color:
                         rgba: hex('#ccccccff')
@@ -79,7 +79,7 @@ Builder.load_string(
         BoxLayout:
             orientation: 'vertical'
             size_hint_x: 0.6
-            padding:[dp(0.0025)*app.width, 0, dp(0.00625)*app.width, 0]
+            padding: app.get_scaled_tuple([2.0, 0.0, 5.0, 0.0])
             spacing: 0
             Label: 
                 id: profile_label
@@ -89,7 +89,7 @@ Builder.load_string(
                 halign: 'left'
                 text_size: self.size
                 bold: True
-                font_size: str(0.0225*app.width) + 'sp'
+                font_size: app.get_scaled_sp('18.0sp')
                 valign: "bottom"
 
             Label:
@@ -99,14 +99,14 @@ Builder.load_string(
                 markup: True
                 halign: 'left'
                 text_size: self.size
-                font_size: str(0.0175*app.width) + 'sp'
+                font_size: app.get_scaled_sp('14.0sp')
                 valign: "middle"
 
         BoxLayout: 
             size_hint_x: 0.1
-            padding:[0, 0, dp(0.0125)*app.width, 0]
+            padding: app.get_scaled_tuple([0.0, 0.0, 10.0, 0.0])
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 id: yp_cog_button
                 background_normal: ''
                 on_press: root.open_yp_settings()

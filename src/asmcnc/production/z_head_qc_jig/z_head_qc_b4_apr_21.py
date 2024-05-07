@@ -130,7 +130,7 @@ Builder.load_string("""
                     halign: 'left'
                     valign: 'middle'
                     on_press: root.enable_alarms()
-                    padding: [dp(10),0]
+                    padding: app.get_scaled_tuple([10.0, 0.0])
 
 
         # Row 3

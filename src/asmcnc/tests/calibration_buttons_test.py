@@ -39,7 +39,7 @@ Builder.load_string("""
                     
         Label:
             id: warning_body_label
-            font_size: '60sp'
+            font_size: app.get_scaled_sp('60sp')
             halign: 'center'
             valign: 'bottom'
             size_hint_y: 1

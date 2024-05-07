@@ -29,21 +29,21 @@ Builder.load_string(
 
     BoxLayout: 
         spacing: 0
-        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+        padding: app.get_scaled_tuple([20.0, 20.0])
         orientation: 'vertical'
 
         Label:
-            font_size: str(0.01875 * app.width) + 'sp'
+            font_size: app.get_scaled_sp('15.0sp')
             size_hint_y: 1
 
         BoxLayout:
-            padding:[dp(0.025)*app.width, 0]
+            padding: app.get_scaled_tuple([20.0, 0.0])
             orientation: 'horizontal'
-            spacing:0.0375*app.width
+            spacing: app.get_scaled_width(30.0)
             size_hint_y: 1.5
 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_press: root.windows_cheat_to_procede()
@@ -67,7 +67,7 @@ Builder.load_string(
                 color: hex('#333333ff')
                         
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_press: root.stop_button_press()

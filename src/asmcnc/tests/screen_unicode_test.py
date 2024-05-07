@@ -23,7 +23,7 @@ Builder.load_string("""
              
     BoxLayout:
         orientation: 'horizontal'
-        padding: 90,50
+        padding: app.get_scaled_tuple([90.0, 50.0])
         spacing: 0
         size_hint_x: 1
 
@@ -33,7 +33,7 @@ Builder.load_string("""
 
             Label:
                 text_size: self.size
-                font_size: '40sp'
+                font_size: app.get_scaled_sp('40sp')
                 halign: 'center'
                 valign: 'middle'
                 text: root.string_test

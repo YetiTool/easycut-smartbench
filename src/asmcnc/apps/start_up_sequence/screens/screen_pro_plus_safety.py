@@ -30,13 +30,13 @@ Builder.load_string(
                 text: 'Safety Information: PrecisionPro +'
                 halign: 'center'
                 valign: 'middle'
-                font_size: dp(0.0375*app.width)
+                font_size: app.get_scaled_width(30.0)
                 text_size: self.size
 
         BoxLayout:
             orientation: 'vertical'
             size_hint_y: 7
-            padding:[dp(0.025)*app.width, dp(0.0208333333333)*app.height, dp(0.025)*app.width, 0]
+            padding: app.get_scaled_tuple([20.0, 10.0, 20.0, 0.0])
 
             canvas: 
                 Color:
@@ -48,7 +48,7 @@ Builder.load_string(
             Label:
                 id: context
                 size_hint_y: 0.41
-                font_size: dp(0.0225*app.width)
+                font_size: app.get_scaled_width(18.0)
                 color: 0,0,0,1
                 halign: 'center'
                 valign: 'middle'
@@ -63,7 +63,7 @@ Builder.load_string(
                 cols: 2
 
                 BoxLayout:
-                    padding:[dp(0.0125)*app.width, 0]
+                    padding: app.get_scaled_tuple([10.0, 0.0])
                     Image:                         
                         source: "./asmcnc/skavaUI/img/popup_error_visual.png"
                         center_x: self.parent.center_x
@@ -73,7 +73,7 @@ Builder.load_string(
 
                 Label:
                     id: clamp_warning_label
-                    font_size: dp(0.0225*app.width)
+                    font_size: app.get_scaled_width(18.0)
                     color: 0,0,0,1
                     halign: 'left'
                     valign: 'middle'
@@ -82,7 +82,7 @@ Builder.load_string(
                     text: "The Spindle motor MUST be clamped securely BEFORE plugging in the Spindle motor cables."
 
                 BoxLayout:
-                    padding:[dp(0.0125)*app.width, 0]
+                    padding: app.get_scaled_tuple([10.0, 0.0])
                     Image:                         
                         source: "./asmcnc/skavaUI/img/popup_error_visual.png"
                         center_x: self.parent.center_x
@@ -92,7 +92,7 @@ Builder.load_string(
 
                 Label:
                     id: rpm_warning_label
-                    font_size: dp(0.0225*app.width)
+                    font_size: app.get_scaled_width(18.0)
                     color: 0,0,0,1
                     halign: 'left'
                     valign: 'middle'
@@ -103,21 +103,21 @@ Builder.load_string(
 
             BoxLayout:
                 size_hint_y: 0.29
-                padding:[dp(0.0125)*app.width, 0, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                padding: app.get_scaled_tuple([10.0, 0.0, 10.0, 10.0])
                 size_hint: (None, None)
-                height: dp(0.254166666667*app.height)
-                width: dp(1.0*app.width)
+                height: app.get_scaled_height(122.0)
+                width: app.get_scaled_width(800.0)
                 orientation: 'horizontal'
                 BoxLayout: 
                     size_hint: (None, None)
-                    height: dp(0.254166666667*app.height)
-                    width: dp(0.305625*app.width)
-                    padding:[0, 0, dp(0.230625)*app.width, 0]
+                    height: app.get_scaled_height(122.0)
+                    width: app.get_scaled_width(244.5)
+                    padding: app.get_scaled_tuple([0.0, 0.0, 184.5, 0.0])
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         size_hint: (None,None)
-                        height: dp(0.108333333333*app.height)
-                        width: dp(0.075*app.width)
+                        height: app.get_scaled_height(51.9999999998)
+                        width: app.get_scaled_width(60.0)
                         background_color: hex('#F4433600')
                         center: self.parent.center
                         pos: self.parent.pos
@@ -134,29 +134,29 @@ Builder.load_string(
                                 allow_stretch: True
                 BoxLayout: 
                     size_hint: (None, None)
-                    height: dp(0.254166666667*app.height)
-                    width: dp(0.36375*app.width)
-                    padding:[0, 0, 0, dp(0.0666666666667)*app.height]
+                    height: app.get_scaled_height(122.0)
+                    width: app.get_scaled_width(291.0)
+                    padding: app.get_scaled_tuple([0.0, 0.0, 0.0, 32.0])
                     Button:
                         id: continue_button
                         background_normal: "./asmcnc/skavaUI/img/next.png"
                         background_down: "./asmcnc/skavaUI/img/next.png"
-                        border: [dp(14.5)]*4
+                        border: app.get_scaled_tuple([14.5, 14.5, 14.5, 14.5])
                         size_hint: (None,None)
-                        width: dp(0.36375*app.width)
-                        height: dp(0.164583333333*app.height)
+                        width: app.get_scaled_width(291.0)
+                        height: app.get_scaled_height(78.9999999998)
                         on_press: root.next_screen()
                         text: 'Next...'
-                        font_size: str(0.0375*app.width) + 'sp'
+                        font_size: app.get_scaled_sp('30.0sp')
                         color: hex('#f9f9f9ff')
                         markup: True
                         center: self.parent.center
                         pos: self.parent.pos
                 BoxLayout: 
                     size_hint: (None, None)
-                    height: dp(0.254166666667*app.height)
-                    width: dp(0.305625*app.width)
-                    padding:[dp(0.241875)*app.width, 0, 0, 0]
+                    height: app.get_scaled_height(122.0)
+                    width: app.get_scaled_width(244.5)
+                    padding: app.get_scaled_tuple([193.5, 0.0, 0.0, 0.0])
 
 """
 )

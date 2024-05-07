@@ -37,18 +37,18 @@ Builder.load_string(
 
         BoxLayout:
             orientation: 'horizontal'
-            padding:[dp(0.1125)*app.width, dp(0.104166666667)*app.height, dp(0.0375)*app.width, dp(0.104166666667)*app.height]
+            padding: app.get_scaled_tuple([90.0, 50.0, 30.0, 50.0])
             spacing: 0
             size_hint_x: 1
 
             BoxLayout:
                 orientation: 'vertical'
                 size_hint_x: 0.8
-                # spacing: 10
+                # spacing: app.get_scaled_width(10)
                 
                 Label:
                     size_hint_y: 1
-                    font_size: str(0.04375*app.width) + 'sp'
+                    font_size: app.get_scaled_sp('35.0sp')
                     text: '[color=263238]Do you want to calibrate SmartBench?[/color]'
                     markup: True
 
@@ -56,14 +56,14 @@ Builder.load_string(
                     id: user_instruction
                     size_hint_y: 2
                     text_size: self.size
-                    font_size: str(0.0225*app.width) + 'sp'
+                    font_size: app.get_scaled_sp('18.0sp')
                     halign: 'center'
                     valign: 'middle'
                     markup: True
 
                 Label:
                     text_size: self.size
-                    font_size: str(0.0225*app.width) + 'sp'
+                    font_size: app.get_scaled_sp('18.0sp')
                     halign: 'center'
                     valign: 'middle'
                     text: '[color=546E7A]Calibration can take 10 minutes. You will need an accurate tape measure.[/color]'
@@ -71,11 +71,11 @@ Builder.load_string(
                     
                 BoxLayout:
                     orientation: 'horizontal'
-                    padding:[0, 0]
-                    spacing:0.025*app.width
+                    padding: app.get_scaled_tuple([0.0, 0.0])
+                    spacing: app.get_scaled_width(20.0)
                 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         size_hint_y:0.9
                         id: getout_button
                         size: self.texture_size
@@ -88,18 +88,18 @@ Builder.load_string(
                             root.skip_to_lobby()
                             
                         BoxLayout:
-                            padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                            padding: app.get_scaled_tuple([5.0, 5.0])
                             size: self.parent.size
                             pos: self.parent.pos
                             
                             Label:
                                 #size_hint_y: 1
-                                font_size: str(0.025*app.width) + 'sp'
+                                font_size: app.get_scaled_sp('20.0sp')
                                 text: '[color=455A64]No, skip[/color]'
                                 markup: True
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         size_hint_y:0.9
                         id: getout_button
                         size: self.texture_size
@@ -112,26 +112,26 @@ Builder.load_string(
                             root.next_screen()
                             
                         BoxLayout:
-                            padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                            padding: app.get_scaled_tuple([5.0, 5.0])
                             size: self.parent.size
                             pos: self.parent.pos
                             
                             Label:
                                 #size_hint_y: 1
-                                font_size: str(0.025*app.width) + 'sp'
+                                font_size: app.get_scaled_sp('20.0sp')
                                 text: '[color=455A64]Yes, calibrate[/color]'
                                 markup: True
 
         BoxLayout:
             size_hint_x: 0.1
-            padding:[0, 0, 0, dp(0.833333333333)*app.height]
+            padding: app.get_scaled_tuple([0.0, 0.0, 0.0, 400.0])
 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 id: exit_button
                 size_hint: (None,None)
-                height: dp(0.0833333333333*app.height)
-                width: dp(0.05*app.width)
+                height: app.get_scaled_height(40.0)
+                width: app.get_scaled_width(40.0)
                 background_color: hex('#F4433600')
                 opacity: 1
                 on_press: root.skip_to_lobby()

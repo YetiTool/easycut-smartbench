@@ -13,19 +13,19 @@ Builder.load_string("""
 
     BoxLayout: 
         orientation: "horizontal"
-        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+        padding: app.get_scaled_tuple([20.0, 20.0])
 
         BoxLayout: 
             orientation: "vertical"
             size_hint_x: 0.88
-            spacing:0.00416666666667*app.height
+            spacing: app.get_scaled_width(2.0)
 
             LabelBase: 
                 id: title_text
                 size_hint_y: 0.15
                 text: "Spindle motor health check"
                 color: [0,0,0,1]
-                font_size: str(0.03*app.width) + 'sp'
+                font_size: app.get_scaled_sp('24.0sp')
                 halign: "left"
                 # valign: "top"
                 markup: True
@@ -36,7 +36,7 @@ Builder.load_string("""
                 size_hint_y: 0.85
                 text: ""
                 color: [0,0,0,1]
-                font_size: str(0.0225*app.width) + 'sp'
+                font_size: app.get_scaled_sp('18.0sp')
                 halign: "left"
                 valign: "top"
                 markup: True
@@ -44,7 +44,7 @@ Builder.load_string("""
 
         BoxLayout: 
             size_hint_x: 0.12
-            padding:[0, 0, 0, dp(0.104166666667)*app.height]
+            padding: app.get_scaled_tuple([0.0, 0.0, 0.0, 50.0])
             spacing: 0
             orientation: 'vertical'
 
@@ -56,10 +56,10 @@ Builder.load_string("""
 
             BoxLayout: 
                 size_hint_y: 0.1
-                padding:[dp(0.0125)*app.width, 0, 0, 0]
+                padding: app.get_scaled_tuple([10.0, 0.0, 0.0, 0.0])
 
                 ToggleButton:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: app.get_scaled_sp('15.0sp')
                     id: switch
                     size_hint: (None, None)
                     size: (dp(app.get_scaled_width(64)), dp(app.get_scaled_height(29)))

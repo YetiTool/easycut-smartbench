@@ -28,8 +28,8 @@ Builder.load_string(
         size: self.parent.size
         pos: self.parent.pos
         orientation: 'vertical'
-        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
-        spacing:0.0208333333333*app.height
+        padding: app.get_scaled_tuple([10.0, 10.0])
+        spacing: app.get_scaled_width(9.99999999998)
         
         GridLayout:
             cols: 2
@@ -54,11 +54,11 @@ Builder.load_string(
                 size: self.parent.size
                 pos: self.parent.pos 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: app.get_scaled_sp('15.0sp')
                     id: reset_button
                     size_hint: (None,None)
-                    height: dp(0.28125*app.height)
-                    width: dp(0.165*app.width)
+                    height: app.get_scaled_height(135.0)
+                    width: app.get_scaled_width(132.0)
                     background_color: [0,0,0,0]
                     center: self.parent.center
                     pos: self.parent.pos
@@ -78,11 +78,11 @@ Builder.load_string(
                 size: self.parent.size
                 pos: self.parent.pos 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: app.get_scaled_sp('15.0sp')
                     id: save_button
                     size_hint: (None,None)
-                    height: dp(0.28125*app.height)
-                    width: dp(0.165*app.width)
+                    height: app.get_scaled_height(135.0)
+                    width: app.get_scaled_width(132.0)
                     background_color: [0,0,0,0]
                     center: self.parent.center
                     pos: self.parent.pos

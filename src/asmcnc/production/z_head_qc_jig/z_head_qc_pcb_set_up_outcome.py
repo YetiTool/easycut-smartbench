@@ -39,7 +39,7 @@ Builder.load_string("""
                     markup: 'True'
                     halign: 'left'
                     valign: 'middle'
-                    padding: [dp(10),0]
+                    padding: app.get_scaled_tuple([10.0, 0.0])
                     on_press: root.go_back_to_pcb_setup()
 
 
@@ -130,7 +130,7 @@ Builder.load_string("""
             Button:
                 on_press: 
                 text: 'OK'
-                font_size: dp(30)
+                font_size: app.get_scaled_width(30)
                 size_hint_y: 0.2
                 on_press: root.go_to_qc_home()
 

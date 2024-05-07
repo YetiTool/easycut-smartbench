@@ -23,8 +23,8 @@ Builder.load_string(
 	next_button : next_button
 
 	BoxLayout:
-		height: dp(1.66666666667*app.height)
-		width: dp(0.6*app.width)
+		height: app.get_scaled_height(800.000000002)
+		width: app.get_scaled_width(480.0)
 		canvas.before:
 			Color: 
 				rgba: hex('#e5e5e5ff')
@@ -50,11 +50,11 @@ Builder.load_string(
 				Label:
 					id: header_label
 					size_hint: (None,None)
-					height: dp(0.125*app.height)
-					width: dp(1.0*app.width)
+					height: app.get_scaled_height(60.0)
+					width: app.get_scaled_width(800.0)
 					color: hex('#f9f9f9ff')
 					# color: hex('#333333ff') #grey
-					font_size: dp(0.0375*app.width)
+					font_size: app.get_scaled_width(30.0)
 					halign: "center"
 					valign: "bottom"
 					markup: True
@@ -62,20 +62,20 @@ Builder.load_string(
 			# BODY
 			BoxLayout:
 				size_hint: (None,None)
-				width: dp(1.0*app.width)
-				height: dp(0.620833333333*app.height)
-				padding:[dp(0.025)*app.width, dp(0.0208333333333)*app.height, dp(0.025)*app.width, dp(0.0375)*app.height]
-				spacing:dp(0.0208333333333)*app.height
+				width: app.get_scaled_width(800.0)
+				height: app.get_scaled_height(298.0)
+				padding: app.get_scaled_tuple([20.0, 10.0, 20.0, 18.0])
+				spacing: app.get_scaled_width(9.99999999998)
 				orientation: 'vertical'
 
 				Label: 
 					id: we_will_collect
 					size_hint: (None, None)
-					height: dp(0.104166666667*app.height)
-					width: dp(0.925*app.width)
+					height: app.get_scaled_height(50.0000000002)
+					width: app.get_scaled_width(740.0)
 					# color: hex('#f9f9f9ff') # white
 					color: hex('#333333ff') #grey
-					font_size: dp(0.0225*app.width)
+					font_size: app.get_scaled_width(18.0)
 					halign: "left"
 					valign: "top"
 					markup: True
@@ -85,18 +85,18 @@ Builder.load_string(
 					cols: 2
 					rows: 2
 					size_hint: (None, None)
-					height: dp(0.166666666667*app.height)
-					width: dp(0.925*app.width)
+					height: app.get_scaled_height(80.0000000002)
+					width: app.get_scaled_width(740.0)
 
 					# Row 1 Col 1
 					BoxLayout: 
-						padding:[dp(0.0125)*app.width, 0]
-						spacing:dp(0.0125)*app.width
+						padding: app.get_scaled_tuple([10.0, 0.0])
+						spacing: app.get_scaled_width(10.0)
 						orientation: 'horizontal'
 
 						BoxLayout: 
 							size_hint_x: None
-							width: dp(0.0375*app.width)
+							width: app.get_scaled_width(30.0)
 			                Image:
 			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/green_tick.png"
 			                    allow_stretch: True
@@ -105,7 +105,7 @@ Builder.load_string(
 	                    	id: job_critical_events
 	                    	# color: hex('#f9f9f9ff') # white
 	                    	color: hex('#333333ff') #grey
-	                    	font_size: dp(0.0225*app.width)
+	                    	font_size: app.get_scaled_width(18.0)
 	                    	halign: "left"
 	                    	valign: "middle"
 	                    	markup: True
@@ -113,13 +113,13 @@ Builder.load_string(
 
 					# Row 1 Col 2
 					BoxLayout: 
-						padding:[dp(0.0125)*app.width, 0]
-						spacing:dp(0.0125)*app.width
+						padding: app.get_scaled_tuple([10.0, 0.0])
+						spacing: app.get_scaled_width(10.0)
 						orientation: 'horizontal'
 
 						BoxLayout: 
 							size_hint_x: None
-							width: dp(0.0375*app.width)
+							width: app.get_scaled_width(30.0)
 			                Image:
 			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/green_tick.png"
 			                    allow_stretch: True
@@ -128,7 +128,7 @@ Builder.load_string(
 	                    	id: maintenance_data
 	                    	# color: hex('#f9f9f9ff') # white
 	                    	color: hex('#333333ff') #grey
-	                    	font_size: dp(0.0225*app.width)
+	                    	font_size: app.get_scaled_width(18.0)
 	                    	halign: "left"
 	                    	valign: "middle"
 	                    	markup: True
@@ -136,13 +136,13 @@ Builder.load_string(
 
 					# Row 2 Col 1
 					BoxLayout: 
-						padding:[dp(0.0125)*app.width, 0]
-						spacing:dp(0.0125)*app.width
+						padding: app.get_scaled_tuple([10.0, 0.0])
+						spacing: app.get_scaled_width(10.0)
 						orientation: 'horizontal'
 
 						BoxLayout: 
 							size_hint_x: None
-							width: dp(0.0375*app.width)
+							width: app.get_scaled_width(30.0)
 			                Image:
 			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/green_tick.png"
 			                    allow_stretch: True
@@ -151,7 +151,7 @@ Builder.load_string(
 	                    	id: ip_address
 	                    	# color: hex('#f9f9f9ff') # white
 	                    	color: hex('#333333ff') #grey
-	                    	font_size: dp(0.0225*app.width)
+	                    	font_size: app.get_scaled_width(18.0)
 	                    	halign: "left"
 	                    	valign: "middle"
 	                    	markup: True
@@ -159,13 +159,13 @@ Builder.load_string(
 
 					# Row 2 Col 2
 					BoxLayout: 
-						padding:[dp(0.0125)*app.width, 0]
-						spacing:dp(0.0125)*app.width
+						padding: app.get_scaled_tuple([10.0, 0.0])
+						spacing: app.get_scaled_width(10.0)
 						orientation: 'horizontal'
 
 						BoxLayout: 
 							size_hint_x: None
-							width: dp(0.0375*app.width)
+							width: app.get_scaled_width(30.0)
 			                Image:
 			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/green_tick.png"
 			                    allow_stretch: True
@@ -174,7 +174,7 @@ Builder.load_string(
 	                    	id: console_hostname
 	                    	# color: hex('#f9f9f9ff') # white
 	                    	color: hex('#333333ff') #grey
-	                    	font_size: dp(0.0225*app.width)
+	                    	font_size: app.get_scaled_width(18.0)
 	                    	halign: "left"
 	                    	valign: "middle"
 	                    	markup: True
@@ -182,18 +182,18 @@ Builder.load_string(
 
 	            BoxLayout: 
 					size_hint: (None, None)
-					height: dp(0.0625*app.height)
-					width: dp(0.925*app.width)
-					padding:[0, 0, 0, 0]
+					height: app.get_scaled_height(30.0)
+					width: app.get_scaled_width(740.0)
+					padding: app.get_scaled_tuple([0.0, 0.0, 0.0, 0.0])
 
 					Label: 
 						id: we_wont_collect
 						size_hint: (None, None)
-						height: dp(0.0625*app.height)
-						width: dp(0.925*app.width)
+						height: app.get_scaled_height(30.0)
+						width: app.get_scaled_width(740.0)
 						# color: hex('#f9f9f9ff') # white
 						color: hex('#333333ff') #grey
-						font_size: dp(0.0225*app.width)
+						font_size: app.get_scaled_width(18.0)
 						halign: "left"
 						valign: "bottom"
 						markup: True
@@ -203,18 +203,18 @@ Builder.load_string(
 					cols: 2
 					rows: 2
 					size_hint: (None, None)
-					height: dp(0.166666666667*app.height)
-					width: dp(0.925*app.width)
+					height: app.get_scaled_height(80.0000000002)
+					width: app.get_scaled_width(740.0)
 
 					# Row 1 Col 1
 					BoxLayout: 
-						padding:[dp(0.0125)*app.width, 0]
-						spacing:dp(0.0125)*app.width
+						padding: app.get_scaled_tuple([10.0, 0.0])
+						spacing: app.get_scaled_width(10.0)
 						orientation: 'horizontal'
 
 						BoxLayout: 
 							size_hint_x: None
-							width: dp(0.0375*app.width)
+							width: app.get_scaled_width(30.0)
 			                Image:
 			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/red_cross.png"
 			                    allow_stretch: True
@@ -223,7 +223,7 @@ Builder.load_string(
 	                    	id: g_code_files
 	                    	# color: hex('#f9f9f9ff') # white
 	                    	color: hex('#333333ff') #grey
-	                    	font_size: dp(0.0225*app.width)
+	                    	font_size: app.get_scaled_width(18.0)
 	                    	halign: "left"
 	                    	valign: "middle"
 	                    	markup: True
@@ -231,13 +231,13 @@ Builder.load_string(
 
 					# Row 1 Col 2
 					BoxLayout: 
-						padding:[dp(0.0125)*app.width, 0]
-						spacing:dp(0.0125)*app.width
+						padding: app.get_scaled_tuple([10.0, 0.0])
+						spacing: app.get_scaled_width(10.0)
 						orientation: 'horizontal'
 
 						BoxLayout: 
 							size_hint_x: None
-							width: dp(0.0375*app.width)
+							width: app.get_scaled_width(30.0)
 			                Image:
 			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/red_cross.png"
 			                    allow_stretch: True
@@ -246,7 +246,7 @@ Builder.load_string(
 	                    	id: wifi_network_details
 	                    	# color: hex('#f9f9f9ff') # white
 	                    	color: hex('#333333ff') #grey
-	                    	font_size: dp(0.0225*app.width)
+	                    	font_size: app.get_scaled_width(18.0)
 	                    	halign: "left"
 	                    	valign: "middle"
 	                    	markup: True
@@ -254,13 +254,13 @@ Builder.load_string(
 
 					# Row 2 Col 1
 					BoxLayout: 
-						padding:[dp(0.0125)*app.width, 0]
-						spacing:dp(0.0125)*app.width
+						padding: app.get_scaled_tuple([10.0, 0.0])
+						spacing: app.get_scaled_width(10.0)
 						orientation: 'horizontal'
 
 						BoxLayout: 
 							size_hint_x: None
-							width: dp(0.0375*app.width)
+							width: app.get_scaled_width(30.0)
 			                Image:
 			                    source: "./asmcnc/apps/start_up_sequence/data_consent_app/img/red_cross.png"
 			                    allow_stretch: True
@@ -269,7 +269,7 @@ Builder.load_string(
 	                    	id: serial_numbers
 	                    	# color: hex('#f9f9f9ff') # white
 	                    	color: hex('#333333ff') #grey
-	                    	font_size: dp(0.0225*app.width)
+	                    	font_size: app.get_scaled_width(18.0)
 	                    	halign: "left"
 	                    	valign: "middle"
 	                    	markup: True
@@ -277,30 +277,30 @@ Builder.load_string(
 
 					# Row 2 Col 2
 					BoxLayout: 
-						padding:[dp(0.0125)*app.width, 0]
-						spacing:dp(0.0125)*app.width
+						padding: app.get_scaled_tuple([10.0, 0.0])
+						spacing: app.get_scaled_width(10.0)
 						orientation: 'horizontal'
 
 
 
 			# FOOTER
 			BoxLayout: 
-				padding:[dp(0.0125)*app.width, 0, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+				padding: app.get_scaled_tuple([10.0, 0.0, 10.0, 10.0])
 				size_hint: (None, None)
-				height: dp(0.254166666667*app.height)
-				width: dp(1.0*app.width)
+				height: app.get_scaled_height(122.0)
+				width: app.get_scaled_width(800.0)
 				orientation: 'horizontal'
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(0.254166666667*app.height)
-					width: dp(0.305625*app.width)
-					padding:[0, 0, dp(0.230625)*app.width, 0]
+					height: app.get_scaled_height(122.0)
+					width: app.get_scaled_width(244.5)
+					padding: app.get_scaled_tuple([0.0, 0.0, 184.5, 0.0])
 					Button:
-					    font_size: str(0.01875 * app.width) + 'sp'
+					    font_size: app.get_scaled_sp('15.0sp')
 						id: prev_screen_button
 						size_hint: (None,None)
-						height: dp(0.108333333333*app.height)
-						width: dp(0.075*app.width)
+						height: app.get_scaled_height(51.9999999998)
+						width: app.get_scaled_width(60.0)
 						background_color: hex('#F4433600')
 						center: self.parent.center
 						pos: self.parent.pos
@@ -317,29 +317,29 @@ Builder.load_string(
 								allow_stretch: True
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(0.254166666667*app.height)
-					width: dp(0.36375*app.width)
-					padding:[0, 0, 0, dp(0.0666666666667)*app.height]
+					height: app.get_scaled_height(122.0)
+					width: app.get_scaled_width(291.0)
+					padding: app.get_scaled_tuple([0.0, 0.0, 0.0, 32.0])
 					Button:
 						id: next_button
 						background_normal: "./asmcnc/skavaUI/img/next.png"
 						background_down: "./asmcnc/skavaUI/img/next.png"
-						border: [dp(14.5)]*4
+						border: app.get_scaled_tuple([14.5, 14.5, 14.5, 14.5])
 						size_hint: (None,None)
-						width: dp(0.36375*app.width)
-						height: dp(0.164583333333*app.height)
+						width: app.get_scaled_width(291.0)
+						height: app.get_scaled_height(78.9999999998)
 						on_press: root.next_screen()
 						text: 'Next...'
-						font_size: str(0.0375*app.width) + 'sp'
+						font_size: app.get_scaled_sp('30.0sp')
 						color: hex('#f9f9f9ff')
 						markup: True
 						center: self.parent.center
 						pos: self.parent.pos
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(0.254166666667*app.height)
-					width: dp(0.305625*app.width)
-					padding:[dp(0.241875)*app.width, 0, 0, 0]
+					height: app.get_scaled_height(122.0)
+					width: app.get_scaled_width(244.5)
+					padding: app.get_scaled_tuple([193.5, 0.0, 0.0, 0.0])
 
 """
 )
