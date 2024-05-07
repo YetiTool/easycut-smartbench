@@ -457,7 +457,7 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
         self.probe()
 
     # def dust_shoe_switch(self):
-    #     if self.m.s.dust_shoe_cover_on:
+    #     if self.m.s.dustshoe_is_closed:
     #         self.dust_shoe_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
     #     else:
     #         self.dust_shoe_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
