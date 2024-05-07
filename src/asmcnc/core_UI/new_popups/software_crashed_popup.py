@@ -38,8 +38,6 @@ class SoftwareCrashedPopup(PopupBase):
         self.user_settings_manager = App.get_running_app().user_settings_manager
         self.serial_number = serial_number
 
-        print(self.user_settings_manager.get_value(SETTING_NAME))
-
         title = PopupErrorTitle(size_hint_y=0.15, localisation=self.localisation)
         self.root_layout.add_widget(title)
 
@@ -123,7 +121,6 @@ class SoftwareCrashedPopup(PopupBase):
         if sent:
             Logger.info("Deleting CRASH_LOG file after sending")
             os.remove(CRASH_LOG)
-
 
     def dont_send_crash_report(self, instance):
         """Delete the crash log file and close the popup."""
