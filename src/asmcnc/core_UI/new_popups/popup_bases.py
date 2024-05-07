@@ -111,9 +111,9 @@ Builder.load_string(scroll_view_kv)  # Overwrite the default ScrollView styling 
 class PopupScrollableBody(ScrollView):
     """Body of a popup that contains a scrollable text area"""
 
-    def __init__(self, text, **kwargs):
+    def __init__(self, text, back_color="light_grey", **kwargs):
         super(PopupScrollableBody, self).__init__(**kwargs)
 
         rst_doc = RstDocument(text=text, markup=True, font_size=scaling_utils.get_scaled_sp("15sp"),
-                              background_color=get_color_from_hex("#f3f3f3"))
+                              background_color=color_provider.get_rgba(back_color))
         self.add_widget(rst_doc)

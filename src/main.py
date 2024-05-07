@@ -7,6 +7,8 @@ YetiTool's UI for SmartBench
 www.yetitool.com
 '''
 from asmcnc import paths
+from asmcnc.comms.user_settings_manager import UserSettingsManager
+
 paths.create_paths()
 from asmcnc.comms.logging_system.logging_system import Logger
 
@@ -172,6 +174,8 @@ class SkavaUI(App):
     l = Localization()
 
     sm = None
+
+    user_settings_manager = UserSettingsManager()
 
     def get_scaled_width(self, val):
         return scaling_utils.get_scaled_width(val)
