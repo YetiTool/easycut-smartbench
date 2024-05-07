@@ -6,6 +6,8 @@ Created on 16 Nov 2017
 YetiTool's UI for SmartBench
 www.yetitool.com
 '''
+from kivy.clock import Clock
+
 from asmcnc import paths
 paths.create_paths()
 
