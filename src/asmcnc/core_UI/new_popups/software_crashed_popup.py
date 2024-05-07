@@ -50,7 +50,7 @@ class SoftwareCrashedPopup(PopupBase):
                 + " "
                   "Would you like to send a crash report to help diagnose the issue?"
         )
-        body = BoxLayout(size_hint_y=0.5, padding=[0, dp(10), 0, 0])
+        body = BoxLayout(size_hint_y=0.5, padding=scaling_utils.get_scaled_tuple([0, dp(10), 0, 0]))
         main_label = Label(text=main_string, font_size=scaling_utils.get_scaled_sp("15sp"),
                            color=color_provider.get_rgba("black"),
                            valign="top")
@@ -59,7 +59,7 @@ class SoftwareCrashedPopup(PopupBase):
         self.root_layout.add_widget(body)
 
         checkbox_container_wrapper = BoxLayout(size_hint_y=0.1)
-        checkbox_container = BoxLayout(pos_hint={"center_x": 0.5}, spacing=dp(10))
+        checkbox_container = BoxLayout(pos_hint={"center_x": 0.5}, spacing=scaling_utils.get_scaled_width(10))
 
         self.checkbox = CheckBox(size_hint_x=0.1, color=color_provider.get_rgba("black"))
         checkbox_container.add_widget(self.checkbox)
@@ -78,7 +78,7 @@ class SoftwareCrashedPopup(PopupBase):
 
         self.root_layout.add_widget(checkbox_container_wrapper)
 
-        button_layout = BoxLayout(size_hint_y=0.15, spacing=dp(30))
+        button_layout = BoxLayout(size_hint_y=0.15, spacing=scaling_utils.get_scaled_width(30))
         button_layout.add_widget(
             Button(
                 text=self.localisation.get_bold("Don't send crash report"),
