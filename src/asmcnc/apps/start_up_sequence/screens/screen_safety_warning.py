@@ -302,7 +302,6 @@ class SafetyScreen(Screen):
             Logger.info("No wifi available, not opening crash popup and deleting crash file")
             software_crashed_popup.delete_crash_log()
 
-
     def next_screen(self):
         self.user_has_confirmed = True
         self.sm.current = "squaring_decision"
