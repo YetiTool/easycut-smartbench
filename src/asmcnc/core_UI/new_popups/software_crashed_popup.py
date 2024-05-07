@@ -25,6 +25,10 @@ SETTING_NAME = "auto_send_crash_report"
 def check_for_crash():
     return os.path.exists(CRASH_LOG)
 
+def delete_crash_log():
+    if os.path.exists(CRASH_LOG):
+        os.remove(CRASH_LOG)
+
 
 class SoftwareCrashedPopup(PopupBase):
     """This popup is displayed on startup if the software crashed during the last session."""
@@ -120,12 +124,12 @@ class SoftwareCrashedPopup(PopupBase):
 
         if sent:
             Logger.info("Deleting CRASH_LOG file after sending")
-            os.remove(CRASH_LOG)
+            delete_crash_log()
 
     def dont_send_crash_report(self, instance):
         """Delete the crash log file and close the popup."""
         self.dismiss()
-        os.remove(CRASH_LOG)
+        delete_crash_log()
 
     def open(self):
         """Override the open method to check if the user has set the auto_send_crash_report setting."""

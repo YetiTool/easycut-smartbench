@@ -298,6 +298,10 @@ class SafetyScreen(Screen):
     def open_crash_popup(self, *args):
         if software_crashed_popup.check_for_crash() and self.m.sett.wifi_available:
             software_crashed_popup.SoftwareCrashedPopup(self.m.serial_number(), size_hint=(0.8, 0.8)).open()
+        elif not self.m.sett.wifi_available:
+            Logger.info("No wifi available, not opening crash popup and deleting crash file")
+            software_crashed_popup.delete_crash_log()
+
 
     def next_screen(self):
         self.user_has_confirmed = True
