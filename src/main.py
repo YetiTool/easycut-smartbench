@@ -34,6 +34,7 @@ from asmcnc.core_UI import scaling_utils, console_utils
 from asmcnc.comms.model_manager import ProductCodes
 from asmcnc.core_UI.popup_manager import PopupManager
 from asmcnc.comms.model_manager import ModelManagerSingleton
+from exporting_screen_manager import ExportingScreenManager
 
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
 
@@ -186,7 +187,7 @@ class SkavaUI(App):
         Logger.info("Starting App:")
 
         # Establish screens
-        sm = ScreenManager(transition=NoTransition())
+        sm = ExportingScreenManager(transition=NoTransition())
 
         # Keyboard object
         kb = custom_keyboard.Keyboard(localization=self.l)
@@ -322,7 +323,9 @@ class SkavaUI(App):
         sm.add_widget(recovery_decision_screen)
         sm.add_widget(homing_decision_screen)
 
-        # Setting the first screen:        
+        Clock.schedule_once(lambda dt: sm.dump_all_screens(), 10)
+
+        # Setting the first screen:
         # sm.current is set at the end of start_services in serial_connection 
         # This ensures kivy has fully loaded and initial kivy schedule calls are safely made before screen is presented
 
