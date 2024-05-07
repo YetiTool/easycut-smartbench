@@ -7,6 +7,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.checkbox import CheckBox
 from kivy.uix.label import Label
+from kivy.uix.screenmanager import ScreenManager
 
 from asmcnc import paths
 from asmcnc.comms.localization import Localization
@@ -18,6 +19,7 @@ from asmcnc.core_UI.new_popups.popup_bases import PopupBase, PopupErrorTitle
 from asmcnc.core_UI.utils import color_provider
 
 CRASH_LOG = os.path.join(paths.COMMS_PATH, "logging_system", "logs", "crash.log")
+SETTING_NAME = "auto_send_crash_report"
 
 
 def check_for_crash():
@@ -33,7 +35,10 @@ class SoftwareCrashedPopup(PopupBase):
 
     def __init__(self, serial_number, **kwargs):
         super(SoftwareCrashedPopup, self).__init__(**kwargs)
+        self.user_settings_manager = App.get_running_app().user_settings_manager
         self.serial_number = serial_number
+
+        print(self.user_settings_manager.get_value(SETTING_NAME))
 
         title = PopupErrorTitle(size_hint_y=0.15, localisation=self.localisation)
         self.root_layout.add_widget(title)
@@ -96,10 +101,11 @@ class SoftwareCrashedPopup(PopupBase):
         self.root_layout.add_widget(button_layout)
 
     def send_crash_report(self, instance):
+        """Callback for the send crash report button. Sends the crash report to the server and closes the popup."""
         self.dismiss()
 
         if self.checkbox.active:
-            self.usm.set_setting("send_crash_report", True)
+            self.user_settings_manager.set_value(SETTING_NAME, True)
 
         try:
             import pika
@@ -111,23 +117,33 @@ class SoftwareCrashedPopup(PopupBase):
         t.start()
 
     def __send_crash_report(self):
+        """Send the crash report to the server and delete the file afterward. Runs in a separate thread."""
         sent = logging_system.send_logs_to_server(CRASH_LOG, self.serial_number)
 
         if sent:
             Logger.info("Deleting CRASH_LOG file after sending")
             os.remove(CRASH_LOG)
 
+
     def dont_send_crash_report(self, instance):
+        """Delete the crash log file and close the popup."""
         self.dismiss()
         os.remove(CRASH_LOG)
+
+    def open(self):
+        """Override the open method to check if the user has set the auto_send_crash_report setting."""
+        if self.user_settings_manager.get_value(SETTING_NAME):
+            self.send_crash_report(None)
+        else:
+            super(SoftwareCrashedPopup, self).open()
 
 
 if __name__ == "__main__":
     class TestApp(App):
-        usm = UserSettingsManager()
+        user_settings_manager = UserSettingsManager()
 
         def build(self):
-            return SoftwareCrashedPopup(size_hint=(0.8, 0.8), serial_number="123456")
+            return ScreenManager()
 
 
     TestApp().run()

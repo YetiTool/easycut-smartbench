@@ -8,6 +8,8 @@ Screen to give a safety warning to the user when they switch on SmartBench.
 """
 from datetime import datetime
 
+from kivy.app import App
+
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
@@ -288,6 +290,7 @@ class SafetyScreen(Screen):
         self.status_bar_widget.cheeky_color = "#1976d2"
         self.update_strings()
         self.m.s.bind(setting_50=self.open_crash_popup)
+        self.user_settings_manager = App.get_running_app().user_settings_manager
 
     def on_enter(self):
         Logger.info("Safety screen UP")

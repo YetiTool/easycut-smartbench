@@ -39,15 +39,26 @@ class UserSettingsManager(EventDispatcher):
     SETTINGS_FILE_PATH = os.path.join(paths.SB_VALUES_PATH, "user_settings.json")
 
     # local copy of settings (Add new settings here):
-    settings = {'dust_shoe_detection': {'description': 'When activated, the dust shoe needs to be inserted '
-                                                       'when starting the spindle or running jobs.',
-                                        'title': 'Dust shoe plug detection',
-                                        'value': True},
-                'interrupt_bars_active': {'description': 'When activated, hitting the interrupt bars will trigger '
-                                                         'an alarm! Only deactivate this if your interrupt bar '
-                                                         'switches are broken!',
-                                          'title': 'Interrupt bars activated',
-                                          'value': True}}
+    settings = {
+        'dust_shoe_detection': {
+            'description': 'When activated, the dust shoe needs to be inserted '
+                           'when starting the spindle or running jobs.',
+            'title': 'Dust shoe plug detection',
+            'value': True
+        },
+        'interrupt_bars_active': {
+            'description': 'When activated, hitting the interrupt bars will trigger '
+                           'an alarm! Only deactivate this if your interrupt bar '
+                           'switches are broken!',
+            'title': 'Interrupt bars activated',
+            'value': True
+        },
+        'auto_send_crash_report': {
+            'description': 'When activated, crash reports will be sent automatically.',
+            'title': 'Auto send crash reports',
+            'value': False
+        },
+    }
 
     # dynamic property creation (kivy properties must be created at class level and not inside a class function:
     for name, details in settings.items():
