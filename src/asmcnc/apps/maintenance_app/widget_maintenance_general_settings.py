@@ -110,7 +110,7 @@ class GeneralSettingsWidget(Widget):
         self.dust_shoe_info_label.text = self.l.get_str("When activated, the dust shoe needs to be inserted when starting the spindle or running jobs.")
 
         self.interrupt_bars_title_label.text = self.l.get_bold("Interrupt bars activation")
-        self.interrupt_bars_info_label.text = self.l.get_str("When disabled, the interrupt bars will not work.")
+        self.interrupt_bars_info_label.text = self.l.get_str("When activated, the interrupt bars will pause the machine when depressed.")
 
     def toggle_interrupt_bars(self, instance, value):
         if value:
