@@ -7,9 +7,13 @@ YetiTool's UI for SmartBench
 www.yetitool.com
 '''
 from asmcnc import paths
+
+
 paths.create_paths()
+from asmcnc.comms.logging_system.logging_system import Logger
 
 import logging
+from asmcnc.comms.user_settings_manager import UserSettingsManager
 # config
 # import os
 # os.environ['KIVY_GL_BACKEND'] = 'sdl2'
@@ -24,7 +28,7 @@ import os
 import os.path
 import sys
 
-from kivy import Logger
+from kivy import Logger as KivyLogger
 from kivy.config import Config
 from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
@@ -108,6 +112,7 @@ Cmport = 'COM3'
 
 # Current version active/working on
 initial_version = 'v2.9.0'
+Logger.info("Starting SmartBench with version: {}".format(initial_version))
 
 config_flag = False
 
@@ -157,7 +162,7 @@ check_and_update_config()
 Builder.load_file('scaled_kv.kv')
 
 # Set the kivy logger to INFO level
-Logger.setLevel(logging.INFO)
+KivyLogger.setLevel(logging.INFO)
 
 
 class SkavaUI(App):
@@ -168,6 +173,10 @@ class SkavaUI(App):
 
     # Localization/language object
     l = Localization()
+
+    sm = None
+
+    user_settings_manager = UserSettingsManager()
 
     def get_scaled_width(self, val):
         return scaling_utils.get_scaled_width(val)
@@ -181,12 +190,23 @@ class SkavaUI(App):
     def get_scaled_tuple(self, tup, orientation="horizontal"):
         return scaling_utils.get_scaled_tuple(tup, orientation)
 
+    def run(self):
+        try:
+            super(SkavaUI, self).run()
+        except Exception as e:
+            Logger.exception("Unhandled exception while running the app. Exporting logs.")
+            if sys.platform.startswith("linux") and not isinstance(e, KeyboardInterrupt):
+                src = os.path.abspath(os.path.join(paths.COMMS_PATH, "logging_system", "logs", "run.log"))
+                dest = os.path.abspath(os.path.join(paths.COMMS_PATH, "logging_system", "logs", "crash.log"))
+                os.system("cp {} {}".format(src, dest))
+                console_utils.reboot()
 
     def build(self):
         Logger.info("Starting App:")
 
         # Establish screens
         sm = ScreenManager(transition=NoTransition())
+        self.sm = sm
 
         # Keyboard object
         kb = custom_keyboard.Keyboard(localization=self.l)
@@ -376,3 +396,5 @@ class SkavaUI(App):
 
 if __name__ == '__main__':
     SkavaUI().run()
+
+

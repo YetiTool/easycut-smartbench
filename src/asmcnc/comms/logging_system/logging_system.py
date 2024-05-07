@@ -1,12 +1,16 @@
+import base64
 import inspect
+import json
 import logging
 import os
+import socket
 import sys
 
 LOG_STRING_FORMAT = "[%(asctime)s] - [%(levelname)s] [%(module_name)s] %(message)s"
 LOG_DATE_FORMAT = "%H:%M:%S %d-%m-%Y"
 
 LOG_FOLDER_PATH = os.path.join(os.path.dirname(__file__), "logs")
+LOG_FILE_PATH = os.path.join(LOG_FOLDER_PATH, "run.log")
 
 if not os.path.exists(LOG_FOLDER_PATH):
     os.makedirs(LOG_FOLDER_PATH)
@@ -26,6 +30,63 @@ try:
             )
 except ImportError:
     formatter = logging.Formatter(LOG_STRING_FORMAT, datefmt=LOG_DATE_FORMAT)
+
+
+def serialize_log_file(log_file_path, serial_number):
+    """
+    Serialize the log file to base64 and remove any instances of the serial number.
+    :param log_file_path:
+    :param serial_number:
+    :return:
+    """
+    with open(log_file_path, "r") as log_file:
+        log_file_contents = log_file.read()
+
+        # Ensure that the serial number is not included in the crash report for GDPR compliance.
+        Logger.info("Replacing {} with SERIAL_NUMBER in crash report.".format(serial_number))
+        log_file_contents = log_file_contents.replace(str(serial_number), "SERIAL_NUMBER")
+
+    encoded_data = base64.b64encode(log_file_contents)
+    return encoded_data
+
+
+def send_logs_to_server(log_file_path, serial_number):
+    """
+    Send log file to server, with serial numbers removed. Recommend running this function on a separate
+    thread to not lock up Kivy.
+    :param log_file_path: absolute path to the log file.
+    :param serial_number: the machine's serial number, to be removed to comply with GDPR.
+    :return:
+    """
+    try:
+        import pika
+
+        encoded_data = serialize_log_file(log_file_path, serial_number)
+
+        connection = pika.BlockingConnection(
+            pika.ConnectionParameters('sm-receiver.yetitool.com', 5672, '/',
+                                      pika.PlainCredentials(
+                                          'console',
+                                          '2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb')
+                                      )
+        )
+        channel = connection.channel()
+
+        channel.queue_declare(queue="crash_reports", durable=True)
+
+        hostname = socket.gethostname().split(".")[0]
+
+        message = {
+            "hostname": hostname,
+            "log_data": encoded_data,
+        }
+
+        channel.basic_publish(exchange="", routing_key="crash_reports", body=json.dumps(message))
+
+        Logger.info("Sent crash report, hostname: {}.".format(socket.gethostname()))
+        return True
+    except:
+        Logger.exception("Failed to send crash report.")
 
 
 class ModuleLogger(logging.Logger):
@@ -55,6 +116,7 @@ class ModuleLogger(logging.Logger):
 class LoggerSingleton(object):
     _instance = None
     _logger = None
+    _level = None
 
     def __new__(cls, level=logging.DEBUG, *args, **kwargs):
         """
@@ -68,10 +130,10 @@ class LoggerSingleton(object):
         """
         if not cls._instance:
             cls._instance = super(LoggerSingleton, cls).__new__(cls, *args, **kwargs)
-            cls._instance._setup_logger(level=level)
+            cls._instance.__setup_logger(level=level)
         return cls._instance
 
-    def _setup_logger(self, level, name="yeti_logger"):
+    def __setup_logger(self, level, name="yeti_logger"):
         """
         Set up the logger.
         :param level: The level to set the logger to, e.g. logging.DEBUG.
@@ -79,20 +141,37 @@ class LoggerSingleton(object):
         :return: None
         """
         self._logger = ModuleLogger(name, level)
+        self._level = level
         self._logger.setLevel(level)
-        self._logger.addHandler(self.__get_console_handler(level))
+        self.__file_handler = self.__get_file_handler()
+        self.__console_handler = self.__get_console_handler()
+        self._logger.addHandler(self.__console_handler)
+        self._logger.addHandler(self.__file_handler)
 
-    @staticmethod
-    def __get_console_handler(level):
+    def __get_console_handler(self):
         """
         Get a console handler for the logger.
 
         :return:  A console handler for the logger.
         """
         console_handler = logging.StreamHandler(stream=sys.stdout)
-        console_handler.setLevel(level)
+        console_handler.setLevel(self._level)
         console_handler.setFormatter(formatter)
         return console_handler
+
+    def __get_file_handler(self):
+        """
+        Get a file handler for the logger.
+
+        :return:  A file handler for the logger.
+        """
+        if os.path.exists(LOG_FILE_PATH):
+            os.remove(LOG_FILE_PATH)
+
+        file_handler = logging.FileHandler(LOG_FILE_PATH)
+        file_handler.setLevel(self._level)
+        file_handler.setFormatter(logging.Formatter(LOG_STRING_FORMAT, datefmt=LOG_DATE_FORMAT))  # No colours.
+        return file_handler
 
     def get_logger(self):
         """

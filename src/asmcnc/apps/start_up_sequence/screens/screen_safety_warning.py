@@ -8,10 +8,13 @@ Screen to give a safety warning to the user when they switch on SmartBench.
 """
 from datetime import datetime
 
+from kivy.app import App
+
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 
+from asmcnc.core_UI.new_popups import software_crashed_popup
 from asmcnc.skavaUI import widget_status_bar
 
 Builder.load_string(
@@ -286,9 +289,18 @@ class SafetyScreen(Screen):
         self.status_container.add_widget(self.status_bar_widget)
         self.status_bar_widget.cheeky_color = "#1976d2"
         self.update_strings()
+        self.m.s.bind(setting_50=self.open_crash_popup)
+        self.user_settings_manager = App.get_running_app().user_settings_manager
 
     def on_enter(self):
         Logger.info("Safety screen UP")
+
+    def open_crash_popup(self, *args):
+        if software_crashed_popup.check_for_crash() and self.m.sett.wifi_available:
+            software_crashed_popup.SoftwareCrashedPopup(self.m.serial_number(), size_hint=(0.8, 0.8)).open()
+        elif not self.m.sett.wifi_available:
+            Logger.info("No wifi available, not opening crash popup and deleting crash file")
+            software_crashed_popup.delete_crash_log()
 
     def next_screen(self):
         self.user_has_confirmed = True
