@@ -66,12 +66,12 @@ Builder.load_string("""
 
             Switch:
                 id: unit_switch
-                size: dp(83), dp(32)
+                size: app.get_scaled_tuple([83.0, 32.0])
                 size_hint: (None, None)
                 pos: self.parent.pos[0] + self.parent.size[0] - self.size[0] - dp(9), self.parent.pos[1] + dp(6)
 
             BoxLayout:
-                size: dp(90), dp(40)
+                size: app.get_scaled_tuple([90.0, 40.0])
                 size_hint: (None, None)
 
                 canvas.before:
@@ -83,7 +83,7 @@ Builder.load_string("""
 
                 FloatInput:
                     id: d_input
-                    font_size: dp(25)
+                    font_size: app.get_scaled_width(25.0)
                     halign: 'center'
                     multiline: False
                     size: self.parent.size
@@ -92,7 +92,7 @@ Builder.load_string("""
 
             Label:
                 text: 'D'
-                font_size: dp(25)
+                font_size: app.get_scaled_width(25.0)
                 pos: d_input.pos[0] - self.width - 2.5, d_input.pos[1] + dp(3)
                 opacity: d_input.opacity
                 color: 0,0,0,1
@@ -101,7 +101,7 @@ Builder.load_string("""
 
             Label:
                 id: d_input_validation_label
-                font_size: dp(15)
+                font_size: app.get_scaled_width(15.0)
                 size: d_input.size
                 size_hint: (None, None)
                 pos: d_input.pos[0], d_input.pos[1] - dp(30)
@@ -110,7 +110,7 @@ Builder.load_string("""
                 opacity: 0
 
             BoxLayout:
-                size: dp(90), dp(40)
+                size: app.get_scaled_tuple([90.0, 40.0])
                 size_hint: (None, None)
 
                 canvas.before:
@@ -122,7 +122,7 @@ Builder.load_string("""
 
                 FloatInput:
                     id: l_input
-                    font_size: dp(25)
+                    font_size: app.get_scaled_width(25.0)
                     halign: 'center'
                     multiline: False
                     size: self.parent.size
@@ -131,7 +131,7 @@ Builder.load_string("""
 
             Label:
                 text: 'L'
-                font_size: dp(25)
+                font_size: app.get_scaled_width(25.0)
                 pos: l_input.pos[0] - self.width - 2.5, l_input.pos[1] + dp(3)
                 opacity: l_input.opacity
                 color: 0,0,0,1
@@ -140,7 +140,7 @@ Builder.load_string("""
 
             Label:
                 id: l_input_validation_label
-                font_size: dp(15)
+                font_size: app.get_scaled_width(15.0)
                 size: l_input.size
                 size_hint: (None, None)
                 pos: l_input.pos[0], l_input.pos[1] - dp(30)
@@ -149,7 +149,7 @@ Builder.load_string("""
                 opacity: 0
 
             BoxLayout:
-                size: dp(90), dp(40)
+                size: app.get_scaled_tuple([90.0, 40.0])
                 size_hint: (None, None)
 
                 canvas.before:
@@ -161,7 +161,7 @@ Builder.load_string("""
 
                 FloatInput:
                     id: r_input
-                    font_size: dp(25)
+                    font_size: app.get_scaled_width(25.0)
                     halign: 'center'
                     multiline: False
                     size: self.parent.size
@@ -170,7 +170,7 @@ Builder.load_string("""
 
             Label:
                 text: 'R'
-                font_size: dp(25)
+                font_size: app.get_scaled_width(25.0)
                 pos: r_input.pos[0] - self.width - 2.5, r_input.pos[1] + dp(3)
                 opacity: r_input.opacity
                 color: 0,0,0,1
@@ -179,7 +179,7 @@ Builder.load_string("""
 
             Label:
                 id: r_input_validation_label
-                font_size: dp(15)
+                font_size: app.get_scaled_width(15.0)
                 size: r_input.size
                 size_hint: (None, None)
                 pos: r_input.pos[0], r_input.pos[1] - dp(30)
@@ -188,7 +188,7 @@ Builder.load_string("""
                 opacity: 0
 
             BoxLayout:
-                size: dp(90), dp(40)
+                size: app.get_scaled_tuple([90.0, 40.0])
                 size_hint: (None, None)
 
                 canvas.before:
@@ -200,7 +200,7 @@ Builder.load_string("""
 
                 FloatInput:
                     id: x_input
-                    font_size: dp(25)
+                    font_size: app.get_scaled_width(25.0)
                     halign: 'center'
                     multiline: False
                     size: self.parent.size
@@ -209,7 +209,7 @@ Builder.load_string("""
 
             Label:
                 text: 'X'
-                font_size: dp(25)
+                font_size: app.get_scaled_width(25.0)
                 pos: x_input.pos[0] - self.width - 2.5, x_input.pos[1] + dp(3)
                 opacity: x_input.opacity
                 color: 0,0,0,1
@@ -218,7 +218,7 @@ Builder.load_string("""
 
             Label:
                 id: x_input_validation_label
-                font_size: dp(15)
+                font_size: app.get_scaled_width(15.0)
                 size: x_input.size
                 size_hint: (None, None)
                 pos: x_input.pos[0], x_input.pos[1] - dp(30)
@@ -227,7 +227,7 @@ Builder.load_string("""
                 opacity: 0
 
             BoxLayout:
-                size: dp(90), dp(40)
+                size: app.get_scaled_tuple([90.0, 40.0])
                 size_hint: (None, None)
 
                 canvas.before:
@@ -239,7 +239,7 @@ Builder.load_string("""
 
                 FloatInput:
                     id: y_input
-                    font_size: dp(25)
+                    font_size: app.get_scaled_width(25.0)
                     halign: 'center'
                     multiline: False
                     size: self.parent.size
@@ -248,7 +248,7 @@ Builder.load_string("""
 
             Label:
                 text: 'Y'
-                font_size: dp(25)
+                font_size: app.get_scaled_width(25.0)
                 pos: y_input.pos[0] - self.width - 2.5, y_input.pos[1] + dp(3)
                 opacity: y_input.opacity
                 color: 0,0,0,1
@@ -257,7 +257,7 @@ Builder.load_string("""
 
             Label:
                 id: y_input_validation_label
-                font_size: dp(15)
+                font_size: app.get_scaled_width(15.0)
                 size: y_input.size
                 size_hint: (None, None)
                 pos: y_input.pos[0], y_input.pos[1] - dp(30)
@@ -267,8 +267,8 @@ Builder.load_string("""
 
             Label:
                 id: x_datum_label
-                font_size: dp(25)
-                size: dp(150), dp(40)
+                font_size: app.get_scaled_width(25.0)
+                size: app.get_scaled_tuple([150.0, 40.0])
                 size_hint: (None, None)
                 text: 'X:'
                 color: 0,0,0,1
@@ -276,7 +276,7 @@ Builder.load_string("""
 
             Label:
                 id: x_datum_validation_label
-                font_size: dp(15)
+                font_size: app.get_scaled_width(15.0)
                 size: x_datum_label.size
                 size_hint: (None, None)
                 pos: x_datum_label.pos[0], x_datum_label.pos[1] - dp(20)
@@ -286,15 +286,15 @@ Builder.load_string("""
 
             Label:
                 id: y_datum_label
-                font_size: dp(25)
-                size: dp(150), dp(40)
+                font_size: app.get_scaled_width(25.0)
+                size: app.get_scaled_tuple([150.0, 40.0])
                 size_hint: (None, None)
                 text: 'Y:'
                 color: 0,0,0,1
 
             Label:
                 id: y_datum_validation_label
-                font_size: dp(15)
+                font_size: app.get_scaled_width(15.0)
                 size: y_datum_label.size
                 size_hint: (None, None)
                 pos: y_datum_label.pos[0], y_datum_label.pos[1] - dp(35)
@@ -329,7 +329,7 @@ Builder.load_string("""
             # TextInput instead of Label, as there is no way to left align a Label in a FloatLayout
             TextInput:
                 id: config_name_label
-                font_size: dp(20)
+                font_size: app.get_scaled_width(20.0)
                 size: self.parent.width, dp(40)
                 size_hint: (None, None)
                 pos: self.parent.pos[0] + dp(5), self.parent.size[1] - self.height + dp(5)
@@ -340,7 +340,7 @@ Builder.load_string("""
 
             Label:
                 id: machine_state_label
-                font_size: dp(20)
+                font_size: app.get_scaled_width(20.0)
                 size: self.texture_size[0], dp(40)
                 size_hint: (None, None)
                 pos: self.parent.pos[0] + self.parent.size[0] - self.texture_size[0] - dp(10), self.parent.size[1] - self.height + dp(5)

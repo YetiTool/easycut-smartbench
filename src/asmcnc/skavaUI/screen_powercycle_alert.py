@@ -31,8 +31,8 @@ Builder.load_string("""
              
     BoxLayout:
         orientation: 'horizontal'
-        padding: 70
-        spacing: 70
+        padding: app.get_scaled_width(70.0)
+        spacing: app.get_scaled_width(70.0)
         size_hint_x: 1
 
         BoxLayout:
@@ -45,7 +45,7 @@ Builder.load_string("""
                 size_hint_y: 0.33
                 color: hex('#333333')
                 markup: True
-                font_size: '40sp'   
+                font_size: app.get_scaled_sp('40sp')
                 valign: 'middle'
                 halign: 'center'
 
@@ -56,7 +56,7 @@ Builder.load_string("""
                 text: "..."
                 color: hex('1976d2ff')
                 markup: True
-                font_size: '200sp'   
+                font_size: app.get_scaled_sp('200sp')
                 valign: 'bottom'
                 halign: 'center'
 
@@ -67,7 +67,7 @@ Builder.load_string("""
                 size_hint_y: 0.33
                 color: hex('#333333')
                 markup: True
-                font_size: '40sp'
+                font_size: app.get_scaled_sp('40sp')
                 valign: 'middle'
                 halign: 'center'
 

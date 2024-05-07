@@ -37,7 +37,7 @@ Builder.load_string(
     color: hex('#333333ff')
     halign: 'center'
     markup: 'True'
-    font_size: 0.0175*app.width
+    font_size: app.get_scaled_width(14.0)
     background_color: 0,0,0,0
     text_size : self.width, None
     canvas.before:
@@ -54,7 +54,7 @@ Builder.load_string(
     size: self.size
     color: hex('#333333ff')
     background_color: 0,0,0,0
-    font_size: 0.0175*app.width
+    font_size: app.get_scaled_width(14.0)
     text_size : self.width, None
     halign: 'center'
     canvas.before:
@@ -78,7 +78,7 @@ Builder.load_string(
 
 <BigSpindleHealthCheckButton@Button>:
     size_hint: (None, None)
-    size: [150.0/800*app.width,150.0/480*app.height]
+    size: app.get_scaled_tuple([150.0, 150.0])
     background_color: 0,0,0,0
     background_normal: ''
     BoxLayout:

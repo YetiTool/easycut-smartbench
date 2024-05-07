@@ -33,14 +33,14 @@ Builder.load_string(
 
     BoxLayout: 
         spacing: 0
-        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+        padding: app.get_scaled_tuple([20.0, 20.0])
         orientation: 'vertical'
 
 
         BoxLayout:
             orientation: 'vertical'
-            spacing:0.0*app.height
-            padding:[0, 0, 0, dp(0.0208333333333)*app.height]
+            spacing: 0
+            padding: app.get_scaled_tuple([0.0, 0.0, 0.0, 10.0])
             size_hint_y: 5
             
 
@@ -72,7 +72,7 @@ Builder.load_string(
             size_hint_y: 3
 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_press: root.cancel_job()
@@ -85,7 +85,7 @@ Builder.load_string(
                         allow_stretch: True 
                         
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 size_hint_x: 0.3
                 background_color: hex('#FFFFFF00')
                 on_press: root.popup_help()
@@ -98,7 +98,7 @@ Builder.load_string(
                         allow_stretch: True 
                         
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 on_press: root.resume_job()

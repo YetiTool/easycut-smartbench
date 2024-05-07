@@ -24,7 +24,7 @@ Builder.load_string("""
             Label:
                 id: success_label
                 text: 'Database updated for '
-                font_size: dp(50)
+                font_size: app.get_scaled_width(50.0)
                 text_size: self.size
                 halign: 'center'
                 valign: 'center'
@@ -32,7 +32,7 @@ Builder.load_string("""
             Button:
                 on_press: root.enter_next_screen()
                 text: 'OK'
-                font_size: dp(30)
+                font_size: app.get_scaled_width(30.0)
                 size_hint_y: 0.2
                 size_hint_x: 0.3
 

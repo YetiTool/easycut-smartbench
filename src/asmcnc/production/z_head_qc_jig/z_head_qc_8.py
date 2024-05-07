@@ -25,25 +25,25 @@ Builder.load_string("""
                 markup: 'True'
                 halign: 'left'
                 valign: 'middle'
-                padding: [dp(10),0]
+                padding: app.get_scaled_tuple([10.0, 0.0])
                 size_hint_y: 0.2
                 size_hint_x: 0.5
-                font_size: dp(20)
+                font_size: app.get_scaled_width(20.0)
 
             GridLayout:
                 rows: 2
-                padding: [dp(0), dp(10)]
-                spacing: dp(10)
+                padding: app.get_scaled_tuple([0.0, 10.0])
+                spacing: app.get_scaled_width(10.0)
 
                 Button:
                     text: 'Disconnect'
-                    font_size: dp(30)
+                    font_size: app.get_scaled_width(30.0)
                     on_press: root.disconnect()
 
                 Button:
                     id: connect_button
                     text: 'Connect and Restart'
-                    font_size: dp(30)
+                    font_size: app.get_scaled_width(30.0)
                     on_press: root.connect_and_restart()
                     disabled: True
 

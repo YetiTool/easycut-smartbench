@@ -20,17 +20,17 @@ Builder.load_string("""
 
     BoxLayout:
         size_hint: (None, None)
-        height: dp(0.416666666667*app.height)
-        width: dp(0.725*app.width)
+        height: app.get_scaled_height(200.0)
+        width: app.get_scaled_width(580.0)
         pos: self.parent.pos
         orientation: 'vertical'
-        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
-        spacing:0.0208333333333*app.height
+        padding: app.get_scaled_tuple([20.0, 20.0])
+        spacing: app.get_scaled_width(10.0)
 
         LabelBase:
             id: time_since_screw_lubricated_label
             color: 0,0,0,1
-            font_size: dp(0.03*app.width)
+            font_size: app.get_scaled_width(24.0)
             markup: True
             halign: "left"
             valign: "middle"
@@ -39,18 +39,18 @@ Builder.load_string("""
 
         BoxLayout: 
             orientation: 'horizontal'
-            padding:[0, dp(0.0104166666667)*app.height, 0, 0]
-            spacing:0.0125*app.width
+            padding: app.get_scaled_tuple([0.0, 5.0, 0.0, 0.0])
+            spacing: app.get_scaled_width(10.0)
             size_hint: (None, None)
-            height: dp(0.3125*app.height)
-            width: dp(0.725*app.width) 
+            height: app.get_scaled_height(150.0)
+            width: app.get_scaled_width(580.0)
 
             # Put the image here
             BoxLayout: 
                 size_hint: (None, None)
                 # pos: self.parent.pos
-                height: dp(0.24375*app.height)
-                width: dp(0.05*app.width)
+                height: app.get_scaled_height(117.0)
+                width: app.get_scaled_width(40.0)
 
                 Image:
                     id: lead_screw_image
@@ -63,12 +63,12 @@ Builder.load_string("""
             # Text input
             BoxLayout: 
                 size_hint: (None, None)
-                height: dp(0.25*app.height)
-                width: dp(0.4375*app.width)
+                height: app.get_scaled_height(120.0)
+                width: app.get_scaled_width(350.0)
                 LabelBase: 
                     id: hours_since_lubrication
                     color: 0,0,0,1
-                    font_size: dp(0.125*app.width)
+                    font_size: app.get_scaled_width(100.0)
                     markup: True
                     halign: "center"
                     valign: "bottom"
@@ -77,15 +77,15 @@ Builder.load_string("""
 
             BoxLayout: 
                 size_hint: (None, None)
-                height: dp(0.25*app.height)
-                width: dp(0.15*app.width)
+                height: app.get_scaled_height(120.0)
+                width: app.get_scaled_width(120.0)
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: app.get_scaled_sp('15.0sp')
                     id: reset_0
                     on_press: root.reset_to_0()
                     size_hint: (None,None)
-                    height: dp(0.25*app.height)
-                    width: dp(0.15*app.width)
+                    height: app.get_scaled_height(120.0)
+                    width: app.get_scaled_width(120.0)
                     background_color: [0,0,0,0]
                     BoxLayout:
                         size: self.parent.size

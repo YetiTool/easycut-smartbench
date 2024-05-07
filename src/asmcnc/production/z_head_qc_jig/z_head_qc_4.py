@@ -22,7 +22,7 @@ Builder.load_string("""
         Label:
             id: calibration_label
             text: 'Calibrating...'
-            font_size: dp(50)
+            font_size: app.get_scaled_width(50.0)
             text_size: root.width, None
             size: self.texture_size
             halign: 'center'

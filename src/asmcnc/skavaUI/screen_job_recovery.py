@@ -35,7 +35,7 @@ Builder.load_string(
         BoxLayout:
             orientation: 'horizontal'
             size_hint_y: 0.9
-            spacing:dp(0.01875)*app.width
+            spacing: app.get_scaled_width(15.0)
             canvas:
                 Color:
                     rgba: hex('#E2E2E2FF')
@@ -44,16 +44,16 @@ Builder.load_string(
                     pos: self.pos
 
             BoxLayout:
-                padding:[dp(0.01875)*app.width, dp(0.03125)*app.height, 0, dp(0.03125)*app.height]
+                padding: app.get_scaled_tuple([15.0, 15.0, 0.0, 15.0])
 
                 BoxLayout:
                     orientation: 'vertical'
-                    spacing:dp(0.03125)*app.height
+                    spacing: app.get_scaled_width(15.0)
 
                     BoxLayout:
                         orientation: 'vertical'
                         size_hint_y: 3.5
-                        spacing:dp(0.03125)*app.height
+                        spacing: app.get_scaled_width(15.0)
 
                         BoxLayout:
                             orientation: 'vertical'
@@ -63,10 +63,10 @@ Builder.load_string(
                                 text: "Go to line:"
                                 color: hex('#333333FF')
                                 bold: True
-                                font_size: dp(0.03125*app.width)
+                                font_size: app.get_scaled_width(25.0)
 
                             BoxLayout:
-                                padding:[0, dp(0.00833333333333)*app.height, 0, 0]
+                                padding: app.get_scaled_tuple([0.0, 4.0, 0.0, 0.0])
                                 canvas:
                                     Color:
                                         rgba: 1,1,1,1
@@ -76,7 +76,7 @@ Builder.load_string(
 
                                 TextInput:
                                     id: line_input
-                                    font_size: dp(0.03125*app.width)
+                                    font_size: app.get_scaled_width(25.0)
                                     halign: 'center'
                                     input_filter: 'int'
                                     multiline: False
@@ -86,11 +86,11 @@ Builder.load_string(
                         BoxLayout:
                             orientation: 'vertical'
                             size_hint_y: 2
-                            padding:[dp(0.0625)*app.width, 0]
-                            spacing:dp(0.0208333333333)*app.height
+                            padding: app.get_scaled_tuple([50.0, 0.0])
+                            spacing: app.get_scaled_width(10.0)
 
                             Button:
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 background_color: [0,0,0,0]
                                 on_press:
                                     root.start_scrolling_up()
@@ -110,7 +110,7 @@ Builder.load_string(
                                         allow_stretch: True
 
                             Button:
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 background_color: [0,0,0,0]
                                 on_press:
                                     root.start_scrolling_down()
@@ -134,7 +134,7 @@ Builder.load_string(
                         valign: "middle"
                         halign: "center"
                         markup: True
-                        font_size: dp(0.0375*app.width)
+                        font_size: app.get_scaled_width(30.0)
                         text_size: self.size[0] - dp(20), self.size[1]
                         text: "GO XY"
                         background_normal: "./asmcnc/skavaUI/img/blank_small_button.png"
@@ -143,17 +143,17 @@ Builder.load_string(
 
             BoxLayout:
                 size_hint_x: 2
-                padding:[0, dp(0.03125)*app.height]
+                padding: app.get_scaled_tuple([0.0, 15.0])
 
                 BoxLayout:
                     orientation: 'vertical'
-                    spacing:dp(0.03125)*app.height
+                    spacing: app.get_scaled_width(15.0)
 
                     BoxLayout:
                         id: gcode_container
                         orientation: 'vertical'
                         size_hint_y: 3.5
-                        padding:[dp(0.015)*app.width, dp(0.025)*app.height, dp(0.015)*app.width, 0]
+                        padding: app.get_scaled_tuple([12.0, 12.0, 12.0, 0.0])
                         canvas:
                             Color:
                                 rgba: 1,1,1,1
@@ -165,7 +165,7 @@ Builder.load_string(
                             Label:
                                 id: gcode_label
                                 color: 0,0,0,1
-                                font_size: dp(0.02*app.width)
+                                font_size: app.get_scaled_width(16.0)
                                 halign: "left"
                                 valign: "top"
                                 text_size: self.size[0] * 2, self.size[1]
@@ -184,7 +184,7 @@ Builder.load_string(
                             id: stopped_on_label
                             size_hint_y: 0.13
                             color: 1,0,0,1
-                            font_size: dp(0.02*app.width)
+                            font_size: app.get_scaled_width(16.0)
                             halign: "left"
                             valign: "top"
                             text_size: self.size
@@ -193,8 +193,8 @@ Builder.load_string(
 
                     BoxLayout:
                         orientation: 'vertical'
-                        padding:[dp(0.015)*app.width, dp(0.025)*app.height]
-                        spacing:dp(0.0145833333333)*app.height
+                        padding: app.get_scaled_tuple([12.0, 12.0])
+                        spacing: app.get_scaled_width(7.0)
                         canvas:
                             Color:
                                 rgba: 1,1,1,1
@@ -207,7 +207,7 @@ Builder.load_string(
                             text: "Job resumes at:"
                             color: hex('#333333FF')
                             bold: True
-                            font_size: dp(0.01875*app.width)
+                            font_size: app.get_scaled_width(15.0)
                             halign: 'left'
                             valign: 'middle'
                             text_size: self.size
@@ -216,7 +216,7 @@ Builder.load_string(
                             id: pos_label
                             text: "wX: | wY: | wZ:"
                             color: 0,0,0,1
-                            font_size: dp(0.02*app.width)
+                            font_size: app.get_scaled_width(16.0)
                             halign: 'left'
                             valign: 'middle'
                             text_size: self.size
@@ -225,23 +225,23 @@ Builder.load_string(
                             id: speed_label
                             text: "F: | S:"
                             color: 0,0,0,1
-                            font_size: dp(0.02*app.width)
+                            font_size: app.get_scaled_width(16.0)
                             halign: 'left'
                             valign: 'middle'
                             text_size: self.size
 
             BoxLayout:
                 orientation: 'vertical'
-                spacing:dp(0.03125)*app.height
+                spacing: app.get_scaled_width(15.0)
 
                 BoxLayout:
                     orientation: 'horizontal'
-                    spacing:dp(0.03125)*app.width
+                    spacing: app.get_scaled_width(25.0)
 
                     BoxLayout:
-                        padding:[dp(0.01875)*app.width, dp(0.03125)*app.height, 0, dp(0.03125)*app.height]
+                        padding: app.get_scaled_tuple([15.0, 15.0, 0.0, 15.0])
                         Button:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: app.get_scaled_sp('15.0sp')
                             background_color: [0,0,0,0]
                             on_press: root.get_info()
                             BoxLayout:
@@ -255,7 +255,7 @@ Builder.load_string(
                                     allow_stretch: True   
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         background_color: [0,0,0,0]
                         on_press: root.back_to_home()
                         BoxLayout:
@@ -271,8 +271,8 @@ Builder.load_string(
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_y: 4
-                    padding:[0, 0, dp(0.01875)*app.width, dp(0.03125)*app.height]
-                    spacing:dp(0.03125)*app.height
+                    padding: app.get_scaled_tuple([0.0, 0.0, 15.0, 15.0])
+                    spacing: app.get_scaled_width(15.0)
 
                     BoxLayout:
                         id: z_move_container
@@ -286,15 +286,15 @@ Builder.load_string(
 
                     BoxLayout:
 
-                        padding:[0, dp(0.00208333333333)*app.height]
+                        padding: app.get_scaled_tuple([0.0, 1.0])
 
                         Button:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: app.get_scaled_sp('15.0sp')
                             background_color: [0,0,0,0]
                             on_press: root.next_screen()
                             size_hint: (None, None)
-                            height: dp(0.139583333333*app.height)
-                            width: dp(0.11*app.width)
+                            height: app.get_scaled_height(67.0)
+                            width: app.get_scaled_width(88.0)
                             BoxLayout:
                                 size: self.parent.size
                                 pos: self.parent.pos
@@ -321,7 +321,7 @@ Builder.load_string(
             Label:
                 id: arc_movement_error_label
                 color: 1,0,0,1
-                font_size: dp(0.0175*app.width)
+                font_size: app.get_scaled_width(14.0)
                 halign: "left"
                 valign: "top"
                 text_size: self.size

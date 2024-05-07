@@ -87,7 +87,7 @@ class PopupWarningTitle(PopupTitle):
 
 scroll_view_kv = """
 <ScrollView>:
-    bar_width: dp(6)
+    bar_width: app.get_scaled_width(6.0)
     _handle_y_pos: (self.right - self.bar_width - self.bar_margin) if self.bar_pos_y == 'right' else (self.x + self.bar_margin), self.y + self.height * self.vbar[0]
     _handle_y_size: min(self.bar_width, self.width), self.height * self.vbar[1]
     _handle_x_pos: self.x + self.width * self.hbar[0], (self.y + self.bar_margin) if self.bar_pos_x == 'bottom' else (self.top - self.bar_margin - self.bar_width)

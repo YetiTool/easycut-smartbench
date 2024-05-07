@@ -8,7 +8,7 @@ BoxLayout:
     Label:
         text: "Hello, World!"
         color: color_provider.get_rgba("green")
-        font_size: 20
+        font_size: app.get_scaled_width(20.0)
 """
 
 

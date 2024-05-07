@@ -18,31 +18,31 @@ Builder.load_string("""
 
     BoxLayout:
         orientation: 'vertical'
-        padding: dp(10)
-        spacing: dp(10)
+        padding: app.get_scaled_width(10.0)
+        spacing: app.get_scaled_width(10.0)
 
         Button:
             text: 'Back'
             bold: True
-            font_size: dp(25)
+            font_size: app.get_scaled_width(25.0)
             on_press: root.back()
 
         BoxLayout:
             size_hint_y: 8
             orientation: 'horizontal'
-            spacing: dp(30)
+            spacing: app.get_scaled_width(30.0)
 
             BoxLayout:
                 orientation: 'vertical'
-                spacing: dp(10)
+                spacing: app.get_scaled_width(10.0)
 
                 BoxLayout:
                     orientation: 'horizontal'
-                    spacing: dp(10)
+                    spacing: app.get_scaled_width(10.0)
 
                     TextInput:
                         id: phase_one_input
-                        font_size: dp(25)
+                        font_size: app.get_scaled_width(25.0)
                         input_filter: 'int'
                         multiline: False
 
@@ -57,11 +57,11 @@ Builder.load_string("""
 
                 BoxLayout:
                     orientation: 'horizontal'
-                    spacing: dp(10)
+                    spacing: app.get_scaled_width(10.0)
 
                     TextInput:
                         id: phase_two_input
-                        font_size: dp(25)
+                        font_size: app.get_scaled_width(25.0)
                         input_filter: 'int'
                         multiline: False
 
@@ -76,7 +76,7 @@ Builder.load_string("""
 
                 Button:
                     text: 'Set power high'
-                    font_size: dp(25)
+                    font_size: app.get_scaled_width(25.0)
                     bold: True
                     background_color: [0,0,1,1]
                     background_normal: ''
@@ -84,7 +84,7 @@ Builder.load_string("""
 
                 Button:
                     text: 'Set power low'
-                    font_size: dp(25)
+                    font_size: app.get_scaled_width(25.0)
                     bold: True
                     background_color: hex('#EAEA00FF')
                     background_normal: ''
@@ -92,7 +92,7 @@ Builder.load_string("""
 
                 Button:
                     text: 'Energise motor'
-                    font_size: dp(25)
+                    font_size: app.get_scaled_width(25.0)
                     bold: True
                     background_color: [0,1,0,1]
                     background_normal: ''
@@ -100,7 +100,7 @@ Builder.load_string("""
 
                 Button:
                     text: 'De-energise motor'
-                    font_size: dp(25)
+                    font_size: app.get_scaled_width(25.0)
                     bold: True
                     background_color: [1,0,0,1]
                     background_normal: ''
@@ -115,36 +115,36 @@ Builder.load_string("""
 
                     Label:
                         text: 'Real time load:'
-                        font_size: dp(25)
+                        font_size: app.get_scaled_width(25.0)
 
                     Label:
                         id: load_label
                         size_hint_y: 2
                         text: '-'
-                        font_size: dp(50)
+                        font_size: app.get_scaled_width(50.0)
                         bold: True
 
                     Label:
                         text: 'Z axis position:'
-                        font_size: dp(25)
+                        font_size: app.get_scaled_width(25.0)
 
                     Label:
                         id: pos_label
                         size_hint_y: 2
                         text: '-'
-                        font_size: dp(50)
+                        font_size: app.get_scaled_width(50.0)
                         bold: True
 
                 Button:
                     text: 'Home'
-                    font_size: dp(25)
+                    font_size: app.get_scaled_width(25.0)
                     bold: True
                     background_color: hex('#9900FFFF')
                     background_normal: ''
                     on_press: root.home()
 
             BoxLayout:
-                padding: [dp(0), dp(50)]
+                padding: app.get_scaled_tuple([0.0, 50.0])
 
                 BoxLayout:
                     id: z_move_container

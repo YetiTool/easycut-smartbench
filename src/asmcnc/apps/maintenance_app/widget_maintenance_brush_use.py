@@ -24,19 +24,19 @@ Builder.load_string("""
     
     BoxLayout:
         size_hint: (None, None)
-        height: dp(0.520833333333*app.height)
-        width: dp(0.35*app.width)
+        height: app.get_scaled_height(250.0)
+        width: app.get_scaled_width(280.0)
         pos: self.parent.pos
         orientation: 'vertical'
-        padding:[dp(0.016625)*app.width, dp(0.0208333333333)*app.height, dp(0.016625)*app.width, dp(0.0208333333333)*app.height]
-        spacing:0.0208333333333*app.height
+        padding: app.get_scaled_tuple([13.3, 10.0, 13.3, 10.0])
+        spacing: app.get_scaled_width(10.0)
 
         BoxLayout: 
             orientation: 'vertical'
-            spacing:dp(0.0104166666667)*app.height
+            spacing: app.get_scaled_width(5.0)
             size_hint: (None, None)
-            height: dp(0.208333333333*app.height)
-            width: dp(0.35*app.width)         
+            height: app.get_scaled_height(100.0)
+            width: app.get_scaled_width(280.0)
 
             LabelBase:
                 id: brush_use_label
@@ -50,26 +50,26 @@ Builder.load_string("""
 
             BoxLayout: 
                 orientation: 'horizontal'
-                padding:[0, dp(0.0104166666667)*app.height, 0, 0]
-                spacing:0.0125*app.width
+                padding: app.get_scaled_tuple([0.0, 5.0, 0.0, 0.0])
+                spacing: app.get_scaled_width(10.0)
                 size_hint: (None, None)
-                height: dp(0.110416666667*app.height)
-                width: dp(0.35*app.width) 
+                height: app.get_scaled_height(53.0)
+                width: app.get_scaled_width(280.0)
 
                 # Text input
                 TextInput:
                     id: brush_use
                     size_hint: (None, None)
-                    height: dp(0.104166666667*app.height)
-                    width: dp(0.15*app.width)
-                    font_size: dp(0.035*app.width)
+                    height: app.get_scaled_height(50.0)
+                    width: app.get_scaled_width(120.0)
+                    font_size: app.get_scaled_width(28.0)
                     input_filter: 'int'
                     multiline: False
 
                 LabelBase:
                     id: hours_label
                     color: 0,0,0,1
-                    font_size: dp(0.035*app.width)
+                    font_size: app.get_scaled_width(28.0)
                     markup: True
                     halign: "left"
                     valign: "middle"
@@ -79,21 +79,21 @@ Builder.load_string("""
         GridLayout:
             cols: 2
             rows: 1
-            spacing:0.016625*app.width
+            spacing: app.get_scaled_width(13.3)
             size_hint: (None, None)
-            height: dp(0.25*app.height)
-            width: dp(0.316625*app.width)
+            height: app.get_scaled_height(120.0)
+            width: app.get_scaled_width(253.3)
 
             BoxLayout: 
                 size: self.parent.size
                 pos: self.parent.pos
                 ToggleButton:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: app.get_scaled_sp('15.0sp')
                     id: restore_button
                     on_press: root.restore()
                     size_hint: (None,None)
-                    height: dp(0.25*app.height)
-                    width: dp(0.15*app.width)
+                    height: app.get_scaled_height(120.0)
+                    width: app.get_scaled_width(120.0)
                     background_color: [0,0,0,0]
                     center: self.parent.center
                     pos: self.parent.pos
@@ -112,12 +112,12 @@ Builder.load_string("""
                 size: self.parent.size
                 pos: self.parent.pos
                 ToggleButton:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: app.get_scaled_sp('15.0sp')
                     id: reset_0
                     on_press: root.reset_to_0()
                     size_hint: (None,None)
-                    height: dp(0.25*app.height)
-                    width: dp(0.15*app.width)
+                    height: app.get_scaled_height(120.0)
+                    width: app.get_scaled_width(120.0)
                     background_color: [0,0,0,0]
                     center: self.parent.center
                     pos: self.parent.pos

@@ -35,17 +35,17 @@ Builder.load_string(
              
     BoxLayout:
         orientation: 'vertical'
-        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+        padding: app.get_scaled_tuple([20.0, 20.0])
         spacing: 0
 
         BoxLayout:
             orientation: 'horizontal'
-            padding:[0, 0]
-            spacing:0.025*app.width
+            padding: app.get_scaled_tuple([0.0, 0.0])
+            spacing: app.get_scaled_width(20.0)
             size_hint_y: 0.2
         
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 size_hint_y:0.9
                 id: getout_button
                 size: self.texture_size
@@ -58,17 +58,17 @@ Builder.load_string(
                     root.repeat_section()
                     
                 BoxLayout:
-                    padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                    padding: app.get_scaled_tuple([5.0, 5.0])
                     size: self.parent.size
                     pos: self.parent.pos
                     
                     Label:
-                        font_size: str(0.025*app.width) + 'sp'
+                        font_size: app.get_scaled_sp('20.0sp')
                         text: '[color=455A64]Go Back[/color]'
                         markup: True
 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 size_hint_y:0.9
                 id: getout_button
                 size: self.texture_size
@@ -81,17 +81,17 @@ Builder.load_string(
                     root.skip_section()
                     
                 BoxLayout:
-                    padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                    padding: app.get_scaled_tuple([5.0, 5.0])
                     size: self.parent.size
                     pos: self.parent.pos
                     
                     Label:
-                        font_size: str(0.025*app.width) + 'sp'
+                        font_size: app.get_scaled_sp('20.0sp')
                         text: '[color=455A64]Skip section[/color]'
                         markup: True
                         
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 size_hint_y:0.9
                 id: getout_button
                 size: self.texture_size
@@ -104,21 +104,21 @@ Builder.load_string(
                     root.quit_calibration()
                     
                 BoxLayout:
-                    padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                    padding: app.get_scaled_tuple([5.0, 5.0])
                     size: self.parent.size
                     pos: self.parent.pos
                     
                     Label:
-                        font_size: str(0.025*app.width) + 'sp'
+                        font_size: app.get_scaled_sp('20.0sp')
                         text: '[color=455A64]Quit calibration[/color]'
                         markup: True
 
         BoxLayout:
             orientation: 'horizontal'
-            spacing:0.025*app.width
+            spacing: app.get_scaled_width(20.0)
 
             Label:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 id: instruction_left
                 size_hint_x: 0.4
                 size: self.texture_size
@@ -132,7 +132,7 @@ Builder.load_string(
                 size_hint_x: 1.3
                  
                 Label:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: app.get_scaled_sp('15.0sp')
                     id: instruction_top
                     size_hint_y: 0.3
                     size: self.texture_size
@@ -149,11 +149,11 @@ Builder.load_string(
 
             BoxLayout:
                 orientation: 'vertical'
-                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                padding: app.get_scaled_tuple([10.0, 10.0])
                 size_hint_x: 0.3
                   
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: app.get_scaled_sp('15.0sp')
                     id: action_button
                     size_hint_y: 0.9
                     size: self.texture_size
@@ -166,12 +166,12 @@ Builder.load_string(
                         root.next_instruction()
                         
                     BoxLayout:
-                        padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                        padding: app.get_scaled_tuple([5.0, 5.0])
                         size: self.parent.size
                         pos: self.parent.pos
                         
                         Label:
-                            font_size: str(0.025*app.width) + 'sp'
+                            font_size: app.get_scaled_sp('20.0sp')
                             text: '[color=455A64]Next[/color]'
                             markup: True
                         
