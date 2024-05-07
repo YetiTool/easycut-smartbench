@@ -27,23 +27,23 @@ class UserSettingsManagerTests(unittest.TestCase):
         #  make sure the file does not exist:
         try:
             os.remove(UserSettingsManager.SETTINGS_FILE_PATH)
-        except:
+        except WindowsError:
             # file seems to be gone already...
             pass
         # file should not exist anymore:
-        assert(not os.path.exists(UserSettingsManager.SETTINGS_FILE_PATH))
+        assert not os.path.exists(UserSettingsManager.SETTINGS_FILE_PATH)
         usm = UserSettingsManager()  # make new instance with default values
         usm.save_settings_to_file()
         # file should exist again:
-        assert(os.path.exists(usm.SETTINGS_FILE_PATH))
+        assert os.path.exists(usm.SETTINGS_FILE_PATH)
 
         # getters:
         value = usm.get_value('dust_shoe_detection')
         assert value
         title = usm.get_title('dust_shoe_detection')
-        assert (title == 'Dust shoe plug detection')
+        assert title == 'Dust shoe plug detection'
         type = usm.get_type('dust_shoe_detection')
-        assert (type == 'bool')
+        assert type == bool
         description = usm.get_description('dust_shoe_detection')
         assert (description == 'When activated, the dust shoe needs to be inserted '
                                'when starting the spindle or running jobs.')
@@ -56,9 +56,9 @@ class UserSettingsManagerTests(unittest.TestCase):
 
         usm.bind(dust_shoe_detection=callback)
         usm.set_value('dust_shoe_detection', False)
-        assert  test['is_called']
+        assert test['is_called']
         value = usm.get_value('dust_shoe_detection')
-        assert (not value)
+        assert not value
 
         # bad cases that should raise an exception:
         self.assertRaises(KeyError, usm.get_value, 'setting_does_not_exist')
