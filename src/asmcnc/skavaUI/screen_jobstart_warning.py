@@ -20,7 +20,7 @@ Builder.load_string(
     background_color: color_provider.get_rgba("invisible")
     canvas.before:
         Color:
-            rgba: hex('#1976d2ff')
+            rgba: color_provider.get_rgba("blue")
         RoundedRectangle:
             pos: self.pos
             size: self.size
@@ -55,7 +55,7 @@ Builder.load_string(
                 spacing: 0
                 canvas:
                     Color:
-                        rgba: hex('#1976d2ff')
+                        rgba: color_provider.get_rgba("blue")
                     Rectangle:
                         pos: self.pos
                         size: self.size

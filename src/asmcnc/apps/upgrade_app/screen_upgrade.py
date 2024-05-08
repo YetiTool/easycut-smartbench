@@ -34,7 +34,7 @@ Builder.load_string("""
 
             canvas:
                 Color:
-                    rgba: hex('#1976d2')
+                    rgba: color_provider.get_rgba("blue")
                 Rectangle:
                     size: self.size
                     pos: self.pos

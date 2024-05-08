@@ -67,7 +67,7 @@ Builder.load_string(
 				spacing: 0
 				canvas:
 					Color:
-						rgba: hex('#1976d2ff')
+						rgba: color_provider.get_rgba("blue")
 					Rectangle:
 						pos: self.pos
 						size: self.size
@@ -106,7 +106,7 @@ Builder.load_string(
 					CheckBox: 
 						group: "language_radio_buttons" 
 						on_press: root.select_language(self, row_1_col_1)
-						color: hex('#1976d2ff')
+						color: color_provider.get_rgba("blue")
 
 	                Image: 
 	                	id: row_1_col_1_image
