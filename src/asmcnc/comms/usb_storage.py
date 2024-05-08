@@ -15,6 +15,7 @@ import sys, os, subprocess
 
 from asmcnc.core_UI.popups import ErrorPopup
 from asmcnc.skavaUI import popup_info
+from asmcnc.core_UI.utils import color_provider
 
 
 class USB_storage(object):
@@ -233,7 +234,7 @@ class USB_storage(object):
                     ok_button_background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
                 elif popup_mode:
                     description = self.l.get_str('It is now safe to remove your USB stick.')
-                    ok_button_background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+                    ok_button_background_color = color_provider.get_rgba("green")
 
                 self.sm.pm.show_error_popup(main_string=description,
                                          width=350, height=350,

@@ -49,7 +49,7 @@ class PopupDataAndWiFiDisableWarning(Widget):
 		ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 		back_button = Button(text=back_string, markup = True)
 		back_button.background_normal = ''
-		back_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+		back_button.background_color = color_provider.get_rgba("green")
 
 		btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[20,0,20,0])
 		btn_layout.add_widget(back_button)

@@ -52,7 +52,7 @@ class PopupWelcome(Widget):
 
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
 
         remind_me_button = Button(text=remind_string, markup=True)
         remind_me_button.background_normal = ''
@@ -143,7 +143,7 @@ class PopupDatum(Widget):
 
         ok_button = Button(text=yes_string, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=no_string, markup=True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -212,7 +212,7 @@ class PopupPark(Widget):
 
         ok_button = Button(text=yes_string, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=no_string, markup=True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -272,7 +272,7 @@ class PopupStop(Widget):
 
         resume_button = Button(text=resume_string, markup=True)
         resume_button.background_normal = ''
-        resume_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        resume_button.background_color = color_provider.get_rgba("green")
         cancel_button = Button(text=cancel_string, markup=True)
         cancel_button.background_normal = ''
         cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -340,7 +340,7 @@ class PopupUSBInfo(Widget):
 
         elif safe_to_remove == True:
             description = self.l.get_str('It is now safe to remove your USB stick.')
-            ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+            ok_button.background_color = color_provider.get_rgba("green")
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
         label = Label(size_hint_y=1, text_size=(310, None), halign='center', valign='middle', text=description,
@@ -442,7 +442,7 @@ class PopupInfo(Widget):
 
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150, 20, 150, 0])
         btn_layout.add_widget(ok_button)
@@ -485,7 +485,7 @@ class PopupMiniInfo(Widget):
 
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0, 0, 0, 0])
         btn_layout.add_widget(ok_button)
@@ -537,7 +537,7 @@ class PopupSoftwareUpdateSuccess(Widget):
 
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0, 0, 0, 0])
         btn_layout.add_widget(ok_button)
@@ -597,7 +597,7 @@ class PopupSoftwareUpdateWarning(Widget):
 
         ok_button = Button(text=update_string, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=back_string, markup=True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -652,7 +652,7 @@ class PopupSoftwareRepair(Widget):
 
         ok_button = Button(text=repair_string, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=back_string, markup=True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -790,7 +790,7 @@ class PopupWait(Widget):
 
         # ok_button = Button(text=ok_string, markup = True)
         # ok_button.background_normal = ''
-        # ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        # ok_button.background_color = color_provider.get_rgba("green")
 
         # btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0])
         # btn_layout.add_widget(ok_button)
@@ -850,7 +850,7 @@ class PopupDeleteFile(Widget):
 
         ok_button = Button(text=yes_string, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=no_string, markup=True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -940,7 +940,7 @@ class PopupReminder(Widget):
         ok_button = Button(text=ok_text, markup=True)
         back_button = Button(text=back_text, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
 
@@ -996,7 +996,7 @@ class PopupConfirmJobCancel(Widget):
 
         resume_button = Button(text=no_string, markup=True)
         resume_button.background_normal = ''
-        resume_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        resume_button.background_color = color_provider.get_rgba("green")
         cancel_button = Button(text=yes_string, markup=True)
         cancel_button.background_normal = ''
         cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -1110,7 +1110,7 @@ class PopupShutdown(Widget):
 
         ok_button = Button(text=shutdown_string, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         cancel_button = Button(text=cancel_string, markup=True)
         cancel_button.background_normal = ''
         cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -1162,7 +1162,7 @@ class PopupScrollableInfo(Widget):
         
         ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,10,150,0])
         btn_layout.add_widget(ok_button)
@@ -1205,7 +1205,7 @@ class PopupQRInfo(Widget):
 
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150, 20, 150, 0])
         btn_layout.add_widget(ok_button)

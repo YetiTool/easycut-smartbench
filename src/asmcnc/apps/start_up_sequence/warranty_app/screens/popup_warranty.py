@@ -36,7 +36,7 @@ class QuitToConsoleWarranty(Widget):
         
         ok_button = Button(text='[b]Yes[/b]', markup = True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text='[b]No[/b]', markup = True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]

@@ -27,7 +27,7 @@ class PopupCalibrate(Widget):
 
         ok_button = Button(text=calibrate_string, markup = True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         ok_button.bold = True
         cancel_button = Button(text=cancel_string, markup = True)
         cancel_button.background_normal = ''
@@ -82,7 +82,7 @@ class PopupPhaseTwo(Widget):
 
         ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         ok_button.bold = True
         
         layout_plan = BoxLayout(orientation='vertical', spacing=10, padding=[20,10,20,10])

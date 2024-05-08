@@ -896,7 +896,7 @@ class PopupSoftwareUpdateWarning(Widget):
 
         ok_button = Button(text=update_string, markup=True, font_size=get_scaled_sp("15sp"))
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=back_string, markup=True, font_size=get_scaled_sp("15sp"))
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -951,7 +951,7 @@ class PopupSoftwareRepair(Widget):
 
         ok_button = Button(text=repair_string, markup=True, font_size=get_scaled_sp("15sp"))
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=back_string, markup=True, font_size=get_scaled_sp("15sp"))
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]

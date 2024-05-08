@@ -3,6 +3,7 @@ import os
 from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1, wifi_and_data_consent_2, wifi_and_data_consent_3
 from asmcnc.core_UI.popups import BasicPopup, PopupType
 from asmcnc.comms.logging_system.logging_system import Logger
+from asmcnc.core_UI.utils import color_provider
 
 class ScreenManagerDataConsent(object):
 
@@ -74,7 +75,7 @@ class ScreenManagerDataConsent(object):
 			),
 			button_one_text=self.l.get_bold('No, go back'),
 			button_one_callback=None,
-			button_one_background_color=[76 / 255., 175 / 255., 80 / 255., 1.],
+			button_one_background_color=color_provider.get_rgba("green"),
 			button_two_text=self.l.get_bold("Yes, disable Wi-Fi"),
 			button_two_callback=self.decline_terms_and_disable_wifi,
 			button_two_background_color=[230 / 255., 74 / 255., 25 / 255., 1.],

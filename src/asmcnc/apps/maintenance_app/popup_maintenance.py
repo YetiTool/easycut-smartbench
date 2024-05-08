@@ -37,7 +37,7 @@ class PopupResetOffset(Widget):
             yes_font_size = 13
         ok_button = Button(text=yes_string, markup = True, font_size = yes_font_size)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=no_string, markup = True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -96,7 +96,7 @@ class PopupSaveOffset(Widget):
 
         ok_button = Button(text=yes_string, markup = True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=no_string, markup = True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -202,7 +202,7 @@ class PopupBrushInfo(Widget):  # TODO: MOVE THIS TO A UNIQUE POPUPS FILE
 
         ok_button = Button(text='[b]Ok[/b]', markup = True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
 
         examples_layout = BoxLayout(orientation='horizontal', padding=[0, 0, 20, 0], spacing=20, size_hint_x = None, width=284)
         examples_layout.add_widget(example_full_length)
@@ -278,7 +278,7 @@ class PopupGetSpindleData(Widget):
 
         ok_button = Button(text=yes_string, markup = True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=no_string, markup = True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -367,7 +367,7 @@ class PopupDisplaySpindleData(Widget):  # TODO: SCALE AND MOVE TO A UNIQUE POPUP
 
         ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=100, padding=[200,10,200,0], size_hint_y=0.6)
         btn_layout.add_widget(ok_button)
@@ -497,7 +497,7 @@ class PopupSpindleSettingsInfo(Widget):
 
         ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[300,10,300,0])
         btn_layout.add_widget(ok_button)

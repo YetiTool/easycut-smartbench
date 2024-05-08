@@ -41,7 +41,7 @@ class PopupInfo(Widget):
         
         ok_button = Button(text='[b]Ok[/b]', markup = True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[150,20,150,0])
         btn_layout.add_widget(ok_button)
@@ -89,7 +89,7 @@ class PopupTutorial(Widget):
         
         ok_button = Button(text='[b]Ok[/b]', markup = True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[50,20,50,0])
         btn_layout.add_widget(tutorial_button)
@@ -130,7 +130,7 @@ class PopupFeedsAndSpeedsLookupTable(Widget):
         
         ok_button = Button(text='[b]Ok[/b]', markup = True, font_size=utils.get_scaled_sp("15sp"))
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         
         btn_layout = BoxLayout(orientation='horizontal', spacing=utils.get_scaled_tuple(15, orientation="horizontal"), padding=utils.get_scaled_tuple([150,0,150,0]), size_hint_y = 0.2)
         btn_layout.add_widget(ok_button)
@@ -174,7 +174,7 @@ class PopupWait(Widget):
         
         ok_button = Button(text='[b]Ok[/b]', markup = True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         
         btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0])
         btn_layout.add_widget(ok_button)

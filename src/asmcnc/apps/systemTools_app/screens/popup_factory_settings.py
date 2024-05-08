@@ -29,7 +29,7 @@ class PopupSC2Decision(Widget):
 
         ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         ok_button.bold = True
         cancel_button = Button(text=cancel_string, markup = True)
         cancel_button.background_normal = ''

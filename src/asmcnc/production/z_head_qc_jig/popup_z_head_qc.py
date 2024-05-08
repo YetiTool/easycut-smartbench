@@ -33,7 +33,7 @@ class PopupTempPowerDiagnosticsInfo(Widget):
 
         ok_button = Button(text='[b]Ok[/b]', markup = True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
 
         text_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0)
         text_layout.add_widget(label1)
@@ -78,7 +78,7 @@ class PopupSpindleDiagnosticsInfo(Widget):
 
         ok_button = Button(text='[b]Ok[/b]', markup = True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
 
         text_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0)
         text_layout.add_widget(label1)

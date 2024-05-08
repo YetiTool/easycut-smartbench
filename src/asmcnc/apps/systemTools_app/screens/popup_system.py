@@ -50,7 +50,7 @@ class PopupDownloadLogs(Widget):
 
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=back_string, markup=True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -104,7 +104,7 @@ class RebootConsole(Widget):
 
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=back_string, markup=True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -158,7 +158,7 @@ class QuitToConsole(Widget):
 
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=back_string, markup=True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -218,7 +218,7 @@ class PopupUSBFirstAid(Widget):
 
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=cancel_string, markup=True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -283,7 +283,7 @@ class PopupBetaTesting(Widget):
 
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=back_string, markup=True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -582,7 +582,7 @@ class RebootAfterLanguageChange(Widget):
 
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=cancel_string, markup=True)
         back_button.background_normal = ''
         back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -630,7 +630,7 @@ class PopupSSHToggleFailed(Widget):
 
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0, 0, 0, 0])
         btn_layout.add_widget(ok_button)
@@ -670,7 +670,7 @@ class PopupFailedToSendSSHKey(Widget):
 
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0, 0, 0, 0])
         btn_layout.add_widget(ok_button)
@@ -710,7 +710,7 @@ class PopupNoSSHFile(Widget):
 
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0, 0, 0, 0])
         btn_layout.add_widget(ok_button)
@@ -751,7 +751,7 @@ class PopupCSVOnUSB(Widget):
 
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0, 0, 0, 0])
         btn_layout.add_widget(ok_button)
@@ -811,7 +811,7 @@ class PopupStopOvernightTest(Widget):
 
         resume_button = Button(text=resume_string, markup=True)
         resume_button.background_normal = ''
-        resume_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        resume_button.background_color = color_provider.get_rgba("green")
         cancel_button = Button(text=cancel_string, markup=True)
         cancel_button.background_normal = ''
         cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -868,7 +868,7 @@ class PopupFSCKGood(Widget):
 
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
 
         more_info_button = Button(text=more_info_string, markup=True)
         more_info_button.background_normal = ''
@@ -976,7 +976,7 @@ class PopupFSCKInfo(Widget):
 
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[10, 20, 10, 0], size_hint_y=0.6)
         btn_layout.add_widget(ok_button)
@@ -1045,7 +1045,7 @@ class PopupStopStallJig(Widget):
 
         resume_button = Button(text=resume_string, markup=True)
         resume_button.background_normal = ''
-        resume_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        resume_button.background_color = color_provider.get_rgba("green")
         cancel_button = Button(text=cancel_string, markup=True)
         cancel_button.background_normal = ''
         cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -1104,7 +1104,7 @@ class PopupConfirmStoreCurrentValues(Widget):
 
         resume_button = Button(text=resume_string, markup=True)
         resume_button.background_normal = ''
-        resume_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        resume_button.background_color = color_provider.get_rgba("green")
         cancel_button = Button(text=cancel_string, markup=True)
         cancel_button.background_normal = ''
         cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
@@ -1159,7 +1159,7 @@ class PopupConfirmSpindleTest(Widget):
 
         resume_button = Button(text=resume_string, markup=True)
         resume_button.background_normal = ''
-        resume_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        resume_button.background_color = color_provider.get_rgba("green")
         cancel_button = Button(text=cancel_string, markup=True)
         cancel_button.background_normal = ''
         cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]

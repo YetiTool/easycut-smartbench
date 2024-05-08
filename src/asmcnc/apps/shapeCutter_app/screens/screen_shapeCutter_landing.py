@@ -10,6 +10,7 @@ from kivy.properties import ObjectProperty
 from kivy.uix.popup import Popup
 from asmcnc.apps.shapeCutter_app.screens import popup_info
 from asmcnc.core_UI.popups import InfoPopup
+from asmcnc.core_UI.utils import color_provider
 
 Builder.load_string(
     """
@@ -200,7 +201,7 @@ class ShapeCutterLandingScreenClass(Screen):
                   button_one_background_color=[0.141, 0.596, 0.957, 1],
                   button_two_text="Ok",
                   button_two_callback=None,
-                  button_two_background_color=[76 / 255., 175 / 255., 80 / 255., 1.]).open()
+                  button_two_background_color=color_provider.get_rgba("green")).open()
 
     def cut_rectangle(self):
         self.j.shape_dict["shape"] = "rectangle"
