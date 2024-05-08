@@ -15,7 +15,7 @@ Builder.load_string("""
 
     canvas:
         Color: 
-            rgba: hex('#000000')
+            rgba: color_provider.get_rgba("black")
         Rectangle: 
             size: self.size
             pos: self.pos
