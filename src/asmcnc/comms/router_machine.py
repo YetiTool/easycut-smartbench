@@ -3926,7 +3926,7 @@ class RouterMachine(EventDispatcher):
             Clock.schedule_once(lambda dt: self.soft_stop(), timer)
             timer += 0.5
             Clock.schedule_once(lambda dt: self.stop_from_soft_stop_cancel(), timer)
-            timer += 0.5
+            timer += 2
         if spindle_on:
             Logger.warning('Stopping spindle and moving up for collet access!')
             Clock.schedule_once(lambda dt: self.turn_off_spindle(), timer)
