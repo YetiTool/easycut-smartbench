@@ -2,6 +2,7 @@
 import sys, os
 
 from asmcnc.comms.logging_system.logging_system import Logger
+from asmcnc.core_UI.utils import color_provider
 from kivy.core.window import Window
 from kivy.uix.label import Label
 from kivy.uix.vkeyboard import VKeyboard
@@ -20,7 +21,7 @@ except:
 
 
 class Keyboard(VKeyboard):
-    font_color = [0, 0, 0, 1]
+    font_color=color_provider.get_rgba("black")
 
     def __init__(self, **kwargs):
         super(Keyboard, self).__init__(**kwargs)
@@ -46,7 +47,7 @@ class Keyboard(VKeyboard):
         self.qwertyKR_layout = os.path.join(dirname, "layouts", "qwertyKR.json")
         self.font_size = scaling_utils.get_scaled_width(20)
 
-        self.background_color = [0, 0, 0, 1]
+        self.background_color=color_provider.get_rgba("black")
 
         try:
             if self.l.lang == self.l.ko:

@@ -20,6 +20,8 @@ from kivy.clock import Clock
 from kivy.uix.checkbox import CheckBox
 from kivy.graphics import Color, Rectangle
 
+from asmcnc.core_UI.utils import color_provider
+
 class PopupTempPowerDiagnosticsInfo(Widget):
 
     def __init__(self, screen_manager, report_string):
@@ -27,7 +29,7 @@ class PopupTempPowerDiagnosticsInfo(Widget):
         self.sm = screen_manager
         
         # img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label1 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=report_string, color=[0,0,0,1], padding=[10,10])
+        label1 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=report_string, color=color_provider.get_rgba("black"), padding=[10,10])
 
         ok_button = Button(text='[b]Ok[/b]', markup = True)
         ok_button.background_normal = ''
@@ -45,7 +47,7 @@ class PopupTempPowerDiagnosticsInfo(Widget):
         layout_plan.add_widget(btn_layout)
         
         popup = Popup(title='Output',
-                      title_color=[0, 0, 0, 1],
+                      title_color=color_provider.get_rgba("black"),
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -68,11 +70,11 @@ class PopupSpindleDiagnosticsInfo(Widget):
         self.sm = screen_manager
 
         # img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label1 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test1, color=[0,0,0,1], padding=[5,5])
-        label2 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test2, color=[0,0,0,1], padding=[5,5])
-        label3 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test3, color=[0,0,0,1], padding=[5,5])
-        label4 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test4, color=[0,0,0,1], padding=[5,5])
-        label5 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test5, color=[0,0,0,1], padding=[5,5])
+        label1 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test1, color=color_provider.get_rgba("black"), padding=[5,5])
+        label2 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test2, color=color_provider.get_rgba("black"), padding=[5,5])
+        label3 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test3, color=color_provider.get_rgba("black"), padding=[5,5])
+        label4 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test4, color=color_provider.get_rgba("black"), padding=[5,5])
+        label5 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=test5, color=color_provider.get_rgba("black"), padding=[5,5])
 
         ok_button = Button(text='[b]Ok[/b]', markup = True)
         ok_button.background_normal = ''
@@ -94,7 +96,7 @@ class PopupSpindleDiagnosticsInfo(Widget):
         layout_plan.add_widget(btn_layout)
 
         popup = Popup(title='Output',
-                      title_color=[0, 0, 0, 1],
+                      title_color=color_provider.get_rgba("black"),
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -115,7 +117,7 @@ class PopupFWUpdateDiagnosticsInfo(Widget):
     def __init__(self, screen_manager, outcome, message):
 
         self.sm = screen_manager
-        label1 = Label(size_hint_y=0.92, text_size=(None, None), markup=True, halign='left', valign='top', text=message, font_size = '11sp', color=[0,0,0,1])
+        label1 = Label(size_hint_y=0.92, text_size=(None, None), markup=True, halign='left', valign='top', text=message, font_size = '11sp', color=color_provider.get_rgba("black"))
 
         back_button = Button(text='[b]Ok[/b]', markup = True)
         back_button.background_normal = ''
@@ -133,7 +135,7 @@ class PopupFWUpdateDiagnosticsInfo(Widget):
         layout_plan.add_widget(btn_layout)
 
         popup = Popup(title=outcome,
-                      title_color=[0, 0, 0, 1],
+                      title_color=color_provider.get_rgba("black"),
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),

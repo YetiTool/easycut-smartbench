@@ -24,6 +24,7 @@ from kivy.uix.scrollview import ScrollView
 from kivy.clock import Clock
 
 from asmcnc.core_UI import scaling_utils as utils
+from asmcnc.core_UI.utils import color_provider
 
 class PopupInfo(Widget):
 
@@ -35,7 +36,7 @@ class PopupInfo(Widget):
 #                             "If you need help or support, please visit customer support at www.yetitool.com/support"
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=2, text_size=(360, None), markup=True, halign='left', valign='middle', text=description, color=[0,0,0,1], padding=[10,10])
+        label = Label(size_hint_y=2, text_size=(360, None), markup=True, halign='left', valign='middle', text=description, color=color_provider.get_rgba("black"), padding=[10,10])
 
         
         ok_button = Button(text='[b]Ok[/b]', markup = True)
@@ -52,7 +53,7 @@ class PopupInfo(Widget):
         
         popup = Popup(title='Information',
 #                       title_color=[0.141, 0.596, 0.957, 1],
-                      title_color=[0, 0, 0, 1],
+                      title_color=color_provider.get_rgba("black"),
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -81,7 +82,7 @@ class PopupTutorial(Widget):
                             "If you need help or support, please visit customer support at www.yetitool.com/support"
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_bigger.png", allow_stretch=False)
-        label = Label(size_hint_y=1, text_size=(360, None), halign='left', valign='middle', text=description, color=[0,0,0,1], padding=[20,20])
+        label = Label(size_hint_y=1, text_size=(360, None), halign='left', valign='middle', text=description, color=color_provider.get_rgba("black"), padding=[20,20])
         tutorial_button = Button(text='[b]Tutorial[/b]', markup = True)
         tutorial_button.background_normal = ''
         tutorial_button.background_color = [0.141, 0.596, 0.957, 1]
@@ -100,7 +101,7 @@ class PopupTutorial(Widget):
         layout_plan.add_widget(btn_layout)
         
         popup = Popup(title='Information',
-                      title_color=[0, 0, 0, 1],
+                      title_color=color_provider.get_rgba("black"),
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -145,7 +146,7 @@ class PopupFeedsAndSpeedsLookupTable(Widget):
         
         popup = Popup(title='Information',
 #                       title_color=[0.141, 0.596, 0.957, 1],
-                      title_color=[0, 0, 0, 1],
+                      title_color=color_provider.get_rgba("black"),
                       title_size = utils.get_scaled_sp("20sp"),
                       content=layout_plan,
                       size_hint=(None, None),
@@ -169,7 +170,7 @@ class PopupWait(Widget):
         description = "Please wait" + message
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[40,20], markup = True)
+        label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=color_provider.get_rgba("black"), padding=[40,20], markup = True)
         
         ok_button = Button(text='[b]Ok[/b]', markup = True)
         ok_button.background_normal = ''
@@ -184,7 +185,7 @@ class PopupWait(Widget):
         layout_plan.add_widget(btn_layout)
         
         popup = Popup(title='Please Wait...',
-                      title_color=[0, 0, 0, 1],
+                      title_color=color_provider.get_rgba("black"),
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),

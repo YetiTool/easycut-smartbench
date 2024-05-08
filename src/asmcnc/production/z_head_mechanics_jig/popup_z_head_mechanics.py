@@ -5,6 +5,8 @@ from kivy.uix.label import Label
 from kivy.uix.button import  Button
 from kivy.uix.image import Image
 
+from asmcnc.core_UI.utils import color_provider
+
 class PopupCalibrate(Widget):
 
     def __init__(self, screen_manager, localization):
@@ -21,7 +23,7 @@ class PopupCalibrate(Widget):
             self.sm.get_screen('mechanics').calibrate_motor()
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1.5, text_size=(480, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
+        label = Label(size_hint_y=1.5, text_size=(480, None), halign='center', valign='middle', text=description, color=color_provider.get_rgba("black"), padding=[0,0], markup = True)
 
         ok_button = Button(text=calibrate_string, markup = True)
         ok_button.background_normal = ''
@@ -42,7 +44,7 @@ class PopupCalibrate(Widget):
         layout_plan.add_widget(btn_layout)
         
         popup = Popup(title=title_string,
-                      title_color=[0, 0, 0, 1],
+                      title_color=color_provider.get_rgba("black"),
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -76,7 +78,7 @@ class PopupPhaseTwo(Widget):
             self.sm.get_screen('mechanics').phase_two()
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1.5, text_size=(480, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
+        label = Label(size_hint_y=1.5, text_size=(480, None), halign='center', valign='middle', text=description, color=color_provider.get_rgba("black"), padding=[0,0], markup = True)
 
         ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
@@ -89,7 +91,7 @@ class PopupPhaseTwo(Widget):
         layout_plan.add_widget(ok_button)
         
         popup = Popup(title=title_string,
-                      title_color=[0, 0, 0, 1],
+                      title_color=color_provider.get_rgba("black"),
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),

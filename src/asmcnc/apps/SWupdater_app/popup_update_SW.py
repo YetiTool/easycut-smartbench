@@ -11,6 +11,7 @@ from kivy.uix.image import Image
 from kivy.core.window import Window
 
 from asmcnc.core_UI.components.labels.base_label import LabelBase
+from asmcnc.core_UI.utils import color_provider
 
 
 class PopupBetaUpdate(Widget):
@@ -48,7 +49,7 @@ class PopupBetaUpdate(Widget):
             halign="center",
             valign="middle",
             text=description,
-            color=[0, 0, 0, 1],
+            color=color_provider.get_rgba("black"),
             padding=[0, 0],
             markup=True,
         )
@@ -83,7 +84,7 @@ class PopupBetaUpdate(Widget):
 
         popup = Popup(
             title="Warning!",
-            title_color=[0, 0, 0, 1],
+            title_color=color_provider.get_rgba("black"),
             title_size=str(20.0 / 800.0 * Window.width) + "sp",
             content=layout_plan,
             size_hint=(None, None),

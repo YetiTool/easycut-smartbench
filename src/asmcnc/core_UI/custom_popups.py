@@ -18,6 +18,7 @@ from asmcnc.core_UI.scaling_utils import (
     get_scaled_tuple,
     is_screen_big,
 )
+from asmcnc.core_UI.utils import color_provider
 
 info_img_source = (
     "./asmcnc/apps/shapeCutter_app/img/info_icon_scaled_up.png"
@@ -106,7 +107,7 @@ class PopupBrushInfo(Widget):
             halign="left",
             valign="bottom",
             text=description_top,
-            color=[0, 0, 0, 1],
+            color=color_provider.get_rgba("black"),
             padding=[0, 0],
             width=get_scaled_width(476),
             font_size=default_font_size,
@@ -118,7 +119,7 @@ class PopupBrushInfo(Widget):
             halign="left",
             valign="bottom",
             text="",
-            color=[0, 0, 0, 1],
+            color=color_provider.get_rgba("black"),
             padding=[0, 0],
             width=get_scaled_width(476),
             font_size=default_font_size,
@@ -129,7 +130,7 @@ class PopupBrushInfo(Widget):
             halign="left",
             valign="top",
             text=description_bottom,
-            color=[0, 0, 0, 1],
+            color=color_provider.get_rgba("black"),
             padding=[0, 0],
             width=get_scaled_width(760),
             font_size=default_font_size,
@@ -148,7 +149,7 @@ class PopupBrushInfo(Widget):
             markup=True,
             halign="left",
             valign="middle",
-            color=[0, 0, 0, 1],
+            color=color_provider.get_rgba("black"),
             padding=[0, 0],
             width=img_full_brush.width,
         )
@@ -160,7 +161,7 @@ class PopupBrushInfo(Widget):
             markup=True,
             halign="left",
             valign="middle",
-            color=[0, 0, 0, 1],
+            color=color_provider.get_rgba("black"),
             padding=[0, 0],
             width=img_full_brush.width,
         )
@@ -172,7 +173,7 @@ class PopupBrushInfo(Widget):
             markup=True,
             halign="left",
             valign="middle",
-            color=[0, 0, 0, 1],
+            color=color_provider.get_rgba("black"),
             padding=[0, 0],
             width=img_full_brush.width,
         )
@@ -202,7 +203,7 @@ class PopupBrushInfo(Widget):
             markup=True,
             halign="left",
             valign="middle",
-            color=[0, 0, 0, 1],
+            color=color_provider.get_rgba("black"),
             padding=[0, 0],
             width=get_scaled_width(68),
         )
@@ -214,7 +215,7 @@ class PopupBrushInfo(Widget):
             markup=True,
             halign="left",
             valign="middle",
-            color=[0, 0, 0, 1],
+            color=color_provider.get_rgba("black"),
             padding=[0, 0],
             width=get_scaled_width(68),
         )
@@ -226,7 +227,7 @@ class PopupBrushInfo(Widget):
             markup=True,
             halign="left",
             valign="middle",
-            color=[0, 0, 0, 1],
+            color=color_provider.get_rgba("black"),
             padding=[0, 0],
             width=get_scaled_width(68),
         )
@@ -256,7 +257,7 @@ class PopupBrushInfo(Widget):
             markup=True,
             halign="left",
             valign="middle",
-            color=[0, 0, 0, 1],
+            color=color_provider.get_rgba("black"),
             padding=[0, 0],
             width=get_scaled_width(88),
         )
@@ -268,7 +269,7 @@ class PopupBrushInfo(Widget):
             markup=True,
             halign="left",
             valign="middle",
-            color=[0, 0, 0, 1],
+            color=color_provider.get_rgba("black"),
             padding=[0, 0],
             width=get_scaled_width(68),
         )
@@ -280,7 +281,7 @@ class PopupBrushInfo(Widget):
             markup=True,
             halign="left",
             valign="middle",
-            color=[0, 0, 0, 1],
+            color=color_provider.get_rgba("black"),
             padding=[0, 0],
             width=get_scaled_width(68),
         )
@@ -363,7 +364,7 @@ class PopupBrushInfo(Widget):
 
         popup = Popup(
             title=title_string,
-            title_color=[0, 0, 0, 1],
+            title_color=color_provider.get_rgba("black"),
             title_size=get_scaled_sp("20sp"),
             content=layout_plan,
             size_hint=(None, None),
@@ -438,7 +439,7 @@ class PopupDisplaySpindleData(Widget):
             halign="left",
             valign="middle",
             text=category_string,
-            color=(0, 0, 0, 1),
+            color=color_provider.get_rgba("black"),
             padding=(0, 0),
             markup=True,
             bold=True,
@@ -449,7 +450,7 @@ class PopupDisplaySpindleData(Widget):
             halign="right",
             valign="middle",
             text=value_string,
-            color=(0, 0, 0, 1),
+            color=color_provider.get_rgba("black"),
             padding=(0, 0),
             markup=True,
             font_size=default_font_size,
@@ -484,7 +485,7 @@ class PopupDisplaySpindleData(Widget):
 
         popup = Popup(
             title=title_string,
-            title_color=[0, 0, 0, 1],
+            title_color=color_provider.get_rgba("black"),
             title_size=get_scaled_sp("20sp"),
             content=layout_plan,
             size_hint=(None, None),
@@ -574,7 +575,7 @@ class PopupSpindleSettingsInfo(Widget):
             halign="left",
             valign="middle",
             text=model_info,
-            color=[0, 0, 0, 1],
+            color=color_provider.get_rgba("black"),
             font_size=default_font_size,
             background_color=[0.95, 0.95, 0.95, 1],
         )
@@ -600,7 +601,7 @@ class PopupSpindleSettingsInfo(Widget):
             halign="left",
             valign="middle",
             text=cooldown_info,
-            color=[0, 0, 0, 1],
+            color=color_provider.get_rgba("black"),
             font_size=default_font_size,
             background_color=[0.95, 0.95, 0.95, 1],
         )
@@ -619,7 +620,7 @@ class PopupSpindleSettingsInfo(Widget):
             halign="left",
             valign="middle",
             text=stylus_info,
-            color=[0, 0, 0, 1],
+            color=color_provider.get_rgba("black"),
             font_size=default_font_size,
             background_color=[0.95, 0.95, 0.95, 1],
         )
@@ -638,7 +639,7 @@ class PopupSpindleSettingsInfo(Widget):
             valign="middle",
             text=get_data_info,
             font_size=default_font_size,
-            color=[0, 0, 0, 1],
+            color=color_provider.get_rgba("black"),
             background_color=[0.95, 0.95, 0.95, 1],
         )
         get_data_info_container = BoxLayout(orientation="horizontal")
@@ -704,7 +705,7 @@ class PopupSpindleSettingsInfo(Widget):
 
         popup = Popup(
             title=title_string,
-            title_color=[0, 0, 0, 1],
+            title_color=color_provider.get_rgba("black"),
             title_size=get_scaled_sp("20sp"),
             content=layout_plan,
             size_hint=(None, None),
@@ -782,7 +783,7 @@ class PopupDatum(Widget):
             halign="center",
             valign="middle",
             text=description,
-            color=[0, 0, 0, 1],
+            color=color_provider.get_rgba("black"),
             padding=get_scaled_tuple((40, 20)),
             markup=True,
             font_size=get_scaled_sp("15sp"),
@@ -823,7 +824,7 @@ class PopupDatum(Widget):
                 valign="middle",
                 text=chk_message,
                 text_size=get_scaled_tuple((200, 100)),
-                color=[0, 0, 0, 1],
+                color=color_provider.get_rgba("black"),
                 font_size=get_scaled_sp("15sp"),
                 padding=get_scaled_tuple((0, 20)),
                 markup=True,
@@ -848,7 +849,7 @@ class PopupDatum(Widget):
 
         popup = Popup(
             title=title_string,
-            title_color=[0, 0, 0, 1],
+            title_color=color_provider.get_rgba("black"),
             title_size=get_scaled_sp("20sp"),
             content=layout_plan,
             size_hint=(None, None),
@@ -891,7 +892,7 @@ class PopupSoftwareUpdateWarning(Widget):
 
         img = Image(source=error_img_source, allow_stretch=False)
         label = Label(size_hint_y=1.4, text_size=get_scaled_tuple((560, None)), halign='center', valign='middle', text=description,
-                      color=[0, 0, 0, 1], padding=get_scaled_tuple((20, 20)), markup=True, font_size=get_scaled_sp("15sp"))
+                      color=color_provider.get_rgba("black"), padding=get_scaled_tuple((20, 20)), markup=True, font_size=get_scaled_sp("15sp"))
 
         ok_button = Button(text=update_string, markup=True, font_size=get_scaled_sp("15sp"))
         ok_button.background_normal = ''
@@ -910,7 +911,7 @@ class PopupSoftwareUpdateWarning(Widget):
         layout_plan.add_widget(btn_layout)
 
         popup = Popup(title=title_string,
-                      title_color=[0, 0, 0, 1],
+                      title_color=color_provider.get_rgba("black"),
                       title_size=get_scaled_sp("20sp"),
                       content=layout_plan,
                       size_hint=(None, None),
@@ -946,7 +947,7 @@ class PopupSoftwareRepair(Widget):
 
         img = Image(source=error_img_source, allow_stretch=False)
         label = Label(size_hint_y=1.4, text_size=get_scaled_tuple((560, None)), halign='center', valign='middle', text=description,
-                      color=[0, 0, 0, 1], padding=get_scaled_tuple((20, 20)), markup=True, font_size=get_scaled_sp("15sp"))
+                      color=color_provider.get_rgba("black"), padding=get_scaled_tuple((20, 20)), markup=True, font_size=get_scaled_sp("15sp"))
 
         ok_button = Button(text=repair_string, markup=True, font_size=get_scaled_sp("15sp"))
         ok_button.background_normal = ''
@@ -965,7 +966,7 @@ class PopupSoftwareRepair(Widget):
         layout_plan.add_widget(btn_layout)
 
         popup = Popup(title=title_string,
-                      title_color=[0, 0, 0, 1],
+                      title_color=color_provider.get_rgba("black"),
                       title_size=get_scaled_sp("20sp"),
                       content=layout_plan,
                       size_hint=(None, None),

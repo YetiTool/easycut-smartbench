@@ -5,6 +5,7 @@ Created for info buttons in the shapecutter app
 
 import kivy
 from asmcnc.comms.logging_system.logging_system import Logger
+from asmcnc.core_UI.utils import color_provider
 
 from kivy.lang import Builder
 from kivy.uix.gridlayout import GridLayout
@@ -29,7 +30,7 @@ class PopupInputError(Widget):
         description = error_message
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1, text_size=(360, None), halign='left', valign='middle', text=description, color=[0,0,0,1], padding=[20,20])
+        label = Label(size_hint_y=1, text_size=(360, None), halign='left', valign='middle', text=description, color=color_provider.get_rgba("black"), padding=[20,20])
         
         ok_button = Button(text='[b]Ok[/b]', markup = True)
         ok_button.background_normal = ''
@@ -44,7 +45,7 @@ class PopupInputError(Widget):
         layout_plan.add_widget(btn_layout)
         
         popup = Popup(title='Warning!',
-                      title_color=[0, 0, 0, 1],
+                      title_color=color_provider.get_rgba("black"),
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -107,7 +108,7 @@ class PopupDatum(Widget):
           return True
 
       img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-      label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[40,20], markup = True)
+      label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=color_provider.get_rgba("black"), padding=[40,20], markup = True)
       
 
       ok_button = Button(text='[b]Yes[/b]', markup = True)
@@ -124,7 +125,7 @@ class PopupDatum(Widget):
 
 
       if self.m.is_laser_enabled == True:
-        chk_label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=chk_message, color=[0,0,0,1], padding=[40,20], markup = True)
+        chk_label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=chk_message, color=color_provider.get_rgba("black"), padding=[40,20], markup = True)
         checkbox = CheckBox(background_checkbox_normal="./asmcnc/skavaUI/img/checkbox_inactive.png", active=set_checkbox_default())
         chk_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0])
         chk_layout.add_widget(chk_label)
@@ -137,7 +138,7 @@ class PopupDatum(Widget):
       layout_plan.add_widget(btn_layout)
       
       popup = Popup(title='Warning!',
-                    title_color=[0, 0, 0, 1],
+                    title_color=color_provider.get_rgba("black"),
                     title_size = '20sp',
                     content=layout_plan,
                     size_hint=(None, None),
@@ -166,7 +167,7 @@ class PopupBoundary(Widget):
         description = error_message
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1, text_size=(360, None), halign='left', valign='middle', text=description, color=[0,0,0,1], padding=[0,0])
+        label = Label(size_hint_y=1, text_size=(360, None), halign='left', valign='middle', text=description, color=color_provider.get_rgba("black"), padding=[0,0])
         
         ok_button = Button(text='[b]Ok[/b]', markup = True)
         ok_button.background_normal = ''
@@ -181,7 +182,7 @@ class PopupBoundary(Widget):
         layout_plan.add_widget(btn_layout)
         
         popup = Popup(title='Warning!',
-                      title_color=[0, 0, 0, 1],
+                      title_color=color_provider.get_rgba("black"),
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),

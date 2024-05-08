@@ -16,6 +16,8 @@ from kivy.uix.image import Image
 from kivy.graphics import Color, Rectangle
 from kivy.uix.textinput import TextInput
 
+from asmcnc.core_UI.utils import color_provider
+
 ### Quit To Console
 class QuitToConsoleWarranty(Widget):
     def __init__(self, screen_manager):
@@ -30,7 +32,7 @@ class QuitToConsoleWarranty(Widget):
             sys.exit()
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,0], markup = True)
+        label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=description, color=color_provider.get_rgba("black"), padding=[20,0], markup = True)
         
         ok_button = Button(text='[b]Yes[/b]', markup = True)
         ok_button.background_normal = ''
@@ -50,7 +52,7 @@ class QuitToConsoleWarranty(Widget):
         layout_plan.add_widget(btn_layout)
         
         popup = Popup(title='Warning!',
-                      title_color=[0, 0, 0, 1],
+                      title_color=color_provider.get_rgba("black"),
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -83,7 +85,7 @@ class PopupFactorySettingsPassword(Widget):
             self.am.systemtools_sm.open_factory_settings_screen()
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1.2, text_size=(450, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
+        label = Label(size_hint_y=1.2, text_size=(450, None), halign='center', valign='middle', text=description, color=color_provider.get_rgba("black"), padding=[0,0], markup = True)
         textinput = TextInput(size_hint_y=1, text = '')
 
         ok_button = Button(text='[b]Ok[/b]', markup = True)
@@ -100,7 +102,7 @@ class PopupFactorySettingsPassword(Widget):
         layout_plan.add_widget(btn_layout)
         
         popup = Popup(title='Warning!',
-                      title_color=[0, 0, 0, 1],
+                      title_color=color_provider.get_rgba("black"),
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),

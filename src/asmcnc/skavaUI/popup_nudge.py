@@ -6,6 +6,7 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.image import Image
 from asmcnc.core_UI.scaling_utils import is_screen_big, get_scaled_tuple, get_scaled_height, get_scaled_width, get_scaled_sp
+from asmcnc.core_UI.utils import color_provider
 
 
 class PopupNudgeDatum(Widget):
@@ -42,7 +43,7 @@ class PopupNudgeDatum(Widget):
             halign="center",
             valign="middle",
             text=description,
-            color=[0, 0, 0, 1],
+            color=color_provider.get_rgba("black"),
             padding=get_scaled_tuple([40, 20]),
             markup=True,
         )
@@ -69,7 +70,7 @@ class PopupNudgeDatum(Widget):
 
         popup = Popup(
             title=title_string,
-            title_color=[0, 0, 0, 1],
+            title_color=color_provider.get_rgba("black"),
             title_size=get_scaled_sp("20sp"),
             content=layout_plan,
             size_hint=(None, None),
@@ -127,7 +128,7 @@ class PopupNudgeWarning(Widget):
             halign="center",
             valign="middle",
             text=description,
-            color=[0, 0, 0, 1],
+            color=color_provider.get_rgba("black"),
             padding=get_scaled_tuple([20, 20]),
             markup=True,
         )
@@ -154,7 +155,7 @@ class PopupNudgeWarning(Widget):
 
         popup = Popup(
             title=title_string,
-            title_color=[0, 0, 0, 1],
+            title_color=color_provider.get_rgba("black"),
             title_size=get_scaled_sp("20sp"),
             content=layout_plan,
             size_hint=(None, None),

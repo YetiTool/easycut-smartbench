@@ -18,6 +18,7 @@ from kivy.clock import Clock
 from asmcnc.core_UI import scaling_utils as utils
 from asmcnc.core_UI.components.buttons.hold_button import WarningHoldButton
 from asmcnc.comms.logging_system.logging_system import Logger
+from asmcnc.core_UI.utils import color_provider
 
 """
 Popup type enum
@@ -245,7 +246,7 @@ class BasicPopup(Popup):
             halign=self.main_label_h_align,
             valign="middle",
             text=self.l.get_str(self.main_string),
-            color=(0, 0, 0, 1),
+            color=color_provider.get_rgba("black"),
             padding=utils.get_scaled_tuple(self.main_label_padding),
             markup=True,
             font_size=str(utils.get_scaled_width(15)) + "sp",
@@ -918,7 +919,7 @@ class SpindleSafetyPopup(BasicPopup):
                 hold_time=1,
                 callback=lambda: self.on_button_pressed(self.button_two_callback),
                 font_size=utils.get_scaled_sp("15sp"),
-                color=(0, 0, 0, 1),
+                color=color_provider.get_rgba("black"),
                 markup=True
             )
         ]
@@ -983,7 +984,7 @@ class JobValidationPopup(BasicPopup):
         self.main_label = RstDocument(
             text_size=(text_size_x, None),
             text=self.l.get_str(self.main_string),
-            color=(0, 0, 0, 1),
+            color=color_provider.get_rgba("black"),
             background_color=(1, 1, 1, 1),
             markup=True,
             font_size=str(utils.get_scaled_width(15)) + "sp",
