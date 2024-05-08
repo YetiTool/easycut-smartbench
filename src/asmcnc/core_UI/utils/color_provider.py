@@ -65,7 +65,7 @@ Colors = {
     "monochrome_red": [1.0, 0.0, 0.0, 1.0],
     "monochrome_green": [0.0, 1.0, 0.0, 1.0],
     "monochrome_blue": [0.0, 0.0, 1.0, 1.0],
-    "button_press_red": [244 / 255., 67 / 255., 54 / 255., 1.0],
+    "button_press_background": [244 / 255., 67 / 255., 54 / 255., 1.0],
 }  # type: Dict[str, List[float]]  
 
 

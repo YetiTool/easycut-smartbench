@@ -43,7 +43,7 @@ Builder.load_string("""
                     self.background_color = color_provider.get_rgba("invisible")
                 on_press:
                     root.jogModeCycled()
-                    self.background_color = color_provider.get_rgba("button_press_red")
+                    self.background_color = color_provider.get_rgba("button_press_background")
                 BoxLayout:
                     size: self.parent.size
                     pos: self.parent.pos
@@ -68,7 +68,7 @@ Builder.load_string("""
                     self.background_color = color_provider.get_rgba("invisible")
                 on_press:
                     root.jog_z('Z+')
-                    self.background_color = color_provider.get_rgba("button_press_red")
+                    self.background_color = color_provider.get_rgba("button_press_background")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -88,7 +88,7 @@ Builder.load_string("""
                     self.background_color = color_provider.get_rgba("invisible")
                 on_press:
                     root.jog_z('Z-')
-                    self.background_color = color_provider.get_rgba("button_press_red")
+                    self.background_color = color_provider.get_rgba("button_press_background")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size

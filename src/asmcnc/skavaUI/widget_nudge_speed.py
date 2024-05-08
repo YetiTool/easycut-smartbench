@@ -36,7 +36,7 @@ Builder.load_string("""
                 self.background_color = color_provider.get_rgba("invisible")
             on_press: 
                 root.set_datum()
-                self.background_color = color_provider.get_rgba("button_press_red")
+                self.background_color = color_provider.get_rgba("button_press_background")
             BoxLayout:
                 padding: 5
                 size: self.parent.size

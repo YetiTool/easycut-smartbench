@@ -53,7 +53,7 @@ Builder.load_string("""
                     self.background_color = color_provider.get_rgba("invisible")
                 on_press: 
                     root.set_standby_to_pos()
-                    self.background_color = color_provider.get_rgba("button_press_red")
+                    self.background_color = color_provider.get_rgba("button_press_background")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -71,7 +71,7 @@ Builder.load_string("""
                     self.background_color = color_provider.get_rgba("invisible")
                 on_press: 
                     root.set_workzone_to_pos_xy()
-                    self.background_color = color_provider.get_rgba("button_press_red")
+                    self.background_color = color_provider.get_rgba("button_press_background")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -124,7 +124,7 @@ Builder.load_string("""
                     self.background_color = color_provider.get_rgba("invisible")
                 on_press: 
                     root.go_to_standby()
-                    self.background_color = color_provider.get_rgba("button_press_red")
+                    self.background_color = color_provider.get_rgba("button_press_background")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -141,7 +141,7 @@ Builder.load_string("""
                     self.background_color = color_provider.get_rgba("invisible")
                 on_press: 
                     root.go_to_jobstart_xy()
-                    self.background_color = color_provider.get_rgba("button_press_red")
+                    self.background_color = color_provider.get_rgba("button_press_background")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
