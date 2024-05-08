@@ -621,7 +621,7 @@ class StallJigScreen(Screen):
         if button_object.background_color != self.highlight_yellow:
             return
         button_object.background_normal = "atlas://data/images/defaulttheme/button"
-        button_object.background_color = [1, 1, 1, 1]
+        button_object.background_color = color_provider.get_rgba("white")
         button_object.background_disabled_normal = (
             "atlas://data/images/defaulttheme/button_disabled"
         )

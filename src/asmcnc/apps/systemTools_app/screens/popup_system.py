@@ -971,7 +971,7 @@ class PopupFSCKInfo(Widget):
         ok_string = self.l.get_bold('Ok')
 
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        info_label = RstDocument(text=description, background_color=[1, 1, 1, 1], base_font_size=26,
+        info_label = RstDocument(text=description, background_color=color_provider.get_rgba("white"), base_font_size=26,
                                  underline_color='000000')
 
         ok_button = Button(text=ok_string, markup=True)

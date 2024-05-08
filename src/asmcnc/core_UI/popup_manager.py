@@ -20,6 +20,7 @@ from asmcnc.core_UI.popups import (
     JobValidationPopup,
     SimulatingJobPopup
 )
+from asmcnc.core_UI.utils import color_provider
 
 
 class PopupManager:
@@ -433,7 +434,7 @@ class PopupManager:
                                          always_overscroll=True, size_hint_y=1.2)
                 rst_doc = RstDocument(
                     text=more_info,
-                    background_color=(1, 1, 1, 1),
+                    background_color=color_provider.get_rgba("white"),
                     base_font_size=scaling_utils.get_scaled_width(26),
                     underline_color="000000",
                 )
