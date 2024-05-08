@@ -56,7 +56,7 @@ class PopupWelcome(Widget):
 
         remind_me_button = Button(text=remind_string, markup=True)
         remind_me_button.background_normal = ''
-        remind_me_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        remind_me_button.background_color = color_provider.get_rgba("red")
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[20, 10, 20, 0])
         btn_layout.add_widget(remind_me_button)
@@ -146,7 +146,7 @@ class PopupDatum(Widget):
         ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=no_string, markup=True)
         back_button.background_normal = ''
-        back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        back_button.background_color = color_provider.get_rgba("red")
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0, 0, 0, 0])
         btn_layout.add_widget(back_button)
@@ -177,7 +177,7 @@ class PopupDatum(Widget):
                       auto_dismiss=False
                       )
 
-        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("red")
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 
@@ -215,7 +215,7 @@ class PopupPark(Widget):
         ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=no_string, markup=True)
         back_button.background_normal = ''
-        back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        back_button.background_color = color_provider.get_rgba("red")
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0, 0, 0, 0])
         btn_layout.add_widget(back_button)
@@ -235,7 +235,7 @@ class PopupPark(Widget):
                       auto_dismiss=False
                       )
 
-        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("red")
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 
@@ -275,7 +275,7 @@ class PopupStop(Widget):
         resume_button.background_color = color_provider.get_rgba("green")
         cancel_button = Button(text=cancel_string, markup=True)
         cancel_button.background_normal = ''
-        cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        cancel_button.background_color = color_provider.get_rgba("red")
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0, 5, 0, 0], size_hint_y=2)
         btn_layout.add_widget(cancel_button)
@@ -295,7 +295,7 @@ class PopupStop(Widget):
                       auto_dismiss=False
                       )
 
-        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("red")
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 
@@ -327,7 +327,7 @@ class PopupUSBInfo(Widget):
                     self.l.get_str("Please do not remove your USB stick until it is safe to do so.")
             )
 
-            ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+            ok_button.background_color = color_provider.get_rgba("red")
 
         elif safe_to_remove == False:
 
@@ -336,7 +336,7 @@ class PopupUSBInfo(Widget):
                     self.l.get_str("Please wait") + "..."
             )
 
-            ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+            ok_button.background_color = color_provider.get_rgba("red")
 
         elif safe_to_remove == True:
             description = self.l.get_str('It is now safe to remove your USB stick.')
@@ -363,7 +363,7 @@ class PopupUSBInfo(Widget):
                            auto_dismiss=False
                            )
 
-        self.popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        self.popup.separator_color = color_provider.get_rgba("red")
         self.popup.separator_height = '4dp'
         self.popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 
@@ -397,7 +397,7 @@ class PopupUSBError(Widget):
 
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("red")
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0, 0, 0, 0])
         btn_layout.add_widget(ok_button)
@@ -416,7 +416,7 @@ class PopupUSBError(Widget):
                       auto_dismiss=False
                       )
 
-        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("red")
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 
@@ -600,7 +600,7 @@ class PopupSoftwareUpdateWarning(Widget):
         ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=back_string, markup=True)
         back_button.background_normal = ''
-        back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        back_button.background_color = color_provider.get_rgba("red")
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0, 0, 0, 0])
         btn_layout.add_widget(back_button)
@@ -620,7 +620,7 @@ class PopupSoftwareUpdateWarning(Widget):
                       auto_dismiss=False
                       )
 
-        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("red")
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 
@@ -655,7 +655,7 @@ class PopupSoftwareRepair(Widget):
         ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=back_string, markup=True)
         back_button.background_normal = ''
-        back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        back_button.background_color = color_provider.get_rgba("red")
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0, 0, 0, 0])
         btn_layout.add_widget(back_button)
@@ -675,7 +675,7 @@ class PopupSoftwareRepair(Widget):
                       auto_dismiss=False
                       )
 
-        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("red")
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 
@@ -702,7 +702,7 @@ class PopupError(Widget):
 
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("red")
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0, 20, 0, 0])
         btn_layout.add_widget(ok_button)
@@ -721,7 +721,7 @@ class PopupError(Widget):
                       auto_dismiss=True
                       )
 
-        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("red")
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 
@@ -745,7 +745,7 @@ class PopupWarning(Widget):
 
         ok_button = Button(text=ok_string, markup=True)
         ok_button.background_normal = ''
-        ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("red")
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[20, 10, 20, 0])
         btn_layout.add_widget(ok_button)
@@ -764,7 +764,7 @@ class PopupWarning(Widget):
                       auto_dismiss=True
                       )
 
-        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("red")
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 
@@ -853,7 +853,7 @@ class PopupDeleteFile(Widget):
         ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=no_string, markup=True)
         back_button.background_normal = ''
-        back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        back_button.background_color = color_provider.get_rgba("red")
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0, 5, 0, 0])
         btn_layout.add_widget(back_button)
@@ -873,7 +873,7 @@ class PopupDeleteFile(Widget):
                       auto_dismiss=False
                       )
 
-        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("red")
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 
@@ -942,7 +942,7 @@ class PopupReminder(Widget):
         ok_button.background_normal = ''
         ok_button.background_color = color_provider.get_rgba("green")
         back_button.background_normal = ''
-        back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        back_button.background_color = color_provider.get_rgba("red")
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0, 0, 0, 0], size_hint_y=0.6)
         btn_layout.add_widget(back_button)
@@ -962,7 +962,7 @@ class PopupReminder(Widget):
                       auto_dismiss=False
                       )
 
-        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("red")
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 
@@ -999,7 +999,7 @@ class PopupConfirmJobCancel(Widget):
         resume_button.background_color = color_provider.get_rgba("green")
         cancel_button = Button(text=yes_string, markup=True)
         cancel_button.background_normal = ''
-        cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        cancel_button.background_color = color_provider.get_rgba("red")
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0, 5, 0, 0], size_hint_y=2)
         btn_layout.add_widget(cancel_button)
@@ -1019,7 +1019,7 @@ class PopupConfirmJobCancel(Widget):
                       auto_dismiss=False
                       )
 
-        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("red")
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 
@@ -1055,7 +1055,7 @@ class PopupHomingWarning(Widget):
 
         cancel_button = Button(text=cancel_string, markup=True)
         cancel_button.background_normal = ''
-        cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        cancel_button.background_color = color_provider.get_rgba("red")
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0, 5, 0, 0], size_hint_y=2)
         btn_layout.add_widget(cancel_button)
@@ -1075,7 +1075,7 @@ class PopupHomingWarning(Widget):
                       auto_dismiss=False
                       )
 
-        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("red")
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 
@@ -1113,7 +1113,7 @@ class PopupShutdown(Widget):
         ok_button.background_color = color_provider.get_rgba("green")
         cancel_button = Button(text=cancel_string, markup=True)
         cancel_button.background_normal = ''
-        cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        cancel_button.background_color = color_provider.get_rgba("red")
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0, 10, 0, 0])
         btn_layout.add_widget(cancel_button)

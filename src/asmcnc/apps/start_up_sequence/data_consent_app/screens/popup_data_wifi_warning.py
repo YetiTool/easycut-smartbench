@@ -46,7 +46,7 @@ class PopupDataAndWiFiDisableWarning(Widget):
 
 		ok_button = Button(text=ok_string, markup = True)
 		ok_button.background_normal = ''
-		ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+		ok_button.background_color = color_provider.get_rgba("red")
 		back_button = Button(text=back_string, markup = True)
 		back_button.background_normal = ''
 		back_button.background_color = color_provider.get_rgba("green")
@@ -69,7 +69,7 @@ class PopupDataAndWiFiDisableWarning(Widget):
 					  auto_dismiss= False
 					  )
 
-		popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+		popup.separator_color = color_provider.get_rgba("red")
 		popup.separator_height = '4dp'
 		popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 

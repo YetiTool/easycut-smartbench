@@ -33,7 +33,7 @@ class PopupSC2Decision(Widget):
         ok_button.bold = True
         cancel_button = Button(text=cancel_string, markup = True)
         cancel_button.background_normal = ''
-        cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        cancel_button.background_color = color_provider.get_rgba("red")
         cancel_button.bold = True
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,10,0,0])

@@ -40,7 +40,7 @@ class PopupResetOffset(Widget):
         ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=no_string, markup = True)
         back_button.background_normal = ''
-        back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        back_button.background_color = color_provider.get_rgba("red")
 
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0])
@@ -99,7 +99,7 @@ class PopupSaveOffset(Widget):
         ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=no_string, markup = True)
         back_button.background_normal = ''
-        back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        back_button.background_color = color_provider.get_rgba("red")
 
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0])
@@ -281,7 +281,7 @@ class PopupGetSpindleData(Widget):
         ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=no_string, markup = True)
         back_button.background_normal = ''
-        back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        back_button.background_color = color_provider.get_rgba("red")
 
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=100, padding=[100,0], size_hint_y = 0.6)
@@ -302,7 +302,7 @@ class PopupGetSpindleData(Widget):
                       auto_dismiss= False
                       )
 
-        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("red")
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 

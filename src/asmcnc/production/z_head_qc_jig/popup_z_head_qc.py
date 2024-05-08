@@ -121,7 +121,7 @@ class PopupFWUpdateDiagnosticsInfo(Widget):
 
         back_button = Button(text='[b]Ok[/b]', markup = True)
         back_button.background_normal = ''
-        back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        back_button.background_color = color_provider.get_rgba("red")
 
         text_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0)
         text_layout.add_widget(label1)

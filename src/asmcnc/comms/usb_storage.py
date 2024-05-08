@@ -224,14 +224,14 @@ class USB_storage(object):
                             self.l.get_str("Please do not remove your USB stick until it is safe to do so.")
                     )
 
-                    ok_button_background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+                    ok_button_background_color = color_provider.get_rgba("red")
                 elif not popup_mode:
                     description = (
                             self.l.get_str("Do not remove your USB stick yet.") + "\n\n" +
                             self.l.get_str("Please wait") + "..."
                     )
 
-                    ok_button_background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+                    ok_button_background_color = color_provider.get_rgba("red")
                 elif popup_mode:
                     description = self.l.get_str('It is now safe to remove your USB stick.')
                     ok_button_background_color = color_provider.get_rgba("green")

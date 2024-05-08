@@ -78,7 +78,7 @@ class ScreenManagerDataConsent(object):
 			button_one_background_color=color_provider.get_rgba("green"),
 			button_two_text=self.l.get_bold("Yes, disable Wi-Fi"),
 			button_two_callback=self.decline_terms_and_disable_wifi,
-			button_two_background_color=[230 / 255., 74 / 255., 25 / 255., 1.],
+			button_two_background_color=color_provider.get_rgba("red"),
 			main_label_size_hint_y=1.3,
 			main_label_padding=(0,0),
 			main_layout_padding=(10,20,10,20),
