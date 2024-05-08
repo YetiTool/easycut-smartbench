@@ -151,7 +151,7 @@ Builder.load_string(
 class StatusBar(Widget):
     GRBL_REPORT_INTERVAL = 0.1
     IP_REPORT_INTERVAL = 2
-    cheeky_color = color_provider.get_rgba("green")
+    cheeky_color = ListProperty(color_provider.get_rgba("green"))
     wifi_on = "./asmcnc/skavaUI/img/wifi_on.png"
     wifi_off = "./asmcnc/skavaUI/img/wifi_off.png"
     wifi_warning = "./asmcnc/skavaUI/img/wifi_warning.png"

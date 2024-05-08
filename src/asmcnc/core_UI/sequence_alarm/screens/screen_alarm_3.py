@@ -8,6 +8,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
 from asmcnc.skavaUI import widget_status_bar
+from asmcnc.core_UI.utils import color_provider
 
 Builder.load_string(
     """
@@ -138,7 +139,7 @@ class AlarmScreen3(Screen):
             screen_manager=self.a.sm, machine=self.a.m
         )
         self.status_container.add_widget(self.status_bar_widget)
-        self.status_bar_widget.cheeky_color = "#1976d2"
+        self.status_bar_widget.cheeky_color = color_provider.get_rgba("blue")
         self.camera_img.source = "./asmcnc/core_UI/sequence_alarm/img/camera_light.png"
         self.next_button.text = self.a.l.get_str("Next") + "..."
         # self.usb_img.source = "./asmcnc/core_UI/sequence_alarm/img/usb_empty_light.png"

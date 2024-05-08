@@ -13,6 +13,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 
 from asmcnc.skavaUI import widget_status_bar
+from asmcnc.core_UI.utils import color_provider
 
 Builder.load_string(
     """
@@ -284,7 +285,7 @@ class SafetyScreen(Screen):
             machine=self.m, screen_manager=self.sm
         )
         self.status_container.add_widget(self.status_bar_widget)
-        self.status_bar_widget.cheeky_color = "#1976d2"
+        self.status_bar_widget.cheeky_color = color_provider.get_rgba("blue")
         self.update_strings()
 
     def on_enter(self):
