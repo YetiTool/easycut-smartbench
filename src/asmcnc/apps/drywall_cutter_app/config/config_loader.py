@@ -132,6 +132,35 @@ class DWTConfig(EventDispatcher):
 
         self.setup_dropdowns()
 
+        self.shape_rules = {
+            'line': {
+                'toolpath_offset': ['on'],
+                'rotate_enabled': True,
+                'tool_whitelist': None
+            },
+            'rectangle': {
+                'toolpath_offset': ['inside', 'on', 'outside'],
+                'rotate_enabled': True,
+                'tool_whitelist': None
+            },
+            'square': {
+                'toolpath_offset': ['inside', 'on', 'outside'],
+                'rotate_enabled': False,
+                'tool_whitelist': None
+            },
+            'circle': {
+                'toolpath_offset': ['inside', 'on', 'outside'],
+                'rotate_enabled': False,
+                'tool_whitelist': None
+            },
+            'geberit': {
+                'toolpath_offset': ['on'],
+                'rotate_enabled': True,
+                'tool_whitelist': ['tool_6mm.json', 'tool_8mm.json']
+            }
+            # Add new shape rules here
+        }
+
     def setup_dropdowns(self):
         self.drywall_screen.tool_selection.set_default_image('./asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_6mm.png')
         self.drywall_screen.shape_selection.set_default_image('./asmcnc/apps/drywall_cutter_app/img/square_shape_button.png')
@@ -155,7 +184,7 @@ class DWTConfig(EventDispatcher):
         allowed_toolpath_dict = dict([(k, self.toolpath_offset_options_dict[k]) for k in allowed_toolpaths if
                                       k in self.toolpath_offset_options_dict])
         # Then update dropdown to only show allowed toolpaths
-        self.drywall_screen.image_dict = allowed_toolpath_dict
+        self.drywall_screen.toolpath_selection.set_image_dict(allowed_toolpath_dict)
         # check if currently selected toolpath is not allowed
         if self.active_config.toolpath_offset not in allowed_toolpaths:
             # Default to first toolpath, so disabled toolpath is never selected
@@ -178,45 +207,45 @@ class DWTConfig(EventDispatcher):
         self.drywall_screen.toolpath_selection.source = self.drywall_screen.toolpath_selection.image_dict[self.active_config.toolpath_offset]['image_path']
 
     def select_shape(self, shape):
-        self.on_parameter_change('shape_type', shape.lower())
+        shape = shape.lower()  # Normalize shape name to lowercase
 
-        self.drywall_screen.shape_selection.source = self.shape_options_dict[shape.lower()]['image_path']
+        self.on_parameter_change('shape_type', shape)
 
-        # handle toolpath
-        if shape in ['line', 'geberit']:
-            # Only on line available for these options
-            self.drywall_screen.toolpath_selection.disabled = True
-            if self.active_config.toolpath_offset is not 'on':
-                # default to 'on'
-                self.select_toolpath('on')
-            else:
-                self.drywall_screen.drywall_shape_display_widget.shape_toolpath_image.opacity = 0
+        shape_info = self.shape_rules.get(shape, {})  # Get rules for the selected shape
+
+        self.drywall_screen.shape_selection.source = self.shape_options_dict[shape]['image_path']
+
+        # Handle toolpath
+        toolpath_offsets = shape_info.get('toolpath_offset')
+        if self.active_config.toolpath_offset not in toolpath_offsets:
+            # Default to first available option if active config not in allowed options
+            self.select_toolpath(toolpath_offsets[0])
         else:
             self.select_toolpath(self.active_config.toolpath_offset)
-            self.drywall_screen.toolpath_selection.disabled = False
 
-        # handle rotate button
-        if shape in ['rectangle', 'line', 'geberit']:
-            self.drywall_screen.rotate_button.disabled = False
-        else:
-            self.drywall_screen.rotate_button.disabled = True
+        # Handle rotate button
+        rotate_enabled = shape_info.get('rotate_enabled')
+        self.drywall_screen.rotate_button.disabled = not rotate_enabled
 
+        # Set rotation
         self.drywall_screen.rotation = self.active_config.rotation
         self.drywall_screen.drywall_shape_display_widget.select_shape(shape, self.drywall_screen.rotation)
 
         if self.drywall_screen.drywall_shape_display_widget.rotation_required():
             self.drywall_screen.rotate_shape(swap_lengths=False)
 
-        # handle tool selection for geberit shape:
-        if shape is 'geberit':
-            geberit_cutters = {k: v for k, v in self.drywall_screen.tool_options.iteritems() if '8 mm' in k or '6 mm' in k}
-            geberit_cutter_names = [v['cutter_path'] for v in geberit_cutters.values()]
-            self.drywall_screen.tool_selection.image_dict = geberit_cutters
-            # check if valid tool is selected:
-            if self.active_config.cutter_type not in geberit_cutter_names:
-                self.select_tool(geberit_cutter_names[0])
+        # Handle tool selection
+        tool_whitelist = shape_info.get('tool_whitelist')
+        if tool_whitelist:
+            available_tools = {k: v for k, v in self.drywall_screen.tool_options.items() if v['cutter_path'] in tool_whitelist}
+            self.drywall_screen.tool_selection.set_image_dict(available_tools)
+            # Check if active tool is allowed
+            if self.active_config.cutter_type not in tool_whitelist:
+                # Select the first available tool
+                self.select_tool(next(iter(tool_whitelist), None))
         else:
-            self.drywall_screen.tool_selection.image_dict = self.drywall_screen.tool_options
+            # If no tool whitelist, show all tools
+            self.drywall_screen.tool_selection.set_image_dict(self.drywall_screen.tool_options)
 
     @staticmethod
     def get_most_recent_config():

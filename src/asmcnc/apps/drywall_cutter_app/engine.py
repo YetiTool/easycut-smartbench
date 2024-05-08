@@ -336,7 +336,7 @@ class GCodeEngine(object):
                 if os.path.exists(file_path):
                     try:
                         with open(file_path, 'r') as file:
-                            Logger.debug("Reading {} gcode file: {}".format(shape_type, file_path))
+                            Logger.debug("Reading {} gcode file: {}".format(shape_type, file_path.replace(directory, "")[1:]))
                             return file.readlines()
                     except IOError:
                         Logger.Warning("An error occurred while reading the Gcode file")

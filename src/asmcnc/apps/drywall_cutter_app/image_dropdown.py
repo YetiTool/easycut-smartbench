@@ -65,6 +65,7 @@ class ImageDropDownButton(ButtonBehavior, Image):
     callback = ObjectProperty(None)
     key_name = StringProperty('')
     dropdown = None
+    disable_if_1_option = False
 
     def __init__(self, **kwargs):
         super(ImageDropDownButton, self).__init__(**kwargs)
@@ -81,6 +82,9 @@ class ImageDropDownButton(ButtonBehavior, Image):
             return
 
         self.dropdown = ImageDropDown(self.image_dict, self.callback, self.key_name)
+
+        if self.disable_if_1_option:
+            self.disabled = len(self.image_dict) < 2
 
     def on_release(self):
         self.dropdown.open(self)
@@ -119,3 +123,4 @@ class ToolPathSelectionDropDown(ImageDropDownButton):
         super(ToolPathSelectionDropDown, self).__init__(**kwargs)
         self.source = './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_inside_button.png'
         self.key_name = 'key'
+        self.disable_if_1_option = True
