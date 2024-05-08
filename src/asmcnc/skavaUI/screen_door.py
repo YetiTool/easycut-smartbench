@@ -37,8 +37,8 @@ Builder.load_string(
 
     FloatLayout:
         size_hint: (None, None)
-        height: dp(0.73125*app.height)
-        width: dp(0.62*app.width)
+        height: app.get_scaled_height(351.0)
+        width: app.get_scaled_width(496.0)
         pos: (dp(148.0/800.0)*app.width, dp(80.0/480.0)*app.height)
         Image:
             id: x_beam
@@ -49,8 +49,8 @@ Builder.load_string(
 
     FloatLayout:
         size_hint: (None, None)
-        height: dp(0.114583333333*app.height)
-        width: dp(0.06875*app.width)
+        height: app.get_scaled_height(55.0)
+        width: app.get_scaled_width(55.0)
         pos: (dp(270.0/800.0)*app.width, dp(240.0/480.0)*app.height)
         Image:
             id: stop_img
@@ -65,35 +65,35 @@ Builder.load_string(
         padding: 0
         spacing: 0
         size_hint: (None, None)
-        height: dp(1.0*app.height)
-        width: dp(1.0*app.width)
+        height: app.get_scaled_height(480.0)
+        width: app.get_scaled_width(800.0)
 
         # Door label
         BoxLayout: 
-            padding:[dp(0.01875)*app.width, 0, 0, 0]
+            padding: app.get_scaled_tuple([15.0, 0.0, 0.0, 0.0])
             spacing: 0
             size_hint: (None, None)
-            height: dp(0.104166666667*app.height)
-            width: dp(1.0*app.width)
+            height: app.get_scaled_height(50.0)
+            width: app.get_scaled_width(800.0)
             Label:
                 id: header_label
                 size_hint: (None, None)
-                font_size: str(0.0375*app.width) + 'sp'
+                font_size: app.get_scaled_sp('30.0sp')
                 color: [0,0,0,1]
                 markup: True
                 halign: 'left'
-                height: dp(0.104166666667*app.height)
-                width: dp(0.9875*app.width)
+                height: app.get_scaled_height(50.0)
+                width: app.get_scaled_width(790.0)
                 text_size: self.size
                 size: self.parent.size
                 pos: self.parent.pos
 
         BoxLayout: 
-            padding:[dp(0.0125)*app.width, 0, dp(0.0125)*app.width, 0]
+            padding: app.get_scaled_tuple([10.0, 0.0, 10.0, 0.0])
             spacing: 0
             size_hint: (None, None)
-            height: dp(0.0104166666667*app.height)
-            width: dp(1.0*app.width)
+            height: app.get_scaled_height(5.0)
+            width: app.get_scaled_width(800.0)
             Image:
                 id: red_underline
                 source: "./asmcnc/skavaUI/img/red_underline.png"
@@ -107,24 +107,24 @@ Builder.load_string(
             padding: 0
             spacing: 0
             size_hint: (None, None)
-            height: dp(0.614583333333*app.height)
-            width: dp(1.0*app.width)
+            height: app.get_scaled_height(295.0)
+            width: app.get_scaled_width(800.0)
             orientation: 'vertical'
 
             BoxLayout: 
                 padding: 0
                 spacing: 0
                 size_hint: (None, None)
-                height: dp(0.510416666667*app.height)
-                width: dp(1.0*app.width)
+                height: app.get_scaled_height(245.0)
+                width: app.get_scaled_width(800.0)
                 orientation: 'vertical'
 
             FloatLayout: 
                 padding: 0
                 spacing: 0
                 size_hint: (None, None)
-                height: dp(0.104166666667*app.height)
-                width: dp(1.0*app.width)
+                height: app.get_scaled_height(50.0)
+                width: app.get_scaled_width(800.0)
                 orientation: 'vertical'
                 pos: (dp(0),dp(130.0/480.0)*app.height)
 
@@ -138,13 +138,13 @@ Builder.load_string(
                 Label:
                     id: spindle_raise_label
                     size_hint: (None, None)
-                    font_size: str(0.03*app.width) + 'sp'
+                    font_size: app.get_scaled_sp('24.0sp')
                     color: [0,0,0,1]
                     markup: True
                     halign: 'center'
                     valign: 'middle'
-                    height: dp(0.104166666667*app.height)
-                    width: dp(0.9*app.width)
+                    height: app.get_scaled_height(50.0)
+                    width: app.get_scaled_width(720.0)
                     text_size: self.size
                     size: self.parent.size
                     x: self.parent.x + 80.0/800*app.width
@@ -165,13 +165,13 @@ Builder.load_string(
             orientation: 'horizontal'
             spacing: 0
             size_hint: (None, None)
-            height: dp(0.270833333333*app.height)
-            width: dp(1.0*app.width)
-            padding:[0, 0, 0, dp(0.0208333333333)*app.height]
+            height: app.get_scaled_height(130.0)
+            width: app.get_scaled_width(800.0)
+            padding: app.get_scaled_tuple([0.0, 0.0, 0.0, 10.0])
    
 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 id: cancel_button
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
@@ -185,7 +185,7 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 id: resume_button
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')

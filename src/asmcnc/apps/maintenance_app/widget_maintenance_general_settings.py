@@ -16,7 +16,7 @@ Builder.load_string("""
         size: self.parent.size
         pos: self.parent.pos
         orientation: 'vertical'
-        padding: [dp(0.025)*app.width, 0]
+        padding: app.get_scaled_tuple([20.0, 0.0])
 
         BoxLayout:
             size_hint_y: 0.4
@@ -29,7 +29,7 @@ Builder.load_string("""
                 Label:
                     id: dust_shoe_title_label
                     color: color_provider.get_rgba("black")
-                    font_size: str(0.03*app.width) + 'sp'
+                    font_size: app.get_scaled_sp('24.0sp')
                     halign: "left"
                     markup: True
                     text_size: self.size
@@ -37,13 +37,13 @@ Builder.load_string("""
                 Label:
                     id: dust_shoe_info_label
                     color: color_provider.get_rgba("black")
-                    font_size: str(0.0225*app.width) + 'sp'
+                    font_size: app.get_scaled_sp('18.0sp')
                     halign: "left"
                     markup: True
                     text_size: self.size
 
             BoxLayout:
-                padding: [dp(0.15)*app.width, 0, 0, 0]
+                padding: app.get_scaled_tuple([120.0, 0.0, 0.0, 0.0])
 
                 Switch:
                     id: dust_shoe_switch

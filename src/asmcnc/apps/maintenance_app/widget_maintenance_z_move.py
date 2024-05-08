@@ -21,12 +21,12 @@ Builder.load_string(
 
         size: self.parent.size
         pos: self.parent.pos      
-        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
-        spacing:0.025*app.width
+        padding: app.get_scaled_tuple([20.0, 20.0])
+        spacing: app.get_scaled_width(20.0)
         orientation: 'horizontal'
         
         BoxLayout:
-            spacing:0.0208333333333*app.height
+            spacing: app.get_scaled_width(10.0)
             orientation: "vertical"
             
             BoxLayout:
@@ -34,11 +34,11 @@ Builder.load_string(
                 id: virtual_z_container
 
         BoxLayout:
-            spacing:0.0208333333333*app.height
+            spacing: app.get_scaled_width(10.0)
             orientation: "vertical"
             
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release:
@@ -60,7 +60,7 @@ Builder.load_string(
                         allow_stretch: True   
 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 size_hint_y: 1
                 background_color: hex('#F4433600')
                 on_release: 
@@ -82,14 +82,14 @@ Builder.load_string(
                         allow_stretch: True   
                         
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 background_color: hex('#F4433600')
                 on_press: root.get_info()
                 BoxLayout:
-                    padding:[dp(0.009375)*app.width, dp(0.0416666666667)*app.height, dp(0.040625)*app.width, dp(0.0416666666667)*app.height]
+                    padding: app.get_scaled_tuple([7.5, 20.0, 32.5, 20.0])
                     size_hint: (None,None)
-                    height: dp(0.208333333333*app.height)
-                    width: dp(0.125*app.width)
+                    height: app.get_scaled_height(100.0)
+                    width: app.get_scaled_width(100.0)
                     pos: self.parent.pos
                     Image:
                         source: "./asmcnc/apps/shapeCutter_app/img/info_icon.png"

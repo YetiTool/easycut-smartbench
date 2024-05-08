@@ -58,15 +58,15 @@ Builder.load_string(
                         id: xy_move_container
                         pos_hint: {'center_x': .5, 'center_y': .5}
                         size_hint: (None,None)
-                        height: dp(0.75*app.height)
-                        width: dp(0.3375*app.width)
+                        height: app.get_scaled_height(360.0)
+                        width: app.get_scaled_width(270.0)
         
                     BoxLayout:
                         size_hint_y: 0.1
-                        padding:[0, dp(0.0625)*app.height, dp(0.1875)*app.width, 0]
+                        padding: app.get_scaled_tuple([0.0, 30.0, 150.0, 0.0])
         
                         Button:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: app.get_scaled_sp('15.0sp')
                             text: 'Factory Settings'
                             on_press: root.back_to_fac_settings()
         
@@ -80,7 +80,7 @@ Builder.load_string(
                             rows:2
         
                             Label:
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 size_hint_y: 0.2
                                 text: 'Active Current Adjustment'
         
@@ -89,26 +89,26 @@ Builder.load_string(
         
                         BoxLayout:
                             size_hint_x: 0.3
-                            # padding: [0, dp(25), 0, dp(25)]
+                            # padding: app.get_scaled_tuple([0.0, 25.0, 0.0, 25.0])
                             orientation: 'vertical'
         
                             Button:
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 text: 'Home'
                                 on_press: root.home()
         
                             Button:
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 text: 'Reset Currents'
                                 on_press: root.reset_currents()
 
                             Button:
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 text: 'GRBL Reset'
                                 on_press: root.grbl_reset()
 
                             Label: 
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 id: protocol_status
                                 text: ""
 
@@ -124,115 +124,115 @@ Builder.load_string(
                             Label
         
                             Label:
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 text: 'SG X'
         
                             Label:
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 text: 'SG X1'
         
                             Label:
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 text: 'SG X2'
         
                             Label:
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 text: 'SG Y1'
         
                             Label:
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 text: 'SG Y2'
         
                             Label:
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 text: 'SG Z'
         
                             Label:
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 text: 'Realtime'
         
                             Label:
                                 id: rt_x_sg
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 text: '-'
         
                             Label:
                                 id: rt_x1_sg
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 text: '-'
         
                             Label:
                                 id: rt_x2_sg
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 text: '-'
         
                             Label:
                                 id: rt_y1_sg
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 text: '-'
         
                             Label:
                                 id: rt_y2_sg
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 text: '-'
         
                             Label:
                                 id: rt_z_sg
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 text: '-'
         
                             Label:
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 text: 'Peak'
         
                             Label:
                                 id: peak_x_sg
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 text: '-'
         
                             Label:
                                 id: peak_x1_sg
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 text: '-'
         
                             Label:
                                 id: peak_x2_sg
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 text: '-'
         
                             Label:
                                 id: peak_y1_sg
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 text: '-'
         
                             Label:
                                 id: peak_y2_sg
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 text: '-'
         
                             Label:
                                 id: peak_z_sg
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 text: '-'
         
                         BoxLayout:
                             orientation: 'vertical'
                             size_hint_x: 0.3
-                            padding:[0, dp(0.0520833333333)*app.height, 0, dp(0.0520833333333)*app.height]
+                            padding: app.get_scaled_tuple([0.0, 25.0, 0.0, 25.0])
         
                             Button:
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 text: 'Clear'
                                 on_press: root.clear_sg_vals()
         
                             ToggleButton:
                                 id: raw_sg_toggle_button
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 text: 'Show raw'
                                 on_press: root.toggle_raw_sg_values()
         
                             Button:
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 text: 'STORE PARAMS'
                                 on_press: root.confirm_store_values()
 

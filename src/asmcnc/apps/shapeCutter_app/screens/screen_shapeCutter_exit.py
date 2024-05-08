@@ -15,8 +15,8 @@ Builder.load_string(
 <ShapeCutterExitScreenClass>:
     
     BoxLayout:
-        height: dp(1.66666666667*app.height)
-        width: dp(0.6*app.width)
+        height: app.get_scaled_height(800.0)
+        width: app.get_scaled_width(480.0)
         canvas:
             Rectangle: 
                 pos: self.pos
@@ -30,10 +30,10 @@ Builder.load_string(
                 
             Label:
                 size_hint: (None,None)
-                height: dp(0.1875*app.height)
-                width: dp(1.0*app.width)
+                height: app.get_scaled_height(90.0)
+                width: app.get_scaled_width(800.0)
                 text: "Leaving Shape Cutter..."
-                font_size: 0.0375*app.width
+                font_size: app.get_scaled_width(30.0)
                 halign: "center"
                 valign: "bottom"
                 markup: True
@@ -41,19 +41,19 @@ Builder.load_string(
                     
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.0*app.width)
-                height: dp(0.8125*app.height)
-                padding:[0, dp(0.229166666667)*app.height, 0, dp(0.229166666667)*app.height]
+                width: app.get_scaled_width(800.0)
+                height: app.get_scaled_height(390.0)
+                padding: app.get_scaled_tuple([0.0, 110.0, 0.0, 110.0])
                 spacing: 0
                 Label:
                     size_hint: (None,None)
-                    height: dp(0.354166666667*app.height)
-                    width: dp(1.0*app.width)
+                    height: app.get_scaled_height(170.0)
+                    width: app.get_scaled_width(800.0)
                     halign: "center"
                     valign: "middle"
                     text: "Bye!"
                     color: 0,0,0,1
-                    font_size: 0.0325*app.width
+                    font_size: app.get_scaled_width(26.0)
                     markup: True
 
 """

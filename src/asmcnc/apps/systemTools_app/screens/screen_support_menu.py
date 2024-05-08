@@ -37,8 +37,8 @@ Builder.load_string(
     GridLayout:
         size: self.parent.size
         pos: self.parent.pos
-        padding:[dp(0.0104125)*app.width, dp(0.125)*app.height]
-        spacing:[dp(0.0104125)*app.width, dp(0.125)*app.height]
+        padding: app.get_scaled_tuple([8.33, 60.0])
+        spacing: app.get_scaled_tuple([8.33, 60.0])
         cols: 5
         rows: 2
 
@@ -58,7 +58,7 @@ Builder.load_string(
             background_normal: "./asmcnc/apps/systemTools_app/img/download_logs.png"
             background_down: "./asmcnc/apps/systemTools_app/img/download_logs.png"
             padding_y: 5.0/800.0*app.width
-            border: (0,0,0,0)
+            border: app.get_scaled_tuple([0.0, 0.0, 0.0, 0.0])
 
         Button:
             id: button_reinstall_pika
@@ -72,7 +72,7 @@ Builder.load_string(
             background_normal: "./asmcnc/apps/systemTools_app/img/pika_reinstall.png"
             background_down: "./asmcnc/apps/systemTools_app/img/pika_reinstall.png"
             padding_y: 5.0/800.0*app.width
-            border: (0,0,0,0)
+            border: app.get_scaled_tuple([0.0, 0.0, 0.0, 0.0])
 
         Button:
             id: button_git_fsck
@@ -86,7 +86,7 @@ Builder.load_string(
             background_normal: "./asmcnc/apps/systemTools_app/img/git_fsck_button.png"
             background_down: "./asmcnc/apps/systemTools_app/img/git_fsck_button.png"
             padding_y: 5.0/800.0*app.width
-            border: (0,0,0,0)
+            border: app.get_scaled_tuple([0.0, 0.0, 0.0, 0.0])
 
         BoxLayout:
             padding: 0
@@ -107,7 +107,7 @@ Builder.load_string(
             background_normal: "./asmcnc/apps/systemTools_app/img/download_to_usb.png"
             background_down: "./asmcnc/apps/systemTools_app/img/download_to_usb.png"
             padding_y: 5.0/800.0*app.width
-            border: (0,0,0,0)
+            border: app.get_scaled_tuple([0.0, 0.0, 0.0, 0.0])
 
         Button:
             id: button_upload_settings_from_usb
@@ -121,7 +121,7 @@ Builder.load_string(
             background_normal: "./asmcnc/apps/systemTools_app/img/upload_from_usb.png"
             background_down: "./asmcnc/apps/systemTools_app/img/upload_from_usb.png"
             padding_y: 5.0/800.0*app.width
-            border: (0,0,0,0)
+            border: app.get_scaled_tuple([0.0, 0.0, 0.0, 0.0])
 
         BoxLayout:
             padding: 0
@@ -138,7 +138,7 @@ Builder.load_string(
             background_normal: "./asmcnc/apps/systemTools_app/img/exit_system_tools.png"
             background_down: "./asmcnc/apps/systemTools_app/img/exit_system_tools.png"
             padding_y: 5.0/800.0*app.width
-            border: (0,0,0,0)
+            border: app.get_scaled_tuple([0.0, 0.0, 0.0, 0.0])
 """
 )
 

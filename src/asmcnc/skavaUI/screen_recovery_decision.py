@@ -28,10 +28,10 @@ Builder.load_string(
 
         BoxLayout:
             size_hint_y: 0.75
-            padding:[dp(0.895)*app.width, 0, 0, 0]
+            padding: app.get_scaled_tuple([716.0, 0.0, 0.0, 0.0])
 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 background_color: [0,0,0,0]
                 on_press: root.back_to_home()
                 BoxLayout:
@@ -53,12 +53,12 @@ Builder.load_string(
                 text: "[b]Last job:[/b]"
                 color: hex('#333333ff')
                 markup: True
-                font_size: dp(0.0375*app.width)
+                font_size: app.get_scaled_width(30.0)
 
             Label:
                 id: job_name_label
                 color: hex('#333333ff')
-                font_size: dp(0.03125*app.width)
+                font_size: app.get_scaled_width(25.0)
                 text_size: self.size
                 halign: "center"
                 valign: "middle"
@@ -67,18 +67,18 @@ Builder.load_string(
             Label:
                 id: completion_label
                 color: hex('#333333ff')
-                font_size: dp(0.0375*app.width)
+                font_size: app.get_scaled_width(30.0)
 
         BoxLayout:
             orientation: 'horizontal'
             size_hint_y: 2.23
-            padding:[dp(0.0625)*app.width, dp(0.0625)*app.height]
-            spacing:dp(0.0625)*app.width
+            padding: app.get_scaled_tuple([50.0, 30.0])
+            spacing: app.get_scaled_width(50.0)
 
             Button:
                 id: repeat_job_button
                 text: "Repeat job from the beginning"
-                font_size: dp(0.0375*app.width)
+                font_size: app.get_scaled_width(30.0)
                 valign: "middle"
                 halign: "center"
                 text_size: self.size[0] - dp(50), self.size[1]
@@ -89,7 +89,7 @@ Builder.load_string(
             Button:
                 id: recover_job_button
                 text: "Recover job"
-                font_size: dp(0.0375*app.width)
+                font_size: app.get_scaled_width(30.0)
                 valign: "middle"
                 halign: "center"
                 text_size: self.size[0] - dp(50), self.size[1]

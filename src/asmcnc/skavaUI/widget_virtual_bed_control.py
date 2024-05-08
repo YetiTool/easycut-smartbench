@@ -23,15 +23,15 @@ Builder.load_string("""
         size: self.parent.size
         pos: self.parent.pos   
         padding: 0
-        spacing: 20
+        spacing: app.get_scaled_width(20.0)
         orientation: "horizontal"
 
         BoxLayout:
             size_hint_x: 2 
             size: self.parent.size
             pos: self.parent.pos   
-            padding: 5
-            spacing: 5
+            padding: app.get_scaled_width(5.0)
+            spacing: app.get_scaled_width(5.0)
             orientation: "horizontal"
             canvas:
                 Color: 
@@ -45,7 +45,7 @@ Builder.load_string("""
                 size_hint_x: 1 
                 markup: True
                 color: hex('#ff9800ff')
-                font_size: 20.0 / 800 * app.width
+                font_size: app.get_scaled_width(20.0)
 
             Button:
                 background_color: hex('#F4433600')
@@ -88,8 +88,8 @@ Builder.load_string("""
             size_hint_x: 2 
             size: self.parent.size
             pos: self.parent.pos   
-#             padding: 5
-#             spacing: 5
+#             padding: app.get_scaled_width(5.0)
+#             spacing: app.get_scaled_width(5.0)
 #             orientation: "horizontal"
 #             canvas:
 #                 Color: 
@@ -103,8 +103,8 @@ Builder.load_string("""
             size_hint_x: 2 
             size: self.parent.size
             pos: self.parent.pos   
-            padding: 5
-            spacing: 5
+            padding: app.get_scaled_width(5.0)
+            spacing: app.get_scaled_width(5.0)
             orientation: "horizontal"
             canvas:
                 Color: 
@@ -117,7 +117,7 @@ Builder.load_string("""
                 size_hint_x: 1 
                 markup: True
                 color: hex('#4caf50ff')
-                font_size: 20.0 / 800 * app.width    
+                font_size: app.get_scaled_width(20.0)
             Button:
                 background_color: hex('#F4433600')
                 on_release: 
