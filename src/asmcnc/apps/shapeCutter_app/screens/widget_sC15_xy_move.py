@@ -68,10 +68,10 @@ Builder.load_string(
 #                 Button:
 #                     background_color: color_provider.get_rgba("invisible")
 #                     on_release: 
-#                         self.background_color = hex('#F4433600')
+#                         self.background_color = color_provider.get_rgba("invisible")
 #                     on_press: 
 #                         root.go_x_datum()
-#                         self.background_color = hex('#F44336FF')
+#                         self.background_color = color_provider.get_rgba("button_press_red")
 #                     BoxLayout:
 #                         size: self.parent.size
 #                         pos: self.parent.pos  
@@ -90,10 +90,10 @@ Builder.load_string(
                 always_release: True
                 on_release: 
                     root.cancelXYJog()
-                    self.background_color = hex('#F4433600')
+                    self.background_color = color_provider.get_rgba("invisible")
                 on_press: 
                     root.buttonJogXY('X+')
-                    self.background_color = hex('#F44336FF')
+                    self.background_color = color_provider.get_rgba("button_press_red")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -113,10 +113,10 @@ Builder.load_string(
 #                 Button:
 #                     background_color: color_provider.get_rgba("invisible")
 #                     on_release: 
-#                         self.background_color = hex('#F4433600')
+#                         self.background_color = color_provider.get_rgba("invisible")
 #                     on_press:
 #                         root.go_y_datum()
-#                         self.background_color = hex('#F44336FF')
+#                         self.background_color = color_provider.get_rgba("button_press_red")
 #                     BoxLayout:
 #                         size: self.parent.size
 #                         pos: self.parent.pos  
@@ -133,10 +133,10 @@ Builder.load_string(
                 always_release: True
                 on_release: 
                     root.cancelXYJog()
-                    self.background_color = hex('#F4433600')
+                    self.background_color = color_provider.get_rgba("invisible")
                 on_press: 
                     root.buttonJogXY('Y+')
-                    self.background_color = hex('#F44336FF')
+                    self.background_color = color_provider.get_rgba("button_press_red")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -151,10 +151,10 @@ Builder.load_string(
                 font_size: str(0.01875 * app.width) + 'sp'
                 background_color: color_provider.get_rgba("invisible")
                 on_release: 
-                    self.background_color = hex('#F4433600')
+                    self.background_color = color_provider.get_rgba("invisible")
                 on_press: 
                     root.jogModeCycled()
-                    self.background_color = hex('#F44336FF')
+                    self.background_color = color_provider.get_rgba("button_press_red")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -172,10 +172,10 @@ Builder.load_string(
                 always_release: True
                 on_release: 
                     root.cancelXYJog()
-                    self.background_color = hex('#F4433600')
+                    self.background_color = color_provider.get_rgba("invisible")
                 on_press: 
                     root.buttonJogXY('Y-')
-                    self.background_color = hex('#F44336FF')
+                    self.background_color = color_provider.get_rgba("button_press_red")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -195,10 +195,10 @@ Builder.load_string(
 #                 Button:
 #                     background_color: color_provider.get_rgba("invisible")
 #                     on_release: 
-#                         self.background_color = hex('#F4433600')
+#                         self.background_color = color_provider.get_rgba("invisible")
 #                     on_press:
 #                         root.set_x_datum()
-#                         self.background_color = hex('#F44336FF')
+#                         self.background_color = color_provider.get_rgba("button_press_red")
 #                     BoxLayout:
 #                         size: self.parent.size
 #                         pos: self.parent.pos  
@@ -215,10 +215,10 @@ Builder.load_string(
                 always_release: True
                 on_release:
                     root.cancelXYJog()
-                    self.background_color = hex('#F4433600')
+                    self.background_color = color_provider.get_rgba("invisible")
                 on_press: 
                     root.buttonJogXY('X-')
-                    self.background_color = hex('#F44336FF')
+                    self.background_color = color_provider.get_rgba("button_press_red")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size

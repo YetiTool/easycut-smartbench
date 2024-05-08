@@ -42,10 +42,10 @@ Builder.load_string(
                 size_hint_y: 1
                 background_color: color_provider.get_rgba("invisible")
                 on_release: 
-                    self.background_color = hex('#F4433600')
+                    self.background_color = color_provider.get_rgba("invisible")
                 on_press: 
                     root.set_jobstart_z()
-                    self.background_color = hex('#F44336FF')
+                    self.background_color = color_provider.get_rgba("button_press_red")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -70,10 +70,10 @@ Builder.load_string(
                 background_color: color_provider.get_rgba("invisible")
                 on_release:
                     root.quit_jog_z()
-                    self.background_color = hex('#F4433600')
+                    self.background_color = color_provider.get_rgba("invisible")
                 on_press:
                     root.jog_z('Z+') 
-                    self.background_color = hex('#F44336FF')
+                    self.background_color = color_provider.get_rgba("button_press_red")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -91,10 +91,10 @@ Builder.load_string(
                 background_color: color_provider.get_rgba("invisible")
                 on_release: 
                     root.quit_jog_z()
-                    self.background_color = hex('#F4433600')
+                    self.background_color = color_provider.get_rgba("invisible")
                 on_press:
                     root.jog_z('Z-') 
-                    self.background_color = hex('#F44336FF')
+                    self.background_color = color_provider.get_rgba("button_press_red")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -116,10 +116,10 @@ Builder.load_string(
                 size_hint_y: 1
                 background_color: color_provider.get_rgba("invisible")
                 on_release: 
-                    self.background_color = hex('#F4433600')
+                    self.background_color = color_provider.get_rgba("invisible")
                 on_press: 
                     root.go_to_jobstart_z()
-                    self.background_color = hex('#F44336FF')
+                    self.background_color = color_provider.get_rgba("button_press_red")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size

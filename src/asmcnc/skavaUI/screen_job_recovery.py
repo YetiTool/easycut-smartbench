@@ -94,9 +94,9 @@ Builder.load_string(
                                 background_color: color_provider.get_rgba("invisible")
                                 on_press:
                                     root.start_scrolling_up()
-                                    self.background_color = hex('#F44336FF')
+                                    self.background_color = color_provider.get_rgba("button_press_red")
                                 on_release:
-                                    self.background_color = hex('#F4433600')
+                                    self.background_color = color_provider.get_rgba("invisible")
                                     root.stop_scrolling_up()
                                 BoxLayout:
                                     padding: 0
@@ -114,10 +114,10 @@ Builder.load_string(
                                 background_color: color_provider.get_rgba("invisible")
                                 on_press:
                                     root.start_scrolling_down()
-                                    self.background_color = hex('#F44336FF')
+                                    self.background_color = color_provider.get_rgba("button_press_red")
                                 on_release:
                                     root.stop_scrolling_down()
-                                    self.background_color = hex('#F4433600')
+                                    self.background_color = color_provider.get_rgba("invisible")
                                 BoxLayout:
                                     padding: 0
                                     size: self.parent.size
