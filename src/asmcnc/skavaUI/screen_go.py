@@ -196,7 +196,7 @@ Builder.load_string(
                                     halign: 'center'
                                     size:self.texture_size
                                     text_size: self.size
-                                    color: hex('#808080ff')
+                                    color: color_provider.get_rgba("neutral_grey")
 
                             BoxLayout:
                                 id: feed_override_container
@@ -242,7 +242,7 @@ Builder.load_string(
                                     halign: 'center'
                                     size:self.texture_size
                                     text_size: self.size
-                                    color: hex('#808080ff')
+                                    color: color_provider.get_rgba("neutral_grey")
 
                             BoxLayout:
                                 id: speed_override_widget_container
@@ -296,7 +296,7 @@ Builder.load_string(
                                     halign: 'left'
                                     size:self.texture_size
                                     text_size: self.size
-                                    color: hex('#808080ff')
+                                    color: color_provider.get_rgba("neutral_grey")
                                 Label:
                                     size_hint_y: 3
                                     id: progress_percentage_label
@@ -317,7 +317,7 @@ Builder.load_string(
                                     halign: 'left'
                                     size:self.texture_size
                                     text_size: self.size
-                                    color: hex('#808080ff')
+                                    color: color_provider.get_rgba("neutral_grey")
                                 Label:
                                     size_hint_y: 1.1
                                     id: run_time_label
