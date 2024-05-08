@@ -19,7 +19,7 @@ Builder.load_string(
 	next_button : next_button
 	canvas:
 		Color: 
-			rgba: [1, 1, 1, 1]
+			rgba: color_provider.get_rgba("white")
 		Rectangle: 
 			size: self.size
 			pos: self.pos

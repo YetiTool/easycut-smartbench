@@ -26,7 +26,7 @@ Builder.load_string(
         orientation: 'vertical'
         canvas:
             Color:
-                rgba: [1,1,1,1]
+                rgba: color_provider.get_rgba("white")
             Rectangle:
                 size: self.size
                 pos: self.pos

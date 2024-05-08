@@ -120,7 +120,7 @@ Builder.load_string("""
                         id: title
                         canvas:
                             Color:
-                                rgba: 1,1,1,1
+                                rgba: color_provider.get_rgba("white")
                             RoundedRectangle:
                                 size: self.size
                                 pos: self.pos
@@ -156,7 +156,7 @@ Builder.load_string("""
                         id: laser_button_container
                         canvas:
                             Color:
-                                rgba: 1,1,1,1
+                                rgba: color_provider.get_rgba("white")
                             RoundedRectangle:
                                 size: self.size
                                 pos: self.pos
@@ -176,7 +176,7 @@ Builder.load_string("""
                         id: xy_move_container
                         canvas:
                             Color:
-                                rgba: 1,1,1,1
+                                rgba: color_provider.get_rgba("white")
                             RoundedRectangle:
                                 size: self.size
                                 pos: self.pos
@@ -188,7 +188,7 @@ Builder.load_string("""
                     id: z_move_container
                     canvas:
                         Color:
-                            rgba: 1,1,1,1
+                            rgba: color_provider.get_rgba("white")
                         RoundedRectangle:
                             size: self.size
                             pos: self.pos
@@ -229,7 +229,7 @@ Builder.load_string("""
                         id: brush_use_container
                         canvas:
                             Color:
-                                rgba: 1,1,1,1
+                                rgba: color_provider.get_rgba("white")
                             RoundedRectangle:
                                 size: self.size
                                 pos: self.pos
@@ -241,7 +241,7 @@ Builder.load_string("""
                         id: brush_life_container
                         canvas:
                             Color:
-                                rgba: 1,1,1,1
+                                rgba: color_provider.get_rgba("white")
                             RoundedRectangle:
                                 size: self.size
                                 pos: self.pos
@@ -253,7 +253,7 @@ Builder.load_string("""
                         id: brush_save_container
                         canvas:
                             Color:
-                                rgba: 1,1,1,1
+                                rgba: color_provider.get_rgba("white")
                             RoundedRectangle:
                                 size: self.size
                                 pos: self.pos
@@ -265,7 +265,7 @@ Builder.load_string("""
                     id: monitor_strip
                     canvas:
                         Color:
-                            rgba: 1,1,1,1
+                            rgba: color_provider.get_rgba("white")
                         RoundedRectangle:
                             size: self.size
                             pos: self.pos
@@ -362,7 +362,7 @@ Builder.load_string("""
                         id: touchplate_offset_container
                         canvas:
                             Color:
-                                rgba: 1,1,1,1
+                                rgba: color_provider.get_rgba("white")
                             RoundedRectangle:
                                 size: self.size
                                 pos: self.pos
@@ -374,7 +374,7 @@ Builder.load_string("""
                         id: z_lubrication_reminder_container
                         canvas:
                             Color:
-                                rgba: 1,1,1,1
+                                rgba: color_provider.get_rgba("white")
                             RoundedRectangle:
                                 size: self.size
                                 pos: self.pos
@@ -386,7 +386,7 @@ Builder.load_string("""
                     id: z_misc_save_container
                     canvas:
                         Color:
-                            rgba: 1,1,1,1
+                            rgba: color_provider.get_rgba("white")
                         RoundedRectangle:
                             size: self.size
                             pos: self.pos
@@ -453,7 +453,7 @@ Builder.load_string("""
                     width: dp(0.95*app.width)
                     canvas:
                         Color:
-                            rgba: 1,1,1,1
+                            rgba: color_provider.get_rgba("white")
                         RoundedRectangle:
                             size: self.size
                             pos: self.pos

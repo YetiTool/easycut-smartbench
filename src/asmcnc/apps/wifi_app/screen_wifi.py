@@ -138,7 +138,7 @@ Builder.load_string(
                 spacing:0.0125*app.width
                 canvas:
                     Color:
-                        rgba: [1,1,1,1]
+                        rgba: color_provider.get_rgba("white")
                     RoundedRectangle:
                         pos: self.pos
                         size: self.size
@@ -371,7 +371,7 @@ Builder.load_string(
                 padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
                 canvas:
                     Color:
-                        rgba: [1,1,1,1]
+                        rgba: color_provider.get_rgba("white")
                     RoundedRectangle:
                         pos: self.pos
                         size: self.size

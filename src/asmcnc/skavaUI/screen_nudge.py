@@ -93,7 +93,7 @@ Builder.load_string(
                     padding:[0, dp(0.00208333333333)*app.height]
                     canvas:
                         Color:
-                            rgba: 1,1,1,1
+                            rgba: color_provider.get_rgba("white")
                         RoundedRectangle:
                             size: self.size
                             pos: self.pos
@@ -108,7 +108,7 @@ Builder.load_string(
                     id: nudge_speed_container
                     canvas:
                         Color:
-                            rgba: 1,1,1,1
+                            rgba: color_provider.get_rgba("white")
                         RoundedRectangle:
                             size: self.size
                             pos: self.pos
@@ -118,7 +118,7 @@ Builder.load_string(
                     size_hint_x: 2
                     canvas:
                         Color:
-                            rgba: 1,1,1,1
+                            rgba: color_provider.get_rgba("white")
                         RoundedRectangle:
                             size: self.size
                             pos: self.pos

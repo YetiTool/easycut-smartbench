@@ -69,7 +69,7 @@ Builder.load_string(
                                 padding:[0, dp(0.00833333333333)*app.height, 0, 0]
                                 canvas:
                                     Color:
-                                        rgba: 1,1,1,1
+                                        rgba: color_provider.get_rgba("white")
                                     RoundedRectangle:
                                         size: self.size
                                         pos: self.pos
@@ -156,7 +156,7 @@ Builder.load_string(
                         padding:[dp(0.015)*app.width, dp(0.025)*app.height, dp(0.015)*app.width, 0]
                         canvas:
                             Color:
-                                rgba: 1,1,1,1
+                                rgba: color_provider.get_rgba("white")
                             RoundedRectangle:
                                 size: self.size
                                 pos: self.pos
@@ -197,7 +197,7 @@ Builder.load_string(
                         spacing:dp(0.0145833333333)*app.height
                         canvas:
                             Color:
-                                rgba: 1,1,1,1
+                                rgba: color_provider.get_rgba("white")
                             RoundedRectangle:
                                 size: self.size
                                 pos: self.pos
@@ -279,7 +279,7 @@ Builder.load_string(
                         size_hint_y: 2.5
                         canvas:
                             Color:
-                                rgba: 1,1,1,1
+                                rgba: color_provider.get_rgba("white")
                             RoundedRectangle:
                                 size: self.size
                                 pos: self.pos

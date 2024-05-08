@@ -23,7 +23,7 @@ Builder.load_string(
     right_button_id: right_button_id
     canvas:
         Color: 
-            rgba: hex('#FFFFFF')
+            rgba: color_provider.get_rgba("white")
         Rectangle: 
             size: self.size
             pos: self.pos

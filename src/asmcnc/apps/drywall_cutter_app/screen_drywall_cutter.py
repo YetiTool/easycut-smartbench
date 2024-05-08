@@ -121,7 +121,7 @@ Builder.load_string("""
                     padding: [dp(0), dp(30)]
                     canvas.before:
                         Color:
-                            rgba: hex('#FFFFFFFF')
+                            rgba: color_provider.get_rgba("white")
                         Rectangle:
                             size: self.size
                             pos: self.pos

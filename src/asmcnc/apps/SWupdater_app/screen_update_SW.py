@@ -73,7 +73,7 @@ Builder.load_string("""
                     orientation: "horizontal"
                     canvas:
                         Color:
-                            rgba: [1,1,1,1]
+                            rgba: color_provider.get_rgba("white")
                         RoundedRectangle:
                             pos: self.pos
                             size: self.size
@@ -201,7 +201,7 @@ Builder.load_string("""
                 spacing: 0
                 canvas:
                     Color:
-                        rgba: [1,1,1,1]
+                        rgba: color_provider.get_rgba("white")
                     RoundedRectangle:
                         pos: self.pos
                         size: self.size
@@ -284,7 +284,7 @@ Builder.load_string("""
                 spacing: 0  
                 canvas:
                     Color:
-                        rgba: [1,1,1,1]
+                        rgba: color_provider.get_rgba("white")
                     RoundedRectangle:
                         pos: self.pos
                         size: self.size

@@ -124,7 +124,7 @@ Builder.load_string(
                                 id: xy_move_container
                                 canvas:
                                     Color:
-                                        rgba: 1,1,1,1
+                                        rgba: color_provider.get_rgba("white")
                                     RoundedRectangle:
                                         size: self.size
                                         pos: self.pos
@@ -138,7 +138,7 @@ Builder.load_string(
                                 id: z_move_container
                                 canvas:
                                     Color:
-                                        rgba: 1,1,1,1
+                                        rgba: color_provider.get_rgba("white")
                                     RoundedRectangle:
                                         size: self.size
                                         pos: self.pos
@@ -165,7 +165,7 @@ Builder.load_string(
                                 padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                                 canvas:
                                     Color:
-                                        rgba: 1,1,1,1
+                                        rgba: color_provider.get_rgba("white")
                                     RoundedRectangle:
                                         size: self.size
                                         pos: self.pos
@@ -200,7 +200,7 @@ Builder.load_string(
                                 orientation: 'horizontal'
                                 canvas:
                                     Color:
-                                        rgba: 1,1,1,1
+                                        rgba: color_provider.get_rgba("white")
                                     RoundedRectangle:
                                         size: self.size
                                         pos: self.pos
@@ -257,7 +257,7 @@ Builder.load_string(
                                 orientation: 'horizontal'
                                 canvas:
                                     Color:
-                                        rgba: 1,1,1,1
+                                        rgba: color_provider.get_rgba("white")
                                     RoundedRectangle:
                                         size: self.size
                                         pos: self.pos

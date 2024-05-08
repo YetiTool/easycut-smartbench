@@ -39,7 +39,7 @@ Builder.load_string(
             orientation: 'vertical'
             canvas:
                 Color: 
-                    rgba: 1,1,1,1
+                    rgba: color_provider.get_rgba("white")
                 RoundedRectangle: 
                     size: self.size
                     pos: self.pos 
@@ -69,7 +69,7 @@ Builder.load_string(
             id: vacuum_spindle_container
             canvas:
                 Color: 
-                    rgba: 1,1,1,1
+                    rgba: color_provider.get_rgba("white")
                 RoundedRectangle: 
                     size: self.size
                     pos: self.pos 
