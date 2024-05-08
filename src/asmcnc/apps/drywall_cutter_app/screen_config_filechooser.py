@@ -63,7 +63,7 @@ Builder.load_string("""
             Label:
                 canvas.before:
                     Color:
-                        rgba: hex('#333333FF')
+                        rgba: color_provider.get_rgba("dark_grey")
                     Rectangle:
                         size: self.size
                         pos: self.pos

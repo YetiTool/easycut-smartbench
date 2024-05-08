@@ -53,7 +53,7 @@ Builder.load_string(
             font_size: str(0.01875 * app.width) + 'sp'
             canvas.before:
                 Color:
-                    rgba: hex('#333333FF')
+                    rgba: color_provider.get_rgba("dark_grey")
                 Rectangle:
                     size: self.size
                     pos: self.pos
@@ -70,7 +70,7 @@ Builder.load_string(
             font_size: str(0.01875 * app.width) + 'sp'
             canvas.before:
                 Color:
-                    rgba: hex('#333333FF')
+                    rgba: color_provider.get_rgba("dark_grey")
                 Rectangle:
                     size: self.size
                     pos: self.pos
