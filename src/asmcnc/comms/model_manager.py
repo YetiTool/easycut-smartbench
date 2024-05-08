@@ -6,7 +6,7 @@ from hashlib import md5
 
 from asmcnc import paths
 from asmcnc.comms.logging_system.logging_system import Logger
-from kivy._event import EventDispatcher
+from kivy.event import EventDispatcher
 
 
 class ProductCodes(Enum):
@@ -18,10 +18,12 @@ class ProductCodes(Enum):
     FIRST_VERSION = 01
     UNKNOWN = 00
 
+
 class MachineType(Enum):
     SMARTBENCH = "SmartBench"
     DRYWALLTEC = "DrywallTec"
     UNKNOWN = "Unknown"
+
 
 class ModelManagerSingleton(EventDispatcher):
     """
