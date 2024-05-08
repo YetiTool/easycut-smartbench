@@ -121,6 +121,15 @@ class SpeedOverride(Widget):
     def update_spindle_speed_label(self, instance, value):
         self.spindle_rpm.text = str(value)
 
+        current_multiplier = float(self.m.s.speed_override_percentage) / 100
+        rpm_down_5 = (value / current_multiplier) * (current_multiplier - 0.05)
+
+        # If the speed down button produces speed below minimum, don't allow it to be pressed
+        if rpm_down_5 < self.m.minimum_spindle_speed():
+            self.down_5.disabled = True
+        else:
+            self.down_5.disabled = False
+
     def update_speed_percentage_override_label(self):
         self.speed_override_percentage = self.m.s.speed_override_percentage
         self.speed_rate_label.text = str(self.m.s.speed_override_percentage) + "%"
