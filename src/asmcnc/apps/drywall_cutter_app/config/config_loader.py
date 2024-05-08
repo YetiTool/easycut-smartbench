@@ -36,28 +36,28 @@ def get_display_preview(json_obj):
     preview += "Toolpath offset: " + json_obj["toolpath_offset"] + "\n"
     preview += "Cutting depths: \n"
     preview += (
-        INDENT_VALUE
-        + "Material thickness: "
-        + str(json_obj["cutting_depths"]["material_thickness"])
-        + "\n"
+            INDENT_VALUE
+            + "Material thickness: "
+            + str(json_obj["cutting_depths"]["material_thickness"])
+            + "\n"
     )
     preview += (
-        INDENT_VALUE
-        + "Bottom offset: "
-        + str(json_obj["cutting_depths"]["bottom_offset"])
-        + "\n"
+            INDENT_VALUE
+            + "Bottom offset: "
+            + str(json_obj["cutting_depths"]["bottom_offset"])
+            + "\n"
     )
     preview += (
-        INDENT_VALUE
-        + "Auto pass: "
-        + str(json_obj["cutting_depths"]["auto_pass"])
-        + "\n"
+            INDENT_VALUE
+            + "Auto pass: "
+            + str(json_obj["cutting_depths"]["auto_pass"])
+            + "\n"
     )
     preview += (
-        INDENT_VALUE
-        + "Depth per pass: "
-        + str(json_obj["cutting_depths"]["depth_per_pass"])
-        + "\n"
+            INDENT_VALUE
+            + "Depth per pass: "
+            + str(json_obj["cutting_depths"]["depth_per_pass"])
+            + "\n"
     )
     preview += "Datum position: \n"
     preview += INDENT_VALUE + "X: " + str(json_obj["datum_position"]["x"]) + "\n"
@@ -68,7 +68,7 @@ def get_display_preview(json_obj):
 def get_shape_type(json_obj):
     if json_obj["shape_type"] in ["line", "rectangle"]:
         return (
-            "Shape type: " + json_obj["rotation"] + " " + json_obj["shape_type"] + "\n"
+                "Shape type: " + json_obj["rotation"] + " " + json_obj["shape_type"] + "\n"
         )
     else:
         return "Shape type: " + json_obj["shape_type"] + "\n"
@@ -96,15 +96,127 @@ class DWTConfig(EventDispatcher):
     active_config = ObjectProperty(config_classes.Configuration.default())  # type: config_classes.Configuration
     active_cutter = ObjectProperty(config_classes.Cutter.default())  # type: config_classes.Cutter
 
-    def __init__(self, screen_drywall_cutter=None, *args, **kwargs):
+    shape_options_dict = {
+        'circle': {
+            'image_path': './asmcnc/apps/drywall_cutter_app/img/circle_shape_button.png',
+        }, 'square': {
+            'image_path': './asmcnc/apps/drywall_cutter_app/img/square_shape_button.png',
+        }, 'line': {
+            'image_path': './asmcnc/apps/drywall_cutter_app/img/line_shape_button.png',
+        }, 'geberit': {
+            'image_path': './asmcnc/apps/drywall_cutter_app/img/geberit_shape_button.png',
+        }, 'rectangle': {
+            'image_path': './asmcnc/apps/drywall_cutter_app/img/rectangle_shape_button.png',
+        }
+    }
+
+    toolpath_offset_options_dict ={
+        'inside': {
+            'image_path': './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_inside_button.png',
+        }, 'outside': {
+            'image_path': './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_outside_button.png',
+        }, 'on': {
+            'image_path': './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_on_button.png',
+        }
+    }
+
+    def __init__(self, screen_drywall_cutter, *args, **kwargs):
         super(DWTConfig, self).__init__(*args, **kwargs)
-        self.screen_drywall_cutter = screen_drywall_cutter
+        self.drywall_screen = screen_drywall_cutter
 
         most_recent_config_path = self.get_most_recent_config()
         if most_recent_config_path:
             self.load_config(most_recent_config_path)
         else:
             self.load_temp_config()
+
+        self.setup_dropdowns()
+
+    def setup_dropdowns(self):
+        self.drywall_screen.tool_selection.set_default_image('./asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_6mm.png')
+        self.drywall_screen.shape_selection.set_default_image('./asmcnc/apps/drywall_cutter_app/img/square_shape_button.png')
+        self.drywall_screen.toolpath_selection.set_default_image('./asmcnc/apps/drywall_cutter_app/img/toolpath_offset_inside_button.png')
+
+        self.drywall_screen.tool_selection.set_key('cutter_path')
+        self.drywall_screen.shape_selection.set_key('key')
+        self.drywall_screen.toolpath_selection.set_key('key')
+
+        self.drywall_screen.tool_selection.set_image_dict(self.get_available_cutter_names())
+        self.drywall_screen.shape_selection.set_image_dict(self.shape_options_dict)
+        self.drywall_screen.toolpath_selection.set_image_dict(self.toolpath_offset_options_dict)
+
+    def select_tool(self, cutter_file):
+        self.load_cutter(cutter_file)
+
+        # Convert allowed toolpaths object to dict, then put attributes with True into a list
+        allowed_toolpaths = [toolpath for toolpath, allowed in
+                             self.active_cutter.toolpath_offsets.__dict__.items() if allowed]
+        # Use allowed toolpath list to create a dict of only allowed toolpaths
+        allowed_toolpath_dict = dict([(k, self.toolpath_offset_options_dict[k]) for k in allowed_toolpaths if
+                                      k in self.toolpath_offset_options_dict])
+        # Then update dropdown to only show allowed toolpaths
+        self.drywall_screen.image_dict = allowed_toolpath_dict
+        # check if currently selected toolpath is not allowed
+        if self.active_config.toolpath_offset not in allowed_toolpaths:
+            # Default to first toolpath, so disabled toolpath is never selected
+            self.select_toolpath(allowed_toolpaths[0])
+
+        self.drywall_screen.tool_selection.source = self.active_cutter.image
+        self.on_parameter_change('cutter_type', cutter_file)
+
+    def show_tool_image(self):
+        self.drywall_screen.tool_selection.source = self.active_cutter.image
+
+    def select_toolpath(self, toolpath):
+        self.on_parameter_change('toolpath_offset', toolpath)
+
+        self.drywall_screen.drywall_shape_display_widget.select_toolpath(self.active_config.shape_type, toolpath, self.drywall_screen.rotation)
+
+        self.show_toolpath_image()
+
+    def show_toolpath_image(self):
+        self.drywall_screen.toolpath_selection.source = self.drywall_screen.toolpath_selection.image_dict[self.active_config.toolpath_offset]['image_path']
+
+    def select_shape(self, shape):
+        self.on_parameter_change('shape_type', shape.lower())
+
+        self.drywall_screen.shape_selection.source = self.shape_options_dict[shape.lower()]['image_path']
+
+        # handle toolpath
+        if shape in ['line', 'geberit']:
+            # Only on line available for these options
+            self.drywall_screen.toolpath_selection.disabled = True
+            if self.active_config.toolpath_offset is not 'on':
+                # default to 'on'
+                self.select_toolpath('on')
+            else:
+                self.drywall_screen.drywall_shape_display_widget.shape_toolpath_image.opacity = 0
+        else:
+            self.select_toolpath(self.active_config.toolpath_offset)
+            self.drywall_screen.toolpath_selection.disabled = False
+
+        # handle rotate button
+        if shape in ['rectangle', 'line', 'geberit']:
+            self.drywall_screen.rotate_button.disabled = False
+        else:
+            self.drywall_screen.rotate_button.disabled = True
+
+        self.drywall_screen.rotation = self.active_config.rotation
+        self.drywall_screen.drywall_shape_display_widget.select_shape(shape, self.drywall_screen.rotation)
+
+        if self.drywall_screen.drywall_shape_display_widget.rotation_required():
+            self.drywall_screen.rotate_shape(swap_lengths=False)
+
+        # handle tool selection for geberit shape:
+        if shape is 'geberit':
+            geberit_cutters = {k: v for k, v in self.drywall_screen.tool_options.iteritems() if '8 mm' in k or '6 mm' in k}
+            geberit_cutter_names = [v['cutter_path'] for v in geberit_cutters.values()]
+            self.drywall_screen.tool_selection.image_dict = geberit_cutters
+            # check if valid tool is selected:
+            if self.active_config.cutter_type not in geberit_cutter_names:
+                self.select_tool(geberit_cutter_names[0])
+        else:
+            self.drywall_screen.tool_selection.image_dict = self.drywall_screen.tool_options
 
     @staticmethod
     def get_most_recent_config():
@@ -157,7 +269,7 @@ class DWTConfig(EventDispatcher):
         field_count = len(cfg)
 
         valid_field_count = (
-            len(inspect.getargspec(config_classes.Configuration.__init__).args) - 1
+                len(inspect.getargspec(config_classes.Configuration.__init__).args) - 1
         )
 
         if field_count != valid_field_count:
@@ -364,4 +476,31 @@ class DWTConfig(EventDispatcher):
 
         # update screen, check bumpers and so on:
         if not (self.active_config.shape_type == 'geberit' and self.active_cutter.dimensions.diameter is None):
-            self.screen_drywall_cutter.drywall_shape_display_widget.check_datum_and_extents()
+            self.drywall_screen.drywall_shape_display_widget.check_datum_and_extents()
+
+
+### Appendix
+"""
+self.screen_drywall_cutter.shape_cutter_filter = dict(
+    # shape=[allowed cutters]
+    # e.g. geberit=[8, 6]
+    # e.g. circle=[] # all cutters allowed
+    circle=[],
+    square=[],
+    line=[],
+    geberit=[8, 6]
+)
+
+self.options_dict = 
+
+self.options_dict = 
+        
+self.options_dict = dict(
+    inside={
+        'image_path': './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_inside_button.png',
+    }, outside={
+        'image_path': './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_outside_button.png',
+    }, on={
+        'image_path': './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_on_button.png',
+    })
+"""
