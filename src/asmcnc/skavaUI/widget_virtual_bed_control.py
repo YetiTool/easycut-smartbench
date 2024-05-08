@@ -116,7 +116,7 @@ Builder.load_string("""
                 text: ' GO:'
                 size_hint_x: 1 
                 markup: True
-                color: hex('#4caf50ff')
+                color: color_provider.get_rgba("green")
                 font_size: 20.0 / 800 * app.width    
             Button:
                 background_color: color_provider.get_rgba("invisible")

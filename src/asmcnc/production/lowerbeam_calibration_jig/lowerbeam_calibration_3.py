@@ -5,7 +5,7 @@ Builder.load_string("""
 <LBCalibration3>:
     canvas:
         Color:
-            rgba: hex('#4CAF50FF')
+            rgba: color_provider.get_rgba("green")
         Rectangle:
             pos:self.pos
             size: self.size

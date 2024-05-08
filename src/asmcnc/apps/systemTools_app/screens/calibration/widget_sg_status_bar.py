@@ -11,6 +11,7 @@ from kivy.properties import ObjectProperty, ListProperty, NumericProperty, Strin
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.clock import Clock
+from asmcnc.core_UI.utils import color_provider
 
 import os, sys
 import socket
@@ -41,11 +42,11 @@ Builder.load_string("""
     wifi_image:wifi_image
     ip_status_label:ip_status_label
 
-    cheeky_color: '#4CAF50FF'
+    cheeky_color: color_provider.get_rgba("green")
 
     canvas:
         Color:
-            rgba: hex(self.cheeky_color)
+            rgba: self.cheeky_color
         Rectangle:
             pos:self.pos
             size: self.size
@@ -170,7 +171,7 @@ class SGStatusBar(Widget):
     GRBL_REPORT_INTERVAL = 0.1
     IP_REPORT_INTERVAL = 2
     
-    cheeky_color = StringProperty('#4CAF50FF')
+    cheeky_color = color_provider.get_rgba("green")
 
     wifi_on = "./asmcnc/skavaUI/img/wifi_on.png"
     wifi_off = "./asmcnc/skavaUI/img/wifi_off.png"
