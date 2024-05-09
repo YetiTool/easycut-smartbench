@@ -232,7 +232,7 @@ class DWTConfig(EventDispatcher):
         # Handle tool selection
         tool_whitelist = shape_info.get('tool_whitelist')
         if tool_whitelist:
-            available_tools = {k: v for k, v in self.drywall_screen.tool_options.items() if v['cutter_path'] in tool_whitelist}
+            available_tools = {k: v for k, v in self.tool_options.items() if v['cutter_path'] in tool_whitelist}
             self.drywall_screen.tool_selection.set_image_dict(available_tools)
             # Check if active tool is allowed
             if self.active_config.cutter_type not in tool_whitelist:
