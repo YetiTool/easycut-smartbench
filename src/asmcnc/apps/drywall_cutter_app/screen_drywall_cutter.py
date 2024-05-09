@@ -151,7 +151,6 @@ class DrywallCutterScreen(Screen):
         self.name = 'drywall_cutter'
         super(DrywallCutterScreen, self).__init__(**kwargs)
         self.dwt_config = config_loader.DWTConfig(self)
-        self.tool_options = self.dwt_config.get_available_cutter_names()
 
         self.sm = kwargs['screen_manager']
         self.m = kwargs['machine']

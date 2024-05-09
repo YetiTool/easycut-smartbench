@@ -153,6 +153,8 @@ class DWTConfig(EventDispatcher):
         super(DWTConfig, self).__init__(*args, **kwargs)
         self.drywall_screen = screen_drywall_cutter
 
+        self.tool_options = self.get_available_cutter_names()
+
         most_recent_config_path = self.get_most_recent_config()
         if most_recent_config_path:
             self.load_config(most_recent_config_path)
@@ -162,11 +164,11 @@ class DWTConfig(EventDispatcher):
         self.setup_dropdowns()
 
     def setup_dropdowns(self):
-        self.drywall_screen.tool_selection.set_default_image(
+        self.drywall_screen.tool_selection.set_image(
             './asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_6mm.png')
-        self.drywall_screen.shape_selection.set_default_image(
+        self.drywall_screen.shape_selection.set_image(
             './asmcnc/apps/drywall_cutter_app/img/square_shape_button.png')
-        self.drywall_screen.toolpath_selection.set_default_image(
+        self.drywall_screen.toolpath_selection.set_image(
             './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_inside_button.png')
 
         self.drywall_screen.tool_selection.set_key('cutter_path')
@@ -211,7 +213,8 @@ class DWTConfig(EventDispatcher):
     def select_shape(self, shape):
         self.on_parameter_change('shape_type', shape)
 
-        shape_info = self.shape_rules.get(shape)  # Get rules for the selected shape
+        # Get rules for the selected shape
+        shape_info = self.shape_rules.get(shape)
 
         self.drywall_screen.shape_selection.source = self.shape_options_dict[shape]['image_path']
 
@@ -229,8 +232,7 @@ class DWTConfig(EventDispatcher):
         # Handle tool selection
         tool_whitelist = shape_info.get('tool_whitelist')
         if tool_whitelist:
-            available_tools = {k: v for k, v in self.drywall_screen.tool_options.items() if
-                               v['cutter_path'] in tool_whitelist}
+            available_tools = {k: v for k, v in self.drywall_screen.tool_options.items() if v['cutter_path'] in tool_whitelist}
             self.drywall_screen.tool_selection.set_image_dict(available_tools)
             # Check if active tool is allowed
             if self.active_config.cutter_type not in tool_whitelist:
@@ -238,7 +240,7 @@ class DWTConfig(EventDispatcher):
                 self.select_tool(next(iter(tool_whitelist), None))
         else:
             # If no tool whitelist, show all tools
-            self.drywall_screen.tool_selection.set_image_dict(self.drywall_screen.tool_options)
+            self.drywall_screen.tool_selection.set_image_dict(self.tool_options)
 
         # Handle toolpath
         self.update_toolpath_dropdown()
@@ -262,7 +264,7 @@ class DWTConfig(EventDispatcher):
                 return current_toolpath_offset, allowed_toolpaths
             return allowed_toolpaths[0], allowed_toolpaths
         else:
-            Logger.error("No valid toolpaths found for the current shape and cutter")
+            Logger.error("No valid toolpaths found for {} and {}".format(shape_type, cutter.tool_id))
 
     def update_toolpath_dropdown(self):
         # Set toolpath dropdown to only show valid toolpaths and set the active toolpath to a valid one
@@ -530,30 +532,3 @@ class DWTConfig(EventDispatcher):
         # update screen, check bumpers and so on:
         if not (self.active_config.shape_type == 'geberit' and self.active_cutter.dimensions.diameter is None):
             self.drywall_screen.drywall_shape_display_widget.check_datum_and_extents()
-
-
-### Appendix
-"""
-self.screen_drywall_cutter.shape_cutter_filter = dict(
-    # shape=[allowed cutters]
-    # e.g. geberit=[8, 6]
-    # e.g. circle=[] # all cutters allowed
-    circle=[],
-    square=[],
-    line=[],
-    geberit=[8, 6]
-)
-
-self.options_dict = 
-
-self.options_dict = 
-        
-self.options_dict = dict(
-    inside={
-        'image_path': './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_inside_button.png',
-    }, outside={
-        'image_path': './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_outside_button.png',
-    }, on={
-        'image_path': './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_on_button.png',
-    })
-"""

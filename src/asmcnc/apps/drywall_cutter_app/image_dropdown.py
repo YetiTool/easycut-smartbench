@@ -89,7 +89,7 @@ class ImageDropDownButton(ButtonBehavior, Image):
     def on_release(self):
         self.dropdown.open(self)
 
-    def set_default_image(self, image_path):
+    def set_image(self, image_path):
         self.source = image_path
 
     def set_image_dict(self, image_dict):
@@ -100,11 +100,6 @@ class ImageDropDownButton(ButtonBehavior, Image):
 
 
 class ToolSelectionDropDown(ImageDropDownButton):
-    """
-    This class is a custom widget that is used to create a dropdown menu with images of tools.
-    By default, it's setup for the Drywall Cutter App, but it can be used for other apps as well.
-    Use setter methods to set up for other apps.
-    """
     def __init__(self, **kwargs):
         super(ToolSelectionDropDown, self).__init__(**kwargs)
         self.source = './asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_6mm.png'
