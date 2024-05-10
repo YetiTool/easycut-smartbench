@@ -159,7 +159,7 @@ class RouterMachine(EventDispatcher):
         self.grbl_manager = GRBLSettingsManagerSingleton()
         self.set_jog_limits()
 
-        self.win_serial_port = "COM3"   # Need to save so that serial connection can be reopened (for zhead cycle app)
+        self.win_serial_port = "COM4"   # Need to save so that serial connection can be reopened (for zhead cycle app)
 
         # Establish 's'erial comms and initialise
         self.s = serial_connection.SerialConnection(self, self.sm, self.sett, self.l, self.jd)

@@ -221,7 +221,7 @@ class EasycutApp(App):
             name="serialScreen",
             screen_manager=self.screen_manager,
             machine=self.machine,
-            win_port="COM3",
+            win_port="COM4",
             localization=self.localisation,
         )
         mstate_screen = screen_mstate_warning.WarningMState(

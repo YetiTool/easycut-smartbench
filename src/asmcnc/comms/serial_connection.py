@@ -170,7 +170,7 @@ class SerialConnection(EventDispatcher):
 
     SMARTBENCH_PORTS = {
         "win32": [
-            "COM3",
+            "COM4",
         ],
         "darwin": glob.glob("/dev/tty.usb*"),
         "linux2": [
