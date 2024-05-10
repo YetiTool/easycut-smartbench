@@ -275,11 +275,11 @@ class CheckingScreen(Screen):
     def boundary_check(self):
         bounds_output = self.is_job_within_bounds()
         if bounds_output == "job is within bounds":
-            Logger.info("In bounds...")
+            Logger.debug("In bounds...")
             self.check_outcome = self.l.get_str("Job is within bounds.")
             Clock.schedule_once(lambda dt: self.try_gcode_check(), 0.4)
         else:
-            Logger.info("Out of bounds...")
+            Logger.debug("Out of bounds...")
             self.job_checking_checked = self.l.get_str("Boundary issue!")
             self.toggle_boundary_buttons(False)
             self.check_outcome = (

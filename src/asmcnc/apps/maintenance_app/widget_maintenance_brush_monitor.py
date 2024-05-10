@@ -6,8 +6,8 @@ from kivy.lang import Builder
 from kivy.properties import NumericProperty
 from kivy.uix.widget import Widget
 
-Builder.load_string(
-    """
+Builder.load_string("""
+#:import LabelBase asmcnc.core_UI.components.labels.base_label
 
 
 <BrushMonitorWidget>
@@ -32,7 +32,7 @@ Builder.load_string(
         x: self.parent.x + (self.parent.width*root.x_pos_modifier)
         y: self.parent.y+(self.parent.height*0.05)
 
-    Label: 
+    LabelBase: 
         id: percentage
         color: 1,1,1,1
         font_size: dp(0.0625*app.width)

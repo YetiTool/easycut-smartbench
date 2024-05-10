@@ -3,25 +3,19 @@
 Info pop-up for SW Update app
 """
 
-import kivy
-
-from kivy.lang import Builder
-from kivy.uix.gridlayout import GridLayout
 from kivy.uix.popup import Popup
-from kivy.properties import StringProperty  
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.widget import Widget
-from kivy.uix.textinput import TextInput
-from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.image import Image
-from kivy.clock import Clock
-from kivy.graphics import Color, Rectangle
 from kivy.core.window import Window
+
+from asmcnc.core_UI.components.labels.base_label import LabelBase
 
 
 class PopupBetaUpdate(Widget):
-    def __init__(self, screen_manager, wifi_or_usb):
+    def __init__(self, screen_manager, wifi_or_usb, **kwargs):
+        super(PopupBetaUpdate, self).__init__(**kwargs)
         self.sm = screen_manager
 
         description = (
@@ -47,10 +41,10 @@ class PopupBetaUpdate(Widget):
             source=image_source,
             allow_stretch=False
         )
-        label = Label(
-            size_hint_y = 2.0,
-            font_size = str(15.0 / 800.0 * Window.width) + "sp",
-            text_size = (620.0 / 800.0 * Window.width, None),
+        label = LabelBase(
+            size_hint_y=2.0,
+            font_size=str(15.0 / 800.0 * Window.width) + "sp",
+            text_size=(620.0 / 800.0 * Window.width, None),
             halign="center",
             valign="middle",
             text=description,

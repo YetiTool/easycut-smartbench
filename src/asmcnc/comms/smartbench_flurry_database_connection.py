@@ -11,7 +11,7 @@ try:
 
 except:
 	pika = None
-	Logger.info("Couldn't import pika lib")
+	Logger.error("Couldn't import pika lib")
 
 
 class DatabaseEventManager():
@@ -95,9 +95,8 @@ class DatabaseEventManager():
 						self.send_routine_updates_to_database()
 					break
 
-				except Exception as e:
-					Logger.info("Pika connection exception: " + str(e))
-					Logger.info(traceback.format_exc())
+				except:
+					Logger.exception("Pika connection exception")
 					sleep(10)
 
 			else:
@@ -105,28 +104,28 @@ class DatabaseEventManager():
 
 	def reinstate_channel_or_connection_if_missing(self):
 
-		Logger.info("Attempt to reinstate channel or connection")
+		Logger.debug("Attempt to reinstate channel or connection")
 
 		try:
 			if self.connection.is_closed:
 
-				Logger.info("Connection is closed, set up new connection")
+				Logger.debug("Connection is closed, set up new connection")
 				self.set_up_pika_connection()
 
 			elif self.routine_updates_channel.is_closed:
-				if self.VERBOSE: Logger.info("Channel is closed, set up new channel")
+				if self.VERBOSE: Logger.debug("Channel is closed, set up new channel")
 				self.routine_updates_channel = self.connection.channel()
 				self.routine_updates_channel.queue_declare(queue=self.queue)
 
 			else: 
 
 				try:
-					Logger.info("Close connection and start again") 
+					Logger.warning("Close connection and start again")
 					self.connection.close()
 					self.set_up_pika_connection()
 
 				except:
-					Logger.info("sleep and try reinstating connection again in a minute") 
+					Logger.error("sleep and try reinstating connection again in 10s")
 					sleep(10)
 					self.reinstate_channel_or_connection_if_missing()
 
@@ -158,9 +157,8 @@ class DatabaseEventManager():
 						else:
 							self.publish_event_with_routine_updates_channel(self.generate_full_payload_data(), "Routine Full Payload")
 
-					except Exception as e:
-						Logger.info("Could not send routine update:")
-						Logger.info(str(e))
+					except:
+						Logger.exception("Could not send routine update")
 
 
 				sleep(10)
@@ -202,8 +200,8 @@ class DatabaseEventManager():
 				self.routine_updates_channel.basic_publish(exchange='', routing_key=self.queue, body=json.dumps(data))
 				if self.VERBOSE: Logger.info(data)
 			
-			except Exception as e:
-				Logger.info(exception_type + " send exception: " + str(e))
+			except:
+				Logger.exception(exception_type + " sent exception")
 				self.reinstate_channel_or_connection_if_missing()
 
 
@@ -228,8 +226,8 @@ class DatabaseEventManager():
 							if self.VERBOSE: Logger.info(data)
 
 					
-					except Exception as e:
-						Logger.info(exception_type + " send exception: " + str(e))
+					except:
+						Logger.exception(exception_type + " send exception")
 
 					temp_event_channel.close()
 					break

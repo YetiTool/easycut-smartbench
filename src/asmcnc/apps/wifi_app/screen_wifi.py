@@ -20,6 +20,7 @@ Builder.load_string(
     """
 
 #:import Factory kivy.factory.Factory
+#:import LabelBase asmcnc.core_UI.components.labels.base_label
 
 
 <NetworkSpinner@SpinnerOption>
@@ -106,7 +107,7 @@ Builder.load_string(
                     height: dp(0.125*app.height)
                     width: dp(0.1875*app.width)
                     orientation: 'vertical'
-                    Label:
+                    LabelBase:
                         id: ip_address_label
                         color: 1,1,1,1
                         font_size: 0.0225*app.width
@@ -117,7 +118,7 @@ Builder.load_string(
                         size: self.parent.size
                         pos: self.parent.pos
 
-                    Label:
+                    LabelBase:
                         id: ip_status_label
                         color: 1,1,1,1
                         font_size: 0.0225*app.width
@@ -160,7 +161,7 @@ Builder.load_string(
                             orientation: "vertical"
                             width: dp(0.18875*app.width)
                             height: dp(0.0833333333333*app.height)
-                            Label:
+                            LabelBase:
                                 id: network_name_label
                                 width: dp(0.18875*app.width)
                                 color: 0,0,0,1
@@ -282,7 +283,7 @@ Builder.load_string(
                     orientation: "vertical"
                     padding:[0, 0, 0, dp(0.0416666666667)*app.height]
                               
-                    Label:
+                    LabelBase:
                         id: password_label
                         color: 0,0,0,1
                         font_size: 0.025*app.width
@@ -318,7 +319,7 @@ Builder.load_string(
                     orientation: 'vertical'
                     padding:[0, 0, dp(0.0125)*app.width, dp(0.0416666666667)*app.height]
                               
-                    Label:
+                    LabelBase:
                         id: country_label
                         color: 0,0,0,1
                         font_size: 0.025*app.width

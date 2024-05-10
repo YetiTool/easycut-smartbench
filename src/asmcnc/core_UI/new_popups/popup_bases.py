@@ -60,8 +60,7 @@ class PopupTitle(BoxLayout):
         self.canvas.before.clear()  # Clear previous drawing
         with self.canvas.before:
             Color(*self.separator_colour)
-            self.line = Line(points=[self.x, self.y, self.x + self.width, self.y],
-                             width=dp(2))
+            Line(points=[self.x + 2, self.y, self.x + self.width - 2, self.y], width=dp(2), cap="square")
 
     def on_label_size(self, instance, value):
         self.label.pos = (self.label.pos[0], self.label.pos[1] + 5)  # Cheat way to center the label

@@ -243,7 +243,7 @@ class LoadingScreen(Screen):
         self.jd.generate_job_data(self.job_file_as_list)
         self.total_lines_in_job_file_pre_scrubbed = len(self.job_file_as_list)
         self.load_value = 1
-        Logger.info(
+        Logger.debug(
             "> Job file loaded as list... "
             + str(self.total_lines_in_job_file_pre_scrubbed)
             + " lines"
@@ -261,7 +261,7 @@ class LoadingScreen(Screen):
     def _scrub_file_loop(self, dt):
         try:
             if self.total_lines_in_job_file_pre_scrubbed > self.max_lines:
-                Logger.info("File exceeds 10 million lines!")
+                Logger.warning("File exceeds 10 million lines!")
                 self.update_screen("Could not load - Exceeds 10 million lines")
                 self.jd.reset_values()
                 return
@@ -346,7 +346,7 @@ class LoadingScreen(Screen):
                                             "check_job"
                                         ).as_high_as = float(feed_rate)
                             except:
-                                Logger.info(
+                                Logger.exception(
                                     "Failed to extract feed rate. Probable G-code error!"
                                 )
                         if "N" in l_block:
@@ -371,7 +371,7 @@ class LoadingScreen(Screen):
                 self.jd.create_gcode_summary_string()
                 self._get_gcode_preview_and_ranges()
         except:
-            Logger.info(traceback.format_exc())
+            Logger.exception('Failed to scrub file!')
             self.update_screen("Could not load")
             self.jd.reset_values()
 

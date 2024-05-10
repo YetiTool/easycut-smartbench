@@ -622,7 +622,7 @@ class GoScreen(Screen):
                 )
                 return
             except:
-                Logger.info(traceback.format_exc())
+                Logger.exception('Failed to check brush use and lifetime!')
         popup_info.PopupError(self.sm, self.l, self.l.get_str("Error!"))
 
     def check_brush_use_and_lifetime(self, use, lifetime):
@@ -704,7 +704,7 @@ class GoScreen(Screen):
 
     ### COMMON SCREEN PREP METHOD
     def reset_go_screen_prior_to_job_start(self):
-        Logger.info("RESET GO SCREEN FIRES")
+        Logger.debug("RESET GO SCREEN FIRES")
         # Update images
         self.start_or_pause_button_image.source = "./asmcnc/skavaUI/img/go.png"
         # Show back button
@@ -741,7 +741,7 @@ class GoScreen(Screen):
     ### GENERAL ACTIONS
 
     def start_or_pause_button_press(self):
-        Logger.info("start/pause button pressed")
+        Logger.debug("start/pause button pressed")
         if self.is_job_started_already:
             if not self.m.is_machine_paused:
                 self._pause_job()
@@ -825,7 +825,7 @@ class GoScreen(Screen):
             if self.listen_for_pauses != None:
                 self.listen_for_pauses.cancel()
                 self.listen_for_pauses = None
-            Logger.info("RAISE PAUSE SCREEN: " + str(self.m.reason_for_machine_pause))
+            Logger.warning("RAISE PAUSE SCREEN: " + str(self.m.reason_for_machine_pause))
             self.sm.get_screen(
                 "spindle_shutdown"
             ).reason_for_pause = self.m.reason_for_machine_pause
@@ -903,7 +903,7 @@ class GoScreen(Screen):
             self.m.s.run_job(self.jd.job_gcode_modified)
             Logger.info("Job started ok from go screen...")
         except:
-            Logger.info("Job start from go screen failed!")
+            Logger.exception("Job start from go screen failed!")
 
     def return_to_app(self):
         if self.m.fw_can_operate_zUp_on_pause():  # precaution
@@ -1041,7 +1041,7 @@ class GoScreen(Screen):
                     "[color=C11C17][b]" + str(state) + "[size=25px] %[/size][/b][/color]"
             )
         else:
-            Logger.info("Overload state not recognised: " + str(state))
+            Logger.warning("Overload state not recognised: " + str(state))
 
     def update_overload_peak(self, instance, state):
         if state > self.overload_peak:

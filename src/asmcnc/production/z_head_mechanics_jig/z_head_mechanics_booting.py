@@ -38,4 +38,4 @@ class ZHeadMechanicsBooting(Screen):
             self.sm.current = 'mechanics'
         except:
             Clock.schedule_once(self.next_screen, 1)
-            Logger.info('Failed to read grbl settings, retrying')
+            Logger.exception('Failed to read grbl settings, retrying')
