@@ -47,7 +47,8 @@ SPINDLE_QUEUE = "spindle"
 
 
 class Flurry(object):
-    """Class to handle the connection and communication with the Flurry server."""
+    """Class to handle the connection and communication with the Flurry server. This class will replace the current
+    implementation of the Flurry connection in the future."""
 
     def __init__(self):
         self.app = App.get_running_app()
