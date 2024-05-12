@@ -68,8 +68,6 @@ class Flurry(object):
         self.connection = None
         self.channel = None
 
-        self.bind_listeners()
-
         self.connection_thread = threading.Thread(target=self.__setup)
         self.connection_thread.daemon = True  # Daemonize the thread, so it closes when the main thread closes
         self.connection_thread.start()
@@ -99,6 +97,10 @@ class Flurry(object):
 
     def __on_start_up(self):
         """Send the initial payloads to the Flurry server on start up to sync."""
+
+        self.app.smartbench_ready.wait()  # Wait for the Smartbench to be ready before sending payloads
+        self.bind_listeners()  # Bind listeners after the Smartbench is ready
+
         self.__publish(self.__get_full_console_payload(), EXCHANGE, CONSOLE_QUEUE)
         self.__publish(self.__get_grbl_settings_payload(), EXCHANGE, GRBL_SETTINGS_QUEUE)
 
@@ -155,7 +157,8 @@ class Flurry(object):
                 "remote_ip_addr": self.settings.public_ip_address,
                 "language": self.localisation.lang,
                 "software_version": self.settings.sw_version,
-                "firmware_version": self.settings.fw_version,
+                "firmware_version": self.machine.s.fw_version,
+                "hardware_version": self.machine.s.hw_version,
                 "screen_version": self.screen_version,
                 "pi_version": self.pi_version,
                 "model_version": self.model_version,

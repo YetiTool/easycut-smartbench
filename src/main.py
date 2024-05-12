@@ -6,6 +6,8 @@ Created on 16 Nov 2017
 YetiTool's UI for SmartBench
 www.yetitool.com
 '''
+import threading
+
 from asmcnc import paths
 from asmcnc.comms.flurry.flurry import Flurry
 
@@ -183,6 +185,10 @@ class SkavaUI(App):
     def get_scaled_tuple(self, tup, orientation="horizontal"):
         return scaling_utils.get_scaled_tuple(tup, orientation)
 
+    def __init__(self, **kwargs):
+        super(SkavaUI, self).__init__(**kwargs)
+
+        self.smartbench_ready = threading.Event()
 
     def build(self):
         Logger.info("Starting App:")
@@ -215,7 +221,7 @@ class SkavaUI(App):
 
         # Create database object to talk to
         db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
-        flurry = Flurry()
+        self.flurry = Flurry()
 
         # Popup manager
         pm = PopupManager(sm, m, self.l)
