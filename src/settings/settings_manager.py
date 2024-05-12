@@ -22,7 +22,7 @@ import socket
 from kivy.clock import Clock
 
 
-class Settings(Object):
+class Settings(object):
     
     wifi_check_thread = None
 
