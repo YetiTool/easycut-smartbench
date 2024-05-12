@@ -1,15 +1,20 @@
 import json
+import platform
 import time
 import threading
+from functools import partial
+
 import pika
 
 from kivy.app import App
-from pika.exceptions import UnroutableError, NackError
+from pika.exceptions import UnroutableError, NackError, ConnectionWrongStateError
 
+from asmcnc.comms.grbl_settings_manager import GRBLSettingsManagerSingleton
 from asmcnc.comms.localization import Localization
 from asmcnc.comms.logging_system.logging_system import Logger
+from asmcnc.comms.model_manager import ModelManagerSingleton
 
-LOCAL_HOST = True
+LOCAL_HOST = True  # Set to True to use a local RabbitMQ server
 
 HOST = "localhost" if LOCAL_HOST else "sm-receiver.yetitool.com"
 PORT = 5672
@@ -35,6 +40,11 @@ if not LOCAL_HOST:
 MESSAGE_INTERVAL = 15
 RECONNECT_INTERVAL = 10
 
+EXCHANGE = "flurry"
+CONSOLE_QUEUE = "console"
+GRBL_SETTINGS_QUEUE = "grbl_settings"
+SPINDLE_QUEUE = "spindle"
+
 
 class Flurry(object):
     """Class to handle the connection and communication with the Flurry server."""
@@ -44,21 +54,31 @@ class Flurry(object):
         self.settings = self.app.settings_manager
         self.machine = self.app.machine
         self.localisation = Localization()
+        self.model_manager = ModelManagerSingleton()
+        self.grbl_settings_manager = GRBLSettingsManagerSingleton()
+        self.parameters_to_update = {}
 
+        # Required parameters for Console payload (won't change during runtime)
         self.hostname = self.settings.console_hostname
-        self.screen_resolution = "{}x{}".format(str(self.app.width), str(self.app.height))
+        self.screen_version = 1 if self.app.width == 800 else 2
+        self.pi_version = 3 if platform.machine() == "armv7l" else 4 if platform.machine() == "aarch64" else 0
+        self.model_version = self.model_manager.get_product_code().value
 
         self.connection_thread = None
         self.connection = None
         self.channel = None
 
+        self.bind_listeners()
+
         self.connection_thread = threading.Thread(target=self.__setup)
+        self.connection_thread.daemon = True  # Daemonize the thread, so it closes when the main thread closes
         self.connection_thread.start()
 
     def __setup(self):
-        """Setup the connection to the Flurry server. Create the connection, channel and start the sending loop."""
+        """Set up the connection to the Flurry server. Create the connection, channel and start the sending loop."""
         self.__create_connection()
         self.__create_channel()
+        self.__on_start_up()
         self.__send_loop()
 
     def __create_connection(self):
@@ -71,18 +91,33 @@ class Flurry(object):
 
     def __create_channel(self):
         """Create a channel for the connection. If the connection is not established, log an error."""
-        if not self.connection:
-            Logger.error("Connection not established, cannot create channel")
-            return
+        try:
+            self.channel = self.connection.channel()
+            Logger.info("Channel created")
+        except ConnectionWrongStateError:
+            Logger.exception("Connection not established, cannot create channel")
 
-        self.channel = self.connection.channel()
-        Logger.info("Channel created")
+    def __on_start_up(self):
+        """Send the initial payloads to the Flurry server on start up to sync."""
+        self.__publish(self.__get_full_console_payload(), EXCHANGE, CONSOLE_QUEUE)
+        self.__publish(self.__get_grbl_settings_payload(), EXCHANGE, GRBL_SETTINGS_QUEUE)
+
+        spindle_payload = self.__get_spindle_payload()
+        if spindle_payload["serial_number"]:
+            self.__publish(spindle_payload, EXCHANGE, SPINDLE_QUEUE)
 
     def __send_loop(self):
-        """Main sending loop for the Flurry connection. Publishes the console payload to the queue every MESSAGE_INTERVAL
-        seconds. If the connection is closed, wait RECONNECT_INTERVAL seconds before attempting to reconnect."""
+        """Main sending loop for the Flurry connection. Publishes the parameter update payloads to the queue every
+        MESSAGE_INTERVAL seconds. If the connection is closed, wait RECONNECT_INTERVAL seconds before attempting to
+        reconnect."""
         while self.connection.is_open:
-            self.__publish(self.__get_full_console_payload(), "", "console")
+            if self.parameters_to_update:
+                for queue, payload in self.parameters_to_update.items():
+                    payload['timestamp'] = time.time()  # Insert timestamp just before sending
+                    self.__publish(payload, EXCHANGE, queue)
+                self.parameters_to_update = {}
+            else:
+                Logger.debug("No parameters to update")
             time.sleep(MESSAGE_INTERVAL)
 
         Logger.info("Connection to {} closed".format(HOST))
@@ -121,6 +156,60 @@ class Flurry(object):
                 "language": self.localisation.lang,
                 "software_version": self.settings.sw_version,
                 "firmware_version": self.settings.fw_version,
-                "screen_resolution": self.screen_resolution,
+                "screen_version": self.screen_version,
+                "pi_version": self.pi_version,
+                "model_version": self.model_version,
+                "total_uptime": None,  # TODO: Implement uptime
             }
         }
+
+    def __get_grbl_settings_payload(self):
+        """Get the GRBL settings payload to send to the Flurry server."""
+        return {
+            "hostname": self.hostname,
+            "data": {
+                "3": self.machine.s.setting_3,
+                "100": self.machine.s.setting_100,
+                "101": self.machine.s.setting_101,
+                "102": self.machine.s.setting_102,
+            }
+        }
+
+    def __get_spindle_payload(self):
+        """Get the spindle payload to send to the Flurry server."""
+        return {
+            "serial_number": self.machine.s.spindle_serial_number,
+            "hostname": self.hostname,
+            "data": {
+                "total_uptime": None,  # TODO: Implement uptime
+            }
+        }
+
+    def bind_listeners(self):
+        """Bind the listeners for the Flurry connection."""
+
+        # Binds for GRBL settings
+        self.machine.s.bind(setting_3=partial(self.__add_pending_update, GRBL_SETTINGS_QUEUE, "3"))
+        self.machine.s.bind(setting_100=partial(self.__add_pending_update, GRBL_SETTINGS_QUEUE, "100"))
+        self.machine.s.bind(setting_101=partial(self.__add_pending_update, GRBL_SETTINGS_QUEUE, "101"))
+        self.machine.s.bind(setting_102=partial(self.__add_pending_update, GRBL_SETTINGS_QUEUE, "102"))
+
+        # Binds for Console
+        self.machine.bind(device_label=partial(self.__add_pending_update, CONSOLE_QUEUE, "display_name"))
+        self.machine.bind(device_location=partial(self.__add_pending_update, CONSOLE_QUEUE, "location"))
+        self.settings.bind(ip_address=partial(self.__add_pending_update, CONSOLE_QUEUE, "local_ip_addr"))
+        self.settings.bind(public_ip_address=partial(self.__add_pending_update, CONSOLE_QUEUE, "remote_ip_addr"))
+        self.localisation.bind(lang=partial(self.__add_pending_update, CONSOLE_QUEUE, "language"))
+
+    def __add_pending_update(self, queue, key, instance, value):
+        """Add an update to the pending messages to be sent to the Flurry server."""
+        Logger.info("{}, {}, {}, {}".format(queue, key, instance, value))
+        if queue not in self.parameters_to_update:
+            self.parameters_to_update[queue] = {
+                "hostname": self.hostname,
+                "data": {
+                    key: value
+                }
+            }
+        else:
+            self.parameters_to_update[queue]["data"][key] = value

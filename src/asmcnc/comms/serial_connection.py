@@ -42,6 +42,7 @@ class SerialConnection(EventDispatcher):
     setting_0 = NumericProperty(-1.0)
     setting_1 = NumericProperty(-1.0)
     setting_2 = NumericProperty(-1.0)
+    setting_3 = NumericProperty(-1.0)
     setting_4 = NumericProperty(-1.0)
     setting_5 = NumericProperty(-1.0)
     setting_6 = NumericProperty(-1.0)

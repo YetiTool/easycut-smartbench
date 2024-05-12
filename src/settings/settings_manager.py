@@ -6,6 +6,10 @@ Module to get and store settings info
 
 import sys, os, subprocess, time, threading
 from time import sleep
+
+from kivy.event import EventDispatcher
+from kivy.properties import StringProperty, BooleanProperty
+
 from asmcnc.core_UI import console_utils
 
 from datetime import datetime
@@ -22,17 +26,17 @@ import socket
 from kivy.clock import Clock
 
 
-class Settings(object):
+class Settings(EventDispatcher):
     
     wifi_check_thread = None
 
     ping_command = 'ping -c1 one.one.one.one'
-    wifi_available = False
-    ip_address = ''
+    wifi_available = BooleanProperty(False)
+    ip_address = StringProperty('')
     WIFI_REPORT_INTERVAL = 2
     full_hostname = socket.gethostname() 
     console_hostname = full_hostname.split('.')[0]
-    public_ip_address = ''
+    public_ip_address = StringProperty('')
     timezone = None
 
     sw_version = ''

@@ -1,4 +1,7 @@
+from functools import partial
+
 from kivy.app import App
+from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager
 
 from asmcnc.comms.flurry.flurry import Flurry
@@ -22,7 +25,11 @@ class TestApp(App):
 
     def build(self):
         self.flurry = Flurry()
+        Clock.schedule_once(partial(self.set_name, "Test"), 5)
         return self.screen_manager
+
+    def set_name(self, name, *args):
+        self.machine.device_label = name
 
 
 if __name__ == "__main__":

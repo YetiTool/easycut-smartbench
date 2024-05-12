@@ -7,6 +7,8 @@ YetiTool's UI for SmartBench
 www.yetitool.com
 '''
 from asmcnc import paths
+from asmcnc.comms.flurry.flurry import Flurry
+
 paths.create_paths()
 
 import logging
@@ -213,6 +215,7 @@ class SkavaUI(App):
 
         # Create database object to talk to
         db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
+        flurry = Flurry()
 
         # Popup manager
         pm = PopupManager(sm, m, self.l)
