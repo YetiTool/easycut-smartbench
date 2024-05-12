@@ -487,7 +487,7 @@ class RouterMachine(EventDispatcher):
             file.close()
             self.laser_offset_x_value = float(X)
             self.laser_offset_y_value = float(Y)
-            if enabled == "True" or enabled: self.is_laser_enabled = True
+            if enabled == "True" or enabled == True: self.is_laser_enabled = True
             else: self.is_laser_enabled = False
 
             return True
@@ -558,7 +558,7 @@ class RouterMachine(EventDispatcher):
             file.write(str(rpm_override))
             file.close()
 
-            if rpm_override == 'True' or rpm_override:
+            if rpm_override == 'True' or rpm_override == True:
                 self.spindle_cooldown_rpm_override = True
             else:
                 self.spindle_cooldown_rpm_override = False
@@ -622,7 +622,7 @@ class RouterMachine(EventDispatcher):
 
             self.spindle_brand = str(brand)
             self.spindle_voltage = int(voltage)
-            if digital == 'True' or digital: self.spindle_digital = True
+            if digital == 'True' or digital == True: self.spindle_digital = True
             else: self.spindle_digital = False
 
             self.spindle_cooldown_time_seconds = int(time_seconds)
@@ -661,7 +661,7 @@ class RouterMachine(EventDispatcher):
             file.write(str(stylus))
             file.close()
 
-            if stylus == 'True' or stylus:
+            if stylus == 'True' or stylus == True:
                 self.is_stylus_enabled = True
             else:
                 self.is_stylus_enabled = False
@@ -699,7 +699,7 @@ class RouterMachine(EventDispatcher):
             file.write(str(health_check))
             file.close()
 
-            if health_check == 'True' or health_check:
+            if health_check == 'True' or health_check == True:
                 self.is_spindle_health_check_enabled_as_default = True
             else:
                 self.is_spindle_health_check_enabled_as_default = False
