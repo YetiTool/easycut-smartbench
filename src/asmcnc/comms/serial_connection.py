@@ -15,6 +15,7 @@ import sys
 import threading
 import time
 from enum import Enum
+from kivy.app import App
 from kivy.clock import Clock
 from kivy.event import EventDispatcher
 from kivy.properties import StringProperty, NumericProperty, BooleanProperty
@@ -115,6 +116,7 @@ class SerialConnection(EventDispatcher):
         self.m = machine
         self.jd = job
         self.l = localization
+        self.usm = App.get_running_app().user_settings_manager
         # Initialise managers for GRBL Notification screens (e.g. alarm, error, etc.)
         self.alarm = alarm_manager.AlarmSequenceManager(self.sm, self.sett, self.m, self.l, self.jd)
         self.FINAL_TEST = False
@@ -1180,7 +1182,7 @@ class SerialConnection(EventDispatcher):
                     if part.startswith("Door:3"):
                         pass
                     else:
-                        if self.sett.interrupt_bars_active:
+                        if self.usm.get_value('interrupt_bars_active'):
                             self.m.set_pause(True)  # sets flag is_machine_paused so this stub only gets called once
                             if self.sm.current != 'door':
                                 Logger.info("Hard " + self.m_state)
