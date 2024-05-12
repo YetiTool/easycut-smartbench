@@ -1,3 +1,4 @@
+from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 
@@ -100,14 +101,21 @@ class GeneralSettingsWidget(Widget):
         self.m = kwargs["machine"]
         self.l = kwargs["localization"]
         self.sett = kwargs["settings"]
+        self.usm = App.get_running_app().user_settings_manager
+
+        # dust_shoe_detection:
+        self.usm.bind(dust_shoe_detection=lambda i, value: setattr(self.dust_shoe_switch, 'active', value))
+        self.dust_shoe_switch.bind(active=lambda i, value: self.usm.set_value('dust_shoe_detection', value))
+        self.dust_shoe_switch.active = self.usm.get_value('dust_shoe_detection')
+
         self.update_strings()
 
         self.interrupt_bars_switch.active = self.sett.interrupt_bars_active
         self.interrupt_bars_switch.bind(active=self.toggle_interrupt_bars)
 
     def update_strings(self):
-        self.dust_shoe_title_label.text = self.l.get_bold("Dust shoe plug detection")
-        self.dust_shoe_info_label.text = self.l.get_str("When activated, the dust shoe needs to be inserted when starting the spindle or running jobs.")
+        self.dust_shoe_title_label.text = self.l.get_bold(self.usm.get_title('dust_shoe_detection'))
+        self.dust_shoe_info_label.text = self.l.get_str(self.usm.get_description('dust_shoe_detection'))
 
         self.interrupt_bars_title_label.text = self.l.get_bold("Interrupt bars activation")
         self.interrupt_bars_info_label.text = self.l.get_str("When activated, the interrupt bars will pause the machine when depressed.")
