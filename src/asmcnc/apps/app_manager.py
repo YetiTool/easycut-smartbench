@@ -47,7 +47,7 @@ class AppManagerClass(object):
         self.sm.add_widget(wifi_screen)
 
         # Set up maintenance screen asap, to avoid long load time on app entry
-        maintenance_screen = screen_maintenance.MaintenanceScreenClass(name = 'maintenance', screen_manager = self.sm, machine = self.m, localization = self.l, keyboard = self.kb, job = self.jd, settings = self.set)
+        maintenance_screen = screen_maintenance.MaintenanceScreenClass(name = 'maintenance', screen_manager = self.sm, machine = self.m, localization = self.l, keyboard = self.kb, job = self.jd)
         self.sm.add_widget(maintenance_screen)
 
         if self.model_manager.is_machine_drywall():

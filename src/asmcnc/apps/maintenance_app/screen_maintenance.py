@@ -497,7 +497,6 @@ class MaintenanceScreenClass(Screen):
         self.jd = kwargs["job"]
         self.l = kwargs["localization"]
         self.kb = kwargs["keyboard"]
-        self.sett = kwargs["settings"]
         self.xy_move_widget = widget_maintenance_xy_move.MaintenanceXYMove(
             machine=self.m, screen_manager=self.sm
         )
@@ -563,7 +562,7 @@ class MaintenanceScreenClass(Screen):
         )
         self.general_settings_widget = (
             widget_maintenance_general_settings.GeneralSettingsWidget(
-                machine=self.m, screen_manager=self.sm, localization=self.l, settings = self.sett
+                machine=self.m, screen_manager=self.sm, localization=self.l
             )
         )
         self.general_settings_container.add_widget(

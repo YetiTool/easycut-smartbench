@@ -100,7 +100,6 @@ class GeneralSettingsWidget(Widget):
         self.sm = kwargs["screen_manager"]
         self.m = kwargs["machine"]
         self.l = kwargs["localization"]
-        self.sett = kwargs["settings"]
         self.usm = App.get_running_app().user_settings_manager
 
         # dust_shoe_detection:
