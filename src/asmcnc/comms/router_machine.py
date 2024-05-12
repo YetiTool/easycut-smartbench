@@ -38,7 +38,7 @@ class Axis(Enum):
 
 class RouterMachine(EventDispatcher):
     # SETUP
-    
+
     s = None # serial object
 
     # This block of variables reflecting grbl settings (when '$$' is issued, serial reads settings and syncs these params)
@@ -333,7 +333,7 @@ class RouterMachine(EventDispatcher):
             trigger_bool_string  = str(file.read())
             file.close()
 
-            if trigger_bool_string == 'False' or trigger_bool_string == False: self.trigger_setup = False
+            if trigger_bool_string == 'False' or not trigger_bool_string: self.trigger_setup = False
             else: self.trigger_setup = True
 
             Logger.info("Read in set up options")
@@ -1409,10 +1409,10 @@ class RouterMachine(EventDispatcher):
 
         def record_pause_time(prev_state, pauseBool):
             # record pause time
-            if prev_state == False and pauseBool:
+            if not prev_state and pauseBool:
                 self.s.stream_pause_start_time = time.time()
 
-            if prev_state and pauseBool == False and self.s.stream_pause_start_time != 0:
+            if prev_state and not pauseBool and self.s.stream_pause_start_time != 0:
                 self.s.stream_paused_accumulated_time = self.s.stream_paused_accumulated_time + (time.time() - self.s.stream_pause_start_time)
                 self.s.stream_pause_start_time = 0
 
@@ -2444,7 +2444,7 @@ class RouterMachine(EventDispatcher):
 
 
 
-        # individual motor commands 
+        # individual motor commands
         if command == SET_IDLE_CURRENT:         cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = value
         if command == SET_ACTIVE_CURRENT:       cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = value; val = self.setShadowReg(motor, SGCSCONF, value, CS_MASK     , CS_SHIFT          )
         if command == SET_MOTOR_ENERGIZED:      cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = value
