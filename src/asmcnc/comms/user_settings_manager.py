@@ -47,9 +47,8 @@ class UserSettingsManager(EventDispatcher):
             'value': True
         },
         'interrupt_bars_active': {
-            'description': 'When activated, hitting the interrupt bars will trigger an alarm! '
-                           'Only deactivate this if your interrupt bar switches are broken!',
-            'title': 'Interrupt bars activated',
+            'description': 'When activated, the interrupt bars will pause the machine when depressed.',
+            'title': 'Interrupt bars activation',
             'value': True
         }
     }

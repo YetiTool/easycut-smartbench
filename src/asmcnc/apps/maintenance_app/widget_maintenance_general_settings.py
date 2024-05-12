@@ -108,17 +108,19 @@ class GeneralSettingsWidget(Widget):
         self.dust_shoe_switch.bind(active=lambda i, value: self.usm.set_value('dust_shoe_detection', value))
         self.dust_shoe_switch.active = self.usm.get_value('dust_shoe_detection')
 
-        self.update_strings()
+        # interrupt_bars_active:
+        self.usm.bind(interrupt_bars_active=lambda i, value: setattr(self.interrupt_bars_switch, 'active', value))
+        self.interrupt_bars_switch.bind(active=lambda i, value: self.usm.set_value('interrupt_bars_active', value))
+        self.interrupt_bars_switch.active = self.usm.get_value('interrupt_bars_active')
 
-        self.interrupt_bars_switch.active = self.sett.interrupt_bars_active
-        self.interrupt_bars_switch.bind(active=self.toggle_interrupt_bars)
+        self.update_strings()
 
     def update_strings(self):
         self.dust_shoe_title_label.text = self.l.get_bold(self.usm.get_title('dust_shoe_detection'))
         self.dust_shoe_info_label.text = self.l.get_str(self.usm.get_description('dust_shoe_detection'))
 
-        self.interrupt_bars_title_label.text = self.l.get_bold("Interrupt bars activation")
-        self.interrupt_bars_info_label.text = self.l.get_str("When activated, the interrupt bars will pause the machine when depressed.")
+        self.interrupt_bars_title_label.text = self.l.get_bold(self.usm.get_title('interrupt_bars_active'))
+        self.interrupt_bars_info_label.text = self.l.get_str(self.usm.get_description('interrupt_bars_active'))
 
     def toggle_interrupt_bars(self, instance, value):
         if value:
