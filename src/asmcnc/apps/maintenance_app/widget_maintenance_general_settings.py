@@ -110,7 +110,7 @@ class GeneralSettingsWidget(Widget):
 
         # interrupt_bars_active:
         self.usm.bind(interrupt_bars_active=lambda i, value: setattr(self.interrupt_bars_switch, 'active', value))
-        self.interrupt_bars_switch.bind(active=lambda i, value: self.usm.set_value('interrupt_bars_active', value))
+        self.interrupt_bars_switch.bind(active=self.toggle_interrupt_bars)
         self.interrupt_bars_switch.active = self.usm.get_value('interrupt_bars_active')
 
         self.update_strings()
@@ -124,6 +124,5 @@ class GeneralSettingsWidget(Widget):
 
     def toggle_interrupt_bars(self, instance, value):
         if value:
-            self.sett.enable_interrupt_bars()
-        else:
-            self.sett.disable_interrupt_bars()
+            self.m.resume_after_a_hard_door()
+        self.usm.set_value('interrupt_bars_active', value)
