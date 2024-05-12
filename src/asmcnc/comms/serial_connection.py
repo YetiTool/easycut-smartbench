@@ -1179,15 +1179,12 @@ class SerialConnection(EventDispatcher):
                         Clock.schedule_once(lambda dt: self.m.resume_from_a_soft_door(), 1)
 
                 elif part.startswith("Door") and self.m.is_machine_paused == False:
-                    if part.startswith("Door:3"):
-                        pass
-                    else:
-                        if self.usm.get_value('interrupt_bars_active'):
-                            self.m.set_pause(True)  # sets flag is_machine_paused so this stub only gets called once
-                            if self.sm.current != 'door':
-                                Logger.info("Hard " + self.m_state)
-                                self.sm.get_screen('door').return_to_screen = self.sm.current
-                                self.sm.current = 'door'
+                    if not part.startswith("Door:3") and self.usm.get_value('interrupt_bars_active'):
+                        self.m.set_pause(True)  # sets flag is_machine_paused so this stub only gets called once
+                        if self.sm.current != 'door':
+                            Logger.info("Hard " + self.m_state)
+                            self.sm.get_screen('door').return_to_screen = self.sm.current
+                            self.sm.current = 'door'
 
                 elif part.startswith('Ld:'):
 
