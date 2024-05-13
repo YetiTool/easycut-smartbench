@@ -62,7 +62,7 @@ class BasicPopup(Popup):
 
     # Default properties
     # You can override these properties in the constructor, pass them as kwargs
-    separator_color = ListProperty([249 / 255.0, 206 / 255.0, 29 / 255.0, 1.0])
+    separator_color = ListProperty(color_provider.get_rgba("yellow"))
     separator_height = dp(utils.get_scaled_height(4))
     background = StringProperty(
         "./asmcnc/apps/shapeCutter_app/img/popup_background.png"

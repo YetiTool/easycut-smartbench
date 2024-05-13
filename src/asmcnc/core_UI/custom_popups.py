@@ -373,7 +373,7 @@ class PopupBrushInfo(Widget):
         )
 
         popup.background = "./asmcnc/apps/shapeCutter_app/img/popup_background.png"
-        popup.separator_color = [249 / 255.0, 206 / 255.0, 29 / 255.0, 1.0]
+        popup.separator_color = color_provider.get_rgba("yellow")
         popup.separator_height = str(get_scaled_height(4)) + "dp"
 
         ok_button.bind(on_press=popup.dismiss)
@@ -493,7 +493,7 @@ class PopupDisplaySpindleData(Widget):
             auto_dismiss=False,
         )
 
-        popup.separator_color = [249 / 255.0, 206 / 255.0, 29 / 255.0, 1.0]
+        popup.separator_color = color_provider.get_rgba("yellow")
         popup.separator_height = str(get_scaled_height(4)) + "dp"
         popup.background = "./asmcnc/apps/shapeCutter_app/img/popup_background.png"
 
@@ -714,7 +714,7 @@ class PopupSpindleSettingsInfo(Widget):
         )
 
         popup.background = "./asmcnc/apps/shapeCutter_app/img/popup_background.png"
-        popup.separator_color = [249 / 255.0, 206 / 255.0, 29 / 255.0, 1.0]
+        popup.separator_color = color_provider.get_rgba("yellow")
         popup.separator_height = str(get_scaled_height(4)) + "dp"
 
         # Binding to the carousel functions directly causes argument issues, so create "wrapper" functions
