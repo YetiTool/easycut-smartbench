@@ -10,6 +10,7 @@ import sys, os
 from kivy.clock import Clock
 from kivy.uix.label import Label
 
+from asmcnc.core_UI.utils import color_provider
 
 """
 DEPRECATED, NOW USING: src/asmcnc/apps/start_up_sequence/screens/screen_language_selection.py
@@ -407,7 +408,7 @@ class LanguageSelectScreen(Screen):
             self.next_button.opacity = 1
             self.next_button.disabled = False
         else:
-            radio_button.color = [51 / 255.0, 51 / 255.0, 51 / 255.0, 1.0]
+            radio_button.color = color_provider.get_rgba("dark_grey")
             self.next_button.opacity = 0
             self.next_button.disabled = True
 
