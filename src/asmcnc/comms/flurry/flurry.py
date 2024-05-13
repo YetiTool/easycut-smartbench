@@ -188,7 +188,7 @@ class Flurry(object):
             "serial_number": self.machine.s.spindle_serial_number,
             "hostname": self.hostname,
             "data": {
-                "total_uptime": self.m.s.spindle_total_run_time_seconds
+                "total_uptime": self.machine.s.spindle_total_run_time_seconds
             }
         }
 
