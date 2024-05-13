@@ -14,7 +14,7 @@ from asmcnc.comms.localization import Localization
 from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.comms.model_manager import ModelManagerSingleton
 
-LOCAL_HOST = True  # Set to True to use a local RabbitMQ server
+LOCAL_HOST = False  # Set to True to use a local RabbitMQ server
 
 HOST = "localhost" if LOCAL_HOST else "sm-receiver.yetitool.com"
 PORT = 5672
@@ -99,7 +99,8 @@ class Flurry(object):
     def __on_start_up(self):
         """Send the initial payloads to the Flurry server on start up to sync."""
 
-        self.app.smartbench_ready.wait()  # Wait for the Smartbench to be ready before sending payloads
+        Logger.info("Waiting for Smartbench to be ready...")
+        self.app.smartbench_ready.wait()
         self.bind_listeners()  # Bind listeners after the Smartbench is ready
 
         self.__publish(self.__get_full_console_payload(), EXCHANGE, CONSOLE_QUEUE)
