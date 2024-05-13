@@ -1,11 +1,10 @@
 import json
 import platform
-import time
 import threading
+import time
 from functools import partial
 
 import pika
-
 from kivy.app import App
 from pika.exceptions import UnroutableError, NackError, ConnectionWrongStateError
 
@@ -211,6 +210,8 @@ class Flurry(object):
         # Binds for Spindle
         self.machine.s.bind(spindle_serial_number=partial(self.__add_pending_full_payload, SPINDLE_QUEUE,
                                                           self.__get_spindle_payload))
+        self.machine.s.bind(spindle_total_run_time_seconds=partial(self.__add_pending_update, SPINDLE_QUEUE,
+                                                                   "total_uptime"))
 
     def __add_pending_full_payload(self, queue, payload_func, instance, value):
         """Add a full payload to the pending messages to be sent to the Flurry server."""
