@@ -25,6 +25,7 @@ from asmcnc.core_UI import console_utils
 from kivy.core.window import Window
 
 from asmcnc.comms.model_manager import ModelManagerSingleton
+from asmcnc.core_UI.utils import color_provider
 
 Builder.load_string("""
 
@@ -627,7 +628,7 @@ class LobbyScreen(Screen):
                                    main_layout_spacing=10, button_layout_padding=(20, 10, 20, 0),
                                    button_layout_spacing=15,
                                    button_two_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
-                                   button_one_background_color=(230 / 255., 74 / 255., 25 / 255., 1.),
+                                   button_one_background_color=color_provider.get_rgba("red"),
                                    button_one_text="Remind me later", button_two_text="Ok",
                                    button_one_callback=self.set_trigger_to_true,
                                    button_two_callback=self.set_trigger_to_false)
