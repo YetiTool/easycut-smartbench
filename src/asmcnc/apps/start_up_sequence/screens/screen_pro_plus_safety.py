@@ -118,7 +118,7 @@ Builder.load_string(
                         size_hint: (None,None)
                         height: dp(0.108333333333*app.height)
                         width: dp(0.075*app.width)
-                        background_color: color_provider.get_rgba("invisible")
+                        background_color: color_provider.get_rgba("transparent")
                         center: self.parent.center
                         pos: self.parent.pos
                         on_press: root.prev_screen()

@@ -42,7 +42,7 @@ Builder.load_string("""
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_x: 1
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 on_press: root.probe_button_press()
                 BoxLayout:
                     size: self.parent.size
@@ -66,7 +66,7 @@ Builder.load_string("""
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_x: 1
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 on_press: root.stop_button_press()
                 BoxLayout:
                     size: self.parent.size

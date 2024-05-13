@@ -32,7 +32,7 @@ Builder.load_string(
 
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 on_press: root.back_to_home()
                 BoxLayout:
                     size: self.parent.size

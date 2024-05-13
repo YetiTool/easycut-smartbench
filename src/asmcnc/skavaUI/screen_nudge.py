@@ -56,7 +56,7 @@ Builder.load_string(
                         padding:[dp(0.01875)*app.width, dp(0.03125)*app.height, 0, dp(0.03125)*app.height]
                         Button:
                             font_size: str(0.01875 * app.width) + 'sp'
-                            background_color: color_provider.get_rgba("invisible")
+                            background_color: color_provider.get_rgba("transparent")
                             on_press: root.get_info()
                             BoxLayout:
                                 size: self.parent.size
@@ -70,7 +70,7 @@ Builder.load_string(
 
                     Button:
                         font_size: str(0.01875 * app.width) + 'sp'
-                        background_color: color_provider.get_rgba("invisible")
+                        background_color: color_provider.get_rgba("transparent")
                         on_press: root.back_to_home()
                         BoxLayout:
                             size: self.parent.size
@@ -131,7 +131,7 @@ Builder.load_string(
                 Button:
                     font_size: str(0.01875 * app.width) + 'sp'
                     on_press: root.previous_screen()
-                    background_color: color_provider.get_rgba("invisible")
+                    background_color: color_provider.get_rgba("transparent")
                     size_hint: (None, None)
                     height: dp(0.139583333333*app.height)
                     width: dp(0.11*app.width)
@@ -153,7 +153,7 @@ Builder.load_string(
                 Button:
                     font_size: str(0.01875 * app.width) + 'sp'
                     on_press: root.next_screen()
-                    background_color: color_provider.get_rgba("invisible")
+                    background_color: color_provider.get_rgba("transparent")
                     size_hint: (None, None)
                     height: dp(0.139583333333*app.height)
                     width: dp(0.11*app.width)

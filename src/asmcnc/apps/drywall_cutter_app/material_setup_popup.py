@@ -251,7 +251,7 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(app.get_scaled_width(83))
                 height: dp(app.get_scaled_height(23))
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -269,7 +269,7 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(app.get_scaled_width(86))
                 height: dp(app.get_scaled_height(23))
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size

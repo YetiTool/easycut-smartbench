@@ -40,7 +40,7 @@ Builder.load_string("""
         Button:
             size: dp(80), dp(70) # Slightly bigger than image size, but image is tiny and I think slightly bigger looks fine
             size_hint: None, None
-            background_color: color_provider.get_rgba("invisible")
+            background_color: color_provider.get_rgba("transparent")
             on_press: root.switch_screen()
             BoxLayout:
                 padding: 0

@@ -38,7 +38,7 @@ Builder.load_string(
     halign: 'center'
     markup: 'True'
     font_size: 0.0175*app.width
-    background_color: color_provider.get_rgba("invisible")
+    background_color: color_provider.get_rgba("transparent")
     text_size : self.width, None
     canvas.before:
         Color:
@@ -53,7 +53,7 @@ Builder.load_string(
     background_normal: ''
     size: self.size
     color: color_provider.get_rgba("dark_grey")
-    background_color: color_provider.get_rgba("invisible")
+    background_color: color_provider.get_rgba("transparent")
     font_size: 0.0175*app.width
     text_size : self.width, None
     halign: 'center'
@@ -66,7 +66,7 @@ Builder.load_string(
             radius: [dp(5), dp(5)]
 
 <CloseButton@Button>:
-    background_color: color_provider.get_rgba("invisible")
+    background_color: color_provider.get_rgba("transparent")
     background_normal: ''
     canvas.before:
         Color:
@@ -79,7 +79,7 @@ Builder.load_string(
 <BigSpindleHealthCheckButton@Button>:
     size_hint: (None, None)
     size: [150.0/800*app.width,150.0/480*app.height]
-    background_color: color_provider.get_rgba("invisible")
+    background_color: color_provider.get_rgba("transparent")
     background_normal: ''
     BoxLayout:
         padding: 0

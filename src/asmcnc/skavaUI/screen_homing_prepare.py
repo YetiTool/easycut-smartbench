@@ -52,7 +52,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 height: dp(0.104166666667*app.height)
                 width: dp(0.0625*app.width)
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 opacity: 1
                 on_press: root.cancel()
                 BoxLayout:
@@ -94,7 +94,7 @@ Builder.load_string(
         Button:
             font_size: str(0.01875 * app.width) + 'sp'
             size_hint_y: 4.9
-            background_color: color_provider.get_rgba("invisible")
+            background_color: color_provider.get_rgba("transparent")
             on_press: root.begin_homing()
             BoxLayout:
                 size: self.parent.size

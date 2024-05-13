@@ -18,7 +18,7 @@ Builder.load_string("""
         ToggleButton:
             id: speed_toggle
             on_press: root.set_jog_speeds()
-            background_color: color_provider.get_rgba("invisible")
+            background_color: color_provider.get_rgba("transparent")
             BoxLayout:
                 size: self.parent.size
                 pos: self.parent.pos
@@ -31,9 +31,9 @@ Builder.load_string("""
                     allow_stretch: True
 
         Button:
-            background_color: color_provider.get_rgba("invisible")
+            background_color: color_provider.get_rgba("transparent")
             on_release: 
-                self.background_color = color_provider.get_rgba("invisible")
+                self.background_color = color_provider.get_rgba("transparent")
             on_press: 
                 root.set_datum()
                 self.background_color = color_provider.get_rgba("button_press_background")

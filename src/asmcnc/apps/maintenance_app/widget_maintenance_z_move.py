@@ -40,10 +40,10 @@ Builder.load_string(
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y: 1
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 on_release:
                     root.quit_jog_z()
-                    self.background_color = color_provider.get_rgba("invisible")
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press:
                     root.jog_z('Z+') 
                     self.background_color = color_provider.get_rgba("button_press_background")
@@ -62,10 +62,10 @@ Builder.load_string(
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y: 1
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 on_release: 
                     root.quit_jog_z()
-                    self.background_color = color_provider.get_rgba("invisible")
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press:
                     root.jog_z('Z-') 
                     self.background_color = color_provider.get_rgba("button_press_background")
@@ -83,7 +83,7 @@ Builder.load_string(
                         
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 on_press: root.get_info()
                 BoxLayout:
                     padding:[dp(0.009375)*app.width, dp(0.0416666666667)*app.height, dp(0.040625)*app.width, dp(0.0416666666667)*app.height]

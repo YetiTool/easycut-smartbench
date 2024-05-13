@@ -95,7 +95,7 @@ Builder.load_string(
                             size_hint: (None,None)
                             height: dp(0.46875*app.height)
                             width: dp(0.25875*app.width)
-                            background_color: color_provider.get_rgba("invisible")
+                            background_color: color_provider.get_rgba("transparent")
                             center: self.parent.center
                             pos: self.parent.pos
                             on_press: root.aperture()
@@ -123,7 +123,7 @@ Builder.load_string(
                             size_hint: (None,None)
                             height: dp(0.46875*app.height)
                             width: dp(0.25875*app.width)
-                            background_color: color_provider.get_rgba("invisible")
+                            background_color: color_provider.get_rgba("transparent")
                             center: self.parent.center
                             pos: self.parent.pos
                             on_press: root.island()
@@ -194,7 +194,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     height: dp(0.0833333333333*app.height)
                     width: dp(0.05*app.width)
-                    background_color: color_provider.get_rgba("invisible")
+                    background_color: color_provider.get_rgba("transparent")
                     opacity: 0
 #                     on_press: root.get_info()
 #                     BoxLayout:
@@ -214,7 +214,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     height: dp(0.0833333333333*app.height)
                     width: dp(0.05*app.width)
-                    background_color: color_provider.get_rgba("invisible")
+                    background_color: color_provider.get_rgba("transparent")
                     opacity: 1
                     on_press: root.exit()
                     BoxLayout:

@@ -59,7 +59,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     height: dp(0.28125*app.height)
                     width: dp(0.165*app.width)
-                    background_color: color_provider.get_rgba("invisible")
+                    background_color: color_provider.get_rgba("transparent")
                     center: self.parent.center
                     pos: self.parent.pos
                     on_press: root.reset_button_press()
@@ -83,7 +83,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     height: dp(0.28125*app.height)
                     width: dp(0.165*app.width)
-                    background_color: color_provider.get_rgba("invisible")
+                    background_color: color_provider.get_rgba("transparent")
                     center: self.parent.center
                     pos: self.parent.pos
                     on_press: root.save_button_press()

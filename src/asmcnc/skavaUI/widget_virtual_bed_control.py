@@ -48,9 +48,9 @@ Builder.load_string("""
                 font_size: 20.0 / 800 * app.width
 
             Button:
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 on_release: 
-                    self.background_color = color_provider.get_rgba("invisible")
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press: 
                     root.set_standby_to_pos()
                     self.background_color = color_provider.get_rgba("button_press_background")
@@ -66,9 +66,9 @@ Builder.load_string("""
                         allow_stretch: True
     
             Button:
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 on_release: 
-                    self.background_color = color_provider.get_rgba("invisible")
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press: 
                     root.set_workzone_to_pos_xy()
                     self.background_color = color_provider.get_rgba("button_press_background")
@@ -119,9 +119,9 @@ Builder.load_string("""
                 color: color_provider.get_rgba("green")
                 font_size: 20.0 / 800 * app.width    
             Button:
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 on_release: 
-                    self.background_color = color_provider.get_rgba("invisible")
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press: 
                     root.go_to_standby()
                     self.background_color = color_provider.get_rgba("button_press_background")
@@ -136,9 +136,9 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                       
             Button:
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 on_release: 
-                    self.background_color = color_provider.get_rgba("invisible")
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press: 
                     root.go_to_jobstart_xy()
                     self.background_color = color_provider.get_rgba("button_press_background")

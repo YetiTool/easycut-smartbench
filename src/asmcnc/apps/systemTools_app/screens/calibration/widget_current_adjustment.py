@@ -20,7 +20,7 @@ Builder.load_string("""
         
         Button:
             on_press: root.current_up()
-            background_color: color_provider.get_rgba("invisible")
+            background_color: color_provider.get_rgba("transparent")
             BoxLayout:
                 padding: 2
                 size: self.parent.size
@@ -45,7 +45,7 @@ Builder.load_string("""
         
         Button:
             on_press: root.current_down()
-            background_color: color_provider.get_rgba("invisible")
+            background_color: color_provider.get_rgba("transparent")
             BoxLayout:
                 padding: 2
                 size: self.parent.size

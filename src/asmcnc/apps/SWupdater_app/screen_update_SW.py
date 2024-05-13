@@ -131,7 +131,7 @@ Builder.load_string("""
                                 size_hint: (None,None)
                                 height: dp(0.0625*app.height)
                                 width: dp(0.03625*app.width)
-                                background_color: color_provider.get_rgba("invisible")
+                                background_color: color_provider.get_rgba("transparent")
                                 center: self.parent.center
                                 pos: self.parent.pos
                                 on_press: root.refresh_latest_software_version()
@@ -168,7 +168,7 @@ Builder.load_string("""
                     size_hint: (None,None)
                     height: dp(0.233333333333*app.height)
                     width: dp(0.14*app.width)
-                    background_color: color_provider.get_rgba("invisible")
+                    background_color: color_provider.get_rgba("transparent")
                     center: self.parent.center
                     pos: self.parent.pos
                     on_press: root.quit_to_lobby()

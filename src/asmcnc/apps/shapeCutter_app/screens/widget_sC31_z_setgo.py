@@ -43,7 +43,7 @@ Builder.load_string(
                 font_size: str(0.01875 * app.width) + 'sp'
                 id: speed_toggle
                 on_press: root.set_jog_speeds()
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 BoxLayout:
                     padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                     size: self.parent.size
@@ -59,9 +59,9 @@ Builder.load_string(
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y: 1
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 on_release: 
-                    self.background_color = color_provider.get_rgba("invisible")
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press:
                     root.set_jobstart_z()
                     self.background_color = color_provider.get_rgba("button_press_background")
@@ -79,9 +79,9 @@ Builder.load_string(
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_y: 1
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 on_release: 
-                    self.background_color = color_provider.get_rgba("invisible")
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press:
                     root.go_to_jobstart_z()
                     self.background_color = color_provider.get_rgba("button_press_background")

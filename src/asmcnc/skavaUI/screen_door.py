@@ -174,7 +174,7 @@ Builder.load_string(
                 font_size: str(0.01875 * app.width) + 'sp'
                 id: cancel_button
                 size_hint_x: 1
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 on_press: root.cancel_stream()
                 disabled: True
                 BoxLayout:
@@ -188,7 +188,7 @@ Builder.load_string(
                 font_size: str(0.01875 * app.width) + 'sp'
                 id: resume_button
                 size_hint_x: 1
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 on_press: root.resume_stream()
                 disabled: True
                 BoxLayout:

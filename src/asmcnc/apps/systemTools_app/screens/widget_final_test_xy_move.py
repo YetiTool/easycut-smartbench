@@ -36,11 +36,11 @@ Builder.load_string("""
             size_hint_y: 1
 
             Button:
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 size_hint_y: 1
                 on_release:
                     root.quit_jog_z()
-                    self.background_color = color_provider.get_rgba("invisible")
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press:
                     root.jog_z('Z+') 
                     self.background_color = color_provider.get_rgba("button_press_background")
@@ -80,11 +80,11 @@ Builder.load_string("""
                 pos: self.parent.pos           
             
             Button:
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 always_release: True
                 on_release: 
                     root.cancelXYJog()
-                    self.background_color = color_provider.get_rgba("invisible")
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press: 
                     root.buttonJogXY('X+')
                     self.background_color = color_provider.get_rgba("button_press_background")
@@ -104,11 +104,11 @@ Builder.load_string("""
 
                             
             Button:
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 always_release: True
                 on_release: 
                     root.cancelXYJog()
-                    self.background_color = color_provider.get_rgba("invisible")
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press: 
                     root.buttonJogXY('Y+')
                     self.background_color = color_provider.get_rgba("button_press_background")
@@ -123,9 +123,9 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True                                    
             Button:
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 on_release: 
-                    self.background_color = color_provider.get_rgba("invisible")
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press:
                     root.jogModeCycled()
                     self.background_color = color_provider.get_rgba("button_press_background")
@@ -141,11 +141,11 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True  
             Button:
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 always_release: True
                 on_release: 
                     root.cancelXYJog()
-                    self.background_color = color_provider.get_rgba("invisible")
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press: 
                     root.buttonJogXY('Y-')
                     self.background_color = color_provider.get_rgba("button_press_background")
@@ -166,11 +166,11 @@ Builder.load_string("""
 
 
             Button:
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 always_release: True
                 on_release:
                     root.cancelXYJog()
-                    self.background_color = color_provider.get_rgba("invisible")
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press: 
                     root.buttonJogXY('X-')
                     self.background_color = color_provider.get_rgba("button_press_background")
@@ -197,10 +197,10 @@ Builder.load_string("""
 
             Button:
                 size_hint_y: 1
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 on_release: 
                     root.quit_jog_z()
-                    self.background_color = color_provider.get_rgba("invisible")
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press:
                     root.jog_z('Z-') 
                     self.background_color = color_provider.get_rgba("button_press_background")
@@ -229,7 +229,7 @@ Builder.load_string("""
                 ToggleButton:
                     id: speed_toggle
                     on_press: root.set_jog_speeds()
-                    background_color: color_provider.get_rgba("invisible")
+                    background_color: color_provider.get_rgba("transparent")
                     size_hint_y: 1
                     BoxLayout:
                         size: self.parent.size

@@ -37,7 +37,7 @@ Builder.load_string(
                 width: dp(0.10625*app.width)
                 Switch:
                     id: laser_switch
-                    background_color: color_provider.get_rgba("invisible")
+                    background_color: color_provider.get_rgba("transparent")
                     center_x: self.parent.center_x
                     y: self.parent.y
                     pos: self.parent.pos

@@ -208,7 +208,7 @@ Builder.load_string("""
                             font_size: str(0.01875 * app.width) + 'sp'
                             id: vacuum_toggle
                             on_press: root.set_vacuum()
-                            background_color: color_provider.get_rgba("invisible")
+                            background_color: color_provider.get_rgba("transparent")
                             BoxLayout:
                                 padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                                 size: self.parent.size
@@ -250,7 +250,7 @@ Builder.load_string("""
                                 size_hint: (None,None)
                                 height: dp(0.0833333333333*app.height)
                                 width: dp(0.05*app.width)
-                                background_color: color_provider.get_rgba("invisible")
+                                background_color: color_provider.get_rgba("transparent")
                                 opacity: 1
                                 on_press: root.get_info()
                                 BoxLayout:
@@ -270,7 +270,7 @@ Builder.load_string("""
                             size_hint: (None,None)
                             height: dp(0.139583333333*app.height)
                             width: dp(0.11*app.width)
-                            background_color: color_provider.get_rgba("invisible")
+                            background_color: color_provider.get_rgba("transparent")
                             on_press: root.go_back()
                             BoxLayout:
                                 padding: 0
@@ -288,7 +288,7 @@ Builder.load_string("""
                             size_hint: (None,None)
                             height: dp(0.139583333333*app.height)
                             width: dp(0.11*app.width)
-                            background_color: color_provider.get_rgba("invisible")
+                            background_color: color_provider.get_rgba("transparent")
                             on_press: root.next_screen()
                             BoxLayout:
                                 padding: 0

@@ -9,7 +9,7 @@ Builder.load_string(
     """
 
 <PowerAdjustButtons@Button>:
-    background_color: color_provider.get_rgba("invisible")
+    background_color: color_provider.get_rgba("transparent")
     canvas.before:
         Color:
             rgba: hex('#ccccccff')

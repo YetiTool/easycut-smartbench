@@ -41,9 +41,9 @@ Builder.load_string("""
             Button:
                 disabled: False
                 size_hint_y: 1
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 on_release: 
-                    self.background_color = color_provider.get_rgba("invisible")
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press:
                     root.quit_to_home()
                     self.background_color = color_provider.get_rgba("white")

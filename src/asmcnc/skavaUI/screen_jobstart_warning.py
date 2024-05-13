@@ -17,7 +17,7 @@ Builder.load_string(
 #:import Factory kivy.factory.Factory
 
 <RoundedButton@Button>:
-    background_color: color_provider.get_rgba("invisible")
+    background_color: color_provider.get_rgba("transparent")
     canvas.before:
         Color:
             rgba: color_provider.get_rgba("blue")

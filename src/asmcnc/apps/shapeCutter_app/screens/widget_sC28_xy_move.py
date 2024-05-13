@@ -48,9 +48,9 @@ Builder.load_string(
                 pos: self.parent.pos                 
                 Button:
                     font_size: str(0.01875 * app.width) + 'sp'
-                    background_color: color_provider.get_rgba("invisible")
+                    background_color: color_provider.get_rgba("transparent")
                     on_release: 
-                        self.background_color = color_provider.get_rgba("invisible")
+                        self.background_color = color_provider.get_rgba("transparent")
                     on_press: 
                         root.go_x_datum()
                         self.background_color = color_provider.get_rgba("button_press_background")
@@ -68,11 +68,11 @@ Builder.load_string(
 
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 always_release: True
                 on_release: 
                     root.cancelXYJog()
-                    self.background_color = color_provider.get_rgba("invisible")
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press: 
                     root.buttonJogXY('X+')
                     self.background_color = color_provider.get_rgba("button_press_background")
@@ -94,9 +94,9 @@ Builder.load_string(
                 pos: self.parent.pos                 
                 Button:
                     font_size: str(0.01875 * app.width) + 'sp'
-                    background_color: color_provider.get_rgba("invisible")
+                    background_color: color_provider.get_rgba("transparent")
                     on_release: 
-                        self.background_color = color_provider.get_rgba("invisible")
+                        self.background_color = color_provider.get_rgba("transparent")
                     on_press:
                         root.go_y_datum()
                         self.background_color = color_provider.get_rgba("button_press_background")
@@ -112,11 +112,11 @@ Builder.load_string(
                             
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 always_release: True
                 on_release: 
                     root.cancelXYJog()
-                    self.background_color = color_provider.get_rgba("invisible")
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press: 
                     root.buttonJogXY('Y+')
                     self.background_color = color_provider.get_rgba("button_press_background")
@@ -132,9 +132,9 @@ Builder.load_string(
                         allow_stretch: True                                    
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 on_release: 
-                    self.background_color = color_provider.get_rgba("invisible")
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press: 
                     root.jogModeCycled()
                     self.background_color = color_provider.get_rgba("button_press_background")
@@ -151,11 +151,11 @@ Builder.load_string(
                         allow_stretch: True  
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 always_release: True
                 on_release: 
                     root.cancelXYJog()
-                    self.background_color = color_provider.get_rgba("invisible")
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press: 
                     root.buttonJogXY('Y-')
                     self.background_color = color_provider.get_rgba("button_press_background")
@@ -177,9 +177,9 @@ Builder.load_string(
                 pos: self.parent.pos                 
                 Button:
                     font_size: str(0.01875 * app.width) + 'sp'
-                    background_color: color_provider.get_rgba("invisible")
+                    background_color: color_provider.get_rgba("transparent")
                     on_release: 
-                        self.background_color = color_provider.get_rgba("invisible")
+                        self.background_color = color_provider.get_rgba("transparent")
                     on_press:
                         root.set_x_datum()
                         self.background_color = color_provider.get_rgba("button_press_background")
@@ -195,11 +195,11 @@ Builder.load_string(
 
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 always_release: True
                 on_release:
                     root.cancelXYJog()
-                    self.background_color = color_provider.get_rgba("invisible")
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press: 
                     root.buttonJogXY('X-')
                     self.background_color = color_provider.get_rgba("button_press_background")
@@ -221,9 +221,9 @@ Builder.load_string(
                 pos: self.parent.pos
                 Button:
                     font_size: str(0.01875 * app.width) + 'sp'
-                    background_color: color_provider.get_rgba("invisible")
+                    background_color: color_provider.get_rgba("transparent")
                     on_release: 
-                        self.background_color = color_provider.get_rgba("invisible")
+                        self.background_color = color_provider.get_rgba("transparent")
                     on_press:
                         root.set_y_datum()
                         self.background_color = color_provider.get_rgba("button_press_background")
@@ -244,9 +244,9 @@ Builder.load_string(
 
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 on_release: 
-                    self.background_color = color_provider.get_rgba("invisible")
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press:
                     root.set_standby_to_pos()
                     self.background_color = color_provider.get_rgba("button_press_background")
@@ -266,7 +266,7 @@ Builder.load_string(
                     font_size: str(0.01875 * app.width) + 'sp'
                     id: speed_toggle
                     on_press: root.set_jog_speeds()
-                    background_color: color_provider.get_rgba("invisible")
+                    background_color: color_provider.get_rgba("transparent")
                     BoxLayout:
                         padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                         size: self.parent.size
@@ -280,9 +280,9 @@ Builder.load_string(
                             allow_stretch: True
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
-                background_color: color_provider.get_rgba("invisible")
+                background_color: color_provider.get_rgba("transparent")
                 on_release: 
-                    self.background_color = color_provider.get_rgba("invisible")
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press:
                     root.set_workzone_to_pos_xy()
                     self.background_color = color_provider.get_rgba("button_press_background")

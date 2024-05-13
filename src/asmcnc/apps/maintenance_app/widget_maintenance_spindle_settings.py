@@ -92,7 +92,7 @@ Builder.load_string("""
                     option_cls: Factory.get("SpindleSpinner")
                     background_normal: './asmcnc/apps/maintenance_app/img/brand_dropdown.png'
                     on_text: root.autofill_rpm_time()
-                    # background_color: color_provider.get_rgba("invisible")
+                    # background_color: color_provider.get_rgba("transparent")
 
         BoxLayout:
             orientation: 'horizontal'
@@ -238,7 +238,7 @@ Builder.load_string("""
 
                             Switch:
                                 id: stylus_switch
-                                background_color: color_provider.get_rgba("invisible")
+                                background_color: color_provider.get_rgba("transparent")
                                 center_x: self.parent.center_x
                                 y: self.parent.y
                                 pos: self.parent.pos
