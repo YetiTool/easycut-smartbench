@@ -300,7 +300,7 @@ class PopupBrushInfo(Widget):
 
         ok_button = Button(text="[b]Ok[/b]", markup=True, font_size=default_font_size)
         ok_button.background_normal = ""
-        ok_button.background_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
+        ok_button.background_color = color_provider.get_rgba("green")
 
         examples_layout = BoxLayout(
             orientation="horizontal",
@@ -464,7 +464,7 @@ class PopupDisplaySpindleData(Widget):
 
         ok_button = Button(text=ok_string, markup=True, font_size=default_font_size)
         ok_button.background_normal = ""
-        ok_button.background_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
+        ok_button.background_color = color_provider.get_rgba("green")
 
         btn_layout = BoxLayout(
             orientation="horizontal",
@@ -689,7 +689,7 @@ class PopupSpindleSettingsInfo(Widget):
 
         ok_button = Button(text=ok_string, markup=True, font_size=default_font_size)
         ok_button.background_normal = ""
-        ok_button.background_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
+        ok_button.background_color = color_provider.get_rgba("green")
 
         btn_layout = BoxLayout(
             orientation="horizontal",
@@ -793,7 +793,7 @@ class PopupDatum(Widget):
             text=yes_string, markup=True, font_size=get_scaled_sp("15sp")
         )
         ok_button.background_normal = ""
-        ok_button.background_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
+        ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(
             text=no_string, markup=True, font_size=get_scaled_sp("15sp")
         )

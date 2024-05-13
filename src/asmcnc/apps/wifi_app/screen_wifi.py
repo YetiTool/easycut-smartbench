@@ -15,6 +15,7 @@ import socket, sys, os
 from kivy.properties import StringProperty, ObjectProperty
 from asmcnc.skavaUI import popup_info
 from kivy.core.window import Window
+from asmcnc.core_UI.utils import color_provider
 
 Builder.load_string(
     """
@@ -460,7 +461,7 @@ Builder.load_string(
 class WifiScreen(Screen):
     default_font_size = 20.0 / 800.0 * Window.width
     IP_REPORT_INTERVAL = 2
-    status_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
+    status_color = color_provider.get_rgba("green")
     network_name = ObjectProperty()
     _password = ObjectProperty()
     country = ObjectProperty()
@@ -746,7 +747,7 @@ class WifiScreen(Screen):
         self.ip_status_label.text = self.set.ip_address
         if self.set.wifi_available:
             self.wifi_image.source = self.wifi_on
-            self.status_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
+            self.status_color = color_provider.get_rgba("green")
         elif not self.set.ip_address:
             self.wifi_image.source = self.wifi_off
             self.status_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]

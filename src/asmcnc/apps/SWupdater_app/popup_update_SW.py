@@ -56,7 +56,7 @@ class PopupBetaUpdate(Widget):
 
         ok_button = Button(text="[b]Yes[/b]", markup=True, font_size = str(15.0 / 800 * Window.width) + "sp")
         ok_button.background_normal = ""
-        ok_button.background_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
+        ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text="[b]No[/b]", markup=True, font_size = str(15.0 / 800 * Window.width) + "sp")
         back_button.background_normal = ""
         back_button.background_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]

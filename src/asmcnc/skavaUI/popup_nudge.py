@@ -50,7 +50,7 @@ class PopupNudgeDatum(Widget):
 
         ok_button = Button(text=yes_string, font_size=get_scaled_sp("15sp"), markup=True)
         ok_button.background_normal = ""
-        ok_button.background_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
+        ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=no_string, font_size=get_scaled_sp("15sp"), markup=True)
         back_button.background_normal = ""
         back_button.background_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
@@ -135,7 +135,7 @@ class PopupNudgeWarning(Widget):
 
         ok_button = Button(text=yes_string, font_size=get_scaled_sp("15sp"), markup=True)
         ok_button.background_normal = ""
-        ok_button.background_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
+        ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=no_string, font_size=get_scaled_sp("15sp"), markup=True)
         back_button.background_normal = ""
         back_button.background_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
