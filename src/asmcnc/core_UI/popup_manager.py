@@ -113,7 +113,7 @@ class PopupManager:
         main_layout_spacing=10,
         button_layout_padding=(0, 20, 0, 0),
         button_layout_spacing=10,
-        button_one_background_color=(230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0),
+        button_one_background_color=color_provider.get_rgba("red"),
         button_two_background_color=None,
     ):
 
@@ -288,7 +288,7 @@ class PopupManager:
             button_layout_padding=(0, 5, 0, 0),
             button_layout_spacing=15,
             button_two_background_color=(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0),
-            button_one_background_color=(230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0),
+            button_one_background_color=color_provider.get_rgba("red"),
         )
 
     def show_usb_first_aid_popup(self, systemtools_sm):
@@ -313,7 +313,7 @@ class PopupManager:
             button_one_text="Cancel",
             button_two_text="Ok",
             button_two_callback=button_two_callback,
-            button_one_background_color=(230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0),
+            button_one_background_color=color_provider.get_rgba("red"),
             button_two_background_color=(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0),
             width=360,
             height=360,
@@ -348,7 +348,7 @@ class PopupManager:
             button_one_text="No",
             button_two_text="Ok",
             button_two_callback=button_two_callback,
-            button_one_background_color=(230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0),
+            button_one_background_color=color_provider.get_rgba("red"),
             button_two_background_color=(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0),
             width=550,
             height=400,
@@ -372,7 +372,7 @@ class PopupManager:
             button_one_text="Cancel",
             button_two_text="Ok",
             button_two_callback=button_two_callback,
-            button_one_background_color=(230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0),
+            button_one_background_color=color_provider.get_rgba("red"),
             button_two_background_color=(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0),
             width=300,
             height=300,

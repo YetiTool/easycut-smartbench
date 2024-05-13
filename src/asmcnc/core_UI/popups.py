@@ -42,7 +42,7 @@ class PopupType(Enum):
     ERROR = {
         "small_image": "./asmcnc/apps/shapeCutter_app/img/error_icon.png",
         "big_image": "./asmcnc/apps/shapeCutter_app/img/error_icon_scaled_up.png",
-        "separator_color": (230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0),
+        "separator_color": color_provider.get_rgba("red"),
     }
     QR = None
     OTHER = None
