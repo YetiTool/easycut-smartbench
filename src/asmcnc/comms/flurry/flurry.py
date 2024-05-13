@@ -51,6 +51,8 @@ class Flurry(object):
     implementation of the Flurry connection in the future."""
 
     def __init__(self):
+        Logger.info("Initialising Flurry connection")
+
         self.app = App.get_running_app()
         self.settings = self.app.settings_manager
         self.machine = self.app.machine
