@@ -37,7 +37,7 @@ class PopupType(Enum):
     INFO = {
         "small_image": "./asmcnc/apps/shapeCutter_app/img/info_icon.png",
         "big_image": "./asmcnc/apps/shapeCutter_app/img/info_icon_scaled_up.png",
-        "separator_color": (249 / 255.0, 206 / 255.0, 29 / 255.0, 1.0),
+        "separator_color": color_provider.get_rgba("yellow"),
     }
     ERROR = {
         "small_image": "./asmcnc/apps/shapeCutter_app/img/error_icon.png",
