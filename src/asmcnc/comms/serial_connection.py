@@ -149,7 +149,7 @@ class SerialConnection(EventDispatcher):
     def is_use_yp(self):
         if self.yp:
             return self.yp.use_yp
-        else: 
+        else:
             return False
 
     def set_use_yp(self, val):
@@ -367,7 +367,7 @@ class SerialConnection(EventDispatcher):
     # "Push" is for messages from GRBL to provide more general feedback on what Grbl is doing (e.g. status)
 
     VERBOSE_ALL_PUSH_MESSAGES = False
-    VERBOSE_ALL_RESPONSE = True
+    VERBOSE_ALL_RESPONSE = False
     VERBOSE_STATUS = False
 
     def grbl_scanner(self, run_grbl_scanner_once=False):
@@ -659,7 +659,7 @@ class SerialConnection(EventDispatcher):
                                         speed),
 
     def remove_from_g_mode_tracker(self, line_diff):
-        if line_diff: 
+        if line_diff:
             del self.jd.grbl_mode_tracker[:line_diff]
 
     # PROCESSING GRBL RESPONSES
@@ -1893,6 +1893,9 @@ class SerialConnection(EventDispatcher):
         if "M3" in serialCommand.upper():
             # Set spindle_on flag
             self.spindle_on = True
+
+            if not self.spindle_serial_number:
+                self.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
 
             if "S" in serialCommand.upper():
                 # Correct the spindle speed command
