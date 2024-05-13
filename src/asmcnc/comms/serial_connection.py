@@ -1894,8 +1894,8 @@ class SerialConnection(EventDispatcher):
             # Set spindle_on flag
             self.spindle_on = True
 
-            if not self.spindle_serial_number:
-                self.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
+            # Write the protocol command to retrieve the spindle info
+            self.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO")
 
             if "S" in serialCommand.upper():
                 # Correct the spindle speed command
