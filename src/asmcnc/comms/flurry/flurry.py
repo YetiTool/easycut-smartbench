@@ -210,11 +210,12 @@ class Flurry(object):
 
         # Binds for Spindle
         self.machine.s.bind(spindle_serial_number=partial(self.__add_pending_full_payload, SPINDLE_QUEUE,
-                                                          self.__get_spindle_payload()))
+                                                          self.__get_spindle_payload))
 
-    def __add_pending_full_payload(self, queue, payload, instance, value):
+    def __add_pending_full_payload(self, queue, payload_func, instance, value):
         """Add a full payload to the pending messages to be sent to the Flurry server."""
-        Logger.info("{}, {}, {}, {}".format(queue, payload, instance, value))
+        payload = payload_func()
+        Logger.info("{}, {}, {}, {}".format(queue, payload_func, instance, value))
         if queue not in self.parameters_to_update:
             self.parameters_to_update[queue] = payload
         else:
