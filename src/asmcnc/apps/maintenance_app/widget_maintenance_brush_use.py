@@ -40,7 +40,7 @@ Builder.load_string("""
 
             LabelBase:
                 id: brush_use_label
-                color: 0,0,0,1
+                color: color_provider.get_rgba("black")
                 font_size: root.default_font_size
                 markup: True
                 halign: "left"
@@ -68,7 +68,7 @@ Builder.load_string("""
 
                 LabelBase:
                     id: hours_label
-                    color: 0,0,0,1
+                    color: color_provider.get_rgba("black")
                     font_size: dp(0.035*app.width)
                     markup: True
                     halign: "left"
@@ -94,7 +94,7 @@ Builder.load_string("""
                     size_hint: (None,None)
                     height: dp(0.25*app.height)
                     width: dp(0.15*app.width)
-                    background_color: [0,0,0,0]
+                    background_color: color_provider.get_rgba("transparent")
                     center: self.parent.center
                     pos: self.parent.pos
                     BoxLayout:
@@ -118,7 +118,7 @@ Builder.load_string("""
                     size_hint: (None,None)
                     height: dp(0.25*app.height)
                     width: dp(0.15*app.width)
-                    background_color: [0,0,0,0]
+                    background_color: color_provider.get_rgba("transparent")
                     center: self.parent.center
                     pos: self.parent.pos
                     BoxLayout:

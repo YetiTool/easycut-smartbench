@@ -35,7 +35,7 @@ Builder.load_string("""
             orientation: "horizontal"
             canvas:
                 Color: 
-                    rgba: hex('FFFFFFFF')
+                    rgba: color_provider.get_rgba("white")
                 RoundedRectangle: 
                     size: self.size
                     pos: self.pos
@@ -48,12 +48,12 @@ Builder.load_string("""
                 font_size: 20.0 / 800 * app.width
 
             Button:
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("transparent")
                 on_release: 
-                    self.background_color = hex('#F4433600')
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press: 
                     root.set_standby_to_pos()
-                    self.background_color = hex('#F44336FF')
+                    self.background_color = color_provider.get_rgba("button_press_background")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -66,12 +66,12 @@ Builder.load_string("""
                         allow_stretch: True
     
             Button:
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("transparent")
                 on_release: 
-                    self.background_color = hex('#F4433600')
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press: 
                     root.set_workzone_to_pos_xy()
-                    self.background_color = hex('#F44336FF')
+                    self.background_color = color_provider.get_rgba("button_press_background")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -93,7 +93,7 @@ Builder.load_string("""
 #             orientation: "horizontal"
 #             canvas:
 #                 Color: 
-#                     rgba: hex('FFFFFFFF')
+#                     rgba: color_provider.get_rgba("white")
 #                 RoundedRectangle: 
 #                     size: self.size
 #                     pos: self.pos
@@ -108,7 +108,7 @@ Builder.load_string("""
             orientation: "horizontal"
             canvas:
                 Color: 
-                    rgba: hex('FFFFFFFF')
+                    rgba: color_provider.get_rgba("white")
                 RoundedRectangle: 
                     size: self.size
                     pos: self.pos
@@ -116,15 +116,15 @@ Builder.load_string("""
                 text: ' GO:'
                 size_hint_x: 1 
                 markup: True
-                color: hex('#4caf50ff')
+                color: color_provider.get_rgba("green")
                 font_size: 20.0 / 800 * app.width    
             Button:
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("transparent")
                 on_release: 
-                    self.background_color = hex('#F4433600')
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press: 
                     root.go_to_standby()
-                    self.background_color = hex('#F44336FF')
+                    self.background_color = color_provider.get_rgba("button_press_background")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -136,12 +136,12 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                       
             Button:
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("transparent")
                 on_release: 
-                    self.background_color = hex('#F4433600')
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press: 
                     root.go_to_jobstart_xy()
-                    self.background_color = hex('#F44336FF')
+                    self.background_color = color_provider.get_rgba("button_press_background")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size

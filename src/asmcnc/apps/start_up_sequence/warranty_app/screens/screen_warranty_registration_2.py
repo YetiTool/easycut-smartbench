@@ -27,7 +27,7 @@ Builder.load_string(
 
 		canvas:
 			Color:
-				rgba: hex('##e5e5e5')
+				rgba: color_provider.get_rgba("light_grey")
 			Rectangle:
 				size: self.size
 				pos: self.pos
@@ -43,7 +43,7 @@ Builder.load_string(
 				spacing: 0
 				canvas:
 					Color:
-						rgba: hex('#1976d2ff')
+						rgba: color_provider.get_rgba("blue")
 					Rectangle:
 						pos: self.pos
 						size: self.size
@@ -53,8 +53,8 @@ Builder.load_string(
 					height: dp(0.125*app.height)
 					width: dp(1.0*app.width)
 					text: "SmartBench Warranty Registration"
-					color: hex('#f9f9f9ff')
-					# color: hex('#333333ff') #grey
+					color: color_provider.get_rgba("near_white")
+					# color: color_provider.get_rgba("dark_grey") #grey
 					font_size: dp(0.0375*app.width)
 					halign: "center"
 					valign: "bottom"
@@ -75,7 +75,7 @@ Builder.load_string(
 					valign: 'bottom'
 					halign: 'center'
 					markup: 'true'
-					color: hex('#333333ff')
+					color: color_provider.get_rgba("dark_grey")
 
 				BoxLayout:
 					orientation: 'vertical'
@@ -91,7 +91,7 @@ Builder.load_string(
 						valign: 'middle'
 						halign: 'center'
 						markup: 'true'
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 			# FOOTER
 			BoxLayout: 
@@ -111,7 +111,7 @@ Builder.load_string(
 						size_hint: (None,None)
 						height: dp(0.108333333333*app.height)
 						width: dp(0.075*app.width)
-						background_color: hex('#F4433600')
+						background_color: color_provider.get_rgba("transparent")
 						center: self.parent.center
 						pos: self.parent.pos
 						on_press: root.prev_screen()
@@ -142,7 +142,7 @@ Builder.load_string(
 						on_press: root.next_screen()
 						text: 'Next...'
 						font_size: str(0.0375*app.width) + 'sp'
-						color: hex('#f9f9f9ff')
+						color: color_provider.get_rgba("near_white")
 						markup: True
 						center: self.parent.center
 						pos: self.parent.pos

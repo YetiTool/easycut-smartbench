@@ -10,6 +10,7 @@ from kivy.properties import ObjectProperty
 from kivy.uix.popup import Popup
 from asmcnc.apps.shapeCutter_app.screens import popup_info
 from asmcnc.core_UI.popups import InfoPopup
+from asmcnc.core_UI.utils import color_provider
 
 Builder.load_string(
     """
@@ -54,7 +55,7 @@ Builder.load_string(
                     halign: "center"
                     valign: "middle"
                     text: "Select a shape to cut..."
-                    color: 0,0,0,1
+                    color: color_provider.get_rgba("black")
                     font_size: 0.0325*app.width
                     markup: True
 
@@ -80,7 +81,7 @@ Builder.load_string(
                         size_hint: (None,None)
                         height: dp(0.35*app.height)
                         width: dp(0.21*app.width)
-                        background_color: hex('#F4433600')
+                        background_color: color_provider.get_rgba("transparent")
                         center: self.parent.center
                         pos: self.parent.pos
                         on_press: root.cut_circle()
@@ -107,7 +108,7 @@ Builder.load_string(
                         size_hint: (None,None)
                         height: dp(0.35*app.height)
                         width: dp(0.21*app.width)
-                        background_color: hex('#F4433600')
+                        background_color: color_provider.get_rgba("transparent")
                         center: self.parent.center
                         pos: self.parent.pos
                         on_press: root.cut_rectangle()
@@ -136,7 +137,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     height: dp(0.0833333333333*app.height)
                     width: dp(0.05*app.width)
-                    background_color: hex('#F4433600')
+                    background_color: color_provider.get_rgba("transparent")
                     opacity: 1
                     on_press: root.get_info()
                     BoxLayout:
@@ -155,7 +156,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     height: dp(0.0833333333333*app.height)
                     width: dp(0.05*app.width)
-                    background_color: hex('#F4433600')
+                    background_color: color_provider.get_rgba("transparent")
                     opacity: 1
                     on_press: root.exit()
                     BoxLayout:
@@ -200,7 +201,7 @@ class ShapeCutterLandingScreenClass(Screen):
                   button_one_background_color=[0.141, 0.596, 0.957, 1],
                   button_two_text="Ok",
                   button_two_callback=None,
-                  button_two_background_color=[76 / 255., 175 / 255., 80 / 255., 1.]).open()
+                  button_two_background_color=color_provider.get_rgba("green")).open()
 
     def cut_rectangle(self):
         self.j.shape_dict["shape"] = "rectangle"

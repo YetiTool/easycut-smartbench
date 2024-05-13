@@ -38,7 +38,7 @@ Builder.load_string("""
                 valign: 'middle'
                 text: root.string_test
                 markup: 'True'
-                color: [0,0,0,1]
+                color: color_provider.get_rgba("black")
 """)
 
 

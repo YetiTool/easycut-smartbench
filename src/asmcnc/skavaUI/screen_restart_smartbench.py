@@ -16,7 +16,7 @@ Builder.load_string("""
 
     canvas:
         Color: 
-            rgba: hex('#e5e5e5')
+            rgba: color_provider.get_rgba("light_grey")
         Rectangle: 
             size: self.size
             pos: self.pos
@@ -25,7 +25,7 @@ Builder.load_string("""
         id: restart_label
         padding: [dp(10),dp(0)]
         font_size: '40sp'
-        color: hex('#333333')
+        color: color_provider.get_rgba("dark_grey")
         text_size: self.size
         size: self.texture_size
         halign: "center"
@@ -40,7 +40,7 @@ Builder.load_string("""
         Button:
             size: dp(80), dp(70) # Slightly bigger than image size, but image is tiny and I think slightly bigger looks fine
             size_hint: None, None
-            background_color: 0,0,0,0
+            background_color: color_provider.get_rgba("transparent")
             on_press: root.switch_screen()
             BoxLayout:
                 padding: 0

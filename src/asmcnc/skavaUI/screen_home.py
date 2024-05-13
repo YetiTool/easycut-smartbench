@@ -94,7 +94,7 @@ Builder.load_string(
                             spacing:0.025*app.width
                             canvas:
                                 Color:
-                                    rgba: hex('#E5E5E5FF')
+                                    rgba: color_provider.get_rgba("light_grey")
                                 Rectangle:
                                     size: self.size
                                     pos: self.pos
@@ -114,7 +114,7 @@ Builder.load_string(
                             spacing:0.025*app.width
                             canvas:
                                 Color:
-                                    rgba: hex('#E5E5E5FF')
+                                    rgba: color_provider.get_rgba("light_grey")
                                 Rectangle:
                                     size: self.size
                                     pos: self.pos
@@ -124,7 +124,7 @@ Builder.load_string(
                                 id: xy_move_container
                                 canvas:
                                     Color:
-                                        rgba: 1,1,1,1
+                                        rgba: color_provider.get_rgba("white")
                                     RoundedRectangle:
                                         size: self.size
                                         pos: self.pos
@@ -138,7 +138,7 @@ Builder.load_string(
                                 id: z_move_container
                                 canvas:
                                     Color:
-                                        rgba: 1,1,1,1
+                                        rgba: color_provider.get_rgba("white")
                                     RoundedRectangle:
                                         size: self.size
                                         pos: self.pos
@@ -155,7 +155,7 @@ Builder.load_string(
                             spacing:0.0416666666667*app.height
                             canvas:
                                 Color:
-                                    rgba: hex('#E5E5E5FF')
+                                    rgba: color_provider.get_rgba("light_grey")
                                 Rectangle:
                                     size: self.size
                                     pos: self.pos
@@ -165,7 +165,7 @@ Builder.load_string(
                                 padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                                 canvas:
                                     Color:
-                                        rgba: 1,1,1,1
+                                        rgba: color_provider.get_rgba("white")
                                     RoundedRectangle:
                                         size: self.size
                                         pos: self.pos
@@ -188,7 +188,7 @@ Builder.load_string(
                             id: job_container
                             canvas:
                                 Color:
-                                    rgba: hex('#E5E5E5FF')
+                                    rgba: color_provider.get_rgba("light_grey")
                                 Rectangle:
                                     size: self.size
                                     pos: self.pos
@@ -200,7 +200,7 @@ Builder.load_string(
                                 orientation: 'horizontal'
                                 canvas:
                                     Color:
-                                        rgba: 1,1,1,1
+                                        rgba: color_provider.get_rgba("white")
                                     RoundedRectangle:
                                         size: self.size
                                         pos: self.pos
@@ -208,7 +208,7 @@ Builder.load_string(
                                 Button:
                                     font_size: str(0.01875 * app.width) + 'sp'
                                     size_hint_x: 1
-                                    background_color: hex('#F4433600')
+                                    background_color: color_provider.get_rgba("transparent")
                                     on_press:
                                         root.manager.current = 'local_filechooser'
                                     BoxLayout:
@@ -226,7 +226,7 @@ Builder.load_string(
                                     font_size: str(0.01875 * app.width) + 'sp'
                                     id: job_recovery_button
                                     size_hint_x: 1
-                                    background_color: hex('#F4433600')
+                                    background_color: color_provider.get_rgba("transparent")
                                     on_press:
                                         root.manager.current = 'recovery_decision'
                                     BoxLayout:
@@ -257,7 +257,7 @@ Builder.load_string(
                                 orientation: 'horizontal'
                                 canvas:
                                     Color:
-                                        rgba: 1,1,1,1
+                                        rgba: color_provider.get_rgba("white")
                                     RoundedRectangle:
                                         size: self.size
                                         pos: self.pos

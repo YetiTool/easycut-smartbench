@@ -20,6 +20,7 @@ from asmcnc.core_UI.popups import (
     JobValidationPopup,
     SimulatingJobPopup
 )
+from asmcnc.core_UI.utils import color_provider
 
 
 class PopupManager:
@@ -112,7 +113,7 @@ class PopupManager:
         main_layout_spacing=10,
         button_layout_padding=(0, 20, 0, 0),
         button_layout_spacing=10,
-        button_one_background_color=(230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0),
+        button_one_background_color=color_provider.get_rgba("red"),
         button_two_background_color=None,
     ):
 
@@ -144,7 +145,7 @@ class PopupManager:
         button_two_callback=None,
         button_one_text="Ok",
         button_two_text=None,
-        button_one_background_color=(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0),
+        button_one_background_color=color_provider.get_rgba("green"),
         button_two_background_color=None,
         height=440,
         main_label_size_delta=40,
@@ -286,8 +287,8 @@ class PopupManager:
             main_layout_spacing=10,
             button_layout_padding=(0, 5, 0, 0),
             button_layout_spacing=15,
-            button_two_background_color=(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0),
-            button_one_background_color=(230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0),
+            button_two_background_color=color_provider.get_rgba("green"),
+            button_one_background_color=color_provider.get_rgba("red"),
         )
 
     def show_usb_first_aid_popup(self, systemtools_sm):
@@ -312,8 +313,8 @@ class PopupManager:
             button_one_text="Cancel",
             button_two_text="Ok",
             button_two_callback=button_two_callback,
-            button_one_background_color=(230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0),
-            button_two_background_color=(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0),
+            button_one_background_color=color_provider.get_rgba("red"),
+            button_two_background_color=color_provider.get_rgba("green"),
             width=360,
             height=360,
             main_label_size_delta=40,
@@ -347,8 +348,8 @@ class PopupManager:
             button_one_text="No",
             button_two_text="Ok",
             button_two_callback=button_two_callback,
-            button_one_background_color=(230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0),
-            button_two_background_color=(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0),
+            button_one_background_color=color_provider.get_rgba("red"),
+            button_two_background_color=color_provider.get_rgba("green"),
             width=550,
             height=400,
             main_label_size_delta=140,
@@ -371,8 +372,8 @@ class PopupManager:
             button_one_text="Cancel",
             button_two_text="Ok",
             button_two_callback=button_two_callback,
-            button_one_background_color=(230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0),
-            button_two_background_color=(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0),
+            button_one_background_color=color_provider.get_rgba("red"),
+            button_two_background_color=color_provider.get_rgba("green"),
             width=300,
             height=300,
             main_label_size_delta=40,
@@ -433,7 +434,7 @@ class PopupManager:
                                          always_overscroll=True, size_hint_y=1.2)
                 rst_doc = RstDocument(
                     text=more_info,
-                    background_color=(1, 1, 1, 1),
+                    background_color=color_provider.get_rgba("white"),
                     base_font_size=scaling_utils.get_scaled_width(26),
                     underline_color="000000",
                 )

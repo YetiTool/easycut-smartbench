@@ -20,7 +20,7 @@ Builder.load_string(
 
     canvas.before:
         Color:
-            rgba: 0,0,0,1
+            rgba: color_provider.get_rgba("black")
         Rectangle:
             size: self.size
             pos: self.pos
@@ -39,7 +39,7 @@ Builder.load_string(
 
     canvas.before:
         Color:
-            rgba: 0,0,0,1
+            rgba: color_provider.get_rgba("black")
         Rectangle:
             size: self.size
             pos: self.pos
@@ -77,7 +77,7 @@ Builder.load_string(
                 spacing: 0
                 canvas:
                     Color:
-                        rgba: [1,1,1,1]
+                        rgba: color_provider.get_rgba("white")
                     RoundedRectangle:
                         pos: self.pos
                         size: self.size
@@ -86,7 +86,7 @@ Builder.load_string(
                     height: dp(0.145833333333*app.height)
                     width: dp(0.975*app.width)
                     text: "Developer"
-                    color: [0,0,0,1]
+                    color: color_provider.get_rgba("black")
                     font_size: 0.0375*app.width
                     halign: "center"
                     valign: "bottom"
@@ -109,7 +109,7 @@ Builder.load_string(
                     orientation: 'vertical'
                     canvas:
                         Color:
-                            rgba: [1,1,1,1]
+                            rgba: color_provider.get_rgba("white")
                         RoundedRectangle:
                             pos: self.pos
                             size: self.size
@@ -194,7 +194,7 @@ Builder.load_string(
                     orientation: 'vertical'
                     canvas:
                         Color:
-                            rgba: [1,1,1,1]
+                            rgba: color_provider.get_rgba("white")
                         RoundedRectangle:
                             pos: self.pos
                             size: self.size
@@ -220,7 +220,7 @@ Builder.load_string(
                 orientation: 'horizontal'
                 canvas:
                     Color:
-                        rgba: [1,1,1,1]
+                        rgba: color_provider.get_rgba("white")
                     RoundedRectangle:
                         pos: self.pos
                         size: self.size
@@ -242,7 +242,7 @@ Builder.load_string(
                             size_hint: (None,None)
                             height: dp(0.141666666667*app.height)
                             width: dp(0.11*app.width)
-                            background_color: hex('#F4433600')
+                            background_color: color_provider.get_rgba("transparent")
                             center: self.parent.center
                             pos: self.parent.pos
                             on_press: root.go_back()
@@ -286,7 +286,7 @@ Builder.load_string(
                             size_hint: (None,None)
                             height: dp(0.233333333333*app.height)
                             width: dp(0.14*app.width)
-                            background_color: hex('#F4433600')
+                            background_color: color_provider.get_rgba("transparent")
                             center: self.parent.center
                             pos: self.parent.pos
                             on_press: root.exit_app()

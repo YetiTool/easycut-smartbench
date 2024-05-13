@@ -38,7 +38,7 @@ Builder.load_string(
 
     canvas:
         Color: 
-            rgba: hex('#FFFFFF')
+            rgba: color_provider.get_rgba("white")
         Rectangle: 
             size: self.size
             pos: self.pos
@@ -152,7 +152,7 @@ Builder.load_string(
                     
                     RstDocument:
                         id: user_instructions_text
-                        background_color: hex('#FFFFFF')
+                        background_color: color_provider.get_rgba("white")
                         base_font_size: str(31.0/800.0*app.width) + 'sp'
                         
                 BoxLayout: 

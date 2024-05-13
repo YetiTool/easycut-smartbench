@@ -35,7 +35,7 @@ Builder.load_string("""
             orientation: "vertical"       
                 
             LabelBase:
-                color: 1,1,1,1
+                color: color_provider.get_rgba("white")
                 size_hint: (None,None)
                 height: dp(0.1875*app.height)
                 width: dp(1.0*app.width)
@@ -75,7 +75,7 @@ Builder.load_string("""
 
                             LabelBase: 
                                 text: ''
-                                color: 0,0,0,1
+                                color: color_provider.get_rgba("black")
                                 font_size: 0.025*app.width
                                 markup: True
                                 halign: "center"
@@ -111,7 +111,7 @@ Builder.load_string("""
                                 height: dp(0.35*app.height)
                                 width: dp(0.21*app.width)
                                 on_press: root.save_file()
-                                background_color: hex('#F4433600')
+                                background_color: color_provider.get_rgba("transparent")
                                 BoxLayout:
                                     padding: 0
                                     size: self.parent.size
@@ -141,7 +141,7 @@ Builder.load_string("""
                             scroll_type: ['content']
                             RstDocument:
                                 text: root.display_profile
-                                background_color: hex('#FFFFFF')                 
+                                background_color: color_provider.get_rgba("white")                 
                                 base_font_size: str(31.0/800.0*app.width) + 'sp'
                 BoxLayout: #action box
                     size_hint: (None,None)
@@ -162,7 +162,7 @@ Builder.load_string("""
                             size_hint: (None,None)
                             height: dp(0.0833333333333*app.height)
                             width: dp(0.05*app.width)
-                            background_color: hex('#F4433600')
+                            background_color: color_provider.get_rgba("transparent")
                             opacity: 0
                             on_press: root.get_info()
                             BoxLayout:
@@ -181,7 +181,7 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(0.139583333333*app.height)
                         width: dp(0.11*app.width)
-                        background_color: hex('#F4433600')
+                        background_color: color_provider.get_rgba("transparent")
                         opacity: 0
                         BoxLayout:
                             padding: 0
@@ -198,7 +198,7 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(0.139583333333*app.height)
                         width: dp(0.11*app.width)
-                        background_color: hex('#F4433600')
+                        background_color: color_provider.get_rgba("transparent")
                         on_press: root.next_screen()
                         BoxLayout:
                             padding: 0

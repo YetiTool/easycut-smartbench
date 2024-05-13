@@ -41,7 +41,7 @@ Builder.load_string(
 
     canvas:
         Color: 
-            rgba: hex('#e5e5e5')
+            rgba: color_provider.get_rgba("light_grey")
         Rectangle: 
             size: self.size
             pos: self.pos
@@ -65,7 +65,7 @@ Builder.load_string(
                 Label:
                     id: version_number_label
                     font_size: str(0.0375*app.width) + 'sp'
-                    color: hex('#333333')
+                    color: color_provider.get_rgba("dark_grey")
                     text_size: self.size
                     size: self.texture_size
                     valign: "middle"
@@ -74,7 +74,7 @@ Builder.load_string(
                 id: please_read_label
                 size_hint_y: 0.4
                 padding:[dp(0.01875)*app.width, 0]
-                color: hex('#333333')
+                color: color_provider.get_rgba("dark_grey")
                 font_size: str(0.0225*app.width) + 'sp'
                 text_size: self.size
                 size: self.texture_size
@@ -97,7 +97,7 @@ Builder.load_string(
                 Label:
                     id: url_label
                     size_hint_y: 0.6
-                    color: hex('#333333')
+                    color: color_provider.get_rgba("dark_grey")
                     font_size: str(0.01625*app.width) + 'sp'
                     height: self.texture_size[1]
                     text_size: self.size
@@ -115,7 +115,7 @@ Builder.load_string(
                 font_size: str(0.0375*app.width) + 'sp'
                 background_normal: "./asmcnc/skavaUI/img/next.png"
                 on_press: root.next_screen()
-                color: hex('f9f9f9ff')
+                color: color_provider.get_rgba("near_white")
 
 """
 )

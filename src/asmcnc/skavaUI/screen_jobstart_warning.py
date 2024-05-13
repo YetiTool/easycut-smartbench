@@ -17,10 +17,10 @@ Builder.load_string(
 #:import Factory kivy.factory.Factory
 
 <RoundedButton@Button>:
-    background_color: 0,0,0,0
+    background_color: color_provider.get_rgba("transparent")
     canvas.before:
         Color:
-            rgba: hex('#1976d2ff')
+            rgba: color_provider.get_rgba("blue")
         RoundedRectangle:
             pos: self.pos
             size: self.size
@@ -40,7 +40,7 @@ Builder.load_string(
         width: dp(1.0*app.width)
         canvas.before:
             Color: 
-                rgba: hex('#E5E5E5FF')
+                rgba: color_provider.get_rgba("light_grey")
             Rectangle: 
                 size: self.size
                 pos: self.pos
@@ -55,7 +55,7 @@ Builder.load_string(
                 spacing: 0
                 canvas:
                     Color:
-                        rgba: hex('#1976d2ff')
+                        rgba: color_provider.get_rgba("blue")
                     Rectangle:
                         pos: self.pos
                         size: self.size
@@ -65,7 +65,7 @@ Builder.load_string(
                     height: dp(0.125*app.height)
                     width: dp(1.0*app.width)
                     text: "Safety Warning"
-                    color: hex('#f9f9f9ff')
+                    color: color_provider.get_rgba("near_white")
                     font_size: 0.0375*app.width
                     halign: "center"
                     valign: "bottom"
@@ -106,7 +106,7 @@ Builder.load_string(
                             valign: 'top'
                             size:self.texture_size
                             text_size: self.size
-                            color: hex('#333333FF')
+                            color: color_provider.get_rgba("dark_grey")
 
                         Label:
                             id: causes_of_fire
@@ -116,7 +116,7 @@ Builder.load_string(
                             valign: 'middle'
                             size: self.texture_size
                             text_size: self.size
-                            color: hex('#333333FF')
+                            color: color_provider.get_rgba("dark_grey")
                             markup: True
                             font_size: str(0.025*app.width) + 'sp' 
 
@@ -150,7 +150,7 @@ Builder.load_string(
                                 valign: 'middle'
                                 size:self.texture_size
                                 text_size: self.size
-                                color: hex('#333333FF')
+                                color: color_provider.get_rgba("dark_grey")
 
                     BoxLayout:
                         orientation: 'vertical'
@@ -173,7 +173,7 @@ Builder.load_string(
                             valign: 'middle'
                             size:self.texture_size
                             text_size: self.size
-                            color: hex('#333333FF')
+                            color: color_provider.get_rgba("dark_grey")
   
 
             BoxLayout:
@@ -193,7 +193,7 @@ Builder.load_string(
                     width: dp(0.36375*app.width)
                     height: dp(0.164583333333*app.height)
                     font_size: str(0.035*app.width) + 'sp'
-                    color: hex('#f9f9f9ff')
+                    color: color_provider.get_rgba("near_white")
                     markup: True
                     center: self.parent.center
                     pos: self.parent.pos

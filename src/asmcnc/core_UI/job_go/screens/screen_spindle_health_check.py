@@ -30,7 +30,7 @@ Builder.load_string(
         width: 1.0*app.width
         canvas:
             Color: 
-                rgba: hex('#E5E5E5FF')
+                rgba: color_provider.get_rgba("light_grey")
             Rectangle: 
                 size: self.size
                 pos: self.pos         
@@ -41,7 +41,7 @@ Builder.load_string(
             orientation: 'vertical'
             canvas:
                 Color: 
-                    rgba: [1,1,1,1]
+                    rgba: color_provider.get_rgba("white")
                 RoundedRectangle:
                     size: self.size
                     pos: self.pos    
@@ -49,7 +49,7 @@ Builder.load_string(
             Label:
                 id: cool_down_label
                 size_hint_y: 1
-                color: [0,0,0,1]
+                color: color_provider.get_rgba("black")
                 markup: True
                 font_size: str(0.0375*app.width) + 'px' 
                 valign: 'middle'
@@ -101,7 +101,7 @@ Builder.load_string(
                         size:self.texture_size
                         text_size: self.size  
                         text: '10'
-                        color: [0,0,0,1]
+                        color: color_provider.get_rgba("black")
 
                 BoxLayout: 
                     spacing: 0

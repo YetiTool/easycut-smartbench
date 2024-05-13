@@ -24,7 +24,7 @@ Builder.load_string("""
 
     canvas:
         Color: 
-            rgba: hex('#e5e5e5')
+            rgba: color_provider.get_rgba("light_grey")
         Rectangle: 
             size: self.size
             pos: self.pos
@@ -43,7 +43,7 @@ Builder.load_string("""
                 id: finishing_install_label
                 text_size: self.size
                 size_hint_y: 0.33
-                color: hex('#333333')
+                color: color_provider.get_rgba("dark_grey")
                 markup: True
                 font_size: '40sp'   
                 valign: 'middle'
@@ -54,7 +54,7 @@ Builder.load_string("""
                 text_size: self.size
                 size_hint_y: 0.33
                 text: "..."
-                color: hex('1976d2ff')
+                color: color_provider.get_rgba("blue")
                 markup: True
                 font_size: '200sp'   
                 valign: 'bottom'
@@ -65,7 +65,7 @@ Builder.load_string("""
                 text_size: self.size
                 size: self.texture_size
                 size_hint_y: 0.33
-                color: hex('#333333')
+                color: color_provider.get_rgba("dark_grey")
                 markup: True
                 font_size: '40sp'
                 valign: 'middle'

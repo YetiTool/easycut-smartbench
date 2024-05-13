@@ -71,7 +71,7 @@ Builder.load_string(
 
     canvas:
         Color: 
-            rgba: hex('#E5E5E5FF')
+            rgba: color_provider.get_rgba("light_grey")
         Rectangle: 
             size: self.size
             pos: self.pos
@@ -92,7 +92,7 @@ Builder.load_string(
             halign: 'center'
             size: self.texture_size
             text_size: self.size
-            color: hex('#333333ff')
+            color: color_provider.get_rgba("dark_grey")
             font_size: str(0.05*app.width) + 'sp'
             text: root.job_checking_checked
 
@@ -101,7 +101,7 @@ Builder.load_string(
             size_hint_y: 0.65
             size: self.texture_size
             text_size: self.size
-            color: hex('#333333ff')
+            color: color_provider.get_rgba("dark_grey")
             font_size: str(0.025*app.width) + 'sp'
             halign: 'center'
             valign: 'top'
@@ -122,7 +122,7 @@ Builder.load_string(
                     size_hint_y: 3
                     size: self.texture_size
                     text_size: self.size
-                    color: hex('#333333ff')
+                    color: color_provider.get_rgba("dark_grey")
                     font_size: str(0.025*app.width) + 'sp'
                     halign: 'center'
                     valign: 'middle'
@@ -145,7 +145,7 @@ Builder.load_string(
                         width: dp(0.36375*app.width)
                         height: dp(0.164583333333*app.height)
                         font_size: str(0.035*app.width) + 'sp'
-                        color: hex('#f9f9f9ff')
+                        color: color_provider.get_rgba("near_white")
                         markup: True
                         center: self.parent.center
                         pos: self.parent.pos
@@ -165,7 +165,7 @@ Builder.load_string(
                     
                     RstDocument:
                         text: root.display_output
-                        background_color: hex('#E5E5E5FF')
+                        background_color: color_provider.get_rgba("light_grey")
                         base_font_size: str(31.0/800.0*app.width) + 'sp'
 
                 BoxLayout:
@@ -176,7 +176,7 @@ Builder.load_string(
                     Button:
                         font_size: str(0.01875 * app.width) + 'sp'
                         id: load_file_now_button
-                        color: hex('#f9f9f9ff')
+                        color: color_provider.get_rgba("near_white")
                         markup: True
                         center: self.parent.center
                         pos: self.parent.pos
@@ -189,7 +189,7 @@ Builder.load_string(
                     Button:
                         font_size: str(0.01875 * app.width) + 'sp'
                         id: check_gcode_button
-                        color: hex('#f9f9f9ff')
+                        color: color_provider.get_rgba("near_white")
                         markup: True
                         center: self.parent.center
                         pos: self.parent.pos

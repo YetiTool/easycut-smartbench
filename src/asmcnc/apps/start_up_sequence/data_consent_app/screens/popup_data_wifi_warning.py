@@ -20,6 +20,8 @@ from kivy.clock import Clock
 from kivy.uix.checkbox import CheckBox
 from kivy.graphics import Color, Rectangle
 
+from asmcnc.core_UI.utils import color_provider
+
 class PopupDataAndWiFiDisableWarning(Widget):   
 	def __init__(self, consent_manager, localization):
 
@@ -40,14 +42,14 @@ class PopupDataAndWiFiDisableWarning(Widget):
 		back_string = self.l.get_bold('No, go back')
 
 		img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-		label = Label(size_hint_y=1.3, text_size=(380, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
+		label = Label(size_hint_y=1.3, text_size=(380, None), halign='center', valign='middle', text=description, color=color_provider.get_rgba("black"), padding=[0,0], markup = True)
 
 		ok_button = Button(text=ok_string, markup = True)
 		ok_button.background_normal = ''
-		ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+		ok_button.background_color = color_provider.get_rgba("red")
 		back_button = Button(text=back_string, markup = True)
 		back_button.background_normal = ''
-		back_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+		back_button.background_color = color_provider.get_rgba("green")
 
 		btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[20,0,20,0])
 		btn_layout.add_widget(back_button)
@@ -59,7 +61,7 @@ class PopupDataAndWiFiDisableWarning(Widget):
 		layout_plan.add_widget(btn_layout)
 
 		popup = Popup(title=title_string,
-					  title_color=[0, 0, 0, 1],
+					  title_color=color_provider.get_rgba("black"),
 					  title_size = '20sp',
 					  content=layout_plan,
 					  size_hint=(None, None),
@@ -67,7 +69,7 @@ class PopupDataAndWiFiDisableWarning(Widget):
 					  auto_dismiss= False
 					  )
 
-		popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+		popup.separator_color = color_provider.get_rgba("red")
 		popup.separator_height = '4dp'
 		popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 

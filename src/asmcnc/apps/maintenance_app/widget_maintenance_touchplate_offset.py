@@ -26,7 +26,7 @@ Builder.load_string("""
 
         LabelBase:
             id: touchplate_offset_label
-            color: 0,0,0,1
+            color: color_provider.get_rgba("black")
             font_size: dp(0.03*app.width)
             markup: True
             halign: "left"
@@ -68,7 +68,7 @@ Builder.load_string("""
                 multiline: False
 
             LabelBase: 
-                color: 0,0,0,1
+                color: color_provider.get_rgba("black")
                 font_size: dp(0.035*app.width)
                 markup: True
                 halign: "left"

@@ -50,14 +50,14 @@ Builder.load_string("""
             pos_hint: {'x': -0.39, 'y': 0.45}
             text: 'Cutting depths'
             font_size: app.get_scaled_sp('20sp')
-            color: hex('#F9F9F9')
+            color: color_provider.get_rgba("near_white")
         
         Label:
             id: Z0
             pos_hint: {'x': 0.0375, 'y': 0.21}
             text: 'Z0'
             font_size: app.get_scaled_sp('20sp')
-            color: hex('#333333')
+            color: color_provider.get_rgba("dark_grey")
             
         Image:
             id: material_graphic
@@ -72,7 +72,7 @@ Builder.load_string("""
             pos_hint: {'x': -0.42, 'y': 0.23}
             text: ''
             font_size: app.get_scaled_sp('16sp')
-            color: hex('#333333')
+            color: color_provider.get_rgba("dark_grey")
             text_size: (dp(app.get_scaled_width(75)), None)
             
         Image:
@@ -100,7 +100,7 @@ Builder.load_string("""
             pos_hint: {'x': -0.42, 'y': -0.075}
             text: ''
             font_size: app.get_scaled_sp('16sp')
-            color: hex('#333333')
+            color: color_provider.get_rgba("dark_grey")
             text_size: (dp(app.get_scaled_width(75)), None)
             
         Image:
@@ -137,7 +137,7 @@ Builder.load_string("""
             pos_hint: {'x': -0.42, 'y': -0.275}
             text: ''
             font_size: app.get_scaled_sp('16sp')
-            color: hex('#333333')
+            color: color_provider.get_rgba("dark_grey")
             text_size: (dp(app.get_scaled_width(75)), None)
             
         FloatInput:
@@ -184,7 +184,7 @@ Builder.load_string("""
             text: ''
             font_size: app.get_scaled_sp('14sp')
             markup: True
-            color: hex('#FF0000')
+            color: color_provider.get_rgba("monochrome_red")
             text_size: (dp(app.get_scaled_width(175)), None)
         
         Label:
@@ -193,7 +193,7 @@ Builder.load_string("""
             text: ''
             font_size: app.get_scaled_sp('14sp')
             markup: True
-            color: hex('#FF0000')
+            color: color_provider.get_rgba("monochrome_red")
             text_size: (dp(app.get_scaled_width(150)), None) 
         
         GridLayout:
@@ -210,7 +210,7 @@ Builder.load_string("""
                 id: auto_pass_label
                 text: ''
                 font_size: app.get_scaled_sp('16sp')
-                color: hex('#333333')
+                color: color_provider.get_rgba("dark_grey")
                 text_size: (dp(app.get_scaled_width(75)), None)
             CheckBox:
                 id: auto_pass_checkbox
@@ -223,7 +223,7 @@ Builder.load_string("""
                 id: depth_per_pass_label
                 text: ''
                 font_size: app.get_scaled_sp('16sp')
-                color: hex('#333333')
+                color: color_provider.get_rgba("dark_grey")
                 text_size: (dp(app.get_scaled_width(75)), None)
                 
             FloatInput:
@@ -251,7 +251,7 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(app.get_scaled_width(83))
                 height: dp(app.get_scaled_height(23))
-                background_color: [0,0,0,0]
+                background_color: color_provider.get_rgba("transparent")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -269,7 +269,7 @@ Builder.load_string("""
                 size_hint: (None,None)
                 width: dp(app.get_scaled_width(86))
                 height: dp(app.get_scaled_height(23))
-                background_color: [0,0,0,0]
+                background_color: color_provider.get_rgba("transparent")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size

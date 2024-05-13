@@ -48,14 +48,14 @@ Builder.load_string(
 
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("transparent")
                 always_release: True
                 on_release: 
                     root.cancelXYJog()
-                    self.background_color = hex('#F4433600')
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press: 
                     root.buttonJogXY('X+')
-                    self.background_color = hex('#F44336FF')
+                    self.background_color = color_provider.get_rgba("button_press_background")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -75,14 +75,14 @@ Builder.load_string(
                             
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("transparent")
                 always_release: True
                 on_release: 
                     root.cancelXYJog()
-                    self.background_color = hex('#F4433600')
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press: 
                     root.buttonJogXY('Y+')
-                    self.background_color = hex('#F44336FF')
+                    self.background_color = color_provider.get_rgba("button_press_background")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -95,12 +95,12 @@ Builder.load_string(
                         allow_stretch: True                                    
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("transparent")
                 on_release: 
-                    self.background_color = hex('#F4433600')
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press:
                     root.jogModeCycled()
-                    self.background_color = hex('#F44336FF')
+                    self.background_color = color_provider.get_rgba("button_press_background")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -114,14 +114,14 @@ Builder.load_string(
                         allow_stretch: True  
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("transparent")
                 always_release: True
                 on_release: 
                     root.cancelXYJog()
-                    self.background_color = hex('#F4433600')
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press: 
                     root.buttonJogXY('Y-')
-                    self.background_color = hex('#F44336FF')
+                    self.background_color = color_provider.get_rgba("button_press_background")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -139,12 +139,12 @@ Builder.load_string(
                 size: self.parent.size
                 pos: self.parent.pos                 
 #                 Button:
-#                     background_color: hex('#F4433600')
+#                     background_color: color_provider.get_rgba("transparent")
 #                     on_release: 
 #                         root.set_x_datum()
-#                         self.background_color = hex('#F4433600')
+#                         self.background_color = color_provider.get_rgba("transparent")
 #                     on_press: 
-#                         self.background_color = hex('#F44336FF')
+#                         self.background_color = color_provider.get_rgba("button_press_background")
 #                     BoxLayout:
 #                         size: self.parent.size
 #                         pos: self.parent.pos  
@@ -157,14 +157,14 @@ Builder.load_string(
 
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("transparent")
                 always_release: True
                 on_release:
                     root.cancelXYJog()
-                    self.background_color = hex('#F4433600')
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press: 
                     root.buttonJogXY('X-')
-                    self.background_color = hex('#F44336FF')
+                    self.background_color = color_provider.get_rgba("button_press_background")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -182,12 +182,12 @@ Builder.load_string(
                 size: self.parent.size
                 pos: self.parent.pos
 #                 Button:
-#                     background_color: hex('#F4433600')
+#                     background_color: color_provider.get_rgba("transparent")
 #                     on_release: 
 #                         root.set_y_datum()
-#                         self.background_color = hex('#F4433600')
+#                         self.background_color = color_provider.get_rgba("transparent")
 #                     on_press: 
-#                         self.background_color = hex('#F44336FF')
+#                         self.background_color = color_provider.get_rgba("button_press_background")
 #                     BoxLayout:
 #                         padding: 0
 #                         size: self.parent.size
@@ -205,12 +205,12 @@ Builder.load_string(
 
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("transparent")
                 on_release: 
-                    self.background_color = hex('#F4433600')
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press:
                     root.set_standby_to_pos()
-                    self.background_color = hex('#F44336FF')
+                    self.background_color = color_provider.get_rgba("button_press_background")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -226,7 +226,7 @@ Builder.load_string(
 #                 id: virtual_bed_container
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("transparent")
                 disabled: True
                 opacity: 0
                 BoxLayout:

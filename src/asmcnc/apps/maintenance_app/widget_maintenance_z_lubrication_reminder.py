@@ -29,7 +29,7 @@ Builder.load_string("""
 
         LabelBase:
             id: time_since_screw_lubricated_label
-            color: 0,0,0,1
+            color: color_provider.get_rgba("black")
             font_size: dp(0.03*app.width)
             markup: True
             halign: "left"
@@ -67,7 +67,7 @@ Builder.load_string("""
                 width: dp(0.4375*app.width)
                 LabelBase: 
                     id: hours_since_lubrication
-                    color: 0,0,0,1
+                    color: color_provider.get_rgba("black")
                     font_size: dp(0.125*app.width)
                     markup: True
                     halign: "center"
@@ -86,7 +86,7 @@ Builder.load_string("""
                     size_hint: (None,None)
                     height: dp(0.25*app.height)
                     width: dp(0.15*app.width)
-                    background_color: [0,0,0,0]
+                    background_color: color_provider.get_rgba("transparent")
                     BoxLayout:
                         size: self.parent.size
                         pos: self.parent.pos      

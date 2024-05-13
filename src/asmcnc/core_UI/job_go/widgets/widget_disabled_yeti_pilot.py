@@ -43,7 +43,7 @@ Builder.load_string(
                 Label:
                     id: body_label
                     size_hint_y: None
-                    color: hex('#333333ff')
+                    color: color_provider.get_rgba("dark_grey")
                     markup: True
                     halign: 'left'
                     height: self.texture_size[1]
@@ -61,7 +61,7 @@ Builder.load_string(
                 id: health_check_button
                 size_hint_x: 1
                 disabled: False
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("transparent")
 
                 on_press:
                     root.run_spindle_health_check()

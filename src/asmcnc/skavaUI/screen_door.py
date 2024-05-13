@@ -30,7 +30,7 @@ Builder.load_string(
 
     canvas:
         Color: 
-            rgba: [1, 1, 1, 1]
+            rgba: color_provider.get_rgba("white")
         Rectangle: 
             size: self.size
             pos: self.pos
@@ -79,7 +79,7 @@ Builder.load_string(
                 id: header_label
                 size_hint: (None, None)
                 font_size: str(0.0375*app.width) + 'sp'
-                color: [0,0,0,1]
+                color: color_provider.get_rgba("black")
                 markup: True
                 halign: 'left'
                 height: dp(0.104166666667*app.height)
@@ -139,7 +139,7 @@ Builder.load_string(
                     id: spindle_raise_label
                     size_hint: (None, None)
                     font_size: str(0.03*app.width) + 'sp'
-                    color: [0,0,0,1]
+                    color: color_provider.get_rgba("black")
                     markup: True
                     halign: 'center'
                     valign: 'middle'
@@ -174,7 +174,7 @@ Builder.load_string(
                 font_size: str(0.01875 * app.width) + 'sp'
                 id: cancel_button
                 size_hint_x: 1
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("transparent")
                 on_press: root.cancel_stream()
                 disabled: True
                 BoxLayout:
@@ -188,7 +188,7 @@ Builder.load_string(
                 font_size: str(0.01875 * app.width) + 'sp'
                 id: resume_button
                 size_hint_x: 1
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("transparent")
                 on_press: root.resume_stream()
                 disabled: True
                 BoxLayout:

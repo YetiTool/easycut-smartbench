@@ -18,7 +18,7 @@ Builder.load_string(
         width: dp(0.6*app.width)
         canvas.before:
             Color: 
-                rgba: hex('#e5e5e5ff')
+                rgba: color_provider.get_rgba("light_grey")
             Rectangle: 
                 size: self.size
                 pos: self.pos
@@ -34,7 +34,7 @@ Builder.load_string(
                 spacing: 0
                 canvas:
                     Color:
-                        rgba: hex('#1976d2ff')
+                        rgba: color_provider.get_rgba("blue")
                     Rectangle:
                         pos: self.pos
                         size: self.size
@@ -44,8 +44,8 @@ Builder.load_string(
                     height: dp(0.125*app.height)
                     width: dp(1.0*app.width)
                     text: "Wi-Fi and Data Consent"
-                    color: hex('#f9f9f9ff')
-                    # color: hex('#333333ff') #grey
+                    color: color_provider.get_rgba("near_white")
+                    # color: color_provider.get_rgba("dark_grey") #grey
                     font_size: dp(0.0375*app.width)
                     halign: "center"
                     valign: "bottom"
@@ -62,8 +62,8 @@ Builder.load_string(
                 Label: 
                 	id: user_info
 					size_hint: (1,1)
-                    # color: hex('#f9f9f9ff') # white
-                    color: hex('#333333ff') #grey
+                    # color: color_provider.get_rgba("near_white") # white
+                    color: color_provider.get_rgba("dark_grey") #grey
                     font_size: dp(0.0225*app.width)
                     halign: "left"
                     valign: "top"
@@ -88,7 +88,7 @@ Builder.load_string(
 						size_hint: (None,None)
 						height: dp(0.108333333333*app.height)
 						width: dp(0.075*app.width)
-						background_color: hex('#F4433600')
+						background_color: color_provider.get_rgba("transparent")
 						center: self.parent.center
 						pos: self.parent.pos
 						on_press: root.prev_screen()
@@ -118,7 +118,7 @@ Builder.load_string(
 						on_press: root.next_screen()
 						text: 'Next...'
 						font_size: str(0.0375*app.width) + 'sp'
-						color: hex('#f9f9f9ff')
+						color: color_provider.get_rgba("near_white")
 						markup: True
 						center: self.parent.center
 						pos: self.parent.pos

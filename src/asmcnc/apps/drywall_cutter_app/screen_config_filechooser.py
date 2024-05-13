@@ -63,7 +63,7 @@ Builder.load_string("""
             Label:
                 canvas.before:
                     Color:
-                        rgba: hex('#333333FF')
+                        rgba: color_provider.get_rgba("dark_grey")
                     Rectangle:
                         size: self.size
                         pos: self.pos
@@ -115,7 +115,7 @@ Builder.load_string("""
                 id: toggle_view_button
                 size_hint_x: 1
                 on_press: root.switch_view()
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("transparent")
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
@@ -132,7 +132,7 @@ Builder.load_string("""
                 id: sort_button
                 size_hint_x: 1
                 on_press: root.switch_sort()
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("transparent")
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
@@ -148,7 +148,7 @@ Builder.load_string("""
             Button:
                 disabled: True
                 size_hint_x: 1
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("transparent")
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
@@ -157,7 +157,7 @@ Builder.load_string("""
             Button:
                 disabled: True
                 size_hint_x: 1
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("transparent")
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
@@ -167,12 +167,12 @@ Builder.load_string("""
                 id: delete_selected_button
                 disabled: True
                 size_hint_x: 1
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("transparent")
                 on_release: 
                     root.delete_popup(file_selection = filechooser.selection[0])
-                    self.background_color = hex('#FFFFFF00')
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press:
-                    self.background_color = hex('#FFFFFFFF')
+                    self.background_color = color_provider.get_rgba("white")
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
@@ -188,12 +188,12 @@ Builder.load_string("""
                 id: delete_all_button
                 disabled: False
                 size_hint_x: 1
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("transparent")
                 on_release: 
-                    self.background_color = hex('#FFFFFF00')
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press:
                     root.delete_popup(file_selection = 'all')
-                    self.background_color = hex('#FFFFFFFF')
+                    self.background_color = color_provider.get_rgba("white")
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
@@ -208,12 +208,12 @@ Builder.load_string("""
             Button:
                 disabled: False
                 size_hint_x: 1
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("transparent")
                 on_release: 
                     root.quit_to_home()
-                    self.background_color = hex('#FFFFFF00')
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press:
-                    self.background_color = hex('#FFFFFFFF')
+                    self.background_color = color_provider.get_rgba("white")
                 BoxLayout:
                     padding: 25
                     size: self.parent.size
@@ -230,10 +230,10 @@ Builder.load_string("""
                 disabled: True
                 size_hint_x: 1
                 on_release: 
-                    self.background_color = hex('#FFFFFF00')
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press:
                     root.load_config_and_return_to_dwt()
-                    self.background_color = hex('#FFFFFFFF')
+                    self.background_color = color_provider.get_rgba("white")
                 BoxLayout:
                     padding: 25
                     size: self.parent.size

@@ -13,6 +13,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 
 from asmcnc.skavaUI import widget_status_bar
+from asmcnc.core_UI.utils import color_provider
 
 Builder.load_string(
     """
@@ -36,7 +37,7 @@ Builder.load_string(
 
     canvas:
         Color:
-            rgba: hex('#E5E5E5FF')
+            rgba: color_provider.get_rgba("light_grey")
         Rectangle:
             size: self.size
             pos: self.pos
@@ -72,7 +73,7 @@ Builder.load_string(
                     halign: 'center'
                     size:self.texture_size
                     text_size: self.size
-                    color: hex('#333333ff')
+                    color: color_provider.get_rgba("dark_grey")
                 
             BoxLayout:
                 size_hint_y: 4.1
@@ -100,7 +101,7 @@ Builder.load_string(
                             valign: 'middle'
                             size:self.texture_size
                             text_size: self.size
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
                             
                     BoxLayout:
                         orientation: 'horizontal'
@@ -120,7 +121,7 @@ Builder.load_string(
                             valign: 'middle'
                             size:self.texture_size
                             text_size: self.size
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
         
                 BoxLayout:
                     orientation: 'horizontal'
@@ -142,7 +143,7 @@ Builder.load_string(
                             valign: 'middle'
                             size:self.texture_size
                             text_size: self.size
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
     
                     BoxLayout:
                         orientation: 'horizontal'
@@ -162,7 +163,7 @@ Builder.load_string(
                             valign: 'middle'
                             size:self.texture_size
                             text_size: self.size
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
     
                             
                 BoxLayout:
@@ -185,7 +186,7 @@ Builder.load_string(
                             valign: 'middle'
                             size:self.texture_size
                             text_size: self.size
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
                     BoxLayout:
                         orientation: 'horizontal'
                         spacing:0.025*app.width
@@ -204,7 +205,7 @@ Builder.load_string(
                             size:self.texture_size
                             text_size: self.size
                             halign: 'left'
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
 
                 BoxLayout:
                     orientation: 'horizontal'
@@ -226,7 +227,7 @@ Builder.load_string(
                             valign: 'middle'
                             size:self.texture_size
                             text_size: self.size
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
                     BoxLayout:
                         orientation: 'horizontal'
                         spacing:0.025*app.width
@@ -245,7 +246,7 @@ Builder.load_string(
                             size:self.texture_size
                             text_size: self.size
                             halign: 'left'
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
   
 
             BoxLayout:
@@ -284,7 +285,7 @@ class SafetyScreen(Screen):
             machine=self.m, screen_manager=self.sm
         )
         self.status_container.add_widget(self.status_bar_widget)
-        self.status_bar_widget.cheeky_color = "#1976d2"
+        self.status_bar_widget.cheeky_color = color_provider.get_rgba("blue")
         self.update_strings()
 
     def on_enter(self):

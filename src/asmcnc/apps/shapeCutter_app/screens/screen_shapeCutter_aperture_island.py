@@ -69,7 +69,7 @@ Builder.load_string(
                         halign: "center"
                         valign: "bottom"
                         text: "Select a shape to define..."
-                        color: 0,0,0,1
+                        color: color_provider.get_rgba("black")
                         font_size: 0.0325*app.width
                         markup: True
     
@@ -95,7 +95,7 @@ Builder.load_string(
                             size_hint: (None,None)
                             height: dp(0.46875*app.height)
                             width: dp(0.25875*app.width)
-                            background_color: hex('#F4433600')
+                            background_color: color_provider.get_rgba("transparent")
                             center: self.parent.center
                             pos: self.parent.pos
                             on_press: root.aperture()
@@ -123,7 +123,7 @@ Builder.load_string(
                             size_hint: (None,None)
                             height: dp(0.46875*app.height)
                             width: dp(0.25875*app.width)
-                            background_color: hex('#F4433600')
+                            background_color: color_provider.get_rgba("transparent")
                             center: self.parent.center
                             pos: self.parent.pos
                             on_press: root.island()
@@ -159,7 +159,7 @@ Builder.load_string(
                             halign: "center"
                             valign: "middle"
                             text: "Hole (cut an aperture)"
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             font_size: 0.025*app.width
                             markup: True
                     BoxLayout:
@@ -175,7 +175,7 @@ Builder.load_string(
                             halign: "center"
                             valign: "middle"
                             text: "Plate (cut an island)"
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             font_size: 0.025*app.width
                             markup: True
                             
@@ -194,7 +194,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     height: dp(0.0833333333333*app.height)
                     width: dp(0.05*app.width)
-                    background_color: hex('#F4433600')
+                    background_color: color_provider.get_rgba("transparent")
                     opacity: 0
 #                     on_press: root.get_info()
 #                     BoxLayout:
@@ -214,7 +214,7 @@ Builder.load_string(
                     size_hint: (None,None)
                     height: dp(0.0833333333333*app.height)
                     width: dp(0.05*app.width)
-                    background_color: hex('#F4433600')
+                    background_color: color_provider.get_rgba("transparent")
                     opacity: 1
                     on_press: root.exit()
                     BoxLayout:

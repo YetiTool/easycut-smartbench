@@ -25,6 +25,7 @@ from asmcnc.core_UI import console_utils
 from kivy.core.window import Window
 
 from asmcnc.comms.model_manager import ModelManagerSingleton
+from asmcnc.core_UI.utils import color_provider
 
 Builder.load_string("""
 
@@ -88,12 +89,12 @@ Builder.load_string("""
                         font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y: 8
                         disabled: False
-                        background_color: hex('#FFFFFF00')
+                        background_color: color_provider.get_rgba("transparent")
                         on_release: 
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("transparent")
                         on_press:
                             root.pro_app()
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("transparent")
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
@@ -124,12 +125,12 @@ Builder.load_string("""
                         
                         disabled: False
                         size_hint_y: 8
-                        background_color: hex('#FFFFFF00')
+                        background_color: color_provider.get_rgba("transparent")
                         on_release:                 
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("transparent")
                         on_press:
                             root.shapecutter_app()
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("transparent")
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
@@ -157,7 +158,7 @@ Builder.load_string("""
                         font_size: str(0.01875 * app.width) + 'sp'
                         disabled: False
                         size_hint_y: 8
-                        background_color: hex('#FFFFFF00')
+                        background_color: color_provider.get_rgba("transparent")
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
@@ -185,12 +186,12 @@ Builder.load_string("""
                         font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y: 8
                         disabled: False
-                        background_color: hex('#FFFFFF00')
+                        background_color: color_provider.get_rgba("transparent")
                         on_release:
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("transparent")
                         on_press:
                             root.drywall_cutter_app()
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("transparent")
                         BoxLayout:
                             size: self.parent.size
                             pos: self.parent.pos
@@ -223,12 +224,12 @@ Builder.load_string("""
                         font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y: 8
                         disabled: False
-                        background_color: hex('#FFFFFF00')
+                        background_color: color_provider.get_rgba("transparent")
                         on_release: 
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("transparent")
                         on_press:
                             root.wifi_app()
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("transparent")
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
@@ -256,12 +257,12 @@ Builder.load_string("""
                         font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y: 8
                         disabled: False
-                        background_color: hex('#FFFFFF00')
+                        background_color: color_provider.get_rgba("transparent")
                         on_release: 
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("transparent")
                         on_press:
                             root.calibrate_smartbench()
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("transparent")
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
@@ -295,12 +296,12 @@ Builder.load_string("""
                         font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y: 8
                         disabled: False
-                        background_color: hex('#FFFFFF00')
+                        background_color: color_provider.get_rgba("transparent")
                         on_release: 
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("transparent")
                         on_press:
                             root.update_app()
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("transparent")
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
@@ -328,12 +329,12 @@ Builder.load_string("""
                         font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y: 8
                         disabled: False
-                        background_color: hex('#FFFFFF00')
+                        background_color: color_provider.get_rgba("transparent")
                         on_release: 
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("transparent")
                         on_press:
                             root.maintenance_app()
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("transparent")
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
@@ -367,12 +368,12 @@ Builder.load_string("""
                         font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y: 8
                         disabled: False
-                        background_color: hex('#FFFFFF00')
+                        background_color: color_provider.get_rgba("transparent")
                         on_release: 
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("transparent")
                         on_press:
                             root.upgrade_app()
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("transparent")
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
@@ -400,12 +401,12 @@ Builder.load_string("""
                         font_size: str(0.01875 * app.width) + 'sp'
                         size_hint_y: 8
                         disabled: False
-                        background_color: hex('#FFFFFF00')
+                        background_color: color_provider.get_rgba("transparent")
                         on_release: 
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("transparent")
                         on_press:
                             root.developer_app()
-                            self.background_color = hex('#FFFFFF00')
+                            self.background_color = color_provider.get_rgba("transparent")
                         BoxLayout:
                             padding: 0
                             size: self.parent.size
@@ -447,12 +448,12 @@ Builder.load_string("""
                     font_size: str(0.01875 * app.width) + 'sp'
                     disabled: False
                     size_hint_y: 1
-                    background_color: hex('#FFFFFF00')
+                    background_color: color_provider.get_rgba("transparent")
                     on_release: 
                         carousel.load_previous()
-                        self.background_color = hex('#FFFFFF00')
+                        self.background_color = color_provider.get_rgba("transparent")
                     on_press:
-                        self.background_color = hex('#FFFFFF00')
+                        self.background_color = color_provider.get_rgba("transparent")
                     BoxLayout:
                         size: self.parent.size
                         pos: self.parent.pos
@@ -471,7 +472,7 @@ Builder.load_string("""
                     font_size: str(0.01875 * app.width) + 'sp'
                     id: shutdown_button
                     size_hint_y: 1
-                    background_color: hex('#FFFFFF00')
+                    background_color: color_provider.get_rgba("transparent")
                     on_press: root.shutdown_console()
 
                     BoxLayout:
@@ -494,12 +495,12 @@ Builder.load_string("""
                     id: load_button
                     disabled: False
                     size_hint_y: 1
-                    background_color: hex('#FFFFFF00')
+                    background_color: color_provider.get_rgba("transparent")
                     on_release: 
                         carousel.load_next(mode='next')
-                        self.background_color = hex('#FFFFFF00')
+                        self.background_color = color_provider.get_rgba("transparent")
                     on_press:
-                        self.background_color = hex('#FFFFFF00')
+                        self.background_color = color_provider.get_rgba("transparent")
                     BoxLayout:
                         size: self.parent.size
                         pos: self.parent.pos
@@ -519,7 +520,7 @@ Builder.load_string("""
                 Button:
                     font_size: str(0.01875 * app.width) + 'sp'
                     disabled: False
-                    background_color: hex('#FFFFFF00')
+                    background_color: color_provider.get_rgba("transparent")
                     on_press: root.help_popup()
                     BoxLayout:
                         size: self.parent.size
@@ -626,8 +627,8 @@ class LobbyScreen(Screen):
                                    main_label_padding=(0, 0), main_layout_padding=(10, 10, 10, 10),
                                    main_layout_spacing=10, button_layout_padding=(20, 10, 20, 0),
                                    button_layout_spacing=15,
-                                   button_two_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
-                                   button_one_background_color=(230 / 255., 74 / 255., 25 / 255., 1.),
+                                   button_two_background_color=color_provider.get_rgba("green"),
+                                   button_one_background_color=color_provider.get_rgba("red"),
                                    button_one_text="Remind me later", button_two_text="Ok",
                                    button_one_callback=self.set_trigger_to_true,
                                    button_two_callback=self.set_trigger_to_false)

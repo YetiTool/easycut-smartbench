@@ -30,9 +30,9 @@ Builder.load_string(
 <SystemToolsLanguageSpinner@SpinnerOption>
 
     background_normal: ''
-    background_color: [1,1,1,1]
+    background_color: color_provider.get_rgba("white")
     height: dp(0.0833333333333*app.height)
-    color: 0,0,0,1
+    color: color_provider.get_rgba("black")
     halign: 'left'
     markup: 'True'
     font_size: 0.0225*app.width
@@ -78,7 +78,7 @@ Builder.load_string(
         width: dp(0.6*app.width)
         canvas.before:
             Color: 
-                rgba: hex('#e5e5e5ff')
+                rgba: color_provider.get_rgba("light_grey")
             Rectangle: 
                 size: self.size
                 pos: self.pos
@@ -92,7 +92,7 @@ Builder.load_string(
                 spacing: 0
                 canvas:
                     Color:
-                        rgba: hex('#1976d2ff')
+                        rgba: color_provider.get_rgba("blue")
                     Rectangle:
                         pos: self.pos
                         size: self.size
@@ -102,8 +102,8 @@ Builder.load_string(
                     height: dp(0.125*app.height)
                     width: dp(1.0*app.width)
                     text: "System Information"
-                    color: hex('#f9f9f9ff')
-                    # color: hex('#333333ff') #grey
+                    color: color_provider.get_rgba("near_white")
+                    # color: color_provider.get_rgba("dark_grey") #grey
                     font_size: 0.0375*app.width
                     halign: "center"
                     valign: "bottom"
@@ -128,7 +128,7 @@ Builder.load_string(
                     Button:
                         font_size: str(0.01875 * app.width) + 'sp'
                         id: smartbench_name
-                        background_color: hex('#e5e5e5ff')
+                        background_color: color_provider.get_rgba("light_grey")
                         background_normal: ""
                         background_down: ""
                         opacity: 1
@@ -163,7 +163,7 @@ Builder.load_string(
                                     valign: "middle"
                                     markup: True
                                     font_size: 0.0375*app.width
-                                    color: hex('#333333ff')
+                                    color: color_provider.get_rgba("dark_grey")
                                     shorten_from: 'right'
                                     shorten: True
 
@@ -179,7 +179,7 @@ Builder.load_string(
                         padding:[dp(0.005)*app.width, dp(0.00416666666667)*app.height]
                         id: smartbench_name_input
                         text: 'My SmartBench'
-                        color: hex('#333333ff')
+                        color: color_provider.get_rgba("dark_grey")
                         text_size: self.size
                         halign: "left"
                         valign: "middle"
@@ -200,7 +200,7 @@ Builder.load_string(
                         id: smartbench_location
                         size_hint_x: None
                         width: dp(0.625*app.width)
-                        background_color: hex('#e5e5e5ff')
+                        background_color: color_provider.get_rgba("light_grey")
                         background_normal: ""
                         background_down: ""
                         size_hint_y: None
@@ -228,7 +228,7 @@ Builder.load_string(
                                         size: self.size
                                 Label:
                                     id: smartbench_location_label
-                                    color: hex('#333333ff')
+                                    color: color_provider.get_rgba("dark_grey")
                                     text_size: self.size
                                     halign: "left"
                                     valign: "middle"
@@ -248,7 +248,7 @@ Builder.load_string(
                         padding:[dp(0.005)*app.width, dp(0.00416666666667)*app.height]
                         id: smartbench_location_input
                         text: 'SmartBench location'
-                        color: hex('#333333ff')
+                        color: color_provider.get_rgba("dark_grey")
                         text_size: self.size
                         halign: "left"
                         valign: "middle"
@@ -279,7 +279,7 @@ Builder.load_string(
                         Label:
                             id: smartbench_model_header
                             text: '[b]SmartBench model[/b]'
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
                             text_size: self.size
                             halign: "left"
                             valign: "middle"
@@ -289,7 +289,7 @@ Builder.load_string(
                         Label:
                             id: smartbench_model
                             text: '-'
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
                             text_size: self.size
                             halign: "left"
                             valign: "middle"
@@ -299,7 +299,7 @@ Builder.load_string(
                         Label:
                             id: serial_number_header
                             text: '[b]Serial number[/b]'
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
                             text_size: self.size
                             halign: "left"
                             valign: "middle"
@@ -307,7 +307,7 @@ Builder.load_string(
                             font_size: 0.025*app.width
                         Label:
                             id: machine_serial_number_label
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
                             text: ''
                             text_size: self.size
                             halign: "left"
@@ -317,7 +317,7 @@ Builder.load_string(
 
                         Label:
                             id: console_serial_number_header
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
                             text_size: self.size
                             halign: "left"
                             valign: "middle"
@@ -326,7 +326,7 @@ Builder.load_string(
                         Label:
                             id: console_serial_number
                             text: '-'
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
                             text_size: self.size
                             halign: "left"
                             valign: "middle"
@@ -335,7 +335,7 @@ Builder.load_string(
                         Label: 
                             id: software_header
                             text: '[b]Software[/b]'
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
                             text_size: self.size
                             halign: "left"
                             valign: "middle"
@@ -343,7 +343,7 @@ Builder.load_string(
                             font_size: 0.025*app.width
                         Label:
                             id: sw_version_label
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
                             text: 'SW_version'
                             halign: "left"
                             valign: "middle"
@@ -354,7 +354,7 @@ Builder.load_string(
                         Label: 
                             id: platform_header
                             text: '[b]Platform[/b]'
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
                             text_size: self.size
                             halign: "left"
                             valign: "middle"
@@ -362,7 +362,7 @@ Builder.load_string(
                             font_size: 0.025*app.width
                         Label: 
                             id: pl_version_label
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
                             text: 'PL_version'
                             halign: "left"
                             valign: "middle"
@@ -373,7 +373,7 @@ Builder.load_string(
                         Label: 
                             id: firmware_header
                             text: '[b]Firmware[/b]'
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
                             text_size: self.size
                             halign: "left"
                             valign: "middle"
@@ -381,7 +381,7 @@ Builder.load_string(
                             font_size: 0.025*app.width
                         Label: 
                             id: fw_version_label
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
                             text: 'FW_version'
                             halign: "left"
                             valign: "middle"
@@ -392,7 +392,7 @@ Builder.load_string(
                         Label: 
                             id: zhead_header
                             text: '[b]Z head[/b]'
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
                             text_size: self.size
                             halign: "left"
                             valign: "middle"
@@ -400,7 +400,7 @@ Builder.load_string(
                             font_size: 0.025*app.width
                         Label: 
                             id: zh_version_label
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
                             text: 'ZH_version'
                             halign: "left"
                             valign: "middle"
@@ -411,7 +411,7 @@ Builder.load_string(
                         Label: 
                             id: hardware_header
                             text: '[b]Hardware[/b]'
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
                             text_size: self.size
                             halign: "left"
                             valign: "middle"
@@ -419,7 +419,7 @@ Builder.load_string(
                             font_size: 0.025*app.width
                         Label: 
                             id: hw_version_label
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
                             text: 'HW_version'
                             halign: "left"
                             valign: "middle"
@@ -448,7 +448,7 @@ Builder.load_string(
                         center: self.parent.center
                         pos: self.parent.pos
                         text: 'Choose language...'
-                        color: hex('#f9f9f9ff')
+                        color: color_provider.get_rgba("near_white")
                         markup: True
                         option_cls: Factory.get("SystemToolsLanguageSpinner")
                         on_text: root.choose_language()
@@ -465,7 +465,7 @@ Builder.load_string(
                         center: self.parent.center
                         pos: self.parent.pos
                         on_press: root.open_data_consent_app()
-                        color: hex('#f9f9f9ff')
+                        color: color_provider.get_rgba("near_white")
                         markup: True
                         
                     ToggleButton:
@@ -480,7 +480,7 @@ Builder.load_string(
                         center: self.parent.center
                         pos: self.parent.pos
                         on_press: root.toggle_ssh()
-                        color: hex('#f9f9f9ff')
+                        color: color_provider.get_rgba("near_white")
                         markup: True
 
                     ToggleButton:
@@ -495,7 +495,7 @@ Builder.load_string(
                         center: self.parent.center
                         pos: self.parent.pos
                         on_press: root.do_show_more_info()
-                        color: hex('#f9f9f9ff')
+                        color: color_provider.get_rgba("near_white")
                         markup: True
 
                     BoxLayout: 
@@ -509,7 +509,7 @@ Builder.load_string(
                             id: show_more_info
                             text: ''
                             opacity: 0
-                            color: hex('#333333ff')
+                            color: color_provider.get_rgba("dark_grey")
 
             BoxLayout:
                 size_hint: (None,None)
@@ -536,7 +536,7 @@ Builder.load_string(
                             size_hint: (None,None)
                             height: dp(0.108333333333*app.height)
                             width: dp(0.075*app.width)
-                            background_color: hex('#F4433600')
+                            background_color: color_provider.get_rgba("transparent")
                             center: self.parent.center
                             pos: self.parent.pos
                             on_press: root.go_back()
@@ -576,7 +576,7 @@ Builder.load_string(
                             size_hint: (None,None)
                             height: dp(0.125*app.height)
                             width: dp(0.06375*app.width)
-                            background_color: hex('#F4433600')
+                            background_color: color_provider.get_rgba("transparent")
                             center: self.parent.center
                             pos: self.parent.pos
                             on_press: root.exit_app()

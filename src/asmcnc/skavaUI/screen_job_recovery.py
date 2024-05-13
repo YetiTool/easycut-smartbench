@@ -61,7 +61,7 @@ Builder.load_string(
                             Label:
                                 id: line_input_header
                                 text: "Go to line:"
-                                color: hex('#333333FF')
+                                color: color_provider.get_rgba("dark_grey")
                                 bold: True
                                 font_size: dp(0.03125*app.width)
 
@@ -69,7 +69,7 @@ Builder.load_string(
                                 padding:[0, dp(0.00833333333333)*app.height, 0, 0]
                                 canvas:
                                     Color:
-                                        rgba: 1,1,1,1
+                                        rgba: color_provider.get_rgba("white")
                                     RoundedRectangle:
                                         size: self.size
                                         pos: self.pos
@@ -80,7 +80,7 @@ Builder.load_string(
                                     halign: 'center'
                                     input_filter: 'int'
                                     multiline: False
-                                    background_color: (0,0,0,0)
+                                    background_color: color_provider.get_rgba("transparent")
                                     hint_text: "Enter #"
 
                         BoxLayout:
@@ -91,12 +91,12 @@ Builder.load_string(
 
                             Button:
                                 font_size: str(0.01875 * app.width) + 'sp'
-                                background_color: [0,0,0,0]
+                                background_color: color_provider.get_rgba("transparent")
                                 on_press:
                                     root.start_scrolling_up()
-                                    self.background_color = hex('#F44336FF')
+                                    self.background_color = color_provider.get_rgba("button_press_background")
                                 on_release:
-                                    self.background_color = hex('#F4433600')
+                                    self.background_color = color_provider.get_rgba("transparent")
                                     root.stop_scrolling_up()
                                 BoxLayout:
                                     padding: 0
@@ -111,13 +111,13 @@ Builder.load_string(
 
                             Button:
                                 font_size: str(0.01875 * app.width) + 'sp'
-                                background_color: [0,0,0,0]
+                                background_color: color_provider.get_rgba("transparent")
                                 on_press:
                                     root.start_scrolling_down()
-                                    self.background_color = hex('#F44336FF')
+                                    self.background_color = color_provider.get_rgba("button_press_background")
                                 on_release:
                                     root.stop_scrolling_down()
-                                    self.background_color = hex('#F4433600')
+                                    self.background_color = color_provider.get_rgba("transparent")
                                 BoxLayout:
                                     padding: 0
                                     size: self.parent.size
@@ -156,7 +156,7 @@ Builder.load_string(
                         padding:[dp(0.015)*app.width, dp(0.025)*app.height, dp(0.015)*app.width, 0]
                         canvas:
                             Color:
-                                rgba: 1,1,1,1
+                                rgba: color_provider.get_rgba("white")
                             RoundedRectangle:
                                 size: self.size
                                 pos: self.pos
@@ -164,7 +164,7 @@ Builder.load_string(
                         FloatLayout:
                             Label:
                                 id: gcode_label
-                                color: 0,0,0,1
+                                color: color_provider.get_rgba("black")
                                 font_size: dp(0.02*app.width)
                                 halign: "left"
                                 valign: "top"
@@ -183,7 +183,7 @@ Builder.load_string(
                         Label:
                             id: stopped_on_label
                             size_hint_y: 0.13
-                            color: 1,0,0,1
+                            color: color_provider.get_rgba("monochrome_red")
                             font_size: dp(0.02*app.width)
                             halign: "left"
                             valign: "top"
@@ -197,7 +197,7 @@ Builder.load_string(
                         spacing:dp(0.0145833333333)*app.height
                         canvas:
                             Color:
-                                rgba: 1,1,1,1
+                                rgba: color_provider.get_rgba("white")
                             RoundedRectangle:
                                 size: self.size
                                 pos: self.pos
@@ -205,7 +205,7 @@ Builder.load_string(
                         Label:
                             id: pos_label_header
                             text: "Job resumes at:"
-                            color: hex('#333333FF')
+                            color: color_provider.get_rgba("dark_grey")
                             bold: True
                             font_size: dp(0.01875*app.width)
                             halign: 'left'
@@ -215,7 +215,7 @@ Builder.load_string(
                         Label:
                             id: pos_label
                             text: "wX: | wY: | wZ:"
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             font_size: dp(0.02*app.width)
                             halign: 'left'
                             valign: 'middle'
@@ -224,7 +224,7 @@ Builder.load_string(
                         Label:
                             id: speed_label
                             text: "F: | S:"
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             font_size: dp(0.02*app.width)
                             halign: 'left'
                             valign: 'middle'
@@ -242,7 +242,7 @@ Builder.load_string(
                         padding:[dp(0.01875)*app.width, dp(0.03125)*app.height, 0, dp(0.03125)*app.height]
                         Button:
                             font_size: str(0.01875 * app.width) + 'sp'
-                            background_color: [0,0,0,0]
+                            background_color: color_provider.get_rgba("transparent")
                             on_press: root.get_info()
                             BoxLayout:
                                 size: self.parent.size
@@ -256,7 +256,7 @@ Builder.load_string(
 
                     Button:
                         font_size: str(0.01875 * app.width) + 'sp'
-                        background_color: [0,0,0,0]
+                        background_color: color_provider.get_rgba("transparent")
                         on_press: root.back_to_home()
                         BoxLayout:
                             size: self.parent.size
@@ -279,7 +279,7 @@ Builder.load_string(
                         size_hint_y: 2.5
                         canvas:
                             Color:
-                                rgba: 1,1,1,1
+                                rgba: color_provider.get_rgba("white")
                             RoundedRectangle:
                                 size: self.size
                                 pos: self.pos
@@ -290,7 +290,7 @@ Builder.load_string(
 
                         Button:
                             font_size: str(0.01875 * app.width) + 'sp'
-                            background_color: [0,0,0,0]
+                            background_color: color_provider.get_rgba("transparent")
                             on_press: root.next_screen()
                             size_hint: (None, None)
                             height: dp(0.139583333333*app.height)
@@ -320,7 +320,7 @@ Builder.load_string(
 
             Label:
                 id: arc_movement_error_label
-                color: 1,0,0,1
+                color: color_provider.get_rgba("monochrome_red")
                 font_size: dp(0.0175*app.width)
                 halign: "left"
                 valign: "top"

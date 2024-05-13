@@ -42,7 +42,7 @@ Builder.load_string(
     
     canvas:
         Color: 
-            rgba: hex('#E5E5E5FF')
+            rgba: color_provider.get_rgba("light_grey")
         Rectangle: 
             size: self.size
             pos: self.pos
@@ -58,7 +58,7 @@ Builder.load_string(
             id: usb_status_label
             canvas.before:
                 Color:
-                    rgba: hex('#333333FF')
+                    rgba: color_provider.get_rgba("dark_grey")
                 Rectangle:
                     size: self.size
                     pos: self.pos
@@ -84,7 +84,7 @@ Builder.load_string(
                 halign: 'center'
                 size: self.texture_size
                 text_size: self.size
-                color: hex('#333333ff')
+                color: color_provider.get_rgba("dark_grey")
                 font_size: str(0.05*app.width) + 'sp'
                 text: root.progress_value          
 
@@ -97,7 +97,7 @@ Builder.load_string(
                 halign: 'center'
                 size: self.texture_size
                 text_size: self.size
-                color: hex('#333333ff')
+                color: color_provider.get_rgba("dark_grey")
                 text: 'Filename here'
                 
             Label:
@@ -109,7 +109,7 @@ Builder.load_string(
                 markup: True
                 size: self.texture_size
                 text_size: self.size
-                color: hex('#333333ff')
+                color: color_provider.get_rgba("dark_grey")
 
             BoxLayout:
                 orientation: 'horizontal'

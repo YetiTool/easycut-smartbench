@@ -76,7 +76,7 @@ Builder.load_string("""
 
                 canvas.before:
                     Color:
-                        rgba: hex('#E5E5E5FF')
+                        rgba: color_provider.get_rgba("light_grey")
                     Rectangle:
                         pos: self.x + 2.5, self.y + 5
                         size: self.width - 5, self.height - 10
@@ -88,14 +88,14 @@ Builder.load_string("""
                     multiline: False
                     size: self.parent.size
                     pos: self.parent.pos
-                    background_color: (0,0,0,0)
+                    background_color: color_provider.get_rgba("transparent")
 
             Label:
                 text: 'D'
                 font_size: dp(25)
                 pos: d_input.pos[0] - self.width - 2.5, d_input.pos[1] + dp(3)
                 opacity: d_input.opacity
-                color: 0,0,0,1
+                color: color_provider.get_rgba("black")
                 size: self.texture_size
                 size_hint: (None, None)
 
@@ -105,7 +105,7 @@ Builder.load_string("""
                 size: d_input.size
                 size_hint: (None, None)
                 pos: d_input.pos[0], d_input.pos[1] - dp(30)
-                color: 1,0,0,1
+                color: color_provider.get_rgba("monochrome_red")
                 halign: 'left'
                 opacity: 0
 
@@ -115,7 +115,7 @@ Builder.load_string("""
 
                 canvas.before:
                     Color:
-                        rgba: hex('#E5E5E5FF')
+                        rgba: color_provider.get_rgba("light_grey")
                     Rectangle:
                         pos: self.x + 2.5, self.y + 5
                         size: self.width - 5, self.height - 10
@@ -127,14 +127,14 @@ Builder.load_string("""
                     multiline: False
                     size: self.parent.size
                     pos: self.parent.pos
-                    background_color: (0,0,0,0)
+                    background_color: color_provider.get_rgba("transparent")
 
             Label:
                 text: 'L'
                 font_size: dp(25)
                 pos: l_input.pos[0] - self.width - 2.5, l_input.pos[1] + dp(3)
                 opacity: l_input.opacity
-                color: 0,0,0,1
+                color: color_provider.get_rgba("black")
                 size: self.texture_size
                 size_hint: (None, None)
 
@@ -144,7 +144,7 @@ Builder.load_string("""
                 size: l_input.size
                 size_hint: (None, None)
                 pos: l_input.pos[0], l_input.pos[1] - dp(30)
-                color: 1,0,0,1
+                color: color_provider.get_rgba("monochrome_red")
                 halign: 'left'
                 opacity: 0
 
@@ -154,7 +154,7 @@ Builder.load_string("""
 
                 canvas.before:
                     Color:
-                        rgba: hex('#E5E5E5FF')
+                        rgba: color_provider.get_rgba("light_grey")
                     Rectangle:
                         pos: self.x + 2.5, self.y + 5
                         size: self.width - 5, self.height - 10
@@ -166,14 +166,14 @@ Builder.load_string("""
                     multiline: False
                     size: self.parent.size
                     pos: self.parent.pos
-                    background_color: (0,0,0,0)
+                    background_color: color_provider.get_rgba("transparent")
 
             Label:
                 text: 'R'
                 font_size: dp(25)
                 pos: r_input.pos[0] - self.width - 2.5, r_input.pos[1] + dp(3)
                 opacity: r_input.opacity
-                color: 0,0,0,1
+                color: color_provider.get_rgba("black")
                 size: self.texture_size
                 size_hint: (None, None)
 
@@ -183,7 +183,7 @@ Builder.load_string("""
                 size: r_input.size
                 size_hint: (None, None)
                 pos: r_input.pos[0], r_input.pos[1] - dp(30)
-                color: 1,0,0,1
+                color: color_provider.get_rgba("monochrome_red")
                 halign: 'left'
                 opacity: 0
 
@@ -193,7 +193,7 @@ Builder.load_string("""
 
                 canvas.before:
                     Color:
-                        rgba: hex('#E5E5E5FF')
+                        rgba: color_provider.get_rgba("light_grey")
                     Rectangle:
                         pos: self.x + 2.5, self.y + 5
                         size: self.width - 5, self.height - 10
@@ -205,14 +205,14 @@ Builder.load_string("""
                     multiline: False
                     size: self.parent.size
                     pos: self.parent.pos
-                    background_color: (0,0,0,0)
+                    background_color: color_provider.get_rgba("transparent")
 
             Label:
                 text: 'X'
                 font_size: dp(25)
                 pos: x_input.pos[0] - self.width - 2.5, x_input.pos[1] + dp(3)
                 opacity: x_input.opacity
-                color: 0,0,0,1
+                color: color_provider.get_rgba("black")
                 size: self.texture_size
                 size_hint: (None, None)
 
@@ -222,7 +222,7 @@ Builder.load_string("""
                 size: x_input.size
                 size_hint: (None, None)
                 pos: x_input.pos[0], x_input.pos[1] - dp(30)
-                color: 1,0,0,1
+                color: color_provider.get_rgba("monochrome_red")
                 halign: 'left'
                 opacity: 0
 
@@ -232,7 +232,7 @@ Builder.load_string("""
 
                 canvas.before:
                     Color:
-                        rgba: hex('#E5E5E5FF')
+                        rgba: color_provider.get_rgba("light_grey")
                     Rectangle:
                         pos: self.x + 2.5, self.y + 5
                         size: self.width - 5, self.height - 10
@@ -244,14 +244,14 @@ Builder.load_string("""
                     multiline: False
                     size: self.parent.size
                     pos: self.parent.pos
-                    background_color: (0,0,0,0)
+                    background_color: color_provider.get_rgba("transparent")
 
             Label:
                 text: 'Y'
                 font_size: dp(25)
                 pos: y_input.pos[0] - self.width - 2.5, y_input.pos[1] + dp(3)
                 opacity: y_input.opacity
-                color: 0,0,0,1
+                color: color_provider.get_rgba("black")
                 size: self.texture_size
                 size_hint: (None, None)
 
@@ -261,7 +261,7 @@ Builder.load_string("""
                 size: y_input.size
                 size_hint: (None, None)
                 pos: y_input.pos[0], y_input.pos[1] - dp(30)
-                color: 1,0,0,1
+                color: color_provider.get_rgba("monochrome_red")
                 halign: 'left'
                 opacity: 0
 
@@ -271,7 +271,7 @@ Builder.load_string("""
                 size: dp(150), dp(40)
                 size_hint: (None, None)
                 text: 'X:'
-                color: 0,0,0,1
+                color: color_provider.get_rgba("black")
                 halign: 'left'
 
             Label:
@@ -280,7 +280,7 @@ Builder.load_string("""
                 size: x_datum_label.size
                 size_hint: (None, None)
                 pos: x_datum_label.pos[0], x_datum_label.pos[1] - dp(20)
-                color: 1,0,0,1
+                color: color_provider.get_rgba("monochrome_red")
                 halign: 'left'
                 opacity: 0
 
@@ -290,7 +290,7 @@ Builder.load_string("""
                 size: dp(150), dp(40)
                 size_hint: (None, None)
                 text: 'Y:'
-                color: 0,0,0,1
+                color: color_provider.get_rgba("black")
 
             Label:
                 id: y_datum_validation_label
@@ -298,7 +298,7 @@ Builder.load_string("""
                 size: y_datum_label.size
                 size_hint: (None, None)
                 pos: y_datum_label.pos[0], y_datum_label.pos[1] - dp(35)
-                color: 1,0,0,1
+                color: color_provider.get_rgba("monochrome_red")
                 halign: 'left'
                 opacity: 0
 
@@ -334,8 +334,8 @@ Builder.load_string("""
                 size_hint: (None, None)
                 pos: self.parent.pos[0] + dp(5), self.parent.size[1] - self.height + dp(5)
                 multiline: False
-                background_color: (0,0,0,0)
-                disabled_foreground_color: (0,0,0,1)
+                background_color: color_provider.get_rgba("transparent")
+                disabled_foreground_color: color_provider.get_rgba("black")
                 disabled: True
 
             Label:
@@ -345,7 +345,7 @@ Builder.load_string("""
                 size_hint: (None, None)
                 pos: self.parent.pos[0] + self.parent.size[0] - self.texture_size[0] - dp(10), self.parent.size[1] - self.height + dp(5)
                 text: 'Test'
-                color: 0,0,0,1
+                color: color_provider.get_rgba("black")
 
 """)
 

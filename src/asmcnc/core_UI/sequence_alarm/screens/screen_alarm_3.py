@@ -8,6 +8,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
 from asmcnc.skavaUI import widget_status_bar
+from asmcnc.core_UI.utils import color_provider
 
 Builder.load_string(
     """
@@ -26,7 +27,7 @@ Builder.load_string(
         orientation: 'vertical'
         canvas:
             Color:
-                rgba: [1,1,1,1]
+                rgba: color_provider.get_rgba("white")
             Rectangle:
                 size: self.size
                 pos: self.pos
@@ -42,7 +43,7 @@ Builder.load_string(
                 Label:
                     id: description_label
                     font_size: str(0.02*app.width) + 'sp'
-                    color: [0,0,0,1]
+                    color: color_provider.get_rgba("black")
                     markup: True
                     halign: 'left'
                     valign: 'top'
@@ -65,7 +66,7 @@ Builder.load_string(
                         size_hint: (None,None)
                         height: dp(0.108333333333*app.height)
                         width: dp(0.075*app.width)
-                        background_color: hex('#F4433600')
+                        background_color: color_provider.get_rgba("transparent")
                         center: self.parent.center
                         pos: self.parent.pos
                         on_press: root.prev_screen()
@@ -95,7 +96,7 @@ Builder.load_string(
                         on_press: root.next_screen()
                         text: 'Next...'
                         font_size: root.default_font_size
-                        color: hex('#f9f9f9ff')
+                        color: color_provider.get_rgba("near_white")
                         markup: True
                         center: self.parent.center
                         pos: self.parent.pos
@@ -138,7 +139,7 @@ class AlarmScreen3(Screen):
             screen_manager=self.a.sm, machine=self.a.m
         )
         self.status_container.add_widget(self.status_bar_widget)
-        self.status_bar_widget.cheeky_color = "#1976d2"
+        self.status_bar_widget.cheeky_color = color_provider.get_rgba("blue")
         self.camera_img.source = "./asmcnc/core_UI/sequence_alarm/img/camera_light.png"
         self.next_button.text = self.a.l.get_str("Next") + "..."
         # self.usb_img.source = "./asmcnc/core_UI/sequence_alarm/img/usb_empty_light.png"

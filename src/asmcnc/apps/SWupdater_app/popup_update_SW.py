@@ -11,6 +11,7 @@ from kivy.uix.image import Image
 from kivy.core.window import Window
 
 from asmcnc.core_UI.components.labels.base_label import LabelBase
+from asmcnc.core_UI.utils import color_provider
 
 
 class PopupBetaUpdate(Widget):
@@ -48,17 +49,17 @@ class PopupBetaUpdate(Widget):
             halign="center",
             valign="middle",
             text=description,
-            color=[0, 0, 0, 1],
+            color=color_provider.get_rgba("black"),
             padding=[0, 0],
             markup=True,
         )
 
         ok_button = Button(text="[b]Yes[/b]", markup=True, font_size = str(15.0 / 800 * Window.width) + "sp")
         ok_button.background_normal = ""
-        ok_button.background_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
+        ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text="[b]No[/b]", markup=True, font_size = str(15.0 / 800 * Window.width) + "sp")
         back_button.background_normal = ""
-        back_button.background_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
+        back_button.background_color = color_provider.get_rgba("red")
 
         btn_layout = BoxLayout(
             orientation="horizontal", spacing= 15.0 / 800.0 * Window.width, padding=[
@@ -83,7 +84,7 @@ class PopupBetaUpdate(Widget):
 
         popup = Popup(
             title="Warning!",
-            title_color=[0, 0, 0, 1],
+            title_color=color_provider.get_rgba("black"),
             title_size=str(20.0 / 800.0 * Window.width) + "sp",
             content=layout_plan,
             size_hint=(None, None),
@@ -94,7 +95,7 @@ class PopupBetaUpdate(Widget):
             auto_dismiss=False,
         )
 
-        popup.separator_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
+        popup.separator_color = color_provider.get_rgba("red")
         popup.separator_height = str(4.0 / 480 * Window.height) + "dp"
         popup.background = "./asmcnc/apps/shapeCutter_app/img/popup_background.png"
 

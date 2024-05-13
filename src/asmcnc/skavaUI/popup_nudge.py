@@ -6,6 +6,7 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.image import Image
 from asmcnc.core_UI.scaling_utils import is_screen_big, get_scaled_tuple, get_scaled_height, get_scaled_width, get_scaled_sp
+from asmcnc.core_UI.utils import color_provider
 
 
 class PopupNudgeDatum(Widget):
@@ -42,17 +43,17 @@ class PopupNudgeDatum(Widget):
             halign="center",
             valign="middle",
             text=description,
-            color=[0, 0, 0, 1],
+            color=color_provider.get_rgba("black"),
             padding=get_scaled_tuple([40, 20]),
             markup=True,
         )
 
         ok_button = Button(text=yes_string, font_size=get_scaled_sp("15sp"), markup=True)
         ok_button.background_normal = ""
-        ok_button.background_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
+        ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=no_string, font_size=get_scaled_sp("15sp"), markup=True)
         back_button.background_normal = ""
-        back_button.background_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
+        back_button.background_color = color_provider.get_rgba("red")
 
         btn_layout = BoxLayout(
             orientation="horizontal", spacing=get_scaled_tuple(10), padding=[0, 0, 0, 0]
@@ -69,7 +70,7 @@ class PopupNudgeDatum(Widget):
 
         popup = Popup(
             title=title_string,
-            title_color=[0, 0, 0, 1],
+            title_color=color_provider.get_rgba("black"),
             title_size=get_scaled_sp("20sp"),
             content=layout_plan,
             size_hint=(None, None),
@@ -77,7 +78,7 @@ class PopupNudgeDatum(Widget):
             auto_dismiss=False,
         )
 
-        popup.separator_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
+        popup.separator_color = color_provider.get_rgba("red")
         popup.separator_height = str(get_scaled_height(4)) +"dp"
         popup.background = "./asmcnc/apps/shapeCutter_app/img/popup_background.png"
 
@@ -127,17 +128,17 @@ class PopupNudgeWarning(Widget):
             halign="center",
             valign="middle",
             text=description,
-            color=[0, 0, 0, 1],
+            color=color_provider.get_rgba("black"),
             padding=get_scaled_tuple([20, 20]),
             markup=True,
         )
 
         ok_button = Button(text=yes_string, font_size=get_scaled_sp("15sp"), markup=True)
         ok_button.background_normal = ""
-        ok_button.background_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
+        ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=no_string, font_size=get_scaled_sp("15sp"), markup=True)
         back_button.background_normal = ""
-        back_button.background_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
+        back_button.background_color = color_provider.get_rgba("red")
 
         btn_layout = BoxLayout(
             orientation="horizontal", spacing=get_scaled_tuple(10), padding=[0, 0, 0, 0]
@@ -154,7 +155,7 @@ class PopupNudgeWarning(Widget):
 
         popup = Popup(
             title=title_string,
-            title_color=[0, 0, 0, 1],
+            title_color=color_provider.get_rgba("black"),
             title_size=get_scaled_sp("20sp"),
             content=layout_plan,
             size_hint=(None, None),
@@ -162,7 +163,7 @@ class PopupNudgeWarning(Widget):
             auto_dismiss=False,
         )
 
-        popup.separator_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
+        popup.separator_color = color_provider.get_rgba("red")
         popup.separator_height = str(get_scaled_height(4)) + "dp"
         popup.background = "./asmcnc/apps/shapeCutter_app/img/popup_background.png"
 

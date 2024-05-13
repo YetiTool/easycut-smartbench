@@ -15,6 +15,7 @@ import sys, os
 from asmcnc.skavaUI import popup_info
 from datetime import datetime
 from asmcnc.core_UI.popups import BasicPopup, PopupType, InfoPopup
+from asmcnc.core_UI.utils import color_provider
 
 Builder.load_string(
     """
@@ -26,7 +27,7 @@ Builder.load_string(
 
     canvas:
         Color: 
-            rgba: hex('#E5E5E5FF')
+            rgba: color_provider.get_rgba("light_grey")
         Rectangle: 
             size: self.size
             pos: self.pos         
@@ -53,7 +54,7 @@ Builder.load_string(
                 halign: 'center'
                 size:self.texture_size
                 text_size: self.size
-                color: hex('#333333ff')
+                color: color_provider.get_rgba("dark_grey")
          
             Label:
                 id: pause_description_label
@@ -64,7 +65,7 @@ Builder.load_string(
                 halign: 'center'
                 size:self.texture_size
                 text_size: self.size
-                color: hex('#333333ff')
+                color: color_provider.get_rgba("dark_grey")
      
         BoxLayout:
             orientation: 'horizontal'
@@ -74,7 +75,7 @@ Builder.load_string(
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_x: 1
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("transparent")
                 on_press: root.cancel_job()
                 BoxLayout:
                     size: self.parent.size
@@ -87,7 +88,7 @@ Builder.load_string(
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_x: 0.3
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("transparent")
                 on_press: root.popup_help()
                 BoxLayout:
                     size: self.parent.size
@@ -100,7 +101,7 @@ Builder.load_string(
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_x: 1
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("transparent")
                 on_press: root.resume_job()
                 BoxLayout:
                     size: self.parent.size
@@ -192,7 +193,7 @@ class StopOrResumeDecisionScreen(Screen):
                 button_layout_padding=(150, 20, 150, 0),
                 button_layout_spacing=15,
                 button_one_text='Ok',
-                button_one_background_color=(76 / 255., 175 / 255., 80 / 255., 1.)
+                button_one_background_color=color_provider.get_rgba("green")
             )
             qr_popup.open()
 

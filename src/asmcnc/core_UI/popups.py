@@ -18,6 +18,7 @@ from kivy.clock import Clock
 from asmcnc.core_UI import scaling_utils as utils
 from asmcnc.core_UI.components.buttons.hold_button import WarningHoldButton
 from asmcnc.comms.logging_system.logging_system import Logger
+from asmcnc.core_UI.utils import color_provider
 
 """
 Popup type enum
@@ -36,12 +37,12 @@ class PopupType(Enum):
     INFO = {
         "small_image": "./asmcnc/apps/shapeCutter_app/img/info_icon.png",
         "big_image": "./asmcnc/apps/shapeCutter_app/img/info_icon_scaled_up.png",
-        "separator_color": (249 / 255.0, 206 / 255.0, 29 / 255.0, 1.0),
+        "separator_color": color_provider.get_rgba("yellow"),
     }
     ERROR = {
         "small_image": "./asmcnc/apps/shapeCutter_app/img/error_icon.png",
         "big_image": "./asmcnc/apps/shapeCutter_app/img/error_icon_scaled_up.png",
-        "separator_color": (230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0),
+        "separator_color": color_provider.get_rgba("red"),
     }
     QR = None
     OTHER = None
@@ -61,7 +62,7 @@ class BasicPopup(Popup):
 
     # Default properties
     # You can override these properties in the constructor, pass them as kwargs
-    separator_color = ListProperty([249 / 255.0, 206 / 255.0, 29 / 255.0, 1.0])
+    separator_color = ListProperty(color_provider.get_rgba("yellow"))
     separator_height = dp(utils.get_scaled_height(4))
     background = StringProperty(
         "./asmcnc/apps/shapeCutter_app/img/popup_background.png"
@@ -123,8 +124,8 @@ class BasicPopup(Popup):
                                          main_label_padding=(0, 0), main_layout_padding=(10, 10, 10, 10),
                                          main_layout_spacing=10, button_layout_padding=(20, 10, 20, 0),
                                          button_layout_spacing=15,
-                                         button_two_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
-                                         button_one_background_color=(230 / 255., 74 / 255., 25 / 255., 1.),
+                                         button_two_background_color=color_provider.get_rgba("green"),
+                                         button_one_background_color=color_provider.get_rgba("red"),
                                          button_one_text="Remind me", button_two_text="Ok",
                                          button_one_callback=self.set_trigger_to_true,
                                          button_two_callback=self.set_trigger_to_false)
@@ -148,7 +149,7 @@ class BasicPopup(Popup):
             button_layout_padding=(150, 20, 150, 0),
             button_layout_spacing=15,
             button_one_text='Ok',
-            button_one_background_color=(76 / 255., 175 / 255., 80 / 255., 1.)
+            button_one_background_color=color_provider.get_rgba("green")
         )
     qr_popup.open()
     """
@@ -245,7 +246,7 @@ class BasicPopup(Popup):
             halign=self.main_label_h_align,
             valign="middle",
             text=self.l.get_str(self.main_string),
-            color=(0, 0, 0, 1),
+            color=color_provider.get_rgba("black"),
             padding=utils.get_scaled_tuple(self.main_label_padding),
             markup=True,
             font_size=str(utils.get_scaled_width(15)) + "sp",
@@ -345,7 +346,7 @@ class InfoPopup(BasicPopup):
         popup_height,
         button_one_text="Ok",
         button_one_callback=None,
-        button_one_background_color=(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0),
+        button_one_background_color=color_provider.get_rgba("green"),
         button_two_text=None,
         button_two_callback=None,
         button_two_background_color=None,
@@ -392,7 +393,7 @@ class ErrorPopup(BasicPopup):
         popup_height=400,
         button_one_text="Ok",
         button_one_callback=None,
-        button_one_background_color=[230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0],
+        button_one_background_color = color_provider.get_rgba("red"),
         button_two_text=None,
         button_two_callback=None,
         button_two_background_color=None,
@@ -478,7 +479,7 @@ class MiniInfoPopup(BasicPopup):
         popup_height=300,
         button_one_text="Ok",
         button_one_callback=None,
-        button_one_background_color=(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0),
+        button_one_background_color=color_provider.get_rgba("green"),
         button_two_text=None,
         button_two_callback=None,
         button_two_background_color=None,
@@ -516,9 +517,9 @@ class StopPopup(BasicPopup):
         popup_width=400,
         popup_height=300,
         button_one_text="Cancel",
-        button_one_background_color=(230 / 255., 74 / 255., 25 / 255., 1.),
+        button_one_background_color=color_provider.get_rgba("red"),
         button_two_text="Resume",
-        button_two_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
+        button_two_background_color=color_provider.get_rgba("green"),
         main_label_padding=(0, 0),
         main_layout_padding=(30, 20, 30, 0),
         main_layout_spacing=5,
@@ -568,9 +569,9 @@ class ParkPopup(BasicPopup):
         popup_width=300,
         popup_height=350,
         button_one_text="No",
-        button_one_background_color=(230 / 255., 74 / 255., 25 / 255., 1.),
+        button_one_background_color=color_provider.get_rgba("red"),
         button_two_text="Yes",
-        button_two_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
+        button_two_background_color=color_provider.get_rgba("green"),
         main_label_padding=(40, 20),
         main_layout_padding=(40, 20, 40, 20),
         main_layout_spacing=10,
@@ -620,7 +621,7 @@ class SoftwareUpdateSuccessPopup(BasicPopup):
         popup_width=700,
         popup_height=400,
         button_one_text="Ok",
-        button_one_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
+        button_one_background_color=color_provider.get_rgba("green"),
         button_two_text=None,
         button_two_background_color=None,
         main_label_padding=(40, 10),
@@ -667,7 +668,7 @@ class WarningPopup(BasicPopup):
         popup_height=400,
         button_one_text="Ok",
         button_one_callback=None,
-        button_one_background_color=[230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0],
+        button_one_background_color = color_provider.get_rgba("red"),
         button_two_text=None,
         button_two_callback=None,
         button_two_background_color=None,
@@ -763,7 +764,7 @@ class UploadSettingsFromUsbPopup(BasicPopup):
         popup_width=600,
         popup_height=450,
         button_one_text="Ok",
-        button_one_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
+        button_one_background_color=color_provider.get_rgba("green"),
         main_label_padding=(40, 20),
         main_layout_padding=(40, 20, 40, 20),
         main_layout_spacing=10,
@@ -809,7 +810,7 @@ class DownloadSettingsToUsbPopup(BasicPopup):
         popup_width=600,
         popup_height=450,
         button_one_text="Ok",
-        button_one_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
+        button_one_background_color=color_provider.get_rgba("green"),
         main_label_padding=(40, 20),
         main_layout_padding=(40, 20, 40, 20),
         main_layout_spacing=10,
@@ -855,7 +856,7 @@ class SpindleSafetyPopup(BasicPopup):
         popup_height=450,
         button_one_text="Cancel",
         button_one_callback=None,
-        button_one_background_color=(230 / 255., 74 / 255., 25 / 255., 1.),
+        button_one_background_color=color_provider.get_rgba("red"),
         button_two_text=None,
         button_two_callback=None,
         button_two_background_color=None,
@@ -918,7 +919,7 @@ class SpindleSafetyPopup(BasicPopup):
                 hold_time=1,
                 callback=lambda: self.on_button_pressed(self.button_two_callback),
                 font_size=utils.get_scaled_sp("15sp"),
-                color=(0, 0, 0, 1),
+                color=color_provider.get_rgba("black"),
                 markup=True
             )
         ]
@@ -932,7 +933,7 @@ class JobValidationPopup(BasicPopup):
         popup_height=450,
         button_one_text="Ok",
         button_one_callback=None,
-        button_one_background_color=(230 / 255., 74 / 255., 25 / 255., 1.),
+        button_one_background_color=color_provider.get_rgba("red"),
         button_two_text=None,
         button_two_callback=None,
         button_two_background_color=None,
@@ -983,8 +984,8 @@ class JobValidationPopup(BasicPopup):
         self.main_label = RstDocument(
             text_size=(text_size_x, None),
             text=self.l.get_str(self.main_string),
-            color=(0, 0, 0, 1),
-            background_color=(1, 1, 1, 1),
+            color=color_provider.get_rgba("black"),
+            background_color=color_provider.get_rgba("white"),
             markup=True,
             font_size=str(utils.get_scaled_width(15)) + "sp",
         )
@@ -1019,7 +1020,7 @@ class SimulatingJobPopup(ErrorPopup):
         popup_width=500,
         popup_height=400,
         button_one_text="Stop",
-        button_one_background_color=[230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0],
+        button_one_background_color = color_provider.get_rgba("red"),
         button_two_text=None,
         button_two_callback=None,
         button_two_background_color=None,

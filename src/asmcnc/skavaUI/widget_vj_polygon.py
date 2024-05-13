@@ -33,7 +33,7 @@ Builder.load_string("""
 
             canvas.before:
                 Color: 
-                    rgba: 1,1,1,1
+                    rgba: color_provider.get_rgba("white")
                 RoundedRectangle:
                     size: self.size
                     pos: self.pos
@@ -116,7 +116,7 @@ Builder.load_string("""
 
                 canvas:
                     Color: 
-                        rgba: 1,1,1,1
+                        rgba: color_provider.get_rgba("white")
                     RoundedRectangle:
                         size: self.size
                         pos: self.pos
@@ -134,7 +134,7 @@ Builder.load_string("""
 
                 canvas:
                     Color: 
-                        rgba: 1,1,1,1
+                        rgba: color_provider.get_rgba("white")
                     RoundedRectangle:
                         size: self.size
                         pos: self.pos
@@ -145,11 +145,11 @@ Builder.load_string("""
                     disabled: False
                     size_hint_y: 0.25
                     #size: [50,50]
-                    background_color: hex('#FFFFFF00')
+                    background_color: color_provider.get_rgba("transparent")
                     on_release:
-                        self.background_color = hex('#FFFFFF00')
+                        self.background_color = color_provider.get_rgba("transparent")
                     on_press:
-                        self.background_color = hex('#FFFFFFFF')
+                        self.background_color = color_provider.get_rgba("white")
                         root.on_ok()
                     BoxLayout:
                         padding: 20
@@ -169,13 +169,13 @@ Builder.load_string("""
                     disabled: False
                     size_hint_y:0.25
                     #size: [50,50]
-                    background_color: hex('#FFFFFF00')
+                    background_color: color_provider.get_rgba("transparent")
                     on_release:
 #                        root.manager.current = 'lobby'
-                        self.background_color = hex('#FFFFFF00')
+                        self.background_color = color_provider.get_rgba("transparent")
                     on_press:
                         root.sm.current = 'lobby'
-                        self.background_color = hex('#FFFFFFFF')
+                        self.background_color = color_provider.get_rgba("white")
                     BoxLayout:
                         padding: 20
                         size: self.parent.size
@@ -192,14 +192,14 @@ Builder.load_string("""
                     id: left_button
                     disabled: False
                     size_hint_y: 0.25
-                    background_color: hex('#FFFFFF00')
+                    background_color: color_provider.get_rgba("transparent")
                     on_release:
 #                        carousel.load_previous()
 #                        root.manager.current = 'template'
-                        self.background_color = hex('#FFFFFF00')
+                        self.background_color = color_provider.get_rgba("transparent")
                     on_press:
                         root.sm.current = 'template'
-                        self.background_color = hex('#FFFFFFFF')
+                        self.background_color = color_provider.get_rgba("white")
                     BoxLayout:
                         padding: 10
                         size: self.parent.size
@@ -216,13 +216,13 @@ Builder.load_string("""
                     id: right_button
                     disabled: False
                     size_hint_y: 0.25
-                    background_color: hex('#FFFFFF00')
+                    background_color: color_provider.get_rgba("transparent")
                     on_release:
 #                        carousel.load_next(mode='next')
-                        self.background_color = hex('#FFFFFF00')
+                        self.background_color = color_provider.get_rgba("transparent")
                     on_press:
                         root.sm.current = 'template'
-                        self.background_color = hex('#FFFFFFFF')
+                        self.background_color = color_provider.get_rgba("white")
                     BoxLayout:
                         padding: 10
                         size: self.parent.size

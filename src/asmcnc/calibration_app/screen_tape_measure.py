@@ -16,7 +16,7 @@ Builder.load_string(
     alert_label:alert_label
     canvas:
         Color: 
-            rgba: hex('#FFFFFF')
+            rgba: color_provider.get_rgba("white")
         Rectangle: 
             size: self.size
             pos: self.pos

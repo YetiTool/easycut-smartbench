@@ -84,7 +84,7 @@ Builder.load_string(
             Label: 
                 id: profile_label
                 size_hint_y: 0.4
-                color: hex('#333333ff')
+                color: color_provider.get_rgba("dark_grey")
                 markup: True
                 halign: 'left'
                 text_size: self.size
@@ -95,7 +95,7 @@ Builder.load_string(
             Label:
                 id: profile_selection
                 size_hint_y: 0.6
-                color: hex('#333333ff')
+                color: color_provider.get_rgba("dark_grey")
                 markup: True
                 halign: 'left'
                 text_size: self.size

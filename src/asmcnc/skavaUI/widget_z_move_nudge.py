@@ -29,13 +29,13 @@ Builder.load_string("""
             Button:
                 id: up_button
                 size_hint_y: 1
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("transparent")
                 on_release:
                     root.quit_jog_z()
-                    self.background_color = hex('#F4433600')
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press:
                     root.jog_z('Z+')
-                    self.background_color = hex('#F44336FF')
+                    self.background_color = color_provider.get_rgba("button_press_background")
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -49,13 +49,13 @@ Builder.load_string("""
 
             Button:
                 size_hint_y: 1
-                background_color: hex('#F4433600')
+                background_color: color_provider.get_rgba("transparent")
                 on_release:
                     root.quit_jog_z()
-                    self.background_color = hex('#F4433600')
+                    self.background_color = color_provider.get_rgba("transparent")
                 on_press:
                     root.jog_z('Z-')
-                    self.background_color = hex('#F44336FF')
+                    self.background_color = color_provider.get_rgba("button_press_background")
                 BoxLayout:
                     size: self.parent.size
                     pos: self.parent.pos
@@ -77,7 +77,7 @@ Builder.load_string("""
             text: 'Z'
             markup: True
             bold: True
-            color: hex('#333333ff')
+            color: color_provider.get_rgba("dark_grey")
             font_size: dp(20)
 
 """)

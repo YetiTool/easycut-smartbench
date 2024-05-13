@@ -18,7 +18,7 @@ Builder.load_string("""
         BoxLayout:
             canvas:
                 Color:
-                    rgba: hex('#1976d2')
+                    rgba: color_provider.get_rgba("blue")
                 Rectangle:
                     size: self.size
                     pos: self.pos
@@ -37,7 +37,7 @@ Builder.load_string("""
 
             canvas: 
                 Color:
-                    rgba: hex('e5e5e5ff')
+                    rgba: color_provider.get_rgba("light_grey")
                 Rectangle:
                     size: self.size
                     pos: self.pos
@@ -45,7 +45,7 @@ Builder.load_string("""
             LabelBase:
                 id: success_label
                 font_size: dp(0.04*app.width)
-                color: 0,0,0,1
+                color: color_provider.get_rgba("black")
                 halign: 'center'
                 valign: 'middle'
                 text_size: self.size
@@ -64,7 +64,7 @@ Builder.load_string("""
                     size_hint: (None,None)
                     width: dp(0.5625*app.width)
                     height: dp(0.125*app.height)
-                    color: hex('#f9f9f9ff')
+                    color: color_provider.get_rgba("near_white")
                     center: self.parent.center
                     pos: self.parent.pos
                     text_size: self.size

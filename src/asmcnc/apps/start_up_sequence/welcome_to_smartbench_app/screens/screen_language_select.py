@@ -10,6 +10,7 @@ import sys, os
 from kivy.clock import Clock
 from kivy.uix.label import Label
 
+from asmcnc.core_UI.utils import color_provider
 
 """
 DEPRECATED, NOW USING: src/asmcnc/apps/start_up_sequence/screens/screen_language_selection.py
@@ -51,7 +52,7 @@ Builder.load_string(
 		width: dp(0.6*app.width)
 		canvas.before:
 			Color: 
-				rgba: hex('#e5e5e5ff')
+				rgba: color_provider.get_rgba("light_grey")
 			Rectangle: 
 				size: self.size
 				pos: self.pos
@@ -67,7 +68,7 @@ Builder.load_string(
 				spacing: 0
 				canvas:
 					Color:
-						rgba: hex('#1976d2ff')
+						rgba: color_provider.get_rgba("blue")
 					Rectangle:
 						pos: self.pos
 						size: self.size
@@ -77,8 +78,8 @@ Builder.load_string(
 					height: dp(0.125*app.height)
 					width: dp(1.0*app.width)
 					text: "Welcome to SmartBench"
-					color: hex('#f9f9f9ff')
-					# color: hex('#333333ff') #grey
+					color: color_provider.get_rgba("near_white")
+					# color: color_provider.get_rgba("dark_grey") #grey
 					font_size: dp(0.0375*app.width)
 					halign: "center"
 					valign: "bottom"
@@ -106,7 +107,7 @@ Builder.load_string(
 					CheckBox: 
 						group: "language_radio_buttons" 
 						on_press: root.select_language(self, row_1_col_1)
-						color: hex('#1976d2ff')
+						color: color_provider.get_rgba("blue")
 
 	                Image: 
 	                	id: row_1_col_1_image
@@ -119,13 +120,13 @@ Builder.load_string(
 						text_size: self.size
 						markup: True
 						halign: "left"
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 
 					CheckBox: 
 						group: "language_radio_buttons" 
 						on_press: root.select_language(self, row_1_col_2)
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 	                Image: 
 	                	id: row_1_col_2_image
@@ -138,13 +139,13 @@ Builder.load_string(
 						text_size: self.size
 						markup: True
 						halign: "left"
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 
 					CheckBox: 
 						group: "language_radio_buttons" 
 						on_press: root.select_language(self, row_1_col_3)
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 	                Image: 
 	                	id: row_1_col_3_image
@@ -157,7 +158,7 @@ Builder.load_string(
 						text_size: self.size
 						markup: True
 						halign: "left"
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 
 					# ROW 2
@@ -165,7 +166,7 @@ Builder.load_string(
 					CheckBox: 
 						group: "language_radio_buttons" 
 						on_press: root.select_language(self, row_2_col_1)
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 	                Image: 
 	                	id: row_2_col_1_image
@@ -178,13 +179,13 @@ Builder.load_string(
 						text_size: self.size
 						markup: True
 						halign: "left"
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 
 					CheckBox: 
 						group: "language_radio_buttons" 
 						on_press: root.select_language(self, row_2_col_2)
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 	                Image: 
 	                	id: row_2_col_2_image
@@ -197,13 +198,13 @@ Builder.load_string(
 						text_size: self.size
 						markup: True
 						halign: "left"
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 
 					CheckBox: 
 						group: "language_radio_buttons" 
 						on_press: root.select_language(self, row_2_col_3)
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 	                Image: 
 	                	id: row_2_col_3_image
@@ -216,7 +217,7 @@ Builder.load_string(
 						text_size: self.size
 						markup: True
 						halign: "left"
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 
 					# ROW 3
@@ -224,7 +225,7 @@ Builder.load_string(
 					CheckBox: 
 						group: "language_radio_buttons" 
 						on_press: root.select_language(self, row_3_col_1)
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 	                Image: 
 	                	id: row_3_col_1_image
@@ -237,12 +238,12 @@ Builder.load_string(
 						text_size: self.size
 						markup: True
 						halign: "left"
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 					CheckBox: 
 						group: "language_radio_buttons" 
 						on_press: root.select_language(self, row_3_col_2)
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 	                Image: 
 	                	id: row_3_col_2_image
@@ -255,7 +256,7 @@ Builder.load_string(
 						text_size: self.size
 						markup: True
 						halign: "left"
-						color: hex('#333333ff')
+						color: color_provider.get_rgba("dark_grey")
 
 					BoxLayout: 
 					BoxLayout: 
@@ -265,7 +266,7 @@ Builder.load_string(
 					# 	group: "language_radio_buttons" 
 					# 	on_press: root.select_language(self, row_3_col_3)
 					# 	on_press: root.select_language(self)
-					# 	color: hex('#333333ff')
+					# 	color: color_provider.get_rgba("dark_grey")
 
 	    #             Image: 
 	    #             	id: row_3_col_3_image
@@ -279,7 +280,7 @@ Builder.load_string(
 					# 	text_size: self.size
 					# 	markup: True
 					# 	halign: "left"
-					# 	color: hex('#333333ff')
+					# 	color: color_provider.get_rgba("dark_grey")
 
 			# FOOTER
 			BoxLayout: 
@@ -310,7 +311,7 @@ Builder.load_string(
 						on_press: root.next_screen()
 						text: 'Next...'
 						font_size: str(0.0375*app.width) + 'sp'
-						color: hex('#f9f9f9ff')
+						color: color_provider.get_rgba("near_white")
 						markup: True
 						center: self.parent.center
 						pos: self.parent.pos
@@ -407,7 +408,7 @@ class LanguageSelectScreen(Screen):
             self.next_button.opacity = 1
             self.next_button.disabled = False
         else:
-            radio_button.color = [51 / 255.0, 51 / 255.0, 51 / 255.0, 1.0]
+            radio_button.color = color_provider.get_rgba("dark_grey")
             self.next_button.opacity = 0
             self.next_button.disabled = True
 

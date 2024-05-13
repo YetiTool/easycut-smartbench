@@ -188,7 +188,7 @@ Builder.load_string(
                         
                         Label:
                             text: root.title_label
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             font_size: 0.035*app.width
                             markup: True
                             halign: "left"
@@ -249,7 +249,7 @@ Builder.load_string(
 #                                         size_hint: (None,None)
 #                                         height: dp(30)
 #                                         width: dp(75)
-#                                         background_color: hex('#F4433600')
+#                                         background_color: color_provider.get_rgba("transparent")
 #                                         center: self.parent.center
 #                                         pos: self.parent.pos
 #                                         on_press: root.toggle_units()
@@ -265,7 +265,7 @@ Builder.load_string(
 #                                         Label:
 #                                             id: unit_label
 #                                             text: "mm"
-#                                             color: 1,1,1,1
+#                                             color: color_provider.get_rgba("white")
 #                                             font_size: 20
 #                                             markup: True
 #                                             halign: "center"
@@ -278,7 +278,7 @@ Builder.load_string(
                                         size_hint: (None,None)
                                         height: dp(0.0666666666667*app.height)
                                         width: dp(0.10375*app.width)
-                                        background_color: hex('#F4433600')
+                                        background_color: color_provider.get_rgba("transparent")
                                         center: self.parent.center
                                         pos: self.parent.pos
                                         on_active: root.toggle_units()
@@ -308,7 +308,7 @@ Builder.load_string(
                                     
                                     Label: 
                                         text: "Stock bottom offset"
-                                        color: 0,0,0,1
+                                        color: color_provider.get_rgba("black")
                                         font_size: 0.025*app.width
                                         markup: True
                                         halign: "left"
@@ -341,7 +341,7 @@ Builder.load_string(
                                         Label: 
                                             id: stock_bottom_offset_units
                                             text: "units"
-                                            color: 0,0,0,1
+                                            color: color_provider.get_rgba("black")
                                             font_size: 0.025*app.width
                                             markup: True
                                             halign: "left"
@@ -359,7 +359,7 @@ Builder.load_string(
                                     
                                     Label: 
                                         text: "Step down"
-                                        color: 0,0,0,1
+                                        color: color_provider.get_rgba("black")
                                         font_size: 0.025*app.width
                                         markup: True
                                         halign: "left"
@@ -391,7 +391,7 @@ Builder.load_string(
                                         padding:[dp(0.0125)*app.width, 0, dp(0.0125)*app.width, 0]
                                         Label: 
                                             id: step_down_units
-                                            color: 0,0,0,1
+                                            color: color_provider.get_rgba("black")
                                             font_size: 0.025*app.width
                                             markup: True
                                             halign: "left"
@@ -408,7 +408,7 @@ Builder.load_string(
                                     
                                     Label: 
                                         text: "Finishing passes"
-                                        color: 0,0,0,1
+                                        color: color_provider.get_rgba("black")
                                         font_size: 0.025*app.width
                                         markup: True
                                         halign: "left"
@@ -440,7 +440,7 @@ Builder.load_string(
                                         padding:[dp(0.0125)*app.width, 0, dp(0.0125)*app.width, 0]
                                         Label: 
                                             text: "passes"
-                                            color: 0,0,0,1
+                                            color: color_provider.get_rgba("black")
                                             font_size: 0.025*app.width
                                             markup: True
                                             halign: "left"
@@ -458,7 +458,7 @@ Builder.load_string(
                                     
                                     Label: 
                                         text: ""
-                                        color: 0,0,0,1
+                                        color: color_provider.get_rgba("black")
                                         font_size: 0.025*app.width
                                         markup: True
                                         halign: "left"
@@ -486,7 +486,7 @@ Builder.load_string(
                                 size_hint: (None,None)
                                 height: dp(0.0833333333333*app.height)
                                 width: dp(0.05*app.width)
-                                background_color: hex('#F4433600')
+                                background_color: color_provider.get_rgba("transparent")
                                 opacity: 1
                                 on_press: root.get_info()
                                 BoxLayout:
@@ -505,7 +505,7 @@ Builder.load_string(
                             size_hint: (None,None)
                             height: dp(0.139583333333*app.height)
                             width: dp(0.11*app.width)
-                            background_color: hex('#F4433600')
+                            background_color: color_provider.get_rgba("transparent")
                             on_press: root.go_back()
                             BoxLayout:
                                 padding: 0
@@ -522,7 +522,7 @@ Builder.load_string(
                             size_hint: (None,None)
                             height: dp(0.139583333333*app.height)
                             width: dp(0.11*app.width)
-                            background_color: hex('#F4433600')
+                            background_color: color_provider.get_rgba("transparent")
                             on_press: root.next_screen()
                             BoxLayout:
                                 padding: 0

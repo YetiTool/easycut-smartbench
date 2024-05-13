@@ -34,7 +34,7 @@ Builder.load_string("""
 
             canvas:
                 Color:
-                    rgba: hex('#1976d2')
+                    rgba: color_provider.get_rgba("blue")
                 Rectangle:
                     size: self.size
                     pos: self.pos
@@ -60,7 +60,7 @@ Builder.load_string("""
                     size_hint: (None,None)
                     height: dp(0.104166666667*app.height)
                     width: dp(0.0625*app.width)
-                    background_color: [0,0,0,0]
+                    background_color: color_provider.get_rgba("transparent")
                     opacity: 1
                     on_press: root.quit_to_lobby()
                     BoxLayout:
@@ -81,7 +81,7 @@ Builder.load_string("""
 
             canvas: 
                 Color:
-                    rgba: hex('e5e5e5ff')
+                    rgba: color_provider.get_rgba("light_grey")
                 Rectangle:
                     size: self.size
                     pos: self.pos
@@ -93,7 +93,7 @@ Builder.load_string("""
                     id: instruction_label
                     size_hint_y: 2
                     font_size: dp(0.03*app.width)
-                    color: 0,0,0,1
+                    color: color_provider.get_rgba("black")
                     halign: 'center'
                     valign: 'middle'
                     text_size: self.size
@@ -121,7 +121,7 @@ Builder.load_string("""
                         size_hint_y: 0
                         height: 0
                         font_size: dp(0.02875*app.width)
-                        color: 1,0,0,1
+                        color: color_provider.get_rgba("monochrome_red")
                         halign: 'center'
                         valign: 'middle'
                         text_size: self.size
@@ -133,7 +133,7 @@ Builder.load_string("""
                             id: support_label
                             size_hint_y: 1.5
                             font_size: dp(0.03*app.width)
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             halign: 'center'
                             valign: 'middle'
                             text_size: self.size
@@ -146,7 +146,7 @@ Builder.load_string("""
                         LabelBase:
                             id: spindle_label
                             font_size: dp(0.025*app.width)
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             halign: 'center'
                             valign: 'middle'
                             text_size: self.size

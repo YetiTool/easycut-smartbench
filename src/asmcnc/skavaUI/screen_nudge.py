@@ -41,7 +41,7 @@ Builder.load_string(
                     size_hint_x: 3.15
                     text: 'Optional Nudge:'
                     bold: True
-                    color: hex('#333333ff')
+                    color: color_provider.get_rgba("dark_grey")
                     font_size: dp(0.03125*app.width)
                     halign: 'left'
                     valign: 'middle'
@@ -56,7 +56,7 @@ Builder.load_string(
                         padding:[dp(0.01875)*app.width, dp(0.03125)*app.height, 0, dp(0.03125)*app.height]
                         Button:
                             font_size: str(0.01875 * app.width) + 'sp'
-                            background_color: [0,0,0,0]
+                            background_color: color_provider.get_rgba("transparent")
                             on_press: root.get_info()
                             BoxLayout:
                                 size: self.parent.size
@@ -70,7 +70,7 @@ Builder.load_string(
 
                     Button:
                         font_size: str(0.01875 * app.width) + 'sp'
-                        background_color: [0,0,0,0]
+                        background_color: color_provider.get_rgba("transparent")
                         on_press: root.back_to_home()
                         BoxLayout:
                             size: self.parent.size
@@ -93,7 +93,7 @@ Builder.load_string(
                     padding:[0, dp(0.00208333333333)*app.height]
                     canvas:
                         Color:
-                            rgba: 1,1,1,1
+                            rgba: color_provider.get_rgba("white")
                         RoundedRectangle:
                             size: self.size
                             pos: self.pos
@@ -108,7 +108,7 @@ Builder.load_string(
                     id: nudge_speed_container
                     canvas:
                         Color:
-                            rgba: 1,1,1,1
+                            rgba: color_provider.get_rgba("white")
                         RoundedRectangle:
                             size: self.size
                             pos: self.pos
@@ -118,7 +118,7 @@ Builder.load_string(
                     size_hint_x: 2
                     canvas:
                         Color:
-                            rgba: 1,1,1,1
+                            rgba: color_provider.get_rgba("white")
                         RoundedRectangle:
                             size: self.size
                             pos: self.pos
@@ -131,7 +131,7 @@ Builder.load_string(
                 Button:
                     font_size: str(0.01875 * app.width) + 'sp'
                     on_press: root.previous_screen()
-                    background_color: [0,0,0,0]
+                    background_color: color_provider.get_rgba("transparent")
                     size_hint: (None, None)
                     height: dp(0.139583333333*app.height)
                     width: dp(0.11*app.width)
@@ -153,7 +153,7 @@ Builder.load_string(
                 Button:
                     font_size: str(0.01875 * app.width) + 'sp'
                     on_press: root.next_screen()
-                    background_color: [0,0,0,0]
+                    background_color: color_provider.get_rgba("transparent")
                     size_hint: (None, None)
                     height: dp(0.139583333333*app.height)
                     width: dp(0.11*app.width)
@@ -183,7 +183,7 @@ Builder.load_string(
             text: 'XY'
             markup: True
             bold: True
-            color: hex('#333333ff')
+            color: color_provider.get_rgba("dark_grey")
             font_size: dp(0.025*app.width)
 
 """

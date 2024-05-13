@@ -20,6 +20,7 @@ from kivy.uix.label import Label
 from kivy.uix.button import  Button
 from kivy.uix.image import Image
 
+from asmcnc.core_UI.utils import color_provider
 
 class PopupMachineError(Widget):
 
@@ -34,11 +35,11 @@ class PopupMachineError(Widget):
         ok_string = self.sm.l.get_bold('Ok')
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1, text_size=(360, None), halign='left', valign='middle', text=description, color=[0,0,0,1], padding=[20,20])
+        label = Label(size_hint_y=1, text_size=(360, None), halign='left', valign='middle', text=description, color=color_provider.get_rgba("black"), padding=[20,20])
         
         ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
-        ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("red")
         
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[50,25,50,0])
         btn_layout.add_widget(ok_button)
@@ -49,7 +50,7 @@ class PopupMachineError(Widget):
         layout_plan.add_widget(btn_layout)
         
         popup = Popup(title=title_string,
-                      title_color=[0, 0, 0, 1],
+                      title_color=color_provider.get_rgba("black"),
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -57,7 +58,7 @@ class PopupMachineError(Widget):
                       auto_dismiss= False
                       )
         
-        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("red")
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
         
@@ -75,11 +76,11 @@ class PopupWait(Widget):
         description = "Please wait while the machine moves..."
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,20])
+        label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=color_provider.get_rgba("black"), padding=[20,20])
         
         ok_button = Button(text='[b]Ok[/b]', markup = True, disabled = True)
         ok_button.background_normal = ''
-        ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("red")
         
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[50,25,50,0])
         btn_layout.add_widget(ok_button)
@@ -90,7 +91,7 @@ class PopupWait(Widget):
         layout_plan.add_widget(btn_layout)
         
         self.popup = Popup(title='Warning!',
-                      title_color=[0, 0, 0, 1],
+                      title_color=color_provider.get_rgba("black"),
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -98,7 +99,7 @@ class PopupWait(Widget):
                       auto_dismiss= False
                       )
         
-        self.popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        self.popup.separator_color = color_provider.get_rgba("red")
         self.popup.separator_height = '4dp'
         self.popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
         

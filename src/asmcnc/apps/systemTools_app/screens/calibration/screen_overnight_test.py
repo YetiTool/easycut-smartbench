@@ -110,14 +110,14 @@ Builder.load_string(
                         font_size: str(0.01875 * app.width) + 'sp'
                         text: 'Home'
                         on_press: root.home()
-                        background_color: [0,0,1,1]
+                        background_color: color_provider.get_rgba("monochrome_blue")
 
                     Button:
                         id: overnight_test_button
                         font_size: str(0.01875 * app.width) + 'sp'
                         text: 'START'
                         on_press: root.start_full_overnight_test()
-                        background_color: [0,1,0,1]
+                        background_color: color_provider.get_rgba("monochrome_green")
 
                     Button:
                         id: cal_and_post_button
@@ -130,7 +130,7 @@ Builder.load_string(
                         id: stop_button
                         font_size: str(0.01875 * app.width) + 'sp'
                         text: 'STOP'
-                        background_color: [1,0,0,1]
+                        background_color: color_provider.get_rgba("monochrome_red")
                         on_press: root.stop()
                         background_normal: ''
 

@@ -39,7 +39,7 @@ Builder.load_string(
             orientation: 'vertical'
             canvas:
                 Color: 
-                    rgba: 1,1,1,1
+                    rgba: color_provider.get_rgba("white")
                 RoundedRectangle: 
                     size: self.size
                     pos: self.pos 
@@ -48,7 +48,7 @@ Builder.load_string(
                 font_size: str(0.01875 * app.width) + 'sp'
                 id: speed_toggle
                 on_press: root.set_jog_speeds()
-                background_color: 1, 1, 1, 0 
+                background_color: color_provider.get_rgba("transparent")
                 BoxLayout:
                     padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
                     size: self.parent.size
@@ -69,7 +69,7 @@ Builder.load_string(
             id: vacuum_spindle_container
             canvas:
                 Color: 
-                    rgba: 1,1,1,1
+                    rgba: color_provider.get_rgba("white")
                 RoundedRectangle: 
                     size: self.size
                     pos: self.pos 

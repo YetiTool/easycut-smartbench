@@ -73,7 +73,7 @@ Builder.load_string("""
                     orientation: "horizontal"
                     canvas:
                         Color:
-                            rgba: [1,1,1,1]
+                            rgba: color_provider.get_rgba("white")
                         RoundedRectangle:
                             pos: self.pos
                             size: self.size
@@ -90,7 +90,7 @@ Builder.load_string("""
                             orientation: "vertical"
                             LabelBase:
                                 id: current_version_label
-                                color: 0,0,0,1
+                                color: color_provider.get_rgba("black")
                                 font_size: 0.025*app.width
                                 markup: True
                                 valign: "bottom"
@@ -98,7 +98,7 @@ Builder.load_string("""
 
                             LabelBase:
                                 id: sw_version_label
-                                color: 0,0,0,1
+                                color: color_provider.get_rgba("black")
                                 font_size: 0.02875*app.width
                                 markup: True
                                 text_size: self.size
@@ -106,7 +106,7 @@ Builder.load_string("""
                             LabelBase:
                                 id: find_release_notes_label
                                 size_hint_y: 1.1
-                                color: 0,0,0,1
+                                color: color_provider.get_rgba("black")
                                 font_size: 0.01625*app.width
                                 markup: True
                                 valign: "middle"
@@ -131,7 +131,7 @@ Builder.load_string("""
                                 size_hint: (None,None)
                                 height: dp(0.0625*app.height)
                                 width: dp(0.03625*app.width)
-                                background_color: hex('#F4433600')
+                                background_color: color_provider.get_rgba("transparent")
                                 center: self.parent.center
                                 pos: self.parent.pos
                                 on_press: root.refresh_latest_software_version()
@@ -148,7 +148,7 @@ Builder.load_string("""
 
                         LabelBase: 
                             id: latest_software_version_label
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             font_size: 0.0225*app.width
                             markup: True
                             halign: "center"
@@ -168,7 +168,7 @@ Builder.load_string("""
                     size_hint: (None,None)
                     height: dp(0.233333333333*app.height)
                     width: dp(0.14*app.width)
-                    background_color: hex('#F4433600')
+                    background_color: color_provider.get_rgba("transparent")
                     center: self.parent.center
                     pos: self.parent.pos
                     on_press: root.quit_to_lobby()
@@ -201,7 +201,7 @@ Builder.load_string("""
                 spacing: 0
                 canvas:
                     Color:
-                        rgba: [1,1,1,1]
+                        rgba: color_provider.get_rgba("white")
                     RoundedRectangle:
                         pos: self.pos
                         size: self.size
@@ -213,7 +213,7 @@ Builder.load_string("""
                     # padding: [0,5,0,0]
                     LabelBase: 
                         id: update_using_wifi_label
-                        color: 0,0,0,1
+                        color: color_provider.get_rgba("black")
                         font_size: 0.0225*app.width
                         markup: True
                         halign: "left"
@@ -229,7 +229,7 @@ Builder.load_string("""
                     # padding: [0,5,0,0]
                     LabelBase:
                         id: update_using_wifi_instructions_label
-                        color: 0,0,0,1
+                        color: color_provider.get_rgba("black")
                         font_size: 0.02*app.width
                         markup: True
                         halign: "left"
@@ -270,7 +270,7 @@ Builder.load_string("""
                             on_press: root.prep_for_sw_update("WiFi")
                             # text: 'Update'
                             # font_size: '28sp'
-                            color: hex('#f9f9f9ff')
+                            color: color_provider.get_rgba("near_white")
                             markup: True
                             center: self.parent.center
                             pos: self.parent.pos           
@@ -284,7 +284,7 @@ Builder.load_string("""
                 spacing: 0  
                 canvas:
                     Color:
-                        rgba: [1,1,1,1]
+                        rgba: color_provider.get_rgba("white")
                     RoundedRectangle:
                         pos: self.pos
                         size: self.size
@@ -295,7 +295,7 @@ Builder.load_string("""
                     width: dp(0.36875*app.width)
                     LabelBase:
                         id: update_using_usb_label
-                        color: 0,0,0,1
+                        color: color_provider.get_rgba("black")
                         font_size: 0.0225*app.width
                         markup: True
                         halign: "left"
@@ -310,7 +310,7 @@ Builder.load_string("""
                     width: dp(0.36875*app.width)
                     LabelBase:
                         id: update_using_usb_instructions_label
-                        color: 0,0,0,1
+                        color: color_provider.get_rgba("black")
                         font_size: 0.02*app.width
                         markup: True
                         halign: "left"
@@ -352,7 +352,7 @@ Builder.load_string("""
                             on_press: root.prep_for_sw_update("USB")
                             # text: 'Update'
                             # font_size: '28sp'
-                            color: hex('#f9f9f9ff')
+                            color: color_provider.get_rgba("near_white")
                             markup: True
                             center: self.parent.center
                             pos: self.parent.pos

@@ -28,7 +28,7 @@ Builder.load_string(
 
     canvas:
         Color: 
-            rgba: hex('#E5E5E5FF')
+            rgba: color_provider.get_rgba("light_grey")
         Rectangle: 
             size: self.size
             pos: self.pos         
@@ -56,7 +56,7 @@ Builder.load_string(
                 size_hint: (None,None)
                 height: dp(0.104166666667*app.height)
                 width: dp(0.0625*app.width)
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("transparent")
                 opacity: 1
                 on_press: root.cancel()
                 BoxLayout:
@@ -90,7 +90,7 @@ Builder.load_string(
                 halign: 'center'
                 size:self.texture_size
                 text_size: self.size
-                color: hex('#333333ff')
+                color: color_provider.get_rgba("dark_grey")
          
             Label:
                 id: subtitle_label
@@ -101,7 +101,7 @@ Builder.load_string(
                 halign: 'center'
                 size:self.texture_size
                 text_size: self.size
-                color: hex('#333333ff')
+                color: color_provider.get_rgba("dark_grey")
      
         BoxLayout:
             orientation: 'horizontal'
@@ -125,7 +125,7 @@ Builder.load_string(
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
                 size_hint_x: 0.3
-                background_color: hex('#FFFFFF00')
+                background_color: color_provider.get_rgba("transparent")
                 on_press: root.popup_help()
                 BoxLayout:
                     size: self.parent.size

@@ -23,7 +23,7 @@ Builder.load_string("""
 
     canvas.before:
         Color:
-            rgba: 0,0,0,1
+            rgba: color_provider.get_rgba("black")
         Rectangle:
             size: self.size
             pos: self.pos
@@ -60,7 +60,7 @@ Builder.load_string("""
                 spacing: 0
                 canvas:
                     Color:
-                        rgba: hex('#1976d2ff')
+                        rgba: color_provider.get_rgba("blue")
                     Rectangle:
                         pos: self.pos
                         size: self.size
@@ -69,7 +69,7 @@ Builder.load_string("""
                     height: dp(60)
                     width: dp(800)
                     text: "Update Testing"
-                    color: hex('#f9f9f9ff')
+                    color: color_provider.get_rgba("near_white")
                     font_size: 30
                     halign: "center"
                     valign: "bottom"
@@ -169,7 +169,7 @@ Builder.load_string("""
                             size_hint: (None,None)
                             height: dp(52)
                             width: dp(60)
-                            background_color: hex('#F4433600')
+                            background_color: color_provider.get_rgba("transparent")
                             center: self.parent.center
                             pos: self.parent.pos
                             on_press: root.go_back()
@@ -210,7 +210,7 @@ Builder.load_string("""
                             size_hint: (None,None)
                             height: dp(60)
                             width: dp(51)
-                            background_color: hex('#F4433600')
+                            background_color: color_provider.get_rgba("transparent")
                             center: self.parent.center
                             pos: self.parent.pos
                             on_press: root.exit_app()

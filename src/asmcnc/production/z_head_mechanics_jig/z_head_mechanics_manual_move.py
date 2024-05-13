@@ -78,7 +78,7 @@ Builder.load_string("""
                     text: 'Set power high'
                     font_size: dp(25)
                     bold: True
-                    background_color: [0,0,1,1]
+                    background_color: color_provider.get_rgba("monochrome_blue")
                     background_normal: ''
                     on_press: root.set_power_high()
 
@@ -94,7 +94,7 @@ Builder.load_string("""
                     text: 'Energise motor'
                     font_size: dp(25)
                     bold: True
-                    background_color: [0,1,0,1]
+                    background_color: color_provider.get_rgba("monochrome_green")
                     background_normal: ''
                     on_press: root.energise_motor()
 
@@ -102,7 +102,7 @@ Builder.load_string("""
                     text: 'De-energise motor'
                     font_size: dp(25)
                     bold: True
-                    background_color: [1,0,0,1]
+                    background_color: color_provider.get_rgba("monochrome_red")
                     background_normal: ''
                     on_press: root.de_energise_motor()
 
@@ -151,7 +151,7 @@ Builder.load_string("""
 
                     canvas:
                         Color:
-                            rgba: 1,1,1,1
+                            rgba: color_provider.get_rgba("white")
                         RoundedRectangle:
                             size: self.size
                             pos: self.pos

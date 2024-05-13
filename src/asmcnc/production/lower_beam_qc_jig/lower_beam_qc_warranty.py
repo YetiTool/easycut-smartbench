@@ -10,6 +10,7 @@ from kivy.uix.button import  Button
 from asmcnc.skavaUI import widget_status_bar, popup_info
 from asmcnc.production.lower_beam_qc_jig.widget_lower_beam_qc_xy_move import LowerBeamQCXYMove
 from asmcnc.core_UI import console_utils
+from asmcnc.core_UI.utils import color_provider
 
 import sys, os
 
@@ -160,7 +161,7 @@ Builder.load_string("""
 						valign: 'middle'
 						padding: [dp(10),0]
 						text: 'STOP'
-						background_color: [1,0,0,1]
+						background_color: color_provider.get_rgba("monochrome_red")
 						background_normal: ''
 						size_hint_y: 0.25
 						on_press: root.stop()
@@ -187,11 +188,11 @@ class PopupMotorChipsTest(Widget):
 		self.sm = screen_manager
 
 		# img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-		label1 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=report_string, color=[0,0,0,1], padding=[10,10])
+		label1 = Label(size_hint_y=1, text_size=(None, None), markup=True, halign='left', valign='middle', text=report_string, color=color_provider.get_rgba("black"), padding=[10,10])
 
 		ok_button = Button(text='[b]Ok[/b]', markup = True)
 		ok_button.background_normal = ''
-		ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+		ok_button.background_color = color_provider.get_rgba("green")
 
 		text_layout = BoxLayout(orientation='horizontal', spacing=0, padding=0)
 		text_layout.add_widget(label1)
@@ -205,7 +206,7 @@ class PopupMotorChipsTest(Widget):
 		layout_plan.add_widget(btn_layout)
 
 		popup = Popup(title='Output',
-					  title_color=[0, 0, 0, 1],
+					  title_color=color_provider.get_rgba("black"),
 					  title_size = '20sp',
 					  content=layout_plan,
 					  size_hint=(None, None),
@@ -214,7 +215,7 @@ class PopupMotorChipsTest(Widget):
 					  )
 
 		popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
-		popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
+		popup.separator_color = color_provider.get_rgba("yellow")
 		popup.separator_height = '4dp'
 
 		ok_button.bind(on_press=popup.dismiss)

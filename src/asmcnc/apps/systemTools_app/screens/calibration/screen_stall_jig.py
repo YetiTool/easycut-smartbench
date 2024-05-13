@@ -26,6 +26,7 @@ from asmcnc.apps.systemTools_app.screens import widget_final_test_xy_move
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupStopStallJig
 from asmcnc.production.database.calibration_database import CalibrationDatabase
 from asmcnc.skavaUI.popup_info import PopupMiniInfo
+from asmcnc.core_UI.utils import color_provider
 
 Builder.load_string(
     """
@@ -86,7 +87,7 @@ Builder.load_string(
                     size_hint_y: 1
                     background_normal: ""
                     background_down: ""
-                    background_color: [0,0,0,1]
+                    background_color: color_provider.get_rgba("black")
 
                 Button: 
                     id: reset_test_button
@@ -620,7 +621,7 @@ class StallJigScreen(Screen):
         if button_object.background_color != self.highlight_yellow:
             return
         button_object.background_normal = "atlas://data/images/defaulttheme/button"
-        button_object.background_color = [1, 1, 1, 1]
+        button_object.background_color = color_provider.get_rgba("white")
         button_object.background_disabled_normal = (
             "atlas://data/images/defaulttheme/button_disabled"
         )
@@ -640,7 +641,7 @@ class StallJigScreen(Screen):
         self.reset_flags()
         self.disable_run(False)
         self.result_label.text = ""
-        self.result_label.background_color = [0, 0, 0, 1]
+        self.result_label.background_color=color_provider.get_rgba("black")
         Logger.info("CHOOSE TEST: " + str(axis) + ", " + str(feed) + ", " + str(threshold))
         self.test_status_label.text = (
             str(axis) + ", " + str(feed) + ", " + str(threshold)
@@ -1041,7 +1042,7 @@ class StallJigScreen(Screen):
         self.false_stall_happened = False
         self.expected_limit_found = False
         self.result_label.text = ""
-        self.result_label.background_color = [0, 0, 0, 1]
+        self.result_label.background_color=color_provider.get_rgba("black")
         Logger.info("Run next test")
         self.test_status_label.text = "RUNNING"
 

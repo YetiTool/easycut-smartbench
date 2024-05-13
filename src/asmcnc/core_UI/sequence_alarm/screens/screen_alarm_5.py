@@ -19,7 +19,7 @@ Builder.load_string(
 	next_button : next_button
 	canvas:
 		Color: 
-			rgba: [1, 1, 1, 1]
+			rgba: color_provider.get_rgba("white")
 		Rectangle: 
 			size: self.size
 			pos: self.pos
@@ -42,7 +42,7 @@ Builder.load_string(
 				id: alarm_title
 				size_hint: (None, None)
 				font_size: str(0.0375*app.width) + 'sp'
-				color: [0,0,0,1]
+				color: color_provider.get_rgba("black")
 				markup: True
 				halign: 'left'
 				height: dp(0.104166666667*app.height)
@@ -96,7 +96,7 @@ Builder.load_string(
 				Label:
 					id: description_label
 					font_size: str(0.025*app.width) + 'sp'
-					color: [0,0,0,1]
+					color: color_provider.get_rgba("black")
 					markup: True
 					halign: 'center'
 					valign: 'middle'
@@ -119,7 +119,7 @@ Builder.load_string(
 					size_hint: (None,None)
 					height: dp(0.108333333333*app.height)
 					width: dp(0.075*app.width)
-					background_color: hex('#F4433600')
+					background_color: color_provider.get_rgba("transparent")
 					center: self.parent.center
 					pos: self.parent.pos
 					on_press: root.prev_screen()
@@ -148,7 +148,7 @@ Builder.load_string(
 					height: dp(0.164583333333*app.height)
 					on_press: root.more_info()
 					font_size: root.default_font_size
-					color: hex('#f9f9f9ff')
+					color: color_provider.get_rgba("near_white")
 					markup: True
 					center: self.parent.center
 					pos: self.parent.pos
@@ -164,7 +164,7 @@ Builder.load_string(
 					size_hint: (None,None)
 					height: dp(0.125*app.height)
 					width: dp(0.06375*app.width)
-					background_color: hex('#F4433600')
+					background_color: color_provider.get_rgba("transparent")
 					center: self.parent.center
 					pos: self.parent.pos
 					on_press: root.next_screen()

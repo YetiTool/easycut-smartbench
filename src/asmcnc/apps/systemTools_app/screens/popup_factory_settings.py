@@ -5,6 +5,8 @@ from kivy.uix.label import Label
 from kivy.uix.button import  Button
 from kivy.uix.image import Image
 
+from asmcnc.core_UI.utils import color_provider
+
 class PopupSC2Decision(Widget):
 
     def __init__(self, screen_manager, localization, description):
@@ -23,15 +25,15 @@ class PopupSC2Decision(Widget):
             self.sm.get_screen('factory_settings').undo_toggle()
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/info_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1.5, text_size=(480, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
+        label = Label(size_hint_y=1.5, text_size=(480, None), halign='center', valign='middle', text=description, color=color_provider.get_rgba("black"), padding=[0,0], markup = True)
 
         ok_button = Button(text=ok_string, markup = True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         ok_button.bold = True
         cancel_button = Button(text=cancel_string, markup = True)
         cancel_button.background_normal = ''
-        cancel_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        cancel_button.background_color = color_provider.get_rgba("red")
         cancel_button.bold = True
 
         btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,10,0,0])
@@ -44,7 +46,7 @@ class PopupSC2Decision(Widget):
         layout_plan.add_widget(btn_layout)
         
         popup = Popup(title=title_string,
-                      title_color=[0, 0, 0, 1],
+                      title_color=color_provider.get_rgba("black"),
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -53,7 +55,7 @@ class PopupSC2Decision(Widget):
                       )
 
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
-        popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("yellow")
         popup.separator_height = '4dp'
 
         ok_button.bind(on_press=toggle_sc2_compatability)

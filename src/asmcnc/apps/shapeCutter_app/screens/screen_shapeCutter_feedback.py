@@ -52,7 +52,7 @@ Builder.load_string("""
                     halign: "center"
                     valign: "middle"
                     text: "Was your job successful?"
-                    color: 0,0,0,1
+                    color: color_provider.get_rgba("black")
                     font_size: 26
                     markup: True
 
@@ -77,7 +77,7 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(171)
                         width: dp(172)
-                        background_color: hex('#F4433600')
+                        background_color: color_provider.get_rgba("transparent")
                         center: self.parent.center
                         pos: self.parent.pos
                         on_press: root.thumbs_up()
@@ -103,7 +103,7 @@ Builder.load_string("""
                         size_hint: (None,None)
                         height: dp(171)
                         width: dp(172)
-                        background_color: hex('#F4433600')
+                        background_color: color_provider.get_rgba("transparent")
                         center: self.parent.center
                         pos: self.parent.pos
                         on_press: root.thumbs_down()

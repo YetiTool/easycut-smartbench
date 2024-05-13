@@ -15,6 +15,7 @@ import socket, sys, os
 from kivy.properties import StringProperty, ObjectProperty
 from asmcnc.skavaUI import popup_info
 from kivy.core.window import Window
+from asmcnc.core_UI.utils import color_provider
 
 Builder.load_string(
     """
@@ -26,9 +27,9 @@ Builder.load_string(
 <NetworkSpinner@SpinnerOption>
 
     background_normal: ''
-    background_color: [1,1,1,1]
+    background_color: color_provider.get_rgba("white")
     height: dp(0.0833333333333*app.height)
-    color: 0,0,0,1
+    color: color_provider.get_rgba("black")
     halign: 'left'
     markup: 'True'
     font_size: sp(app.get_scaled_width(15))
@@ -109,7 +110,7 @@ Builder.load_string(
                     orientation: 'vertical'
                     LabelBase:
                         id: ip_address_label
-                        color: 1,1,1,1
+                        color: color_provider.get_rgba("white")
                         font_size: 0.0225*app.width
                         markup: True
                         halign: "center"
@@ -120,7 +121,7 @@ Builder.load_string(
 
                     LabelBase:
                         id: ip_status_label
-                        color: 1,1,1,1
+                        color: color_provider.get_rgba("white")
                         font_size: 0.0225*app.width
                         markup: True
                         halign: "center"
@@ -138,7 +139,7 @@ Builder.load_string(
                 spacing:0.0125*app.width
                 canvas:
                     Color:
-                        rgba: [1,1,1,1]
+                        rgba: color_provider.get_rgba("white")
                     RoundedRectangle:
                         pos: self.pos
                         size: self.size
@@ -164,7 +165,7 @@ Builder.load_string(
                             LabelBase:
                                 id: network_name_label
                                 width: dp(0.18875*app.width)
-                                color: 0,0,0,1
+                                color: color_provider.get_rgba("black")
                                 font_size: 0.025*app.width
                                 markup: True
                                 halign: "left"
@@ -184,7 +185,7 @@ Builder.load_string(
                                 size_hint: (None,None)
                                 height: dp(0.0625*app.height)
                                 width: dp(0.03625*app.width)
-                                background_color: hex('#F4433600')
+                                background_color: color_provider.get_rgba("transparent")
                                 center: self.parent.center
                                 pos: self.parent.pos
                                 on_press: root.refresh_available_networks()
@@ -233,11 +234,11 @@ Builder.load_string(
                                 font_size: str(0.025*app.width) + 'sp'
                                 text_size: self.size
                                 multiline: False
-                                color: 0,0,0,1
+                                color: color_provider.get_rgba("black")
                                 values: root.SSID_list
                                 option_cls: Factory.get("NetworkSpinner")
                                 background_normal: ''
-                                background_color: [1,1,1,0]
+                                background_color: color_provider.get_rgba("transparent")
                         
                         # The TextInput for the custom network name, very similar to the Password BoxLayout
                         BoxLayout:
@@ -270,7 +271,7 @@ Builder.load_string(
                             id: custom_ssid_button
                             on_release: root.custom_ssid_input()
                             font_size: 0.025*app.width
-                            color: hex('#f9f9f9ff')
+                            color: color_provider.get_rgba("near_white")
                             markup: True
                             background_normal: "./asmcnc/apps/wifi_app/img/CustomSSID_blank.png"
                             background_down: "./asmcnc/apps/wifi_app/img/CustomSSID_blank.png"
@@ -285,7 +286,7 @@ Builder.load_string(
                               
                     LabelBase:
                         id: password_label
-                        color: 0,0,0,1
+                        color: color_provider.get_rgba("black")
                         font_size: 0.025*app.width
                         markup: True
                         halign: "left"
@@ -321,7 +322,7 @@ Builder.load_string(
                               
                     LabelBase:
                         id: country_label
-                        color: 0,0,0,1
+                        color: color_provider.get_rgba("black")
                         font_size: 0.025*app.width
                         markup: True
                         halign: "left"
@@ -351,9 +352,9 @@ Builder.load_string(
                             text: 'GB'
                             font_size: str(0.025*app.width) + 'sp'
                             text_size: self.size
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             values: root.values
-                            background_color: [1,1,1,0]
+                            background_color: color_provider.get_rgba("transparent")
                             option_cls: Factory.get("NetworkSpinner")
 
         BoxLayout:
@@ -371,7 +372,7 @@ Builder.load_string(
                 padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
                 canvas:
                     Color:
-                        rgba: [1,1,1,1]
+                        rgba: color_provider.get_rgba("white")
                     RoundedRectangle:
                         pos: self.pos
                         size: self.size
@@ -384,7 +385,7 @@ Builder.load_string(
                     scroll_type: ['content']
                     RstDocument:
                         id: connection_instructions_rst
-                        background_color: hex('#FFFFFF')
+                        background_color: color_provider.get_rgba("white")
                         base_font_size: 26.0 / 800 * app.width
                         underline_color: '000000'
                                                                                    
@@ -423,7 +424,7 @@ Builder.load_string(
                         on_press: root.check_credentials()
                         # text: 'Connect'
                         font_size: str(0.035*app.width) + 'sp'
-                        color: hex('#f9f9f9ff')
+                        color: color_provider.get_rgba("near_white")
                         markup: True
                         center: self.parent.center
                         pos: self.parent.pos
@@ -439,7 +440,7 @@ Builder.load_string(
                         size_hint: (None,None)
                         height: dp(0.233333333333*app.height)
                         width: dp(0.14*app.width)
-                        background_color: hex('#F4433600')
+                        background_color: color_provider.get_rgba("transparent")
                         center: self.parent.center
                         pos: self.parent.pos
                         on_press: root.quit_to_lobby()
@@ -460,7 +461,7 @@ Builder.load_string(
 class WifiScreen(Screen):
     default_font_size = 20.0 / 800.0 * Window.width
     IP_REPORT_INTERVAL = 2
-    status_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
+    status_color = color_provider.get_rgba("green")
     network_name = ObjectProperty()
     _password = ObjectProperty()
     country = ObjectProperty()
@@ -746,13 +747,13 @@ class WifiScreen(Screen):
         self.ip_status_label.text = self.set.ip_address
         if self.set.wifi_available:
             self.wifi_image.source = self.wifi_on
-            self.status_color = [76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0]
+            self.status_color = color_provider.get_rgba("green")
         elif not self.set.ip_address:
             self.wifi_image.source = self.wifi_off
-            self.status_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
+            self.status_color = color_provider.get_rgba("red")
         else:
             self.wifi_image.source = self.wifi_warning
-            self.status_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
+            self.status_color = color_provider.get_rgba("red")
 
     def quit_to_lobby(self):
         self.sm.current = "lobby"

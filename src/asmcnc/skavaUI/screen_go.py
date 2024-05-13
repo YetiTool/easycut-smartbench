@@ -84,7 +84,7 @@ Builder.load_string(
 
                 canvas:
                     Color:
-                        rgba: hex('#E5E5E5FF')
+                        rgba: color_provider.get_rgba("light_grey")
                     Rectangle:
                         size: self.size
                         pos: self.pos
@@ -99,7 +99,7 @@ Builder.load_string(
                         padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
                         canvas:
                             Color:
-                                rgba: hex('#FFFFFFFF')
+                                rgba: color_provider.get_rgba("white")
                             RoundedRectangle:
                                 size: self.size
                                 pos: self.pos
@@ -111,7 +111,7 @@ Builder.load_string(
                                 font_size: str(0.01875 * app.width) + 'sp'
                                 id: btn_back
                                 size_hint_x: 1
-                                background_color: hex('#F4433600')
+                                background_color: color_provider.get_rgba("transparent")
                                 on_press:
                                     root.return_to_app()
                                 BoxLayout:
@@ -134,14 +134,14 @@ Builder.load_string(
                                 halign: 'center'
                                 valign: 'middle'
                                 id: file_data_label
-                                color: hex('#333333ff')
+                                color: color_provider.get_rgba("dark_grey")
                                 
                             Button:
                                 font_size: str(0.01875 * app.width) + 'sp'
                                 id: stop_start
                                 size_hint_x: 1
                                 disabled: False
-                                background_color: hex('#F4433600')
+                                background_color: color_provider.get_rgba("transparent")
 
                                 on_press:
                                     root.start_or_pause_button_press()
@@ -172,7 +172,7 @@ Builder.load_string(
                             size_hint_x: 0.2
                             canvas:
                                 Color:
-                                    rgba: hex('#FFFFFFFF')
+                                    rgba: color_provider.get_rgba("white")
                                 RoundedRectangle:
                                     size: self.size
                                     pos: self.pos
@@ -184,7 +184,7 @@ Builder.load_string(
                                 spacing:0.0*app.height
                                 canvas:
                                     Color:
-                                        rgba: hex('#FFFFFFFF')
+                                        rgba: color_provider.get_rgba("white")
                                     RoundedRectangle:
                                         size: self.size
                                         pos: self.pos
@@ -196,7 +196,7 @@ Builder.load_string(
                                     halign: 'center'
                                     size:self.texture_size
                                     text_size: self.size
-                                    color: hex('#808080ff')
+                                    color: color_provider.get_rgba("neutral_grey")
 
                             BoxLayout:
                                 id: feed_override_container
@@ -204,7 +204,7 @@ Builder.load_string(
                                 size_hint_y: 9
                                 canvas:
                                     Color:
-                                        rgba: hex('#FFFFFFFF')
+                                        rgba: color_provider.get_rgba("white")
                                     RoundedRectangle:
                                         size: self.size
                                         pos: self.pos
@@ -218,7 +218,7 @@ Builder.load_string(
                             size_hint_x: 0.2
                             canvas:
                                 Color:
-                                    rgba: hex('#FFFFFFFF')
+                                    rgba: color_provider.get_rgba("white")
                                 RoundedRectangle:
                                     size: self.size
                                     pos: self.pos
@@ -230,7 +230,7 @@ Builder.load_string(
                                 spacing:0.0*app.height
                                 canvas:
                                     Color:
-                                        rgba: hex('#FFFFFFFF')
+                                        rgba: color_provider.get_rgba("white")
                                     RoundedRectangle:
                                         size: self.size
                                         pos: self.pos
@@ -242,7 +242,7 @@ Builder.load_string(
                                     halign: 'center'
                                     size:self.texture_size
                                     text_size: self.size
-                                    color: hex('#808080ff')
+                                    color: color_provider.get_rgba("neutral_grey")
 
                             BoxLayout:
                                 id: speed_override_widget_container
@@ -250,7 +250,7 @@ Builder.load_string(
                                 size_hint_y: 9
                                 canvas:
                                     Color:
-                                        rgba: hex('#FFFFFFFF')
+                                        rgba: color_provider.get_rgba("white")
                                     RoundedRectangle:
                                         size: self.size
                                         pos: self.pos
@@ -267,7 +267,7 @@ Builder.load_string(
                                 
                                 canvas:
                                     Color:
-                                        rgba: hex('#FFFFFFFF')
+                                        rgba: color_provider.get_rgba("white")
                                     RoundedRectangle:
                                         size: self.size
                                         pos: self.pos
@@ -281,7 +281,7 @@ Builder.load_string(
 
                                 canvas:
                                     Color:
-                                        rgba: hex('#FFFFFFFF')
+                                        rgba: color_provider.get_rgba("white")
                                     RoundedRectangle:
                                         size: self.size
                                         pos: self.pos
@@ -296,11 +296,11 @@ Builder.load_string(
                                     halign: 'left'
                                     size:self.texture_size
                                     text_size: self.size
-                                    color: hex('#808080ff')
+                                    color: color_provider.get_rgba("neutral_grey")
                                 Label:
                                     size_hint_y: 3
                                     id: progress_percentage_label
-                                    color: hex('#333333ff')
+                                    color: color_provider.get_rgba("dark_grey")
                                     text: '0 %'
                                     markup: True                           
                                     font_size: str(0.125*app.width) + 'px' 
@@ -317,7 +317,7 @@ Builder.load_string(
                                     halign: 'left'
                                     size:self.texture_size
                                     text_size: self.size
-                                    color: hex('#808080ff')
+                                    color: color_provider.get_rgba("neutral_grey")
                                 Label:
                                     size_hint_y: 1.1
                                     id: run_time_label
@@ -327,7 +327,7 @@ Builder.load_string(
                                     halign: 'left'
                                     size:self.texture_size
                                     text_size: self.size
-                                    color: hex('#333333ff')
+                                    color: color_provider.get_rgba("dark_grey")
 
                 BoxLayout:
                     id: spindle_widgets
@@ -338,7 +338,7 @@ Builder.load_string(
 
                     canvas:
                         Color:
-                            rgba: hex('#FFFFFFFF')
+                            rgba: color_provider.get_rgba("white")
                         RoundedRectangle:
                             size: self.size
                             pos: self.pos

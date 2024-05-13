@@ -5,6 +5,7 @@ Created for info buttons in the shapecutter app
 
 import kivy
 from asmcnc.comms.logging_system.logging_system import Logger
+from asmcnc.core_UI.utils import color_provider
 
 from kivy.lang import Builder
 from kivy.uix.gridlayout import GridLayout
@@ -29,11 +30,11 @@ class PopupInputError(Widget):
         description = error_message
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1, text_size=(360, None), halign='left', valign='middle', text=description, color=[0,0,0,1], padding=[20,20])
+        label = Label(size_hint_y=1, text_size=(360, None), halign='left', valign='middle', text=description, color=color_provider.get_rgba("black"), padding=[20,20])
         
         ok_button = Button(text='[b]Ok[/b]', markup = True)
         ok_button.background_normal = ''
-        ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("red")
         
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[50,25,50,0])
         btn_layout.add_widget(ok_button)
@@ -44,7 +45,7 @@ class PopupInputError(Widget):
         layout_plan.add_widget(btn_layout)
         
         popup = Popup(title='Warning!',
-                      title_color=[0, 0, 0, 1],
+                      title_color=color_provider.get_rgba("black"),
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -52,7 +53,7 @@ class PopupInputError(Widget):
                       auto_dismiss= False
                       )
         
-        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("red")
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
         
@@ -107,15 +108,15 @@ class PopupDatum(Widget):
           return True
 
       img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-      label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[40,20], markup = True)
+      label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=description, color=color_provider.get_rgba("black"), padding=[40,20], markup = True)
       
 
       ok_button = Button(text='[b]Yes[/b]', markup = True)
       ok_button.background_normal = ''
-      ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+      ok_button.background_color = color_provider.get_rgba("green")
       back_button = Button(text='[b]No[/b]', markup = True)
       back_button.background_normal = ''
-      back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+      back_button.background_color = color_provider.get_rgba("red")
 
      
       btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0])
@@ -124,7 +125,7 @@ class PopupDatum(Widget):
 
 
       if self.m.is_laser_enabled == True:
-        chk_label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=chk_message, color=[0,0,0,1], padding=[40,20], markup = True)
+        chk_label = Label(size_hint_y=1, text_size=(360, None), halign='center', valign='middle', text=chk_message, color=color_provider.get_rgba("black"), padding=[40,20], markup = True)
         checkbox = CheckBox(background_checkbox_normal="./asmcnc/skavaUI/img/checkbox_inactive.png", active=set_checkbox_default())
         chk_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[0,0,0,0])
         chk_layout.add_widget(chk_label)
@@ -137,7 +138,7 @@ class PopupDatum(Widget):
       layout_plan.add_widget(btn_layout)
       
       popup = Popup(title='Warning!',
-                    title_color=[0, 0, 0, 1],
+                    title_color=color_provider.get_rgba("black"),
                     title_size = '20sp',
                     content=layout_plan,
                     size_hint=(None, None),
@@ -145,7 +146,7 @@ class PopupDatum(Widget):
                     auto_dismiss= False
                     )
       
-      popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+      popup.separator_color = color_provider.get_rgba("red")
       popup.separator_height = '4dp'
       popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
       
@@ -166,11 +167,11 @@ class PopupBoundary(Widget):
         description = error_message
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1, text_size=(360, None), halign='left', valign='middle', text=description, color=[0,0,0,1], padding=[0,0])
+        label = Label(size_hint_y=1, text_size=(360, None), halign='left', valign='middle', text=description, color=color_provider.get_rgba("black"), padding=[0,0])
         
         ok_button = Button(text='[b]Ok[/b]', markup = True)
         ok_button.background_normal = ''
-        ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("red")
         
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[70,25,70,0])
         btn_layout.add_widget(ok_button)
@@ -181,7 +182,7 @@ class PopupBoundary(Widget):
         layout_plan.add_widget(btn_layout)
         
         popup = Popup(title='Warning!',
-                      title_color=[0, 0, 0, 1],
+                      title_color=color_provider.get_rgba("black"),
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -189,7 +190,7 @@ class PopupBoundary(Widget):
                       auto_dismiss= False
                       )
         
-        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("red")
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
         

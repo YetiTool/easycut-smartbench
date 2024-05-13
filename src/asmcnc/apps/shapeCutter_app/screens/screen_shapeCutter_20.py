@@ -186,7 +186,7 @@ Builder.load_string(
                         
                         Label:
                             text: root.title_label
-                            color: 0,0,0,1
+                            color: color_provider.get_rgba("black")
                             font_size: 0.035*app.width
                             markup: True
                             halign: "left"
@@ -247,7 +247,7 @@ Builder.load_string(
 #                                         size_hint: (None,None)
 #                                         height: dp(30)
 #                                         width: dp(75)
-#                                         background_color: hex('#F4433600')
+#                                         background_color: color_provider.get_rgba("transparent")
 #                                         center: self.parent.center
 #                                         pos: self.parent.pos
 #                                         on_press: root.toggle_units()
@@ -263,7 +263,7 @@ Builder.load_string(
 #                                         Label:
 #                                             id: unit_label
 #                                             text: "mm"
-#                                             color: 1,1,1,1
+#                                             color: color_provider.get_rgba("white")
 #                                             font_size: 20
 #                                             markup: True
 #                                             halign: "center"
@@ -276,7 +276,7 @@ Builder.load_string(
                                         size_hint: (None,None)
                                         height: dp(0.0666666666667*app.height)
                                         width: dp(0.10375*app.width)
-                                        background_color: hex('#F4433600')
+                                        background_color: color_provider.get_rgba("transparent")
                                         center: self.parent.center
                                         pos: self.parent.pos
                                         on_active: root.toggle_units()
@@ -305,7 +305,7 @@ Builder.load_string(
                                     
                                     Label: 
                                         text: "Diameter (A):"
-                                        color: 0,0,0,1
+                                        color: color_provider.get_rgba("black")
                                         font_size: 0.03*app.width
                                         markup: True
                                         halign: "left"
@@ -340,7 +340,7 @@ Builder.load_string(
                                     
                                     Label: 
                                         text: "Cutting length (B):"
-                                        color: 0,0,0,1
+                                        color: color_provider.get_rgba("black")
                                         font_size: 0.03*app.width
                                         markup: True
                                         halign: "left"
@@ -375,7 +375,7 @@ Builder.load_string(
                                     
                                     Label: 
                                         text: "Shoulder length (C):"
-                                        color: 0,0,0,1
+                                        color: color_provider.get_rgba("black")
                                         font_size: 0.03*app.width
                                         markup: True
                                         halign: "left"
@@ -435,7 +435,7 @@ Builder.load_string(
                                 size_hint: (None,None)
                                 height: dp(0.0833333333333*app.height)
                                 width: dp(0.05*app.width)
-                                background_color: hex('#F4433600')
+                                background_color: color_provider.get_rgba("transparent")
                                 opacity: 1
                                 on_press: root.get_info()
                                 BoxLayout:
@@ -454,7 +454,7 @@ Builder.load_string(
                             size_hint: (None,None)
                             height: dp(0.139583333333*app.height)
                             width: dp(0.11*app.width)
-                            background_color: hex('#F4433600')
+                            background_color: color_provider.get_rgba("transparent")
                             on_press: root.go_back()
                             BoxLayout:
                                 padding: 0
@@ -471,7 +471,7 @@ Builder.load_string(
                             size_hint: (None,None)
                             height: dp(0.139583333333*app.height)
                             width: dp(0.11*app.width)
-                            background_color: hex('#F4433600')
+                            background_color: color_provider.get_rgba("transparent")
                             on_press: root.next_screen()
                             BoxLayout:
                                 padding: 0

@@ -32,7 +32,7 @@ Builder.load_string(
 
             Button:
                 font_size: str(0.01875 * app.width) + 'sp'
-                background_color: [0,0,0,0]
+                background_color: color_provider.get_rgba("transparent")
                 on_press: root.back_to_home()
                 BoxLayout:
                     size: self.parent.size
@@ -51,13 +51,13 @@ Builder.load_string(
             Label:
                 id: job_name_header
                 text: "[b]Last job:[/b]"
-                color: hex('#333333ff')
+                color: color_provider.get_rgba("dark_grey")
                 markup: True
                 font_size: dp(0.0375*app.width)
 
             Label:
                 id: job_name_label
-                color: hex('#333333ff')
+                color: color_provider.get_rgba("dark_grey")
                 font_size: dp(0.03125*app.width)
                 text_size: self.size
                 halign: "center"
@@ -66,7 +66,7 @@ Builder.load_string(
 
             Label:
                 id: completion_label
-                color: hex('#333333ff')
+                color: color_provider.get_rgba("dark_grey")
                 font_size: dp(0.0375*app.width)
 
         BoxLayout:

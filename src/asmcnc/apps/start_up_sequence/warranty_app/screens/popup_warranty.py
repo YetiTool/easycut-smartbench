@@ -16,6 +16,8 @@ from kivy.uix.image import Image
 from kivy.graphics import Color, Rectangle
 from kivy.uix.textinput import TextInput
 
+from asmcnc.core_UI.utils import color_provider
+
 ### Quit To Console
 class QuitToConsoleWarranty(Widget):
     def __init__(self, screen_manager):
@@ -30,14 +32,14 @@ class QuitToConsoleWarranty(Widget):
             sys.exit()
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[20,0], markup = True)
+        label = Label(size_hint_y=2, text_size=(360, None), halign='center', valign='middle', text=description, color=color_provider.get_rgba("black"), padding=[20,0], markup = True)
         
         ok_button = Button(text='[b]Yes[/b]', markup = True)
         ok_button.background_normal = ''
-        ok_button.background_color = [76 / 255., 175 / 255., 80 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text='[b]No[/b]', markup = True)
         back_button.background_normal = ''
-        back_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        back_button.background_color = color_provider.get_rgba("red")
 
        
         btn_layout = BoxLayout(orientation='horizontal', spacing=15, padding=[0,5,0,0])
@@ -50,7 +52,7 @@ class QuitToConsoleWarranty(Widget):
         layout_plan.add_widget(btn_layout)
         
         popup = Popup(title='Warning!',
-                      title_color=[0, 0, 0, 1],
+                      title_color=color_provider.get_rgba("black"),
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -58,7 +60,7 @@ class QuitToConsoleWarranty(Widget):
                       auto_dismiss= False
                       )
         
-        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("red")
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
         
@@ -83,12 +85,12 @@ class PopupFactorySettingsPassword(Widget):
             self.am.systemtools_sm.open_factory_settings_screen()
         
         img = Image(source="./asmcnc/apps/shapeCutter_app/img/error_icon.png", allow_stretch=False)
-        label = Label(size_hint_y=1.2, text_size=(450, None), halign='center', valign='middle', text=description, color=[0,0,0,1], padding=[0,0], markup = True)
+        label = Label(size_hint_y=1.2, text_size=(450, None), halign='center', valign='middle', text=description, color=color_provider.get_rgba("black"), padding=[0,0], markup = True)
         textinput = TextInput(size_hint_y=1, text = '')
 
         ok_button = Button(text='[b]Ok[/b]', markup = True)
         ok_button.background_normal = ''
-        ok_button.background_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        ok_button.background_color = color_provider.get_rgba("red")
        
         btn_layout = BoxLayout(orientation='horizontal', spacing=10, padding=[10,0,10,0])
         btn_layout.add_widget(ok_button)
@@ -100,7 +102,7 @@ class PopupFactorySettingsPassword(Widget):
         layout_plan.add_widget(btn_layout)
         
         popup = Popup(title='Warning!',
-                      title_color=[0, 0, 0, 1],
+                      title_color=color_provider.get_rgba("black"),
                       title_size = '20sp',
                       content=layout_plan,
                       size_hint=(None, None),
@@ -110,7 +112,7 @@ class PopupFactorySettingsPassword(Widget):
                                 'y':160.0 /  480.0},
                       )
         
-        popup.separator_color = [230 / 255., 74 / 255., 25 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("red")
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
         

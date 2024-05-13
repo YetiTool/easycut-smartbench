@@ -14,7 +14,7 @@ Builder.load_string("""
     
     canvas:
         Color:
-            rgba: hex('#E5E5E5FF')
+            rgba: color_provider.get_rgba("light_grey")
         Rectangle:
             size: self.size
             pos: self.pos
@@ -33,7 +33,7 @@ Builder.load_string("""
             
             canvas.before:
                 Color: 
-                    rgba: hex('#1976D2FF')
+                    rgba: color_provider.get_rgba("blue")
                 Rectangle: 
                     size: self.size
                     pos: self.pos
@@ -73,7 +73,7 @@ Builder.load_string("""
                         halign: 'center'
                         text_size: self.parent.size
                         markup: True
-                        color: hex('333333ff') 
+                        color: color_provider.get_rgba("dark_grey") 
                 
             # Correct shutdown steps section
             BoxLayout:
@@ -88,7 +88,7 @@ Builder.load_string("""
                         valign: 'middle'
                         text_size: self.parent.size
                         markup: True
-                        color: hex('333333ff')
+                        color: color_provider.get_rgba("dark_grey")
                         line_height: 1.5
                         
                 Image:
@@ -114,7 +114,7 @@ Builder.load_string("""
                         halign: 'center'
                         text_size: self.parent.size
                         markup: True
-                        color: hex('333333ff')
+                        color: color_provider.get_rgba("dark_grey")
                     
         # 'I understand' button
         BoxLayout:

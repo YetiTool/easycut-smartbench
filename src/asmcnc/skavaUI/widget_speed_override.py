@@ -31,7 +31,7 @@ Builder.load_string(
             font_size: str(0.01875 * app.width) + 'sp'
             id: up_5
             on_press: root.speed_up()
-            background_color: 1, 1, 1, 0 
+            background_color: color_provider.get_rgba("transparent")
             BoxLayout:
                 padding:[dp(0.0025)*app.width, dp(0.00416666666667)*app.height]
                 size: self.parent.size
@@ -51,7 +51,7 @@ Builder.load_string(
                 font_size: str(0.01875 * app.width) + 'sp'
                 id: norm_button
                 on_press: root.speed_norm()
-                background_color: 1, 1, 1, 0 
+                background_color: color_provider.get_rgba("transparent")
                 pos_hint: {'center_x':0.5, 'center_y': .5}
                 size: self.parent.size
             Image:
@@ -70,7 +70,7 @@ Builder.load_string(
             font_size: str(0.01875 * app.width) + 'sp'
             id: down_5
             on_press: root.speed_down()
-            background_color: 1, 1, 1, 0 
+            background_color: color_provider.get_rgba("transparent")
             BoxLayout:
                 padding:[dp(0.0025)*app.width, dp(0.00416666666667)*app.height]
                 size: self.parent.size
