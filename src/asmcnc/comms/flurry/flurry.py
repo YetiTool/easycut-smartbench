@@ -209,6 +209,19 @@ class Flurry(object):
         self.settings.bind(public_ip_address=partial(self.__add_pending_update, CONSOLE_QUEUE, "remote_ip_addr"))
         self.localisation.bind(lang=partial(self.__add_pending_update, CONSOLE_QUEUE, "language"))
 
+        # Binds for Spindle
+        self.machine.s.bind(spindle_serial_number=partial(self.__add_pending_full_payload, SPINDLE_QUEUE,
+                                                          self.__get_spindle_payload()))
+
+    def __add_pending_full_payload(self, queue, payload, instance, value):
+        """Add a full payload to the pending messages to be sent to the Flurry server."""
+        Logger.info("{}, {}, {}, {}".format(queue, payload, instance, value))
+        if queue not in self.parameters_to_update:
+            self.parameters_to_update[queue] = payload
+        else:
+            for key, value in payload.items():
+                self.parameters_to_update[queue][key] = value
+
     def __add_pending_update(self, queue, key, instance, value):
         """Add an update to the pending messages to be sent to the Flurry server."""
         Logger.info("{}, {}, {}, {}".format(queue, key, instance, value))

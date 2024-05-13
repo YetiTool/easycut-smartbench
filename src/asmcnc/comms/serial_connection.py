@@ -946,7 +946,7 @@ class SerialConnection(EventDispatcher):
     record_sg_values_flag = False
 
     # SPINDLE STATISTICS
-    spindle_serial_number = None
+    spindle_serial_number = StringProperty("")
     spindle_production_year = None
     spindle_production_week = None
     spindle_firmware_version = None
