@@ -62,7 +62,7 @@ class PopupInfo(Widget):
                       )
 
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
-        popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("yellow")
         popup.separator_height = '4dp'
 
         ok_button.bind(on_press=popup.dismiss)
@@ -109,7 +109,7 @@ class PopupTutorial(Widget):
                       auto_dismiss= False
                       )
         
-        popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("yellow")
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
         
@@ -155,7 +155,7 @@ class PopupFeedsAndSpeedsLookupTable(Widget):
                       )
 
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
-        popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("yellow")
         popup.separator_height = str(utils.get_scaled_width(4)) + "dp"
 
         ok_button.bind(on_press=popup.dismiss)
@@ -193,7 +193,7 @@ class PopupWait(Widget):
                       auto_dismiss= False
                       )
         
-        popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("yellow")
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
         

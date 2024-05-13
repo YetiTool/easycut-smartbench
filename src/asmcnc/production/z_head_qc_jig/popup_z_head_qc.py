@@ -56,7 +56,7 @@ class PopupTempPowerDiagnosticsInfo(Widget):
                       )
 
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
-        popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("yellow")
         popup.separator_height = '4dp'
 
         ok_button.bind(on_press=popup.dismiss)
@@ -105,7 +105,7 @@ class PopupSpindleDiagnosticsInfo(Widget):
                       )
 
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
-        popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("yellow")
         popup.separator_height = '4dp'
 
         ok_button.bind(on_press=popup.dismiss)
@@ -144,7 +144,7 @@ class PopupFWUpdateDiagnosticsInfo(Widget):
                       )
 
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
-        popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("yellow")
         popup.separator_height = '4dp'
 
         back_button.bind(on_press=popup.dismiss)

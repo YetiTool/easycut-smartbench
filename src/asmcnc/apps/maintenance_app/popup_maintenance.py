@@ -61,7 +61,7 @@ class PopupResetOffset(Widget):
                       auto_dismiss= False
                       )
 
-        popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("yellow")
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 
@@ -120,7 +120,7 @@ class PopupSaveOffset(Widget):
                       auto_dismiss= False
                       )
 
-        popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("yellow")
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 
@@ -239,7 +239,7 @@ class PopupBrushInfo(Widget):  # TODO: MOVE THIS TO A UNIQUE POPUPS FILE
                       )
 
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
-        popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("yellow")
         popup.separator_height = '4dp'
 
         ok_button.bind(on_press=popup.dismiss)
@@ -386,7 +386,7 @@ class PopupDisplaySpindleData(Widget):  # TODO: SCALE AND MOVE TO A UNIQUE POPUP
                       auto_dismiss= False
                       )
 
-        popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("yellow")
         popup.separator_height = '4dp'
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
 
@@ -517,7 +517,7 @@ class PopupSpindleSettingsInfo(Widget):
                       )
 
         popup.background = './asmcnc/apps/shapeCutter_app/img/popup_background.png'
-        popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
+        popup.separator_color = color_provider.get_rgba("yellow")
         popup.separator_height = '4dp'
 
         # Binding to the carousel functions directly causes argument issues, so create "wrapper" functions
