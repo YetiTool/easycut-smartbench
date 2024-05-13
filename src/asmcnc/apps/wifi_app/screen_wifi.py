@@ -750,10 +750,10 @@ class WifiScreen(Screen):
             self.status_color = color_provider.get_rgba("green")
         elif not self.set.ip_address:
             self.wifi_image.source = self.wifi_off
-            self.status_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
+            self.status_color = color_provider.get_rgba("red")
         else:
             self.wifi_image.source = self.wifi_warning
-            self.status_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
+            self.status_color = color_provider.get_rgba("red")
 
     def quit_to_lobby(self):
         self.sm.current = "lobby"

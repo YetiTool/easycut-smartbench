@@ -798,7 +798,7 @@ class PopupDatum(Widget):
             text=no_string, markup=True, font_size=get_scaled_sp("15sp")
         )
         back_button.background_normal = ""
-        back_button.background_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
+        back_button.background_color = color_provider.get_rgba("red")
 
         btn_layout = BoxLayout(
             orientation="horizontal",
@@ -855,7 +855,7 @@ class PopupDatum(Widget):
             size_hint=(None, None),
             size=get_scaled_tuple((300, 350)),
             auto_dismiss=False,
-            separator_color=[230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0],
+            separator_color = color_provider.get_rgba("red"),
             separator_height=str(get_scaled_height(4)) + "dp",
             background="./asmcnc/apps/shapeCutter_app/img/popup_background.png",
         )

@@ -53,7 +53,7 @@ class PopupNudgeDatum(Widget):
         ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=no_string, font_size=get_scaled_sp("15sp"), markup=True)
         back_button.background_normal = ""
-        back_button.background_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
+        back_button.background_color = color_provider.get_rgba("red")
 
         btn_layout = BoxLayout(
             orientation="horizontal", spacing=get_scaled_tuple(10), padding=[0, 0, 0, 0]
@@ -78,7 +78,7 @@ class PopupNudgeDatum(Widget):
             auto_dismiss=False,
         )
 
-        popup.separator_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
+        popup.separator_color = color_provider.get_rgba("red")
         popup.separator_height = str(get_scaled_height(4)) +"dp"
         popup.background = "./asmcnc/apps/shapeCutter_app/img/popup_background.png"
 
@@ -138,7 +138,7 @@ class PopupNudgeWarning(Widget):
         ok_button.background_color = color_provider.get_rgba("green")
         back_button = Button(text=no_string, font_size=get_scaled_sp("15sp"), markup=True)
         back_button.background_normal = ""
-        back_button.background_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
+        back_button.background_color = color_provider.get_rgba("red")
 
         btn_layout = BoxLayout(
             orientation="horizontal", spacing=get_scaled_tuple(10), padding=[0, 0, 0, 0]
@@ -163,7 +163,7 @@ class PopupNudgeWarning(Widget):
             auto_dismiss=False,
         )
 
-        popup.separator_color = [230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0]
+        popup.separator_color = color_provider.get_rgba("red")
         popup.separator_height = str(get_scaled_height(4)) + "dp"
         popup.background = "./asmcnc/apps/shapeCutter_app/img/popup_background.png"
 
