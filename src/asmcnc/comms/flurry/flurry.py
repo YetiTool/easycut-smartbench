@@ -109,9 +109,8 @@ class Flurry(object):
         self.__publish(self.__get_full_console_payload(), EXCHANGE, CONSOLE_QUEUE)
         self.__publish(self.__get_grbl_settings_payload(), EXCHANGE, GRBL_SETTINGS_QUEUE)
 
-        spindle_payload = self.__get_spindle_payload()
-        if spindle_payload["serial_number"]:
-            self.__publish(spindle_payload, EXCHANGE, SPINDLE_QUEUE)
+        # Spindle payload isn't sent on start up, as the spindle serial number is not available yet. It will be sent
+        # when the spindle serial number is set.
 
     def __send_loop(self):
         """Main sending loop for the Flurry connection. Publishes the parameter update payloads to the queue every
