@@ -627,7 +627,7 @@ class LobbyScreen(Screen):
                                    main_label_padding=(0, 0), main_layout_padding=(10, 10, 10, 10),
                                    main_layout_spacing=10, button_layout_padding=(20, 10, 20, 0),
                                    button_layout_spacing=15,
-                                   button_two_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
+                                   button_two_background_color=color_provider.get_rgba("green"),
                                    button_one_background_color=color_provider.get_rgba("red"),
                                    button_one_text="Remind me later", button_two_text="Ok",
                                    button_one_callback=self.set_trigger_to_true,

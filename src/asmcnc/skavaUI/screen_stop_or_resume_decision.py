@@ -15,6 +15,7 @@ import sys, os
 from asmcnc.skavaUI import popup_info
 from datetime import datetime
 from asmcnc.core_UI.popups import BasicPopup, PopupType, InfoPopup
+from asmcnc.core_UI.utils import color_provider
 
 Builder.load_string(
     """
@@ -192,7 +193,7 @@ class StopOrResumeDecisionScreen(Screen):
                 button_layout_padding=(150, 20, 150, 0),
                 button_layout_spacing=15,
                 button_one_text='Ok',
-                button_one_background_color=(76 / 255., 175 / 255., 80 / 255., 1.)
+                button_one_background_color=color_provider.get_rgba("green")
             )
             qr_popup.open()
 
