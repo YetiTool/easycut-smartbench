@@ -104,6 +104,7 @@ class Flurry(object):
         Logger.info("Waiting for Smartbench to be ready...")
         self.app.smartbench_ready.wait()
         self.bind_listeners()  # Bind listeners after the Smartbench is ready
+        Logger.info("Sending initial payloads to Flurry server")
 
         self.__publish(self.__get_full_console_payload(), EXCHANGE, CONSOLE_QUEUE)
         self.__publish(self.__get_grbl_settings_payload(), EXCHANGE, GRBL_SETTINGS_QUEUE)
