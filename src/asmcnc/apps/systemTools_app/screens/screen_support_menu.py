@@ -198,6 +198,10 @@ class SupportMenuScreen(Screen):
         self.systemtools_sm.do_usb_first_aid()
 
     def git_repair(self):
+        # From easycut-smartbench directory:
+        # sudo aptitude install git-repair
+        # git-repair --force
+        # sudo reboot
         pass
 
     def update_strings(self):
