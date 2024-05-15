@@ -26,11 +26,11 @@ Builder.load_string(
 
     background_normal: ''
     background_color: [1,1,1,1]
-    height: dp(0.0833333333333*app.height)
+    height: app.get_scaled_height(40.0)
     color: 0,0,0,1
     halign: 'left'
     markup: 'True'
-    font_size: 0.0225*app.width
+    font_size: app.get_scaled_width(18.0)
     font_name: 'KRFont'
 
 <BetaTestingScreen>
@@ -44,8 +44,8 @@ Builder.load_string(
     on_touch_down: root.on_touch()
 
     BoxLayout:
-        height: dp(1.66666666667*app.height)
-        width: dp(0.6*app.width)
+        height: app.get_scaled_height(800.0)
+        width: app.get_scaled_width(480.0)
         canvas.before:
             Color: 
                 rgba: hex('#e5e5e5ff')
@@ -55,7 +55,7 @@ Builder.load_string(
 
         BoxLayout:
             padding: 0
-            spacing:0.0208333333333*app.height
+            spacing: app.get_scaled_width(10.0)
             orientation: "vertical"
             BoxLayout:
                 padding: 0
@@ -68,29 +68,29 @@ Builder.load_string(
                         size: self.size
                 Label:
                     size_hint: (None,None)
-                    height: dp(0.125*app.height)
-                    width: dp(1.0*app.width)
+                    height: app.get_scaled_height(60.0)
+                    width: app.get_scaled_width(800.0)
                     text: "Beta Testing"
                     color: hex('#f9f9f9ff')
-                    font_size: 0.0375*app.width
+                    font_size: app.get_scaled_width(30.0)
                     halign: "center"
                     valign: "bottom"
                     markup: True
                    
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.0*app.width)
-                height: dp(0.666666666667*app.height)
+                width: app.get_scaled_width(800.0)
+                height: app.get_scaled_height(320.0)
                 padding: 0
-                spacing:0.0125*app.width
+                spacing: app.get_scaled_width(10.0)
                 orientation: 'horizontal'
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.75*app.width)
-                    height: dp(0.666666666667*app.height)
-                    padding:[dp(0.05)*app.width, dp(0.0416666666667)*app.height]
-                    spacing:0.0416666666667*app.height
+                    width: app.get_scaled_width(600.0)
+                    height: app.get_scaled_height(320.0)
+                    padding: app.get_scaled_tuple([40.0, 20.0])
+                    spacing: app.get_scaled_width(20.0)
                     orientation: 'vertical'
 
                     GridLayout:
@@ -103,7 +103,7 @@ Builder.load_string(
                         Label
                             text: 'Run developer branch:'
                             color: [0,0,0,1]
-                            font_size: 0.025*app.width
+                            font_size: app.get_scaled_width(20.0)
                             halign: "left"
                             markup: True
                             text_size: self.size
@@ -112,10 +112,10 @@ Builder.load_string(
                             id: user_branch
                             text: 'branch'
                             multiline: False
-                            font_size: 0.025*app.width
+                            font_size: app.get_scaled_width(20.0)
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         text: 'Checkout and pull (uses wifi)'
                         on_press: root.checkout_branch()
 
@@ -129,7 +129,7 @@ Builder.load_string(
                         Label:
                             text: 'Latest beta version:'
                             color: [0,0,0,1]
-                            font_size: 0.025*app.width
+                            font_size: app.get_scaled_width(20.0)
                             markup: True
                             halign: "left"
 
@@ -137,33 +137,33 @@ Builder.load_string(
                             id: beta_version
                             text: 'beta_version_no'
                             color: [0,0,0,1]
-                            font_size: 0.025*app.width
+                            font_size: app.get_scaled_width(20.0)
                             markup: True
                             halign: "left"
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         text: 'Update to beta'
                         on_press: root.update_to_latest_beta()
 
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.2375*app.width)
-                    height: dp(0.666666666667*app.height)
+                    width: app.get_scaled_width(190.0)
+                    height: app.get_scaled_height(320.0)
                     padding: 0
                     spacing: 0
                     orientation: 'vertical'
 
                     Spinner:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         id: language_button
                         size_hint: (None,None)
-                        height: dp(0.0729166666667*app.height)
-                        width: dp(0.225*app.width)
+                        height: app.get_scaled_height(35.0)
+                        width: app.get_scaled_width(180.0)
                         background_normal: "./asmcnc/apps/systemTools_app/img/word_button.png"
                         background_down: ""
-                        border: [dp(7.5)]*4
+                        border: app.get_scaled_tuple([7.5, 7.5, 7.5, 7.5])
                         center: self.parent.center
                         pos: self.parent.pos
                         text: 'Choose language...'
@@ -174,33 +174,33 @@ Builder.load_string(
 
                     BoxLayout:
                         size_hint: (None,None)
-                        width: dp(0.240625*app.width)
-                        height: dp(0.25*app.height)
+                        width: app.get_scaled_width(192.5)
+                        height: app.get_scaled_height(120.0)
                         orientation: 'horizontal'
-                        padding:[dp(0.025)*app.width, dp(0.0625)*app.height]
+                        padding: app.get_scaled_tuple([20.0, 30.0])
                         ToggleButton:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: app.get_scaled_sp('15.0sp')
                             id: usb_toggle
                             text: 'USB'
                             group: 'wifi-usb'
                         ToggleButton:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: app.get_scaled_sp('15.0sp')
                             id: wifi_toggle
                             text: 'WIFI'
                             group: 'wifi-usb'
                             state: 'down'
                     BoxLayout:
                         size_hint: (None,None)
-                        width: dp(0.240625*app.width)
-                        height: dp(0.25*app.height)
-                        padding:[dp(0.1021875)*app.width, dp(0.09375)*app.height]
+                        width: app.get_scaled_width(192.5)
+                        height: app.get_scaled_height(120.0)
+                        padding: app.get_scaled_tuple([81.8, 45.0])
                         spacing: 0
 
                         Button:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: app.get_scaled_sp('15.0sp')
                             size_hint: (None,None)
-                            height: dp(0.0625*app.height)
-                            width: dp(0.03625*app.width)
+                            height: app.get_scaled_height(30.0)
+                            width: app.get_scaled_width(29.0)
                             background_color: hex('#F4433600')
                             center: self.parent.center
                             pos: self.parent.pos
@@ -218,29 +218,29 @@ Builder.load_string(
 
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.0*app.width)
-                height: dp(0.166666666667*app.height)
+                width: app.get_scaled_width(800.0)
+                height: app.get_scaled_height(80.0)
                 padding: 0
-                spacing:0.0125*app.width
+                spacing: app.get_scaled_width(10.0)
                 orientation: 'horizontal'
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.1*app.width)
-                    height: dp(0.166666666667*app.height)
+                    width: app.get_scaled_width(80.0)
+                    height: app.get_scaled_height(80.0)
                     padding: 0
                     spacing: 0
 
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(0.166666666667*app.height)
-                        width: dp(0.1*app.width)
-                        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                        height: app.get_scaled_height(80.0)
+                        width: app.get_scaled_width(80.0)
+                        padding: app.get_scaled_tuple([10.0, 10.0, 10.0, 10.0])
                         Button:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: app.get_scaled_sp('15.0sp')
                             size_hint: (None,None)
-                            height: dp(0.108333333333*app.height)
-                            width: dp(0.075*app.width)
+                            height: app.get_scaled_height(52.0)
+                            width: app.get_scaled_width(60.0)
                             background_color: hex('#F4433600')
                             center: self.parent.center
                             pos: self.parent.pos
@@ -258,29 +258,29 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.775*app.width)
-                    height: dp(0.166666666667*app.height)
-                    padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                    width: app.get_scaled_width(620.0)
+                    height: app.get_scaled_height(80.0)
+                    padding: app.get_scaled_tuple([10.0, 10.0])
                     spacing: 0
                     orientation: 'vertical'
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.1*app.width)
-                    height: dp(0.166666666667*app.height)
+                    width: app.get_scaled_width(80.0)
+                    height: app.get_scaled_height(80.0)
                     padding: 0
                     spacing: 0
 
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(0.166666666667*app.height)
-                        width: dp(0.1*app.width)
-                        padding:[dp(0.02375)*app.width, dp(0.0208333333333)*app.height, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                        height: app.get_scaled_height(80.0)
+                        width: app.get_scaled_width(80.0)
+                        padding: app.get_scaled_tuple([19.0, 10.0, 10.0, 10.0])
                         Button:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: app.get_scaled_sp('15.0sp')
                             size_hint: (None,None)
-                            height: dp(0.125*app.height)
-                            width: dp(0.06375*app.width)
+                            height: app.get_scaled_height(60.0)
+                            width: app.get_scaled_width(51.0)
                             background_color: hex('#F4433600')
                             center: self.parent.center
                             pos: self.parent.pos

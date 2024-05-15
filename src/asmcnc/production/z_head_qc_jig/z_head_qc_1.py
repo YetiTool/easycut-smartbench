@@ -52,7 +52,7 @@ Builder.load_string("""
                     markup: 'True'
                     halign: 'left'
                     valign: 'middle'
-                    padding: [dp(10),0]
+                    padding: app.get_scaled_tuple([10, 0])
 
                 GridLayout:
                     cols: 2
@@ -63,7 +63,7 @@ Builder.load_string("""
                         markup: 'True'
                         halign: 'left'
                         valign: 'middle'
-                        padding: [dp(10),0]
+                        padding: app.get_scaled_tuple([10, 0])
                         on_press: root.test_motor_chips()
 
                     Image:
@@ -79,7 +79,7 @@ Builder.load_string("""
                     markup: 'True'
                     halign: 'center'
                     valign: 'middle'
-                    padding: [dp(10),0]
+                    padding: app.get_scaled_tuple([10, 0])
                     text: 'STOP'
                     background_color: [1,0,0,1]
                     background_normal: ''
@@ -94,7 +94,7 @@ Builder.load_string("""
                     markup: 'True'
                     halign: 'left'
                     valign: 'middle'
-                    padding: [dp(10),0]
+                    padding: app.get_scaled_tuple([10, 0])
 
                 GridLayout:
                     cols: 2
@@ -105,7 +105,7 @@ Builder.load_string("""
                         markup: 'True'
                         halign: 'left'
                         valign: 'middle'
-                        padding: [dp(10),0]
+                        padding: app.get_scaled_tuple([10, 0])
 
                     GridLayout:
                         cols: 2
@@ -116,7 +116,7 @@ Builder.load_string("""
                             markup: 'True'
                             halign: 'center'
                             valign: 'middle'
-                            padding: [dp(10),0]
+                            padding: app.get_scaled_tuple([10, 0])
                             on_press: root.x_motor_down()
                             on_release: root.quit_jog()
 
@@ -126,7 +126,7 @@ Builder.load_string("""
                             markup: 'True'
                             halign: 'center'
                             valign: 'middle'
-                            padding: [dp(10),0]
+                            padding: app.get_scaled_tuple([10, 0])
                             on_press: root.x_motor_up()
                             on_release: root.quit_jog()
 
@@ -136,7 +136,7 @@ Builder.load_string("""
                     markup: 'True'
                     halign: 'left'
                     valign: 'middle'
-                    padding: [dp(10),0]
+                    padding: app.get_scaled_tuple([10, 0])
                     on_press: root.disable_alarms()
 
                 # ROW 3
@@ -150,7 +150,7 @@ Builder.load_string("""
                         markup: 'True'
                         halign: 'left'
                         valign: 'middle'
-                        padding: [dp(10),0]
+                        padding: app.get_scaled_tuple([10, 0])
 
                     Image:
                         id: temp_voltage_power_check
@@ -169,7 +169,7 @@ Builder.load_string("""
                         markup: 'True'
                         halign: 'left'
                         valign: 'middle'
-                        padding: [dp(10),0]
+                        padding: app.get_scaled_tuple([10, 0])
                         size_hint_x: 1.6
 
                     Button: 
@@ -178,7 +178,7 @@ Builder.load_string("""
                         markup: 'True'
                         halign: 'center'
                         valign: 'middle'
-                        padding: [dp(5),0]
+                        padding: app.get_scaled_tuple([5, 0])
                         on_press: root.z_motor_down()
                         on_release: root.quit_jog()
                         size_hint_x: 1
@@ -189,7 +189,7 @@ Builder.load_string("""
                         markup: 'True'
                         halign: 'center'
                         valign: 'middle'
-                        padding: [dp(10),0]
+                        padding: app.get_scaled_tuple([10, 0])
                         on_press: root.z_motor_up()
                         on_release: root.quit_jog()
                         size_hint_x: 1
@@ -200,7 +200,7 @@ Builder.load_string("""
                         markup: 'True'
                         halign: 'center'
                         valign: 'middle'
-                        padding: [dp(10),0]
+                        padding: app.get_scaled_tuple([10, 0])
                         on_press: root.mini_cycle()
                         size_hint_x: 1
 
@@ -213,7 +213,7 @@ Builder.load_string("""
                         markup: 'True'
                         halign: 'left'
                         valign: 'middle'
-                        padding: [dp(10),0]
+                        padding: app.get_scaled_tuple([10, 0])
 
                     Image:
                         id: x_home_check
@@ -233,7 +233,7 @@ Builder.load_string("""
                         markup: 'True'
                         halign: 'left'
                         valign: 'middle'
-                        padding: [dp(10),0]
+                        padding: app.get_scaled_tuple([10, 0])
                         text: '2. Bake GRBL Settings'
                         on_press: root.bake_grbl_settings()
 
@@ -255,7 +255,7 @@ Builder.load_string("""
                         markup: 'True'
                         halign: 'left'
                         valign: 'middle'
-                        padding: [dp(10),0]
+                        padding: app.get_scaled_tuple([10, 0])
                         on_press: root.set_spindle()
 
                     ToggleButton:
@@ -264,7 +264,7 @@ Builder.load_string("""
                         markup: 'True'
                         halign: 'left'
                         valign: 'middle'
-                        padding: [dp(10),0]
+                        padding: app.get_scaled_tuple([10, 0])
                         text: '9. Laser'
                         on_press: root.set_laser()
 
@@ -274,7 +274,7 @@ Builder.load_string("""
                         markup: 'True'
                         halign: 'left'
                         valign: 'middle'
-                        padding: [dp(10),0]
+                        padding: app.get_scaled_tuple([10, 0])
                         text: '10. Vac'
                         on_press: root.set_vac()
 
@@ -287,7 +287,7 @@ Builder.load_string("""
                         markup: 'True'
                         halign: 'left'
                         valign: 'middle'
-                        padding: [dp(10),0]
+                        padding: app.get_scaled_tuple([10, 0])
 
                     Image:
                         id: x_max_check
@@ -309,7 +309,7 @@ Builder.load_string("""
                         markup: 'True'
                         halign: 'left'
                         valign: 'middle'
-                        padding: [dp(10),0]
+                        padding: app.get_scaled_tuple([10, 0])
                         on_press: root.home()
 
                     Button: 
@@ -319,7 +319,7 @@ Builder.load_string("""
                         markup: 'True'
                         halign: 'left'
                         valign: 'middle'
-                        padding: [dp(10),0]
+                        padding: app.get_scaled_tuple([10, 0])
                         on_press: root.resume_from_alarm()
 
                 GridLayout:
@@ -331,7 +331,7 @@ Builder.load_string("""
                         markup: 'True'
                         halign: 'left'
                         valign: 'middle'
-                        padding: [dp(10),0]
+                        padding: app.get_scaled_tuple([10, 0])
 
                     GridLayout:
                         cols: 3
@@ -341,7 +341,7 @@ Builder.load_string("""
                             text_size: self.size
                             markup: 'True'
                             valign: 'middle'
-                            padding: [dp(10),0]
+                            padding: app.get_scaled_tuple([10, 0])
                             on_press: root.dust_shoe_red()
 
                         Button:
@@ -349,7 +349,7 @@ Builder.load_string("""
                             text_size: self.size
                             markup: 'True'
                             valign: 'middle'
-                            padding: [dp(10),0]
+                            padding: app.get_scaled_tuple([10, 0])
                             on_press: root.dust_shoe_green()
 
                         Button:
@@ -363,7 +363,7 @@ Builder.load_string("""
                     markup: 'True'
                     halign: 'left'
                     valign: 'middle'
-                    padding: [dp(10),0]
+                    padding: app.get_scaled_tuple([10, 0])
 
             # RECIEVED STATUS MONITOR
 

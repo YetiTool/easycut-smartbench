@@ -46,8 +46,8 @@ Builder.load_string(
             size: self.size
 
     BoxLayout:
-        padding:[dp(0.00125)*app.width, dp(0.00208333333333)*app.height]
-        spacing:0.0075*app.width
+        padding: app.get_scaled_tuple([1.0, 1.0])
+        spacing: app.get_scaled_width(6.0)
         orientation: "horizontal"
         size: self.parent.size
         pos: self.parent.pos
@@ -60,7 +60,7 @@ Builder.load_string(
             halign: 'center'
             valign: 'middle'
             markup: True
-            font_size: 0.01625*app.width
+            font_size: app.get_scaled_width(13.0)
         Label:
             size_hint_x: 0.1
             id: grbl_ym_label
@@ -69,7 +69,7 @@ Builder.load_string(
             halign: 'center'
             valign: 'middle'
             markup: True
-            font_size: 0.01625*app.width
+            font_size: app.get_scaled_width(13.0)
         Label:
             size_hint_x: 0.1
             id: grbl_zm_label
@@ -78,7 +78,7 @@ Builder.load_string(
             halign: 'center'
             valign: 'middle'
             markup: True
-            font_size: 0.01625*app.width
+            font_size: app.get_scaled_width(13.0)
 
         Label:
             size_hint_x: 0.1
@@ -88,7 +88,7 @@ Builder.load_string(
             halign: 'center'
             valign: 'middle'
             markup: True
-            font_size: 0.01625*app.width
+            font_size: app.get_scaled_width(13.0)
         Label:
             size_hint_x: 0.1
             id: grbl_yw_label
@@ -97,7 +97,7 @@ Builder.load_string(
             halign: 'center'
             valign: 'middle'
             markup: True
-            font_size: 0.01625*app.width
+            font_size: app.get_scaled_width(13.0)
         Label:
             size_hint_x: 0.1
             id: grbl_zw_label
@@ -106,7 +106,7 @@ Builder.load_string(
             halign: 'center'
             valign: 'middle'
             markup: True
-            font_size: 0.01625*app.width
+            font_size: app.get_scaled_width(13.0)
 """
 )
 

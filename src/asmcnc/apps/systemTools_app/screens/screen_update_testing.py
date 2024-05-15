@@ -32,7 +32,7 @@ Builder.load_string("""
         size_hint_y: None
         height: self.texture_size[1]
         text_size: self.width, None
-        font_size: '12sp'
+        font_size: app.get_scaled_sp('12sp')
         text: root.text
         max_lines: 3
 
@@ -42,8 +42,8 @@ Builder.load_string("""
     output_view: output_view
 
     BoxLayout:
-        height: dp(800)
-        width: dp(480)
+        height: app.get_scaled_height(800)
+        width: app.get_scaled_width(480)
         canvas.before:
             Color: 
                 rgba: hex('#f9f9f9ff')
@@ -53,7 +53,7 @@ Builder.load_string("""
 
         BoxLayout:
             padding: 0
-            spacing: 10
+            spacing: app.get_scaled_width(10)
             orientation: "vertical"
             BoxLayout:
                 padding: 0
@@ -66,20 +66,20 @@ Builder.load_string("""
                         size: self.size
                 Label:
                     size_hint: (None,None)
-                    height: dp(60)
-                    width: dp(800)
+                    height: app.get_scaled_height(60)
+                    width: app.get_scaled_width(800)
                     text: "Update Testing"
                     color: hex('#f9f9f9ff')
-                    font_size: 30
+                    font_size: app.get_scaled_width(30)
                     halign: "center"
                     valign: "bottom"
                     markup: True
                    
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(800)
-                height: dp(320)
-                padding: 20
+                width: app.get_scaled_width(800)
+                height: app.get_scaled_height(320)
+                padding: app.get_scaled_width(20)
                 spacing: 0
                 orientation: 'vertical'
 
@@ -147,28 +147,28 @@ Builder.load_string("""
 
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(800)
-                height: dp(80)
+                width: app.get_scaled_width(800)
+                height: app.get_scaled_height(80)
                 padding: 0
-                spacing: 10
+                spacing: app.get_scaled_width(10)
                 orientation: 'horizontal'
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(80)
-                    height: dp(80)
+                    width: app.get_scaled_width(80)
+                    height: app.get_scaled_height(80)
                     padding: 0
                     spacing: 0
 
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(80)
-                        width: dp(80)
-                        padding: [10, 10, 10, 10]
+                        height: app.get_scaled_height(80)
+                        width: app.get_scaled_width(80)
+                        padding: app.get_scaled_tuple([10, 10, 10, 10])
                         Button:
                             size_hint: (None,None)
-                            height: dp(52)
-                            width: dp(60)
+                            height: app.get_scaled_height(52)
+                            width: app.get_scaled_width(60)
                             background_color: hex('#F4433600')
                             center: self.parent.center
                             pos: self.parent.pos
@@ -186,9 +186,9 @@ Builder.load_string("""
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(620)
-                    height: dp(80)
-                    padding: 10
+                    width: app.get_scaled_width(620)
+                    height: app.get_scaled_height(80)
+                    padding: app.get_scaled_width(10)
                     spacing: 0
                     orientation: 'vertical'
                     ScrollableLabelOSOutput:
@@ -196,20 +196,20 @@ Builder.load_string("""
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(80)
-                    height: dp(80)
+                    width: app.get_scaled_width(80)
+                    height: app.get_scaled_height(80)
                     padding: 0
                     spacing: 0
 
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(80)
-                        width: dp(80)
-                        padding: [19, 10, 10, 10]
+                        height: app.get_scaled_height(80)
+                        width: app.get_scaled_width(80)
+                        padding: app.get_scaled_tuple([19, 10, 10, 10])
                         Button:
                             size_hint: (None,None)
-                            height: dp(60)
-                            width: dp(51)
+                            height: app.get_scaled_height(60)
+                            width: app.get_scaled_width(51)
                             background_color: hex('#F4433600')
                             center: self.parent.center
                             pos: self.parent.pos

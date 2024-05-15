@@ -22,8 +22,8 @@ Builder.load_string("""
              
     BoxLayout:
         orientation: 'horizontal'
-        padding: 70
-        spacing: 70
+        padding: app.get_scaled_width(70)
+        spacing: app.get_scaled_width(70)
         size_hint_x: 1
 
         BoxLayout:
@@ -35,7 +35,7 @@ Builder.load_string("""
                 text_size: self.size
                 size_hint_y: 0.5
                 markup: True
-                font_size: '40sp'   
+                font_size: app.get_scaled_sp('40sp')
                 valign: 'middle'
                 halign: 'center'    
     

@@ -38,8 +38,8 @@ Builder.load_string("""
         orientation: 'vertical'
         BoxLayout:
             orientation: 'horizontal'
-            padding: dp(5)
-            spacing: dp(10)
+            padding: app.get_scaled_width(5)
+            spacing: app.get_scaled_width(10)
             ImageButton:
                 source: './asmcnc/apps/drywall_cutter_app/img/home_button.png'
                 allow_stretch: True
@@ -106,19 +106,19 @@ Builder.load_string("""
         BoxLayout:
             size_hint_y: 5
             orientation: 'horizontal'
-            padding: dp(5)
-            spacing: dp(10)
+            padding: app.get_scaled_width(5)
+            spacing: app.get_scaled_width(10)
             BoxLayout:
                 id: shape_display_container
                 size_hint_x: 55
             BoxLayout:
                 size_hint_x: 23
                 orientation: 'vertical'
-                spacing: dp(10)
+                spacing: app.get_scaled_width(10)
                 BoxLayout:
                     id: xy_move_container
                     size_hint_y: 31
-                    padding: [dp(0), dp(30)]
+                    padding: app.get_scaled_tuple([0, 30])
                     canvas.before:
                         Color:
                             rgba: hex('#FFFFFFFF')
@@ -128,7 +128,7 @@ Builder.load_string("""
                 BoxLayout:
                     size_hint_y: 7
                     orientation: 'horizontal'
-                    spacing: dp(10)
+                    spacing: app.get_scaled_width(10)
                     ImageButton:
                         source: './asmcnc/apps/drywall_cutter_app/img/simulate_button.png'
                         allow_stretch: True

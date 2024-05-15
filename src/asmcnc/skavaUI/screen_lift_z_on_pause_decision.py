@@ -34,7 +34,7 @@ Builder.load_string(
 
     BoxLayout: 
         spacing: 0
-        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+        padding: app.get_scaled_tuple([20.0, 20.0])
         orientation: 'vertical'
 
         Label:
@@ -50,8 +50,8 @@ Builder.load_string(
     
         BoxLayout:
             orientation: 'horizontal'
-            padding:[dp(0.025)*app.width, 0, dp(0.025)*app.width, 0]
-            spacing:0.05*app.width
+            padding: app.get_scaled_tuple([20.0, 0, 20.0, 0])
+            spacing: app.get_scaled_width(40.0)
             size_hint_y: 3
 
             Button:
@@ -65,11 +65,11 @@ Builder.load_string(
                 text_size: self.size
                 background_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                 background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
-                border: [dp(30)]*4
-                padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                border: app.get_scaled_tuple([30, 30, 30, 30])
+                padding: app.get_scaled_tuple([20.0, 20.0])
                         
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 size_hint_x: 0.3
                 background_color: hex('#FFFFFF00')
                 on_press: root.popup_help()
@@ -92,11 +92,11 @@ Builder.load_string(
                 text_size: self.size
                 background_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                 background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
-                border: [dp(30)]*4
-                padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                border: app.get_scaled_tuple([30, 30, 30, 30])
+                padding: app.get_scaled_tuple([20.0, 20.0])
                         
         Label:
-            font_size: str(0.01875 * app.width) + 'sp'
+            font_size: app.get_scaled_sp('15.0sp')
             size_hint_y: .5                
 
 """

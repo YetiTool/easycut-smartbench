@@ -62,7 +62,7 @@ Builder.load_string("""
                     markup: 'True'
                     halign: 'left'
                     valign: 'middle'
-                    padding: [dp(10),0]
+                    padding: app.get_scaled_tuple([10, 0])
                     on_press: root.go_to_qc_home()
 
                 Label: 
@@ -71,7 +71,7 @@ Builder.load_string("""
                     markup: 'True'
                     halign: 'left'
                     valign: 'middle'
-                    padding: [dp(10),0]
+                    padding: app.get_scaled_tuple([10, 0])
 
 
                 ToggleButton: 
@@ -81,8 +81,8 @@ Builder.load_string("""
                     markup: 'True'
                     halign: 'center'
                     valign: 'middle'
-                    padding: [dp(10),0]
-                    font_size: dp(20)
+                    padding: app.get_scaled_tuple([10, 0])
+                    font_size: app.get_scaled_width(20)
                     on_press: root.toggle_connection_to_z_head()
 
             BoxLayout: 
@@ -91,7 +91,7 @@ Builder.load_string("""
 
                 BoxLayout: 
                     orientation: 'vertical'
-                    padding: [dp(5),dp(10)]
+                    padding: app.get_scaled_tuple([5, 10])
 
                     BoxLayout: 
                         size_hint_y: 0.2
@@ -108,12 +108,12 @@ Builder.load_string("""
                             markup: 'True'
                             halign: 'left'
                             valign: 'middle'
-                            padding: [dp(10),0]
+                            padding: app.get_scaled_tuple([10, 0])
 
                     BoxLayout: 
                         orientation: 'vertical'
                         size_hint_y: 0.8
-                        padding: [dp(5),0]
+                        padding: app.get_scaled_tuple([5, 0])
 
                         Label: 
                             size_hint_y: 0.2
@@ -182,7 +182,7 @@ Builder.load_string("""
 
                 BoxLayout: 
                     orientation: 'vertical'
-                    padding: [dp(5),dp(10)]
+                    padding: app.get_scaled_tuple([5, 10])
 
                     BoxLayout: 
                         size_hint_y: 0.2
@@ -199,12 +199,12 @@ Builder.load_string("""
                             markup: 'True'
                             halign: 'left'
                             valign: 'middle'
-                            padding: [dp(10),0]
+                            padding: app.get_scaled_tuple([10, 0])
 
                     BoxLayout: 
                         orientation: 'vertical'
                         size_hint_y: 0.8
-                        padding: [dp(5),0]
+                        padding: app.get_scaled_tuple([5, 0])
 
                         BoxLayout: 
                             orientation: 'horizontal'
@@ -260,8 +260,8 @@ Builder.load_string("""
                                 size_hint_x: 0.4
                                 input_filter: "int"
                                 multiline: False
-                                font_size: "22sp"
-                                padding: [dp(5), dp(5)]
+                                font_size: app.get_scaled_sp('22sp')
+                                padding: app.get_scaled_tuple([5, 5])
                                 on_text_validate: root.x_current = root.set_value_to_update_to(other_x_current_textinput, self)
 
                         BoxLayout: 
@@ -270,7 +270,7 @@ Builder.load_string("""
 
                 BoxLayout: 
                     orientation: 'vertical'
-                    padding: [dp(5),dp(10)]
+                    padding: app.get_scaled_tuple([5, 10])
 
                     BoxLayout: 
                         size_hint_y: 0.2
@@ -287,12 +287,12 @@ Builder.load_string("""
                             markup: 'True'
                             halign: 'left'
                             valign: 'middle'
-                            padding: [dp(10),0]
+                            padding: app.get_scaled_tuple([10, 0])
 
                     BoxLayout: 
                         orientation: 'vertical'
                         size_hint_y: 0.8
-                        padding: [dp(5),0]
+                        padding: app.get_scaled_tuple([5, 0])
 
                         BoxLayout: 
                             orientation: 'horizontal'
@@ -332,8 +332,8 @@ Builder.load_string("""
                                 size_hint_x: 0.4
                                 input_filter: "int"
                                 multiline: False
-                                font_size: "22sp"
-                                padding: [dp(5), dp(5)]
+                                font_size: app.get_scaled_sp('22sp')
+                                padding: app.get_scaled_tuple([5, 5])
                                 on_text_validate: root.z_current = root.set_value_to_update_to(other_z_current_textinput, self)
                         
                         BoxLayout: 
@@ -341,7 +341,7 @@ Builder.load_string("""
 
                 BoxLayout: 
                     orientation: 'vertical'
-                    padding: [dp(5),dp(10)]
+                    padding: app.get_scaled_tuple([5, 10])
 
                     BoxLayout: 
                         size_hint_y: 0.2
@@ -358,12 +358,12 @@ Builder.load_string("""
                             markup: 'True'
                             halign: 'left'
                             valign: 'middle'
-                            padding: [dp(10),0]
+                            padding: app.get_scaled_tuple([10, 0])
 
                     BoxLayout: 
                         orientation: 'vertical'
                         size_hint_y: 0.8
-                        padding: [dp(5),0]
+                        padding: app.get_scaled_tuple([5, 0])
 
                         GridLayout: 
                             size_hint_y: 0.6
@@ -377,8 +377,8 @@ Builder.load_string("""
                                 text: "5000"
                                 input_filter: "int"
                                 multiline: False
-                                font_size: "22sp"
-                                padding: [dp(5), dp(5)]
+                                font_size: app.get_scaled_sp('22sp')
+                                padding: app.get_scaled_tuple([5, 5])
                                 on_text_validate: root.x_thermal_coefficient = root.set_value_to_update_to(self)
                             Label:
                                 id: thermal_coeff_y_label
@@ -388,8 +388,8 @@ Builder.load_string("""
                                 text: "5000"
                                 input_filter: "int"
                                 multiline: False
-                                font_size: "22sp"
-                                padding: [dp(5), dp(5)]
+                                font_size: app.get_scaled_sp('22sp')
+                                padding: app.get_scaled_tuple([5, 5])
                                 on_text_validate: root.y_thermal_coefficient = root.set_value_to_update_to(self)
                             Label:
                                 id: thermal_coeff_z_label
@@ -399,8 +399,8 @@ Builder.load_string("""
                                 text: "10000"
                                 input_filter: "int"
                                 multiline: False
-                                font_size: "22sp"
-                                padding: [dp(5), dp(5)]
+                                font_size: app.get_scaled_sp('22sp')
+                                padding: app.get_scaled_tuple([5, 5])
                                 on_text_validate: root.z_thermal_coefficient = root.set_value_to_update_to(self)
 
                         BoxLayout: 
@@ -409,7 +409,7 @@ Builder.load_string("""
             Button:
                 id: ok_button
                 text: 'OK'
-                font_size: dp(30)
+                font_size: app.get_scaled_width(30)
                 size_hint_y: 0.2
                 on_press: root.do_pcb_update_and_set_settings()
 

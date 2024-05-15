@@ -30,8 +30,8 @@ Builder.load_string(
 
 	BoxLayout: 
 		size_hint: (None,None)
-		width: dp(1.0*app.width)
-		height: dp(1.0*app.height)
+		width: app.get_scaled_width(800.0)
+		height: app.get_scaled_height(480.0)
 		orientation: 'vertical'
 
 		canvas:
@@ -59,12 +59,12 @@ Builder.load_string(
 				Label:
 					id: title_label
 					size_hint: (None,None)
-					height: dp(0.125*app.height)
-					width: dp(1.0*app.width)
+					height: app.get_scaled_height(60.0)
+					width: app.get_scaled_width(800.0)
 					text: "SmartBench Warranty Registration"
 					color: hex('#f9f9f9ff')
 					# color: hex('#333333ff') #grey
-					font_size: dp(0.0375*app.width)
+					font_size: app.get_scaled_width(30.0)
 					halign: "center"
 					valign: "bottom"
 					markup: True
@@ -72,22 +72,22 @@ Builder.load_string(
 			# BODY
 			BoxLayout:
 				size_hint: (None,None)
-				width: dp(1.0*app.width)
-				height: dp(0.620833333333*app.height)
+				width: app.get_scaled_width(800.0)
+				height: app.get_scaled_height(298.0)
 				orientation: 'vertical'
 
 
 				Button:
-				    font_size: str(0.01875 * app.width) + 'sp'
+				    font_size: app.get_scaled_sp('15.0sp')
 					size_hint_x: None
-					width: dp(0.065*app.width)
+					width: app.get_scaled_width(52.0)
 					background_color: hex('##e5e5e5')
 					background_normal: ''
 					on_press: root.go_to_factory_settings()
 
 				Label:
 					id: scan_qr_code
-					font_size: str(0.0375*app.width) + 'sp'
+					font_size: app.get_scaled_sp('30.0sp')
 					text_size: self.size
 					valign: 'bottom'
 					halign: 'center'
@@ -96,16 +96,16 @@ Builder.load_string(
 
 				BoxLayout:
 					orientation: 'vertical'
-					width: dp(1.0*app.width)
-					height: dp(0.416666666667*app.height)
-					padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height, dp(0.025)*app.width, 0]
+					width: app.get_scaled_width(800.0)
+					height: app.get_scaled_height(200.0)
+					padding: app.get_scaled_tuple([20.0, 20.0, 20.0, 0])
 					size_hint: (None,None)
 					spacing: 0
 
 					Label:
 						id: instructions_label
 						size_hint_y: 0.3
-						font_size: str(0.025*app.width) + 'sp'
+						font_size: app.get_scaled_sp('20.0sp')
 						# text: "[color=333333ff]To submit your details and receive your activation code, go to[/color]"
 						text_size: self.size
 						valign: 'middle'
@@ -115,16 +115,16 @@ Builder.load_string(
 
 					BoxLayout:
 						orientation: 'horizontal'
-						width: dp(1.0*app.width)
-						height: dp(0.275*app.height)
-						# padding: [20, 0]
+						width: app.get_scaled_width(800.0)
+						height: app.get_scaled_height(132.0)
+						# padding: app.get_scaled_tuple([20, 0])
 						size_hint: (None,None)
 						spacing: 0
 
 						BoxLayout:
-							padding:[dp(0.0125)*app.width, 0, 0, 0]
-							width: dp(0.2025*app.width)
-							height: dp(0.275*app.height)
+							padding: app.get_scaled_tuple([10.0, 0, 0, 0])
+							width: app.get_scaled_width(162.0)
+							height: app.get_scaled_height(132.0)
 							size_hint: (None,None)
 							Image:
 								source: "./asmcnc/apps/start_up_sequence/warranty_app/img/registration-qr-code.png"
@@ -135,14 +135,14 @@ Builder.load_string(
 
 						BoxLayout:
 							orientation: 'vertical'
-							width: dp(0.7475*app.width)
-							height: dp(0.275*app.height)
-							padding:[0, 0, 0, 0]
+							width: app.get_scaled_width(598.0)
+							height: app.get_scaled_height(132.0)
+							padding: app.get_scaled_tuple([0, 0, 0, 0])
 							size_hint: (None,None)
 
 							Label:
 								size_hint_y: 0.4
-								font_size: str(0.0275*app.width) + 'sp'
+								font_size: app.get_scaled_sp('22.0sp')
 								text: "[color=333333ff]https://www.yetitool.com/support/Register-Your-Product[/color]"
 								text_size: self.size
 								valign: 'middle'
@@ -154,7 +154,7 @@ Builder.load_string(
 							Label:
 								id: cant_use_web_label
 								size_hint_y: 0.3
-								font_size: str(0.025*app.width) + 'sp'
+								font_size: app.get_scaled_sp('20.0sp')
 								# text: "[color=333333ff]Can't use the web form?"
 								text_size: self.size
 								valign: 'bottom'
@@ -165,7 +165,7 @@ Builder.load_string(
 							Label:
 								id: contact_us_at_support
 								size_hint_y: 0.3
-								font_size: str(0.025*app.width) + 'sp'
+								font_size: app.get_scaled_sp('20.0sp')
 								# text: "[color=333333ff]Contact us at https://www.yetitool.com/support[/color]"
 								text_size: self.size
 								valign: 'middle'
@@ -175,23 +175,23 @@ Builder.load_string(
 
 			# FOOTER
 			BoxLayout: 
-				padding:[dp(0.0125)*app.width, 0, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+				padding: app.get_scaled_tuple([10.0, 0, 10.0, 10.0])
 				size_hint: (None, None)
-				height: dp(0.254166666667*app.height)
-				width: dp(1.0*app.width)
+				height: app.get_scaled_height(122.0)
+				width: app.get_scaled_width(800.0)
 				orientation: 'horizontal'
 
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(0.254166666667*app.height)
-					width: dp(0.305625*app.width)
-					padding:[0, 0, dp(0.230625)*app.width, 0]
+					height: app.get_scaled_height(122.0)
+					width: app.get_scaled_width(244.5)
+					padding: app.get_scaled_tuple([0, 0, 184.5, 0])
 					Button:
-					    font_size: str(0.01875 * app.width) + 'sp'
+					    font_size: app.get_scaled_sp('15.0sp')
 						id: prev_screen_button
 						size_hint: (None,None)
-						height: dp(0.108333333333*app.height)
-						width: dp(0.075*app.width)
+						height: app.get_scaled_height(52.0)
+						width: app.get_scaled_width(60.0)
 						background_color: hex('#F4433600')
 						center: self.parent.center
 						pos: self.parent.pos
@@ -210,20 +210,20 @@ Builder.load_string(
 
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(0.254166666667*app.height)
-					width: dp(0.36375*app.width)
-					padding:[0, 0, 0, dp(0.0666666666667)*app.height]
+					height: app.get_scaled_height(122.0)
+					width: app.get_scaled_width(291.0)
+					padding: app.get_scaled_tuple([0, 0, 0, 32.0])
 					Button:
 						id: next_button
 						background_normal: "./asmcnc/skavaUI/img/next.png"
 						background_down: "./asmcnc/skavaUI/img/next.png"
-						border: [dp(14.5)]*4
+						border: app.get_scaled_tuple([14.5, 14.5, 14.5, 14.5])
 						size_hint: (None,None)
-						width: dp(0.36375*app.width)
-						height: dp(0.164583333333*app.height)
+						width: app.get_scaled_width(291.0)
+						height: app.get_scaled_height(79.0)
 						on_press: root.next_screen()
 						text: 'Next...'
-						font_size: str(0.0375*app.width) + 'sp'
+						font_size: app.get_scaled_sp('30.0sp')
 						color: hex('#f9f9f9ff')
 						markup: True
 						center: self.parent.center
@@ -231,15 +231,15 @@ Builder.load_string(
 
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(0.254166666667*app.height)
-					width: dp(0.305625*app.width)
-					padding:[dp(0.240625)*app.width, 0, 0, 0]
+					height: app.get_scaled_height(122.0)
+					width: app.get_scaled_width(244.5)
+					padding: app.get_scaled_tuple([192.5, 0, 0, 0])
 
 					Button:
-					    font_size: str(0.01875 * app.width) + 'sp'
+					    font_size: app.get_scaled_sp('15.0sp')
 						size_hint: (None,None)
-						height: dp(0.108333333333*app.height)
-						width: dp(0.065*app.width)
+						height: app.get_scaled_height(52.0)
+						width: app.get_scaled_width(52.0)
 						background_color: hex('##e5e5e5')
 						background_normal: ''
 						on_press: root.quit_to_console()

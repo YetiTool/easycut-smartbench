@@ -25,7 +25,7 @@ Builder.load_string(
         BoxLayout:
             orientation: 'vertical'
             size_hint_y: 0.9
-            spacing:dp(0.0166666666667)*app.height
+            spacing: app.get_scaled_width(8.0)
             canvas:
                 Color:
                     rgba: hex('#E2E2E2FF')
@@ -42,20 +42,20 @@ Builder.load_string(
                     text: 'Optional Nudge:'
                     bold: True
                     color: hex('#333333ff')
-                    font_size: dp(0.03125*app.width)
+                    font_size: app.get_scaled_width(25.0)
                     halign: 'left'
                     valign: 'middle'
                     text_size: self.size
-                    padding:[dp(0.0625)*app.width, 0]
+                    padding: app.get_scaled_tuple([50.0, 0])
 
                 BoxLayout:
                     orientation: 'horizontal'
-                    spacing:dp(0.03125)*app.width
+                    spacing: app.get_scaled_width(25.0)
 
                     BoxLayout:
-                        padding:[dp(0.01875)*app.width, dp(0.03125)*app.height, 0, dp(0.03125)*app.height]
+                        padding: app.get_scaled_tuple([15.0, 15.0, 0, 15.0])
                         Button:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: app.get_scaled_sp('15.0sp')
                             background_color: [0,0,0,0]
                             on_press: root.get_info()
                             BoxLayout:
@@ -69,7 +69,7 @@ Builder.load_string(
                                     allow_stretch: True   
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         background_color: [0,0,0,0]
                         on_press: root.back_to_home()
                         BoxLayout:
@@ -85,12 +85,12 @@ Builder.load_string(
             BoxLayout:
                 orientation: 'horizontal'
                 size_hint_y: 3
-                padding:[dp(0.125)*app.width, 0]
-                spacing:dp(0.0375)*app.width
+                padding: app.get_scaled_tuple([100.0, 0])
+                spacing: app.get_scaled_width(30.0)
 
                 BoxLayout:
                     size_hint_x: 2.5
-                    padding:[0, dp(0.00208333333333)*app.height]
+                    padding: app.get_scaled_tuple([0, 1.0])
                     canvas:
                         Color:
                             rgba: 1,1,1,1
@@ -101,8 +101,8 @@ Builder.load_string(
                     BoxLayout:
                         id: xy_move_container
                         size_hint: (None, None)
-                        height: dp(0.572916666667*app.height)
-                        width: dp(0.34375*app.width)
+                        height: app.get_scaled_height(275.0)
+                        width: app.get_scaled_width(275.0)
 
                 BoxLayout:
                     id: nudge_speed_container
@@ -125,16 +125,16 @@ Builder.load_string(
 
             BoxLayout:
                 orientation: 'horizontal'
-                padding:[dp(0.0875)*app.width, dp(0.0208333333333)*app.height, 0, dp(0.0208333333333)*app.height]
-                spacing:dp(0.25)*app.width
+                padding: app.get_scaled_tuple([70.0, 10.0, 0, 10.0])
+                spacing: app.get_scaled_width(200.0)
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: app.get_scaled_sp('15.0sp')
                     on_press: root.previous_screen()
                     background_color: [0,0,0,0]
                     size_hint: (None, None)
-                    height: dp(0.139583333333*app.height)
-                    width: dp(0.11*app.width)
+                    height: app.get_scaled_height(67.0)
+                    width: app.get_scaled_width(88.0)
                     BoxLayout:
                         size: self.parent.size
                         pos: self.parent.pos
@@ -147,16 +147,16 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint: (None, None)
-                    height: dp(0.139583333333*app.height)
-                    width: dp(0.08375*app.width)
+                    height: app.get_scaled_height(67.0)
+                    width: app.get_scaled_width(67.0)
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: app.get_scaled_sp('15.0sp')
                     on_press: root.next_screen()
                     background_color: [0,0,0,0]
                     size_hint: (None, None)
-                    height: dp(0.139583333333*app.height)
-                    width: dp(0.11*app.width)
+                    height: app.get_scaled_height(67.0)
+                    width: app.get_scaled_width(88.0)
                     BoxLayout:
                         size: self.parent.size
                         pos: self.parent.pos
@@ -178,13 +178,13 @@ Builder.load_string(
             x: dp(110.0/800.0)*app.width
             y: dp(345.0/480.0)*app.height
             size_hint: None, None
-            height: dp(0.0625*app.height)
-            width: dp(0.0375*app.width)
+            height: app.get_scaled_height(30.0)
+            width: app.get_scaled_width(30.0)
             text: 'XY'
             markup: True
             bold: True
             color: hex('#333333ff')
-            font_size: dp(0.025*app.width)
+            font_size: app.get_scaled_width(20.0)
 
 """
 )

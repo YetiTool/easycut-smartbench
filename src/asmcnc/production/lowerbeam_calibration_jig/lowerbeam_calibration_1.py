@@ -21,12 +21,12 @@ Builder.load_string("""
             Label:
                 id: user_text
                 text: "Getting ready..."
-                font_size: dp(50)
+                font_size: app.get_scaled_width(50)
             
             Label:
                 id: calibrate_time
                 text: root.formatted_max
-                font_size: dp(50)
+                font_size: app.get_scaled_width(50)
 
 """)
 

@@ -29,8 +29,8 @@ Builder.load_string(
     on_touch_down: root.on_touch()
 
     BoxLayout:
-        height: dp(1.66666666667*app.height)
-        width: dp(0.6*app.width)
+        height: app.get_scaled_height(800.0)
+        width: app.get_scaled_width(480.0)
         canvas.before:
             Color: 
                 rgba: hex('#e5e5e5ff')
@@ -55,11 +55,11 @@ Builder.load_string(
                 Label:
                     id: job_completed_label
                     size_hint: (None,None)
-                    height: dp(0.125*app.height)
-                    width: dp(1.0*app.width)
+                    height: app.get_scaled_height(60.0)
+                    width: app.get_scaled_width(800.0)
                     text: "Job completed!"
                     color: hex('#f9f9f9ff')
-                    font_size: dp(0.0375*app.width)
+                    font_size: app.get_scaled_width(30.0)
                     halign: "center"
                     valign: "middle"
                     markup: True
@@ -67,18 +67,18 @@ Builder.load_string(
             # BODY
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.0*app.width)
-                height: dp(0.875*app.height)
-                padding:[0, dp(0.0208333333333)*app.height]
+                width: app.get_scaled_width(800.0)
+                height: app.get_scaled_height(420.0)
+                padding: app.get_scaled_tuple([0, 10.0])
                 spacing: 0
                 orientation: 'vertical'
                 
                 # METADATA AND PRODUCTION NOTES
                 BoxLayout:
                     size_hint_y: None
-                    height: dp(0.270833333333*app.height)
+                    height: app.get_scaled_height(130.0)
                     orientation: 'horizontal'
-                    padding:[dp(0.025)*app.width, 0, dp(0.025)*app.width, dp(0.0208333333333)*app.height]
+                    padding: app.get_scaled_tuple([20.0, 0, 20.0, 10.0])
                     
                     BoxLayout:
                         orientation: 'vertical'
@@ -86,9 +86,9 @@ Builder.load_string(
                         Label: 
                             id: metadata_label
                             size_hint_y: None
-                            height: dp(0.1875*app.height)
+                            height: app.get_scaled_height(90.0)
                             color: hex('#333333ff') #grey
-                            font_size: dp(0.025*app.width)
+                            font_size: app.get_scaled_width(20.0)
                             markup: True
                             text_size: self.size
                             halign: "left"
@@ -97,13 +97,13 @@ Builder.load_string(
                         BoxLayout:
                             id: parts_completed_container
                             size_hint_y: None
-                            height: dp(0.0625*app.height)
+                            height: app.get_scaled_height(30.0)
                             orientation: 'horizontal'
 
                             Label: 
                                 id: parts_completed_label
                                 color: hex('#333333ff') #grey
-                                font_size: dp(0.025*app.width)
+                                font_size: app.get_scaled_width(20.0)
                                 markup: True
                                 halign: "left"
                                 valign: "top"
@@ -117,15 +117,15 @@ Builder.load_string(
                         BoxLayout: 
                             id: batch_number_container
                             size_hint_y: None
-                            height: dp(0.0854166666667*app.height)
+                            height: app.get_scaled_height(41.0)
                             orientation: 'horizontal'
-                            padding:[0, dp(0.0229166666667)*app.height, 0, 0]
+                            padding: app.get_scaled_tuple([0, 11.0, 0, 0])
 
                             Label:
                                 id: batch_number_label
                                 size_hint_x: 0.45
                                 color: hex('#333333ff') #grey
-                                font_size: dp(0.025*app.width)
+                                font_size: app.get_scaled_width(20.0)
                                 halign: "left"
                                 valign: "bottom"
                                 markup: True
@@ -136,16 +136,16 @@ Builder.load_string(
                                 size_hint_x: 0.55
                                 TextInput:
                                     id: batch_number_input
-                                    padding:[dp(0.005)*app.width, dp(0.00416666666667)*app.height]
+                                    padding: app.get_scaled_tuple([4.0, 2.0])
                                     color: hex('#333333ff')
                                     # foreground_color: hex('#333333ff')
                                     text_size: self.size
                                     size_hint_x: 1
-                                    width: dp(0.125*app.width)
+                                    width: app.get_scaled_width(100.0)
                                     halign: "left"
                                     valign: "bottom"
                                     markup: True
-                                    font_size: dp(0.025*app.width)
+                                    font_size: app.get_scaled_width(20.0)
                                     multiline: False
                                     background_color: hex('#e5e5e5ff')
 
@@ -154,7 +154,7 @@ Builder.load_string(
                             id: post_production_notes_label
                             text: "Production notes"
                             color: hex('#333333ff') #grey
-                            font_size: dp(0.025*app.width)
+                            font_size: app.get_scaled_width(20.0)
                             halign: "left"
                             valign: "top"
                             markup: True
@@ -163,8 +163,8 @@ Builder.load_string(
                         TextInput:
                             id: post_production_notes
                             size_hint_y: None
-                            height: dp(0.116666666667*app.height)
-                            padding:[dp(0.005)*app.width, dp(0.00416666666667)*app.height]
+                            height: app.get_scaled_height(56.0)
+                            padding: app.get_scaled_tuple([4.0, 2.0])
                             text: ""
                             color: hex('#333333ff')
                             # foreground_color: hex('#333333ff')
@@ -172,7 +172,7 @@ Builder.load_string(
                             halign: "left"
                             valign: "top"
                             markup: True
-                            font_size: dp(0.025*app.width)
+                            font_size: app.get_scaled_width(20.0)
                             multiline: True
                             background_color: hex('#e5e5e5ff')
 
@@ -180,12 +180,12 @@ Builder.load_string(
                 Label:
                     id: success_question
                     size_hint: (None,None)
-                    height: dp(0.0625*app.height)
-                    width: dp(1.0*app.width)
+                    height: app.get_scaled_height(30.0)
+                    width: app.get_scaled_width(800.0)
                     text: "Did this complete successfully?"
                     # color: hex('#f9f9f9ff')
                     color: hex('#333333ff') #grey
-                    font_size: dp(0.0375*app.width)
+                    font_size: app.get_scaled_width(30.0)
                     halign: "center"
                     valign: "bottom"
                     markup: True
@@ -193,25 +193,25 @@ Builder.load_string(
                 # Feedback buttons
                 BoxLayout:
                     size_hint: (None,None)
-                    height: dp(0.5*app.height)
-                    width: dp(1.0*app.width)
+                    height: app.get_scaled_height(240.0)
+                    width: app.get_scaled_width(800.0)
                     orientation: 'vertical'
-                    padding:[0, dp(0.0416666666667)*app.height, 0, 0]
+                    padding: app.get_scaled_tuple([0, 20.0, 0, 0])
 
                     BoxLayout:
                         size_hint: (None,None)
-                        height: dp(0.416666666667*app.height)
-                        width: dp(1.0*app.width)
+                        height: app.get_scaled_height(200.0)
+                        width: app.get_scaled_width(800.0)
                         orientation: 'horizontal'
-                        spacing:dp(0.12)*app.width
-                        padding:[dp(0.1875)*app.width, 0]
+                        spacing: app.get_scaled_width(96.0)
+                        padding: app.get_scaled_tuple([150.0, 0])
 
                         # Thumbs down button
                         Button:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: app.get_scaled_sp('15.0sp')
                             size_hint: (None,None)
-                            height: dp(0.416666666667*app.height)
-                            width: dp(0.2525*app.width)
+                            height: app.get_scaled_height(200.0)
+                            width: app.get_scaled_width(202.0)
                             background_color: hex('#e5e5e5ff')
                             background_normal: ""
                             on_press: root.confirm_job_unsuccessful()
@@ -226,10 +226,10 @@ Builder.load_string(
                                     allow_stretch: True
                         # Thumbs up button
                         Button:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: app.get_scaled_sp('15.0sp')
                             size_hint: (None,None)
-                            height: dp(0.416666666667*app.height)
-                            width: dp(0.2525*app.width)
+                            height: app.get_scaled_height(200.0)
+                            width: app.get_scaled_width(202.0)
                             background_color: hex('#e5e5e5ff')
                             background_normal: ""
                             on_press: root.confirm_job_successful()
@@ -250,7 +250,7 @@ Builder.load_string(
                         halign: 'center'
                         vallign: 'middle'
                         color: hex('#333333ff')
-                        font_size: dp(0.0225*app.width)
+                        font_size: app.get_scaled_width(18.0)
 
 """
 )

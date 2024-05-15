@@ -63,8 +63,8 @@ Builder.load_string(
     on_touch_down: root.on_touch()
 
     BoxLayout:
-        height: dp(1.66666666667*app.height)
-        width: dp(0.6*app.width)
+        height: app.get_scaled_height(800.0)
+        width: app.get_scaled_width(480.0)
         canvas.before:
             Color: 
                 rgba: hex('#f9f9f9ff')
@@ -74,7 +74,7 @@ Builder.load_string(
 
         BoxLayout:
             padding: 0
-            spacing:0.0208333333333*app.height
+            spacing: app.get_scaled_width(10.0)
             orientation: "vertical"
             BoxLayout:
                 padding: 0
@@ -87,31 +87,31 @@ Builder.load_string(
                         size: self.size
                 Label:
                     size_hint: (None,None)
-                    height: dp(0.125*app.height)
-                    width: dp(1.0*app.width)
+                    height: app.get_scaled_height(60.0)
+                    width: app.get_scaled_width(800.0)
                     text: "Factory settings"
                     color: hex('#f9f9f9ff')
-                    font_size: 0.0375*app.width
+                    font_size: app.get_scaled_width(30.0)
                     halign: "center"
                     valign: "bottom"
                     markup: True
                    
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.0*app.width)
-                height: dp(0.666666666667*app.height)
+                width: app.get_scaled_width(800.0)
+                height: app.get_scaled_height(320.0)
                 orientation: 'horizontal'
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.721875*app.width)
-                    height: dp(0.666666666667*app.height)
+                    width: app.get_scaled_width(577.5)
+                    height: app.get_scaled_height(320.0)
                     padding: 0
-                    spacing:0.0208333333333*app.height
+                    spacing: app.get_scaled_width(10.0)
                     orientation: 'vertical'
                     BoxLayout:
                         size_hint: (None,None)
-                        width: dp(0.721875*app.width)
-                        height: dp(0.479166666667*app.height)
+                        width: app.get_scaled_width(577.5)
+                        height: app.get_scaled_height(230.0)
                         padding: 0
                         spacing: 0
                         orientation: 'vertical'
@@ -121,25 +121,25 @@ Builder.load_string(
                             pos: self.parent.pos
                             cols: 0
                             rows: 4
-                            padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
-                            spacing:0.0104166666667*app.height
+                            padding: app.get_scaled_tuple([10.0, 10.0])
+                            spacing: app.get_scaled_width(5.0)
                             BoxLayout: 
                                 orientation: 'vertical'
-                                spacing:0.0104166666667*app.height
+                                spacing: app.get_scaled_width(5.0)
                                 
                                 BoxLayout:
                                     orientation: 'horizontal'
-                                    spacing:0.00625*app.width
+                                    spacing: app.get_scaled_width(5.0)
                                     
                                     Spinner:
-                                        font_size: str(0.01875 * app.width) + 'sp'
+                                        font_size: app.get_scaled_sp('15.0sp')
                                         id: smartbench_model
                                         text: 'Choose model'
                                         values: root.latest_machine_model_values
                                         on_text: root.set_smartbench_model()
                                     
                                     ToggleButton:
-                                        font_size: str(0.01875 * app.width) + 'sp'
+                                        font_size: app.get_scaled_sp('15.0sp')
                                         id: smartbench_model_button
                                         text: 'Show all models'
                                         on_press: root.show_all_smartbench_models()
@@ -147,7 +147,7 @@ Builder.load_string(
                                     
                             BoxLayout: 
                                 orientation: 'vertical'
-                                spacing:0.0104166666667*app.height
+                                spacing: app.get_scaled_width(5.0)
 
 
                                 GridLayout: 
@@ -155,10 +155,10 @@ Builder.load_string(
                                     pos: self.parent.pos
                                     cols: 4
                                     rows: 0
-                                    padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
-                                    spacing:0.0125*app.width
+                                    padding: app.get_scaled_tuple([5.0, 5.0])
+                                    spacing: app.get_scaled_width(10.0)
                                     Label:
-                                        font_size: str(0.01875 * app.width) + 'sp'
+                                        font_size: app.get_scaled_sp('15.0sp')
                                         text: '[b]Serial number[/b]'
                                         color: [0,0,0,1]
                                         markup: True
@@ -167,7 +167,7 @@ Builder.load_string(
 
                                         TextInput:
                                             id: serial_prefix
-                                            font_size: str(15.0/800.0 * app.width) + 'sp'
+                                            font_size: app.get_scaled_sp('15.0sp')
                                             text: 'YS6'
                                             color: [0,0,0,1]
                                             markup: True
@@ -175,7 +175,7 @@ Builder.load_string(
                                             size_hint_x: 0.3
                                             multiline: False
                                         Label:
-                                            font_size: str(0.01875 * app.width) + 'sp'
+                                            font_size: app.get_scaled_sp('15.0sp')
                                             text: ''
                                             color: [0,0,0,1]
                                             markup: True
@@ -183,7 +183,7 @@ Builder.load_string(
 
                                         TextInput:
                                             id: serial_number_input
-                                            font_size: str(15.0/800.0 * app.width) + 'sp'
+                                            font_size: app.get_scaled_sp('15.0sp')
                                             text: '0000'
                                             color: [0,0,0,1]
                                             markup: True
@@ -193,7 +193,7 @@ Builder.load_string(
                                             multiline: False
 
                                         Label:
-                                            font_size: str(0.01875 * app.width) + 'sp'
+                                            font_size: app.get_scaled_sp('15.0sp')
                                             text: '.'
                                             color: [0,0,0,1]
                                             markup: True
@@ -201,7 +201,7 @@ Builder.load_string(
 
                                         TextInput:
                                             id: product_number_input
-                                            font_size: str(15.0/800.0 * app.width) + 'sp'
+                                            font_size: app.get_scaled_sp('15.0sp')
                                             text: '00'
                                             color: [0,0,0,1]
                                             markup: True
@@ -211,12 +211,12 @@ Builder.load_string(
                                             multiline: False
 
                                     Button:
-                                        font_size: str(0.01875 * app.width) + 'sp'
+                                        font_size: app.get_scaled_sp('15.0sp')
                                         text: 'UPDATE'
                                         on_press: root.update_serial_number()
 
                                     Label:
-                                        font_size: str(0.01875 * app.width) + 'sp'
+                                        font_size: app.get_scaled_sp('15.0sp')
                                         id: machine_serial
                                         text: 'machine serial'
                                         color: [0,0,0,1]
@@ -224,24 +224,24 @@ Builder.load_string(
 
                             BoxLayout: 
                                 orientation: 'vertical'
-                                spacing:0.0104166666667*app.height
+                                spacing: app.get_scaled_width(5.0)
 
                                 GridLayout: 
                                     size: self.parent.size
                                     pos: self.parent.pos
                                     cols: 4
                                     rows: 0
-                                    padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
-                                    spacing:0.0125*app.width
+                                    padding: app.get_scaled_tuple([5.0, 5.0])
+                                    spacing: app.get_scaled_width(10.0)
 
                                     Label:
-                                        font_size: str(0.01875 * app.width) + 'sp'
+                                        font_size: app.get_scaled_sp('15.0sp')
                                         text: '[b]Touchplate offset[/b]'
                                         color: [0,0,0,1]
                                         markup: True
                                     TextInput:
                                         id: z_touch_plate_entry
-                                        font_size: str(15.0/800.0 * app.width) + 'sp'
+                                        font_size: app.get_scaled_sp('15.0sp')
                                         text: ''
                                         color: [0,0,0,1]
                                         markup: True
@@ -249,12 +249,12 @@ Builder.load_string(
                                         input_filter: 'float'
                                         multiline: False
                                     Button:
-                                        font_size: str(0.01875 * app.width) + 'sp'
+                                        font_size: app.get_scaled_sp('15.0sp')
                                         text: 'UPDATE'
                                         on_press: root.update_z_touch_plate_thickness()
     
                                     Label:
-                                        font_size: str(0.01875 * app.width) + 'sp'
+                                        font_size: app.get_scaled_sp('15.0sp')
                                         id: machine_touchplate_thickness
                                         text: 'machine_tp'
                                         color: [0,0,0,1]
@@ -263,21 +263,21 @@ Builder.load_string(
                         BoxLayout:
                             size_hint_y: 0.3
                             orientation: 'horizontal'
-                            spacing:dp(0.0125)*app.width
+                            spacing: app.get_scaled_width(10.0)
 
                             Button:
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 text: '$54 info'
                                 on_press: root.setting_54_info()
 
                             ToggleButton:
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 id: setting_54_toggle
                                 text: 'Set $54=1'
                                 on_press: root.toggle_setting_54()
 
                             Label:
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 id: setting_54_label
                                 size_hint_x: 0.7
                                 text: '$54 = N/A'
@@ -286,9 +286,9 @@ Builder.load_string(
 
                     BoxLayout:
                         size_hint: (None,None)
-                        width: dp(0.721875*app.width)
-                        height: dp(0.166666666667*app.height)
-                        padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                        width: app.get_scaled_width(577.5)
+                        height: app.get_scaled_height(80.0)
+                        padding: app.get_scaled_tuple([5.0, 5.0])
                         spacing: 0
                         orientation: 'vertical'
 
@@ -298,10 +298,10 @@ Builder.load_string(
                             cols: 3
                             rows: 0
                             padding: 0
-                            spacing:0.0125*app.width
+                            spacing: app.get_scaled_width(10.0)
 
                             Button:
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 id: console_update_button
                                 text: 'Full Console Update (wifi)'
                                 on_press: root.full_console_update()
@@ -312,20 +312,20 @@ Builder.load_string(
                                 cols: 0
                                 rows: 3
                                 padding: 0
-                                spacing:0.0025*app.width
+                                spacing: app.get_scaled_width(2.0)
                                 Label:
-                                    font_size: str(0.01875 * app.width) + 'sp'
+                                    font_size: app.get_scaled_sp('15.0sp')
                                     text: 'Current'
                                     color: [0,0,0,1]
                                     markup: True
                                 Label:
-                                    font_size: str(0.01875 * app.width) + 'sp'
+                                    font_size: app.get_scaled_sp('15.0sp')
                                     id: software_version_label
                                     text: 'SW'
                                     color: [0,0,0,1]
                                     markup: True
                                 Label:
-                                    font_size: str(0.01875 * app.width) + 'sp'
+                                    font_size: app.get_scaled_sp('15.0sp')
                                     id: platform_version_label
                                     text: 'PL'
                                     color: [0,0,0,1]
@@ -336,20 +336,20 @@ Builder.load_string(
                                 cols: 0
                                 rows: 3
                                 padding: 0
-                                spacing:0.0025*app.width
+                                spacing: app.get_scaled_width(2.0)
                                 Label:
-                                    font_size: str(0.01875 * app.width) + 'sp'
+                                    font_size: app.get_scaled_sp('15.0sp')
                                     text: 'Available'
                                     color: [0,0,0,1]
                                     markup: True
                                 Label:
-                                    font_size: str(0.01875 * app.width) + 'sp'
+                                    font_size: app.get_scaled_sp('15.0sp')
                                     id: latest_software_version
                                     text: 'SW'
                                     color: [0,0,0,1]
                                     markup: True
                                 Label:
-                                    font_size: str(0.01875 * app.width) + 'sp'
+                                    font_size: app.get_scaled_sp('15.0sp')
                                     id: latest_platform_version
                                     text: 'PL'
                                     color: [0,0,0,1]
@@ -358,9 +358,9 @@ Builder.load_string(
                 GridLayout:
                     cols: 2
                     rows: 8
-                    spacing:0.0025*app.width
+                    spacing: app.get_scaled_width(2.0)
                     ToggleButton:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         id: maintenance_reminder_toggle
                         text: 'Turn reminders off'
                         on_press: root.toggle_reminders()
@@ -369,7 +369,7 @@ Builder.load_string(
                         valign: "middle"
 
                     ToggleButton:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         id: show_spindle_overload_toggle
                         text: 'Show spindle overload'
                         on_press: root.toggle_spindle_mode()
@@ -378,7 +378,7 @@ Builder.load_string(
                         valign: "middle"
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         text: 'Diagnostics'
                         on_press: root.diagnostics()
                         text_size: self.size
@@ -386,7 +386,7 @@ Builder.load_string(
                         valign: "middle"
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         text: 'Current'
                         on_press: root.enter_current_adjustment()
                         text_size: self.size
@@ -394,7 +394,7 @@ Builder.load_string(
                         valign: "middle"
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         text: 'FT B1'
                         background_normal: ''
                         background_color: [0.75,0.34,0.51,1]
@@ -404,7 +404,7 @@ Builder.load_string(
                         valign: "middle"
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         text: 'FT B2'
                         background_normal: ''
                         background_color: [0.28,0.44,0.97,1]
@@ -414,7 +414,7 @@ Builder.load_string(
                         valign: "middle"
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         text: 'FT B3'
                         background_normal: ''
                         background_color: [0.2,0.8,0.2,1]
@@ -424,7 +424,7 @@ Builder.load_string(
                         valign: "middle"
 
                     ToggleButton:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         id: sc2_compatability_toggle
                         text: 'Enable SC2 compatability'
                         on_press: root.show_sc2_decision_popup()
@@ -433,7 +433,7 @@ Builder.load_string(
                         valign: "middle"
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         text: 'Retrieve LB cal data'
                         on_press: root.enter_serial_number_screen()
                         text_size: self.size
@@ -441,7 +441,7 @@ Builder.load_string(
                         valign: "middle"
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         text: 'SG & Load test'
                         on_press: root.enter_calibration_test()
                         text_size: self.size
@@ -449,7 +449,7 @@ Builder.load_string(
                         valign: "middle"
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         text: 'Overnight test'
                         on_press: root.enter_overnight_test()
                         text_size: self.size
@@ -457,7 +457,7 @@ Builder.load_string(
                         valign: "middle"
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         text: 'Stall Jig'
                         on_press: root.enter_stall_jig()
                         text_size: self.size
@@ -465,7 +465,7 @@ Builder.load_string(
                         valign: "middle"
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         text: 'SG thresh'
                         on_press: root.enter_set_thresholds()
                         text_size: self.size
@@ -473,7 +473,7 @@ Builder.load_string(
                         valign: "middle"
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         text: 'Measure'
                         on_press: root.enter_general_measurement()
                         text_size: self.size
@@ -481,7 +481,7 @@ Builder.load_string(
                         valign: "middle"
                         
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         text: 'SC2 spindle test'
                         on_press: root.digital_spindle_test_pressed()
                         text_size: self.size
@@ -491,29 +491,29 @@ Builder.load_string(
 
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.0*app.width)
-                height: dp(0.166666666667*app.height)
+                width: app.get_scaled_width(800.0)
+                height: app.get_scaled_height(80.0)
                 padding: 0
-                spacing:0.0125*app.width
+                spacing: app.get_scaled_width(10.0)
                 orientation: 'horizontal'
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.1*app.width)
-                    height: dp(0.166666666667*app.height)
+                    width: app.get_scaled_width(80.0)
+                    height: app.get_scaled_height(80.0)
                     padding: 0
                     spacing: 0
 
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(0.166666666667*app.height)
-                        width: dp(0.1*app.width)
-                        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                        height: app.get_scaled_height(80.0)
+                        width: app.get_scaled_width(80.0)
+                        padding: app.get_scaled_tuple([10.0, 10.0, 10.0, 10.0])
                         Button:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: app.get_scaled_sp('15.0sp')
                             size_hint: (None,None)
-                            height: dp(0.108333333333*app.height)
-                            width: dp(0.075*app.width)
+                            height: app.get_scaled_height(52.0)
+                            width: app.get_scaled_width(60.0)
                             background_color: hex('#F4433600')
                             center: self.parent.center
                             pos: self.parent.pos
@@ -531,34 +531,34 @@ Builder.load_string(
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.775*app.width)
-                    height: dp(0.166666666667*app.height)
-                    padding:[dp(0.2)*app.width, 0]
+                    width: app.get_scaled_width(620.0)
+                    height: app.get_scaled_height(80.0)
+                    padding: app.get_scaled_tuple([160.0, 0])
                     spacing: 0
                     orientation: 'vertical'
                     BoxLayout:
                         Button:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: app.get_scaled_sp('15.0sp')
                             text: 'FACTORY RESET'
                             on_press: root.factory_reset()
 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.1*app.width)
-                    height: dp(0.166666666667*app.height)
+                    width: app.get_scaled_width(80.0)
+                    height: app.get_scaled_height(80.0)
                     padding: 0
                     spacing: 0
 
                     BoxLayout: 
                         size_hint: (None, None)
-                        height: dp(0.166666666667*app.height)
-                        width: dp(0.1*app.width)
-                        padding:[dp(0.02375)*app.width, dp(0.0208333333333)*app.height, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                        height: app.get_scaled_height(80.0)
+                        width: app.get_scaled_width(80.0)
+                        padding: app.get_scaled_tuple([19.0, 10.0, 10.0, 10.0])
                         Button:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: app.get_scaled_sp('15.0sp')
                             size_hint: (None,None)
-                            height: dp(0.125*app.height)
-                            width: dp(0.06375*app.width)
+                            height: app.get_scaled_height(60.0)
+                            width: app.get_scaled_width(51.0)
                             background_color: hex('#F4433600')
                             center: self.parent.center
                             pos: self.parent.pos

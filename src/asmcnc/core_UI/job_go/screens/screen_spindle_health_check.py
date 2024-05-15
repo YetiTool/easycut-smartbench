@@ -23,11 +23,11 @@ Builder.load_string(
 
     BoxLayout: 
         spacing: 0
-        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+        padding: app.get_scaled_tuple([20.0, 20.0])
         orientation: 'vertical'
         size_hint: (None, None)
-        height: 1.0*app.height
-        width: 1.0*app.width
+        height: app.get_scaled_height(480.0)
+        width: app.get_scaled_width(800.0)
         canvas:
             Color: 
                 rgba: hex('#E5E5E5FF')
@@ -59,21 +59,21 @@ Builder.load_string(
 
             BoxLayout: 
                 spacing: 0
-                padding:[dp(0.125)*app.width, 0, dp(0.125)*app.width, dp(0.270833333333)*app.height]
+                padding: app.get_scaled_tuple([100.0, 0, 100.0, 130.0])
                 orientation: 'horizontal'          
                 size_hint: (None, None)
-                height: dp(251.0/480.0)*app.height
-                width: 1.0*app.width
+                height: app.get_scaled_height(251.0)
+                width: app.get_scaled_width(800.0)
                 pos: self.parent.pos
 
 
                 BoxLayout: 
                     spacing: 0
-                    padding:[dp(0.01)*app.width, 0, dp(0.07125)*app.width, 0]
+                    padding: app.get_scaled_tuple([8.0, 0, 57.0, 0])
                     orientation: 'horizontal'          
                     size_hint: (None, None)
-                    height: dp(121.0/480.0)*app.height
-                    width: 0.225*app.width
+                    height: app.get_scaled_height(121.0)
+                    width: app.get_scaled_width(180.0)
                     Image:
                         id: spindle_icon
                         source: "./asmcnc/core_UI/job_go/img/spindle_check.png"
@@ -82,16 +82,16 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
                         size_hint: (None, None)
-                        height: dp(0.252083333333*app.height)
-                        width: dp(0.14375*app.width) 
+                        height: app.get_scaled_height(121.0)
+                        width: app.get_scaled_width(115.0)
 
                 BoxLayout: 
                     spacing: 0
-                    padding:[0, 0, 0, 0]
+                    padding: app.get_scaled_tuple([0, 0, 0, 0])
                     orientation: 'horizontal'          
                     size_hint: (None, None)
-                    height: dp(121.0/480.0)*app.height
-                    width: 0.25*app.width
+                    height: app.get_scaled_height(121.0)
+                    width: app.get_scaled_width(200.0)
                     Label:
                         id: countdown
                         markup: True
@@ -105,11 +105,11 @@ Builder.load_string(
 
                 BoxLayout: 
                     spacing: 0
-                    padding:[dp(0.0875)*app.width, 0, dp(0.0125)*app.width, dp(0.00625)*app.height]
+                    padding: app.get_scaled_tuple([70.0, 0, 10.0, 3.0])
                     orientation: 'horizontal'          
                     size_hint: (None, None)
-                    height: dp(121.0/480.0)*app.height
-                    width: 0.225*app.width
+                    height: app.get_scaled_height(121.0)
+                    width: app.get_scaled_width(180.0)
                     Image:
                         id: countdown_icon
                         source: "./asmcnc/skavaUI/img/countdown_big.png"
@@ -118,8 +118,8 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True
                         size_hint: (None, None)
-                        height: dp(0.245833333333*app.height)
-                        width: dp(0.125*app.width) 
+                        height: app.get_scaled_height(118.0)
+                        width: app.get_scaled_width(100.0)
 
 
 """

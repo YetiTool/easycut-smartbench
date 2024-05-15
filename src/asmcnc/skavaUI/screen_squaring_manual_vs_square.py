@@ -35,27 +35,27 @@ Builder.load_string(
 
     BoxLayout: 
         spacing: 0
-        padding:[dp(0.05)*app.width, dp(0.0833333333333)*app.height]
+        padding: app.get_scaled_tuple([40.0, 40.0])
         orientation: 'vertical'
 
         # Cancel button
         BoxLayout:
             size_hint: (None,None)
-            height: dp(0.0416666666667*app.height)
-            padding:[dp(0.025)*app.width, 0, dp(0.025)*app.width, 0]
-            spacing:0.85*app.width
+            height: app.get_scaled_height(20.0)
+            padding: app.get_scaled_tuple([20.0, 0, 20.0, 0])
+            spacing: app.get_scaled_width(680.0)
             orientation: 'horizontal'
             pos: self.parent.pos
 
             Label:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 text: ""
 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 size_hint: (None,None)
-                height: dp(0.104166666667*app.height)
-                width: dp(0.0625*app.width)
+                height: app.get_scaled_height(50.0)
+                width: app.get_scaled_width(50.0)
                 background_color: hex('#FFFFFF00')
                 opacity: 1
                 on_press: root.cancel()
@@ -71,13 +71,13 @@ Builder.load_string(
                         allow_stretch: True
 
         Label:
-            font_size: str(0.01875 * app.width) + 'sp'
+            font_size: app.get_scaled_sp('15.0sp')
             size_hint_y: 0.1
 
         BoxLayout:
             orientation: 'vertical'
-            spacing:0.0208333333333*app.height
-            padding:[0, dp(0.0416666666667)*app.height, 0, dp(0.0416666666667)*app.height]
+            spacing: app.get_scaled_width(10.0)
+            padding: app.get_scaled_tuple([0, 20.0, 0, 20.0])
             size_hint_y: 3
             
 
@@ -105,7 +105,7 @@ Builder.load_string(
      
         BoxLayout:
             orientation: 'horizontal'
-            spacing:0.0375*app.width
+            spacing: app.get_scaled_width(30.0)
             size_hint_y: 3
 
             Button:
@@ -119,11 +119,11 @@ Builder.load_string(
                 text_size: self.size
                 background_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                 background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
-                border: [dp(30)]*4
-                padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                border: app.get_scaled_tuple([30, 30, 30, 30])
+                padding: app.get_scaled_tuple([20.0, 20.0])
                         
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 size_hint_x: 0.3
                 background_color: hex('#FFFFFF00')
                 on_press: root.popup_help()
@@ -147,11 +147,11 @@ Builder.load_string(
                 text_size: self.size
                 background_normal: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
                 background_down: "./asmcnc/skavaUI/img/blank_blue_btn_2-1_rectangle.png"
-                border: [dp(30)]*4
-                padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+                border: app.get_scaled_tuple([30, 30, 30, 30])
+                padding: app.get_scaled_tuple([20.0, 20.0])
                         
         Label:
-            font_size: str(0.01875 * app.width) + 'sp'
+            font_size: app.get_scaled_sp('15.0sp')
             size_hint_y: .5                
 
 """
