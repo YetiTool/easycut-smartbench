@@ -8,6 +8,8 @@ from kivy.properties import StringProperty, ObjectProperty
 
 import config_classes
 from asmcnc.comms.logging_system.logging_system import Logger
+from asmcnc import paths
+
 
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 CONFIGURATIONS_DIR = os.path.join(CURRENT_DIR, "configurations")
@@ -98,31 +100,31 @@ class DWTConfig(EventDispatcher):
 
     shape_options_dict = {
         'circle': {
-            'image_path': './asmcnc/apps/drywall_cutter_app/img/circle_shape_button.png',
+            'image_path': paths.join(paths.DWT_IMG_PATH, 'circle_shape_button.png'),
         },
         'square': {
-            'image_path': './asmcnc/apps/drywall_cutter_app/img/square_shape_button.png',
+            'image_path': paths.join(paths.DWT_IMG_PATH, 'square_shape_button.png'),
         },
         'line': {
-            'image_path': './asmcnc/apps/drywall_cutter_app/img/line_shape_button.png',
+            'image_path': paths.join(paths.DWT_IMG_PATH, 'line_shape_button.png'),
         },
         'geberit': {
-            'image_path': './asmcnc/apps/drywall_cutter_app/img/geberit_shape_button.png',
+            'image_path': paths.join(paths.DWT_IMG_PATH, 'geberit_shape_button.png'),
         },
         'rectangle': {
-            'image_path': './asmcnc/apps/drywall_cutter_app/img/rectangle_shape_button.png',
+            'image_path': paths.join(paths.DWT_IMG_PATH, 'rectangle_shape_button.png'),
         }
     }
 
     toolpath_offset_options_dict = {
         'inside': {
-            'image_path': './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_inside_button.png',
+            'image_path': paths.join(paths.DWT_IMG_PATH, 'toolpath_offset_inside_button.png'),
         },
         'outside': {
-            'image_path': './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_outside_button.png',
+            'image_path': paths.join(paths.DWT_IMG_PATH, 'toolpath_offset_outside_button.png'),
         },
         'on': {
-            'image_path': './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_on_button.png',
+            'image_path': paths.join(paths.DWT_IMG_PATH, 'toolpath_offset_on_button.png'),
         }
     }
 
@@ -167,6 +169,8 @@ class DWTConfig(EventDispatcher):
             self.load_config(most_recent_config_path)
         else:
             self.load_temp_config()
+
+        # self.apply_active_config()
 
     def setup_dropdowns(self):
         self.drywall_screen.tool_selection_dropdown.set_image_dict(self.get_available_cutter_names())
@@ -221,7 +225,7 @@ class DWTConfig(EventDispatcher):
         self.drywall_screen.drywall_shape_display_widget.select_shape(shape, self.drywall_screen.rotation)
 
         if self.drywall_screen.drywall_shape_display_widget.rotation_required():
-            self.drywall_screen.rotate_shape(swap_lengths=False)
+            self.rotate_shape(swap_lengths=False)
 
         # Handle tool selection
         tool_whitelist = shape_info.get('tool_whitelist')
@@ -523,6 +527,36 @@ class DWTConfig(EventDispatcher):
 
             setattr(self.active_config, parameter_name, parameter_value)
 
-        # update screen, check bumpers and so on:
-        if not (self.active_config.shape_type == 'geberit' and self.active_cutter.dimensions.diameter is None):
-            self.drywall_screen.drywall_shape_display_widget.check_datum_and_extents()
+        # # update screen, check bumpers and so on:
+        # if not (self.active_config.shape_type == 'geberit' and self.active_cutter.dimensions.diameter is None):
+        #     self.drywall_screen.drywall_shape_display_widget.check_datum_and_extents()
+
+    def apply_active_config(self):
+        try:
+            self.select_shape(self.active_config.shape_type)
+            self.select_tool(self.active_config.cutter_type)
+            self.select_toolpath(self.active_config.toolpath_offset)
+
+            self.drywall_screen.d_input.text = str(self.active_config.canvas_shape_dims.d)
+            self.drywall_screen.drywall_shape_display_widget.l_input.text = str(self.active_config.canvas_shape_dims.l)
+            self.drywall_screen.drywall_shape_display_widget.r_input.text = str(self.active_config.canvas_shape_dims.r)
+            self.drywall_screen.drywall_shape_display_widget.x_input.text = str(self.active_config.canvas_shape_dims.x)
+            self.drywall_screen.drywall_shape_display_widget.y_input.text = str(self.active_config.canvas_shape_dims.y)
+
+            self.drywall_screen.drywall_shape_display_widget.unit_switch.active = self.active_config.units == 'mm'
+        except:
+            Logger.error("Error applying active configuration")
+
+        # Vlad set your text inputs here:
+
+    def rotate_shape(self, swap_lengths=True):
+        self.drywall_screen.rotation = 'vertical' if self.drywall_screen.rotation == 'horizontal' else 'horizontal'
+
+        self.drywall_screen.drywall_shape_display_widget.select_shape(self.active_config.shape_type, self.drywall_screen.rotation, swap_lengths=swap_lengths)
+        self.select_toolpath(self.active_config.toolpath_offset)
+
+        # Need to manually set parameters after internally swapping x and y, because inputs are bound to on_focus
+        self.drywall_screen.drywall_shape_display_widget.swapping_lengths = True
+        self.drywall_screen.drywall_shape_display_widget.text_input_change(self.drywall_screen.drywall_shape_display_widget.x_input)
+        self.drywall_screen.drywall_shape_display_widget.text_input_change(self.drywall_screen.drywall_shape_display_widget.y_input)
+        self.drywall_screen.drywall_shape_display_widget.swapping_lengths = False

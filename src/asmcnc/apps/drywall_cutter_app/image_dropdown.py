@@ -6,6 +6,8 @@ from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.dropdown import DropDown
 from kivy.uix.image import Image
 from asmcnc.comms.logging_system.logging_system import Logger
+from asmcnc import paths
+
 
 
 """
@@ -102,20 +104,20 @@ class ImageDropDownButton(ButtonBehavior, Image):
 class ToolSelectionDropDown(ImageDropDownButton):
     def __init__(self, **kwargs):
         super(ToolSelectionDropDown, self).__init__(**kwargs)
-        self.source = './asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_6mm.png'
+        self.source = paths.get_resource('tool_6mm.png')
         self.key_name = 'cutter_path'
 
 
 class ShapeSelectionDropDown(ImageDropDownButton):
     def __init__(self, **kwargs):
         super(ShapeSelectionDropDown, self).__init__(**kwargs)
-        self.source = './asmcnc/apps/drywall_cutter_app/img/square_shape_button.png'
+        self.source = paths.get_resource('square_shape_button.png')
         self.key_name = 'key'
 
 
 class ToolPathSelectionDropDown(ImageDropDownButton):
     def __init__(self, **kwargs):
         super(ToolPathSelectionDropDown, self).__init__(**kwargs)
-        self.source = './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_inside_button.png'
+        self.source = paths.get_resource('toolpath_offset_inside_button.png')
         self.key_name = 'key'
         self.disable_if_1_option = True

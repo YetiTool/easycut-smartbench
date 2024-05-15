@@ -203,7 +203,7 @@ class DrywallCutterScreen(Screen):
         self.dwt_config.on_parameter_change('datum_position.y', dy)
 
     def on_pre_enter(self):
-        self.apply_active_config()
+        self.dwt_config.apply_active_config()
         self.materials_popup.on_open()  # to make sure material values are set correctly
         self.pulse_poll = Clock.schedule_interval(self.update_pulse_opacity, 0.04)
         self.kb.set_numeric_pos((scaling_utils.get_scaled_width(565), scaling_utils.get_scaled_height(115)))
@@ -251,20 +251,7 @@ class DrywallCutterScreen(Screen):
         self.dwt_config.select_shape(shape)
 
     def rotate_shape(self, swap_lengths=True):
-        if self.rotation == 'horizontal':
-            self.rotation = 'vertical'
-        else:
-            self.rotation = 'horizontal'
-
-        self.drywall_shape_display_widget.select_shape(self.dwt_config.active_config.shape_type, self.rotation,
-                                                       swap_lengths=swap_lengths)
-        self.select_toolpath(self.dwt_config.active_config.toolpath_offset)
-
-        # Need to manually set parameters after internally swapping x and y, because inputs are bound to on_focus
-        self.drywall_shape_display_widget.swapping_lengths = True
-        self.drywall_shape_display_widget.text_input_change(self.drywall_shape_display_widget.x_input)
-        self.drywall_shape_display_widget.text_input_change(self.drywall_shape_display_widget.y_input)
-        self.drywall_shape_display_widget.swapping_lengths = False
+        self.dwt_config.rotate_shape(swap_lengths=swap_lengths)
 
     def select_toolpath(self, toolpath):
         self.dwt_config.select_toolpath(toolpath)
@@ -438,33 +425,11 @@ class DrywallCutterScreen(Screen):
         """
         Logger.debug("New config loaded. Applying settings.")
 
-        self.apply_active_config()
+        # self.apply_active_config()
 
         dx, dy = self.drywall_shape_display_widget.get_current_x_y(value.datum_position.x,
                                                                    value.datum_position.y, True)
         self.m.set_datum(x=dx, y=dy, relative=True)
-
-    def apply_active_config(self):
-        toolpath_offset = self.dwt_config.active_config.toolpath_offset
-        rotation = self.dwt_config.active_config.rotation
-
-        self.select_shape(self.dwt_config.active_config.shape_type)
-
-        #if rotation == 'vertical':
-        #    self.rotate_shape(swap_lengths=False)
-
-        self.select_tool(self.dwt_config.active_config.cutter_type)
-        self.select_toolpath(toolpath_offset)
-
-        self.drywall_shape_display_widget.d_input.text = str(self.dwt_config.active_config.canvas_shape_dims.d)
-        self.drywall_shape_display_widget.l_input.text = str(self.dwt_config.active_config.canvas_shape_dims.l)
-        self.drywall_shape_display_widget.r_input.text = str(self.dwt_config.active_config.canvas_shape_dims.r)
-        self.drywall_shape_display_widget.x_input.text = str(self.dwt_config.active_config.canvas_shape_dims.x)
-        self.drywall_shape_display_widget.y_input.text = str(self.dwt_config.active_config.canvas_shape_dims.y)
-
-        self.drywall_shape_display_widget.unit_switch.active = self.dwt_config.active_config.units == 'mm'
-
-        # Vlad set your text inputs here:
 
     def on_leave(self, *args):
         self.dwt_config.save_temp_config()
