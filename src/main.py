@@ -7,7 +7,7 @@ YetiTool's UI for SmartBench
 www.yetitool.com
 '''
 from asmcnc import paths
-
+from exporting_screen_manage import ExportingScreenManager
 
 paths.create_paths()
 
@@ -191,7 +191,7 @@ class SkavaUI(App):
         Logger.info("Starting App:")
 
         # Establish screens
-        sm = ScreenManager(transition=NoTransition())
+        sm = ExportingScreenManager(transition=NoTransition())
 
         # Keyboard object
         kb = custom_keyboard.Keyboard(localization=self.l)
