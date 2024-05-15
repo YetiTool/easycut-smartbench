@@ -28,10 +28,10 @@ from engine import GCodeEngine
 
 Builder.load_string("""
 <DrywallCutterScreen>:
-    tool_selection:tool_selection
-    shape_selection:shape_selection
+    tool_selection_dropdown:tool_selection_dropdown
+    shape_selection_dropdown:shape_selection_dropdown
     rotate_button:rotate_button
-    toolpath_selection:toolpath_selection
+    toolpath_selection_dropdown:toolpath_selection_dropdown
     shape_display_container:shape_display_container
     xy_move_container:xy_move_container
     BoxLayout:
@@ -52,12 +52,12 @@ Builder.load_string("""
                 text: 'File'
                 on_press: root.open_filechooser()
             ToolSelectionDropDown:
-                id: tool_selection
+                id: tool_selection_dropdown
                 callback: root.select_tool
                 size_hint_x: 7
                 allow_stretch: True
             ShapeSelectionDropDown:
-                id: shape_selection
+                id: shape_selection_dropdown
                 callback: root.select_shape
                 size_hint_x: 7
                 allow_stretch: True
@@ -69,7 +69,7 @@ Builder.load_string("""
                 text: 'Rotate'
                 on_press: root.rotate_shape()
             ToolPathSelectionDropDown:
-                id: toolpath_selection
+                id: toolpath_selection_dropdown
                 size_hint_x: 7
                 callback: root.select_toolpath
                 allow_stretch: True
