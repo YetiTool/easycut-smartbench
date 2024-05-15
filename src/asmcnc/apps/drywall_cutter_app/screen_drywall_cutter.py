@@ -36,6 +36,12 @@ Builder.load_string("""
     xy_move_container:xy_move_container
     BoxLayout:
         orientation: 'vertical'
+        canvas.before:
+            Color:
+                rgba: 0.8, 0.8, 0.8, 1  # Grey color
+            Rectangle:
+                size: self.size
+                pos: self.pos
         BoxLayout:
             orientation: 'horizontal'
             padding: dp(5)
@@ -121,7 +127,7 @@ Builder.load_string("""
                     padding: [dp(0), dp(30)]
                     canvas.before:
                         Color:
-                            rgba: hex('#FFFFFFFF')
+                            rgba: 1, 1, 1, 1  # White color
                         Rectangle:
                             size: self.size
                             pos: self.pos
