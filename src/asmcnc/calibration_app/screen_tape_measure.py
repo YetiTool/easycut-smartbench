@@ -23,7 +23,7 @@ Builder.load_string(
              
     BoxLayout:
         orientation: 'horizontal'
-        padding:[dp(0.1)*app.width, dp(0.0625)*app.height]
+        padding: app.get_scaled_tuple([80.0, 30.0])
         spacing: 0
         size_hint_x: 1
         BoxLayout:
@@ -32,7 +32,7 @@ Builder.load_string(
             
 #             Label:
 #                 text_size: self.size
-#                 font_size: '40sp'
+#                 font_size: app.get_scaled_sp('40sp')
 #                 halign: 'center'
 #                 valign: 'middle'
 #                 text: '[color=455A64]TAPE MEASURE ALERT![/color]'
@@ -50,7 +50,7 @@ Builder.load_string(
             Label:
                 id: alert_label
                 text_size: self.size
-                font_size: str(0.03*app.width) + 'sp'
+                font_size: app.get_scaled_sp('24.0sp')
                 halign: 'center'
                 valign: 'middle'
                 text: '[color=455A64]PLEASE REMOVE YOUR TAPE MEASURE FROM THE MACHINE NOW.[/color]'
@@ -59,7 +59,7 @@ Builder.load_string(
         
             AnchorLayout:
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: app.get_scaled_sp('15.0sp')
                     #size: self.texture_size
                     size_hint_y: 0.8
                     size_hint_x: 0.35
@@ -72,12 +72,12 @@ Builder.load_string(
                         root.next_screen()
     
                     BoxLayout:
-                        padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                        padding: app.get_scaled_tuple([5.0, 5.0])
                         size: self.parent.size
                         pos: self.parent.pos
                         
                         Label:
-                            font_size: str(0.0325*app.width) + 'sp'
+                            font_size: app.get_scaled_sp('26.0sp')
                             text: '[color=FFFFFF]Ok, continue...[/color]'
                             markup: 'True'
                 

@@ -17,7 +17,7 @@ Builder.load_string(
     text_container: text_container
 
     Label:
-        font_size: str(0.01875 * app.width) + 'sp'
+        font_size: app.get_scaled_sp('15.0sp')
         id: text_container
         color: [0, 0, 0, 1]
         size_hint_y: None

@@ -34,31 +34,31 @@ Builder.load_string(
              
     BoxLayout:
         orientation: 'horizontal'
-        padding:[dp(0.0625)*app.width, dp(0.104166666667)*app.height]
-        spacing:0.0625*app.height
+        padding: app.get_scaled_tuple([50.0, 50.0])
+        spacing: app.get_scaled_width(30.0)
         size_hint_x: 1
 
         BoxLayout:
             orientation: 'vertical'
             size_hint_x: 1
-            spacing:0.0416666666667*app.height
+            spacing: app.get_scaled_width(20.0)
              
             Label:
                 id: title_string
                 size_hint_y: 1.2
                 text_size: self.size
-                font_size: str(0.03*app.width) + 'sp'
+                font_size: app.get_scaled_sp('24.0sp')
                 markup: True
                 halign: 'left'
                 vallign: 'top'
  
             BoxLayout:
                 orientation: 'horizontal'
-                padding:[dp(0.025)*app.width, 0, 0, 0]
+                padding: app.get_scaled_tuple([20.0, 0, 0, 0])
                 size_hint_y: 1
                 Label:
                     text_size: self.size
-                    font_size: str(0.03*app.width) + 'sp'
+                    font_size: app.get_scaled_sp('24.0sp')
                     halign: 'left'
                     valign: 'middle'
                     text: root.error_description 
@@ -66,7 +66,7 @@ Builder.load_string(
 
             Label:
                 size_hint_y: 1
-                font_size: str(0.03*app.width) + 'sp'
+                font_size: app.get_scaled_sp('24.0sp')
                 text_size: self.size
                 halign: 'left'
                 valign: 'top'
@@ -75,11 +75,11 @@ Builder.load_string(
                     
             BoxLayout:
                 orientation: 'horizontal'
-                padding:[dp(0.25)*app.width, 0]
-                spacing:0.05*app.width
+                padding: app.get_scaled_tuple([200.0, 0])
+                spacing: app.get_scaled_width(40.0)
                         
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: app.get_scaled_sp('15.0sp')
                     size_hint_y: 0.9
                     size_hint_x: 0.3
                     id: reboot_button
@@ -91,7 +91,7 @@ Builder.load_string(
                         root.reboot_button_press()
                         
                     BoxLayout:
-                        padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                        padding: app.get_scaled_tuple([5.0, 5.0])
                         size: self.parent.size
                         pos: self.parent.pos
                         
@@ -100,7 +100,7 @@ Builder.load_string(
                             valign: 'middle'
                             halign: 'center'
                             text_size: self.size
-                            font_size: str(0.0375*app.width) + 'sp'
+                            font_size: app.get_scaled_sp('30.0sp')
 """
 )
 

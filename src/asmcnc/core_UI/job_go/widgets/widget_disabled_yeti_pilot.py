@@ -24,20 +24,20 @@ Builder.load_string(
         orientation: 'horizontal'
         size: self.parent.size
         pos: self.parent.pos
-        padding:[dp(0.0125)*app.width, dp(0.0166666666667)*app.height, dp(0.0125)*app.width, dp(0.0166666666667)*app.height]
+        padding: app.get_scaled_tuple([10.0, 8.0, 10.0, 8.0])
 
         BoxLayout:
             id: text_container
             size_hint_x: 0.85
             orientation: 'vertical'
-            padding:[dp(0.0025)*app.width, 0, dp(0.00625)*app.width, 0]
+            padding: app.get_scaled_tuple([2.0, 0, 5.0, 0])
             spacing: 0
 
             ScrollView:
                 do_scroll_x: False
                 do_scroll_y: True
                 scroll_y: 1
-                bar_width: 0.005*app.width
+                bar_width: app.get_scaled_width(4.0)
                 bar_inactive_color: [.7, .7, .7, .7]
 
                 Label:
@@ -48,7 +48,7 @@ Builder.load_string(
                     halign: 'left'
                     height: self.texture_size[1]
                     text_size: self.width - dp(3.0/800.0)*app.width, None
-                    font_size: str(0.01875*app.width) + 'sp'
+                    font_size: app.get_scaled_sp('15.0sp')
                     valign: "middle"
                     max_lines: 60
 
@@ -57,7 +57,7 @@ Builder.load_string(
             size_hint_x: 0.15
 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 id: health_check_button
                 size_hint_x: 1
                 disabled: False

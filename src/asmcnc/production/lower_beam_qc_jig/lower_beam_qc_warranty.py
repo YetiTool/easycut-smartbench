@@ -46,7 +46,7 @@ Builder.load_string("""
 						text_size: self.size
 						halign: 'left'
 						valign: 'middle'
-						padding: [dp(10),0]
+						padding: app.get_scaled_tuple([10, 0])
 						on_press: root.disable_alarms()
 
 					GridLayout:
@@ -56,7 +56,7 @@ Builder.load_string("""
 							text_size: self.size
 							halign: 'left'
 							valign: 'middle'
-							padding: [dp(10),0]
+							padding: app.get_scaled_tuple([10, 0])
 						Image:
 							id: y_max_check
 							source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
@@ -72,7 +72,7 @@ Builder.load_string("""
 							text_size: self.size
 							halign: 'left'
 							valign: 'middle'
-							padding: [dp(10),0]
+							padding: app.get_scaled_tuple([10, 0])
 						Image:
 							id: y_home_check
 							source: "./asmcnc/skavaUI/img/checkbox_inactive.png"
@@ -86,7 +86,7 @@ Builder.load_string("""
 						text_size: self.size
 						halign: 'left'
 						valign: 'middle'
-						padding: [dp(10),0]
+						padding: app.get_scaled_tuple([10, 0])
 						on_press: root.enable_alarms()
 
 					GridLayout:
@@ -97,7 +97,7 @@ Builder.load_string("""
 							text_size: self.size
 							halign: 'left'
 							valign: 'middle'
-							padding: [dp(10),0]
+							padding: app.get_scaled_tuple([10, 0])
 							on_press: root.set_vac()
 
 						ToggleButton:
@@ -106,7 +106,7 @@ Builder.load_string("""
 							text_size: self.size
 							halign: 'left'
 							valign: 'middle'
-							padding: [dp(10),0]
+							padding: app.get_scaled_tuple([10, 0])
 							on_press: root.set_spindle()
 
 				# COLUMN 2
@@ -128,20 +128,20 @@ Builder.load_string("""
 								id: xy_move_container
 								size_hint: (None,None)
 								pos_hint: {'center_x': .5, 'center_y': .5}
-								height: dp(270)
-								width: dp(270)
+								height: app.get_scaled_height(270)
+								width: app.get_scaled_width(270)
 
 						BoxLayout:
 							orientation: 'vertical'
 							size_hint_x: 0.25
-							padding: [0,0,0,dp(150)]
+							padding: app.get_scaled_tuple([0, 0, 0, 150])
 
 							Button:
 								text: 'OFF'
 								text_size: self.size
 								halign: 'left'
 								valign: 'middle'
-								padding: [dp(10),0]
+								padding: app.get_scaled_tuple([10, 0])
 								on_press: console_utils.shutdown()
 
 							ToggleButton:
@@ -150,7 +150,7 @@ Builder.load_string("""
 								text_size: self.size
 								halign: 'left'
 								valign: 'middle'
-								padding: [dp(10),0]
+								padding: app.get_scaled_tuple([10, 0])
 								on_press: root.switch_screen()
 
 					Button:
@@ -158,7 +158,7 @@ Builder.load_string("""
 						markup: 'True'
 						halign: 'center'
 						valign: 'middle'
-						padding: [dp(10),0]
+						padding: app.get_scaled_tuple([10, 0])
 						text: 'STOP'
 						background_color: [1,0,0,1]
 						background_normal: ''

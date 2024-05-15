@@ -20,28 +20,28 @@ Builder.load_string("""
             markup: 'True'
             halign: 'left'
             valign: 'middle'
-            padding: [dp(10),0]
+            padding: app.get_scaled_tuple([10, 0])
             size_hint_y: 0.2
             size_hint_x: 0.5
-            font_size: dp(20)
+            font_size: app.get_scaled_width(20)
 
         BoxLayout: 
             orientation: "vertical"
-            spacing: dp(10)
+            spacing: app.get_scaled_width(10)
 
             Label:
                 text: 'ENSURE COVER ON'
-                font_size: dp(50)
+                font_size: app.get_scaled_width(50)
 
             Label:
                 id: user_text
                 text: "Getting ready..."
-                font_size: dp(50)
+                font_size: app.get_scaled_width(50)
             
             Label:
                 id: calibrate_time
                 text: root.formatted_max
-                font_size: dp(50)
+                font_size: app.get_scaled_width(50)
 
 """)
 

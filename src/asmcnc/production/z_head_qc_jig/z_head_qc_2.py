@@ -37,7 +37,7 @@ Builder.load_string("""
                     markup: 'True'
                     halign: 'left'
                     valign: 'middle'
-                    padding: [dp(10),0]
+                    padding: app.get_scaled_tuple([10, 0])
 
                 GridLayout:
                     cols: 2
@@ -48,7 +48,7 @@ Builder.load_string("""
                         markup: 'True'
                         halign: 'left'
                         valign: 'middle'
-                        padding: [dp(10),0]
+                        padding: app.get_scaled_tuple([10, 0])
                         on_press: root.run_digital_spindle_test()
 
                     Image:
@@ -64,7 +64,7 @@ Builder.load_string("""
                     markup: 'True'
                     halign: 'center'
                     valign: 'middle'
-                    padding: [dp(10),0]
+                    padding: app.get_scaled_tuple([10, 0])
                     text: 'STOP'
                     background_color: [1,0,0,1]
                     background_normal: ''
@@ -79,7 +79,7 @@ Builder.load_string("""
                         markup: 'True'
                         halign: 'left'
                         valign: 'middle'
-                        padding: [dp(10),0]
+                        padding: app.get_scaled_tuple([10, 0])
 
                     Image:
                         id: probe_check
@@ -95,7 +95,7 @@ Builder.load_string("""
                     markup: 'True'
                     halign: 'left'
                     valign: 'middle'
-                    padding: [dp(10),0]
+                    padding: app.get_scaled_tuple([10, 0])
 
                 Label:
                     text: '25. Remove USB "spindle"'
@@ -103,7 +103,7 @@ Builder.load_string("""
                     markup: 'True'
                     halign: 'left'
                     valign: 'middle'
-                    padding: [dp(10),0]
+                    padding: app.get_scaled_tuple([10, 0])
 
                 Button:
                     text: '17. Enable alarms'
@@ -111,7 +111,7 @@ Builder.load_string("""
                     markup: 'True'
                     halign: 'left'
                     valign: 'middle'
-                    padding: [dp(10),0]
+                    padding: app.get_scaled_tuple([10, 0])
                     on_press: root.enable_alarms()
 
                 Label: 
@@ -120,7 +120,7 @@ Builder.load_string("""
                     markup: 'True'
                     halign: 'left'
                     valign: 'middle'
-                    padding: [dp(10),0]
+                    padding: app.get_scaled_tuple([10, 0])
 
                 Button:
                     text: '26. CONFIRM COVER ON: START AUTO-CALIBRATE'
@@ -128,7 +128,7 @@ Builder.load_string("""
                     markup: 'True'
                     halign: 'left'
                     valign: 'middle'
-                    padding: [dp(10),0]
+                    padding: app.get_scaled_tuple([10, 0])
                     on_press: root.enter_next_screen()
 
                 Button:
@@ -137,7 +137,7 @@ Builder.load_string("""
                     markup: 'True'
                     halign: 'left'
                     valign: 'middle'
-                    padding: [dp(10),0]
+                    padding: app.get_scaled_tuple([10, 0])
                     on_press: root.set_spindle_digital()
 
                 Button:
@@ -146,7 +146,7 @@ Builder.load_string("""
                     markup: 'True'
                     halign: 'left'
                     valign: 'middle'
-                    padding: [dp(10),0]
+                    padding: app.get_scaled_tuple([10, 0])
                     on_press: root.set_spindle_analogue()
 
                 Label
@@ -157,7 +157,7 @@ Builder.load_string("""
                     markup: 'True'
                     halign: 'left'
                     valign: 'middle'
-                    padding: [dp(10),0]
+                    padding: app.get_scaled_tuple([10, 0])
 
                 GridLayout:
                     cols: 2
@@ -168,7 +168,7 @@ Builder.load_string("""
                         markup: 'True'
                         halign: 'left'
                         valign: 'middle'
-                        padding: [dp(10),0]
+                        padding: app.get_scaled_tuple([10, 0])
                         on_press: root.run_analogue_spindle_check()
 
                     Image:

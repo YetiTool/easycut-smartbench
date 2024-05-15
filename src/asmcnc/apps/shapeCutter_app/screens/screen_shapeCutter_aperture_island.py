@@ -17,8 +17,8 @@ Builder.load_string(
     image_is: image_is
         
     BoxLayout:
-        height: dp(1.66666666667*app.height)
-        width: dp(0.6*app.width)
+        height: app.get_scaled_height(800.0)
+        width: app.get_scaled_width(480.0)
         canvas:
             Rectangle: 
                 pos: self.pos
@@ -34,14 +34,14 @@ Builder.load_string(
             
             BoxLayout: 
                 size_hint: (None, None) 
-                width: dp(1.0*app.width)
-                height: dp(0.1875*app.height)            
+                width: app.get_scaled_width(800.0)
+                height: app.get_scaled_height(90.0)
                 Label:
                     size_hint: (None,None)
-                    height: dp(0.1875*app.height)
-                    width: dp(1.0*app.width)
+                    height: app.get_scaled_height(90.0)
+                    width: app.get_scaled_width(800.0)
                     text: "Shape Cutter"
-                    font_size: 0.0375*app.width
+                    font_size: app.get_scaled_width(30.0)
                     halign: "center"
                     valign: "middle"
                     markup: True
@@ -52,49 +52,49 @@ Builder.load_string(
             
             BoxLayout: 
                 size_hint: (None, None) 
-                width: dp(1.0*app.width)
-                height: dp(0.6875*app.height)
+                width: app.get_scaled_width(800.0)
+                height: app.get_scaled_height(330.0)
                 orientation: "vertical"
                     
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(1.0*app.width)
-                    height: dp(0.177083333333*app.height)
-                    padding:[0, dp(0.0208333333333)*app.height, 0, 0]
+                    width: app.get_scaled_width(800.0)
+                    height: app.get_scaled_height(85.0)
+                    padding: app.get_scaled_tuple([0, 10.0, 0, 0])
                     spacing: 0
                     Label:
                         size_hint: (None,None)
-                        height: dp(0.15625*app.height)
-                        width: dp(1.0*app.width)
+                        height: app.get_scaled_height(75.0)
+                        width: app.get_scaled_width(800.0)
                         halign: "center"
                         valign: "bottom"
                         text: "Select a shape to define..."
                         color: 0,0,0,1
-                        font_size: 0.0325*app.width
+                        font_size: app.get_scaled_width(26.0)
                         markup: True
     
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(1.0*app.width)
-                    height: dp(0.46875*app.height)
-                    padding:[dp(0.1875)*app.width, 0, dp(0.1875)*app.width, 0]
+                    width: app.get_scaled_width(800.0)
+                    height: app.get_scaled_height(225.0)
+                    padding: app.get_scaled_tuple([150.0, 0, 150.0, 0])
                     spacing: 0
                     orientation: 'horizontal'
                     pos: self.parent.pos                
                     
                     BoxLayout:
                         size_hint: (None,None)
-                        width: dp(0.3125*app.width)
-                        height: dp(0.46875*app.height)
-                        padding:[dp(0.02875)*app.width, 0, dp(0.025)*app.width, 0]
+                        width: app.get_scaled_width(250.0)
+                        height: app.get_scaled_height(225.0)
+                        padding: app.get_scaled_tuple([23.0, 0, 20.0, 0])
                         pos: self.parent.pos
                         
                         # aperture
                         Button:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: app.get_scaled_sp('15.0sp')
                             size_hint: (None,None)
-                            height: dp(0.46875*app.height)
-                            width: dp(0.25875*app.width)
+                            height: app.get_scaled_height(225.0)
+                            width: app.get_scaled_width(207.0)
                             background_color: hex('#F4433600')
                             center: self.parent.center
                             pos: self.parent.pos
@@ -112,17 +112,17 @@ Builder.load_string(
                                     allow_stretch: True
                     BoxLayout:
                         size_hint: (None,None)
-                        width: dp(0.3125*app.width)
-                        height: dp(0.46875*app.height)
-                        padding:[dp(0.025)*app.width, 0, dp(0.02875)*app.width, 0]
+                        width: app.get_scaled_width(250.0)
+                        height: app.get_scaled_height(225.0)
+                        padding: app.get_scaled_tuple([20.0, 0, 23.0, 0])
                         pos: self.parent.pos
                         
                         # island
                         Button:
-                            font_size: str(0.01875 * app.width) + 'sp'
+                            font_size: app.get_scaled_sp('15.0sp')
                             size_hint: (None,None)
-                            height: dp(0.46875*app.height)
-                            width: dp(0.25875*app.width)
+                            height: app.get_scaled_height(225.0)
+                            width: app.get_scaled_width(207.0)
                             background_color: hex('#F4433600')
                             center: self.parent.center
                             pos: self.parent.pos
@@ -140,60 +140,60 @@ Builder.load_string(
                                     allow_stretch: True  
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(1.0*app.width)
-                    height: dp(0.0416666666667*app.height)
-                    padding:[dp(0.1875)*app.width, 0, dp(0.1875)*app.width, 0]
+                    width: app.get_scaled_width(800.0)
+                    height: app.get_scaled_height(20.0)
+                    padding: app.get_scaled_tuple([150.0, 0, 150.0, 0])
                     spacing: 0
                     orientation: 'horizontal'
                     pos: self.parent.pos
                     BoxLayout:
                         size_hint: (None,None)
-                        width: dp(0.3125*app.width)
-                        height: dp(0.0416666666667*app.height)
-                        padding:[dp(0.02875)*app.width, 0, dp(0.025)*app.width, 0]
+                        width: app.get_scaled_width(250.0)
+                        height: app.get_scaled_height(20.0)
+                        padding: app.get_scaled_tuple([23.0, 0, 20.0, 0])
                         pos: self.parent.pos
                         Label:
                             size_hint: (None,None)
-                            height: dp(0.0416666666667*app.height)
-                            width: dp(0.25875*app.width)
+                            height: app.get_scaled_height(20.0)
+                            width: app.get_scaled_width(207.0)
                             halign: "center"
                             valign: "middle"
                             text: "Hole (cut an aperture)"
                             color: 0,0,0,1
-                            font_size: 0.025*app.width
+                            font_size: app.get_scaled_width(20.0)
                             markup: True
                     BoxLayout:
                         size_hint: (None,None)
-                        width: dp(0.3125*app.width)
-                        height: dp(0.0416666666667*app.height)
-                        padding:[dp(0.025)*app.width, 0, dp(0.02875)*app.width, 0]
+                        width: app.get_scaled_width(250.0)
+                        height: app.get_scaled_height(20.0)
+                        padding: app.get_scaled_tuple([20.0, 0, 23.0, 0])
                         pos: self.parent.pos
                         Label:
                             size_hint: (None,None)
-                            height: dp(0.0416666666667*app.height)
-                            width: dp(0.25875*app.width)
+                            height: app.get_scaled_height(20.0)
+                            width: app.get_scaled_width(207.0)
                             halign: "center"
                             valign: "middle"
                             text: "Plate (cut an island)"
                             color: 0,0,0,1
-                            font_size: 0.025*app.width
+                            font_size: app.get_scaled_width(20.0)
                             markup: True
                             
             # Info button
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.0*app.width)
-                height: dp(0.125*app.height)
-                padding:[dp(0.025)*app.width, 0, 0, dp(0.0416666666667)*app.height]
-                spacing:0.85*app.width
+                width: app.get_scaled_width(800.0)
+                height: app.get_scaled_height(60.0)
+                padding: app.get_scaled_tuple([20.0, 0, 0, 20.0])
+                spacing: app.get_scaled_width(680.0)
                 orientation: 'horizontal'
                 pos: self.parent.pos
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: app.get_scaled_sp('15.0sp')
                     id: info_button
                     size_hint: (None,None)
-                    height: dp(0.0833333333333*app.height)
-                    width: dp(0.05*app.width)
+                    height: app.get_scaled_height(40.0)
+                    width: app.get_scaled_width(40.0)
                     background_color: hex('#F4433600')
                     opacity: 0
 #                     on_press: root.get_info()
@@ -209,11 +209,11 @@ Builder.load_string(
 #                             allow_stretch: True
 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: app.get_scaled_sp('15.0sp')
                     id: exit_button
                     size_hint: (None,None)
-                    height: dp(0.0833333333333*app.height)
-                    width: dp(0.05*app.width)
+                    height: app.get_scaled_height(40.0)
+                    width: app.get_scaled_width(40.0)
                     background_color: hex('#F4433600')
                     opacity: 1
                     on_press: root.exit()

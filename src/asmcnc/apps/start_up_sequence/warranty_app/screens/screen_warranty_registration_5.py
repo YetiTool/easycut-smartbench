@@ -22,8 +22,8 @@ Builder.load_string(
 
 	BoxLayout: 
 		size_hint: (None,None)
-		width: dp(1.0*app.width)
-		height: dp(1.0*app.height)
+		width: app.get_scaled_width(800.0)
+		height: app.get_scaled_height(480.0)
 		orientation: 'vertical'
 		canvas:
 			Color:
@@ -49,11 +49,11 @@ Builder.load_string(
 				Label:
 					id: title_label
 					size_hint: (None,None)
-					height: dp(0.125*app.height)
-					width: dp(1.0*app.width)
+					height: app.get_scaled_height(60.0)
+					width: app.get_scaled_width(800.0)
 					color: hex('#f9f9f9ff')
 					# color: hex('#333333ff') #grey
-					font_size: dp(0.0375*app.width)
+					font_size: app.get_scaled_width(30.0)
 					halign: "center"
 					valign: "bottom"
 					markup: True
@@ -61,14 +61,14 @@ Builder.load_string(
 			# BODY
 			BoxLayout:
 				size_hint: (None,None)
-				width: dp(1.0*app.width)
-				height: dp(0.620833333333*app.height)
-				padding:[dp(0.0375)*app.width, dp(0.0208333333333)*app.height]
+				width: app.get_scaled_width(800.0)
+				height: app.get_scaled_height(298.0)
+				padding: app.get_scaled_tuple([30.0, 10.0])
 				orientation: 'vertical'
 				
 				Label:
 					id: cnc_academy_info
-					font_size: str(0.0375*app.width) + 'sp'
+					font_size: app.get_scaled_sp('30.0sp')
 					text_size: self.size
 					valign: 'bottom'
 					halign: 'center'
@@ -78,16 +78,16 @@ Builder.load_string(
 
 				BoxLayout:
 					orientation: 'horizontal'
-					width: dp(1.0*app.width)
-					height: dp(0.416666666667*app.height)
-					padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height, dp(0.025)*app.width, 0]
+					width: app.get_scaled_width(800.0)
+					height: app.get_scaled_height(200.0)
+					padding: app.get_scaled_tuple([20.0, 20.0, 20.0, 0])
 					size_hint: (None,None)
 					spacing: 0
 					BoxLayout:
 						id: qr_code_container
-						padding:[dp(0.0125)*app.width, 0, 0, 0]
-						# width: dp(162)
-						# height: dp(180)
+						padding: app.get_scaled_tuple([10.0, 0, 0, 0])
+						# width: app.get_scaled_width(162)
+						# height: app.get_scaled_height(180)
 						# size_hint: (None,None)
 						size_hint_x: 0.21
 						Image:
@@ -103,7 +103,7 @@ Builder.load_string(
 						BoxLayout:
 							id: cnc_academy_logo_container
 							size_hint_y: 0.75
-							padding:[dp(0.0125)*app.width, dp(0.00416666666667)*app.height, dp(0.0125)*app.width, 0]
+							padding: app.get_scaled_tuple([10.0, 2.0, 10.0, 0])
 
 							Image:
 								id: cnc_academy_logo
@@ -115,7 +115,7 @@ Builder.load_string(
 						Label:
 							id: url_label
 							size_hint_y: 0.25
-							font_size: str(0.03125*app.width) + 'sp'
+							font_size: app.get_scaled_sp('25.0sp')
 							text_size: self.size
 							valign: 'top'
 							halign: 'center'
@@ -124,21 +124,21 @@ Builder.load_string(
 							color: hex('#333333ff')
 			# FOOTER
 			BoxLayout: 
-				padding:[dp(0.0125)*app.width, 0, dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+				padding: app.get_scaled_tuple([10.0, 0, 10.0, 10.0])
 				size_hint: (None, None)
-				height: dp(0.254166666667*app.height)
-				width: dp(1.0*app.width)
+				height: app.get_scaled_height(122.0)
+				width: app.get_scaled_width(800.0)
 				orientation: 'horizontal'
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(0.254166666667*app.height)
-					width: dp(0.305625*app.width)
-					padding:[0, 0, dp(0.230625)*app.width, 0]
+					height: app.get_scaled_height(122.0)
+					width: app.get_scaled_width(244.5)
+					padding: app.get_scaled_tuple([0, 0, 184.5, 0])
 					Button:
-					    font_size: str(0.01875 * app.width) + 'sp'
+					    font_size: app.get_scaled_sp('15.0sp')
 						size_hint: (None,None)
-						height: dp(0.108333333333*app.height)
-						width: dp(0.075*app.width)
+						height: app.get_scaled_height(52.0)
+						width: app.get_scaled_width(60.0)
 						background_color: hex('#F4433600')
 						center: self.parent.center
 						pos: self.parent.pos
@@ -156,29 +156,29 @@ Builder.load_string(
 
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(0.254166666667*app.height)
-					width: dp(0.36375*app.width)
-					padding:[0, 0, 0, dp(0.0666666666667)*app.height]
+					height: app.get_scaled_height(122.0)
+					width: app.get_scaled_width(291.0)
+					padding: app.get_scaled_tuple([0, 0, 0, 32.0])
 					Button:
 						id: next_button
 						background_normal: "./asmcnc/skavaUI/img/next.png"
 						background_down: "./asmcnc/skavaUI/img/next.png"
-						border: [dp(14.5)]*4
+						border: app.get_scaled_tuple([14.5, 14.5, 14.5, 14.5])
 						size_hint: (None,None)
-						width: dp(0.36375*app.width)
-						height: dp(0.164583333333*app.height)
+						width: app.get_scaled_width(291.0)
+						height: app.get_scaled_height(79.0)
 						on_press: root.next_screen()
 						text: 'Next...'
-						font_size: str(0.0375*app.width) + 'sp'
+						font_size: app.get_scaled_sp('30.0sp')
 						color: hex('#f9f9f9ff')
 						markup: True
 						center: self.parent.center
 						pos: self.parent.pos
 				BoxLayout: 
 					size_hint: (None, None)
-					height: dp(0.254166666667*app.height)
-					width: dp(0.305625*app.width)
-					padding:[dp(0.241875)*app.width, 0, 0, 0]
+					height: app.get_scaled_height(122.0)
+					width: app.get_scaled_width(244.5)
+					padding: app.get_scaled_tuple([193.5, 0, 0, 0])
 """
 )
 

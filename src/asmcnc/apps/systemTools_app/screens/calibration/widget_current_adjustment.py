@@ -22,7 +22,7 @@ Builder.load_string("""
             on_press: root.current_up()
             background_color: 1, 1, 1, 0 
             BoxLayout:
-                padding: 2
+                padding: app.get_scaled_width(2)
                 size: self.parent.size
                 pos: self.parent.pos      
                 Image:
@@ -38,7 +38,7 @@ Builder.load_string("""
         TextInput:
             id: current_current_label
             markup: True
-            font_size: "30sp"
+            font_size: app.get_scaled_sp('30sp')
             on_text_validate: root.set_current(self.text)
             input_filter: 'int'
             multiline: False
@@ -47,7 +47,7 @@ Builder.load_string("""
             on_press: root.current_down()
             background_color: 1, 1, 1, 0 
             BoxLayout:
-                padding: 2
+                padding: app.get_scaled_width(2)
                 size: self.parent.size
                 pos: self.parent.pos      
                 Image:

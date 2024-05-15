@@ -32,17 +32,17 @@ Builder.load_string(
              
     BoxLayout:
         orientation: 'vertical'
-        padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
+        padding: app.get_scaled_tuple([20.0, 20.0])
         spacing: 0
 
         BoxLayout:
             orientation: 'horizontal'
-            padding:[0, 0]
-            spacing:0.025*app.width
+            padding: app.get_scaled_tuple([0, 0])
+            spacing: app.get_scaled_width(20.0)
             size_hint_y: 0.2
         
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 size_hint_y:0.9
                 id: getout_button
                 size: self.texture_size
@@ -55,17 +55,17 @@ Builder.load_string(
                     root.repeat_section()
                     
                 BoxLayout:
-                    padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                    padding: app.get_scaled_tuple([5.0, 5.0])
                     size: self.parent.size
                     pos: self.parent.pos
                     
                     Label:
-                        font_size: str(0.025*app.width) + 'sp'
+                        font_size: app.get_scaled_sp('20.0sp')
                         text: '[color=455A64]Go Back[/color]'
                         markup: True
 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 size_hint_y:0.9
                 id: getout_button
                 size: self.texture_size
@@ -78,17 +78,17 @@ Builder.load_string(
                     root.skip_section()
                     
                 BoxLayout:
-                    padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                    padding: app.get_scaled_tuple([5.0, 5.0])
                     size: self.parent.size
                     pos: self.parent.pos
                     
                     Label:
-                        font_size: str(0.025*app.width) + 'sp'
+                        font_size: app.get_scaled_sp('20.0sp')
                         text: '[color=455A64]Skip section[/color]'
                         markup: True
                         
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 size_hint_y:0.9
                 id: getout_button
                 size: self.texture_size
@@ -101,19 +101,19 @@ Builder.load_string(
                     root.quit_calibration()
                     
                 BoxLayout:
-                    padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                    padding: app.get_scaled_tuple([5.0, 5.0])
                     size: self.parent.size
                     pos: self.parent.pos
                     
                     Label:
-                        font_size: str(0.025*app.width) + 'sp'
+                        font_size: app.get_scaled_sp('20.0sp')
                         text: '[color=455A64]Quit calibration[/color]'
                         markup: True
 
         BoxLayout:
             orientation: 'horizontal'
-            spacing:0.0416666666667*app.height
-            padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+            spacing: app.get_scaled_width(20.0)
+            padding: app.get_scaled_tuple([10.0, 10.0])
 
             BoxLayout:
                 orientation: 'vertical'
@@ -123,7 +123,7 @@ Builder.load_string(
                 Label:
                     id: title_label
                     size_hint_y: 0.3
-                    font_size: str(0.04375*app.width) + 'sp'
+                    font_size: app.get_scaled_sp('35.0sp')
                     text_size: self.size
                     halign: 'left'
                     valign: 'middle'
@@ -139,15 +139,15 @@ Builder.load_string(
                     RstDocument:
                         id: user_instructions_text
                         background_color: hex('#FFFFFF')
-                        base_font_size: str(31.0/800.0*app.width) + 'sp'
+                        base_font_size: app.get_scaled_sp('31.0sp')
                         
                 BoxLayout: 
                     orientation: 'horizontal' 
-                    padding:[dp(0.0375)*app.width, dp(0.0625)*app.height]
-                    spacing:0.0125*app.width
+                    padding: app.get_scaled_tuple([30.0, 30.0])
+                    spacing: app.get_scaled_width(10.0)
                     
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         size_hint_y:0.9
                         size: self.texture_size
                         valign: 'top'
@@ -159,19 +159,19 @@ Builder.load_string(
                             root.left_button()
                             
                         BoxLayout:
-                            padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                            padding: app.get_scaled_tuple([5.0, 5.0])
                             size: self.parent.size
                             pos: self.parent.pos
                             
                             Label:
                                 id: improve_button_label
                                 #size_hint_y: 1
-                                font_size: str(0.025*app.width) + 'sp'
+                                font_size: app.get_scaled_sp('20.0sp')
                                 text: '[color=455A64]I want to try to improve the result[/color]'
                                 markup: True
 
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         size_hint_y:0.9
 
                         valign: 'top'
@@ -183,7 +183,7 @@ Builder.load_string(
                             root.right_button()
                             
                         BoxLayout:
-                            padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                            padding: app.get_scaled_tuple([5.0, 5.0])
                             size: self.parent.size
                             pos: self.parent.pos
                             
@@ -191,7 +191,7 @@ Builder.load_string(
                                 id: continue_button_label
                                 text_size: self.size
                                 text: '[color=455A64]Ok, it measures as expected. Move to the next section.[/color]'
-                                font_size: str(0.0225*app.width) + 'sp'
+                                font_size: app.get_scaled_sp('18.0sp')
                                 valign: 'middle'
                                 halign: 'center'
                                 markup: True   

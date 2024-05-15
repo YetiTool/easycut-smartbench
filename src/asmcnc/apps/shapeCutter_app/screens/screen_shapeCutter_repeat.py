@@ -14,8 +14,8 @@ Builder.load_string(
 <ShapeCutterRepeatScreenClass>:
     
     BoxLayout:
-        height: dp(1.66666666667*app.height)
-        width: dp(0.6*app.width)
+        height: app.get_scaled_height(800.0)
+        width: app.get_scaled_width(480.0)
         canvas:
             Rectangle: 
                 pos: self.pos
@@ -29,10 +29,10 @@ Builder.load_string(
                 
             Label:
                 size_hint: (None,None)
-                height: dp(0.1875*app.height)
-                width: dp(1.0*app.width)
+                height: app.get_scaled_height(90.0)
+                width: app.get_scaled_width(800.0)
                 text: "Would you like to do this again?"
-                font_size: 0.0375*app.width
+                font_size: app.get_scaled_width(30.0)
                 halign: "center"
                 valign: "bottom"
                 markup: True
@@ -40,43 +40,43 @@ Builder.load_string(
                     
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.0*app.width)
-                height: dp(0.291666666667*app.height)
+                width: app.get_scaled_width(800.0)
+                height: app.get_scaled_height(140.0)
                 padding: 0
                 spacing: 0
                 Label:
                     size_hint: (None,None)
-                    height: dp(0.354166666667*app.height)
-                    width: dp(1.0*app.width)
+                    height: app.get_scaled_height(170.0)
+                    width: app.get_scaled_width(800.0)
                     halign: "center"
                     valign: "middle"
                     text: ""
                     color: 0,0,0,1
-                    font_size: 0.0325*app.width
+                    font_size: app.get_scaled_width(26.0)
                     markup: True
 
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.0*app.width)
-                height: dp(0.354166666667*app.height)
-                padding:[dp(0.125)*app.width, 0, dp(0.125)*app.width, dp(0.0625)*app.height]
+                width: app.get_scaled_width(800.0)
+                height: app.get_scaled_height(170.0)
+                padding: app.get_scaled_tuple([100.0, 0, 100.0, 30.0])
                 spacing: 0
                 orientation: 'horizontal'
                 pos: self.parent.pos                
                 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.25*app.width)
-                    height: dp(0.35625*app.height)
-                    padding:[dp(0.02)*app.width, 0, dp(0.02)*app.width, 0]
+                    width: app.get_scaled_width(200.0)
+                    height: app.get_scaled_height(171.0)
+                    padding: app.get_scaled_tuple([16.0, 0, 16.0, 0])
                     pos: self.parent.pos
                     
                     # Repeat
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         size_hint: (None,None)
-                        height: dp(0.35625*app.height)
-                        width: dp(0.21*app.width)
+                        height: app.get_scaled_height(171.0)
+                        width: app.get_scaled_width(168.0)
                         background_color: hex('#F4433600')
                         center: self.parent.center
                         pos: self.parent.pos
@@ -93,17 +93,17 @@ Builder.load_string(
                                 allow_stretch: True
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.25*app.width)
-                    height: dp(0.35625*app.height)
-                    padding:[dp(0.02)*app.width, 0, dp(0.02)*app.width, 0]
+                    width: app.get_scaled_width(200.0)
+                    height: app.get_scaled_height(171.0)
+                    padding: app.get_scaled_tuple([16.0, 0, 16.0, 0])
                     pos: self.parent.pos
                     
                     # New
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         size_hint: (None,None)
-                        height: dp(0.35625*app.height)
-                        width: dp(0.21*app.width)
+                        height: app.get_scaled_height(171.0)
+                        width: app.get_scaled_width(168.0)
                         background_color: hex('#F4433600')
                         center: self.parent.center
                         pos: self.parent.pos
@@ -120,17 +120,17 @@ Builder.load_string(
                                 allow_stretch: True
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(0.25*app.width)
-                    height: dp(0.35625*app.height)
-                    padding:[dp(0.02)*app.width, 0, dp(0.02)*app.width, 0]
+                    width: app.get_scaled_width(200.0)
+                    height: app.get_scaled_height(171.0)
+                    padding: app.get_scaled_tuple([16.0, 0, 16.0, 0])
                     pos: self.parent.pos
                     
                     # Next
                     Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
+                        font_size: app.get_scaled_sp('15.0sp')
                         size_hint: (None,None)
-                        height: dp(0.35625*app.height)
-                        width: dp(0.21*app.width)
+                        height: app.get_scaled_height(171.0)
+                        width: app.get_scaled_width(168.0)
                         background_color: hex('#F4433600')
                         center: self.parent.center
                         pos: self.parent.pos
@@ -147,9 +147,9 @@ Builder.load_string(
                                 allow_stretch: True  
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(1.0*app.width)
-                height: dp(0.166666666667*app.height)
-                padding:[dp(0.925)*app.width, 0, 0, dp(0.0416666666667)*app.height]
+                width: app.get_scaled_width(800.0)
+                height: app.get_scaled_height(80.0)
+                padding: app.get_scaled_tuple([740.0, 0, 0, 20.0])
                 spacing: 0
                 orientation: 'horizontal'
                 pos: self.parent.pos

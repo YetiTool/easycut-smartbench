@@ -36,13 +36,13 @@ Builder.load_string(
             halign: "center" 
             valign: "middle"
             color: 0, 0, 0, 1
-            font_size: str(0.0275*app.width) + 'sp'
+            font_size: app.get_scaled_sp('22.0sp')
             size_hint_y: 0.3
 
         BoxLayout:
             orientation: 'horizontal'
             size_hint_y: 0.2
-            padding:[dp(0.01875)*app.width, 0]
+            padding: app.get_scaled_tuple([15.0, 0])
 
             Label: 
                 id: min_label
@@ -51,7 +51,7 @@ Builder.load_string(
                 halign: "center" 
                 valign: "middle"
                 size_hint_x: 0.1
-                font_size: str(0.0175*app.width) + 'sp'
+                font_size: app.get_scaled_sp('14.000000000000002sp')
 
             Slider:
                 id: power_slider
@@ -67,14 +67,14 @@ Builder.load_string(
                 halign: "center" 
                 valign: "middle"
                 size_hint_x: 0.1
-                font_size: str(0.0175*app.width) + 'sp'
+                font_size: app.get_scaled_sp('14.000000000000002sp')
 
         BoxLayout:
             id: button_container
             size_hint_y: 0.5
             orientation: 'horizontal'
-            spacing:0.00625*app.width
-            padding:[dp(0.00625)*app.width, dp(0.03125)*app.height, dp(0.00625)*app.width, dp(0.0416666666667)*app.height]
+            spacing: app.get_scaled_width(5.0)
+            padding: app.get_scaled_tuple([5.0, 15.0, 5.0, 20.0])
             # buttons made in init
 
                 

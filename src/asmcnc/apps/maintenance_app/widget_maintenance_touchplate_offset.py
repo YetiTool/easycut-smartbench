@@ -17,17 +17,17 @@ Builder.load_string("""
     
     BoxLayout:
         size_hint: (None, None)
-        height: dp(0.270833333333*app.height)
-        width: dp(0.725*app.width)
+        height: app.get_scaled_height(130.0)
+        width: app.get_scaled_width(580.0)
         pos: self.parent.pos
         orientation: 'vertical'
-        padding:[dp(0.01875)*app.width, dp(0.03125)*app.height]
-        spacing:0.0208333333333*app.height
+        padding: app.get_scaled_tuple([15.0, 15.0])
+        spacing: app.get_scaled_width(10.0)
 
         LabelBase:
             id: touchplate_offset_label
             color: 0,0,0,1
-            font_size: dp(0.03*app.width)
+            font_size: app.get_scaled_width(24.0)
             markup: True
             halign: "left"
             valign: "middle"
@@ -36,18 +36,18 @@ Builder.load_string("""
 
         BoxLayout: 
             orientation: 'horizontal'
-            padding:[0, dp(0.0104166666667)*app.height, 0, 0]
-            spacing:0.0375*app.width
+            padding: app.get_scaled_tuple([0, 5.0, 0, 0])
+            spacing: app.get_scaled_width(30.0)
             size_hint: (None, None)
-            height: dp(0.125*app.height)
-            width: dp(0.725*app.width) 
+            height: app.get_scaled_height(60.0)
+            width: app.get_scaled_width(580.0)
 
             # Put the image here
             BoxLayout: 
                 size_hint: (None, None)
                 # pos: self.parent.pos
-                height: dp(0.125*app.height)
-                width: dp(0.18125*app.width)
+                height: app.get_scaled_height(60.0)
+                width: app.get_scaled_width(145.0)
 
                 Image:
                     id: touchplate_image
@@ -61,15 +61,15 @@ Builder.load_string("""
             TextInput:
                 id: touchplate_offset
                 size_hint: (None, None)
-                height: dp(0.104166666667*app.height)
-                width: dp(0.15*app.width)
-                font_size: dp(0.035*app.width)
+                height: app.get_scaled_height(50.0)
+                width: app.get_scaled_width(120.0)
+                font_size: app.get_scaled_width(28.0)
                 input_filter: 'float'
                 multiline: False
 
             LabelBase: 
                 color: 0,0,0,1
-                font_size: dp(0.035*app.width)
+                font_size: app.get_scaled_width(28.0)
                 markup: True
                 halign: "left"
                 valign: "middle"

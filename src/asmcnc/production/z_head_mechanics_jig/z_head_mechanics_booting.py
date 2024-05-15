@@ -13,7 +13,7 @@ Builder.load_string("""
 
     Label:
         text: 'Booting...'
-        font_size: dp(40)
+        font_size: app.get_scaled_width(40)
 
 """)
 

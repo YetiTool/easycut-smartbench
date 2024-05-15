@@ -34,14 +34,14 @@ Builder.load_string(
         BoxLayout:
             size_hint_y: None
             height: self.width
-            padding:[dp(0.1)*app.width, dp(0.125)*app.height, dp(0.05)*app.width, dp(0.125)*app.height]
+            padding: app.get_scaled_tuple([80.0, 60.0, 40.0, 60.0])
             ToggleButton:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 id: speed_toggle
                 on_press: root.set_jog_speeds()
                 background_color: 1, 1, 1, 0 
                 BoxLayout:
-                    padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                    padding: app.get_scaled_tuple([10.0, 10.0])
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
@@ -62,7 +62,7 @@ Builder.load_string(
 
 #             # go x datum
             BoxLayout:
-                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                padding: app.get_scaled_tuple([10.0, 10.0])
                 size: self.parent.size
                 pos: self.parent.pos                 
 #                 Button:
@@ -85,7 +85,7 @@ Builder.load_string(
 
 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 background_color: hex('#F4433600')
                 always_release: True
                 on_release: 
@@ -107,7 +107,7 @@ Builder.load_string(
 
 #             # go y datum
             BoxLayout:
-                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                padding: app.get_scaled_tuple([10.0, 10.0])
                 size: self.parent.size
                 pos: self.parent.pos                 
 #                 Button:
@@ -128,7 +128,7 @@ Builder.load_string(
 #                             allow_stretch: True  
                             
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 background_color: hex('#F4433600')
                 always_release: True
                 on_release: 
@@ -148,7 +148,7 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True                                    
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 background_color: hex('#F4433600')
                 on_release: 
                     self.background_color = hex('#F4433600')
@@ -167,7 +167,7 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True  
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 background_color: hex('#F4433600')
                 always_release: True
                 on_release: 
@@ -189,7 +189,7 @@ Builder.load_string(
 
 #             # set x datum
             BoxLayout:
-                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                padding: app.get_scaled_tuple([10.0, 10.0])
                 size: self.parent.size
                 pos: self.parent.pos                 
 #                 Button:
@@ -210,7 +210,7 @@ Builder.load_string(
 #                             allow_stretch: True               
 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 background_color: hex('#F4433600')
                 always_release: True
                 on_release:
@@ -231,7 +231,7 @@ Builder.load_string(
                         allow_stretch: True                                    
 
             BoxLayout:
-                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                padding: app.get_scaled_tuple([10.0, 10.0])
                 size: self.parent.size
                 pos: self.parent.pos 
 #                 ToggleButton:
@@ -239,7 +239,7 @@ Builder.load_string(
 #                     on_press: root.set_jog_speeds()
 #                     background_color: 1, 1, 1, 0 
 #                     BoxLayout:
-#                         padding: 10
+#                         padding: app.get_scaled_width(10)
 #                         size: self.parent.size
 #                         pos: self.parent.pos      
 #                         Image:
