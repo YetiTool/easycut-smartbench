@@ -23,10 +23,10 @@ Builder.load_string("""
 
     background_normal: ''
     background_color: [1,1,1,1]
-    height: dp(0.0833333333333*app.height)
+    height: app.get_scaled_height(40.0)
     color: 0,0,0,1
     halign: 'left'
-    font_size: str(15.0/800.0*app.width) + 'sp'
+    font_size: app.get_scaled_sp('15.0sp')
     markup: 'True'
 
 <SpindleSettingsWidget>
@@ -52,12 +52,12 @@ Builder.load_string("""
         orientation: 'vertical'
         pos: self.parent.pos
         size: self.parent.size
-        spacing:dp(0.03125)*app.height
+        spacing: app.get_scaled_width(15.0)
 
         BoxLayout:
             size_hint_y: 0.3
             orientation: 'horizontal'
-            padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+            padding: app.get_scaled_tuple([5.0, 5.0])
 
             canvas:
                 Color:
@@ -76,7 +76,7 @@ Builder.load_string("""
                 allow_stretch: True
 
             BoxLayout:
-                padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                padding: app.get_scaled_tuple([5.0, 5.0])
 
                 Spinner:
                     id: spindle_brand
@@ -84,7 +84,7 @@ Builder.load_string("""
                     valign: 'middle'
                     markup: True
                     text: 'spinner'
-                    font_size: str(0.0375*app.width) + 'sp'
+                    font_size: app.get_scaled_sp('30.0sp')
                     text_size: self.size
                     multiline: False
                     color: 0,0,0,1
@@ -98,16 +98,16 @@ Builder.load_string("""
             orientation: 'horizontal'
             pos: self.parent.pos
             size: self.parent.size
-            spacing:dp(0.0416666666667)*app.height
+            spacing: app.get_scaled_width(20.0)
 
             BoxLayout:
                 orientation: 'vertical'
-                spacing:dp(0.03125)*app.height
+                spacing: app.get_scaled_width(15.0)
 
                 BoxLayout:
                     size_hint_y: 2
                     orientation: 'vertical'
-                    padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                    padding: app.get_scaled_tuple([5.0, 5.0])
 
                     canvas:
                         Color:
@@ -120,7 +120,7 @@ Builder.load_string("""
                         id: cooldown_settings_label
                         size_hint_y: 0.5
                         color: 0,0,0,1
-                        font_size: dp(0.03*app.width)
+                        font_size: app.get_scaled_width(24.0)
                         halign: "left"
                         valign: "middle"
                         markup: True
@@ -130,7 +130,7 @@ Builder.load_string("""
                         orientation: 'horizontal'
 
                         BoxLayout:
-                            padding:[dp(0.01625)*app.width, dp(0.0270833333333)*app.height]
+                            padding: app.get_scaled_tuple([13.0, 13.0])
 
                             Image:
                                 id: spindle_image
@@ -151,7 +151,7 @@ Builder.load_string("""
                             id: rpm_label
                             size_hint_x: 1.5
                             color: 0,0,0,1
-                            font_size: dp(0.0275*app.width)
+                            font_size: app.get_scaled_width(22.0)
                             markup: True
                             halign: "center"
                             valign: "middle"
@@ -164,7 +164,7 @@ Builder.load_string("""
                         orientation: 'horizontal'
 
                         BoxLayout:
-                            padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                            padding: app.get_scaled_tuple([5.0, 5.0])
 
                             Image:
                                 id: countdown_image
@@ -187,7 +187,7 @@ Builder.load_string("""
                             id: seconds_label
                             size_hint_x: 1.5
                             color: 0,0,0,1
-                            font_size: dp(0.0275*app.width)
+                            font_size: app.get_scaled_width(22.0)
                             markup: True
                             halign: "center"
                             valign: "middle"
@@ -197,11 +197,11 @@ Builder.load_string("""
 
                 BoxLayout:
                     orientation: 'horizontal'
-                    spacing:dp(0.01875)*app.width
+                    spacing: app.get_scaled_width(15.0)
 
                     BoxLayout:
                         orientation: 'horizontal'
-                        padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                        padding: app.get_scaled_tuple([5.0, 5.0])
 
                         canvas:
                             Color:
@@ -219,12 +219,12 @@ Builder.load_string("""
                             allow_stretch: True
 
                         BoxLayout:
-                            padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height, 0, dp(0.0270833333333)*app.height]
+                            padding: app.get_scaled_tuple([10.0, 10.0, 0.0, 13.0])
 
                             BoxLayout:
                                 size_hint: (None,None)
-                                height: dp(0.075*app.height)
-                                width: dp(0.1875*app.width)
+                                height: app.get_scaled_height(36.0)
+                                width: app.get_scaled_width(150.0)
 
                                 Image:
                                     source: "./asmcnc/apps/maintenance_app/img/stylus_text_logo.png"
@@ -247,7 +247,7 @@ Builder.load_string("""
                         id: spindle_data_container
                         size_hint_x: 0.75
                         orientation: 'horizontal'
-                        padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                        padding: app.get_scaled_tuple([5.0, 5.0])
 
                         canvas:
                             Color:
@@ -259,7 +259,7 @@ Builder.load_string("""
                         LabelBase:
                             id: get_data_label
                             color: 0,0,0,1
-                            font_size: dp(0.03625*app.width)
+                            font_size: app.get_scaled_width(29.0)
                             halign: "center"
                             valign: "middle"
                             text_size: self.size
@@ -269,7 +269,7 @@ Builder.load_string("""
                             size_hint_x: 0.5
 
                             Button:
-                                font_size: str(0.01875 * app.width) + 'sp'
+                                font_size: app.get_scaled_sp('15.0sp')
                                 id: get_data_button
                                 on_press: root.show_spindle_data_popup()
                                 background_normal: ''
@@ -298,40 +298,40 @@ Builder.load_string("""
             x: cooldown_speed_slider.pos[0]
             y: cooldown_speed_slider.pos[1] - cooldown_speed_slider.size[1] * 0.1
             size_hint: None, None
-            height: dp(0.0625*app.height)
-            width: dp(0.0375*app.width)
+            height: app.get_scaled_height(30.0)
+            width: app.get_scaled_width(30.0)
             color: hex('#888888ff')
-            font_size: dp(0.01625*app.width)
+            font_size: app.get_scaled_width(13.0)
 
         LabelBase:
             id: max_speed_label
             x: cooldown_speed_slider.pos[0] + cooldown_speed_slider.size[0] * 0.9
             y: cooldown_speed_slider.pos[1] - cooldown_speed_slider.size[1] * 0.1
             size_hint: None, None
-            height: dp(0.0625*app.height)
-            width: dp(0.0375*app.width)
+            height: app.get_scaled_height(30.0)
+            width: app.get_scaled_width(30.0)
             color: hex('#888888ff')
-            font_size: dp(0.01625*app.width)
+            font_size: app.get_scaled_width(13.0)
 
         LabelBase:
             id: min_time_label
             x: cooldown_time_slider.pos[0]
             y: cooldown_time_slider.pos[1] - cooldown_time_slider.size[1] * 0.1
             size_hint: None, None
-            height: dp(0.0625*app.height)
-            width: dp(0.0375*app.width)
+            height: app.get_scaled_height(30.0)
+            width: app.get_scaled_width(30.0)
             color: hex('#888888ff')
-            font_size: dp(0.01625*app.width)
+            font_size: app.get_scaled_width(13.0)
 
         LabelBase:
             id: max_time_label
             x: cooldown_time_slider.pos[0] + cooldown_time_slider.size[0] * 0.9
             y: cooldown_time_slider.pos[1] - cooldown_time_slider.size[1] * 0.1
             size_hint: None, None
-            height: dp(0.0625*app.height)
-            width: dp(0.0375*app.width)
+            height: app.get_scaled_height(30.0)
+            width: app.get_scaled_width(30.0)
             color: hex('#888888ff')
-            font_size: dp(0.01625*app.width)
+            font_size: app.get_scaled_width(13.0)
 
 
 

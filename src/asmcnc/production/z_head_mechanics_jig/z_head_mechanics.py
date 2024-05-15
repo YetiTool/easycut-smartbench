@@ -34,18 +34,18 @@ Builder.load_string("""
 
         BoxLayout:
             orientation: 'horizontal'
-            padding: dp(5)
-            spacing: dp(5)
+            padding: app.get_scaled_width(5.0)
+            spacing: app.get_scaled_width(5.0)
 
             BoxLayout:
                 orientation: 'vertical'
-                spacing: dp(5)
+                spacing: app.get_scaled_width(5.0)
 
                 Button:
                     id: calibrate_button
                     text: 'Calibrate Motor'
                     bold: True
-                    font_size: dp(20)
+                    font_size: app.get_scaled_width(20.0)
                     background_color: hex('#FF9900FF')
                     background_normal: ''
                     on_press: root.show_calibration_popup()
@@ -54,7 +54,7 @@ Builder.load_string("""
                     id: begin_test_button
                     text: 'Begin Test'
                     bold: True
-                    font_size: dp(20)
+                    font_size: app.get_scaled_width(20.0)
                     background_color: hex('#00C300FF')
                     background_normal: ''
                     on_press: root.prepare_for_test()
@@ -123,7 +123,7 @@ Builder.load_string("""
                         id: load_realtime
                         size_hint_y: 2
                         text: '-'
-                        font_size: dp(25)
+                        font_size: app.get_scaled_width(25.0)
 
                 BoxLayout:
                     orientation: 'vertical'
@@ -139,17 +139,17 @@ Builder.load_string("""
                         id: current_realtime
                         size_hint_y: 2
                         text: '-'
-                        font_size: dp(25)
+                        font_size: app.get_scaled_width(25.0)
 
             BoxLayout:
                 size_hint_x: 0.7
                 orientation: 'vertical'
-                spacing: dp(5)
+                spacing: app.get_scaled_width(5.0)
 
                 Button:
                     text: 'Serial Monitor'
                     bold: True
-                    font_size: dp(20)
+                    font_size: app.get_scaled_width(20.0)
                     text_size: self.size
                     valign: 'middle'
                     halign: 'center'
@@ -160,7 +160,7 @@ Builder.load_string("""
                 Button:
                     text: 'Manual Move'
                     bold: True
-                    font_size: dp(20)
+                    font_size: app.get_scaled_width(20.0)
                     text_size: self.size
                     valign: 'middle'
                     halign: 'center'
@@ -172,7 +172,7 @@ Builder.load_string("""
                 id: stop_button
                 text: 'STOP'
                 bold: True
-                font_size: dp(20)
+                font_size: app.get_scaled_width(20.0)
                 background_color: [1,0,0,1]
                 background_normal: ''
                 on_press: root.stop()
@@ -181,7 +181,7 @@ Builder.load_string("""
             id: test_progress_label
             size_hint_y: 3
             text: 'Waiting...'
-            font_size: dp(30)
+            font_size: app.get_scaled_width(30.0)
             markup: True
             bold: True
             text_size: self.size
@@ -192,8 +192,8 @@ Builder.load_string("""
         Image:
             id: load_graph
             size_hint: None, None
-            height: dp(355)
-            width: dp(790)
+            height: app.get_scaled_height(355.0)
+            width: app.get_scaled_width(790.0)
             x: dp(5)
             y: dp(5)
             allow_stretch: True

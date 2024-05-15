@@ -28,13 +28,13 @@ Builder.load_string(
         size: self.parent.size
         pos: self.parent.pos      
 
-        spacing:0.0416666666667*app.height
+        spacing: app.get_scaled_width(20.0)
         
         orientation: "vertical"
         
         BoxLayout:
             spacing: 0
-            padding:dp(0)
+            padding: 0
             size_hint_y: 1
             orientation: 'vertical'
             canvas:
@@ -45,12 +45,12 @@ Builder.load_string(
                     pos: self.pos 
 
             ToggleButton:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 id: speed_toggle
                 on_press: root.set_jog_speeds()
                 background_color: 1, 1, 1, 0 
                 BoxLayout:
-                    padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                    padding: app.get_scaled_tuple([10.0, 10.0])
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
@@ -63,7 +63,7 @@ Builder.load_string(
             
         BoxLayout:
             spacing: 0
-            padding:dp(0)
+            padding: 0
             size_hint_y: 2
             orientation: 'vertical'
             id: vacuum_spindle_container

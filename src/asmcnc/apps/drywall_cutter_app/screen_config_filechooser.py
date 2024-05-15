@@ -49,7 +49,7 @@ Builder.load_string("""
 
     BoxLayout:
         padding: 0
-        spacing: 10
+        spacing: app.get_scaled_width(10.0)
         size: root.size
         pos: root.pos
         orientation: "vertical"
@@ -71,7 +71,7 @@ Builder.load_string("""
                 size_hint_y: 1
                 text: root.filename_selected_label_text
                 markup: True
-                font_size: '18sp'   
+                font_size: app.get_scaled_sp('18sp')
                 valign: 'middle'
                 halign: 'center'
                 bold: True
@@ -103,13 +103,13 @@ Builder.load_string("""
                         size_hint_y: None
                         height: self.texture_size[1]
                         text_size: self.width, None
-                        padding: 10, 10
+                        padding: app.get_scaled_tuple([10.0, 10.0])
                         markup: True
 
 
         BoxLayout:
             size_hint_y: None
-            height: 100
+            height: app.get_scaled_height(100.0)
 
             ToggleButton:
                 id: toggle_view_button
@@ -117,7 +117,7 @@ Builder.load_string("""
                 on_press: root.switch_view()
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_width(25.0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -134,7 +134,7 @@ Builder.load_string("""
                 on_press: root.switch_sort()
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_width(25.0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -150,7 +150,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_width(25.0)
                     size: self.parent.size
                     pos: self.parent.pos
                     
@@ -159,7 +159,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_width(25.0)
                     size: self.parent.size
                     pos: self.parent.pos
                     
@@ -174,7 +174,7 @@ Builder.load_string("""
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_width(25.0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -195,7 +195,7 @@ Builder.load_string("""
                     root.delete_popup(file_selection = 'all')
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_width(25.0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -215,7 +215,7 @@ Builder.load_string("""
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_width(25.0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -235,7 +235,7 @@ Builder.load_string("""
                     root.load_config_and_return_to_dwt()
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_width(25.0)
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:

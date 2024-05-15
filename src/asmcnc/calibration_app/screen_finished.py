@@ -27,7 +27,7 @@ Builder.load_string(
              
     BoxLayout:
         orientation: 'horizontal'
-        padding:[dp(0.1125)*app.width, dp(0.104166666667)*app.height]
+        padding: app.get_scaled_tuple([90.0, 50.0])
         spacing: 0
         size_hint_x: 1
 
@@ -38,7 +38,7 @@ Builder.load_string(
             Label:
                 id: screen_text
                 text_size: self.size
-                font_size: str(0.035*app.width) + 'sp'
+                font_size: app.get_scaled_sp('28.0sp')
                 halign: 'center'
                 valign: 'middle'
                 text: '[color=455A64]Calibration Complete![/color]'

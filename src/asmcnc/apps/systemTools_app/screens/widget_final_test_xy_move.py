@@ -26,8 +26,8 @@ Builder.load_string("""
         size: self.parent.size
         pos: self.parent.pos      
         orientation: 'vertical'
-        spacing: 10
-        padding: [0, 0, 0, 0]
+        spacing: app.get_scaled_width(10.0)
+        padding: app.get_scaled_tuple([0.0, 0.0, 0.0, 0.0])
         
         BoxLayout:
             orientation: 'horizontal'
@@ -56,12 +56,12 @@ Builder.load_string("""
                         allow_stretch: True
 
             BoxLayout:
-                padding: 10
+                padding: app.get_scaled_width(10.0)
                 size: self.parent.size
                 pos: self.parent.pos 
             
             BoxLayout:
-                padding: 10
+                padding: app.get_scaled_width(10.0)
                 size: self.parent.size
                 pos: self.parent.pos
                 
@@ -75,7 +75,7 @@ Builder.load_string("""
             padding: 0
     
             BoxLayout:
-                padding: 10
+                padding: app.get_scaled_width(10.0)
                 size: self.parent.size
                 pos: self.parent.pos           
             
@@ -160,7 +160,7 @@ Builder.load_string("""
                         size: self.parent.width, self.parent.height
                         allow_stretch: True                                    
             BoxLayout:
-                padding: 10
+                padding: app.get_scaled_width(10.0)
                 size: self.parent.size
                 pos: self.parent.pos
 
@@ -186,7 +186,7 @@ Builder.load_string("""
                         allow_stretch: True                     
             # speed toggle
             BoxLayout:
-                padding: 10
+                padding: app.get_scaled_width(10.0)
                 size: self.parent.size
                 pos: self.parent.pos
 
@@ -217,7 +217,7 @@ Builder.load_string("""
                         allow_stretch: True
             
             BoxLayout:
-                padding: 10
+                padding: app.get_scaled_width(10.0)
                 size: self.parent.size
                 pos: self.parent.pos
 

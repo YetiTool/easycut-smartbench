@@ -10,7 +10,7 @@ Builder.load_string("""
 
     Label:
         text: 'Updating database...'
-        font_size: dp(50)
+        font_size: app.get_scaled_width(50.0)
 
 """)
 

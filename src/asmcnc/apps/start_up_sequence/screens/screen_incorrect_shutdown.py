@@ -89,7 +89,7 @@ Builder.load_string("""
                         text_size: self.parent.size
                         markup: True
                         color: hex('333333ff')
-                        line_height: 1.5
+                        line_height: app.get_scaled_height(1.5)
                         
                 Image:
                     size_hint: (0.2,1)

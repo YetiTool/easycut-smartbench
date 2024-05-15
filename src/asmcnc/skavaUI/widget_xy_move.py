@@ -28,8 +28,8 @@ Builder.load_string(
         size: self.parent.size
         pos: self.parent.pos      
         orientation: 'vertical'
-        padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
-        spacing:0.0208333333333*app.height
+        padding: app.get_scaled_tuple([10.0, 10.0])
+        spacing: app.get_scaled_width(10.0)
         
         GridLayout:
             cols: 3
@@ -41,11 +41,11 @@ Builder.load_string(
 
             # go x datum
             BoxLayout:
-                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                padding: app.get_scaled_tuple([10.0, 10.0])
                 size: self.parent.size
                 pos: self.parent.pos                 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: app.get_scaled_sp('15.0sp')
                     background_color: hex('#F4433600')
                     on_release: 
                         self.background_color = hex('#F4433600')
@@ -65,7 +65,7 @@ Builder.load_string(
 
 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 background_color: hex('#F4433600')
                 always_release: True
                 on_release: 
@@ -87,11 +87,11 @@ Builder.load_string(
 
             # go y datum
             BoxLayout:
-                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                padding: app.get_scaled_tuple([10.0, 10.0])
                 size: self.parent.size
                 pos: self.parent.pos                 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: app.get_scaled_sp('15.0sp')
                     background_color: hex('#F4433600')
                     on_release: 
                         self.background_color = hex('#F4433600')
@@ -109,7 +109,7 @@ Builder.load_string(
                             allow_stretch: True  
                             
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 background_color: hex('#F4433600')
                 always_release: True
                 on_release: 
@@ -129,7 +129,7 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True                                    
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 background_color: hex('#F4433600')
                 on_release: 
                     self.background_color = hex('#F4433600')
@@ -148,7 +148,7 @@ Builder.load_string(
                         size: self.parent.width, self.parent.height
                         allow_stretch: True  
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 background_color: hex('#F4433600')
                 always_release: True
                 on_release: 
@@ -170,11 +170,11 @@ Builder.load_string(
 
             # set x datum
             BoxLayout:
-                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                padding: app.get_scaled_tuple([10.0, 10.0])
                 size: self.parent.size
                 pos: self.parent.pos                 
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: app.get_scaled_sp('15.0sp')
                     background_color: hex('#F4433600')
                     on_release: 
                         self.background_color = hex('#F4433600')
@@ -192,7 +192,7 @@ Builder.load_string(
                             allow_stretch: True               
 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 background_color: hex('#F4433600')
                 always_release: True
                 on_release:
@@ -214,11 +214,11 @@ Builder.load_string(
 
             # set y datum
             BoxLayout:
-                padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
+                padding: app.get_scaled_tuple([10.0, 10.0])
                 size: self.parent.size
                 pos: self.parent.pos
                 Button:
-                    font_size: str(0.01875 * app.width) + 'sp'
+                    font_size: app.get_scaled_sp('15.0sp')
                     background_color: hex('#F4433600')
                     on_release: 
                         self.background_color = hex('#F4433600')
@@ -238,10 +238,10 @@ Builder.load_string(
                 
         BoxLayout:
             orientation: 'horizontal'
-            spacing:0.0125*app.width
+            spacing: app.get_scaled_width(10.0)
 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 background_color: hex('#F4433600')
                 on_release: 
                     self.background_color = hex('#F4433600')
@@ -249,7 +249,7 @@ Builder.load_string(
                     root.set_standby_to_pos()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding:[0, dp(0.0416666666667)*app.height, dp(0.05)*app.width, dp(0.0416666666667)*app.height]
+                    padding: app.get_scaled_tuple([0.0, 20.0, 40.0, 20.0])
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:
@@ -260,7 +260,7 @@ Builder.load_string(
                         allow_stretch: True            
 
             Button:
-                font_size: str(0.01875 * app.width) + 'sp'
+                font_size: app.get_scaled_sp('15.0sp')
                 background_color: hex('#F4433600')
                 on_release: 
                     self.background_color = hex('#F4433600')
@@ -268,7 +268,7 @@ Builder.load_string(
                     root.set_workzone_to_pos_xy()
                     self.background_color = hex('#F44336FF')
                 BoxLayout:
-                    padding:[dp(0.05)*app.width, dp(0.0416666666667)*app.height, 0, dp(0.0416666666667)*app.height]
+                    padding: app.get_scaled_tuple([40.0, 20.0, 0.0, 20.0])
                     size: self.parent.size
                     pos: self.parent.pos      
                     Image:

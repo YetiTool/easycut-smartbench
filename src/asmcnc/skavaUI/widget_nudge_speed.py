@@ -12,8 +12,8 @@ Builder.load_string("""
         size: self.parent.size
         pos: self.parent.pos
         orientation: 'vertical'
-        spacing: 10
-        padding: 10
+        spacing: app.get_scaled_width(10.0)
+        padding: app.get_scaled_width(10.0)
 
         ToggleButton:
             id: speed_toggle
@@ -38,7 +38,7 @@ Builder.load_string("""
                 root.set_datum()
                 self.background_color = hex('#F44336FF')
             BoxLayout:
-                padding: 5
+                padding: app.get_scaled_width(5.0)
                 size: self.parent.size
                 pos: self.parent.pos      
                 Image:

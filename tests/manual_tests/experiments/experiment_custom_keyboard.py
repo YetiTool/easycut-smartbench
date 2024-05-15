@@ -37,7 +37,7 @@ Builder.load_string("""
     text_size: self.size
     valign: "top"
     halign: "center"
-    padding: [0,20]
+    padding: app.get_scaled_tuple([0.0, 20.0])
 
 
 <BasicScreen>:

@@ -15,8 +15,8 @@ Builder.load_string("""
 <ShapeCutterFeedbackScreenClass>:
     
     BoxLayout:
-        height: dp(800)
-        width: dp(480)
+        height: app.get_scaled_height(800.0)
+        width: app.get_scaled_width(480.0)
         canvas:
             Rectangle: 
                 pos: self.pos
@@ -30,10 +30,10 @@ Builder.load_string("""
                 
             Label:
                 size_hint: (None,None)
-                height: dp(90)
-                width: dp(800)
+                height: app.get_scaled_height(90.0)
+                width: app.get_scaled_width(800.0)
                 text: "Feedback"
-                font_size: 30
+                font_size: app.get_scaled_width(30.0)
                 halign: "center"
                 valign: "bottom"
                 markup: True
@@ -41,42 +41,42 @@ Builder.load_string("""
                     
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(800)
-                height: dp(140)
+                width: app.get_scaled_width(800.0)
+                height: app.get_scaled_height(140.0)
                 padding: 0
                 spacing: 0
                 Label:
                     size_hint: (None,None)
-                    height: dp(170)
-                    width: dp(800)
+                    height: app.get_scaled_height(170.0)
+                    width: app.get_scaled_width(800.0)
                     halign: "center"
                     valign: "middle"
                     text: "Was your job successful?"
                     color: 0,0,0,1
-                    font_size: 26
+                    font_size: app.get_scaled_width(26.0)
                     markup: True
 
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(800)
-                height: dp(170)
-                padding: (180,0,180,30)
+                width: app.get_scaled_width(800.0)
+                height: app.get_scaled_height(170.0)
+                padding: app.get_scaled_tuple([180.0, 0.0, 180.0, 30.0])
                 spacing: 0
                 orientation: 'horizontal'
                 pos: self.parent.pos                
                 
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(220)
-                    height: dp(171)
-                    padding: (28,0,20,0)
+                    width: app.get_scaled_width(220.0)
+                    height: app.get_scaled_height(171.0)
+                    padding: app.get_scaled_tuple([28.0, 0.0, 20.0, 0.0])
                     pos: self.parent.pos
                     
                     # thumbs up button
                     Button:
                         size_hint: (None,None)
-                        height: dp(171)
-                        width: dp(172)
+                        height: app.get_scaled_height(171.0)
+                        width: app.get_scaled_width(172.0)
                         background_color: hex('#F4433600')
                         center: self.parent.center
                         pos: self.parent.pos
@@ -93,16 +93,16 @@ Builder.load_string("""
                                 allow_stretch: True
                 BoxLayout:
                     size_hint: (None,None)
-                    width: dp(220)
-                    height: dp(171)
-                    padding: (20,0,28,0)
+                    width: app.get_scaled_width(220.0)
+                    height: app.get_scaled_height(171.0)
+                    padding: app.get_scaled_tuple([20.0, 0.0, 28.0, 0.0])
                     pos: self.parent.pos
                     
                     # thumbs down button
                     Button:
                         size_hint: (None,None)
-                        height: dp(171)
-                        width: dp(172)
+                        height: app.get_scaled_height(171.0)
+                        width: app.get_scaled_width(172.0)
                         background_color: hex('#F4433600')
                         center: self.parent.center
                         pos: self.parent.pos
@@ -119,9 +119,9 @@ Builder.load_string("""
                                 allow_stretch: True  
             BoxLayout:
                 size_hint: (None,None)
-                width: dp(800)
-                height: dp(80)
-                padding: (740,0,0,20)
+                width: app.get_scaled_width(800.0)
+                height: app.get_scaled_height(80.0)
+                padding: app.get_scaled_tuple([740.0, 0.0, 0.0, 20.0])
                 spacing: 0
                 orientation: 'horizontal'
                 pos: self.parent.pos

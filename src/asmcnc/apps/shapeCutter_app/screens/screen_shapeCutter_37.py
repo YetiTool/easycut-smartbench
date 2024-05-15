@@ -21,16 +21,16 @@ Builder.load_string("""
 
         BoxLayout:
             size_hint: (None,None)
-            width: dp(800)
-            height: dp(90)
+            width: app.get_scaled_width(800.0)
+            height: app.get_scaled_height(90.0)
             padding: 0
             spacing: 0
             orientation: "horizontal"
 
             Button:
                 size_hint: (None,None)
-                height: dp(90)
-                width: dp(142)
+                height: app.get_scaled_height(90.0)
+                width: app.get_scaled_width(142.0)
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -41,8 +41,8 @@ Builder.load_string("""
                         allow_stretch: True
             Button:
                 size_hint: (None,None)
-                height: dp(90)
-                width: dp(142)
+                height: app.get_scaled_height(90.0)
+                width: app.get_scaled_width(142.0)
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -53,8 +53,8 @@ Builder.load_string("""
                         allow_stretch: True
             Button:
                 size_hint: (None,None)
-                height: dp(90)
-                width: dp(142)
+                height: app.get_scaled_height(90.0)
+                width: app.get_scaled_width(142.0)
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -67,8 +67,8 @@ Builder.load_string("""
                         allow_stretch: True
             Button:
                 size_hint: (None,None)
-                height: dp(90)
-                width: dp(142)
+                height: app.get_scaled_height(90.0)
+                width: app.get_scaled_width(142.0)
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -81,8 +81,8 @@ Builder.load_string("""
                         allow_stretch: True
             Button:
                 size_hint: (None,None)
-                height: dp(90)
-                width: dp(142)
+                height: app.get_scaled_height(90.0)
+                width: app.get_scaled_width(142.0)
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -95,8 +95,8 @@ Builder.load_string("""
                         allow_stretch: True
             Button:
                 size_hint: (None,None)
-                height: dp(90)
-                width: dp(90)
+                height: app.get_scaled_height(90.0)
+                width: app.get_scaled_width(90.0)
                 BoxLayout:
                     padding: 0
                     size: self.parent.size
@@ -109,9 +109,9 @@ Builder.load_string("""
                         allow_stretch: True                    
                     
         BoxLayout:
-            padding: 10
-            height: dp(800)
-            width: dp(480)
+            padding: app.get_scaled_width(10.0)
+            height: app.get_scaled_height(800.0)
+            width: app.get_scaled_width(480.0)
             canvas:
                 Rectangle: 
                     pos: self.pos

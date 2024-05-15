@@ -39,7 +39,7 @@ Builder.load_string("""
                 markup: 'True'
                 halign: 'center'
                 valign: 'middle'
-                font_size: dp(30)
+                font_size: app.get_scaled_width(30.0)
 
             GridLayout: 
                 cols: 2
@@ -47,14 +47,14 @@ Builder.load_string("""
                 Button:
                     id: test_fw_update_button 
                     text: 'NO - Set up PCB & Flash FW'
-                    font_size: dp(20)
+                    font_size: app.get_scaled_width(20.0)
                     on_press: root.go_back_to_pcb_setup()
                     markup: True
                     halign: "center"
 
                 Button:
                     text: 'YES - Take me to QC! (For v1.3)'
-                    font_size: dp(20)
+                    font_size: app.get_scaled_width(20.0)
                     on_press: root.enter_qc()
 
             GridLayout:
@@ -62,12 +62,12 @@ Builder.load_string("""
 
                 Button: 
                     text: 'Take me to WARRANTY QC! (For v1.2)'
-                    font_size: dp(20)
+                    font_size: app.get_scaled_width(20.0)
                     on_press: root.secret_option_c()
 
                 Button:
                     text: 'Shut down'
-                    font_size: dp(20)
+                    font_size: app.get_scaled_width(20.0)
                     background_color: [1,0,0,1]
                     background_normal: ''
                     on_press: console_utils.shutdown()
