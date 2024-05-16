@@ -106,6 +106,7 @@ class ToolSelectionDropDown(ImageDropDownButton):
         super(ToolSelectionDropDown, self).__init__(**kwargs)
         self.source = paths.get_resource('tool_6mm.png')
         self.key_name = 'cutter_path'
+        self.screen = None
 
 
 class ShapeSelectionDropDown(ImageDropDownButton):
@@ -113,6 +114,7 @@ class ShapeSelectionDropDown(ImageDropDownButton):
         super(ShapeSelectionDropDown, self).__init__(**kwargs)
         self.source = paths.get_resource('square_shape_button.png')
         self.key_name = 'key'
+        self.screen = None
 
 
 class ToolPathSelectionDropDown(ImageDropDownButton):
@@ -120,4 +122,5 @@ class ToolPathSelectionDropDown(ImageDropDownButton):
         super(ToolPathSelectionDropDown, self).__init__(**kwargs)
         self.source = paths.get_resource('toolpath_offset_inside_button.png')
         self.key_name = 'key'
+        self.screen = None
         self.disable_if_1_option = True

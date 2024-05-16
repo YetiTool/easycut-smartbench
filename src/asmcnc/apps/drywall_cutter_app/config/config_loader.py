@@ -178,7 +178,7 @@ class DWTConfig(EventDispatcher):
         self.drywall_screen.toolpath_selection_dropdown.set_image_dict(self.toolpath_offset_options_dict)
 
     def select_tool(self, cutter_file):
-        self.load_cutter(cutter_file)
+        self.active_cutter = self.load_cutter(cutter_file)
 
         # Convert allowed toolpaths object to dict, then put attributes with True into a list
         cutter_allowed_toolpaths = self.get_cutter_allowed_toolpaths(self.active_cutter)
@@ -445,7 +445,7 @@ class DWTConfig(EventDispatcher):
 
         Logger.debug("Loading cutter: " + cutter_name)
         with open(file_path, "r") as f:
-            self.active_cutter = config_classes.Cutter.from_json(json.load(f))
+            return config_classes.Cutter.from_json(json.load(f))
 
     @staticmethod
     def get_available_cutter_names():
@@ -527,27 +527,22 @@ class DWTConfig(EventDispatcher):
 
             setattr(self.active_config, parameter_name, parameter_value)
 
-        # # update screen, check bumpers and so on:
-        # if not (self.active_config.shape_type == 'geberit' and self.active_cutter.dimensions.diameter is None):
-        #     self.drywall_screen.drywall_shape_display_widget.check_datum_and_extents()
+        # update screen, check bumpers and so on:
+        if not (self.active_config.shape_type == 'geberit' and self.active_cutter.dimensions.diameter is None):
+            self.drywall_screen.drywall_shape_display_widget.check_datum_and_extents()
 
     def apply_active_config(self):
-        try:
-            self.select_shape(self.active_config.shape_type)
-            self.select_tool(self.active_config.cutter_type)
-            self.select_toolpath(self.active_config.toolpath_offset)
+        self.select_shape(self.active_config.shape_type)
+        self.select_tool(self.active_config.cutter_type)
+        self.select_toolpath(self.active_config.toolpath_offset)
 
-            self.drywall_screen.d_input.text = str(self.active_config.canvas_shape_dims.d)
-            self.drywall_screen.drywall_shape_display_widget.l_input.text = str(self.active_config.canvas_shape_dims.l)
-            self.drywall_screen.drywall_shape_display_widget.r_input.text = str(self.active_config.canvas_shape_dims.r)
-            self.drywall_screen.drywall_shape_display_widget.x_input.text = str(self.active_config.canvas_shape_dims.x)
-            self.drywall_screen.drywall_shape_display_widget.y_input.text = str(self.active_config.canvas_shape_dims.y)
+        self.drywall_screen.drywall_shape_display_widget.d_input.text = str(self.active_config.canvas_shape_dims.d)
+        self.drywall_screen.drywall_shape_display_widget.l_input.text = str(self.active_config.canvas_shape_dims.l)
+        self.drywall_screen.drywall_shape_display_widget.r_input.text = str(self.active_config.canvas_shape_dims.r)
+        self.drywall_screen.drywall_shape_display_widget.x_input.text = str(self.active_config.canvas_shape_dims.x)
+        self.drywall_screen.drywall_shape_display_widget.y_input.text = str(self.active_config.canvas_shape_dims.y)
 
-            self.drywall_screen.drywall_shape_display_widget.unit_switch.active = self.active_config.units == 'mm'
-        except:
-            Logger.error("Error applying active configuration")
-
-        # Vlad set your text inputs here:
+        self.drywall_screen.drywall_shape_display_widget.unit_switch.active = self.active_config.units == 'mm'
 
     def rotate_shape(self, swap_lengths=True):
         self.drywall_screen.rotation = 'vertical' if self.drywall_screen.rotation == 'horizontal' else 'horizontal'

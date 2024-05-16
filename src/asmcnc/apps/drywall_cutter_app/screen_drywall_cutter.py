@@ -192,6 +192,10 @@ class DrywallCutterScreen(Screen):
         self.dwt_config.bind(active_config=self.on_load_config)
         self.m.bind(datum_position=self.set_datum_position)
 
+        self.tool_selection_dropdown.screen = self
+        self.shape_selection_dropdown.screen = self
+        self.toolpath_selection_dropdown.screen = self
+
     def set_datum_position(self, *args):
         if self.sm.current != self.name:
             return
@@ -425,7 +429,7 @@ class DrywallCutterScreen(Screen):
         """
         Logger.debug("New config loaded. Applying settings.")
 
-        # self.apply_active_config()
+        self.dwt_config.apply_active_config()
 
         dx, dy = self.drywall_shape_display_widget.get_current_x_y(value.datum_position.x,
                                                                    value.datum_position.y, True)
