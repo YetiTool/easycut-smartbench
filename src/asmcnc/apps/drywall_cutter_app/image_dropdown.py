@@ -106,6 +106,12 @@ class ToolSelectionDropDown(ImageDropDownButton):
         super(ToolSelectionDropDown, self).__init__(**kwargs)
         self.source = paths.get_resource('tool_6mm.png')
         self.key_name = 'cutter_path'
+        self.config = None
+
+    def bind_to_config(self, config):
+        self.config = config
+        self.config.bind(active_tool=lambda i, value: self.set_image(value))
+        self.config.bind(available_tools=lambda i, value: self.set_image_dict(value))
 
 
 class ShapeSelectionDropDown(ImageDropDownButton):
@@ -113,6 +119,12 @@ class ShapeSelectionDropDown(ImageDropDownButton):
         super(ShapeSelectionDropDown, self).__init__(**kwargs)
         self.source = paths.get_resource('square_shape_button.png')
         self.key_name = 'key'
+        self.config = None
+
+    def bind_to_config(self, config):
+        self.config = config
+        self.config.bind(active_shape=lambda i, value: self.set_image(value))
+        self.config.bind(available_shapes=lambda i, value: self.set_image_dict(value))
 
 
 class ToolPathSelectionDropDown(ImageDropDownButton):
@@ -121,3 +133,9 @@ class ToolPathSelectionDropDown(ImageDropDownButton):
         self.source = paths.get_resource('toolpath_offset_inside_button.png')
         self.key_name = 'key'
         self.disable_if_1_option = True
+        self.config = None
+
+    def bind_to_config(self, config):
+        self.config = config
+        self.config.bind(active_toolpath=lambda i, value: self.set_image(value))
+        self.config.bind(available_toolpaths=lambda i, value: self.set_image_dict(value))

@@ -4,7 +4,7 @@ import inspect
 from collections import OrderedDict
 
 from kivy.event import EventDispatcher
-from kivy.properties import StringProperty, ObjectProperty
+from kivy.properties import StringProperty, ObjectProperty, DictProperty
 
 import config_classes
 from asmcnc.comms.logging_system.logging_system import Logger
@@ -98,25 +98,48 @@ class DWTConfig(EventDispatcher):
     active_config = ObjectProperty(config_classes.Configuration.default())  # type: config_classes.Configuration
     active_cutter = ObjectProperty(config_classes.Cutter.default())  # type: config_classes.Cutter
 
-    shape_options_dict = {
+    active_shape = ObjectProperty(None)
+    active_tool = ObjectProperty(None)
+    active_toolpath = ObjectProperty(None)
+
+    available_shapes = DictProperty(None)
+    available_tools = DictProperty(None)
+    available_toolpaths = DictProperty(None)
+
+    shape_dict = {
         'circle': {
             'image_path': paths.join(paths.DWT_IMG_PATH, 'circle_shape_button.png'),
+            'toolpath_offset': ['inside', 'on', 'outside'],
+            'rotate_enabled': False,
+            'tool_whitelist': None
         },
         'square': {
             'image_path': paths.join(paths.DWT_IMG_PATH, 'square_shape_button.png'),
+            'toolpath_offset': ['inside', 'on', 'outside'],
+            'rotate_enabled': False,
+            'tool_whitelist': None
         },
         'line': {
             'image_path': paths.join(paths.DWT_IMG_PATH, 'line_shape_button.png'),
+            'toolpath_offset': ['on'],
+            'rotate_enabled': True,
+            'tool_whitelist': None
         },
         'geberit': {
             'image_path': paths.join(paths.DWT_IMG_PATH, 'geberit_shape_button.png'),
+            'toolpath_offset': ['on'],
+            'rotate_enabled': True,
+            'tool_whitelist': ['tool_6mm.json', 'tool_8mm.json']
         },
         'rectangle': {
             'image_path': paths.join(paths.DWT_IMG_PATH, 'rectangle_shape_button.png'),
+            'toolpath_offset': ['inside', 'on', 'outside'],
+            'rotate_enabled': True,
+            'tool_whitelist': None
         }
     }
 
-    toolpath_offset_options_dict = {
+    toolpath_offset_dict = {
         'inside': {
             'image_path': paths.join(paths.DWT_IMG_PATH, 'toolpath_offset_inside_button.png'),
         },
@@ -128,40 +151,12 @@ class DWTConfig(EventDispatcher):
         }
     }
 
-    shape_rules = {
-        'line': {
-            'toolpath_offset': ['on'],
-            'rotate_enabled': True,
-            'tool_whitelist': None
-        },
-        'rectangle': {
-            'toolpath_offset': ['inside', 'on', 'outside'],
-            'rotate_enabled': True,
-            'tool_whitelist': None
-        },
-        'square': {
-            'toolpath_offset': ['inside', 'on', 'outside'],
-            'rotate_enabled': False,
-            'tool_whitelist': None
-        },
-        'circle': {
-            'toolpath_offset': ['inside', 'on', 'outside'],
-            'rotate_enabled': False,
-            'tool_whitelist': None
-        },
-        'geberit': {
-            'toolpath_offset': ['on'],
-            'rotate_enabled': True,
-            'tool_whitelist': ['tool_6mm.json', 'tool_8mm.json']
-        }
-        # Add new shape rules here
-    }
 
     def __init__(self, screen_drywall_cutter, *args, **kwargs):
         super(DWTConfig, self).__init__(*args, **kwargs)
         self.drywall_screen = screen_drywall_cutter
 
-        self.setup_dropdowns()
+        # self.setup_dropdowns()
         self.tool_options = self.get_available_cutter_names()
 
         most_recent_config_path = self.get_most_recent_config()
@@ -170,51 +165,43 @@ class DWTConfig(EventDispatcher):
         else:
             self.load_temp_config()
 
-        # self.apply_active_config()
-
     def setup_dropdowns(self):
         self.drywall_screen.tool_selection_dropdown.set_image_dict(self.get_available_cutter_names())
-        self.drywall_screen.shape_selection_dropdown.set_image_dict(self.shape_options_dict)
-        self.drywall_screen.toolpath_selection_dropdown.set_image_dict(self.toolpath_offset_options_dict)
+        self.drywall_screen.shape_selection_dropdown.set_image_dict(self.shape_dict)
+        self.drywall_screen.toolpath_selection_dropdown.set_image_dict(self.toolpath_offset_dict)
 
-    def select_tool(self, cutter_file):
+    def set_tool(self, cutter_file):
         self.active_cutter = self.load_cutter(cutter_file)
 
         # Convert allowed toolpaths object to dict, then put attributes with True into a list
         cutter_allowed_toolpaths = self.get_cutter_allowed_toolpaths(self.active_cutter)
         # Use allowed toolpath list to create a dict of only allowed toolpaths
-        allowed_toolpath_dict = dict([(k, self.toolpath_offset_options_dict[k]) for k in cutter_allowed_toolpaths if
-                                      k in self.toolpath_offset_options_dict])
+        allowed_toolpath_dict = dict([(k, self.toolpath_offset_dict[k]) for k in cutter_allowed_toolpaths if
+                                      k in self.toolpath_offset_dict])
         # Then update dropdown to only show allowed toolpaths
-        self.drywall_screen.toolpath_selection_dropdown.set_image_dict(allowed_toolpath_dict)
+        self.available_toolpaths = allowed_toolpath_dict
 
         # Update the toolpath dropdown to only show valid toolpaths and set the active toolpath to a valid one
-        self.update_toolpath_dropdown()
+        self.filter_available_toolpaths()
 
-        self.drywall_screen.tool_selection_dropdown.source = self.active_cutter.image
+        self.active_tool = self.active_cutter.image
         self.on_parameter_change('cutter_type', cutter_file)
 
-    def show_tool_image(self):
-        self.drywall_screen.tool_selection_dropdown.source = self.active_cutter.image
 
-    def select_toolpath(self, toolpath):
+    def set_toolpath(self, toolpath):
         self.on_parameter_change('toolpath_offset', toolpath)
 
         self.drywall_screen.drywall_shape_display_widget.select_toolpath(self.active_config.shape_type, toolpath,
-                                                                         self.drywall_screen.rotation)
+                                                                      self.drywall_screen.rotation)
 
-        self.show_toolpath_image()
 
-    def show_toolpath_image(self):
-        self.drywall_screen.toolpath_selection_dropdown.source = self.drywall_screen.toolpath_selection_dropdown.image_dict[self.active_config.toolpath_offset]['image_path']
-
-    def select_shape(self, shape):
+    def set_shape(self, shape):
         self.on_parameter_change('shape_type', shape)
 
         # Get rules for the selected shape
-        shape_info = self.shape_rules.get(shape)
+        shape_info = self.shape_dict.get(shape)
 
-        self.drywall_screen.shape_selection_dropdown.source = self.shape_options_dict[shape]['image_path']
+        self.active_shape = self.shape_dict[shape]['image_path']
 
         # Handle rotate button
         rotate_enabled = shape_info.get('rotate_enabled')
@@ -231,17 +218,17 @@ class DWTConfig(EventDispatcher):
         tool_whitelist = shape_info.get('tool_whitelist')
         if tool_whitelist:
             available_tools = {k: v for k, v in self.tool_options.items() if v['cutter_path'] in tool_whitelist}
-            self.drywall_screen.tool_selection_dropdown.set_image_dict(available_tools)
+            self.available_tools = available_tools
             # Check if active tool is allowed
             if self.active_config.cutter_type not in tool_whitelist:
                 # Select the first available tool
-                self.select_tool(next(iter(tool_whitelist), None))
+                self.active_tool = next(iter(tool_whitelist), None)
         else:
             # If no tool whitelist, show all tools
-            self.drywall_screen.tool_selection_dropdown.set_image_dict(self.tool_options)
+            self.available_tools = self.tool_options
 
         # Handle toolpath
-        self.update_toolpath_dropdown()
+        self.filter_available_toolpaths()
 
     @staticmethod
     def get_cutter_allowed_toolpaths(cutter):
@@ -250,7 +237,7 @@ class DWTConfig(EventDispatcher):
 
     def get_shape_allowed_toolpaths(self, shape):
         # Get the allowed toolpaths for the selected shape
-        return self.shape_rules.get(shape).get('toolpath_offset')
+        return self.shape_dict.get(shape).get('toolpath_offset')
 
     def get_valid_toolpaths(self, shape_type, cutter, current_toolpath_offset):
         # Get the valid toolpaths for the current shape and cutter
@@ -264,12 +251,11 @@ class DWTConfig(EventDispatcher):
         else:
             Logger.error("No valid toolpaths found for {} and {}".format(shape_type, cutter.tool_id))
 
-    def update_toolpath_dropdown(self):
-        # Set toolpath dropdown to only show valid toolpaths and set the active toolpath to a valid one
+    def filter_available_toolpaths(self):
         toolpath_to_set, valid_toolpaths = self.get_valid_toolpaths(self.active_config.shape_type, self.active_cutter, self.active_config.toolpath_offset)
-        valid_toolpaths_dict = {k: v for k, v in self.toolpath_offset_options_dict.items() if k in valid_toolpaths}
-        self.drywall_screen.toolpath_selection_dropdown.set_image_dict(valid_toolpaths_dict)
-        self.select_toolpath(toolpath_to_set)
+        valid_toolpaths_dict = {k: v for k, v in self.toolpath_offset_dict.items() if k in valid_toolpaths}
+        self.available_toolpaths = valid_toolpaths_dict
+        self.active_toolpath = toolpath_to_set
 
     @staticmethod
     def get_most_recent_config():
@@ -532,9 +518,9 @@ class DWTConfig(EventDispatcher):
             self.drywall_screen.drywall_shape_display_widget.check_datum_and_extents()
 
     def apply_active_config(self):
-        self.select_shape(self.active_config.shape_type)
-        self.select_tool(self.active_config.cutter_type)
-        self.select_toolpath(self.active_config.toolpath_offset)
+        self.set_shape(self.active_config.shape_type)
+        self.set_tool(self.active_config.cutter_type)
+        self.set_toolpath(self.active_config.toolpath_offset)
 
         self.drywall_screen.drywall_shape_display_widget.d_input.text = str(self.active_config.canvas_shape_dims.d)
         self.drywall_screen.drywall_shape_display_widget.l_input.text = str(self.active_config.canvas_shape_dims.l)
@@ -548,7 +534,7 @@ class DWTConfig(EventDispatcher):
         self.drywall_screen.rotation = 'vertical' if self.drywall_screen.rotation == 'horizontal' else 'horizontal'
 
         self.drywall_screen.drywall_shape_display_widget.select_shape(self.active_config.shape_type, self.drywall_screen.rotation, swap_lengths=swap_lengths)
-        self.select_toolpath(self.active_config.toolpath_offset)
+        self.set_toolpath(self.active_config.toolpath_offset)
 
         # Need to manually set parameters after internally swapping x and y, because inputs are bound to on_focus
         self.drywall_screen.drywall_shape_display_widget.swapping_lengths = True

@@ -181,8 +181,6 @@ class DrywallCutterScreen(Screen):
                                                                                              cs=self.cs,)
         self.shape_display_container.add_widget(self.drywall_shape_display_widget)
 
-        self.dwt_config.show_tool_image()
-        self.dwt_config.show_toolpath_image()
 
         self.bumper_list = [self.drywall_shape_display_widget.bumper_bottom_image,
                             self.drywall_shape_display_widget.bumper_right_image,
@@ -192,9 +190,12 @@ class DrywallCutterScreen(Screen):
         self.dwt_config.bind(active_config=self.on_load_config)
         self.m.bind(datum_position=self.set_datum_position)
 
-        self.tool_selection_dropdown.screen = self
-        self.shape_selection_dropdown.screen = self
-        self.toolpath_selection_dropdown.screen = self
+        self.tool_selection_dropdown.bind_to_config(self.dwt_config)
+        self.shape_selection_dropdown.bind_to_config(self.dwt_config)
+        self.toolpath_selection_dropdown.bind_to_config(self.dwt_config)
+
+        self.dwt_config.setup_dropdowns()
+
 
     def set_datum_position(self, *args):
         if self.sm.current != self.name:
@@ -249,16 +250,16 @@ class DrywallCutterScreen(Screen):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
 
     def select_tool(self, cutter_file, *args):
-        self.dwt_config.select_tool(cutter_file)
+        self.dwt_config.set_tool(cutter_file)
 
     def select_shape(self, shape):
-        self.dwt_config.select_shape(shape)
+        self.dwt_config.set_shape(shape)
 
     def rotate_shape(self, swap_lengths=True):
         self.dwt_config.rotate_shape(swap_lengths=swap_lengths)
 
     def select_toolpath(self, toolpath):
-        self.dwt_config.select_toolpath(toolpath)
+        self.dwt_config.set_toolpath(toolpath)
 
     def material_setup(self):
         self.materials_popup.open()
