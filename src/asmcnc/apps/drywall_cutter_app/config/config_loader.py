@@ -165,9 +165,13 @@ class DWTConfig(EventDispatcher):
             self.load_temp_config()
 
     def setup_dropdowns(self):
-        self.drywall_screen.tool_selection_dropdown.set_image_dict(self.get_available_cutter_names())
-        self.drywall_screen.shape_selection_dropdown.set_image_dict(self.shape_dict)
-        self.drywall_screen.toolpath_selection_dropdown.set_image_dict(self.toolpath_offset_dict)
+        self.available_tools = self.get_available_cutter_names()
+        self.available_shapes = self.shape_dict
+        self.available_toolpaths = self.toolpath_offset_dict
+
+        self.active_tool = self.active_cutter.image
+        self.active_shape = self.shape_dict[self.active_config.shape_type]['image_path']
+        self.active_toolpath = self.toolpath_offset_dict[self.active_config.toolpath_offset]['image_path']
 
     def set_tool(self, cutter_file):
         self.active_cutter = self.load_cutter(cutter_file)
@@ -189,9 +193,10 @@ class DWTConfig(EventDispatcher):
 
     def set_toolpath(self, toolpath):
         self.on_parameter_change('toolpath_offset', toolpath)
+        self.active_toolpath = self.toolpath_offset_dict[toolpath]['image_path']
 
-        self.drywall_screen.drywall_shape_display_widget.select_toolpath(self.active_config.shape_type, toolpath,
-                                                                      self.drywall_screen.rotation)
+        # self.drywall_screen.drywall_shape_display_widget.select_toolpath(self.active_config.shape_type, toolpath,
+        #                                                               self.drywall_screen.rotation)
 
 
     def set_shape(self, shape):

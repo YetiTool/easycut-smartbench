@@ -404,6 +404,8 @@ class DrywallShapeDisplay(Widget):
         self.dwt_config.bind(active_config_name=self.on_config_name_change)
         self.on_config_name_change(self.dwt_config, self.dwt_config.active_config_name)
 
+        self.dwt_config.bind(active_toolpath=self.update_toolpath)
+
     def update_x_datum(self, value):
         """
         Is called when the x datum of the machine changes. E.g. running, jogging, after homing...
@@ -525,6 +527,9 @@ class DrywallShapeDisplay(Widget):
         text_input.disabled = True
         text_input.opacity = 0
         text_input.parent.opacity = 0
+
+    def update_toolpath(self, *args):
+        self.select_toolpath(self.dwt_config.active_config.shape_type, self.dwt_config.active_config.toolpath_offset, self.dwt_config.active_config.rotation)
 
     def select_toolpath(self, shape, toolpath, rotation):
         if shape in ['line', 'geberit']:
