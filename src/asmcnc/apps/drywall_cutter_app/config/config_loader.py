@@ -156,7 +156,6 @@ class DWTConfig(EventDispatcher):
         super(DWTConfig, self).__init__(*args, **kwargs)
         self.drywall_screen = screen_drywall_cutter
 
-        # self.setup_dropdowns()
         self.tool_options = self.get_available_cutter_names()
 
         most_recent_config_path = self.get_most_recent_config()

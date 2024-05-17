@@ -5,6 +5,7 @@ from kivy.properties import DictProperty, ObjectProperty, StringProperty
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.dropdown import DropDown
 from kivy.uix.image import Image
+from kivy.clock import Clock
 from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc import paths
 
@@ -91,8 +92,14 @@ class ImageDropDownButton(ButtonBehavior, Image):
     def on_release(self):
         self.dropdown.open(self)
 
+    def schedule_image_update(self, image_path):
+        Clock.schedule_once(lambda dt: self.set_image(image_path))
+
     def set_image(self, image_path):
         self.source = image_path
+
+    def schedule_image_dict_update(self, image_dict):
+        Clock.schedule_once(lambda dt: self.set_image_dict(image_dict))
 
     def set_image_dict(self, image_dict):
         self.image_dict = image_dict
@@ -110,8 +117,8 @@ class ToolSelectionDropDown(ImageDropDownButton):
 
     def bind_to_config(self, config):
         self.config = config
-        self.config.bind(active_tool=lambda i, value: self.set_image(value))
-        self.config.bind(available_tools=lambda i, value: self.set_image_dict(value))
+        self.config.bind(active_tool=lambda i, value: self.schedule_image_update(value))
+        self.config.bind(available_tools=lambda i, value: self.schedule_image_dict_update(value))
 
 
 class ShapeSelectionDropDown(ImageDropDownButton):
@@ -123,8 +130,8 @@ class ShapeSelectionDropDown(ImageDropDownButton):
 
     def bind_to_config(self, config):
         self.config = config
-        self.config.bind(active_shape=lambda i, value: self.set_image(value))
-        self.config.bind(available_shapes=lambda i, value: self.set_image_dict(value))
+        self.config.bind(active_shape=lambda i, value: self.schedule_image_update(value))
+        self.config.bind(available_shapes=lambda i, value: self.schedule_image_dict_update(value))
 
 
 class ToolPathSelectionDropDown(ImageDropDownButton):
@@ -137,5 +144,5 @@ class ToolPathSelectionDropDown(ImageDropDownButton):
 
     def bind_to_config(self, config):
         self.config = config
-        self.config.bind(active_toolpath=lambda i, value: self.set_image(value))
-        self.config.bind(available_toolpaths=lambda i, value: self.set_image_dict(value))
+        self.config.bind(active_toolpath=lambda i, value: self.schedule_image_update(value))
+        self.config.bind(available_toolpaths=lambda i, value: self.schedule_image_dict_update(value))
