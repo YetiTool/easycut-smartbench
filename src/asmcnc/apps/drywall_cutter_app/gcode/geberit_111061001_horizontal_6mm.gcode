@@ -1,3 +1,10 @@
+(Cut depth: -12.000)
+(Z safe distance: 5.080)
+(Final part x dim: 640.0)
+(Final part y dim: 1250.0)
+(x min: 0.0)
+(y min: -3.0)
+
 (VECTRIC POST REVISION)
 (B467C182A25E2781624BDAEC17A0D7CE)
 T1
