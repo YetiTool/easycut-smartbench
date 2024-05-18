@@ -14,6 +14,7 @@ import sys, os
 from kivy.clock import Clock
 import traceback
 from asmcnc.apps.systemTools_app.screens import popup_system
+import subprocess
 
 Builder.load_string(
 """
@@ -154,6 +155,8 @@ Builder.load_string(
 """
 )
 
+home_dir = "/home/pi/"
+easycut_path = home_dir + "easycut-smartbench/"
 
 class SupportMenuScreen(Screen):
     default_font_size = 16.0 / 800.0 * Window.width
@@ -198,11 +201,22 @@ class SupportMenuScreen(Screen):
         self.systemtools_sm.do_usb_first_aid()
 
     def git_repair(self):
-        # From easycut-smartbench directory:
-        # sudo aptitude install git-repair
-        # git-repair --force
-        # sudo reboot
-        pass
+        commands = [
+            "sudo aptitude install git-repair",
+            "git-repair --force",
+            "sudo reboot"
+        ]
+
+        if not self.execute_commands(commands, easycut_path):
+            self.sm.pm.show_error_popup("Failed to repair! Please ensure your Wi-Fi connection is stable.")
+
+    def execute_commands(commands, working_directory):
+        for command in commands:
+            process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=working_directory)
+            stdout, stderr = process.communicate()
+            if process.returncode != 0:
+                return False
+        return True
 
     def update_strings(self):
         self.button_download_logs.text = self.l.get_str("Download Logs")
