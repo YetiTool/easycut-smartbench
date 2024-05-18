@@ -1,13 +1,9 @@
 import re
 import traceback
 from datetime import datetime
+from asmcnc.comms.logging_system.logging_system import Logger
 
 from kivy.properties import NumericProperty, StringProperty
-
-
-def log(message):
-    timestamp = datetime.now()
-    print (timestamp.strftime('%H:%M:%S.%f')[:12] + ' ' + message)
 
 """
 Code taken from screen_file_loading.py and modified to be used in the JobLoader class
@@ -46,7 +42,7 @@ class JobLoader():
         self.l = kwargs['localization']
 
     def load_gcode_file(self, job_file_path):
-        log('> LOADING:')
+        Logger.info('> LOADING:')
 
         with open(job_file_path) as f:
             self.job_file_as_list = f.readlines()
@@ -57,8 +53,8 @@ class JobLoader():
         self.total_lines_in_job_file_pre_scrubbed = len(self.job_file_as_list)
 
         self.load_value = 1
-        log('> Job file loaded as list... ' + str(self.total_lines_in_job_file_pre_scrubbed) + ' lines')
-        log('> Scrubbing file...')
+        Logger.info('> Job file loaded as list... ' + str(self.total_lines_in_job_file_pre_scrubbed) + ' lines')
+        Logger.info('> Scrubbing file...')
 
         # clear objects
         self.preloaded_job_gcode = []
@@ -68,10 +64,10 @@ class JobLoader():
         self._scrub_file_loop()
 
     def _scrub_file_loop(self):
-        print("scrubbing")
+        Logger.info("scrubbing")
         try:
             if self.total_lines_in_job_file_pre_scrubbed > self.max_lines:
-                log("File exceeds 10 million lines!")
+                Logger.error("File exceeds 10 million lines!")
                 self.jd.reset_values()
                 return
 
@@ -156,7 +152,7 @@ class JobLoader():
                                         self.sm.get_screen('check_job').as_high_as = float(feed_rate)
 
                             except:
-                                print 'Failed to extract feed rate. Probable G-code error!'
+                                Logger.error('Failed to extract feed rate. Probable G-code error!')
 
                         # strip line numbers
                         if "N" in l_block:
@@ -171,15 +167,14 @@ class JobLoader():
                 self._scrub_file_loop()
             else:
 
-                log('> Finished scrubbing ' + str(self.lines_scrubbed) + ' lines.')
+                Logger.info('> Finished scrubbing ' + str(self.lines_scrubbed) + ' lines.')
                 self.jd.job_gcode = self.preloaded_job_gcode
                 # Generated info is displayed in summary
                 self.jd.create_gcode_summary_string()
                 # self._get_gcode_preview_and_ranges()
 
         except Exception as e:
-            print(e)
-            log(traceback.format_exc())
+            Logger.error(e)
             self.jd.reset_values()
 
     def _get_gcode_preview_and_ranges(self):
@@ -190,5 +185,5 @@ class JobLoader():
         # preview does not work
         self.gcode_preview_widget = self.sm.get_screen('home').gcode_preview_widget
 
-        log('> get_non_modal_gcode')
+        Logger.info('> get_non_modal_gcode')
         self.gcode_preview_widget.prep_for_non_modal_gcode(self.jd.job_gcode, False, self.sm, 0)
