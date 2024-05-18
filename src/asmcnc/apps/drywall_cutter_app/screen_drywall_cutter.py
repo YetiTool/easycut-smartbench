@@ -250,7 +250,7 @@ class DrywallCutterScreen(Screen):
         self.drywall_shape_display_widget.check_datum_and_extents()  # update machine value labels
 
         if not self.model_manager.is_machine_drywall():
-            self.drywall_shape_display_widget.canvas_image = "./asmcnc/apps/drywall_cutter_app/img/canvas_with_logo_shapes.png"
+            self.drywall_shape_display_widget.canvas_image.source = "./asmcnc/apps/drywall_cutter_app/img/canvas_with_logo_shapes.png"
 
     def on_enter(self):
         self.m.laser_on()
