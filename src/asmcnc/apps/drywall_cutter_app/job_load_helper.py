@@ -64,7 +64,6 @@ class JobLoader():
         self._scrub_file_loop()
 
     def _scrub_file_loop(self):
-        Logger.info("scrubbing")
         try:
             if self.total_lines_in_job_file_pre_scrubbed > self.max_lines:
                 Logger.error("File exceeds 10 million lines!")
@@ -185,5 +184,5 @@ class JobLoader():
         # preview does not work
         self.gcode_preview_widget = self.sm.get_screen('home').gcode_preview_widget
 
-        Logger.info('> get_non_modal_gcode')
+        Logger.debug('> get_non_modal_gcode')
         self.gcode_preview_widget.prep_for_non_modal_gcode(self.jd.job_gcode, False, self.sm, 0)
