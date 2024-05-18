@@ -9,7 +9,7 @@
   },
   "flutes": {
     "count": 2,
-    "length": 13
+    "length": 21
   },
   "material": "drywall",
   "parameters": {
@@ -18,7 +18,7 @@
     "plunge_feed_rate": 250,
     "cutting_direction": "both",
     "recommended_depth_per_pass": 13,
-    "max_depth_total": 13,
+    "max_depth_total": 21,
     "step_over": 3,
     "yetipilot_target_power": 590
   },
