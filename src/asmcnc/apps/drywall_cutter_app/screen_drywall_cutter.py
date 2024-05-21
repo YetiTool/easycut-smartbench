@@ -251,6 +251,8 @@ class DrywallCutterScreen(Screen):
 
         if not self.model_manager.is_machine_drywall():
             self.drywall_shape_display_widget.canvas_image.source = "./asmcnc/apps/drywall_cutter_app/img/canvas_with_logo_shapes.png"
+        else:
+            self.drywall_shape_display_widget.canvas_image.source = "./asmcnc/apps/drywall_cutter_app/img/canvas_with_logo.png"
 
     def on_enter(self):
         self.m.laser_on()
