@@ -500,13 +500,13 @@ class DrywallShapeDisplay(Widget):
 
         if shape == 'geberit':
             if rotation == 'horizontal':
-                self.place_widget(self.x_datum_label, (407, 46))
-                self.place_widget(self.y_datum_label, (416, 125))
+                self.place_widget(self.x_datum_label, (358, 50))
+                self.place_widget(self.y_datum_label, (400, 207))
                 self.place_widget(self.y_datum_validation_label, (self.y_datum_label.pos[0],
                                                                   self.y_datum_label.pos[1] - 35))
             else:
-                self.place_widget(self.x_datum_label, (360, 47))
-                self.place_widget(self.y_datum_label, (390, 94))
+                self.place_widget(self.x_datum_label, (285, 32))
+                self.place_widget(self.y_datum_label, (370, 87))
                 self.place_widget(self.y_datum_validation_label, (self.y_datum_label.pos[0],
                                                                   self.y_datum_label.pos[1] - 20))
 
