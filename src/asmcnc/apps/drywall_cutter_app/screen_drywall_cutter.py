@@ -6,6 +6,7 @@ from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen
 
+from asmcnc.apps import widget_tool_material_display
 from asmcnc.apps.drywall_cutter_app import screen_config_filechooser
 from asmcnc.apps.drywall_cutter_app import screen_config_filesaver
 from asmcnc.apps.drywall_cutter_app import widget_drywall_shape_display
@@ -34,6 +35,7 @@ Builder.load_string("""
     toolpath_selection:toolpath_selection
     shape_display_container:shape_display_container
     xy_move_container:xy_move_container
+    tool_material_display_container:tool_material_display_container
     BoxLayout:
         orientation: 'vertical'
         BoxLayout:
@@ -117,8 +119,18 @@ Builder.load_string("""
                 spacing: dp(10)
                 BoxLayout:
                     id: xy_move_container
-                    size_hint_y: 31
-                    padding: [dp(0), dp(30)]
+                    size_hint_y: 23
+                    padding: [dp(0), dp(0)]
+                    canvas.before:
+                        Color:
+                            rgba: hex('#FFFFFFFF')
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+                BoxLayout:
+                    id: tool_material_display_container
+                    size_hint_y: 8
+                    padding: [dp(0), dp(0)]
                     canvas.before:
                         Color:
                             rgba: hex('#FFFFFFFF')
@@ -208,6 +220,10 @@ class DrywallCutterScreen(Screen):
                                                                    localization=self.l,
                                                                    coordinate_system=self.cs)
         self.xy_move_container.add_widget(self.xy_move_widget)
+
+        self.tool_material_display_widget = widget_tool_material_display.ToolMaterialDisplayWidget(self.dwt_config)
+
+        self.tool_material_display_container.add_widget(self.tool_material_display_widget)
 
         self.materials_popup = material_setup_popup.CuttingDepthsPopup(self.l, self.kb, self.dwt_config)
         self.drywall_shape_display_widget = widget_drywall_shape_display.DrywallShapeDisplay(machine=self.m,
