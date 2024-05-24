@@ -51,7 +51,7 @@ class AppManagerClass(object):
         self.sm.add_widget(maintenance_screen)
 
         if self.model_manager.is_machine_drywall():
-            drywall_cutter_screen = screen_drywall_cutter.DrywallCutterScreen(name = 'drywall_cutter', screen_manager = self.sm, machine = self.m, localization = self.l, keyboard = self.kb, job = self.jd, popup_manager = self.pm)
+            drywall_cutter_screen = screen_drywall_cutter.DrywallCutterScreen(self.sm, self.m, self.kb, self.jd, name="drywall_cutter")
             self.sm.add_widget(drywall_cutter_screen)
 
         # Start start up sequence
