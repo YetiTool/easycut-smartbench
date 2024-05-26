@@ -19,6 +19,7 @@ from asmcnc.core_UI import scaling_utils
 from asmcnc.core_UI.new_popups.job_validation_popup import JobValidationPopup
 from asmcnc.skavaUI import popup_info
 
+from asmcnc.comms.model_manager import ModelManagerSingleton
 
 class ImageButton(ButtonBehavior, Image):
     pass
@@ -180,6 +181,9 @@ class DrywallCutterScreen(Screen):
         'on': {
             'image_path': './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_on_button.png',
         },
+        'pocket': {
+            'image_path': './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_pocket_button.png',
+        },
     }
 
     pulse_poll = None
@@ -197,6 +201,7 @@ class DrywallCutterScreen(Screen):
         self.jd = kwargs['job']
         self.pm = kwargs['popup_manager']
         self.cs = self.m.cs
+        self.model_manager = ModelManagerSingleton()
 
         self.engine = GCodeEngine(self.m, self.dwt_config, self.cs)
         self.simulation_started = False
@@ -287,6 +292,9 @@ class DrywallCutterScreen(Screen):
 
         # Convert allowed toolpaths object to dict, then put attributes with True into a list
         allowed_toolpaths = [toolpath for toolpath, allowed in self.dwt_config.active_cutter.toolpath_offsets.__dict__.items() if allowed]
+        # Add or remove pocket option based on what app is being used
+        if not self.model_manager.is_machine_drywall():
+            allowed_toolpaths.append('pocket')
         # Use allowed toolpath list to create a dict of only allowed toolpaths
         allowed_toolpath_dict = dict([(k, self.toolpath_offset_options_dict[k]) for k in allowed_toolpaths if
                                       k in self.toolpath_offset_options_dict])
