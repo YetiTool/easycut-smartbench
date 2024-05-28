@@ -19,7 +19,6 @@ class FPSGraph:
         fps = Clock.get_rfps()
         self.times.append(current_time)
         self.fps.append(fps)
-        print(f"Update called. Current time: {current_time}, FPS: {fps}")
 
     def plot(self):
         plt.plot(self.times, self.fps)
