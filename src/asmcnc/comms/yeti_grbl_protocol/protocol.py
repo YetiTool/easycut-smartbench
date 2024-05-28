@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Class protocol_v2 implements interface communications between host and GRBL as defined in YETI-GRBL real time protocol V2
 # all functions in this class return byte string to be sent to GRBL as is.
 # No change shall be made to the byte_command, no end of line is required: use write_realtime()
