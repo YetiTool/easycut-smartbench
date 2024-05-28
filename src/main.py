@@ -369,13 +369,13 @@ class SkavaUI(App):
         # Clock.schedule_once(start_loop, 10)
 
         ## -----------------------------------------------------------------------------------
+        fpsgraph.start()
         if self.height == 768:
             root = BoxLayout(orientation='vertical', size_hint=(None, None), size=(self.width, self.height + 32))
             sm.size_hint = (None, None)
             sm.size = (self.width, self.height)
             root.add_widget(sm)
             return root
-        fpsgraph.start()
         return sm
 
 
