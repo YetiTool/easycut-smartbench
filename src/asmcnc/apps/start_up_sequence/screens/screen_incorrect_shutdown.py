@@ -143,7 +143,7 @@ class IncorrectShutdownScreen(Screen):
         self.sm = kwargs['screen_manager']
         self.update_strings()
 
-    def next(self):
+    def next_screen(self):
         self.start_seq.next_in_sequence()
 
     def update_strings(self):
