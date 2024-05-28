@@ -86,7 +86,7 @@ class VirtualZ(Widget):
                 m_z / self.m.grbl_z_max_travel) * self.z_clear.parent.height
         )
 
-        self.animation = Animation(y=self.new_y, duration=0.2, step=1/15)
+        self.animation = Animation(y=self.new_y, duration=0.2)
         self.animation.start(self.z_bit)
 
 
