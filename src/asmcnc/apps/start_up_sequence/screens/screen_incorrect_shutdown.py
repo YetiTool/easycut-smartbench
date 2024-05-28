@@ -125,7 +125,7 @@ Builder.load_string("""
             
             Button:
                 id: next_button
-                on_press: root.next()
+                on_press: root.next_screen()
                 background_normal: "./asmcnc/skavaUI/img/next.png"
                 background_down: "./asmcnc/skavaUI/img/next.png"
                 font_size: app.get_scaled_sp('28sp')
