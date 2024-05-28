@@ -835,7 +835,7 @@ class SerialConnection(EventDispatcher):
     # Track co-ordinate change in each axis
     x_change = False
     y_change = False
-    z_change = False
+    z_change = BooleanProperty(False)
 
     # Work co-ordinates
     w_x = '0.0'
