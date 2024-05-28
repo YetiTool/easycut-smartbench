@@ -94,6 +94,7 @@ class Keyboard(VKeyboard):
         text_input.bind(focus=self.on_focus_raise_keyboard)
 
     def draw_keys(self):
+        return
         layout = self.available_layouts[self.layout]
         layout_rows = layout["rows"]
         layout_geometry = self.layout_geometry
