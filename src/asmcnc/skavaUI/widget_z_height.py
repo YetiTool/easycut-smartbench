@@ -2,6 +2,7 @@
 Created on 1 Feb 2018
 @author: Ed
 """
+from kivy.animation import Animation
 from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.properties import BooleanProperty
@@ -68,19 +69,21 @@ class VirtualZ(Widget):
         self.sm = kwargs["screen_manager"]
         self.jd = kwargs["job"]
 
-        self.event = None
+        self.animation = None
 
-        self.m.s.bind(z_change=self.on_z_change)
+        self.m.s.bind(m_z=self.on_m_z)
 
-    def on_z_change(self, instance, value):
-        if value and not self.event:
-            self.event = Clock.schedule_interval(self.move_z, 0.1)
-        elif not value and self.event:
-            self.event.cancel()
-            self.event = None
+    def on_m_z(self, instance, value):
+        self.animate_z(value)
 
-    def move_z(self, *args):
-        self.z_bit.y = (
+    def animate_z(self, m_z):
+        if self.animation:
+            self.animation.cancel(self.z_bit)
+
+        new_y = (
                 self.z_bit.parent.y + self.z_bit.parent.height - -(
-                self.m.mpos_z() / self.m.grbl_z_max_travel) * self.z_clear.parent.height
+                m_z / self.m.grbl_z_max_travel) * self.z_clear.parent.height
         )
+        self.animation = Animation(y=new_y, duration=0.1)
+        self.animation.start(self.z_bit)
+
