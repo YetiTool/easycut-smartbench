@@ -77,13 +77,23 @@ class VirtualZ(Widget):
         self.animate_z(value)
 
     def animate_z(self, m_z):
-        if self.animation:
-            self.animation.cancel(self.z_bit)
-
-        new_y = (
+        self.new_y = (
                 self.z_bit.parent.y + self.z_bit.parent.height - -(
                 m_z / self.m.grbl_z_max_travel) * self.z_clear.parent.height
         )
-        self.animation = Animation(y=new_y, duration=0.1)
-        self.animation.start(self.z_bit)
 
+        # Calculate the distance to move per frame
+        distance = self.new_y - self.z_bit.y
+        self.speed = distance / 0.1
+
+        # Schedule the update function to be called every frame
+        Clock.schedule_interval(self.update, 0)
+
+    def update(self, dt):
+        # Update the y position based on the speed and the time delta
+        self.z_bit.y += self.speed * dt
+
+        # If the z_bit has reached or passed the target y position, unschedule the update function
+        if (self.speed > 0 and self.z_bit.y >= self.new_y) or (self.speed < 0 and self.z_bit.y <= self.new_y):
+            self.z_bit.y = self.new_y
+            Clock.unschedule(self.update)
