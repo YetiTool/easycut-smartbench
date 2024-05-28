@@ -4,8 +4,9 @@ Created on 1 Feb 2018
 """
 from kivy.animation import Animation
 from kivy.clock import Clock
+from kivy.event import EventDispatcher
 from kivy.lang import Builder
-from kivy.properties import BooleanProperty
+from kivy.properties import NumericProperty
 from kivy.uix.widget import Widget
 
 Builder.load_string(
@@ -77,23 +78,40 @@ class VirtualZ(Widget):
         self.animate_z(value)
 
     def animate_z(self, m_z):
+        if self.animation:
+            self.animation.cancel(self.z_bit)
+
         self.new_y = (
                 self.z_bit.parent.y + self.z_bit.parent.height - -(
                 m_z / self.m.grbl_z_max_travel) * self.z_clear.parent.height
         )
 
-        # Calculate the distance to move per frame
-        distance = self.new_y - self.z_bit.y
-        self.speed = distance / 0.1
+        self.animation = Animation(y=self.new_y, duration=0.2)
+        self.animation.start(self.z_bit)
 
-        # Schedule the update function to be called every frame
-        Clock.schedule_interval(self.update, 0)
 
-    def update(self, dt):
-        # Update the y position based on the speed and the time delta
-        self.z_bit.y += self.speed * dt
+if __name__ == "__main__":
+    from kivy.app import App
+    from kivy.uix.boxlayout import BoxLayout
 
-        # If the z_bit has reached or passed the target y position, unschedule the update function
-        if (self.speed > 0 and self.z_bit.y >= self.new_y) or (self.speed < 0 and self.z_bit.y <= self.new_y):
-            self.z_bit.y = self.new_y
-            Clock.unschedule(self.update)
+    class SerialTest(EventDispatcher):
+        m_z = NumericProperty(0.0)
+
+    class MachineTest(object):
+        s = SerialTest()
+        grbl_z_max_travel = 120.0
+
+    class TestApp(App):
+        def build(self):
+            self.machine = MachineTest()
+
+            root = BoxLayout()
+            root.add_widget(VirtualZ(machine=self.machine))
+
+            Clock.schedule_interval(self.change_m_z, 0.1)
+            return root
+
+        def change_m_z(self, dt):
+            self.machine.s.m_z = self.machine.s.m_z - 1
+
+    TestApp().run()
