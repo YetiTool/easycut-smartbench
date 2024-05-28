@@ -7,7 +7,7 @@ YetiTool's UI for SmartBench
 www.yetitool.com
 '''
 from asmcnc import paths
-
+from mods import fpsgraph
 
 paths.create_paths()
 
@@ -375,9 +375,12 @@ class SkavaUI(App):
             sm.size = (self.width, self.height)
             root.add_widget(sm)
             return root
-
+        fpsgraph.start()
         return sm
 
 
 if __name__ == '__main__':
-    SkavaUI().run()
+    try:
+        SkavaUI().run()
+    except KeyboardInterrupt:
+        fpsgraph.stop()

@@ -1,4 +1,3 @@
-from kivy import Logger
 from mods._fpsgraph import FPSGraph
 
 __all__ = ('start', 'stop')
@@ -7,12 +6,12 @@ __all__ = ('start', 'stop')
 fps_graph = FPSGraph()
 
 
-def start(win, ctx):
+def start():
     print('FPSGraph: Starting')
     fps_graph.start()
 
 
-def stop(win, ctx):
+def stop():
     print('FPSGraph: Stopping')
     fps_graph.stop()
     fps_graph.plot()
