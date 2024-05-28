@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created on 25 Feb 2019
 
@@ -6,17 +5,14 @@ Created on 25 Feb 2019
 
 This screen checks the users job, and allows them to review any errors 
 """
-from functools import partial
 
+from functools import partial
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.lang import Builder
-from kivy.properties import (
-    StringProperty,
-)
+from kivy.properties import StringProperty
 from kivy.uix.screenmanager import Screen
-
 from asmcnc.geometry import job_envelope
 from asmcnc.skavaUI import widget_gcode_view
 
@@ -221,13 +217,17 @@ class CheckingScreen(Screen):
     serial_function_called = False
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
+        self.jd = kwargs.pop("job")
         super(CheckingScreen, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
-        self.l = kwargs["localization"]
-        self.jd = kwargs["job"]
         self.gcode_preview_widget = widget_gcode_view.GCodeView(job=self.jd)
-        self.m.s.bind(on_check_job_finished=lambda instance, error_log: self.update_error_log(error_log))
+        self.m.s.bind(
+            on_check_job_finished=lambda instance, error_log: self.update_error_log(
+                error_log
+            )
+        )
 
     def on_pre_enter(self):
         self.toggle_boundary_buttons(True)
@@ -455,11 +455,17 @@ class CheckingScreen(Screen):
             self.check_gcode_button.width = "0dp"
             self.load_file_now_button.text = self.l.get_str("Adjust datums")
             if len(self.load_file_now_button.text) > 30:
-                self.load_file_now_button.font_size = str(11.0/800.0*Window.width) + "sp"
+                self.load_file_now_button.font_size = (
+                    str(11.0 / 800.0 * Window.width) + "sp"
+                )
             elif len(self.load_file_now_button.text) > 25:
-                self.load_file_now_button.font_size = str(14.0/800.0*Window.width) + "sp"
+                self.load_file_now_button.font_size = (
+                    str(14.0 / 800.0 * Window.width) + "sp"
+                )
             else:
-                self.load_file_now_button.font_size = str(15.0/800.0*Window.width) + "sp"
+                self.load_file_now_button.font_size = (
+                    str(15.0 / 800.0 * Window.width) + "sp"
+                )
             self.load_file_now_button.disabled = False
             self.load_file_now_button.opacity = 1
             self.load_file_now_button.size_hint_y = 1
@@ -628,7 +634,7 @@ class CheckingScreen(Screen):
                 )
         error_summary = []
         no_empties = list(
-            filter(lambda x: x != ("ok", ""), zip(error_log, self.jd.job_gcode))
+            [x for x in zip(error_log, self.jd.job_gcode) if x != ("ok", "")]
         )
         for idx, f in enumerate(no_empties):
             if f[0].find("error") != -1:

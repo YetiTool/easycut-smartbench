@@ -4,8 +4,8 @@ from kivy.lang import Builder
 from kivy.properties import BooleanProperty, ObjectProperty
 from kivy.uix.widget import Widget
 
-
-Builder.load_string("""
+Builder.load_string(
+    """
 <BlinkingWidget>:
     canvas.before:
         Color:
@@ -21,9 +21,9 @@ Builder.load_string("""
         RoundedRectangle:
             pos: self.pos
             size: self.size
-""")
-
-YELLOW = [240. / 255, 1, 0, 1]
+"""
+)
+YELLOW = [240.0 / 255, 1, 0, 1]
 TRANSPARENT_YELLOW = [240.0 / 255, 1, 0, 0]
 
 
@@ -38,13 +38,10 @@ class BlinkingWidget(Widget):
 
     def __init__(self, **kwargs):
         super(BlinkingWidget, self).__init__(**kwargs)
-
-        self.animation = (
-            Animation(bg_color=YELLOW, duration=0.5)
-            + Animation(bg_color=TRANSPARENT_YELLOW, duration=0.5)
+        self.animation = Animation(bg_color=YELLOW, duration=0.5) + Animation(
+            bg_color=TRANSPARENT_YELLOW, duration=0.5
         )
         self.animation.repeat = True
-
         self.bind(blinking=self.on_blinking)
 
     def on_blinking(self, *args):
@@ -60,7 +57,7 @@ class FastBlinkingWidget(Widget):
 
     blinking = BooleanProperty(False)
     bg_color = ObjectProperty(TRANSPARENT_YELLOW)
-    blink_event = None  # Clock event
+    blink_event = None
 
     def __init__(self, **kwargs):
         super(FastBlinkingWidget, self).__init__(**kwargs)
@@ -74,4 +71,6 @@ class FastBlinkingWidget(Widget):
             self.bg_color = TRANSPARENT_YELLOW
 
     def blink(self, dt):
-        self.bg_color = YELLOW if self.bg_color == TRANSPARENT_YELLOW else TRANSPARENT_YELLOW
+        self.bg_color = (
+            YELLOW if self.bg_color == TRANSPARENT_YELLOW else TRANSPARENT_YELLOW
+        )

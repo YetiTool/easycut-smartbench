@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created on 30 March 2019
 
@@ -6,12 +5,11 @@ Screen to give a safety warning to the user when they switch on SmartBench.
 
 @author: Letty
 """
-from datetime import datetime
 
+from datetime import datetime
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
-
 from asmcnc.skavaUI import widget_status_bar
 
 Builder.load_string(
@@ -275,11 +273,11 @@ class SafetyScreen(Screen):
     user_has_confirmed = False
 
     def __init__(self, **kwargs):
+        self.start_seq = kwargs.pop("start_sequence")
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
         super(SafetyScreen, self).__init__(**kwargs)
-        self.start_seq = kwargs["start_sequence"]
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
-        self.l = kwargs["localization"]
         self.status_bar_widget = widget_status_bar.StatusBar(
             machine=self.m, screen_manager=self.sm
         )

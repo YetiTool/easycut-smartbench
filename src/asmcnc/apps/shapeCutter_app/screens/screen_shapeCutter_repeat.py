@@ -4,6 +4,7 @@ Repeat? Screen for the Shape Cutter App
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty
@@ -161,9 +162,9 @@ class ShapeCutterRepeatScreenClass(Screen):
     exiting = False
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
         super(ShapeCutterRepeatScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs["shapecutter"]
-        self.m = kwargs["machine"]
 
     def repeat(self):
         self.shapecutter_sm.repeat_cut()

@@ -4,6 +4,7 @@ Screen 22 for the Shape Cutter App
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
@@ -495,12 +496,11 @@ class ShapeCutter20ScreenClass(Screen):
     user_instructions = StringProperty("")
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
+        self.j = kwargs.pop("job_parameters")
+        self.kb = kwargs.pop("keyboard")
         super(ShapeCutter20ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs["shapecutter"]
-        self.m = kwargs["machine"]
-        self.j = kwargs["job_parameters"]
-        self.kb = kwargs["keyboard"]
-        # Add the IDs of ALL the TextInputs on this screen
         self.text_inputs = [self.a_dimension, self.b_dimension, self.c_dimension]
 
     def on_touch(self):
@@ -518,7 +518,6 @@ class ShapeCutter20ScreenClass(Screen):
         self.c_dimension.text = "{:.2f}".format(
             float(self.j.parameter_dict["cutter dimensions"]["shoulder length"])
         )
-        # self.unit_label.text = self.j.parameter_dict["cutter dimensions"]["units"]
         if self.j.parameter_dict["cutter dimensions"]["units"] == "mm":
             self.unit_toggle.active = False
         elif self.j.parameter_dict["cutter dimensions"]["units"] == "inches":
@@ -527,24 +526,25 @@ class ShapeCutter20ScreenClass(Screen):
     def on_enter(self):
         self.kb.setup_text_inputs(self.text_inputs)
 
-# Action buttons       
     def get_info(self):
         info = """To maintain accuracy, it is important that you measure the dimensions of your cutter.
 
  The shoulder length must be equal or larger than the cutting length."""
-        InfoPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
-                  main_string=info,
-                  popup_width=500,
-                  popup_height=400,
-                  main_label_size_delta=140).open()
+        InfoPopup(
+            sm=self.shapecutter_sm,
+            m=self.m,
+            l=self.m.l,
+            main_string=info,
+            popup_width=500,
+            popup_height=400,
+            main_label_size_delta=140,
+        ).open()
 
     def go_back(self):
         self.shapecutter_sm.previous_screen()
 
     def next_screen(self):
         self.check_dimensions()
-    
-# Tab functions
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()
@@ -563,15 +563,6 @@ class ShapeCutter20ScreenClass(Screen):
 
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
-
-# Screen specific
-#     def toggle_units(self):
-#         if self.unit_toggle.state == 'normal':
-#             self.unit_label.text = "mm"
-#             self.j.parameter_dict["cutter dimensions"]["units"] = self.unit_label.text
-#         elif self.unit_toggle.state == 'down': 
-#             self.unit_label.text = "inches"
-#             self.j.parameter_dict["cutter dimensions"]["units"] = self.unit_label.text
 
     def toggle_units(self):
         if self.unit_toggle.active == True:
@@ -614,7 +605,6 @@ class ShapeCutter20ScreenClass(Screen):
             elif self.unit_toggle.active == False:
                 self.j.parameter_dict["cutter dimensions"]["units"] = "mm"
             units = self.j.parameter_dict["cutter dimensions"]["units"]
-            # save the dimensions
             input_dim_list = [
                 ("diameter", float(self.a_dimension.text)),
                 ("cutting length", float(self.b_dimension.text)),
@@ -661,15 +651,19 @@ class ShapeCutter20ScreenClass(Screen):
                             + ".\n\n"
                             + "Please re-enter your parameters."
                         )
-                    WarningPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
-                                 main_string=description,
-                                 popup_width=400,
-                                 popup_height=380,
-                                 main_label_size_delta=40,
-                                 button_layout_padding=[50,25,50,0],
-                                 main_label_h_align='left',
-                                 main_layout_padding=[50,20,50,20],
-                                 main_label_padding=[20,20]).open()
+                    WarningPopup(
+                        sm=self.shapecutter_sm,
+                        m=self.m,
+                        l=self.m.l,
+                        main_string=description,
+                        popup_width=400,
+                        popup_height=380,
+                        main_label_size_delta=40,
+                        button_layout_padding=[50, 25, 50, 0],
+                        main_label_h_align="left",
+                        main_layout_padding=[50, 20, 50, 20],
+                        main_label_padding=[20, 20],
+                    ).open()
                     return False
             self.shapecutter_sm.next_screen()
         else:

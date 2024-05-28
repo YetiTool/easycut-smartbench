@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created on 19 Aug 2017
 
@@ -6,23 +5,19 @@ Created on 19 Aug 2017
 
 Screen allows user to select their job for loading into easycut, either from JobCache or from a memory stick.
 """
+
 import os
 import sys
 from itertools import takewhile
 from shutil import copy
-
 import kivy
 from chardet import detect
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.clock import Clock
 from kivy.graphics import Color, Rectangle
 from kivy.lang import Builder
-from kivy.properties import (
-    ObjectProperty,
-    StringProperty,
-)
+from kivy.properties import ObjectProperty, StringProperty
 from kivy.uix.screenmanager import Screen
-
 from asmcnc.comms import usb_storage
 from asmcnc.comms.model_manager import ModelManagerSingleton
 from asmcnc.skavaUI import popup_info
@@ -342,9 +337,7 @@ def name_order_sort_reverse(files, filesystem):
     )
 
 
-decode_and_encode = lambda x: unicode(x, detect(x)["encoding"] or "utf-8").encode(
-    "utf-8"
-)
+decode_and_encode = lambda x: str(x, detect(x)["encoding"] or "utf-8").encode("utf-8")
 
 
 class LocalFileChooser(Screen):
@@ -356,10 +349,10 @@ class LocalFileChooser(Screen):
     is_filechooser_scrolling = False
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.jd = kwargs.pop("job")
+        self.l = kwargs.pop("localization")
         super(LocalFileChooser, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.jd = kwargs["job"]
-        self.l = kwargs["localization"]
         self.model_manager = ModelManagerSingleton()
         self.usb_stick = usb_storage.USB_storage(self.sm, self.l)
         self.check_for_job_cache_dir()
@@ -426,6 +419,7 @@ class LocalFileChooser(Screen):
         if self.model_manager.is_machine_drywall():
             self.button_usb.opacity = 0
             self.usb_status_label.opacity = 0
+
     def on_enter(self):
         self.filechooser.path = job_cache_dir
         if not self.model_manager.is_machine_drywall():
@@ -437,9 +431,9 @@ class LocalFileChooser(Screen):
         self.switch_view()
 
     def on_pre_leave(self):
-        self.sm.get_screen(
-            "usb_filechooser"
-        ).filechooser_usb.sort_func = self.filechooser.sort_func
+        self.sm.get_screen("usb_filechooser").filechooser_usb.sort_func = (
+            self.filechooser.sort_func
+        )
         self.sm.get_screen("usb_filechooser").image_sort.source = self.image_sort.source
         if not self.model_manager.is_machine_drywall():
             Clock.unschedule(self.poll_USB)
@@ -563,6 +557,7 @@ class LocalFileChooser(Screen):
         self.image_delete.source = "./asmcnc/skavaUI/img/file_select_delete.png"
 
     def get_metadata(self):
+
         def not_end_of_metadata(x):
             if "(End of YetiTool SmartBench MES-Data)" in x:
                 return False
@@ -577,15 +572,19 @@ class LocalFileChooser(Screen):
             with open(self.filechooser.selection[0]) as previewed_file:
                 try:
                     if "(YetiTool SmartBench MES-Data)" in previewed_file.readline():
-                        metadata_or_gcode_preview = map(
-                            format_metadata,
-                            [
-                                decode_and_encode(i).strip("\n\r()")
-                                for i in takewhile(not_end_of_metadata, previewed_file)
-                                if decode_and_encode(i)
-                                .split(":", 1)[1]
-                                .strip("\n\r() ")
-                            ],
+                        metadata_or_gcode_preview = list(
+                            map(
+                                format_metadata,
+                                [
+                                    decode_and_encode(i).strip("\n\r()")
+                                    for i in takewhile(
+                                        not_end_of_metadata, previewed_file
+                                    )
+                                    if decode_and_encode(i)
+                                    .split(":", 1)[1]
+                                    .strip("\n\r() ")
+                                ],
+                            )
                         )
                     else:
                         previewed_file.seek(0)
@@ -594,7 +593,7 @@ class LocalFileChooser(Screen):
                             "",
                         ] + [
                             decode_and_encode(next(previewed_file, "")).strip("\n\r")
-                            for x in xrange(20)
+                            for x in range(20)
                         ]
                     self.metadata_preview.text = "\n".join(metadata_or_gcode_preview)
                 except:

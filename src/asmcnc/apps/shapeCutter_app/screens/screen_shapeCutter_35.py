@@ -4,6 +4,7 @@ Screen 35 for the Shape Cutter App
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
@@ -316,14 +317,13 @@ If not, check that it's connected and switched on, then retry by pressing the bu
     )
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
         super(ShapeCutter35ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs["shapecutter"]
-        self.m = kwargs["machine"]
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
 
-# Action buttons       
     def get_info(self):
         pass
 
@@ -332,8 +332,6 @@ If not, check that it's connected and switched on, then retry by pressing the bu
 
     def next_screen(self):
         self.shapecutter_sm.next_screen()
-    
-# Tab functions
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()
@@ -352,8 +350,6 @@ If not, check that it's connected and switched on, then retry by pressing the bu
 
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
-    
-# Screen specific
 
     def set_spindle(self):
         if self.spindle_toggle.state == "normal":
@@ -369,6 +365,5 @@ If not, check that it's connected and switched on, then retry by pressing the bu
             Clock.schedule_once(self.reset_spindle, 2)
 
     def reset_spindle(self, dt):
-        #self.m.vac_on()
         self.spindle_toggle.state = "normal"
         self.set_spindle()

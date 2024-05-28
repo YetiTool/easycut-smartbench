@@ -1,16 +1,15 @@
-# -*- coding: utf-8 -*-
 """
 Created on 6 Aug 2021
 @author: Dennis
 Screen shown after update to display new release notes
 """
+
 import kivy, os
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty, DictProperty
 from datetime import datetime
-
 from asmcnc import paths
 from asmcnc.comms.model_manager import MachineType
 from asmcnc.comms.model_manager import ModelManagerSingleton
@@ -147,17 +146,17 @@ class ReleaseNotesScreen(Screen):
     user_has_confirmed = False
 
     def __init__(self, **kwargs):
+        self.start_seq = kwargs.pop("start_sequence")
+        self.sm = kwargs.pop("screen_manager")
+        self.version = kwargs.pop("version")
+        self.l = kwargs.pop("localization")
         super(ReleaseNotesScreen, self).__init__(**kwargs)
-        self.start_seq = kwargs["start_sequence"]
-        self.sm = kwargs["screen_manager"]
-        self.version = kwargs["version"]
-        self.l = kwargs["localization"]
         self.model_manager = ModelManagerSingleton()
         machine_type = self.model_manager.get_machine_type()
-        self.scroll_release_notes.release_notes.source = self.get_release_notes_source(machine_type)
+        self.scroll_release_notes.release_notes.source = self.get_release_notes_source(
+            machine_type
+        )
         self.update_strings()
-
-        # Remove the knowledgebase link & QR code if the machine is not a SmartBench
         if machine_type is not MachineType.SMARTBENCH:
             self.release_notes_and_links.remove_widget(self.release_links)
 
@@ -177,17 +176,13 @@ class ReleaseNotesScreen(Screen):
         If the version is 'v2.9.0' and the machine type is 'unknown', the resulting file name would be 'v290.txt'.
         If the version is 'v2.9.0' and the machine type is 'SmartBench', the resulting file name would be 'v290_SmartBench.txt'.
         """
-        version_string = self.version.replace(".", "")  # v2.9.0 -> v290
+        version_string = self.version.replace(".", "")
         file_extension = ".txt"
-
         if type == MachineType.UNKNOWN or type is None:
-            # Machine type not found, look for generic release notes
-            target_file_name = version_string + file_extension  # v290.txt
+            target_file_name = version_string + file_extension
         else:
-            # Machine type found, look for specific release notes
-            target_file_name = version_string + "_" + type.value + file_extension  # v290_SmartBench.txt
-
-        return os.path.join(paths.EASYCUT_SMARTBENCH_PATH, target_file_name) # /home/pi/easycut-smartbench/v290_SmartBench.txt
+            target_file_name = version_string + "_" + type.value + file_extension
+        return os.path.join(paths.EASYCUT_SMARTBENCH_PATH, target_file_name)
 
     def update_strings(self):
         self.version_number_label.text = self.l.get_str(

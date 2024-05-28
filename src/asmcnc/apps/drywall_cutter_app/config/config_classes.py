@@ -1,11 +1,11 @@
 """This module contains the classes used to store the configuration data for the drywall cutter app."""
+
 import json
 import os
 
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 SETTINGS_DIR = os.path.join(CURRENT_DIR, "settings")
 CUTTERS_DIR = os.path.join(CURRENT_DIR, "cutters")
-
 DEFAULT_CONFIG_PATH = os.path.join(SETTINGS_DIR, "default_config.json")
 DEFAULT_CUTTER_NAME = "tool_6mm.json"
 DEFAULT_CUTTER_PATH = os.path.join(CUTTERS_DIR, DEFAULT_CUTTER_NAME)
@@ -26,17 +26,15 @@ class Cutter(object):
         toolpath_offsets,
         image,
     ):
-        self.tool_id = tool_id.encode("utf-8")  # type: str
-        self.manufacturer = str(manufacturer)  # type: str
-        self.type = str(type)  # type: str
-        self.dimensions = Dimensions(**dimensions)  # type: Dimensions
-        self.flutes = Flutes(**flutes)  # type: Flutes
-        self.material = str(material)  # type: str
-        self.parameters = Parameters(**parameters)  # type: Parameters
-        self.toolpath_offsets = AllowableToolpathOffsets(
-            **toolpath_offsets
-        )  # type: AllowableToolpathOffsets
-        self.image = str(image)  # type: str
+        self.tool_id = tool_id.encode("utf-8")
+        self.manufacturer = str(manufacturer)
+        self.type = str(type)
+        self.dimensions = Dimensions(**dimensions)
+        self.flutes = Flutes(**flutes)
+        self.material = str(material)
+        self.parameters = Parameters(**parameters)
+        self.toolpath_offsets = AllowableToolpathOffsets(**toolpath_offsets)
+        self.image = str(image)
 
     @classmethod
     def from_json(cls, json_data):
@@ -54,26 +52,26 @@ class Dimensions(object):
     """Class to store the cutter dimensions."""
 
     def __init__(self, diameter, angle, units):
-        self.diameter = diameter  # type: float
-        self.angle = angle  # type: int
-        self.units = str(units)  # type: str
+        self.diameter = diameter
+        self.angle = angle
+        self.units = str(units)
 
 
 class AllowableToolpathOffsets(object):
     """Class to store the allowable toolpath offsets."""
 
     def __init__(self, inside, outside, on):
-        self.inside = inside  # type: bool
-        self.outside = outside  # type: bool
-        self.on = on  # type: bool
+        self.inside = inside
+        self.outside = outside
+        self.on = on
 
 
 class Flutes(object):
     """Class to store the cutter flutes."""
 
     def __init__(self, count, length):
-        self.count = count  # type: int
-        self.length = length  # type: float
+        self.count = count
+        self.length = length
 
 
 class Parameters(object):
@@ -90,43 +88,43 @@ class Parameters(object):
         step_over,
         yetipilot_target_power,
     ):
-        self.cutting_spindle_speed = cutting_spindle_speed  # type: int
-        self.cutting_feed_rate = cutting_feed_rate  # type: float
-        self.plunge_feed_rate = plunge_feed_rate  # type: float
-        self.cutting_direction = str(cutting_direction)  # type: str
-        self.recommended_depth_per_pass = recommended_depth_per_pass  # type: float
-        self.max_depth_total = max_depth_total  # type: float
-        self.step_over = step_over  # type: float
-        self.yetipilot_target_power = yetipilot_target_power  # type: int
+        self.cutting_spindle_speed = cutting_spindle_speed
+        self.cutting_feed_rate = cutting_feed_rate
+        self.plunge_feed_rate = plunge_feed_rate
+        self.cutting_direction = str(cutting_direction)
+        self.recommended_depth_per_pass = recommended_depth_per_pass
+        self.max_depth_total = max_depth_total
+        self.step_over = step_over
+        self.yetipilot_target_power = yetipilot_target_power
 
 
 class CanvasShapeDims(object):
     """Class to store the canvas shape dimensions."""
 
     def __init__(self, x, y, r, d, l):
-        self.x = x  # type: float
-        self.y = y  # type: float
-        self.r = r  # type: float
-        self.d = d  # type: float
-        self.l = l  # type: float
+        self.x = x
+        self.y = y
+        self.r = r
+        self.d = d
+        self.l = l
 
 
 class CuttingDepths(object):
     """Class to store the cutting depths."""
 
     def __init__(self, material_thickness, bottom_offset, auto_pass, depth_per_pass):
-        self.material_thickness = material_thickness  # type: float
-        self.bottom_offset = bottom_offset  # type: float
-        self.auto_pass = auto_pass  # type: bool
-        self.depth_per_pass = depth_per_pass  # type: float
+        self.material_thickness = material_thickness
+        self.bottom_offset = bottom_offset
+        self.auto_pass = auto_pass
+        self.depth_per_pass = depth_per_pass
 
 
 class DatumPosition(object):
     """Class to store the datum position."""
 
     def __init__(self, x, y):
-        self.x = x  # type: float
-        self.y = y  # type: float
+        self.x = x
+        self.y = y
 
 
 class Configuration(object):
@@ -141,18 +139,16 @@ class Configuration(object):
         cutter_type,
         toolpath_offset,
         cutting_depths,
-        datum_position
+        datum_position,
     ):
-        self.shape_type = str(shape_type)  # type: str
-        self.units = str(units)  # type: str
+        self.shape_type = str(shape_type)
+        self.units = str(units)
         self.rotation = str(rotation)
-        self.canvas_shape_dims = CanvasShapeDims(
-            **canvas_shape_dims
-        )  # type: CanvasShapeDims
-        self.cutter_type = str(cutter_type)  # type: str
-        self.toolpath_offset = str(toolpath_offset)  # type: str
-        self.cutting_depths = CuttingDepths(**cutting_depths)  # type: CuttingDepths
-        self.datum_position = DatumPosition(**datum_position)  # type: DatumPosition
+        self.canvas_shape_dims = CanvasShapeDims(**canvas_shape_dims)
+        self.cutter_type = str(cutter_type)
+        self.toolpath_offset = str(toolpath_offset)
+        self.cutting_depths = CuttingDepths(**cutting_depths)
+        self.datum_position = DatumPosition(**datum_position)
 
     @classmethod
     def from_json(cls, json_data):

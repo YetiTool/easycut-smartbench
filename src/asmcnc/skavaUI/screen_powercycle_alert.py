@@ -1,20 +1,19 @@
-# -*- coding: utf-8 -*-
-'''
+"""
 Created March 2020
 
 @author: Letty
 
 Basic screen 
-'''
+"""
+
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
 import sys, os
 
-
-# Kivy UI builder:
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <PowerCycleScreen>:
 
@@ -71,16 +70,19 @@ Builder.load_string("""
                 valign: 'middle'
                 halign: 'center'
 
-""")
+"""
+)
+
 
 class PowerCycleScreen(Screen):
-    
-    def __init__(self, **kwargs):
-        super(PowerCycleScreen, self).__init__(**kwargs)
-        self.sm=kwargs['screen_manager']
-        self.l=kwargs['localization']
 
-        self.finishing_install_label.text = self.l.get_str("Finishing install... please wait")
+    def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.l = kwargs.pop("localization")
+        super(PowerCycleScreen, self).__init__(**kwargs)
+        self.finishing_install_label.text = self.l.get_str(
+            "Finishing install... please wait"
+        )
         self.warning_label.text = self.l.get_str("DO NOT POWER OFF SMARTBENCH")
 
     def on_enter(self):
@@ -88,15 +90,15 @@ class PowerCycleScreen(Screen):
         self.update_dots = Clock.schedule_interval(self.update_label, 0.5)
 
     def update_label(self, dt):
-        self.dots_label.text = self.dots_label.text + '.'
+        self.dots_label.text = self.dots_label.text + "."
         if len(self.dots_label.text) == 4:
-            self.dots_label.text = ''
+            self.dots_label.text = ""
 
     def finished_installing(self, *args):
         Clock.unschedule(self.update_dots)
-        self.sm.current = 'release_notes'
+        self.sm.current = "release_notes"
 
     def on_touch_down(self, touch):
-        if sys.platform == 'win32':
+        if sys.platform == "win32":
             Clock.unschedule(self.wait_for_install)
             self.finished_installing()

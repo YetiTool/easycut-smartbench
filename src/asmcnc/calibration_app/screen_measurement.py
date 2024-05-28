@@ -10,6 +10,7 @@ Y measurement:
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.properties import ObjectProperty, StringProperty
@@ -190,9 +191,9 @@ class MeasurementScreenClass(Screen):
     axis = StringProperty()
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
         super(MeasurementScreenClass, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
 
     def on_pre_enter(self):
         if self.axis == "X":
@@ -297,9 +298,9 @@ Note which face [b](1)[/b] you take your initial measurement from, and make sure
                 self.next_screen()
 
     def quit_calibration(self):
-        self.sm.get_screen(
-            "tape_measure_alert"
-        ).return_to_screen = "calibration_complete"
+        self.sm.get_screen("tape_measure_alert").return_to_screen = (
+            "calibration_complete"
+        )
         self.sm.get_screen("calibration_complete").calibration_cancelled = True
         self.sm.current = "tape_measure_alert"
 

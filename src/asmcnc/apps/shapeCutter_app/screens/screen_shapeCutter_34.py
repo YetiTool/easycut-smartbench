@@ -4,6 +4,7 @@ Screen 34 for the Shape Cutter App
 
 @author: Letty
 """
+
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -11,7 +12,8 @@ from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.clock import Clock
 
-Builder.load_string("""
+Builder.load_string(
+    """
 #:import LabelBase asmcnc.core_UI.components.labels.base_label
 
 <ShapeCutter34ScreenClass>
@@ -319,14 +321,12 @@ If not, check that it's connected and switched on, then retry by pressing the bu
     )
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
         super(ShapeCutter34ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs["shapecutter"]
-        self.m = kwargs["machine"]
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
-
-# Action buttons       
 
     def get_info(self):
         pass
@@ -336,8 +336,6 @@ If not, check that it's connected and switched on, then retry by pressing the bu
 
     def next_screen(self):
         self.shapecutter_sm.next_screen()
-    
-# Tab functions
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()
@@ -356,8 +354,6 @@ If not, check that it's connected and switched on, then retry by pressing the bu
 
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
-    
-# Screen specific
 
     def set_vacuum(self):
         if self.vacuum_toggle.state == "normal":
@@ -375,6 +371,5 @@ If not, check that it's connected and switched on, then retry by pressing the bu
             Clock.schedule_once(self.reset_vacuum, 2)
 
     def reset_vacuum(self, dt):
-        #self.m.vac_on()
         self.vacuum_toggle.state = "normal"
         self.set_vacuum()

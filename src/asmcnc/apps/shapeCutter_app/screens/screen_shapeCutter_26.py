@@ -4,6 +4,7 @@ Screen 26 for the Shape Cutter App
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
@@ -11,7 +12,8 @@ from kivy.properties import StringProperty, ObjectProperty
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
 from asmcnc.core_UI.popups import WarningPopup
 
-Builder.load_string("""
+Builder.load_string(
+    """
 #:import LabelBase asmcnc.core_UI.components.labels.base_label
 
 <ShapeCutter26ScreenClass>
@@ -311,10 +313,10 @@ class ShapeCutter26ScreenClass(Screen):
     )
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
+        self.j = kwargs.pop("job_parameters")
         super(ShapeCutter26ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs["shapecutter"]
-        self.m = kwargs["machine"]
-        self.j = kwargs["job_parameters"]
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
@@ -322,7 +324,6 @@ class ShapeCutter26ScreenClass(Screen):
     def on_enter(self):
         self.load_gcode()
 
-# Action buttons       
     def get_info(self):
         pass
 
@@ -331,8 +332,6 @@ class ShapeCutter26ScreenClass(Screen):
 
     def next_screen(self):
         self.shapecutter_sm.homing_screen("sC26", "sC27")
-    
-# Tab functions
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()
@@ -362,14 +361,18 @@ class ShapeCutter26ScreenClass(Screen):
                 + "Please go back and check your parameters before continuing."
             )
             self.homing_button.disabled = True
-            WarningPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
-                            main_string=description,
-                            popup_width=400,
-                            popup_height=380,
-                            main_label_size_delta=40,
-                            button_layout_padding=[50,25,50,0],
-                            main_label_h_align='left',
-                            main_layout_padding=[50,20,50,20],
-                            main_label_padding=[20,20]).open()
+            WarningPopup(
+                sm=self.shapecutter_sm,
+                m=self.m,
+                l=self.m.l,
+                main_string=description,
+                popup_width=400,
+                popup_height=380,
+                main_label_size_delta=40,
+                button_layout_padding=[50, 25, 50, 0],
+                main_label_h_align="left",
+                main_layout_padding=[50, 20, 50, 20],
+                main_label_padding=[20, 20],
+            ).open()
         if gcode_generated == True:
             self.homing_button.disabled = False

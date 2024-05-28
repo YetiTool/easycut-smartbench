@@ -2,6 +2,7 @@
 Created on 1 Feb 2018
 @author: Ed
 """
+
 from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty, NumericProperty
@@ -111,11 +112,10 @@ class SpeedOverride(Widget):
     enable_button_time = 0.36
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop("machine")
+        self.sm = kwargs.pop("screen_manager")
+        self.db = kwargs.pop("database")
         super(SpeedOverride, self).__init__(**kwargs)
-        self.m = kwargs["machine"]
-        self.sm = kwargs["screen_manager"]
-        self.db = kwargs["database"]
-
         self.m.s.bind(spindle_speed=self.update_spindle_speed_label)
 
     def update_spindle_speed_label(self, instance, value):
@@ -124,7 +124,7 @@ class SpeedOverride(Widget):
     def update_speed_percentage_override_label(self):
         self.speed_override_percentage = self.m.s.speed_override_percentage
         self.speed_rate_label.text = str(self.m.s.speed_override_percentage) + "%"
-        
+
     def speed_up(self):
         if self.m.s.speed_override_percentage >= 200:
             return

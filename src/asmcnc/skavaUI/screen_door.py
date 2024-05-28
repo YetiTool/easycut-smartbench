@@ -5,13 +5,12 @@ Created March 2020
 
 Screen to handle door command, and allow user to resume.
 """
+
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.animation import Animation
 from kivy.clock import Clock
 from kivy.lang import Builder
-from kivy.properties import (
-    ObjectProperty,
-)
+from kivy.properties import ObjectProperty
 from kivy.uix.screenmanager import Screen
 
 Builder.load_string(
@@ -211,12 +210,12 @@ class DoorScreen(Screen):
     spindle_raise_label = ObjectProperty()
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.jd = kwargs.pop("job")
+        self.db = kwargs.pop("database")
+        self.l = kwargs.pop("localization")
         super(DoorScreen, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
-        self.jd = kwargs["job"]
-        self.db = kwargs["database"]
-        self.l = kwargs["localization"]
         self.header_label.text = self.l.get_bold("Interrupt bar pushed!")
         self.spindle_raise_label.text = (
             self.l.get_str("Preparing to resume, please wait") + "..."

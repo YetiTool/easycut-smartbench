@@ -2,6 +2,7 @@
 Created on nov 2020
 @author: Ollie
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
@@ -143,11 +144,12 @@ Builder.load_string(
 
 
 class WarrantyScreen4(Screen):
+
     def __init__(self, **kwargs):
+        self.start_seq = kwargs.pop("start_sequence")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
         super(WarrantyScreen4, self).__init__(**kwargs)
-        self.start_seq = kwargs["start_sequence"]
-        self.m = kwargs["machine"]
-        self.l = kwargs["localization"]
         self.update_strings()
 
     def next_screen(self):

@@ -4,6 +4,7 @@ Landing Screen for the Calibration App
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.properties import (
@@ -154,9 +155,9 @@ class CalibrationLandingScreenClass(Screen):
     return_to_screen = StringProperty()
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
         super(CalibrationLandingScreenClass, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
         self.user_instruction.text = """[color=546E7A]We calibrate SmartBench in the factory, but we recommend you re-calibrate if:
 
 - it has had a bumpy journey;

@@ -3,7 +3,7 @@ Created on 19 Aug 2017
 @author: Ed
 Screen allows user to select their job for loading into easycut, either from JobCache or from a memory stick.
 """
-# config
+
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
@@ -192,13 +192,12 @@ parameter_file_dir = (
 
 
 class SCFileChooser(Screen):
+
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.l = kwargs.pop("localization")
+        self.j = kwargs.pop("job_parameters")
         super(SCFileChooser, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs["shapecutter"]
-        self.l = kwargs["localization"]
-        self.j = kwargs["job_parameters"]
-#         self.usb_stick = usb_storage.USB_storage() # object to manage presence of USB stick (fun in Linux)
-#         self.usb_stick.enable() # start the object scanning for USB stick
 
     def on_enter(self):
         self.refresh_filechooser()
@@ -271,7 +270,7 @@ class SCFileChooser(Screen):
             Clock.schedule_once(lambda dt: self.refresh_filechooser(), 0.25)
 
     def delete_all(self):
-        files_in_cache = os.listdir(parameter_file_dir) # clean cache
+        files_in_cache = os.listdir(parameter_file_dir)
         if files_in_cache:
             for file in files_in_cache:
                 os.remove(parameter_file_dir + file)

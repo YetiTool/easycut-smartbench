@@ -3,13 +3,11 @@ Created on 19 Aug 2017
 
 @author: Ed
 """
+
 from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
-
-from asmcnc.skavaUI import (
-    widget_status_bar,
-)
+from asmcnc.skavaUI import widget_status_bar
 
 Builder.load_string(
     """
@@ -155,10 +153,11 @@ Builder.load_string(
 
 
 class DiagnosticsScreen(Screen):
+
     def __init__(self, **kwargs):
+        self.m = kwargs.pop("machine")
+        self.sm = kwargs.pop("screen_manager")
         super(DiagnosticsScreen, self).__init__(**kwargs)
-        self.m = kwargs["machine"]
-        self.sm = kwargs["screen_manager"]
         self.status_container.add_widget(
             widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
         )

@@ -758,15 +758,6 @@ Builder.load_string(
 
 
 class OvernightTesting(Screen):
-    # STAGES ARE:
-    # "CalibrationQC"
-    # "CalibrationCheckQC"
-    # "UnweightedFT"
-    # "WeightedFT"
-    # "OvernightWearIn"
-    # "CalibrationOT"
-    # "CalibrationCheckOT" (obsolete, but still a DB stage)
-    # "FullyCalibratedTest"
     poll_for_recalibration_stage = None
     poll_for_fully_calibrated_final_run_stage = None
     poll_end_of_six_hour_wear_in = None
@@ -822,12 +813,12 @@ class OvernightTesting(Screen):
     z_fully_calibrated_min_neg = None
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop("m")
+        self.systemtools_sm = kwargs.pop("systemtools")
+        self.calibration_db = kwargs.pop("calibration_db")
+        self.sm = kwargs.pop("sm")
+        self.l = kwargs.pop("l")
         super(OvernightTesting, self).__init__(**kwargs)
-        self.m = kwargs["m"]
-        self.systemtools_sm = kwargs["systemtools"]
-        self.calibration_db = kwargs["calibration_db"]
-        self.sm = kwargs["sm"]
-        self.l = kwargs["l"]
         self.setup_arrays()
         self.overnight_running = False
         self.statuses = []
@@ -846,9 +837,6 @@ class OvernightTesting(Screen):
         self.calibration_stage_id = self.calibration_db.get_stage_id_by_description(
             "CalibrationOT"
         )
-
-    # Set up and clear/reset arrays for storing SG/measurement data
-
 
     def setup_arrays(self):
         self.raw_x_pos_vals = []
@@ -875,13 +863,10 @@ class OvernightTesting(Screen):
 
     def get_sub_serials_from_database(self):
         try:
-            
-            # Get serial numbers
             self.sn_for_db = "ys6" + str(self.m.serial_number()).split(".")[0]
-            [
-                self.zh_serial,
-                self.xl_serial,
-            ] = self.calibration_db.get_serials_by_machine_serial(self.sn_for_db)
+            [self.zh_serial, self.xl_serial] = (
+                self.calibration_db.get_serials_by_machine_serial(self.sn_for_db)
+            )
         except:
             message = (
                 "Can't get subassembly serials from database, have you entered serial numbers yet?"
@@ -889,9 +874,7 @@ class OvernightTesting(Screen):
                 + "Check connection and serial number entry, and don't continue unless absolutely necessary."
             )
             popup_info.PopupInfo(self.systemtools_sm.sm, self.l, 500, message)
-            # self.back_to_fac_settings() # uncommented bc if database down, may block final test.
 
-    # Stage is used to detect which part of the operation overnight test is in, both in screen functions & data
     def set_stage(self, stage):
         self.stage = stage
         self.stage_id = self.calibration_db.get_stage_id_by_description(self.stage)
@@ -902,21 +885,11 @@ class OvernightTesting(Screen):
         self.status_data_dict[self.stage]["Statuses"] = []
         Logger.info("Overnight test, stage: " + str(self.stage))
 
-    # Function called from serial comms to record SG values
     def measure(self):
         if not self.overnight_running:
             return
         if self.m.is_machine_paused:
             return
-        
-        # GET DIRECTIONS
-
-        # -1    FORWARDS/DOWN (AWAY FROM HOME)
-        # 0     NOT MOVING
-        # 1     BACKWARDS/UP (TOWARDS HOME)
-
-        # NOTE Z LIFTS WEIGHT WHEN IT IS 
-
         if len(self.status_data_dict[self.stage]["Statuses"]) > 0:
             if (
                 self.status_data_dict[self.stage]["Statuses"][
@@ -970,8 +943,6 @@ class OvernightTesting(Screen):
             x_dir = 0
             y_dir = 0
             z_dir = 0
-
-        # XCoordinate, YCoordinate, ZCoordinate, XDirection, YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, MOTTemperature, Timestamp, Feedrate
         status = {
             "Id": "",
             "FTID": int(self.sn_for_db[2:] + str(self.stage_id)),
@@ -996,8 +967,6 @@ class OvernightTesting(Screen):
             "ZWeight": 2,
         }
         self.status_data_dict[self.stage]["Statuses"].append(status)
-
-        # Record raw values for statistics calculations
         if -999 < self.m.s.sg_x_motor_axis < 1023:
             if x_dir > 0:
                 self.raw_x_pos_vals.append(self.m.s.sg_x_motor_axis)
@@ -1143,8 +1112,6 @@ class OvernightTesting(Screen):
     def get_statistics(self):
         Logger.info("Getting statistics...")
         try:
-
-            # x_forw_peak, x_backw_peak, y_forw_peak, y_backw_peak, y1_forw_peak, y1_backw_peak, y2_forw_peak, y2_backw_peak, z_forw_peak, z_backw_peak
             peak_list = self.read_out_peaks(self.stage)
             self.statistics_data_dict[self.stage] = [
                 sum(self.raw_x_pos_vals) / len(self.raw_x_pos_vals),
@@ -1182,11 +1149,7 @@ class OvernightTesting(Screen):
     def stop(self):
         PopupStopOvernightTest(self.m, self.sm, self.l, self)
 
-    # Poll/start events are scheduled to detect when one operation has finished and then start the next
-    # If STOP button is pressed, or a stage fails, any active polls need to be cancelled
     def cancel_active_polls(self):
-
-        # put all of the polls here, and check if not none. call this on job cancel, and on_leave. 
         self._unschedule_event(self.poll_for_recalibration_stage)
         self._unschedule_event(self.poll_for_fully_calibrated_final_run_stage)
         self._unschedule_event(self.poll_for_completion_of_overnight_test)
@@ -1203,15 +1166,12 @@ class OvernightTesting(Screen):
         self._unschedule_event(self.run_event_after_datum_set)
         self._unschedule_event(self.poll_for_tuning_completion)
         self._unschedule_event(self._stream_overnight_file_event)
-        
-        # also stop measurement running
         self.overnight_running = False
 
     def _unschedule_event(self, poll_to_unschedule):
         if poll_to_unschedule != None:
             Clock.unschedule(poll_to_unschedule)
 
-    # Disable any buttons other than STOP while other tests are running
     def buttons_disabled(self, status):
         self.back_button.disabled = status
         self.home_button.disabled = status
@@ -1224,12 +1184,9 @@ class OvernightTesting(Screen):
         self.retry_recalibration_data_send.disabled = status
         self.retry_fully_calibrated_run_data_send.disabled = status
 
-    ## OVERNIGHT TEST CONTROL
     def start_full_overnight_test(self):
         self.buttons_disabled(True)
         self.setup_arrays()
-
-        # Schedule stages #2 and #3, and then run the first stage (6 hour wear in)
         Logger.info("Start full overnight test")
         self.poll_for_recalibration_stage = Clock.schedule_interval(
             self.ready_for_recalibration, 10
@@ -1246,23 +1203,11 @@ class OvernightTesting(Screen):
         self.buttons_disabled(True)
         self.setup_arrays()
         Logger.info("Start cal and post cal")
-
-        # Schedule stages #2 and #3, and then run the first stage (6 hour wear in)
         self.poll_for_fully_calibrated_final_run_stage = Clock.schedule_interval(
             self.ready_for_fully_calibrated_final_run, 10
         )
         self.start_recalibration()
 
-    ## RUNNING FUNCTIONS - THESE ARE ALL PARTS OF "OVERNIGHT TEST" -------------------------------------------------------------------
-
-    # These functions also set the Stage, so each bit of sent data knows what it's for
-
-    # Each function in each stage automatically calL the next one in sequence, so that each stage (six hour, recalibration, one-hour post recal) can also be run individually if needed.
-    # The start full overnight test function sets up polls for each stage to start after the next one.
-
-    ## SIX HOUR WEAR IN
-
-    # This should start, stream the 6 hour wear-in file, and then do any post 6 hour wear-in
     def start_six_hour_wear_in(self):
         self.buttons_disabled(True)
         self.reset_checkbox(self.six_hour_wear_in_checkbox)
@@ -1296,8 +1241,6 @@ class OvernightTesting(Screen):
         Logger.info("Running six hour wear-in...")
 
     def post_six_hour_wear_in(self, dt):
-
-        # This should also trigger the payload data send for any data that did not succeed in sending
         if self._not_finished_streaming(self.poll_end_of_six_hour_wear_in):
             return
         Logger.info("Six hour wear-in completed")
@@ -1309,7 +1252,6 @@ class OvernightTesting(Screen):
         if self.poll_for_completion_of_overnight_test is None:
             self.buttons_disabled(False)
 
-    ## RECALIBRATION
     def ready_for_recalibration(self, dt):
         if self.is_step_ticked(
             self.six_hour_wear_in_checkbox
@@ -1332,8 +1274,6 @@ class OvernightTesting(Screen):
         self.setup_arrays()
         self.overnight_running = False
         self.stage = ""
-        
-        # self.m.send_any_gcode_command('M3 S20000')
         self.m.jog_absolute_xy(
             self.m.x_min_jog_abs_limit + 10, self.m.y_min_jog_abs_limit + 10, 6000
         )
@@ -1363,8 +1303,6 @@ class OvernightTesting(Screen):
                     self.post_recalibration, 5
                 )
             else:
-                
-                # Tuning has failed, so no point running future tests
                 self.cancel_active_polls()
                 self.tick_checkbox(self.recalibration_checkbox, False)
                 self.buttons_disabled(False)
@@ -1391,9 +1329,6 @@ class OvernightTesting(Screen):
         if self.poll_for_completion_of_overnight_test is None:
             self.buttons_disabled(False)
 
-    ## ONE HOUR RUN (SAME RECTANGLE AS IS REPEATED FOR SIX HOUR), TO RUN AFTER SB HAS BEEN FULLY CALIBRATED
-
-    # This should run the post-calibration 1 hour file to harvest SG values/run data when machine is fully calibrated. 
     def ready_for_fully_calibrated_final_run(self, dt):
         if self.is_step_ticked(self.recalibration_checkbox) and self.is_step_complete(
             self.sent_recalibration_data
@@ -1473,7 +1408,6 @@ class OvernightTesting(Screen):
         if self.poll_for_completion_of_overnight_test is None:
             self.buttons_disabled(False)
 
-    ## This function only runs if full suite of overnight tests is carried out together (i.e. by pressing START) and completed
     def overnight_test_completed(self, dt):
         if self._not_ready_to_stream():
             return
@@ -1489,8 +1423,6 @@ class OvernightTesting(Screen):
         self.setup_arrays()
         self.stage = ""
         self.buttons_disabled(False)
-
-    # FILE STREAMING FUNCTIONS
 
     def _not_ready_to_stream(self):
         if (
@@ -1515,14 +1447,18 @@ class OvernightTesting(Screen):
         filename = "./asmcnc/apps/systemTools_app/files/" + filename_end + ".gc"
         with open(filename) as f:
             gcode_prescrubbed = f.readlines()
-        if "rectangle" in filename_end and int(self.m.get_dollar_setting(132)) == 130:  # double stack motor
+        if "rectangle" in filename_end and int(self.m.get_dollar_setting(132)) == 130:
             gcode = [
-                self.m.quick_scrub(line).replace("Z149", "Z129").replace("Z-149", "Z-129")
+                self.m.quick_scrub(line)
+                .replace("Z149", "Z129")
+                .replace("Z-149", "Z-129")
                 for line in gcode_prescrubbed
             ]
-        elif "rectangle" in filename_end and int(self.m.get_dollar_setting(132)) == 120:  # DWT machine
+        elif "rectangle" in filename_end and int(self.m.get_dollar_setting(132)) == 120:
             gcode = [
-                self.m.quick_scrub(line).replace("Z149", "Z119").replace("Z-149", "Z-119")
+                self.m.quick_scrub(line)
+                .replace("Z149", "Z119")
+                .replace("Z-149", "Z-119")
                 for line in gcode_prescrubbed
             ]
         else:
@@ -1546,12 +1482,6 @@ class OvernightTesting(Screen):
     def _set_datums_in_xyz_without_leds(self):
         list_to_stream = ["G10 L20 P1 X0 Y0", "G10 L20 P1 Z0", "$#"]
         self.m.s.start_sequential_stream(list_to_stream)
-
-    ## DATA SEND FUNCTIONS
-
-    # These actually only need to send any data that hasn't already been sent - for completion, check when arrays are empty
-
-    # Add all statuses to same array - and then for each function/check, see if any of the stages are in the lists. 
 
     def send_six_hour_wear_in_data(self):
         Logger.info("Sending six hour wear-in data")
@@ -1592,17 +1522,12 @@ class OvernightTesting(Screen):
         try:
             Logger.info("Doing data send...")
             stage_id = self.calibration_db.get_stage_id_by_description(stage)
-            # self.calibration_db.insert_final_test_stage(
-            #     self.sn_for_db,
-            #     stage_id
-            # )
             publisher = DataPublisher(self.sn_for_db)
             j_obj = self.status_data_dict[stage]
             statuses = j_obj["Statuses"]
             table = j_obj["Table"]
             done_send = publisher.run_data_send(statuses, table, stage)
             Logger.info("Data send status: " + str(done_send))
-            # self.calibration_db.insert_final_test_statuses(self.status_data_dict[stage])
             statistics = [self.sn_for_db, stage_id]
             statistics.extend(self.statistics_data_dict[stage])
             self.calibration_db.insert_final_test_statistics(*statistics)
@@ -1651,14 +1576,12 @@ class OvernightTesting(Screen):
             sub_serial, motor_index, self.calibration_stage_id, all_coefficients
         )
 
-    ## SET TICKS
     def tick_checkbox(self, checkbox_id, tick):
         if tick:
             checkbox_id.source = self.green_tick
         else:
             checkbox_id.source = self.red_cross
 
-    ## GET TICKS
     def is_step_complete(self, checkbox_id):
         if not checkbox_id.source == self.checkbox_inactive:
             return True
@@ -1671,11 +1594,9 @@ class OvernightTesting(Screen):
         else:
             return False
 
-    ## RESET CHECKBOXES WHEN RUNS RESTART
     def reset_checkbox(self, checkbox_id):
         checkbox_id.source = self.checkbox_inactive
 
-    ## CHECK THAT SG VALUES ARE WITHIN EXPECTED RANGES
     def pass_or_fail_peak_loads(self):
         self.record_min_peaks()
         if self.stage == "OvernightWearIn":

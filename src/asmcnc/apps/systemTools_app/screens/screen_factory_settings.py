@@ -4,9 +4,9 @@ Menu screen for system tools app
 
 @author: Letty
 """
+
 import os
 import sys
-
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.factory import Factory
@@ -32,9 +32,7 @@ from asmcnc.apps.systemTools_app.screens.calibration import screen_stall_jig
 from asmcnc.apps.systemTools_app.screens.calibration import screen_set_thresholds
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 from asmcnc.production.database.calibration_database import CalibrationDatabase
-
 from asmcnc.comms.model_manager import ModelManagerSingleton, ProductCodes
-
 from asmcnc.core_UI import console_utils
 
 Builder.load_string(
@@ -600,13 +598,13 @@ class FactorySettingsScreen(Screen):
     poll_for_creds_file = None
 
     def __init__(self, **kwargs):
+        self.systemtools_sm = kwargs.pop("system_tools")
+        self.m = kwargs.pop("machine")
+        self.set = kwargs.pop("settings")
+        self.l = kwargs.pop("localization")
+        self.kb = kwargs.pop("keyboard")
+        self.usb_stick = kwargs.pop("usb_stick")
         super(FactorySettingsScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs["system_tools"]
-        self.m = kwargs["machine"]
-        self.set = kwargs["settings"]
-        self.l = kwargs["localization"]
-        self.kb = kwargs["keyboard"]
-        self.usb_stick = kwargs["usb_stick"]
         self.model_manager = ModelManagerSingleton()
         self.software_version_label.text = self.set.sw_version
         self.platform_version_label.text = self.set.platform_version
@@ -750,7 +748,9 @@ class FactorySettingsScreen(Screen):
             )
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False
-        elif int(self.product_number_input.text) not in [pc.value for pc in ProductCodes]:
+        elif int(self.product_number_input.text) not in [
+            pc.value for pc in ProductCodes
+        ]:
             warning_message = "Product code should be 01 to 06."
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False
@@ -785,15 +785,20 @@ class FactorySettingsScreen(Screen):
                 + "."
                 + str(self.product_number_input.text)
             )
-            # Do specific tasks for setting up the machine model (e.g. splash screen)
             pc = ProductCodes(int(self.product_number_input.text))
             self.model_manager.set_machine_type(pc, True)
             self.m.write_dollar_setting(50, full_serial_number)
-            if pc is ProductCodes.DRYWALLTEC:  # set max z travel to 120mm because of the rubber bellow
+            if pc is ProductCodes.DRYWALLTEC:
                 Logger.info("Z max travel ($132) is set to 120 for Drywalltec machine.")
                 self.m.write_dollar_setting(132, 120)
-            elif pc in [ProductCodes.PRECISION_PRO, ProductCodes.PRECISION_PRO_X, ProductCodes.PRECISION_PRO_PLUS]:
-                Logger.info("Z max travel ($132) is set to 130 for double stack motors.")
+            elif pc in [
+                ProductCodes.PRECISION_PRO,
+                ProductCodes.PRECISION_PRO_X,
+                ProductCodes.PRECISION_PRO_PLUS,
+            ]:
+                Logger.info(
+                    "Z max travel ($132) is set to 130 for double stack motors."
+                )
                 self.m.write_dollar_setting(132, 130)
             self.machine_serial.text = "updating..."
 
@@ -837,6 +842,7 @@ class FactorySettingsScreen(Screen):
             pass
 
     def factory_reset(self):
+
         def nested_factory_reset():
             if not self.set.do_git_fsck():
                 message = "git FSCK errors found! repo corrupt."
@@ -1147,7 +1153,9 @@ $51 is currently set to """
             serial_number_from_file = str(file.read())
             file.close()
         except:
-            Logger.exception("Could not get serial number! Please contact YetiTool support!")
+            Logger.exception(
+                "Could not get serial number! Please contact YetiTool support!"
+            )
         return str(serial_number_from_file)
 
     def final_test(self, board):

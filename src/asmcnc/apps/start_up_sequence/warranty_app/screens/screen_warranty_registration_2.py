@@ -2,6 +2,7 @@
 Created on nov 2020
 @author: Ollie
 """
+
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -156,11 +157,12 @@ Builder.load_string(
 
 
 class WarrantyScreen2(Screen):
+
     def __init__(self, **kwargs):
+        self.start_seq = kwargs.pop("start_sequence")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
         super(WarrantyScreen2, self).__init__(**kwargs)
-        self.start_seq = kwargs["start_sequence"]
-        self.m = kwargs["machine"]
-        self.l = kwargs["localization"]
         self.serial_number_label.text = self.get_serial_number()
         self.update_strings()
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created March 2019
 
@@ -6,6 +5,7 @@ Created March 2019
 
 Prepare to home
 """
+
 import kivy
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
@@ -85,7 +85,6 @@ Builder.load_string(
 
 
 class SpindleShutdownScreen(Screen):
-    # Vars to preset before calling this screen
     reason_for_pause = None
     return_screen = "lobby"
     time_to_allow_spindle_to_rest = 2
@@ -95,12 +94,12 @@ class SpindleShutdownScreen(Screen):
     z_rest_poll = None
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.jd = kwargs.pop("job")
+        self.db = kwargs.pop("database")
+        self.l = kwargs.pop("localization")
         super(SpindleShutdownScreen, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
-        self.jd = kwargs["job"]
-        self.db = kwargs["database"]
-        self.l = kwargs["localization"]
         self.label_wait.text = self.l.get_str("Please wait") + "."
 
     def on_pre_enter(self):
@@ -108,20 +107,15 @@ class SpindleShutdownScreen(Screen):
 
     def on_enter(self):
         Logger.info("Pausing job...")
-
         if self.reason_for_pause == "spindle_overload":
-            # Job paused due to overload, send event
             self.db.send_event(
                 1, "Job paused", "Paused job (Spindle overload): " + self.jd.job_name, 3
             )
         elif self.reason_for_pause == "job_pause":
-            # Job paused by user, send event
             self.db.send_event(
                 0, "Job paused", "Paused job (User): " + self.jd.job_name, 3
             )
-        # Ensure next timer is reset (problem in some failure modes)
         self.z_rest_poll = None
-        # Allow spindle to rest before checking that the machine has stopped any auto-Z-up move
         self.spindle_decel_poll = Clock.schedule_once(
             self.start_polling_for_z_rest, self.time_to_allow_spindle_to_rest
         )
@@ -132,16 +126,14 @@ class SpindleShutdownScreen(Screen):
         )
 
     def poll_for_z_rest(self, dt):
-        # see if z_pos has changed since last check
         current_z_pos = self.m.z_pos_str()
         if current_z_pos == self.last_z_pos:
-            # machine has stopped
-            self.sm.get_screen(
-                "stop_or_resume_job_decision"
-            ).reason_for_pause = self.reason_for_pause
-            self.sm.get_screen(
-                "stop_or_resume_job_decision"
-            ).return_screen = self.return_screen
+            self.sm.get_screen("stop_or_resume_job_decision").reason_for_pause = (
+                self.reason_for_pause
+            )
+            self.sm.get_screen("stop_or_resume_job_decision").return_screen = (
+                self.return_screen
+            )
             self.sm.current = "stop_or_resume_job_decision"
         else:
             self.last_z_pos = current_z_pos
@@ -150,12 +142,11 @@ class SpindleShutdownScreen(Screen):
         if self.spindle_decel_poll != None:
             self.spindle_decel_poll.cancel()
         if self.z_rest_poll != None:
-            self.z_rest_poll.cancel() # stop polling
-        self.return_screen = "lobby"  # in case it's not set properly in the next call, default quit to lobby
+            self.z_rest_poll.cancel()
+        self.return_screen = "lobby"
 
     def update_strings(self):
         self.label_wait.text = self.l.get_str("Please wait") + "."
-
         if self.m.stylus_router_choice == "router":
             self.pausing_label.text = self.l.get_str(
                 "SmartBench is pausing the spindle motor."

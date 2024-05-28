@@ -2,6 +2,7 @@
 Created on 1 Feb 2018
 @author: Ed
 """
+
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
@@ -107,11 +108,12 @@ Builder.load_string(
 
 
 class SC31ZMove(Widget):
+
     def __init__(self, **kwargs):
+        self.m = kwargs.pop("machine")
+        self.sm = kwargs.pop("screen_manager")
+        self.j = kwargs.pop("job_parameters")
         super(SC31ZMove, self).__init__(**kwargs)
-        self.m = kwargs["machine"]
-        self.sm = kwargs["screen_manager"]
-        self.j = kwargs["job_parameters"]
         self.vitrtual_z_height_widget = widget_sC31_z_height.VirtualZ31(
             machine=self.m, screen_manager=self.sm, job_parameters=self.j
         )

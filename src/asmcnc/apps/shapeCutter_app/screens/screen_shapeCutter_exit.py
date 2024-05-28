@@ -4,6 +4,7 @@ Job Cancelled Screen for the Shape Cutter App
 
 @author: Letty
 """
+
 from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
@@ -64,9 +65,9 @@ class ShapeCutterExitScreenClass(Screen):
     info_button = ObjectProperty()
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
         super(ShapeCutterExitScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs["shapecutter"]
-        self.m = kwargs["machine"]
 
     def on_enter(self):
         self.poll_for_success = Clock.schedule_once(self.exit_screen, 1)

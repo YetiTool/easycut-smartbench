@@ -1,5 +1,4 @@
 from functools import partial
-
 from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.uix.button import Button
@@ -90,10 +89,11 @@ dark_grey = [51 / 255.0, 51 / 255.0, 51 / 255.0, 1.0]
 
 
 class LoadSliderWidget(Widget):
+
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.yp = kwargs.pop("yetipilot")
         super(LoadSliderWidget, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.yp = kwargs["yetipilot"]
         self.load_label.color = dark_grey
         self.min_label.color = dark_grey
         self.max_label.color = dark_grey
@@ -116,8 +116,10 @@ class LoadSliderWidget(Widget):
         button_adjust_func = partial(self.button_adjust_slider, val)
         container.add_widget(
             PowerAdjustButtons(
-                text=btn_str, on_press=button_adjust_func, color=dark_grey,
-                font_size=str(15.0/800.0*Window.width) + 'sp'
+                text=btn_str,
+                on_press=button_adjust_func,
+                color=dark_grey,
+                font_size=str(15.0 / 800.0 * Window.width) + "sp",
             )
         )
 

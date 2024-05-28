@@ -1,36 +1,30 @@
-'''
+"""
 Created on 03 August 2020
 @author: Letty
-'''
-
-## Renumber all items after vac
+"""
 
 import os, sys, subprocess
 from datetime import datetime
-
 from asmcnc.comms.logging_system.logging_system import Logger
 
 try:
     import pigpio
-
 except:
     pass
-
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty
-
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
 from asmcnc.production.z_head_qc_jig import popup_z_head_qc
-
 from asmcnc.skavaUI import widget_status_bar
 from asmcnc.core_UI import console_utils
 
-Builder.load_string("""
+Builder.load_string(
+    """
 <ZHeadQCWarrantyBeforeApr21>:
     fw_version_label : fw_version_label
     consoleStatusText : consoleStatusText
@@ -308,113 +302,111 @@ Builder.load_string("""
             size_hint_y: 0.08
             id: status_container 
             pos: self.pos
-""")
-
+"""
+)
 STATUS_UPDATE_DELAY = 0.4
 TEMP_POWER_POLL = 5
 
+
 class ScrollableLabelStatus(ScrollView):
-    text = StringProperty('')
+    text = StringProperty("")
+
 
 class ZHeadQCWarrantyBeforeApr21(Screen):
 
     def __init__(self, **kwargs):
-
+        self.m = kwargs.pop("m")
+        self.sm = kwargs.pop("sm")
+        self.l = kwargs.pop("l")
         super(ZHeadQCWarrantyBeforeApr21, self).__init__(**kwargs)
-        self.m=kwargs['m']
-        self.sm=kwargs['sm']
-        self.l=kwargs['l']
-
         self.z_limit_set = False
         self.spindle_pass_fail = True
-        self.string_overload_summary = ''
+        self.string_overload_summary = ""
         self.spindle_test_counter = 0
-
-        # Status bar
-        self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
+        self.status_bar_widget = widget_status_bar.StatusBar(
+            machine=self.m, screen_manager=self.sm
+        )
         self.status_container.add_widget(self.status_bar_widget)
-        # self.status_bar_widget.cheeky_color = '#1976d2'
 
     def on_enter(self, *args):
-        self.string_overload_summary = ''
+        self.string_overload_summary = ""
         Clock.schedule_interval(self.scrape_fw_version, 1)
         self.m.is_laser_enabled = True
-        self.poll_for_status = Clock.schedule_interval(self.update_status_text, STATUS_UPDATE_DELAY)      # Poll for status
-        self.poll_for_limits = Clock.schedule_interval(self.update_checkboxes, STATUS_UPDATE_DELAY)      # Poll for limit switches being triggered
+        self.poll_for_status = Clock.schedule_interval(
+            self.update_status_text, STATUS_UPDATE_DELAY
+        )
+        self.poll_for_limits = Clock.schedule_interval(
+            self.update_checkboxes, STATUS_UPDATE_DELAY
+        )
 
     def on_leave(self, *args):
         Clock.unschedule(self.poll_for_status)
         Clock.unschedule(self.poll_for_limits)
-        self.m.s.write_command('$21 = 1')
+        self.m.s.write_command("$21 = 1")
 
     def scrape_fw_version(self, dt):
-        self.fw_version_label.text = str((str(self.m.s.fw_version)).split('; HW')[0])
+        self.fw_version_label.text = str(str(self.m.s.fw_version).split("; HW")[0])
 
     def bake_grbl_settings(self):
         grbl_settings = [
-                    '$0=10',          #Step pulse, microseconds
-                    '$1=255',         #Step idle delay, milliseconds
-                    '$2=4',           #Step port invert, mask
-                    '$3=1',           #Direction port invert, mask
-                    '$4=0',           #Step enable invert, boolean
-                    '$5=1',           #Limit pins invert, boolean
-                    '$6=0',           #Probe pin invert, boolean
-                    '$10=3',          #Status report, mask <----------------------
-                    '$11=0.010',      #Junction deviation, mm
-                    '$12=0.002',      #Arc tolerance, mm
-                    '$13=0',          #Report inches, boolean
-                    '$20=1',          #Soft limits, boolean <-------------------
-                    # '$21=1',          #Hard limits, boolean <------------------
-                    '$22=1',          #Homing cycle, boolean <------------------------
-                    '$23=3',          #Homing dir invert, mask
-                    '$24=600.0',      #Homing feed, mm/min
-                    '$25=3000.0',     #Homing seek, mm/min
-                    '$26=250',        #Homing debounce, milliseconds
-                    '$27=15.000',     #Homing pull-off, mm
-                    '$30=25000.0',    #Max spindle speed, RPM
-                    '$31=0.0',        #Min spindle speed, RPM
-                    '$32=0',          #Laser mode, boolean
-                    # '$100=56.649',    #X steps/mm
-                    # '$101=56.665',    #Y steps/mm
-                    # '$102=1066.667',  #Z steps/mm
-                    '$110=8000.0',    #X Max rate, mm/min
-                    '$111=6000.0',    #Y Max rate, mm/min
-                    '$112=750.0',     #Z Max rate, mm/min
-                    '$120=130.0',     #X Acceleration, mm/sec^2
-                    '$121=130.0',     #Y Acceleration, mm/sec^2
-                    '$122=200.0',     #Z Acceleration, mm/sec^2
-                    '$130=1300.0',    #X Max travel, mm TODO: Link to a settings object
-                    '$131=2503.0',    #Y Max travel, mm
-                    '$132=150.0',     #Z Max travel, mm
-                    '$$',             # Echo grbl settings, which will be read by sw, and internal parameters sync'd
-                    '$#'              # Echo grbl parameter info, which will be read by sw, and internal parameters sync'd
-            ]
-
-        self.m.s.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)   # Send any grbl specific parameters
+            "$0=10",
+            "$1=255",
+            "$2=4",
+            "$3=1",
+            "$4=0",
+            "$5=1",
+            "$6=0",
+            "$10=3",
+            "$11=0.010",
+            "$12=0.002",
+            "$13=0",
+            "$20=1",
+            "$22=1",
+            "$23=3",
+            "$24=600.0",
+            "$25=3000.0",
+            "$26=250",
+            "$27=15.000",
+            "$30=25000.0",
+            "$31=0.0",
+            "$32=0",
+            "$110=8000.0",
+            "$111=6000.0",
+            "$112=750.0",
+            "$120=130.0",
+            "$121=130.0",
+            "$122=200.0",
+            "$130=1300.0",
+            "$131=2503.0",
+            "$132=150.0",
+            "$$",
+            "$#",
+        ]
+        self.m.s.start_sequential_stream(grbl_settings, reset_grbl_after_stream=True)
 
     def open_monitor(self):
-        self.sm.get_screen('monitor').parent_screen = 'qcW112'
+        self.sm.get_screen("monitor").parent_screen = "qcW112"
         self.sm.current = "monitor"
 
     def home(self):
         self.m.is_machine_completed_the_initial_squaring_decision = True
         self.m.is_squaring_XY_needed_after_homing = False
-        self.m.request_homing_procedure('qcW112','qcW112')
+        self.m.request_homing_procedure("qcW112", "qcW112")
 
     def resume_from_alarm(self):
         self.m.resume_from_alarm()
 
     def x_motor_up(self):
-        self.m.jog_relative('X', 50, 6000)
+        self.m.jog_relative("X", 50, 6000)
 
     def x_motor_down(self):
-        self.m.jog_relative('X', -50, 6000)
+        self.m.jog_relative("X", -50, 6000)
 
     def z_motor_up(self):
-        self.m.jog_relative('Z', 20, 750)
+        self.m.jog_relative("Z", 20, 750)
 
     def z_motor_down(self):
-        self.m.jog_relative('Z', -20, 750)
+        self.m.jog_relative("Z", -20, 750)
 
     def set_spindle(self):
         if self.m.s.spindle_on:
@@ -423,7 +415,7 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
             self.m.turn_on_spindle()
 
     def set_laser(self):
-        if self.laser_toggle.state == 'normal':
+        if self.laser_toggle.state == "normal":
             self.m.laser_off()
         else:
             self.m.laser_on()
@@ -435,32 +427,25 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
             self.m.turn_on_vacuum()
 
     def dust_shoe_red(self):
-        self.m.set_led_colour('RED')
+        self.m.set_led_colour("RED")
 
     def dust_shoe_green(self):
-        self.m.set_led_colour('GREEN')
+        self.m.set_led_colour("GREEN")
 
     def dust_shoe_blue(self):
-        self.m.set_led_colour('BLUE')
+        self.m.set_led_colour("BLUE")
 
     def disable_alarms(self):
-        self.m.s.write_command('$21 = 0')
+        self.m.s.write_command("$21 = 0")
 
     def enable_alarms(self):
-        self.m.s.write_command('$21 = 1')
+        self.m.s.write_command("$21 = 1")
 
     def update_checkboxes(self, dt):
-        # self.dust_shoe_switch()
         self.x_home_switch()
         self.x_max_switch()
         self.z_home_switch()
         self.probe()
-
-    # def dust_shoe_switch(self):
-    #     if self.m.s.dust_shoe_cover:
-    #         self.dust_shoe_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
-    #     else:
-    #         self.dust_shoe_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
 
     def x_home_switch(self):
         if self.m.s.limit_x:
@@ -488,7 +473,9 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
 
     def cycle_limit_switch(self):
         if self.m.s.limit_z:
-            self.cycle_limit_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
+            self.cycle_limit_check.source = (
+                "./asmcnc/skavaUI/img/file_select_select.png"
+            )
             self.z_limit_set = True
         else:
             self.cycle_limit_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"
@@ -500,32 +487,28 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
         self.m.quit_jog()
 
     def do_cycle(self):
+        self.m.s.write_command("G53 G0 Z-150")
+        self.m.s.write_command("G53 G0 Z-1")
+        self.m.s.write_command("G53 G0 Z-150")
+        self.m.s.write_command("G53 G0 Z-1")
+        self.m.s.write_command("G53 G0 Z-150")
+        self.m.s.write_command("G53 G0 Z-1")
+        self.m.s.write_command("G53 G0 Z-150")
+        self.m.s.write_command("G53 G0 Z-1")
+        self.m.s.write_command("G53 G0 Z-150")
+        self.m.s.write_command("G53 G0 Z-1")
+        self.m.s.write_command("G53 G0 Z-150")
+        self.m.s.write_command("G53 G0 Z-1")
+        self.m.s.write_command("G53 G0 Z-150")
+        self.m.s.write_command("G53 G0 Z-1")
+        self.m.s.write_command("G53 G0 Z-150")
+        self.m.s.write_command("G53 G0 Z-1")
+        self.m.s.write_command("G53 G0 Z-150")
+        self.m.s.write_command("G53 G0 Z-1")
+        self.m.s.write_command("G53 G0 Z-150")
+        self.m.s.write_command("G53 G0 Z-1")
 
-        self.m.s.write_command('G53 G0 Z-150')
-        self.m.s.write_command('G53 G0 Z-1')
-        self.m.s.write_command('G53 G0 Z-150')
-        self.m.s.write_command('G53 G0 Z-1')
-        self.m.s.write_command('G53 G0 Z-150')
-        self.m.s.write_command('G53 G0 Z-1')
-        self.m.s.write_command('G53 G0 Z-150')
-        self.m.s.write_command('G53 G0 Z-1')
-        self.m.s.write_command('G53 G0 Z-150')
-        self.m.s.write_command('G53 G0 Z-1')
-        self.m.s.write_command('G53 G0 Z-150')
-        self.m.s.write_command('G53 G0 Z-1')
-        self.m.s.write_command('G53 G0 Z-150')
-        self.m.s.write_command('G53 G0 Z-1')
-        self.m.s.write_command('G53 G0 Z-150')
-        self.m.s.write_command('G53 G0 Z-1')
-        self.m.s.write_command('G53 G0 Z-150')
-        self.m.s.write_command('G53 G0 Z-1')
-        self.m.s.write_command('G53 G0 Z-150')
-        self.m.s.write_command('G53 G0 Z-1')
-
-
-    # TEST FIRMWARE UPDATE
     def test_fw_update(self):
-
         self.test_fw_update_button.text = "  Updating..."
 
         def disconnect_and_update():
@@ -538,12 +521,12 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
             pi.set_mode(17, pigpio.ALT3)
             Logger.info(pi.get_mode(17))
             pi.stop()
-
             cmd = "grbl_file=/media/usb/GRBL*.hex && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
-            proc = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+            proc = subprocess.Popen(
+                cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True
+            )
             self.stdout, stderr = proc.communicate()
             self.exit_code = int(proc.returncode)
-
             connect()
 
         def connect():
@@ -552,39 +535,40 @@ class ZHeadQCWarrantyBeforeApr21(Screen):
 
         def do_connection(dt):
             self.m.reconnect_serial_connection()
-            self.poll_for_reconnection = Clock.schedule_interval(try_start_services, 0.4)
+            self.poll_for_reconnection = Clock.schedule_interval(
+                try_start_services, 0.4
+            )
 
         def try_start_services(dt):
             if self.m.s.is_connected():
                 Clock.unschedule(self.poll_for_reconnection)
                 Clock.schedule_once(self.m.s.start_services, 1)
-                # hopefully 1 second should always be enough to start services
                 Clock.schedule_once(update_complete, 2)
 
         def update_complete(dt):
             if self.exit_code == 0:
                 did_fw_update_succeed = "Success!"
-
             else:
                 did_fw_update_succeed = "Update failed."
-
-            popup_z_head_qc.PopupFWUpdateDiagnosticsInfo(self.sm, did_fw_update_succeed, str(self.stdout))
-            self.test_fw_update_button.text = '  17. Test FW Update'
-
-            self.sm.get_screen('qc1').reset_checkboxes()
-            self.sm.get_screen('qc2').reset_checkboxes()
-            self.sm.get_screen('qcW136').reset_checkboxes()
-            self.sm.get_screen('qcW112').reset_checkboxes()
-            self.sm.get_screen('qc3').reset_timer()
+            popup_z_head_qc.PopupFWUpdateDiagnosticsInfo(
+                self.sm, did_fw_update_succeed, str(self.stdout)
+            )
+            self.test_fw_update_button.text = "  17. Test FW Update"
+            self.sm.get_screen("qc1").reset_checkboxes()
+            self.sm.get_screen("qc2").reset_checkboxes()
+            self.sm.get_screen("qcW136").reset_checkboxes()
+            self.sm.get_screen("qcW112").reset_checkboxes()
+            self.sm.get_screen("qc3").reset_timer()
 
         disconnect_and_update()
 
-
     def update_status_text(self, dt):
-        self.consoleStatusText.text = self.sm.get_screen('home').gcode_monitor_widget.consoleStatusText.text
+        self.consoleStatusText.text = self.sm.get_screen(
+            "home"
+        ).gcode_monitor_widget.consoleStatusText.text
 
     def back_to_choice(self):
-        self.sm.current = 'qcWC'
+        self.sm.current = "qcWC"
 
     def reset_checkboxes(self):
         self.x_home_check.source = "./asmcnc/skavaUI/img/checkbox_inactive.png"

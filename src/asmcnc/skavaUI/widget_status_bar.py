@@ -2,6 +2,7 @@
 Created on 1 Feb 2018
 @author: Ed
 """
+
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
@@ -156,9 +157,9 @@ class StatusBar(Widget):
     wifi_warning = "./asmcnc/skavaUI/img/wifi_warning.png"
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop("machine")
+        self.sm = kwargs.pop("screen_manager")
         super(StatusBar, self).__init__(**kwargs)
-        self.m = kwargs["machine"]
-        self.sm = kwargs["screen_manager"]
         Clock.schedule_interval(
             self.refresh_grbl_label_values, self.GRBL_REPORT_INTERVAL
         )

@@ -11,10 +11,7 @@ Currently forces user to reboot, as I'm not sure how to get a successful re-esta
 """
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
-from kivy.properties import (
-    ObjectProperty,
-    StringProperty,
-)
+from kivy.properties import ObjectProperty, StringProperty
 
 Builder.load_string(
     """
@@ -111,10 +108,11 @@ class SerialFailureClass(Screen):
     user_instruction = StringProperty()
 
     def __init__(self, **kwargs):
+        self.win_port = kwargs.pop("win_port")
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
         super(SerialFailureClass, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
-        self.l = kwargs["localization"]
         self.update_strings()
 
     def on_enter(self):

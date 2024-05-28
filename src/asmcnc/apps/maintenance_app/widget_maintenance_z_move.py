@@ -2,12 +2,11 @@
 Created on 1 Feb 2018
 @author: Ed
 """
+
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
-
 from asmcnc.skavaUI import popup_info
 from asmcnc.skavaUI import widget_z_height
-
 from asmcnc.core_UI.popups import InfoPopup
 
 Builder.load_string(
@@ -103,12 +102,13 @@ Builder.load_string(
 
 
 class MaintenanceZMove(Widget):
+
     def __init__(self, **kwargs):
+        self.m = kwargs.pop("machine")
+        self.sm = kwargs.pop("screen_manager")
+        self.l = kwargs.pop("localization")
+        self.jd = kwargs.pop("job")
         super(MaintenanceZMove, self).__init__(**kwargs)
-        self.m = kwargs["machine"]
-        self.sm = kwargs["screen_manager"]
-        self.l = kwargs["localization"]
-        self.jd = kwargs["job"]
         self.virtual_z_container.add_widget(
             widget_z_height.VirtualZ(
                 machine=self.m, screen_manager=self.sm, job=self.jd
@@ -185,7 +185,12 @@ class MaintenanceZMove(Widget):
                 self.l.get_str("save"), self.l.get_bold("save")
             )
         )
-
-        popup = InfoPopup(sm=self.sm, m=self.m, l=self.l, main_string=info, popup_width=700, popup_height=440)
+        popup = InfoPopup(
+            sm=self.sm,
+            m=self.m,
+            l=self.l,
+            main_string=info,
+            popup_width=700,
+            popup_height=440,
+        )
         popup.open()
-

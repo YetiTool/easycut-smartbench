@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 """
 Created on 1 Feb 2018
 @author: Ed
 """
+
 import kivy, textwrap
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
@@ -33,7 +33,7 @@ Builder.load_string(
         
         GridLayout:
             cols: 3
-            orientation: 'horizontal'
+            orientation: 'lr-tb'
             spacing: 0
             size_hint_y: None
             height: self.width
@@ -283,11 +283,12 @@ Builder.load_string(
 
 
 class XYMove(Widget):
+
     def __init__(self, **kwargs):
+        self.m = kwargs.pop("machine")
+        self.sm = kwargs.pop("screen_manager")
+        self.l = kwargs.pop("localization")
         super(XYMove, self).__init__(**kwargs)
-        self.m = kwargs["machine"]
-        self.sm = kwargs["screen_manager"]
-        self.l = kwargs["localization"]
 
     jogMode = "free"
     jog_mode_button_press_counter = 0
@@ -431,5 +432,7 @@ class XYMove(Widget):
         popup_info.PopupDatum(self.sm, self.m, self.l, "Y", warning)
 
     def format_command(self, cmd):
-        wrapped_cmd = textwrap.fill(cmd, width=0.04375*Window.width, break_long_words=False)
+        wrapped_cmd = textwrap.fill(
+            cmd, width=0.04375 * Window.width, break_long_words=False
+        )
         return wrapped_cmd

@@ -4,6 +4,7 @@ Screen to inform user of essential preparation before they continue calibrating
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty
@@ -180,9 +181,9 @@ class PrepCalibrationScreenClass(Screen):
 - When your machine is prepared, press "Home" to start the homing sequence."""
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
         super(PrepCalibrationScreenClass, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
 
     def quit_calibration(self):
         self.sm.get_screen("calibration_complete").calibration_cancelled = True

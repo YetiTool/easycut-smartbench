@@ -180,13 +180,13 @@ class UploadSerialNumbersScreen(Screen):
     already_in_database = False
 
     def __init__(self, **kwargs):
+        self.systemtools_sm = kwargs.pop("systemtools")
+        self.m = kwargs.pop("m")
+        self.calibration_db = kwargs.pop("calibration_db")
+        self.set = kwargs.pop("settings")
+        self.l = kwargs.pop("l")
+        self.kb = kwargs.pop("keyboard")
         super(UploadSerialNumbersScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs["systemtools"]
-        self.m = kwargs["m"]
-        self.calibration_db = kwargs["calibration_db"]
-        self.set = kwargs["settings"]
-        self.l = kwargs["l"]
-        self.kb = kwargs["keyboard"]
         self.text_inputs = [
             self.zhead_serial_input,
             self.lb_serial_input,
@@ -225,7 +225,6 @@ class UploadSerialNumbersScreen(Screen):
     def check_for_duplicates_and_autofill(self):
         try:
             (
-                # Get serial numbers
                 self.zhead_serial_input.text,
                 self.lb_serial_input.text,
                 self.ub_serial_input.text,
@@ -261,8 +260,6 @@ class UploadSerialNumbersScreen(Screen):
         version_check = self.check_versions_valid_regex()
         if not regex_check or not valid_check or not version_check:
             return
-        
-        ## LINK SERIAL NUMBERS IN DATABASE
         if not self.already_in_database:
             all_serial_numbers = [
                 self.machine_serial_number,
@@ -277,8 +274,6 @@ class UploadSerialNumbersScreen(Screen):
                 self.squareness_input.text,
             ]
             self.calibration_db.insert_serial_numbers(*all_serial_numbers)
-
-        ## DOWNLOAD LB CALIBRATION & UPLOAD TO Z HEAD
         self.error_label.text = "Getting LB data..."
         Clock.schedule_once(lambda dt: self.download_and_upload_LB_cal_data(), 0.2)
 
@@ -352,7 +347,6 @@ class UploadSerialNumbersScreen(Screen):
         truncated_fw_version = ver_lst[0] + "." + ver_lst[1] + "." + ver_lst[2]
         return truncated_fw_version
 
-    # CALIBRATION DATA DOWNLOAD & UPLOAD
     def download_and_upload_LB_cal_data(self):
         self.send_public_keys()
         stage_id = self.calibration_db.get_stage_id_by_description("CalibrationQC")

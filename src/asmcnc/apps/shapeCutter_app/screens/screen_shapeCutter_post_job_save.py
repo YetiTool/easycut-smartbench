@@ -4,13 +4,15 @@ Feedback Screen for the Shape Cutter App
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, StringProperty
 from asmcnc.apps.shapeCutter_app.screens import popup_input_error
 from asmcnc.core_UI.popups import WarningPopup
 
-Builder.load_string("""
+Builder.load_string(
+    """
 #:import LabelBase asmcnc.core_UI.components.labels.base_label
 
 <ShapeCutterSaveJobScreenClass>:
@@ -221,12 +223,11 @@ class ShapeCutterSaveJobScreenClass(Screen):
     display_profile = StringProperty()
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
+        self.j = kwargs.pop("job_parameters")
+        self.kb = kwargs.pop("keyboard")
         super(ShapeCutterSaveJobScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs["shapecutter"]
-        self.m = kwargs["machine"]
-        self.j = kwargs["job_parameters"]
-        self.kb = kwargs["keyboard"]
-        # Add the IDs of ALL the TextInputs on this screen
         self.text_inputs = [self.file_name]
 
     def on_touch(self):
@@ -253,12 +254,16 @@ class ShapeCutterSaveJobScreenClass(Screen):
             description = """Filename input is empty.
 
 Please enter a name for your parameter profile."""
-            WarningPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
-                            main_string=description,
-                            popup_width=400,
-                            popup_height=380,
-                            main_label_size_delta=40,
-                            button_layout_padding=[50,25,50,0],
-                            main_label_h_align='left',
-                            main_layout_padding=[50,20,50,20],
-                            main_label_padding=[20,20]).open()
+            WarningPopup(
+                sm=self.shapecutter_sm,
+                m=self.m,
+                l=self.m.l,
+                main_string=description,
+                popup_width=400,
+                popup_height=380,
+                main_label_size_delta=40,
+                button_layout_padding=[50, 25, 50, 0],
+                main_label_h_align="left",
+                main_layout_padding=[50, 20, 50, 20],
+                main_label_padding=[20, 20],
+            ).open()

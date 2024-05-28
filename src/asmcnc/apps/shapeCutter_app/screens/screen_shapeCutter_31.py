@@ -4,6 +4,7 @@ Screen 31 for the Shape Cutter App
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
@@ -322,11 +323,11 @@ class ShapeCutter31ScreenClass(Screen):
     user_instructions = StringProperty()
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
+        self.j = kwargs.pop("job_parameters")
         super(ShapeCutter31ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs["shapecutter"]
-        self.m = kwargs["machine"]
-        self.l = kwargs["localization"]
-        self.j = kwargs["job_parameters"]
         self.xy_move_widget = widget_sC31_xy_move.SC31XYMove(
             machine=self.m,
             localization=self.l,
@@ -351,7 +352,6 @@ class ShapeCutter31ScreenClass(Screen):
         self.info_button.opacity = 1
         self.z_set_go_widget.set_jog_speeds()
 
-# Action buttons
     def get_info(self):
         info = """Move the machine by using the arrow buttons.
 
@@ -360,11 +360,15 @@ Use the Z0 button to set the datum using the touchplate.
 Use the SET button to manually set the datum.
 
 Use the GO button to move the machine to the datum. """
-        InfoPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
-                  main_string=info,
-                  popup_width=500,
-                  popup_height=400,
-                  main_label_size_delta=140).open()
+        InfoPopup(
+            sm=self.shapecutter_sm,
+            m=self.m,
+            l=self.m.l,
+            main_string=info,
+            popup_width=500,
+            popup_height=400,
+            main_label_size_delta=140,
+        ).open()
 
     def go_back(self):
         if not self.m.state().startswith("Jog"):
@@ -377,8 +381,6 @@ Use the GO button to move the machine to the datum. """
             self.bounding_box_test()
         else:
             pass
-    
-# Tab functions
 
     def prepare(self):
         if not self.m.state().startswith("Jog"):

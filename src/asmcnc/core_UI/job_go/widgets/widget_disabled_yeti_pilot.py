@@ -1,9 +1,7 @@
 from enum import Enum
-
 from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
-
 from asmcnc.core_UI.job_go.screens.screen_spindle_health_check import (
     SpindleHealthCheckActiveScreen,
 )
@@ -92,16 +90,16 @@ class DisabledYetiPilotWidget(Widget):
     health_check_enabled_img = "./asmcnc/core_UI/job_go/img/spindle_check_silver.png"
     health_check_disabled_img = "./asmcnc/core_UI/job_go/img/spindle_check_disabled.png"
     font_str = "[size=%dsp]"
-    bigger_font_str = font_str % float(17.0/800.0*Window.width)
-    smaller_font_str = font_str % float(15.0/800.0*Window.width)
+    bigger_font_str = font_str % float(17.0 / 800.0 * Window.width)
+    smaller_font_str = font_str % float(15.0 / 800.0 * Window.width)
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.l = kwargs.pop("localization")
+        self.m = kwargs.pop("machine")
+        self.db = kwargs.pop("database")
+        self.yp = kwargs.pop("yetipilot")
         super(DisabledYetiPilotWidget, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.l = kwargs["localization"]
-        self.m = kwargs["machine"]
-        self.db = kwargs["database"]
-        self.yp = kwargs["yetipilot"]
         self.yp.disable()
         self.update_strings()
 

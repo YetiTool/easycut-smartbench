@@ -6,6 +6,7 @@ Distance: step 3
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.properties import ObjectProperty, StringProperty, NumericProperty
@@ -292,15 +293,14 @@ class DistanceScreen3xClass(Screen):
     x_cal_measure_2 = NumericProperty()
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
         super(DistanceScreen3xClass, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
 
     def on_pre_enter(self):
         self.nudge_counter = 0
         self.value_input.text = ""
         self.title_label.text = "[color=000000]X Distance:[/color]"
-        # set this screen up for when user returns to Step 3 :)
         self.user_instructions_text.text = """Using the nudges move the carriage to achieve a measurement at the next perfect millimeter increment.
 
 Nudging will move the Z head away from X-home."""
@@ -321,42 +321,36 @@ Nudging will move the Z head away from X-home."""
         self.x_cal_measure_2 = float(self.value_input.text)
 
     def set_and_check(self):
-        self.final_x_cal_move = self.initial_x_cal_move + self.nudge_total # (machine thinks)
+        self.final_x_cal_move = self.initial_x_cal_move + self.nudge_total
         self.measured_x_cal_move = self.x_cal_measure_2 - self.x_cal_measure_1
-        # get dollar settings
         self.m.get_grbl_settings()
-        # get setting 100 from serial screen
         self.existing_x_steps_per_mm = self.m.s.setting_100
-        # calculate new steps per mm
         self.new_x_steps_per_mm = self.existing_x_steps_per_mm * (
             self.final_x_cal_move / self.measured_x_cal_move
         )
         self.next_screen()
 
     def next_instruction(self):
-        # When the button under the text input is pressed, it triggers the button command and sets up
-        # for the next version of this screen:
         if self.value_input.text == "":
             self.warning_label.opacity = 1
             return
         if self.x_cal_measure_1 == float(self.value_input.text):
             self.test_instructions_label.text = "[color=ff0000]INVALID MEASUREMENT: Please nudge to the next mm increment and record the new value[/color]"
             return
-        self.save_measured_value()              # get text input
-        self.nudge_total = self.nudge_counter   # keep the nudges this time, we need them!
-        self.nudge_counter = 0                  # clear nudge counter
-        # Do the actual button command,
+        self.save_measured_value()
+        self.nudge_total = self.nudge_counter
+        self.nudge_counter = 0
         self.set_and_check()
 
     def quit_calibration(self):
-        self.sm.get_screen(
-            "tape_measure_alert"
-        ).return_to_screen = "calibration_complete"
+        self.sm.get_screen("tape_measure_alert").return_to_screen = (
+            "calibration_complete"
+        )
         self.sm.get_screen("calibration_complete").calibration_cancelled = True
         self.sm.current = "tape_measure_alert"
 
     def repeat_section(self):
-        from asmcnc.calibration_app import screen_distance_1_x # this has to be here
+        from asmcnc.calibration_app import screen_distance_1_x
 
         distance_screen1x = screen_distance_1_x.DistanceScreen1xClass(
             name="distance1x", screen_manager=self.sm, machine=self.m
@@ -369,7 +363,7 @@ Nudging will move the Z head away from X-home."""
         self.sm.current = "measurement"
 
     def next_screen(self):
-        if not self.sm.has_screen("distance4x"): # only create the new screen if it doesn't exist already
+        if not self.sm.has_screen("distance4x"):
             distance4x_screen = screen_distance_4_x.DistanceScreen4xClass(
                 name="distance4x", screen_manager=self.sm, machine=self.m
             )

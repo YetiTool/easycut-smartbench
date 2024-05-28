@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.scrollview import ScrollView
@@ -217,10 +216,10 @@ class WiFiAndDataConsentScreen3(Screen):
     )
 
     def __init__(self, **kwargs):
+        self.start_seq = kwargs.pop("start_sequence")
+        self.c = kwargs.pop("consent_manager")
+        self.l = kwargs.pop("localization")
         super(WiFiAndDataConsentScreen3, self).__init__(**kwargs)
-        self.start_seq = kwargs["start_sequence"]
-        self.c = kwargs["consent_manager"]
-        self.l = kwargs["localization"]
         self.update_strings()
         self.set_checkbox_default()
 

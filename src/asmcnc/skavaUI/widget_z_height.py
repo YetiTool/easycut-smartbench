@@ -2,6 +2,7 @@
 Created on 1 Feb 2018
 @author: Ed
 """
+
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.lang import Builder
@@ -63,10 +64,10 @@ class VirtualZ(Widget):
     WIDGET_REFRESH_INTERVAL = 0.1
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop("machine")
+        self.sm = kwargs.pop("screen_manager")
+        self.jd = kwargs.pop("job")
         super(VirtualZ, self).__init__(**kwargs)
-        self.m = kwargs["machine"]
-        self.sm = kwargs["screen_manager"]
-        self.jd = kwargs["job"]
         Clock.schedule_interval(self.refresh_widget, self.WIDGET_REFRESH_INTERVAL)
 
     def refresh_widget(self, dt):
@@ -87,9 +88,9 @@ class VirtualZ(Widget):
             )
             if self.jd.filename == "":
                 if self.z_clear.size[1] == 0:
-                    self.z_clear.size[1] = 4.0/800.0 * Window.width
+                    self.z_clear.size[1] = 4.0 / 800.0 * Window.width
                 if self.z_cut.size[1] == 0:
-                    self.z_cut.size[1] = 4.0/800.0 * Window.width
+                    self.z_cut.size[1] = 4.0 / 800.0 * Window.width
             else:
                 self.z_clear.size[1] = (
                     z_max / self.m.grbl_z_max_travel * self.z_clear.parent.size[1]

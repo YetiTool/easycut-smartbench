@@ -102,19 +102,19 @@ Builder.load_string(
 
 
 class RecoveryDecisionScreen(Screen):
+
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.jd = kwargs.pop("job")
+        self.l = kwargs.pop("localization")
         super(RecoveryDecisionScreen, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
-        self.jd = kwargs["job"]
-        self.l = kwargs["localization"]
         self.update_strings()
 
     def on_pre_enter(self):
         self.update_completion_label_and_button_colours()
 
     def update_completion_label_and_button_colours(self):
-        # Check if job recovery (or job redo) is available
         if self.jd.job_recovery_cancel_line == None:
             self.job_name_label.text = ""
             self.completion_label.text = self.l.get_str("No file available!")
@@ -142,7 +142,6 @@ class RecoveryDecisionScreen(Screen):
             self.repeat_job_button.background_down = (
                 "./asmcnc/skavaUI/img/blank_green_button.png"
             )
-            # Cancel on line -1 represents last job completing successfully
             if self.jd.job_recovery_cancel_line == -1:
                 self.completion_label.text = self.l.get_str(
                     "SmartBench completed the last job 100%"
@@ -166,14 +165,12 @@ class RecoveryDecisionScreen(Screen):
         self.update_font_size(self.completion_label)
 
     def go_to_recovery(self):
-        # Doing it this way because disabling the button causes visuals errors
         if self.jd.job_recovery_cancel_line != -1:
             self.repeat_job(recovering=True)
 
     def repeat_job(self, recovering=False):
         if self.jd.job_recovery_cancel_line != None:
             if os.path.isfile(self.jd.job_recovery_filepath):
-                # Only load file if it's not already loaded
                 if self.jd.job_recovery_filepath != self.jd.filename:
                     self.jd.reset_values()
                     self.jd.job_recovery_from_beginning = True
@@ -187,12 +184,12 @@ class RecoveryDecisionScreen(Screen):
                     self.sm.get_screen("home").z_datum_reminder_flag = True
                     self.jd.reset_recovery()
                     if recovering:
-                        self.sm.get_screen(
-                            "homing_decision"
-                        ).return_to_screen = "job_recovery"
-                        self.sm.get_screen(
-                            "homing_decision"
-                        ).cancel_to_screen = "job_recovery"
+                        self.sm.get_screen("homing_decision").return_to_screen = (
+                            "job_recovery"
+                        )
+                        self.sm.get_screen("homing_decision").cancel_to_screen = (
+                            "job_recovery"
+                        )
                         self.sm.current = "homing_decision"
                     else:
                         self.jd.job_recovery_from_beginning = True

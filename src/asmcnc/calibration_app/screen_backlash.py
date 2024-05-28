@@ -11,6 +11,7 @@ Step 3: Inform
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, StringProperty
@@ -262,9 +263,9 @@ class BacklashScreenClass(Screen):
     axis = StringProperty()
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
         super(BacklashScreenClass, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
 
     def on_pre_enter(self):
         self.title_label.text = "[color=000000] " + self.axis + " backlash:[/color]"
@@ -377,9 +378,9 @@ Nudging will move the Z head towards Y-home."""
         self.nudge01_button.disabled = True
 
     def quit_calibration(self):
-        self.sm.get_screen(
-            "tape_measure_alert"
-        ).return_to_screen = "calibration_complete"
+        self.sm.get_screen("tape_measure_alert").return_to_screen = (
+            "calibration_complete"
+        )
         self.sm.get_screen("calibration_complete").calibration_cancelled = True
         self.sm.current = "tape_measure_alert"
 

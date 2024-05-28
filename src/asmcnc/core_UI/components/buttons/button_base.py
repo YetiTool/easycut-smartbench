@@ -15,6 +15,7 @@ class ButtonBase(Button):
     Additional notes:
     This is an abstract class and must not be instantiated directly!
     """
+
     def __init__(self, **kwargs):
         super(ButtonBase, self).__init__(**kwargs)
 
@@ -30,5 +31,6 @@ class ImageButtonBase(ButtonBehavior, Image):
     Additional notes:
     This is an abstract class and must not be instantiated directly!
     """
+
     def __init__(self, **kwargs):
         super(ImageButtonBase, self).__init__(**kwargs)

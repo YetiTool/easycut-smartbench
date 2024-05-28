@@ -5,10 +5,9 @@ Screen to tell user that machine is not Idle (before running a job).
 
 @author: Letty
 """
+
 from kivy.lang import Builder
-from kivy.properties import (
-    StringProperty,
-)
+from kivy.properties import StringProperty
 from kivy.uix.screenmanager import Screen
 from kivy.utils import get_color_from_hex
 
@@ -108,10 +107,10 @@ class WarningMState(Screen):
     user_instruction = StringProperty()
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
         super(WarningMState, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
-        self.l = kwargs["localization"]
         self.update_strings()
 
     def on_enter(self):

@@ -1,24 +1,20 @@
-# -*- coding: utf-8 -*-
 """
 Created on 19 Aug 2017
 
 @author: Ed
 """
+
 import os
 import sys
 from itertools import takewhile
 from os import path
 from shutil import copy
-
 import kivy
 from chardet import detect
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.graphics import Color, Rectangle
 from kivy.lang import Builder
-from kivy.properties import (
-    ObjectProperty,
-    StringProperty,
-)
+from kivy.properties import ObjectProperty, StringProperty
 from kivy.uix.screenmanager import Screen
 
 Builder.load_string(
@@ -255,9 +251,7 @@ def name_order_sort_reverse(files, filesystem):
     )
 
 
-decode_and_encode = lambda x: unicode(x, detect(x)["encoding"] or "utf-8").encode(
-    "utf-8"
-)
+decode_and_encode = lambda x: str(x, detect(x)["encoding"] or "utf-8").encode("utf-8")
 
 
 class USBFileChooser(Screen):
@@ -268,10 +262,10 @@ class USBFileChooser(Screen):
     is_filechooser_scrolling = False
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.jd = kwargs.pop("job")
+        self.l = kwargs.pop("localization")
         super(USBFileChooser, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.jd = kwargs["job"]
-        self.l = kwargs["localization"]
         self.list_layout_fc.ids.scrollview.bind(on_scroll_stop=self.scrolling_stop)
         self.list_layout_fc.ids.scrollview.bind(on_scroll_start=self.scrolling_start)
         self.icon_layout_fc.ids.scrollview.bind(on_scroll_stop=self.scrolling_stop)
@@ -336,12 +330,12 @@ class USBFileChooser(Screen):
         self.switch_view()
 
     def on_pre_leave(self):
-        self.sm.get_screen(
-            "local_filechooser"
-        ).filechooser.sort_func = self.filechooser_usb.sort_func
-        self.sm.get_screen(
-            "local_filechooser"
-        ).image_sort.source = self.image_sort.source
+        self.sm.get_screen("local_filechooser").filechooser.sort_func = (
+            self.filechooser_usb.sort_func
+        )
+        self.sm.get_screen("local_filechooser").image_sort.source = (
+            self.image_sort.source
+        )
         if self.sm.current != "local_filechooser":
             self.usb_stick.disable()
 
@@ -471,6 +465,7 @@ class USBFileChooser(Screen):
         self.image_select.source = "./asmcnc/skavaUI/img/file_select_select.png"
 
     def get_metadata(self):
+
         def not_end_of_metadata(x):
             if "(End of YetiTool SmartBench MES-Data)" in x:
                 return False
@@ -485,15 +480,19 @@ class USBFileChooser(Screen):
             with open(self.filechooser_usb.selection[0]) as previewed_file:
                 try:
                     if "(YetiTool SmartBench MES-Data)" in previewed_file.readline():
-                        metadata_or_gcode_preview = map(
-                            format_metadata,
-                            [
-                                decode_and_encode(i).strip("\n\r()")
-                                for i in takewhile(not_end_of_metadata, previewed_file)
-                                if decode_and_encode(i)
-                                .split(":", 1)[1]
-                                .strip("\n\r() ")
-                            ],
+                        metadata_or_gcode_preview = list(
+                            map(
+                                format_metadata,
+                                [
+                                    decode_and_encode(i).strip("\n\r()")
+                                    for i in takewhile(
+                                        not_end_of_metadata, previewed_file
+                                    )
+                                    if decode_and_encode(i)
+                                    .split(":", 1)[1]
+                                    .strip("\n\r() ")
+                                ],
+                            )
                         )
                     else:
                         previewed_file.seek(0)
@@ -502,7 +501,7 @@ class USBFileChooser(Screen):
                             "",
                         ] + [
                             decode_and_encode(next(previewed_file, "")).strip("\n\r")
-                            for x in xrange(20)
+                            for x in range(20)
                         ]
                     self.metadata_preview.text = "\n".join(metadata_or_gcode_preview)
                 except:

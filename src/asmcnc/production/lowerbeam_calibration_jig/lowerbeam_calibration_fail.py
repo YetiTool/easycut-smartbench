@@ -2,7 +2,8 @@ from asmcnc.comms.logging import log_exporter
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 
-Builder.load_string("""
+Builder.load_string(
+    """
 <LBCalibrationFail>:
     success_label:success_label
 
@@ -45,24 +46,26 @@ Builder.load_string("""
                 size_hint_y: 0.2
                 size_hint_x: 0.3
 
-""")
+"""
+)
+
 
 class LBCalibrationFail(Screen):
+
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("sm")
+        self.m = kwargs.pop("m")
         super(LBCalibrationFail, self).__init__(**kwargs)
 
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
-
     def enter_prev_screen(self):
-        self.sm.current = 'lbc4'
+        self.sm.current = "lbc4"
 
     def retry_send(self):
-        self.sm.current = 'lbc4'
+        self.sm.current = "lbc4"
 
     def on_enter(self):
         log_exporter.create_trim_and_send_logs(self.serial, 1000)
 
     def set_serial_no(self, serial_no):
         self.serial = serial_no
-        self.success_label.text = 'Database update failed: ' + serial_no
+        self.success_label.text = "Database update failed: " + serial_no

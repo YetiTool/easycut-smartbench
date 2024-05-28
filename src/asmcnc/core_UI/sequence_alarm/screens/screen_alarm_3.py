@@ -132,8 +132,8 @@ class AlarmScreen3(Screen):
     default_font_size = 30.0 / 800.0 * Window.width
 
     def __init__(self, **kwargs):
+        self.a = kwargs.pop("alarm_manager")
         super(AlarmScreen3, self).__init__(**kwargs)
-        self.a = kwargs["alarm_manager"]
         self.status_bar_widget = widget_status_bar.StatusBar(
             screen_manager=self.a.sm, machine=self.a.m
         )
@@ -141,7 +141,6 @@ class AlarmScreen3(Screen):
         self.status_bar_widget.cheeky_color = "#1976d2"
         self.camera_img.source = "./asmcnc/core_UI/sequence_alarm/img/camera_light.png"
         self.next_button.text = self.a.l.get_str("Next") + "..."
-        # self.usb_img.source = "./asmcnc/core_UI/sequence_alarm/img/usb_empty_light.png"
 
     def on_pre_enter(self):
         if self.for_support:

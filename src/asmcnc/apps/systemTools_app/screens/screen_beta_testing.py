@@ -4,8 +4,8 @@ Beta testers screen for system tools app
 
 @author: Letty
 """
-import re
 
+import re
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -305,11 +305,11 @@ class BetaTestingScreen(Screen):
     reset_language = False
 
     def __init__(self, **kwargs):
+        self.systemtools_sm = kwargs.pop("system_tools")
+        self.set = kwargs.pop("settings")
+        self.l = kwargs.pop("localization")
+        self.kb = kwargs.pop("keyboard")
         super(BetaTestingScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs["system_tools"]
-        self.set = kwargs["settings"]
-        self.l = kwargs["localization"]
-        self.kb = kwargs["keyboard"]
         self.user_branch.text = self.set.sw_branch.strip("* ")
         self.beta_version.text = self.set.latest_sw_beta
         self.usb_stick = usb_storage.USB_storage(self.systemtools_sm.sm, self.l)
@@ -346,13 +346,18 @@ class BetaTestingScreen(Screen):
             def nested_branch_update(dt):
                 self.set.update_config()
                 branch_name_formatted = str(self.user_branch.text).translate(None, " ")
-                checkout_call = ("cd /home/pi/easycut-smartbench/ && git fetch origin && git checkout "
-                                 + branch_name_formatted)
+                checkout_call = (
+                    "cd /home/pi/easycut-smartbench/ && git fetch origin && git checkout "
+                    + branch_name_formatted
+                )
                 checkout_exit_code = os.system(checkout_call)
-                Logger.debug('Checkout call: {} | Returns: {}'.format(checkout_call,checkout_exit_code))
-                # check if branch name is a tag like v2.8.1:
+                Logger.debug(
+                    "Checkout call: {} | Returns: {}".format(
+                        checkout_call, checkout_exit_code
+                    )
+                )
                 pull_exit_code = 0
-                if not re.match("v\d\.\d\.\d", branch_name_formatted):
+                if not re.match("v\\d\\.\\d\\.\\d", branch_name_formatted):
                     pull_exit_code = os.system("git pull")
                     Logger.debug('"git pull" returned: {}'.format(pull_exit_code))
                 if checkout_exit_code == 0 and pull_exit_code == 0:

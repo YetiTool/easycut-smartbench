@@ -1,3 +1,4 @@
+import logging
 from kivy.app import App
 
 

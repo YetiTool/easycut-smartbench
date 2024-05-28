@@ -6,7 +6,6 @@ from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
 from kivy.uix.textinput import TextInput
-
 from asmcnc.comms.logging_system.logging_system import Logger
 
 
@@ -29,16 +28,17 @@ class InspectorSingleton(EventDispatcher):
     arrow keys = move widget around
     [i]nspect the widget to print details on console
     """
+
     _instance = None
-    widget = []  # the widget(s) that will be inspected
-    locked = False  # locked to a widget. MouseMove doesn't select new one
-    edit_mode = False  # widgets are movable when edit_mode = True
-    enabled = False  # Only reacting/listening to key events when enabled
-    step_width = 5  # stepwidth for moving widgets
-    key_input_enabled = True # disable key input e.g. when keyboard is shown
-    multiselect = False  # select more than one widget at once
-    snap_mode = False  # using arrow keys lets widgets snap to the next one
-    default_padding = 5  # default padding used for snapping widgets
+    widget = []
+    locked = False
+    edit_mode = False
+    enabled = False
+    step_width = 5
+    key_input_enabled = True
+    multiselect = False
+    snap_mode = False
+    default_padding = 5
 
     def __new__(cls):
         if cls._instance is None:
@@ -50,29 +50,28 @@ class InspectorSingleton(EventDispatcher):
         super(EventDispatcher, self).__init__(**kwargs)
         self.child_index = -1
         self.child_max = -1
-        self.register_event_type('on_show_component_popup')
-        # self.enable()
+        self.register_event_type("on_show_component_popup")
 
     def disable(self):
         """Disables all inspector functionality."""
         self.enabled = False
-        Logger.info('Inspector disabled')
+        Logger.info("Inspector disabled")
 
     def enable(self):
-        """Enables all inspector functionality. """
+        """Enables all inspector functionality."""
         self.enabled = True
         Window.bind(on_key_down=self._on_key_down)
-        Logger.info('Inspector enabled')
+        Logger.info("Inspector enabled")
 
     def disable_key_input(self):
         """disables the key inputs. Useful when a keyboard is open."""
         self.key_input_enabled = False
-        Logger.info('Key input disabled')
+        Logger.info("Key input disabled")
 
     def enable_key_input(self):
         """enable the key inputs. Key are used to control the inspector."""
         self.key_input_enabled = True
-        Logger.info('Key input enabled')
+        Logger.info("Key input enabled")
 
     def on_show_component_popup(self, *args):
         """Default callback. Needed for event creation."""
@@ -85,54 +84,45 @@ class InspectorSingleton(EventDispatcher):
         """
         if not self.enabled or not self.key_input_enabled:
             return True
-
         keycode = args[3]
         key = args[1]
-
-        # Uncomment for info about keys. E.g. 'what's the key for "backspace"?'
-        # Logger.debug('args: {}'.format(args))
-
-        if self.multiselect and keycode and keycode in 'lpcsai':
+        if self.multiselect and keycode and keycode in "lpcsai":
             Logger.warning('"{}" not allowed during multi_select!'.format(keycode))
-        if keycode == 'l':
+        if keycode == "l":
             self.switch_lock_state()
-        elif keycode == 'p':
+        elif keycode == "p":
             self.switch_to_parent()
-        elif keycode == 'c':
+        elif keycode == "c":
             self.switch_to_child()
-        elif keycode == 's':
+        elif keycode == "s":
             self.switch_to_sibling()
-        elif keycode == 'a':
+        elif keycode == "a":
             self.switch_to_sibling_bw()
-        elif keycode == 'i':
+        elif keycode == "i":
             self.inspect_widget()
-        if keycode == 'h':
+        if keycode == "h":
             self.print_help()
-        elif keycode == 'w':
+        elif keycode == "w":
             self.open_close_component_popup()
-        elif keycode == 'e':
+        elif keycode == "e":
             self.switch_edit_mode()
-        elif keycode == 'm':
+        elif keycode == "m":
             pass
-            # self.switch_multi_select_state()
-        elif keycode == 't':
+        elif keycode == "t":
             self.switch_snap_mode()
-        elif 273 <= key <= 276:  # check for arrow keys to move the widget
+        elif 273 <= key <= 276:
             if self.snap_mode:
                 self.snap_widget(key)
             else:
                 self.move_widget(key)
-        elif key in [43, 270]:  # '+' keys
+        elif key in [43, 270]:
             self.adjust_step_width(1)
-        elif key in [45, 269]:  # '-' keys
+        elif key in [45, 269]:
             self.adjust_step_width(-1)
-        elif key == 127:  # del key
+        elif key == 127:
             self.delete_widget()
-        elif key in [303, 304]:  # shift
-            # self.add_remove_widget_to_selection()
+        elif key in [303, 304]:
             pass
-
-        # Return True to accept the key. Otherwise, it will be used by the system.
         return True
 
     def switch_snap_mode(self):
@@ -142,7 +132,7 @@ class InspectorSingleton(EventDispatcher):
         When enabled, widgets can be snapped to the nearest widget using the arrow keys.
         """
         self.snap_mode = not self.snap_mode
-        Logger.debug('snap_mode: {}'.format(self.snap_mode))
+        Logger.debug("snap_mode: {}".format(self.snap_mode))
 
     def switch_lock_state(self):
         """
@@ -151,41 +141,43 @@ class InspectorSingleton(EventDispatcher):
         When enabled, a mouse hover event will not select new widgets.
         """
         if not self.locked:
-            Logger.debug('LOCKED to: {}'.format(self.get_widget_name_class(self.widget)))
+            Logger.debug(
+                "LOCKED to: {}".format(self.get_widget_name_class(self.widget))
+            )
             self.locked = True
         else:
-            Logger.debug('UNLOCKED')
+            Logger.debug("UNLOCKED")
             self.locked = False
 
     def open_close_component_popup(self):
         """
         Fires the event 'on_show_component_popup' to the widget to open and close it.
         """
-        self.dispatch('on_show_component_popup')
+        self.dispatch("on_show_component_popup")
 
     def adjust_step_width(self, value):
         """Adjusts the step width for moving widgets with the arrow keys by the given amount."""
         self.step_width += value
-        if self.step_width < 1:  # min value of 1
+        if self.step_width < 1:
             self.step_width = 1
-        Logger.debug('Step width: {}'.format(self.step_width))
+        Logger.debug("Step width: {}".format(self.step_width))
 
     def switch_multi_select_state(self):
         """Switches multiselect mode between True and False."""
         self.multiselect = not self.multiselect
-        Logger.debug('multiselect: {}'.format(self.multiselect))
+        Logger.debug("multiselect: {}".format(self.multiselect))
 
     def switch_edit_mode(self):
         """Switches edit_mode between True and False."""
         self.edit_mode = not self.edit_mode
-        Logger.debug('edit_mode: {}'.format(self.edit_mode))
+        Logger.debug("edit_mode: {}".format(self.edit_mode))
 
     def delete_widget(self):
         """Deletes the selected widget from the screen."""
         if self.widget:
             self.widget.parent.remove_widget(self.widget)
             self.widget = None
-            Logger.warning('Deleted selected widget!')
+            Logger.warning("Deleted selected widget!")
 
     def snap_widget(self, key):
         """
@@ -196,75 +188,70 @@ class InspectorSingleton(EventDispatcher):
         """
         if not self.widget:
             return
-        # get all siblings within the same container:
         widgets_to_check = self.widget.parent.children
         target_widget = None
-        min_distance = 9999  # used to determine the closes widget
-        w = self.widget   # just for readability
-        if key == 274:  # down
+        min_distance = 9999
+        w = self.widget
+        if key == 274:
             for t in widgets_to_check:
                 if t is self.widget:
                     continue
-                # check if widget would collide:
-                if w.x <= t.x <= w.right or w.x <= t.right <= w.right or t.x <= w.x <= t.right:
-                    # check if to the bottom:
+                if (
+                    w.x <= t.x <= w.right
+                    or w.x <= t.right <= w.right
+                    or t.x <= w.x <= t.right
+                ):
                     distance = w.y - t.top
-                    if 0 < distance < min_distance:  # widget is to the left and closer
-                        min_distance = distance  # keep track in case another widget is even closer
+                    if 0 < distance < min_distance:
+                        min_distance = distance
                         target_widget = t
-            # check if widget was found:
             if target_widget:
                 w.y -= distance - self.default_padding
             else:
-                w.y = self.default_padding  # move to bottom border
-        elif key == 273:  # up
+                w.y = self.default_padding
+        elif key == 273:
             for t in widgets_to_check:
                 if t is self.widget:
                     continue
-                # check if widget would collide:
-                if w.x <= t.x <= w.right or w.x <= t.right <= w.right or t.x <= w.x <= t.right:
-                    # check if to the top:
+                if (
+                    w.x <= t.x <= w.right
+                    or w.x <= t.right <= w.right
+                    or t.x <= w.x <= t.right
+                ):
                     distance = t.y - w.top
-                    if 0 < distance < min_distance:  # widget is to the left and closer
-                        min_distance = distance  # keep track in case another widget is even closer
+                    if 0 < distance < min_distance:
+                        min_distance = distance
                         target_widget = t
-            # check if widget was found:
             if target_widget:
                 w.y += distance - self.default_padding
             else:
-                w.top = w.parent.top - self.default_padding  # move to top border
-        elif key == 275:  # right
+                w.top = w.parent.top - self.default_padding
+        elif key == 275:
             for t in widgets_to_check:
                 if t is self.widget:
                     continue
-                # check if widget would collide:
                 if w.y <= t.y <= w.top or w.y <= t.top <= w.top or t.y <= w.y <= t.top:
-                    # check if to the right:
                     distance = t.x - w.right
-                    if 0 < distance < min_distance:  # widget is to the left and closer
-                        min_distance = distance  # keep track in case another widget is even closer
+                    if 0 < distance < min_distance:
+                        min_distance = distance
                         target_widget = t
-            # check if widget was found:
             if target_widget:
                 w.x += distance - self.default_padding
             else:
-                w.right = w.parent.right - self.default_padding  # move to right border
-        elif key == 276:  # left
+                w.right = w.parent.right - self.default_padding
+        elif key == 276:
             for t in widgets_to_check:
                 if t is self.widget:
                     continue
-                # check if widget would collide:
                 if w.y <= t.y <= w.top or w.y <= t.top <= w.top or t.y <= w.y <= t.top:
-                    # check if to the left:
                     distance = w.x - t.right
-                    if 0 < distance < min_distance:  # widget is to the left and closer
-                        min_distance = distance  # keep track in case another widget is even closer
+                    if 0 < distance < min_distance:
+                        min_distance = distance
                         target_widget = t
-            # check if widget was found:
             if target_widget:
                 w.x -= distance - self.default_padding
             else:
-                w.x = self.default_padding  # move to left border
+                w.x = self.default_padding
 
     def move_widget(self, key):
         """
@@ -275,15 +262,15 @@ class InspectorSingleton(EventDispatcher):
         if not self.edit_mode or self.widget is None:
             return
         try:
-            if key == 273:  # up
+            if key == 273:
                 self.widget.pos[1] += self.step_width
-            elif key == 274:  # down
+            elif key == 274:
                 self.widget.pos[1] -= self.step_width
-            elif key == 275:  # right
+            elif key == 275:
                 self.widget.pos[0] += self.step_width
-            elif key == 276:  # left
+            elif key == 276:
                 self.widget.pos[0] -= self.step_width
-            Logger.debug('pos: {}'.format(self.widget.pos))
+            Logger.debug("pos: {}".format(self.widget.pos))
         except Exception as ex:
             Logger.error("Failed to move widget!")
 
@@ -301,20 +288,30 @@ class InspectorSingleton(EventDispatcher):
         j = self.get_parent_screen().dump_screen()
 
     def print_help(self):
-        Logger.debug('Walking through the widget tree:')
-        Logger.debug('--------------------------------')
-        Logger.debug('l: (un)locks the selected widget.')
-        Logger.debug('e: (e)dit_mode on/off (enables moving widgets)')
-        Logger.debug('i: inspects the widget and shows its attributes.')
-        Logger.debug('c: switches to the first child.')
-        Logger.debug('s: cycles through siblings. You need to switch to a child first!')
-        Logger.debug('a: cycles through siblings backwards. You need to switch to a child first!')
-        Logger.debug('p: switches to the parent.')
-        Logger.debug('[del]: deletes the selected widget.')
-        Logger.debug('+/-: in-/decreases the step width for moving widgets with arrow keys')
-        Logger.debug('w: Open/Close popup to add new widgets to the currently selected one.')
-        Logger.debug('t: Tetris mode. snaps widgets to the closest one in the given direction (with padding).')
-        Logger.debug('When a widget is selected and edit_mode = True, you can use the arrow keys to move it.')
+        Logger.debug("Walking through the widget tree:")
+        Logger.debug("--------------------------------")
+        Logger.debug("l: (un)locks the selected widget.")
+        Logger.debug("e: (e)dit_mode on/off (enables moving widgets)")
+        Logger.debug("i: inspects the widget and shows its attributes.")
+        Logger.debug("c: switches to the first child.")
+        Logger.debug("s: cycles through siblings. You need to switch to a child first!")
+        Logger.debug(
+            "a: cycles through siblings backwards. You need to switch to a child first!"
+        )
+        Logger.debug("p: switches to the parent.")
+        Logger.debug("[del]: deletes the selected widget.")
+        Logger.debug(
+            "+/-: in-/decreases the step width for moving widgets with arrow keys"
+        )
+        Logger.debug(
+            "w: Open/Close popup to add new widgets to the currently selected one."
+        )
+        Logger.debug(
+            "t: Tetris mode. snaps widgets to the closest one in the given direction (with padding)."
+        )
+        Logger.debug(
+            "When a widget is selected and edit_mode = True, you can use the arrow keys to move it."
+        )
         Logger.debug("Or just drag'n drop it with the mouse")
 
     def get_widget_name_class(self, widget):
@@ -324,14 +321,13 @@ class InspectorSingleton(EventDispatcher):
 
         returns name (class name)
         """
-        # check if it has a name
-        if hasattr(widget, 'name'):
+        if hasattr(widget, "name"):
             name = widget.name
-        elif hasattr(widget, 'id') and widget.id:
+        elif hasattr(widget, "id") and widget.id:
             name = widget.id
         else:
-            name = 'NO_NAME'
-        return '{} ({})'.format(name, type(widget).__name__)
+            name = "NO_NAME"
+        return "{} ({})".format(name, type(widget).__name__)
 
     def switch_to_sibling(self):
         """
@@ -344,14 +340,18 @@ class InspectorSingleton(EventDispatcher):
             else:
                 self.child_index = 0
             self.widget = self.widget.parent.children[self.child_index]
-            Logger.debug('Switched to sibling {}/{}: {}'.format(self.child_index,
-                                                                self.child_max,
-                                                                self.get_widget_name_class(self.widget)))
+            Logger.debug(
+                "Switched to sibling {}/{}: {}".format(
+                    self.child_index,
+                    self.child_max,
+                    self.get_widget_name_class(self.widget),
+                )
+            )
             self.inspect_widget(short=True)
         elif self.child_max == 1:
-            Logger.debug('No siblings. Only one child!')
+            Logger.debug("No siblings. Only one child!")
         else:
-            Logger.warning('Not switched to children first...')
+            Logger.warning("Not switched to children first...")
 
     def switch_to_sibling_bw(self):
         """
@@ -364,14 +364,18 @@ class InspectorSingleton(EventDispatcher):
             else:
                 self.child_index = self.child_max - 1
             self.widget = self.widget.parent.children[self.child_index]
-            Logger.debug('Switched to sibling {}/{}: {}'.format(self.child_index,
-                                                                self.child_max,
-                                                                self.get_widget_name_class(self.widget)))
+            Logger.debug(
+                "Switched to sibling {}/{}: {}".format(
+                    self.child_index,
+                    self.child_max,
+                    self.get_widget_name_class(self.widget),
+                )
+            )
             self.inspect_widget(short=True)
         elif self.child_max == 1:
-            Logger.debug('No siblings. Only one child!')
+            Logger.debug("No siblings. Only one child!")
         else:
-            Logger.warning('Not switched to children first...')
+            Logger.warning("Not switched to children first...")
 
     def switch_to_child(self):
         """
@@ -380,45 +384,60 @@ class InspectorSingleton(EventDispatcher):
         if self.widget:
             children = self.widget.children
             if len(children) == 0:
-                Logger.debug('{} has no children!'.format(self.get_widget_name_class(self.widget)))
+                Logger.debug(
+                    "{} has no children!".format(
+                        self.get_widget_name_class(self.widget)
+                    )
+                )
             else:
                 self.child_index = 0
                 self.child_max = len(children)
                 self.widget = children[self.child_index]
-                Logger.debug('Switched to child: {}/{}: {}'.format(self.child_index,
-                                                                   self.child_max,
-                                                                   self.get_widget_name_class(self.widget)))
+                Logger.debug(
+                    "Switched to child: {}/{}: {}".format(
+                        self.child_index,
+                        self.child_max,
+                        self.get_widget_name_class(self.widget),
+                    )
+                )
                 self.inspect_widget(short=True)
 
     def switch_to_parent(self):
         """Switches to the parent of the currently selected widget."""
-
         self.child_index = -1
         self.child_max = -1
         parent = self.widget.parent
         if parent is None:
-            Logger.debug('{} has no parent!'.format(self.get_widget_name_class(self.widget)))
+            Logger.debug(
+                "{} has no parent!".format(self.get_widget_name_class(self.widget))
+            )
         elif issubclass(type(parent), WindowSDL):
-            Logger.warning('Orphaned!')
+            Logger.warning("Orphaned!")
         else:
             self.widget = parent
-            Logger.debug('Switched to parent: {}'.format(self.get_widget_name_class(self.widget)))
+            Logger.debug(
+                "Switched to parent: {}".format(self.get_widget_name_class(self.widget))
+            )
             self.inspect_widget(short=True)
 
     def inspect_widget(self, short=False):
         """Prints debug information about the currently selected widget."""
-        Logger.debug('========================================')
+        Logger.debug("========================================")
         if not short:
             Logger.debug(self.get_widget_name_class(self.widget))
-        Logger.debug('pos: {}\t\tsize:{}\t\tchildren: {}\t\topacity: {}'.format(self.widget.pos,
-                                                                                self.widget.size,
-                                                                                len(self.widget.children),
-                                                                                self.widget.opacity))
-        if issubclass(type(self.widget), (Label,TextInput)):
+        Logger.debug(
+            "pos: {}\t\tsize:{}\t\tchildren: {}\t\topacity: {}".format(
+                self.widget.pos,
+                self.widget.size,
+                len(self.widget.children),
+                self.widget.opacity,
+            )
+        )
+        if issubclass(type(self.widget), (Label, TextInput)):
             Logger.debug('text: "{}"'.format(self.widget.text))
         if issubclass(type(self.widget), Image):
             Logger.debug('source: "{}"'.format(self.widget.source))
-        Logger.debug('========================================')
+        Logger.debug("========================================")
 
     def set_widget(self, w):
         """Sets the given widget as selected, so it can be inspected."""
@@ -432,6 +451,7 @@ class HoverBehavior(object):
     Handles mouse move events. Enables drag'n drop for widgets with left mouse button.
 
     """
+
     inspector = InspectorSingleton()
     hovered = BooleanProperty(False)
     drag = False
@@ -439,13 +459,13 @@ class HoverBehavior(object):
     offset_y = 0
 
     def __init__(self, **kwargs):
+        super(HoverBehavior, self).__init__(**kwargs)
         if self.inspector.enabled:
-            self.register_event_type('on_enter')
+            self.register_event_type("on_enter")
             Window.bind(mouse_pos=self.on_mouse_pos)
             Window.bind(on_touch_down=self.on_mouse_press)
             Window.bind(on_touch_move=self.on_move)
             Window.bind(on_touch_up=self.on_mouse_release)
-        super(HoverBehavior, self).__init__(**kwargs)
 
     def on_mouse_press(self, *args):
         """
@@ -489,21 +509,17 @@ class HoverBehavior(object):
 
         (DE-)ACTIVATE with InspectorSingleton().en/disable()
         """
-        # only active if inspector is not locked to avoid unintended overwriting of the selected widget.
-
         if self.inspector.locked or self.drag or not self.inspector.enabled:
             return
         if not self.get_root_window():
-            return # do proceed if I'm not displayed <=> I have no parent
+            return
         pos = args[1]
-        #Next line to_widget allow to compensate for relative layout
         inside = self.collide_point(*self.to_widget(*pos))
         if self.hovered == inside:
-            # We have already done what was needed or there was nothing to do
             return
         self.hovered = inside
         if inside:
-            self.dispatch('on_enter')
+            self.dispatch("on_enter")
 
     def on_enter(self):
         """A new widget has been entered. So safe it for later inspection."""

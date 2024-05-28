@@ -4,6 +4,7 @@ Screen 36 for the Shape Cutter App
 
 @author: Letty
 """
+
 from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.metrics import MetricsBase
@@ -310,19 +311,17 @@ class ShapeCutter36ScreenClass(Screen):
     user_instructions = StringProperty()
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
+        self.j = kwargs.pop("job_parameters")
         super(ShapeCutter36ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs["shapecutter"]
-        self.m = kwargs["machine"]
-        self.j = kwargs["job_parameters"]
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
-        # get job info
         self.user_instructions = """[b]You can let SmartBench do the rest of the work now.[/b]
 
 Remember when you had to cut out all these shapes by hand? Think of all the things you can do with your extra time. Learn to play the ukelele. Make some cupcakes. Finally master that backflip. So what are you waiting for?"""
 
-# Action buttons
     def get_info(self):
         pass
 
@@ -331,8 +330,6 @@ Remember when you had to cut out all these shapes by hand? Think of all the thin
 
     def next_screen(self):
         self.shapecutter_sm.go_screen("sC36", "sCsavejob")
-    
-# Tab functions
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()

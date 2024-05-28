@@ -4,6 +4,7 @@ Screen 29 for the Shape Cutter App
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
@@ -290,14 +291,13 @@ class ShapeCutter29ScreenClass(Screen):
     user_instructions = StringProperty("")
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
         super(ShapeCutter29ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs["shapecutter"]
-        self.m = kwargs["machine"]
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
 
-# Action buttons       
     def get_info(self):
         pass
 
@@ -306,8 +306,6 @@ class ShapeCutter29ScreenClass(Screen):
 
     def next_screen(self):
         self.shapecutter_sm.next_screen()
-
-# Tab functions
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()

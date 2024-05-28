@@ -3,10 +3,10 @@ from kivy.lang import Builder
 from kivy.clock import Clock
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from datetime import datetime
-
 from asmcnc.skavaUI import widget_status_bar
 
-Builder.load_string("""
+Builder.load_string(
+    """
 <ZHeadPCBSetUpOutcome>:
 
     status_container : status_container
@@ -138,15 +138,14 @@ Builder.load_string("""
             size_hint_y: 0.08
             id: status_container 
             pos: self.pos
-""")
+"""
+)
 
 
 class ZHeadPCBSetUpOutcome(Screen):
-
     undetermined_image = "./asmcnc/skavaUI/img/checkbox_inactive.png"
     success_image = "./asmcnc/skavaUI/img/file_select_select.png"
     fail_image = "./asmcnc/skavaUI/img/template_cancel.png"
-
     fw_update_success = True
     z_current_correct = True
     x_current_correct = True
@@ -154,14 +153,12 @@ class ZHeadPCBSetUpOutcome(Screen):
     thermal_coefficients_correct = True
 
     def __init__(self, **kwargs):
-
+        self.sm = kwargs.pop("sm")
+        self.m = kwargs.pop("m")
         super(ZHeadPCBSetUpOutcome, self).__init__(**kwargs)
-
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
-
-        # Green status bar
-        self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
+        self.status_bar_widget = widget_status_bar.StatusBar(
+            machine=self.m, screen_manager=self.sm
+        )
         self.status_container.add_widget(self.status_bar_widget)
 
     def go_to_qc_home(self):
@@ -171,42 +168,74 @@ class ZHeadPCBSetUpOutcome(Screen):
         self.sm.current = "qcpcbsetup"
 
     def on_enter(self):
-
         self.fw_update_label.text = "Firmware: " + str(self.m.s.fw_version)
-        self.z_current_label.text =     "Z Current: " + \
-                                        "active " + str(self.m.TMC_motor[TMC_Z].ActiveCurrentScale) + "; " + \
-                                        "idle " + str(self.m.TMC_motor[TMC_Z].standStillCurrentScale) +";"
-
-        self.x_current_label.text =     "X Current: " + \
-                                        "X1 active " + str(self.m.TMC_motor[TMC_X1].ActiveCurrentScale) + "; " + \
-                                        "X1 idle " + str(self.m.TMC_motor[TMC_X1].standStillCurrentScale) + "; " + \
-                                        "X2 active " + str(self.m.TMC_motor[TMC_X2].ActiveCurrentScale) + "; " + \
-                                        "X2 idle " + str(self.m.TMC_motor[TMC_X2].standStillCurrentScale) + "; "
-
-        self.y_current_label.text =     "Y Current: " + \
-                                        "Y1 active " + str(self.m.TMC_motor[TMC_Y1].ActiveCurrentScale) + "; " + \
-                                        "Y1 idle " + str(self.m.TMC_motor[TMC_Y1].standStillCurrentScale) + "; " + \
-                                        "Y2 active " + str(self.m.TMC_motor[TMC_Y2].ActiveCurrentScale) + "; " + \
-                                        "Y2 idle " + str(self.m.TMC_motor[TMC_Y2].standStillCurrentScale) + "; "
-
-        self.thermal_coefficients_label.text = "Thermal coefficients: " + \
-                                                "X1: " + str(self.m.TMC_motor[TMC_X1].temperatureCoefficient) + "; " + \
-                                                "X2: " + str(self.m.TMC_motor[TMC_X2].temperatureCoefficient) + "; " + \
-                                                "Y1: " + str(self.m.TMC_motor[TMC_Y1].temperatureCoefficient) + "; " + \
-                                                "Y2: " + str(self.m.TMC_motor[TMC_Y2].temperatureCoefficient) + "; " + \
-                                                "Z: " + str(self.m.TMC_motor[TMC_Z].temperatureCoefficient) + ";"
-
-
-
+        self.z_current_label.text = (
+            "Z Current: "
+            + "active "
+            + str(self.m.TMC_motor[TMC_Z].ActiveCurrentScale)
+            + "; "
+            + "idle "
+            + str(self.m.TMC_motor[TMC_Z].standStillCurrentScale)
+            + ";"
+        )
+        self.x_current_label.text = (
+            "X Current: "
+            + "X1 active "
+            + str(self.m.TMC_motor[TMC_X1].ActiveCurrentScale)
+            + "; "
+            + "X1 idle "
+            + str(self.m.TMC_motor[TMC_X1].standStillCurrentScale)
+            + "; "
+            + "X2 active "
+            + str(self.m.TMC_motor[TMC_X2].ActiveCurrentScale)
+            + "; "
+            + "X2 idle "
+            + str(self.m.TMC_motor[TMC_X2].standStillCurrentScale)
+            + "; "
+        )
+        self.y_current_label.text = (
+            "Y Current: "
+            + "Y1 active "
+            + str(self.m.TMC_motor[TMC_Y1].ActiveCurrentScale)
+            + "; "
+            + "Y1 idle "
+            + str(self.m.TMC_motor[TMC_Y1].standStillCurrentScale)
+            + "; "
+            + "Y2 active "
+            + str(self.m.TMC_motor[TMC_Y2].ActiveCurrentScale)
+            + "; "
+            + "Y2 idle "
+            + str(self.m.TMC_motor[TMC_Y2].standStillCurrentScale)
+            + "; "
+        )
+        self.thermal_coefficients_label.text = (
+            "Thermal coefficients: "
+            + "X1: "
+            + str(self.m.TMC_motor[TMC_X1].temperatureCoefficient)
+            + "; "
+            + "X2: "
+            + str(self.m.TMC_motor[TMC_X2].temperatureCoefficient)
+            + "; "
+            + "Y1: "
+            + str(self.m.TMC_motor[TMC_Y1].temperatureCoefficient)
+            + "; "
+            + "Y2: "
+            + str(self.m.TMC_motor[TMC_Y2].temperatureCoefficient)
+            + "; "
+            + "Z: "
+            + str(self.m.TMC_motor[TMC_Z].temperatureCoefficient)
+            + ";"
+        )
         if self.fw_update_success:
             self.fw_update_image.source = self.success_image
         else:
             self.fw_update_image.source = self.fail_image
-
         self.update_images(self.z_current_correct, self.z_current_image)
         self.update_images(self.x_current_correct, self.x_current_image)
         self.update_images(self.y_current_correct, self.y_current_image)
-        self.update_images(self.thermal_coefficients_correct, self.thermal_coefficients_image)
+        self.update_images(
+            self.thermal_coefficients_correct, self.thermal_coefficients_image
+        )
 
     def update_images(self, correct, image):
         if correct:
@@ -217,13 +246,11 @@ class ZHeadPCBSetUpOutcome(Screen):
             image.source = self.fail_image
 
     def on_leave(self):
-
         self.fw_update_success = True
         self.z_current_correct = True
         self.x_current_correct = True
         self.y_current_correct = True
         self.thermal_coefficients_correct = True
-
         self.fw_update_image.source = self.undetermined_image
         self.z_current_image.source = self.undetermined_image
         self.x_current_image.source = self.undetermined_image

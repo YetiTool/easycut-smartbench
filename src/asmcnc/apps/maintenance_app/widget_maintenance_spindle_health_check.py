@@ -1,7 +1,8 @@
 from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 
-Builder.load_string("""
+Builder.load_string(
+    """
 #:import LabelBase asmcnc.core_UI.components.labels.base_label
 
 <WidgetSpindleHealthCheck>
@@ -82,11 +83,12 @@ Builder.load_string("""
 
 
 class WidgetSpindleHealthCheck(BoxLayout):
+
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
         super(WidgetSpindleHealthCheck, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
-        self.l = kwargs["localization"]
         self.set_switch_state_to_health_check()
         self.toggle_yeti_pilot_availability(self.switch)
         self.update_strings()

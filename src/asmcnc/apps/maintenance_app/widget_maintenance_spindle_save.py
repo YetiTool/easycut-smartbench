@@ -3,9 +3,9 @@ Created on 19 August 2020
 @author: Letty
 widget to hold brush maintenance save and info
 """
+
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
-
 from asmcnc.core_UI.custom_popups import PopupSpindleSettingsInfo
 from asmcnc.skavaUI import popup_info
 
@@ -58,11 +58,12 @@ Builder.load_string(
 
 
 class SpindleSaveWidget(Widget):
+
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
         super(SpindleSaveWidget, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
-        self.l = kwargs["localization"]
 
     def get_info(self):
         PopupSpindleSettingsInfo(self.sm, self.l)

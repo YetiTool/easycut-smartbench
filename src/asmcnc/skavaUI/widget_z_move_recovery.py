@@ -1,7 +1,8 @@
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <ZMoveRecovery>
 
@@ -114,80 +115,85 @@ Builder.load_string("""
             color: hex('#333333ff')
             font_size: dp(20)
 
-""")
-    
+"""
+)
+
 
 class ZMoveRecovery(Widget):
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop("machine")
+        self.sm = kwargs.pop("screen_manager")
         super(ZMoveRecovery, self).__init__(**kwargs)
-        self.m=kwargs['machine']
-        self.sm=kwargs['screen_manager']
-
         self.set_jog_speeds()
 
     fast_z_speed = 750
     feedSpeedJogZ = 750
 
     def set_jog_speeds(self):
-        if self.speed_toggle.state == 'normal': 
+        if self.speed_toggle.state == "normal":
             self.speed_image.source = "./asmcnc/skavaUI/img/slow.png"
             self.feedSpeedJogZ = self.fast_z_speed / 5
-        else: 
+        else:
             self.speed_image.source = "./asmcnc/skavaUI/img/fast.png"
             self.feedSpeedJogZ = self.fast_z_speed
 
-    jogMode = 'free'
+    jogMode = "free"
     jog_mode_button_press_counter = 0
-    
-    def jogModeCycled(self):
 
+    def jogModeCycled(self):
         self.jog_mode_button_press_counter += 1
         if self.jog_mode_button_press_counter % 5 == 0:
-            self.jogMode = 'free'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_infinity.png'
+            self.jogMode = "free"
+            self.jogModeButtonImage.source = (
+                "./asmcnc/skavaUI/img/jog_mode_infinity.png"
+            )
         if self.jog_mode_button_press_counter % 5 == 1:
-            self.jogMode = 'plus_10'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_10.png'
+            self.jogMode = "plus_10"
+            self.jogModeButtonImage.source = "./asmcnc/skavaUI/img/jog_mode_10.png"
         if self.jog_mode_button_press_counter % 5 == 2:
-            self.jogMode = 'plus_1'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_1.png'
+            self.jogMode = "plus_1"
+            self.jogModeButtonImage.source = "./asmcnc/skavaUI/img/jog_mode_1.png"
         if self.jog_mode_button_press_counter % 5 == 3:
-            self.jogMode = 'plus_0-1'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_0-1.png'
+            self.jogMode = "plus_0-1"
+            self.jogModeButtonImage.source = "./asmcnc/skavaUI/img/jog_mode_0-1.png"
         if self.jog_mode_button_press_counter % 5 == 4:
-            self.jogMode = 'plus_0-01'
-            self.jogModeButtonImage.source = './asmcnc/skavaUI/img/jog_mode_0-01.png'
+            self.jogMode = "plus_0-01"
+            self.jogModeButtonImage.source = "./asmcnc/skavaUI/img/jog_mode_0-01.png"
 
     def jog_z(self, case):
-
-        self.m.set_led_colour('WHITE')
-
+        self.m.set_led_colour("WHITE")
         feed_speed = self.feedSpeedJogZ
-        
-        if self.jogMode == 'free':
-            if case == 'Z-': self.m.jog_absolute_single_axis('Z', 
-                                                             self.m.z_min_jog_abs_limit,
-                                                             feed_speed)
-            if case == 'Z+': self.m.jog_absolute_single_axis('Z', 
-                                                             self.m.z_max_jog_abs_limit,
-                                                             feed_speed)
-
-        elif self.jogMode == 'plus_0-01':
-            if case == 'Z+': self.m.jog_relative('Z', 0.01, feed_speed)
-            if case == 'Z-': self.m.jog_relative('Z', -0.01, feed_speed)
-        
-        elif self.jogMode == 'plus_0-1':
-            if case == 'Z+': self.m.jog_relative('Z', 0.1, feed_speed)
-            if case == 'Z-': self.m.jog_relative('Z', -0.1, feed_speed)
-        
-        elif self.jogMode == 'plus_1':
-            if case == 'Z+': self.m.jog_relative('Z', 1, feed_speed)
-            if case == 'Z-': self.m.jog_relative('Z', -1, feed_speed)
-        
-        elif self.jogMode == 'plus_10':
-            if case == 'Z+': self.m.jog_relative('Z', 10, feed_speed)
-            if case == 'Z-': self.m.jog_relative('Z', -10, feed_speed)
+        if self.jogMode == "free":
+            if case == "Z-":
+                self.m.jog_absolute_single_axis(
+                    "Z", self.m.z_min_jog_abs_limit, feed_speed
+                )
+            if case == "Z+":
+                self.m.jog_absolute_single_axis(
+                    "Z", self.m.z_max_jog_abs_limit, feed_speed
+                )
+        elif self.jogMode == "plus_0-01":
+            if case == "Z+":
+                self.m.jog_relative("Z", 0.01, feed_speed)
+            if case == "Z-":
+                self.m.jog_relative("Z", -0.01, feed_speed)
+        elif self.jogMode == "plus_0-1":
+            if case == "Z+":
+                self.m.jog_relative("Z", 0.1, feed_speed)
+            if case == "Z-":
+                self.m.jog_relative("Z", -0.1, feed_speed)
+        elif self.jogMode == "plus_1":
+            if case == "Z+":
+                self.m.jog_relative("Z", 1, feed_speed)
+            if case == "Z-":
+                self.m.jog_relative("Z", -1, feed_speed)
+        elif self.jogMode == "plus_10":
+            if case == "Z+":
+                self.m.jog_relative("Z", 10, feed_speed)
+            if case == "Z-":
+                self.m.jog_relative("Z", -10, feed_speed)
 
     def quit_jog_z(self):
-        if self.jogMode == 'free': self.m.quit_jog()
+        if self.jogMode == "free":
+            self.m.quit_jog()

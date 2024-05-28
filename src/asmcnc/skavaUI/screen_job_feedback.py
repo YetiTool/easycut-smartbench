@@ -3,6 +3,7 @@ Created on 13th September 2021
 End of job screen with feedback and metadata sending
 @author: Letty
 """
+
 from datetime import datetime, timedelta
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -258,7 +259,6 @@ Builder.load_string(
 
 class JobFeedbackScreen(Screen):
     return_to_screen = StringProperty()
-    # Example metadata
     metadata_string = (
         "Project_name | Step 1 of 3"
         + "\n"
@@ -270,13 +270,13 @@ class JobFeedbackScreen(Screen):
     )
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
+        self.jd = kwargs.pop("job")
+        self.db = kwargs.pop("database")
+        self.kb = kwargs.pop("keyboard")
         super(JobFeedbackScreen, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
-        self.l = kwargs["localization"]
-        self.jd = kwargs["job"]
-        self.db = kwargs["database"]
-        self.kb = kwargs["keyboard"]
         self.text_inputs = [self.batch_number_input, self.post_production_notes]
 
     def on_touch(self):

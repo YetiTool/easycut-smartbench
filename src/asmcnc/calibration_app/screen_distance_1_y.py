@@ -6,6 +6,7 @@ Step 1, Y axis
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.properties import ObjectProperty, StringProperty, NumericProperty
@@ -301,9 +302,9 @@ class DistanceScreen1yClass(Screen):
     expected_user_entry = 200
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
         super(DistanceScreen1yClass, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
         if self.m.bench_is_standard():
             self.initial_y_cal_move = 2000
         elif self.m.bench_is_short():
@@ -326,7 +327,7 @@ Please wait while the machine moves to the next measurement point..."""
         self.poll_for_jog_finish = Clock.schedule_interval(self.update_instruction, 0.5)
 
     def initial_move_y(self):
-        self.m.jog_absolute_single_axis("X", -660, 9999)    # machine moves on screen enter
+        self.m.jog_absolute_single_axis("X", -660, 9999)
         self.m.jog_absolute_single_axis("Y", -self.m.grbl_y_max_travel + 182, 9999)
         self.m.jog_relative("Y", -10, 9999)
         self.m.jog_relative("Y", 10, 9999)
@@ -370,8 +371,6 @@ Nudging will move the Z head away from Y-home."""
         self.set_move_button.disabled = False
 
     def next_instruction(self):
-        # When the button under the text input is pressed, it triggers the button command and sets up
-        # for the next version of this screen: 
         if self.value_input.text == "":
             self.warning_label.opacity = 1
             self.warning_label.text = "[color=ff0000]PLEASE ENTER A VALUE![/color]"
@@ -384,15 +383,14 @@ Nudging will move the Z head away from Y-home."""
             self.warning_label.text = "[color=ff0000]VALUE IS TOO HIGH![/color]"
             self.warning_label.opacity = 1
             return
-        self.save_measured_value()  # get text input
-        self.nudge_counter = 0      # clear nudge counter
-        # Do the actual button command, this will also take us to relevant next screens
+        self.save_measured_value()
+        self.nudge_counter = 0
         self.set_and_move()
 
     def quit_calibration(self):
-        self.sm.get_screen(
-            "tape_measure_alert"
-        ).return_to_screen = "calibration_complete"
+        self.sm.get_screen("tape_measure_alert").return_to_screen = (
+            "calibration_complete"
+        )
         self.sm.get_screen("calibration_complete").calibration_cancelled = True
         self.sm.current = "tape_measure_alert"
 
@@ -402,14 +400,14 @@ Nudging will move the Z head away from Y-home."""
         self.sm.current = "backlash"
 
     def skip_section(self):
-        self.sm.get_screen(
-            "tape_measure_alert"
-        ).return_to_screen = "calibration_complete"
+        self.sm.get_screen("tape_measure_alert").return_to_screen = (
+            "calibration_complete"
+        )
         self.sm.get_screen("calibration_complete").calibration_cancelled = True
         self.sm.current = "tape_measure_alert"
 
     def next_screen(self):
-        if not self.sm.has_screen("distance2y"): # only create the new screen if it doesn't exist already
+        if not self.sm.has_screen("distance2y"):
             distance2y_screen = screen_distance_2_y.DistanceScreen2yClass(
                 name="distance2y", screen_manager=self.sm, machine=self.m
             )

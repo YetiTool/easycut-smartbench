@@ -1,4 +1,5 @@
 from kivy.core.window import Window
+
 """
 Created on nov 2020
 @author: Ollie
@@ -249,11 +250,12 @@ Builder.load_string(
 
 
 class WarrantyScreen1(Screen):
+
     def __init__(self, **kwargs):
+        self.start_seq = kwargs.pop("start_sequence")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
         super(WarrantyScreen1, self).__init__(**kwargs)
-        self.start_seq = kwargs["start_sequence"]
-        self.m = kwargs["machine"]
-        self.l = kwargs["localization"]
         self.update_strings()
 
     def next_screen(self):
@@ -275,7 +277,7 @@ class WarrantyScreen1(Screen):
         self.next_button.text = self.l.get_str("Next") + "..."
         self.update_contact_us_font_sizes()
 
-    def update_contact_us_font_sizes(self): # Update both labels together to make it look nicer
+    def update_contact_us_font_sizes(self):
         if self.l.get_text_length(self.contact_us_at_support.text) > 70:
             self.cant_use_web_label.font_size = 0.02125 * Window.width
             self.contact_us_at_support.font_size = 0.02125 * Window.width

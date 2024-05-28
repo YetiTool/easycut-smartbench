@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
 """
 Created on 19 March 2020
 Wifi screen
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -474,27 +474,19 @@ class WifiScreen(Screen):
     refresh_ip_label_value_event = None
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.set = kwargs.pop("settings_manager")
+        self.l = kwargs.pop("localization")
+        self.kb = kwargs.pop("keyboard")
         super(WifiScreen, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.set = kwargs["settings_manager"]
-        self.l = kwargs["localization"]
-        self.kb = kwargs["keyboard"]
         if sys.platform != "win32" and sys.platform != "darwin":
             self.network_name.values = self.get_available_networks()
         self.update_strings()
         self.get_rst_source()
-
-        # I was getting an error for "weakly referenced objects". This line of code prevents the objects from getting
-        # garbage collected
         self.refs = [self.network_name.__self__, self.custom_network_name_box.__self__]
-
-        # Remove the custom SSID input field on startup
         self.network_name_input.remove_widget(self.custom_network_name_box)
-
-        # Add the IDs of ALL the TextInputs on this screen
         self.text_inputs = [self._password, self.custom_network_name]
 
-    # Toggles between normal network selection and custom network name input for hidden networks
     def custom_ssid_input(self):
         if self.custom_ssid_button.state == "normal":
             try:
@@ -566,8 +558,6 @@ class WifiScreen(Screen):
             text_input.focus = False
 
     def check_credentials(self):
-        
-        # get network name and password from text entered (widget)
         if self.custom_ssid_button.state == "normal":
             self.netname = self.network_name.text
         else:
@@ -585,8 +575,6 @@ class WifiScreen(Screen):
             self.connect_wifi()
 
     def is_wlan0_connected(self):
-       
-        #returns "state UP" or "state DOWN" depending on whether wlan0 is connected or not
         state_raw = os.popen(
             'ip addr show | grep "wlan0" | grep -oP "state\\s\\w+"'
         ).read()
@@ -596,8 +584,6 @@ class WifiScreen(Screen):
     def connect_wifi(self):
         self._password.text = ""
         wait_popup = popup_info.PopupWait(self.sm, self.l)
-        
-        # pass credentials to wpa_supplicant file
         self.wpanetpass = (
             'wpa_passphrase "'
             + self.netname
@@ -612,8 +598,6 @@ class WifiScreen(Screen):
             + self.password
             + '" 2>/dev/null | sudo tee /etc/wpa_supplicant/wpa_supplicant-wlan0.conf'
         )
-
-        # put the credentials and the necessary appendages into the wpa file
         try:
             os.system(self.wpanetpass)
             os.system(
@@ -705,14 +689,8 @@ class WifiScreen(Screen):
         os.system(
             'sudo sed -i "s/wifi_connected_before=False/wifi_connected_before=True/" config.txt'
         )
-
-        # Flush all the IP addresses from cache
         os.system("sudo ip addr flush dev wlan0")
-
-        # Reload the updated wpa_supplicant file
         os.system("sudo wpa_cli -i wlan0 reconfigure")
-
-        # Restart the DHCP service to allocate a new IP address on the new network
         os.system("sudo systemctl restart dhcpcd")
 
         def dismiss_wait_popup(dt):
@@ -758,17 +736,12 @@ class WifiScreen(Screen):
         self.sm.current = "lobby"
 
     def get_available_networks(self):
-
-        # Scan for networks, select only ESSIDs, remove ESSID from the line, remove any leading whitespaces or tabs.
-        # This leaves each network name in the format "NETWORK NAME" with each of them on their own new line
         raw_SSID_list = os.popen(
             'sudo iwlist wlan0 scan | grep "ESSID:" | sed "s/ESSID://g" | sed "s/^[ \t]*//g"'
-        ).read()        
-        SSID_list = raw_SSID_list.replace('"', "").strip().split("\n") # Remove " from network name and split on newline
-        if "" in SSID_list:            
-            SSID_list.remove("") # Remove empty entries
-
-        # Remove any addresses that contain only NULL bytes and cast it to a set to remove duplicates
+        ).read()
+        SSID_list = raw_SSID_list.replace('"', "").strip().split("\n")
+        if "" in SSID_list:
+            SSID_list.remove("")
         SSID_list = {x for x in SSID_list if not set(x) <= set("\\x00")}
         return SSID_list
 
@@ -1046,13 +1019,21 @@ class WifiScreen(Screen):
         self.custom_ssid_input()
         self.custom_network_name.hint_text = self.l.get_str("Enter network name")
         self.update_hint_font_size(self.custom_network_name)
-        self.update_button_font_size(self.connect_button, 28.0 / 800.0 * Window.width, 10)
-        self.update_button_font_size(self.custom_ssid_button, 20.0 / 800.0 * Window.width, 20)
+        self.update_button_font_size(
+            self.connect_button, 28.0 / 800.0 * Window.width, 10
+        )
+        self.update_button_font_size(
+            self.custom_ssid_button, 20.0 / 800.0 * Window.width, 20
+        )
 
     def update_hint_font_size(self, value):
         if value.hint_text:
             if len(value.hint_text) > 22:
-                value.font_size = (self.default_font_size - (3 / 800*Window.width))/ 800.0 * Window.width
+                value.font_size = (
+                    (self.default_font_size - 3 / 800 * Window.width)
+                    / 800.0
+                    * Window.width
+                )
 
     def update_button_font_size(self, value, default_size, max_length):
         value.font_size = default_size

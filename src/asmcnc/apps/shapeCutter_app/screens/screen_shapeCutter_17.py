@@ -4,6 +4,7 @@ Screen 17 for the Shape Cutter App
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
@@ -338,10 +339,10 @@ class ShapeCutter17ScreenClass(Screen):
     profile_name = StringProperty("No file loaded")
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
+        self.j = kwargs.pop("job_parameters")
         super(ShapeCutter17ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs["shapecutter"]
-        self.m = kwargs["machine"]
-        self.j = kwargs["job_parameters"]
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
@@ -350,8 +351,7 @@ class ShapeCutter17ScreenClass(Screen):
         if not self.j.parameter_string == "":
             self.display_profile = self.j.parameter_string
             self.profile_name = self.j.profile_filename
-        
-# Action buttons       
+
     def get_info(self):
         pass
 
@@ -360,8 +360,6 @@ class ShapeCutter17ScreenClass(Screen):
 
     def next_screen(self):
         self.shapecutter_sm.next_screen()
-    
-# Tab functions
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()
@@ -380,8 +378,6 @@ class ShapeCutter17ScreenClass(Screen):
 
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
-        
-# Screen commands
 
     def load_file(self):
         self.shapecutter_sm.filechooser_screen()

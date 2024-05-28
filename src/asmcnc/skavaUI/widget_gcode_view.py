@@ -3,7 +3,7 @@ from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivy.base import runTouchApp
-from kivy.properties import ObjectProperty 
+from kivy.properties import ObjectProperty
 from kivy.clock import Clock
 from kivy.graphics import *
 from kivy.utils import *
@@ -41,6 +41,7 @@ Builder.load_string(
 
 
 class StencilBox(StencilView, BoxLayout):
+
     def on_touch_down(self, touch):
         if not self.collide_point(*touch.pos):
             return
@@ -70,15 +71,12 @@ class GCodeView(Widget):
     max_lines_to_read = 2000
 
     def __init__(self, **kwargs):
+        self.jd = kwargs.pop("job")
         super(GCodeView, self).__init__(**kwargs)
-        self.jd = kwargs["job"]
 
     def draw_file_in_xy_plane(self, gcode_list):
-        # Logger.debug('len(gcode_list) ' + str(len(gcode_list)))
         self.gCodePreview.canvas.clear()
-        # Logger.debug('> set_canvas_scale')
         self.set_canvas_scale(gcode_list)
-        # Logger.debug('< set_canvas_scale')
         last_x, last_y = 0, 0
         target_x, target_y = 0, 0
         plane = "G17"
@@ -90,26 +88,20 @@ class GCodeView(Widget):
             if lines_read > self.max_lines_to_read:
                 break
             for bit in line.split(" "):
-                # find plane
                 if bit == "G17":
-                    plane = "G17" # 'xy'
+                    plane = "G17"
                 elif bit == "G18":
-                    plane = "G18" # 'zx'
+                    plane = "G18"
                 elif bit == "G19":
-                    plane = "G19" # 'yz'
-                # else plane remains same as last loop
-
-                # find move
+                    plane = "G19"
                 elif bit == "G0":
-                    move = "G0" # Fast move, straight
+                    move = "G0"
                 elif bit == "G1":
-                    move = "G1"  # Feed move, straight
+                    move = "G1"
                 elif bit == "G2":
-                    move = "G2" # CW arc
+                    move = "G2"
                 elif bit == "G3":
-                    move = "G3" # CCW arc
-                # else move remains same as last loop
-
+                    move = "G3"
             if plane == "G17":
                 if move == "G0":
                     for bit in line.strip().split(" "):
@@ -152,7 +144,7 @@ class GCodeView(Widget):
                         )
                     last_x, last_y = target_x, target_y
                 elif move == "G2" or move == "G3":
-                    i, j = 0, 0 # resets each time'
+                    i, j = 0, 0
                     for bit in line.strip().split(" "):
                         if bit.startswith("X"):
                             target_x = float(bit[1:])
@@ -206,13 +198,11 @@ class GCodeView(Widget):
                         angle_end = math.degrees(math.acos(math.fabs(j) / radius)) + 180
                     if end_quad == 4:
                         angle_end = math.degrees(math.acos(math.fabs(i) / radius)) + 90
-                    # Kivy arcs drawn in direction of lowest angle to highest angle. For arcs passing thru zero degrees (@12 o'#clock pos), the end angle needs to be corrected in some cases. E.g. for CW, 270 -> 90 goes to 270 -> 360 +90 (450)
                     if move == "G2" and angle_start > angle_end:
                         angle_end = angle_end + 360
                     if move == "G3" and angle_start < angle_end:
                         angle_end = angle_end - 360
                     with self.gCodePreview.canvas:
-                        # (center_x, center_y, radius, angle_start, angle_end, segments)
                         Color(
                             self.feed_move_colour[0],
                             self.feed_move_colour[1],
@@ -237,7 +227,6 @@ class GCodeView(Widget):
         Logger.debug("< for line in gcode_list")
 
     def detect_quad_in_xy_plane(self, i, j):
-        # quads defined mathematically, i.e. starting top right, counting ccw    .5 represents boundary between <round up/down> quadrants
         if i > 0:
             if j > 0:
                 return 3
@@ -262,7 +251,6 @@ class GCodeView(Widget):
         scale_x = self.gCodePreview.size[0] / float(self.max_x)
         scale_y = self.gCodePreview.size[1] / float(self.max_y)
         scale = min(scale_x, scale_y) * 0.9
-        # setup canvas for drawing
         with self.gCodePreview.canvas:
             Scale(scale, scale, 1)
             Color(0, 1, 0, 1)
@@ -281,8 +269,6 @@ class GCodeView(Widget):
         self.max_y = -999999
         self.min_z = 999999
         self.max_z = -999999
-
-        # mode defaults
         self.last_x, self.last_y, self.last_z = "0", "0", "0"
         self.plane = "G17"
         self.move = "0"
@@ -294,21 +280,17 @@ class GCodeView(Widget):
         self.get_non_modal_gcode(job_file_gcode, line_cap, screen_manager, dt)
 
     def get_non_modal_gcode(self, job_file_gcode, line_cap, screen_manager, dt):
-        # a lot of this wrapper code is to force a break in the loops so we can allow Kivy to update
         if self.lines_read < self.total_lines_in_job_file_pre_scrubbed:
             break_threshold = min(
                 self.line_threshold_to_pause_and_update_at,
                 self.total_lines_in_job_file_pre_scrubbed,
             )
-            # main scrubbing loop
             while self.lines_read < break_threshold:
                 draw_line = job_file_gcode[self.lines_read]
                 self.lines_read += 1
                 if line_cap == True and self.lines_read > self.max_lines_to_read:
                     break
-                # Prevent any weird behaviour
                 line = draw_line
-                # Hackiest way ever to make up for the space loss...
                 line = re.sub("Y", " YY", line)
                 line = re.sub("X", " XX", line)
                 line = re.sub("Z", " ZZ", line)
@@ -319,7 +301,6 @@ class GCodeView(Widget):
                 line = re.sub("K", " KK", line)
                 line = re.sub("G", " GG", line)
                 self.line_number += 1
-                # centers reset each loop
                 i, j, k = "0", "0", "0"
                 if line.startswith("(") == True:
                     continue
@@ -332,20 +313,19 @@ class GCodeView(Widget):
                         continue
                     if idx == 2:
                         if bit == "G2":
-                            self.move = "G2" # CW arc
+                            self.move = "G2"
                         elif bit == "G3":
-                            self.move = "G3" # CCW arc
+                            self.move = "G3"
                         elif bit == "G0":
-                            self.move = "G0" # Fast self.move, straight
+                            self.move = "G0"
                         elif bit == "G1":
-                            self.move = "G1" # Feed self.move, straight
-                        # find self.plane
+                            self.move = "G1"
                         elif bit == "G17":
-                            self.plane = "G17" # 'xy'
+                            self.plane = "G17"
                         elif bit == "G18":
-                            self.plane = "G18" # 'zx'
+                            self.plane = "G18"
                         elif bit == "G19":
-                            self.plane = "G19" # 'yz' 
+                            self.plane = "G19"
                     start = bit[0]
                     if start == "X":
                         try:
@@ -457,7 +437,6 @@ class GCodeView(Widget):
                         + "): "
                         + line
                     )
-            # take a breather and update progress report
             self.line_threshold_to_pause_and_update_at += self.interrupt_line_threshold
             percentage_progress = int(
                 self.lines_read

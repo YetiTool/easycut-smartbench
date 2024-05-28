@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created March 2019
 
@@ -8,12 +7,9 @@ Squaring decision: manual or auto?
 """
 
 from datetime import datetime
-
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
-
 from asmcnc.skavaUI import popup_info
-
 from asmcnc.core_UI.scaling_utils import get_scaled_sp
 
 Builder.load_string(
@@ -107,10 +103,10 @@ class LiftZOnPauseDecisionScreen(Screen):
     default_font_size = get_scaled_sp("36sp")
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
         super(LiftZOnPauseDecisionScreen, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
-        self.l = kwargs["localization"]
         self.update_strings()
 
     def popup_help(self):
@@ -143,12 +139,12 @@ class LiftZOnPauseDecisionScreen(Screen):
         popup_info.PopupInfo(self.sm, self.l, 760, info)
 
     def decision_no(self):
-        if self.m.fw_can_operate_zUp_on_pause():  # precaution (this screen shouldn't appear if fw not capable)
+        if self.m.fw_can_operate_zUp_on_pause():
             self.sm.get_screen("go").lift_z_on_job_pause = False
         self.sm.current = "jobstart_warning"
 
     def decision_yes(self):
-        if self.m.fw_can_operate_zUp_on_pause():  # precaution (this screen shouldn't appear if fw not capable)
+        if self.m.fw_can_operate_zUp_on_pause():
             self.sm.get_screen("go").lift_z_on_job_pause = True
         self.sm.current = "jobstart_warning"
 

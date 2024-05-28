@@ -196,11 +196,11 @@ class NudgeScreen(Screen):
     display_list = []
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.jd = kwargs.pop("job")
+        self.l = kwargs.pop("localization")
         super(NudgeScreen, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
-        self.jd = kwargs["job"]
-        self.l = kwargs["localization"]
         self.status_container.add_widget(
             widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
         )
@@ -276,14 +276,12 @@ class NudgeScreen(Screen):
         self.sm.current = "job_recovery"
 
     def next_screen(self):
-        # wait_popup = popup_info.PopupWait(self.sm, self.l)
         self.sm.pm.show_wait_popup()
 
         def generate_gcode():
             success, message = self.jd.generate_recovery_gcode()
             self.sm.pm.close_wait_popup()
             if not success:
-                # popup_info.PopupError(self.sm, self.l, message)
                 self.sm.pm.show_error_popup(message)
                 self.jd.reset_recovery()
                 self.jd.job_recovery_from_beginning = True

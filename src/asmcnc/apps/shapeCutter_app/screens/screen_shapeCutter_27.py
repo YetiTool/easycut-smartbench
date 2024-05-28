@@ -4,6 +4,7 @@ Screen 27 for the Shape Cutter App
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
@@ -333,10 +334,10 @@ class ShapeCutter27ScreenClass(Screen):
     image_source = StringProperty("./asmcnc/apps/shapeCutter_app/img/27_rect.png")
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
+        self.j = kwargs.pop("job_parameters")
         super(ShapeCutter27ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs["shapecutter"]
-        self.m = kwargs["machine"]
-        self.j = kwargs["job_parameters"]
 
     def on_pre_enter(self):
         self.info_button.opacity = 1
@@ -349,22 +350,23 @@ class ShapeCutter27ScreenClass(Screen):
             self.image_source = "./asmcnc/apps/shapeCutter_app/img/27_rect.png"
             self.image_box.padding = 25, 0, 0, 0
 
-# Action buttons       
     def get_info(self):
         info = "The X-Y datum is SmartBench's reference point for the job coordinates."
-        InfoPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
-                  main_string=info,
-                  popup_width=500,
-                  popup_height=400,
-                  main_label_size_delta=140).open()
+        InfoPopup(
+            sm=self.shapecutter_sm,
+            m=self.m,
+            l=self.m.l,
+            main_string=info,
+            popup_width=500,
+            popup_height=400,
+            main_label_size_delta=140,
+        ).open()
 
     def go_back(self):
         self.shapecutter_sm.previous_screen()
 
     def next_screen(self):
         self.shapecutter_sm.next_screen()
-
-# Tab functions
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()

@@ -6,6 +6,7 @@ Step 2: Inform user of measurement after machine has moved, and ask user if they
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.properties import ObjectProperty, StringProperty, NumericProperty
@@ -208,9 +209,9 @@ class DistanceScreen2yClass(Screen):
     y_cal_measure_1 = NumericProperty()
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
         super(DistanceScreen2yClass, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
 
     def on_pre_enter(self):
         measure_string = str(self.initial_y_cal_move + self.y_cal_measure_1)
@@ -232,7 +233,7 @@ class DistanceScreen2yClass(Screen):
         self.skip_section()
 
     def repeat_section(self):
-        from asmcnc.calibration_app import screen_distance_1_y # this has to be here
+        from asmcnc.calibration_app import screen_distance_1_y
 
         distance_screen1y = screen_distance_1_y.DistanceScreen1yClass(
             name="distance1y", screen_manager=self.sm, machine=self.m
@@ -242,20 +243,20 @@ class DistanceScreen2yClass(Screen):
 
     def skip_section(self):
         self.sm.get_screen("calibration_complete").calibration_cancelled = False
-        self.sm.get_screen(
-            "tape_measure_alert"
-        ).return_to_screen = "calibration_complete"
+        self.sm.get_screen("tape_measure_alert").return_to_screen = (
+            "calibration_complete"
+        )
         self.sm.current = "tape_measure_alert"
 
     def quit_calibration(self):
-        self.sm.get_screen(
-            "tape_measure_alert"
-        ).return_to_screen = "calibration_complete"
+        self.sm.get_screen("tape_measure_alert").return_to_screen = (
+            "calibration_complete"
+        )
         self.sm.get_screen("calibration_complete").calibration_cancelled = True
         self.sm.current = "tape_measure_alert"
 
     def next_screen(self):
-        if not self.sm.has_screen("distance3y"): # only create the new screen if it doesn't exist already
+        if not self.sm.has_screen("distance3y"):
             distance3y_screen = screen_distance_3_y.DistanceScreen3yClass(
                 name="distance3y", screen_manager=self.sm, machine=self.m
             )

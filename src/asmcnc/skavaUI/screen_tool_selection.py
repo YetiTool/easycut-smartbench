@@ -4,6 +4,7 @@ Created on 30 June 2021
 
 Screen to select router or CNC stylus tool
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 
@@ -89,11 +90,12 @@ Builder.load_string(
 
 
 class ToolSelectionScreen(Screen):
+
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
         super(ToolSelectionScreen, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
-        self.l = kwargs["localization"]
         self.update_strings()
 
     def router_button_pressed(self):

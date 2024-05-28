@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
 """
 Created on 19 Aug 2017
 
 @author: Ed
 """
+
 import kivy
 from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.comms.model_manager import ModelManagerSingleton
@@ -289,44 +289,32 @@ class HomeScreen(Screen):
     has_datum_been_reset = False
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop("machine")
+        self.sm = kwargs.pop("screen_manager")
+        self.jd = kwargs.pop("job")
+        self.set = kwargs.pop("settings")
+        self.l = kwargs.pop("localization")
+        self.kb = kwargs.pop("keyboard")
         super(HomeScreen, self).__init__(**kwargs)
         Clock.schedule_once(lambda *args: self.tab_panel.switch_to(self.home_tab))
-        self.m = kwargs["machine"]
-        self.sm = kwargs["screen_manager"]
-        self.jd = kwargs["job"]
-        self.set = kwargs["settings"]
-        self.l = kwargs["localization"]
-        self.kb = kwargs["keyboard"]
-
         self.model_manager = ModelManagerSingleton()
-
         self.m.bind(probe_z_coord=self.dismiss_z_datum_reminder)
-
-        # Job tab
         self.gcode_summary_widget = widget_gcode_summary.GCodeSummary(job=self.jd)
         self.gcode_preview_container.add_widget(self.gcode_summary_widget)
         self.gcode_preview_widget = widget_gcode_view.GCodeView(job=self.jd)
         self.gcode_preview_container.add_widget(self.gcode_preview_widget)
-
-        # Position tab
         self.virtual_bed_container.add_widget(
             widget_virtual_bed.VirtualBed(machine=self.m, screen_manager=self.sm)
         )
-
-        # Status bar
         self.status_container.add_widget(
             widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
         )
-
-        # Bed tab
         self.virtual_bed_control_container.add_widget(
             widget_virtual_bed_control.VirtualBedControl(
                 machine=self.m, screen_manager=self.sm, localization=self.l
             ),
             index=100,
         )
-
-        # Move tab
         self.xy_move_widget = widget_xy_move.XYMove(
             machine=self.m, screen_manager=self.sm, localization=self.l
         )
@@ -336,23 +324,19 @@ class HomeScreen(Screen):
         self.xy_move_container.add_widget(self.xy_move_widget)
         self.common_move_container.add_widget(self.common_move_widget)
         self.z_move_container.add_widget(
-            widget_z_move.ZMove(machine=self.m, screen_manager=self.sm, job=self.jd, localization=self.l)
+            widget_z_move.ZMove(
+                machine=self.m, screen_manager=self.sm, job=self.jd, localization=self.l
+            )
         )
-
-        # Settings tab
         self.gcode_monitor_widget = widget_gcode_monitor.GCodeMonitor(
             machine=self.m, screen_manager=self.sm, localization=self.l
         )
         self.gcode_monitor_container.add_widget(self.gcode_monitor_widget)
-
-        # Quick commands
         self.quick_commands_container.add_widget(
             widget_quick_commands.QuickCommands(
                 machine=self.m, screen_manager=self.sm, job=self.jd, localization=self.l
             )
         )
-
-        # Add the IDs of ALL the TextInputs on this screen
         self.text_inputs = [self.gcode_monitor_widget.gCodeInput]
 
     def on_enter(self):
@@ -365,11 +349,8 @@ class HomeScreen(Screen):
             Clock.schedule_once(lambda dt: self.m.laser_on(), 0.2)
         else:
             Clock.schedule_once(lambda dt: self.m.set_led_colour("GREEN"), 0.2)
-
         if self.jd.job_gcode != []:
             self.gcode_summary_widget.display_summary()
-
-            # Preview file as drawing
             try:
                 Clock.schedule_once(self.preview_job_file, 0.05)
             except:
@@ -377,8 +358,6 @@ class HomeScreen(Screen):
 
     def on_pre_enter(self):
         if self.jd.job_gcode == []:
-
-            # File label at the top
             self.file_data_label.text = (
                 "[color=333333]" + self.l.get_str("Load a file") + "..." + "[/color]"
             )
@@ -389,8 +368,6 @@ class HomeScreen(Screen):
             self.job_box.range_y[1] = 0
             self.job_box.range_z[0] = 0
             self.job_box.range_z[1] = 0
-
-            # Hack to clear any previous job files
             try:
                 self.gcode_preview_widget.draw_file_in_xy_plane([])
                 self.gcode_preview_widget.get_non_modal_gcode([])
@@ -398,14 +375,9 @@ class HomeScreen(Screen):
                 Logger.exception("No G-code loaded.")
             self.gcode_summary_widget.hide_summary()
         else:
-            # File label at the top
             self.file_data_label.text = "[color=333333]" + self.jd.job_name + "[/color]"
-
-        # Job recovery not available on drywall machines
         if not self.model_manager.is_machine_drywall():
-            # Check if job recovery (or job redo) is available
             if self.jd.job_recovery_cancel_line != None:
-                # Cancel on line -1 represents last job completing successfully
                 if self.jd.job_recovery_cancel_line == -1:
                     self.job_recovery_button_image.source = (
                         "./asmcnc/skavaUI/img/recover_job_disabled.png"
@@ -414,7 +386,6 @@ class HomeScreen(Screen):
                     self.job_recovery_button_image.source = (
                         "./asmcnc/skavaUI/img/recover_job.png"
                     )
-                # Line -1 being selected represents no selected line
                 if self.jd.job_recovery_selected_line == -1:
                     if self.jd.job_recovery_from_beginning:
                         self.file_data_label.text += (
@@ -443,7 +414,6 @@ class HomeScreen(Screen):
             text_input.focus = False
 
     def preview_job_file(self, dt):
-        # Draw gcode preview
         try:
             Logger.debug("> draw_file_in_xy_plane")
             self.gcode_preview_widget.draw_file_in_xy_plane(self.non_modal_gcode_list)

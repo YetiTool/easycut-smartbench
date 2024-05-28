@@ -2,6 +2,7 @@
 Created on 1 Feb 2018
 @author: Ed
 """
+
 import kivy
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
@@ -95,6 +96,7 @@ Builder.load_string(
 
 
 class StencilBox2(StencilView, BoxLayout):
+
     def on_touch_down(self, touch):
         if not self.collide_point(*touch.pos):
             return
@@ -112,15 +114,13 @@ class StencilBox2(StencilView, BoxLayout):
 
 
 class VirtualBed(Widget):
-    # G54: workpiece co-ordinates
-    # G28: set reference point
     width_modifier = NumericProperty()
     x_pos_modifier = NumericProperty()
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop("machine")
+        self.sm = kwargs.pop("screen_manager")
         super(VirtualBed, self).__init__(**kwargs)
-        self.m = kwargs["machine"]
-        self.sm = kwargs["screen_manager"]
         self.set_up_virtual_bed()
 
     def set_up_virtual_bed(self, dt=0):
@@ -165,7 +165,9 @@ class VirtualBed(Widget):
             * self.m.grbl_y_max_travel
             - self.m.grbl_y_max_travel
         )
-        Logger.debug("Y: ", str(touch.y), str(self.touch_zone.y), str(self.touch_zone.pos[1]))
+        Logger.debug(
+            "Y: ", str(touch.y), str(self.touch_zone.y), str(self.touch_zone.pos[1])
+        )
         self.m.quit_jog()
         self.m.jog_absolute_xy(machineX, machineY, self.bedWidgetJogFeedrate)
 

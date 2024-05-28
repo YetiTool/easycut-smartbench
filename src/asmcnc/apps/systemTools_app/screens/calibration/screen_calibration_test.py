@@ -942,14 +942,12 @@ class CalibrationTesting(Screen):
     mini_run_dev_mode = False
 
     def __init__(self, **kwargs):
+        self.m = kwargs.pop("m")
+        self.systemtools_sm = kwargs.pop("systemtools")
+        self.calibration_db = kwargs.pop("calibration_db")
+        self.sm = kwargs.pop("sm")
+        self.l = kwargs.pop("l")
         super(CalibrationTesting, self).__init__(**kwargs)
-        self.m = kwargs["m"]
-        self.systemtools_sm = kwargs["systemtools"]
-        self.calibration_db = kwargs["calibration_db"]
-        self.sm = kwargs["sm"]
-        self.l = kwargs["l"]
-
-        # used to only measure axis in motion
         self.x_running = False
         self.y_running = False
         self.z_running = False
@@ -993,7 +991,6 @@ class CalibrationTesting(Screen):
         self.raw_y2_neg_vals[stage] = []
         self.raw_z_neg_vals[stage] = []
 
-    # Stage is used to detect which part of the operation overnight test is in, both in screen functions & data
     def set_stage(self, stage):
         self.stage = stage
         self.stage_id = self.calibration_db.get_stage_id_by_description(self.stage)
@@ -1067,7 +1064,6 @@ class CalibrationTesting(Screen):
     def enable_run_buttons(self):
         self.x_load_button.disabled = False
         self.y_load_button.disabled = False
-        # self.z_load_button.disabled = False
         self.unweighted_test_button.disabled = False
         self.home_button.disabled = False
         self.x0y0_jog_button.disabled = False
@@ -1101,15 +1097,6 @@ class CalibrationTesting(Screen):
             and not (self.z_running and self.m.feed_rate() < MAX_Z_SPEED * 1.1)
         ):
             return
-        
-        # GET DIRECTIONS
-
-        # -1    BACKWARDS/UP (TOWARDS HOME)
-        # 0     NOT MOVING
-        # 1     FORWARDS/DOWN (AWAY FROM HOME)
-
-        # NOTE Z LIFTS WEIGHT WHEN IT IS
-
         if len(self.status_data_dict[self.stage]) > 0:
             if (
                 self.status_data_dict[self.stage][
@@ -1163,9 +1150,6 @@ class CalibrationTesting(Screen):
             x_dir = 0
             y_dir = 0
             z_dir = 0
-
-        # XCoordinate, YCoordinate, ZCoordinate, XDirection, YDirection, ZDirection, XSG, YSG, Y1SG, Y2SG, ZSG, TMCTemperature, PCBTemperature, MOTTemperature, Timestamp, Feedrate
-        
         status = (
             int(self.sn_for_db[2:] + str(self.stage_id)),
             self.m.mpos_x(),
@@ -1189,8 +1173,6 @@ class CalibrationTesting(Screen):
             self.z_weight,
         )
         self.status_data_dict[self.stage].append(status)
-
-        # Record raw values for statistics calculations
         if -999 < self.m.s.sg_x_motor_axis < 1023:
             if x_dir > 0:
                 self.raw_x_pos_vals[self.stage].append(self.m.s.sg_x_motor_axis)
@@ -1252,9 +1234,6 @@ class CalibrationTesting(Screen):
             self.get_peak_as_string(
                 self.y2_peak_posve_weighted, self.raw_y2_pos_vals[self.stage]
             )
-            #self.get_peak_as_string(
-            #    self.z_peak_posve_weighted, self.raw_z_pos_vals[self.stage]
-            #)
             self.get_peak_as_string(
                 self.x_peak_negve_weighted, self.raw_x_neg_vals[self.stage]
             )
@@ -1267,9 +1246,6 @@ class CalibrationTesting(Screen):
             self.get_peak_as_string(
                 self.y2_peak_negve_weighted, self.raw_y2_neg_vals[self.stage]
             )
-            #self.get_peak_as_string(
-            #    self.z_peak_negve_weighted, self.raw_z_neg_vals[self.stage]
-            #)
             return
 
     def get_peak_as_string(self, label_id, raw_vals):
@@ -1291,8 +1267,6 @@ class CalibrationTesting(Screen):
                 int(self.y2_peak_negve.text),
                 int(self.z_peak_negve.text),
                 int(self.z_peak_posve.text),
-                # int(self.z_peak_negve_weighted.text),
-                # int(self.z_peak_posve_weighted.text)
             ]
             return peak_list
         if stage == "WeightedFT":
@@ -1309,9 +1283,6 @@ class CalibrationTesting(Screen):
             return peak_list
 
     def get_statistics(self, stage):
-
-        # x_forw_peak, x_backw_peak, y_forw_peak, y_backw_peak, y1_forw_peak, y1_backw_peak, y2_forw_peak, y2_backw_peak, z_forw_peak, z_backw_peak 
-
         peak_list = self.read_out_peaks(stage)
         if stage == "UnweightedFT":
             self.statistics_data_dict[stage] = [
@@ -1358,53 +1329,9 @@ class CalibrationTesting(Screen):
                 0,
                 0,
                 0,
-                # sum(self.raw_z_pos_vals[stage])/len(self.raw_z_pos_vals[stage]),
-                # peak_list[8],
-                # sum(self.raw_z_neg_vals[stage])/len(self.raw_z_neg_vals[stage]),
-                # peak_list[9]
             ]
 
-    # def run_z_procedure(self, dt):
-
-    #     # start run, run all the way down and then all the way back up. 
-
-    #     if self.m.mpos_z() != self.m.z_max_jog_abs_limit:
-    #         popup_info.PopupError(self.sm, self.l, "Move Z to Z0 first!")
-    #         return
-
-    #     self.disable_run_buttons()
-
-    #     self.raw_z_pos_vals["WeightedFT"] = []
-    #     self.raw_z_neg_vals["WeightedFT"] = []
-
-    #     if self.stage != "WeightedFT":
-    #         self.set_stage("WeightedFT")
-        
-    #     self.x_weight = 0
-    #     self.y_weight = 0
-
-    #     self.set_weighted_z_range()
-
-    #     self.z_running = True
-
-    #     self.m.send_any_gcode_command('G91 G1 Z-149 F' + str(MAX_Z_SPEED))
-    #     self.m.send_any_gcode_command('G91 G1 Z149 F' + str(MAX_Z_SPEED))
-
-    #     # poll to see when run is done
-    #     self.confirm_event = Clock.schedule_interval(self.confirm_z, 5)
-
-
-    # def confirm_z(self, dt):
-    #     if self.m.state().startswith('Idle'):
-    #         self.z_running = False
-    #         self.enable_run_buttons()
-    #         self.z_test_check.source = "./asmcnc/skavaUI/img/file_select_select.png"
-    #         self.tick_checkbox(self.z_peak_checkbox_weighted, self.check_in_range(self.z_peak_posve_weighted))
-
-
     def run_y_procedure(self, dt):
-
-        # start run, run all the way down and then all the way back up. 
         self.disable_run_buttons()
         self.raw_y_pos_vals["WeightedFT"] = []
         self.raw_y_neg_vals["WeightedFT"] = []
@@ -1424,8 +1351,6 @@ class CalibrationTesting(Screen):
         self.m.send_any_gcode_command(
             "G53 G1 Y" + str(self.m.y_min_jog_abs_limit) + " F" + str(MAX_XY_SPEED)
         )
-
-        # poll to see when run is done
         self.confirm_event = Clock.schedule_interval(self.confirm_y, 5)
 
     def confirm_y(self, dt):
@@ -1447,8 +1372,6 @@ class CalibrationTesting(Screen):
             )
 
     def run_x_procedure(self, dt):
-
-        # start run, run all the way down and then all the way back up. 
         self.disable_run_buttons()
         self.raw_x_pos_vals["WeightedFT"] = []
         self.raw_x_neg_vals["WeightedFT"] = []
@@ -1464,8 +1387,6 @@ class CalibrationTesting(Screen):
         self.m.send_any_gcode_command(
             "G53 G1 X" + str(self.m.x_min_jog_abs_limit) + " F" + str(MAX_XY_SPEED)
         )
-
-        # poll to see when run is done
         self.confirm_event = Clock.schedule_interval(self.confirm_x, 5)
 
     def confirm_x(self, dt):
@@ -1539,13 +1460,11 @@ class CalibrationTesting(Screen):
         if self.m.state().startswith("Idle"):
             self.z_running = False
             self.enable_run_buttons()
-            # self.data_send_button.disabled = False
             self.unweighted_test_check.source = self.green_tick
             self.pass_or_fail_unweighted_peak_loads()
         else:
             self.confirm_event = Clock.schedule_once(self.confirm_unweighted, 3)
 
-    ## SET TICKS
     def tick_checkbox(self, checkbox_id, tick):
         if tick:
             checkbox_id.source = self.green_tick
@@ -1644,13 +1563,6 @@ class CalibrationTesting(Screen):
         self.z_fw_range.text = z_fw_range_text
         self.z_bw_range.text = z_bw_range_text
 
-    # def set_weighted_z_range(self):
-
-    #     z_fw_range_text, z_bw_range_text = self.get_range_text(self.z_friction, 2, self.Z_SG_to_kg_scaling)
-
-    #     self.z_fw_range_weighted.text = z_fw_range_text
-    #     self.z_bw_range_weighted.text = z_bw_range_text   
-        
     def send_all_data(self):
         self.calibration_db.set_up_connection()
         self.data_send_button.disabled = True

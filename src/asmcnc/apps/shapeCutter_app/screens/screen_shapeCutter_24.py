@@ -4,6 +4,7 @@ Screen 23 for the Shape Cutter App
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
@@ -546,12 +547,11 @@ class ShapeCutter24ScreenClass(Screen):
     user_instructions = StringProperty("")
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
+        self.j = kwargs.pop("job_parameters")
+        self.kb = kwargs.pop("keyboard")
         super(ShapeCutter24ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs["shapecutter"]
-        self.m = kwargs["machine"]
-        self.j = kwargs["job_parameters"]
-        self.kb = kwargs["keyboard"]
-        # Add the IDs of ALL the TextInputs on this screen
         self.text_inputs = [
             self.stock_bottom_offset,
             self.step_down,
@@ -586,27 +586,27 @@ class ShapeCutter24ScreenClass(Screen):
     def on_enter(self):
         self.kb.setup_text_inputs(self.text_inputs)
 
-# Action buttons       
-
     def get_info(self):
         info = """[b]Stock Bottom Offset:[/b] Determines the final machine depth offset from the bottom of your stock.
 
 [b]Step Down:[/b] Specifies the maximum step down between Z-levels.
 
 [b]Finishing Passes:[/b] Specifies the number of finishing passes."""
-        InfoPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
-                  main_string=info,
-                  popup_width=500,
-                  popup_height=400,
-                  main_label_size_delta=40).open()
+        InfoPopup(
+            sm=self.shapecutter_sm,
+            m=self.m,
+            l=self.m.l,
+            main_string=info,
+            popup_width=500,
+            popup_height=400,
+            main_label_size_delta=40,
+        ).open()
 
     def go_back(self):
         self.shapecutter_sm.previous_screen()
 
     def next_screen(self):
         self.check_dimensions()
-    
-# Tab functions
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()
@@ -625,8 +625,6 @@ class ShapeCutter24ScreenClass(Screen):
 
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
-        
-# Screen specific
 
     def toggle_units(self):
         if self.unit_toggle.active == True:
@@ -689,15 +687,19 @@ class ShapeCutter24ScreenClass(Screen):
                             + "Clicking next again will allow you to continue. "
                         )
                         if self.counter == 0:
-                            WarningPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
-                                        main_string=description,
-                                        popup_width=400,
-                                        popup_height=380,
-                                        main_label_size_delta=40,
-                                        button_layout_padding=[50,25,50,0],
-                                        main_label_h_align='left',
-                                        main_layout_padding=[50,20,50,20],
-                                        main_label_padding=[20,20]).open()
+                            WarningPopup(
+                                sm=self.shapecutter_sm,
+                                m=self.m,
+                                l=self.m.l,
+                                main_string=description,
+                                popup_width=400,
+                                popup_height=380,
+                                main_label_size_delta=40,
+                                button_layout_padding=[50, 25, 50, 0],
+                                main_label_h_align="left",
+                                main_layout_padding=[50, 20, 50, 20],
+                                main_label_padding=[20, 20],
+                            ).open()
                             self.counter = 1
                             return False
                     elif dim == "step down" and setting != 0:
@@ -711,15 +713,19 @@ class ShapeCutter24ScreenClass(Screen):
                             + " mm.\n\n"
                             + "Please re-enter your parameters."
                         )
-                        WarningPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
-                                    main_string=description,
-                                    popup_width=400,
-                                    popup_height=380,
-                                    main_label_size_delta=40,
-                                    button_layout_padding=[50,25,50,0],
-                                    main_label_h_align='left',
-                                    main_layout_padding=[50,20,50,20],
-                                    main_label_padding=[20,20]).open()
+                        WarningPopup(
+                            sm=self.shapecutter_sm,
+                            m=self.m,
+                            l=self.m.l,
+                            main_string=description,
+                            popup_width=400,
+                            popup_height=380,
+                            main_label_size_delta=40,
+                            button_layout_padding=[50, 25, 50, 0],
+                            main_label_h_align="left",
+                            main_layout_padding=[50, 20, 50, 20],
+                            main_label_padding=[20, 20],
+                        ).open()
                         return False
                     else:
                         description = (
@@ -732,17 +738,20 @@ class ShapeCutter24ScreenClass(Screen):
 """
                             + "Please re-enter your parameters."
                         )
-                        WarningPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
-                                    main_string=description,
-                                    popup_width=400,
-                                    popup_height=380,
-                                    main_label_size_delta=40,
-                                    button_layout_padding=[50,25,50,0],
-                                    main_label_h_align='left',
-                                    main_layout_padding=[50,20,50,20],
-                                    main_label_padding=[20,20]).open()
+                        WarningPopup(
+                            sm=self.shapecutter_sm,
+                            m=self.m,
+                            l=self.m.l,
+                            main_string=description,
+                            popup_width=400,
+                            popup_height=380,
+                            main_label_size_delta=40,
+                            button_layout_padding=[50, 25, 50, 0],
+                            main_label_h_align="left",
+                            main_layout_padding=[50, 20, 50, 20],
+                            main_label_padding=[20, 20],
+                        ).open()
                         return False
-            #self.j.parameter_dict["strategy parameters"]["units"] = self.unit_label.text
             self.shapecutter_sm.next_screen()
         else:
             pass

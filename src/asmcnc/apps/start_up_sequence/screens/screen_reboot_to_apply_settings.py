@@ -137,16 +137,17 @@ Builder.load_string(
 
 
 class ApplySettingsScreen(Screen):
+
     def __init__(self, **kwargs):
+        self.start_seq = kwargs.pop("start_sequence")
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
         super(ApplySettingsScreen, self).__init__(**kwargs)
-        self.start_seq = kwargs["start_sequence"]
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
-        self.l = kwargs["localization"]
         self.update_strings()
 
     def next_screen(self):
-        self.start_seq.exit_sequence(False) # used for test
+        self.start_seq.exit_sequence(False)
         self.sm.current = "rebooting"
 
     def prev_screen(self):

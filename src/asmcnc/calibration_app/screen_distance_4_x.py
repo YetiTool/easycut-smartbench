@@ -8,6 +8,7 @@ Step 2: Inform user of measurement after machine has moved, and ask user if they
 
 @author: Letty
 """
+
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
@@ -217,9 +218,9 @@ class DistanceScreen4xClass(Screen):
     expected_steps = 56.7
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
         super(DistanceScreen4xClass, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
 
     def on_pre_enter(self):
         old_steps = str(self.old_x_steps)
@@ -278,23 +279,20 @@ You will need to home the machine, and then repeat steps 1 and 2 to verify your 
         self.repeat_section()
 
     def right_button(self):
-        # set new steps per mm
         set_new_steps_sequence = ["$100 =" + str(self.new_x_steps), "$$"]
         self.m.s.start_sequential_stream(set_new_steps_sequence)
-        # this makes sure we stay on this screen until steps have been set before triggering homing sequence   
         self.poll_for_success = Clock.schedule_interval(
             self.check_for_successful_completion, 1
         )
 
     def check_for_successful_completion(self, dt):
-        # if sequential_stream completes successfully
         if self.m.s.is_sequential_streaming == False:
             Logger.info("New steps have been set: $100 = " + str(self.new_x_steps))
             Clock.unschedule(self.poll_for_success)
             self.next_screen()
 
     def repeat_section(self):
-        from asmcnc.calibration_app import screen_distance_1_x # this has to be here
+        from asmcnc.calibration_app import screen_distance_1_x
 
         distance_screen1x = screen_distance_1_x.DistanceScreen1xClass(
             name="distance1x", screen_manager=self.sm, machine=self.m
@@ -303,13 +301,11 @@ You will need to home the machine, and then repeat steps 1 and 2 to verify your 
         self.sm.current = "distance1x"
 
     def skip_section(self):
-        # Y STUFF
         self.sm.get_screen("measurement").axis = "Y"
         self.sm.current = "measurement"
 
     def next_screen(self):
-        # set up distance screen 1-x to return to after homing
-        from asmcnc.calibration_app import screen_distance_1_x # this has to be here
+        from asmcnc.calibration_app import screen_distance_1_x
 
         distance_screen1x = screen_distance_1_x.DistanceScreen1xClass(
             name="distance1x", screen_manager=self.sm, machine=self.m
@@ -318,9 +314,9 @@ You will need to home the machine, and then repeat steps 1 and 2 to verify your 
         self.m.request_homing_procedure("distance1x", "calibration_complete")
 
     def quit_calibration(self):
-        self.sm.get_screen(
-            "tape_measure_alert"
-        ).return_to_screen = "calibration_complete"
+        self.sm.get_screen("tape_measure_alert").return_to_screen = (
+            "calibration_complete"
+        )
         self.sm.get_screen("calibration_complete").calibration_cancelled = True
         self.sm.current = "tape_measure_alert"
 

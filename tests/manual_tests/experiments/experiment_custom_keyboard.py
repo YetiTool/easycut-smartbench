@@ -1,36 +1,27 @@
- # -*- coding: utf-8 -*-
-
-'''
+import logging
+"""
 ########################################################
 IMPORTANT!!
 Run from easycut-smartbench folder, with 
 python -m tests.manual_tests.experiments.experiment_custom_keyboard
-'''
-
+"""
 import sys, os, subprocess
-
- from asmcnc.comms.logging_system.logging_system import Logger
-
- sys.path.append('./src')
+from asmcnc.comms.logging_system.logging_system import Logger
+sys.path.append('./src')
 os.chdir('./src')
-
 import kivy
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.core.window import Window
-
 from asmcnc.comms import localization
 from asmcnc.keyboard import custom_keyboard
-
-try: 
+try:
     from mock import Mock
-
 except:
     pass
-
-
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <FormattedButton@Button>:
 
@@ -91,11 +82,12 @@ Builder.load_string("""
 
             TextInput:
                 id: t3
-                text: ""
-""")
+                text: "\"
+"""
+    )
+
 
 class BasicScreen(Screen):
-
     list_of_items = list(range(0, 101))
 
     def __init__(self, **kwargs):
@@ -112,13 +104,14 @@ class BasicScreen(Screen):
         Logger.info(x)
 
     def end_func(self):
-        Logger.info("YAY")
+        Logger.info('YAY')
 
     def test_generic_for_loop_alternative(self):
         self.kb.generic_for_loop_alternative(self.func, self.list_of_items)
 
     def test_generic_for_loop_alternative_with_end_func(self):
-        self.kb.generic_for_loop_alternative(self.func, self.list_of_items, end_func=self.end_func)
+        self.kb.generic_for_loop_alternative(self.func, self.list_of_items,
+            end_func=self.end_func)
 
     def add_keyboard_instance(self):
         self.kb.add_keyboard_instance()
@@ -131,23 +124,20 @@ class BasicScreen(Screen):
 
     def raise_keyboard_if_none_exists_with_mocks(self):
 
-        def add_keyboard(*args): Logger.info("raise keyboard")
+        def add_keyboard(*args):
+            Logger.info('raise keyboard')
         self.kb.add_keyboard_instance = Mock(side_effect=add_keyboard)
-
         self.kb.raise_keyboard_if_none_exists()
 
-        
 
 class TestApp(App):
 
     def build(self):
-        # Create the screen manager
         sm = ScreenManager()
         sm.add_widget(BasicScreen(name='basic'))
         sm.current = 'basic'
         return sm
 
+
 if __name__ == '__main__':
     TestApp().run()
-
-

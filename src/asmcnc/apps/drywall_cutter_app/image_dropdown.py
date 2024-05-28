@@ -1,5 +1,4 @@
 from collections import OrderedDict
-
 from kivy.metrics import dp
 from kivy.properties import DictProperty, ObjectProperty, StringProperty
 from kivy.uix.behaviors import ButtonBehavior
@@ -31,53 +30,50 @@ class ImageButton(ButtonBehavior, Image):
 
 
 class ImageDropDown(DropDown):
+
     def __init__(self, image_dict, callback, key_name, **kwargs):
         super(ImageDropDown, self).__init__(**kwargs)
-
         try:
-            sorted_cutter_list = sorted(image_dict.items(), key=lambda x: (x[1]['type'], x[1]['size']))
+            sorted_cutter_list = sorted(
+                list(image_dict.items()), key=lambda x: (x[1]["type"], x[1]["size"])
+            )
             image_dict = OrderedDict(sorted_cutter_list)
-        except KeyError: # working through the wrong dict...wait for the next one
+        except KeyError:
             pass
-        for key in image_dict.keys():
+        for key in list(image_dict.keys()):
             image = ImageButton(
-                source=image_dict[key]['image_path'],
+                source=image_dict[key]["image_path"],
                 allow_stretch=True,
                 size_hint_y=None,
                 height=dp(75),
             )
-
             image.bind(on_release=self.dismiss)
-
-            if key_name == 'key':
+            if key_name == "key":
                 image.bind(on_press=lambda x, k=key: callback(k))
             else:
-                # https://stackoverflow.com/questions/2295290/what-do-lambda-function-closures-capture
                 image.bind(on_press=lambda x, k=key: callback(image_dict[k][key_name]))
-
             self.add_widget(image)
 
 
 class ImageDropDownButton(ButtonBehavior, Image):
     image_dict = DictProperty({})
     callback = ObjectProperty(None)
-    key_name = StringProperty('')
+    key_name = StringProperty("")
     dropdown = None
 
     def __init__(self, **kwargs):
         super(ImageDropDownButton, self).__init__(**kwargs)
-
         self.bind(image_dict=self.on_property)
         self.bind(callback=self.on_property)
         self.bind(key_name=self.on_property)
 
     def on_property(self, *args):
-        # this is needed because the properties are set in the kv file, and they don't always get set at the same time
-        # idk how to do it better @Lettie any ideas?
-        if self.callback == ObjectProperty(None) or self.key_name == StringProperty(
-                '') or self.image_dict == DictProperty({}):
+        if (
+            self.callback == ObjectProperty(None)
+            or self.key_name == StringProperty("")
+            or self.image_dict == DictProperty({})
+        ):
             return
-
         self.dropdown = ImageDropDown(self.image_dict, self.callback, self.key_name)
 
     def on_release(self):

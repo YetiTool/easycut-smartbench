@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created July 2020
 
@@ -6,8 +5,8 @@ Created July 2020
 
 Spindle cooldown screen
 """
-from math import sqrt, ceil
 
+from math import sqrt, ceil
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.clock import Clock
 from kivy.lang import Builder
@@ -134,26 +133,25 @@ class SpindleHealthCheckActiveScreen(Screen):
     health_check_rpm = 24000
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
         super(SpindleHealthCheckActiveScreen, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
-        self.l = kwargs["localization"]
         self.seconds = self.max_seconds
         self.cool_down_label.text = (
-            self.l.get_str("Running Spindle motor health check…")
+            self.l.get_str("Running Spindle motor health check...")
             + "\n"
             + self.l.get_str("SmartBench is raising the Z axis.")
         )
 
     def on_pre_enter(self):
-        # health check if not called from elsewhere
         self.seconds = self.max_seconds
         self.countdown.text = str(self.seconds)
 
     def on_enter(self):
         self.run_spindle_health_check()
         self.cool_down_label.text = (
-            self.l.get_str("Running Spindle motor health check…")
+            self.l.get_str("Running Spindle motor health check...")
             + "\n"
             + self.l.get_str("SmartBench is raising the Z axis.")
         )
@@ -161,7 +159,7 @@ class SpindleHealthCheckActiveScreen(Screen):
     def start_timer(self):
         self.update_timer_event = Clock.schedule_interval(self.update_timer, 1)
         self.cool_down_label.text = self.l.get_str(
-            "Running Spindle motor health check…"
+            "Running Spindle motor health check..."
         )
 
     def exit_screen(self, dt=0):

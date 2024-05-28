@@ -337,17 +337,16 @@ class JobRecoveryScreen(Screen):
     selected_line_index = 0
     display_list = []
     gcode_without_comments = []
-
     scroll_up_event = None
     scroll_down_event = None
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.jd = kwargs.pop("job")
+        self.l = kwargs.pop("localization")
+        self.kb = kwargs.pop("keyboard")
         super(JobRecoveryScreen, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
-        self.jd = kwargs["job"]
-        self.l = kwargs["localization"]
-        self.kb = kwargs["keyboard"]
         self.line_input.bind(text=self.jump_to_line)
         self.status_container.add_widget(
             widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
@@ -366,11 +365,9 @@ class JobRecoveryScreen(Screen):
         self.m.set_led_colour("WHITE")
 
         def remove_comments(line):
-            # Comments are anything contained in parentheses, or anything after a semicolon
-            return re.sub('\(.*?\)|;.*', '', line)
+            return re.sub("\\(.*?\\)|;.*", "", line)
 
-        self.gcode_without_comments = map(remove_comments, self.jd.job_gcode)
-
+        self.gcode_without_comments = list(map(remove_comments, self.jd.job_gcode))
         self.gcode_label.font_name = "Roboto"
         if self.jd.job_recovery_selected_line == -1:
             self.line_input.text = ""
@@ -461,7 +458,9 @@ class JobRecoveryScreen(Screen):
         spindle_speed_line = next(
             (
                 s
-                for s in reversed(self.gcode_without_comments[: self.selected_line_index + 1])
+                for s in reversed(
+                    self.gcode_without_comments[: self.selected_line_index + 1]
+                )
                 if "S" in s
             ),
             None,
@@ -478,7 +477,9 @@ class JobRecoveryScreen(Screen):
         feedrate_line = next(
             (
                 s
-                for s in reversed(self.gcode_without_comments[: self.selected_line_index + 1])
+                for s in reversed(
+                    self.gcode_without_comments[: self.selected_line_index + 1]
+                )
                 if "F" in s
             ),
             None,
@@ -495,7 +496,9 @@ class JobRecoveryScreen(Screen):
         x_line = next(
             (
                 s
-                for s in reversed(self.gcode_without_comments[: self.selected_line_index + 1])
+                for s in reversed(
+                    self.gcode_without_comments[: self.selected_line_index + 1]
+                )
                 if "X" in s
             ),
             None,
@@ -511,7 +514,9 @@ class JobRecoveryScreen(Screen):
         y_line = next(
             (
                 s
-                for s in reversed(self.gcode_without_comments[: self.selected_line_index + 1])
+                for s in reversed(
+                    self.gcode_without_comments[: self.selected_line_index + 1]
+                )
                 if "Y" in s
             ),
             None,
@@ -527,7 +532,9 @@ class JobRecoveryScreen(Screen):
         z_line = next(
             (
                 s
-                for s in reversed(self.gcode_without_comments[: self.selected_line_index + 1])
+                for s in reversed(
+                    self.gcode_without_comments[: self.selected_line_index + 1]
+                )
                 if "Z" in s
             ),
             None,

@@ -4,6 +4,7 @@ Screen 19 for the Shape Cutter App
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
@@ -11,7 +12,8 @@ from kivy.properties import StringProperty, ObjectProperty
 from asmcnc.apps.shapeCutter_app.screens import popup_info
 from asmcnc.core_UI.popups import InfoPopup
 
-Builder.load_string("""
+Builder.load_string(
+    """
 #:import LabelBase asmcnc.core_UI.components.labels.base_label
 
 <ShapeCutter19ScreenClass>
@@ -312,32 +314,32 @@ class ShapeCutter19ScreenClass(Screen):
     )
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
         super(ShapeCutter19ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs["shapecutter"]
-        self.m = kwargs["machine"]
 
     def on_pre_enter(self):
         self.info_button.opacity = 1
-
-# Action buttons       
 
     def get_info(self):
         info = """Ensure your tool is sharp and has no obvious damage.
 
 Ensure your collet size matches your shank diameter."""
-        InfoPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
-                  main_string=info,
-                  popup_width=500,
-                  popup_height=400,
-                  main_label_size_delta=140).open()
+        InfoPopup(
+            sm=self.shapecutter_sm,
+            m=self.m,
+            l=self.m.l,
+            main_string=info,
+            popup_width=500,
+            popup_height=400,
+            main_label_size_delta=140,
+        ).open()
 
     def go_back(self):
         self.shapecutter_sm.previous_screen()
 
     def next_screen(self):
         self.shapecutter_sm.next_screen()
-    
-# Tab functions
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()

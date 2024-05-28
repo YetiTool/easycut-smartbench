@@ -158,9 +158,9 @@ class GeneralMeasurementScreen(Screen):
     }
 
     def __init__(self, **kwargs):
+        self.systemtools_sm = kwargs.pop("systemtools")
+        self.m = kwargs.pop("machine")
         super(GeneralMeasurementScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs["systemtools"]
-        self.m = kwargs["machine"]
 
     def back_to_fac_settings(self):
         self.systemtools_sm.open_factory_settings_screen()
@@ -192,11 +192,13 @@ class GeneralMeasurementScreen(Screen):
     def display_results(self):
         try:
             plt.rcParams["figure.figsize"] = 7, 3.55
-            xVar, yVar = zip(
-                *(
-                    (x, y)
-                    for x, y in zip(self.get_x_axis(), self.get_y_axis())
-                    if y != -999 and y != None
+            xVar, yVar = list(
+                zip(
+                    *(
+                        (x, y)
+                        for x, y in zip(self.get_x_axis(), self.get_y_axis())
+                        if y != -999 and y != None
+                    )
                 )
             )
             plt.plot(xVar, yVar, "bx")

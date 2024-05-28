@@ -10,7 +10,6 @@ from kivy.uix.modalview import ModalView
 from kivy.uix.rst import RstDocument
 from kivy.uix.scrollview import ScrollView
 from kivy.utils import get_color_from_hex
-
 from asmcnc.core_UI import scaling_utils
 from asmcnc.core_UI.utils import color_provider
 
@@ -25,8 +24,9 @@ class PopupBase(ModalView):
     def __init__(self, **kwargs):
         super(PopupBase, self).__init__(**kwargs)
         self.background = ""
-
-        self.root_layout = GridLayout(cols=1, spacing=dp(10), padding=[dp(20), dp(10), dp(20), dp(10)])
+        self.root_layout = GridLayout(
+            cols=1, spacing=dp(10), padding=[dp(20), dp(10), dp(20), dp(10)]
+        )
         self.add_widget(self.root_layout)
 
 
@@ -37,52 +37,59 @@ class PopupTitle(BoxLayout):
     def __init__(self, title_text, image_path, separator_colour, **kwargs):
         super(PopupTitle, self).__init__(**kwargs)
         self.separator_colour = separator_colour
-
         self.orientation = "vertical"
-
-        image_label_layout = BoxLayout(orientation="horizontal", size_hint_y=0.85,
-                                       padding=[0, dp(10), 0, dp(10)])
+        image_label_layout = BoxLayout(
+            orientation="horizontal", size_hint_y=0.85, padding=[0, dp(10), 0, dp(10)]
+        )
         image = Image(source=image_path, size_hint_x=None, width=dp(40))
         image_label_layout.add_widget(image)
-
         spacer = BoxLayout(size_hint=(0.01, 1))
         image_label_layout.add_widget(spacer)
-
-        self.label = Label(text=title_text, color=get_color_from_hex("#000000"), font_size=20)
+        self.label = Label(
+            text=title_text, color=get_color_from_hex("#000000"), font_size=20
+        )
         self.label.bind(size=self.on_label_size)
         image_label_layout.add_widget(self.label)
-
         self.add_widget(image_label_layout)
-
         self.bind(size=self.update_separator_line)
 
     def update_separator_line(self, instance, value):
-        self.canvas.before.clear()  # Clear previous drawing
+        self.canvas.before.clear()
         with self.canvas.before:
             Color(*self.separator_colour)
-            Line(points=[self.x + 2, self.y, self.x + self.width - 2, self.y], width=dp(2), cap="square")
+            Line(
+                points=[self.x + 2, self.y, self.x + self.width - 2, self.y],
+                width=dp(2),
+                cap="square",
+            )
 
     def on_label_size(self, instance, value):
-        self.label.pos = (self.label.pos[0], self.label.pos[1] + 5)  # Cheat way to center the label
-        self.label.text_size = (self.label.size[0], None)
+        self.label.pos = self.label.pos[0], self.label.pos[1] + 5
+        self.label.text_size = self.label.size[0], None
 
 
 class PopupErrorTitle(PopupTitle):
     """Title bar for error popups. Contains an icon and a title."""
 
     def __init__(self, localisation, **kwargs):
-        super(PopupErrorTitle, self).__init__(localisation.get_str("Error!"),
-                                              "./asmcnc/apps/shapeCutter_app/img/error_icon_scaled_up.png",
-                                              (1, 0, 0, 1), **kwargs)
+        super(PopupErrorTitle, self).__init__(
+            localisation.get_str("Error!"),
+            "./asmcnc/apps/shapeCutter_app/img/error_icon_scaled_up.png",
+            (1, 0, 0, 1),
+            **kwargs
+        )
 
 
 class PopupWarningTitle(PopupTitle):
     """Title bar for error popups. Contains an icon and a title."""
 
     def __init__(self, localisation, **kwargs):
-        super(PopupWarningTitle, self).__init__(localisation.get_str("Warning!"),
-                                                "./asmcnc/apps/shapeCutter_app/img/error_icon_scaled_up.png",
-                                                color_provider.get_rgba("red"), **kwargs)
+        super(PopupWarningTitle, self).__init__(
+            localisation.get_str("Warning!"),
+            "./asmcnc/apps/shapeCutter_app/img/error_icon_scaled_up.png",
+            color_provider.get_rgba("red"),
+            **kwargs
+        )
 
 
 scroll_view_kv = """
@@ -104,8 +111,7 @@ scroll_view_kv = """
             pos: root._handle_x_pos or (0, 0)
             size: root._handle_x_size or (0, 0)
 """
-
-Builder.load_string(scroll_view_kv)  # Overwrite the default ScrollView styling to change colour and width of scrollbar
+Builder.load_string(scroll_view_kv)
 
 
 class PopupScrollableBody(ScrollView):
@@ -113,7 +119,10 @@ class PopupScrollableBody(ScrollView):
 
     def __init__(self, text, **kwargs):
         super(PopupScrollableBody, self).__init__(**kwargs)
-
-        rst_doc = RstDocument(text=text, markup=True, font_size=scaling_utils.get_scaled_sp("15sp"),
-                              background_color=get_color_from_hex("#f3f3f3"))
+        rst_doc = RstDocument(
+            text=text,
+            markup=True,
+            font_size=scaling_utils.get_scaled_sp("15sp"),
+            background_color=get_color_from_hex("#f3f3f3"),
+        )
         self.add_widget(rst_doc)

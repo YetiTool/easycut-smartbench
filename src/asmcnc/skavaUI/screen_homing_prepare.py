@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created March 2019
 
@@ -6,6 +5,7 @@ Created March 2019
 
 Prepare to home
 """
+
 from kivy.core.window import Window
 import kivy
 from kivy.lang import Builder
@@ -118,10 +118,10 @@ class HomingScreenPrepare(Screen):
     default_font_size = utils.get_scaled_width(30)
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
         super(HomingScreenPrepare, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
-        self.l = kwargs["localization"]
         self.update_strings()
 
     def on_enter(self):
@@ -151,7 +151,6 @@ class HomingScreenPrepare(Screen):
             self.instruction_label.text = self.l.get_str("Ensure SmartBench is clear.")
         self.update_font_size(self.press_to_home_label, self.instruction_label)
 
-    # Update both labels together because they should have the same font size
     def update_font_size(self, value1, value2):
         if self.l.get_text_length(value1.text) > 100:
             value1.font_size = self.default_font_size

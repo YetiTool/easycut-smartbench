@@ -4,6 +4,7 @@ Screen 33 for the Shape Cutter App
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
@@ -15,7 +16,8 @@ from asmcnc.apps.shapeCutter_app.screens import (
 )
 from asmcnc.geometry import job_envelope
 
-Builder.load_string("""
+Builder.load_string(
+    """
 #:import LabelBase asmcnc.core_UI.components.labels.base_label
 
 <ShapeCutter33ScreenClass>
@@ -376,10 +378,10 @@ class ShapeCutter33ScreenClass(Screen):
     )
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
+        self.j = kwargs.pop("job_parameters")
         super(ShapeCutter33ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs["shapecutter"]
-        self.m = kwargs["machine"]
-        self.j = kwargs["job_parameters"]
         self.virtual_bed_widget = widget_sC_virtual_bed.SCVirtualBed(
             machine=self.m, job_parameters=self.j, screen_manager=self.shapecutter_sm.sm
         )
@@ -396,8 +398,6 @@ class ShapeCutter33ScreenClass(Screen):
     def on_pre_leave(self):
         self.m.laser_off()
 
-# Action buttons
-
     def get_info(self):
         pass
 
@@ -412,8 +412,6 @@ class ShapeCutter33ScreenClass(Screen):
             self.shapecutter_sm.next_screen()
         else:
             pass
-    
-# Tab functions
 
     def prepare(self):
         if not self.m.state().startswith("Jog"):
@@ -448,15 +446,10 @@ class ShapeCutter33ScreenClass(Screen):
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
 
-# Screen specific:
-    def trace_job(self): #(need to generate gcode in advance)
+    def trace_job(self):
         if not self.m.state().startswith("Jog"):
             self.m.go_x_datum()
             self.m.go_y_datum()
-#            Previously this call returned a VERY SLOW feedrate:
-#             xy_feed_speed = self.j.parameter_dict["feed rates"]["xy feed rate"]
-#            Assuming a conversion error. As quick fix, hardcoding to force a G0 equivalent
-#            Needs investigation tho to ensure core job code is stable
             xy_feed_speed = 8000
             job_x_range = self.j.range_x[1] - self.j.range_x[0]
             job_y_range = self.j.range_y[1] - self.j.range_y[0]

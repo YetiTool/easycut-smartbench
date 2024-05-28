@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 Created March 2019
 
@@ -7,6 +5,7 @@ Created March 2019
 
 Squaring decision: manual or auto?
 """
+
 import kivy
 from kivy.core.window import Window
 from kivy.lang import Builder
@@ -118,24 +117,19 @@ Builder.load_string(
 class StopOrResumeDecisionScreen(Screen):
     reason_for_pause = None
     return_screen = "lobby"
-    # GOS TO: https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/routing-tools-sc0-sc1-troubleshooting-overload-during-operation
     qr_spindle_overload = "./asmcnc/skavaUI/img/qr_spindle_overload.png"
-    # GOS TO: https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/smartbench-extra-features-precision-pro-yetipilot-error-screens
     qr_yetipilot_low_feed = "./asmcnc/skavaUI/img/qr_low_feed_rate.png"
-    # GOS TO: https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/smartbench-extra-features-precision-pro-yetipilot-error-screen-spindle-data-error
     qr_yetipilot_no_data = "./asmcnc/skavaUI/img/qr_no_spindle_data.png"
-    # GOS TO: https://www.yetitool.com/SUPPORT/KNOWLEDGE-BASE/smartbench-extra-features-precision-pro-yetipilot-error-screen-spindle-motor-health-check
     qr_health_check = "./asmcnc/skavaUI/img/qr_health_check_failed.png"
-    # default
     qr_source = qr_spindle_overload
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.jd = kwargs.pop("job")
+        self.db = kwargs.pop("database")
+        self.l = kwargs.pop("localization")
         super(StopOrResumeDecisionScreen, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
-        self.jd = kwargs["job"]
-        self.db = kwargs["database"]
-        self.l = kwargs["localization"]
 
     def popup_help(self):
         info = (
@@ -157,14 +151,15 @@ class StopOrResumeDecisionScreen(Screen):
         )
         if self.reason_for_pause == "job_pause":
             info_popup = InfoPopup(
-                sm=self.sm, m=self.m, l=self.l,
-                title='Information',
+                sm=self.sm,
+                m=self.m,
+                l=self.l,
+                title="Information",
                 main_string=info,
                 popup_width=500,
                 popup_height=440,
-                )
+            )
             info_popup.open()
-
         else:
             info += (
                 "\n\n"
@@ -174,10 +169,11 @@ class StopOrResumeDecisionScreen(Screen):
                     "<URL>", "www.yetitool.com/support > Knowledge Base"
                 )
             )
-
             qr_popup = BasicPopup(
-                sm=self.sm, m=self.m, l=self.l,
-                title='Information',
+                sm=self.sm,
+                m=self.m,
+                l=self.l,
+                title="Information",
                 main_string=info,
                 popup_type=PopupType.QR,
                 popup_image=self.qr_source,
@@ -185,27 +181,25 @@ class StopOrResumeDecisionScreen(Screen):
                 popup_width=500,
                 popup_height=440,
                 main_label_size_delta=40,
-                main_label_h_align='left',
+                main_label_h_align="left",
                 main_label_padding=(10, 10),
                 main_layout_spacing=10,
                 main_layout_padding=10,
                 button_layout_padding=(150, 20, 150, 0),
                 button_layout_spacing=15,
-                button_one_text='Ok',
-                button_one_background_color=(76 / 255., 175 / 255., 80 / 255., 1.)
+                button_one_text="Ok",
+                button_one_background_color=(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0),
             )
             qr_popup.open()
-
 
     def on_pre_enter(self):
         self.update_strings()
 
     def update_strings(self):
-        # Update go screen button in case this screen was called from outside go screen (e.g. spindle overload)
         try:
-            self.sm.get_screen(
-                "go"
-            ).start_or_pause_button_image.source = "./asmcnc/skavaUI/img/resume.png"
+            self.sm.get_screen("go").start_or_pause_button_image.source = (
+                "./asmcnc/skavaUI/img/resume.png"
+            )
         except:
             pass
         if self.reason_for_pause == "job_pause":
@@ -313,7 +307,7 @@ class StopOrResumeDecisionScreen(Screen):
 
     def confirm_job_cancel(self):
         self.m.stop_from_soft_stop_cancel()
-        self.m.s.is_ready_to_assess_spindle_for_shutdown = True # allow spindle overload assessment to resume
+        self.m.s.is_ready_to_assess_spindle_for_shutdown = True
         self.sm.get_screen("job_incomplete").prep_this_screen(
             "cancelled", event_number=False
         )

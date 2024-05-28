@@ -5,10 +5,9 @@ Created on 25 Feb 2019
 
 This screen checks the users job, and allows them to review any errors 
 """
+
 from kivy.lang import Builder
-from kivy.properties import (
-    StringProperty,
-)
+from kivy.properties import StringProperty
 from kivy.uix.screenmanager import Screen
 
 Builder.load_string(
@@ -123,10 +122,10 @@ class BoundaryWarningScreen(Screen):
     job_box_details = []
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
         super(BoundaryWarningScreen, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
-        self.l = kwargs["localization"]
         self.update_strings()
 
     def on_enter(self):

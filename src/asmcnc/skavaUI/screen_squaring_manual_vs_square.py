@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from kivy.core.window import Window
 
 """
@@ -164,10 +163,10 @@ class SquaringScreenDecisionManualVsSquare(Screen):
     default_font_size = utils.get_scaled_width(30)
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
         super(SquaringScreenDecisionManualVsSquare, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
-        self.l = kwargs["localization"]
         self.update_strings()
 
     def on_pre_enter(self):

@@ -2,7 +2,8 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety
 
-Builder.load_string("""
+Builder.load_string(
+    """
 #:import LabelBase asmcnc.core_UI.components.labels.base_label
 
 <UpgradeSuccessfulScreen>:
@@ -76,11 +77,12 @@ Builder.load_string("""
 
 
 class UpgradeSuccessfulScreen(Screen):
+
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
         super(UpgradeSuccessfulScreen, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
-        self.l = kwargs["localization"]
         self.update_strings()
 
     def next_screen(self):

@@ -2,6 +2,7 @@
 Created on 1 Feb 2018
 @author: Ed
 """
+
 import kivy
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
@@ -91,6 +92,7 @@ Builder.load_string(
 
 
 class SCStencilBox2(StencilView, BoxLayout):
+
     def on_touch_down(self, touch):
         if not self.collide_point(*touch.pos):
             return
@@ -109,15 +111,12 @@ class SCStencilBox2(StencilView, BoxLayout):
 
 class SCVirtualBed(Widget):
 
-    # G54: workpiece co-ordinates
-    # G28: set reference point
-
     def __init__(self, **kwargs):
+        self.m = kwargs.pop("machine")
+        self.sm = kwargs.pop("screen_manager")
+        self.j = kwargs.pop("job_parameters")
         super(SCVirtualBed, self).__init__(**kwargs)
-        self.m = kwargs["machine"]
-        self.sm = kwargs["screen_manager"]
-        self.j = kwargs["job_parameters"]
-        Clock.schedule_interval(self.refresh_widget, self.m.s.STATUS_INTERVAL)      # Poll for status
+        Clock.schedule_interval(self.refresh_widget, self.m.s.STATUS_INTERVAL)
 
     def refresh_widget(self, dt):
         self.setG54PosByMachineCoords(self.m.x_wco(), self.m.y_wco())
@@ -133,9 +132,6 @@ class SCVirtualBed(Widget):
 
     def on_touch_down(self, touch):
         pass
-#         if self.touch_zone.collide_point(*touch.pos): 
-# #             if homeScreen.zoomToggleButton.state == 'normal': self.setCarriagePosByTouch_andGo(touch)
-#             self.setCarriagePosByTouch_andGo(touch)
 
     def setCarriagePosByTouch_andGo(self, touch):
         machineX = int(
@@ -150,7 +146,9 @@ class SCVirtualBed(Widget):
             * self.m.grbl_y_max_travel
             - self.m.grbl_y_max_travel
         )
-        Logger.info("Y: ", str(touch.y), str(self.touch_zone.y), str(self.touch_zone.pos[1]))
+        Logger.info(
+            "Y: ", str(touch.y), str(self.touch_zone.y), str(self.touch_zone.pos[1])
+        )
         self.m.quit_jog()
         self.m.jog_absolute_xy(machineX, machineY, self.bedWidgetJogFeedrate)
 
@@ -241,8 +239,6 @@ class SCVirtualBed(Widget):
             / self.m.grbl_x_max_travel
             * pixel_canvas[1]
         )
-#         self.carriage.width = self.xBar.width
-#         self.carriage.width = self.xBar.width
         self.carriage.width = self.touch_zone.width / 6
         self.carriage.x = pixels_x - self.carriage.width / 2
         self.carriage.y = pixels_y - self.carriage.height / 2

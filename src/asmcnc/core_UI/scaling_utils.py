@@ -59,17 +59,22 @@ def get_scaled_tuple(tup, orientation="horizontal"):
     """
     if tup is None:
         return None
-
     if type(tup) is not tuple:
         if type(tup) is int or type(tup) is float:
-            return get_scaled_width(tup) if orientation == "horizontal" else get_scaled_height(tup)
-
+            return (
+                get_scaled_width(tup)
+                if orientation == "horizontal"
+                else get_scaled_height(tup)
+            )
     if len(tup) == 2:
         return get_scaled_width(tup[0]), get_scaled_height(tup[1])
-
     if len(tup) == 4:
-        return (get_scaled_width(tup[0]), get_scaled_height(tup[1]),
-                get_scaled_width(tup[2]), get_scaled_height(tup[3]))
+        return (
+            get_scaled_width(tup[0]),
+            get_scaled_height(tup[1]),
+            get_scaled_width(tup[2]),
+            get_scaled_height(tup[3]),
+        )
 
 
 def get_scaled_sp(sp_str):

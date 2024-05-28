@@ -1,6 +1,6 @@
+import logging
 from kivy.app import App
 from kivy.lang import Builder
-
 kv = """
 #:import color_provider asmcnc.core_UI.utils.color_provider
 
@@ -13,9 +13,10 @@ BoxLayout:
 
 
 class TestApp(App):
+
     def build(self):
         return Builder.load_string(kv)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     TestApp().run()

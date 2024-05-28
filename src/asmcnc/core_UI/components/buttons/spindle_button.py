@@ -1,10 +1,8 @@
 import os
 from functools import partial
-
 from kivy.clock import Clock
 from kivy.properties import BooleanProperty, StringProperty
 from kivy.uix.image import Image
-
 from asmcnc import paths
 from asmcnc.core_UI.components.buttons.button_base import ImageButtonBase
 from asmcnc.core_UI.components.widgets.blinking_widget import FastBlinkingWidget
@@ -22,28 +20,32 @@ class SpindleButton(ImageButtonBase, FastBlinkingWidget):
 
     def __init__(self, router_machine, serial_connection, screen_manager, **kwargs):
         super(SpindleButton, self).__init__(**kwargs)
-
         self.router_machine = router_machine
         self.serial_connection = serial_connection
         self.screen_manager = screen_manager
-
-        self.overlay_image = Image(source=RED_NO_SIGN_IMAGE, pos_hint={"center_x": 0.75, "center_y": 0.25},
-                                   size_hint=(None, None), size=(self.width / 2, self.height / 2))
-        self.bind(pos=self.__update_overlay_image, size=self.__update_overlay_image)
+        self.overlay_image = Image(
+            source=RED_NO_SIGN_IMAGE,
+            pos_hint={"center_x": 0.75, "center_y": 0.25},
+            size_hint=(None, None),
+            size=(self.width / 2, self.height / 2),
+        )
+        self.bind(pos=self._update_overlay_image, size=self._update_overlay_image)
         self.add_widget(self.overlay_image)
+        self.serial_connection.bind(spindle_on=self._on_spindle_on)
+        self.bind(on_press=self._on_press)
 
-        self.serial_connection.bind(spindle_on=self.__on_spindle_on)
-        self.bind(on_press=self.__on_press)
-
-    def __update_overlay_image(self, *args):
+    def _update_overlay_image(self, *args):
         """
         Update the overlay image, so it stays in the same position relative to the button.
         :param args:
         :return:
         """
-        self.overlay_image.pos = (self.right - self.overlay_image.width, self.top - self.overlay_image.height)
+        self.overlay_image.pos = (
+            self.right - self.overlay_image.width,
+            self.top - self.overlay_image.height,
+        )
 
-    def __on_press(self, *args):
+    def _on_press(self, *args):
         """
         Handles what happens when the button is pressed.
         If the spindle is off, it shows the safety popup.
@@ -52,11 +54,13 @@ class SpindleButton(ImageButtonBase, FastBlinkingWidget):
         :return: None
         """
         if not self.serial_connection.spindle_on:
-            self.screen_manager.pm.show_spindle_safety_popup(None, self.router_machine.turn_on_spindle)
+            self.screen_manager.pm.show_spindle_safety_popup(
+                None, self.router_machine.turn_on_spindle
+            )
         else:
             self.router_machine.turn_off_spindle()
 
-    def __on_spindle_on(self, instance, value):
+    def _on_spindle_on(self, instance, value):
         """
         Callback for the spindle_on event. Changes the overlay image opacity and starts/stops the blinking.
 

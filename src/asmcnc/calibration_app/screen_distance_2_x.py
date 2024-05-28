@@ -8,6 +8,7 @@ Step 2: Inform user of measurement after machine has moved, and ask user if they
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, SlideTransition
 from kivy.properties import ObjectProperty, StringProperty, NumericProperty
@@ -213,9 +214,9 @@ class DistanceScreen2xClass(Screen):
     x_cal_measure_1 = NumericProperty()
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
         super(DistanceScreen2xClass, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
 
     def on_pre_enter(self):
         measure_string = str(self.initial_x_cal_move + self.x_cal_measure_1)
@@ -237,7 +238,7 @@ class DistanceScreen2xClass(Screen):
         self.skip_section()
 
     def repeat_section(self):
-        from asmcnc.calibration_app import screen_distance_1_x # this has to be here
+        from asmcnc.calibration_app import screen_distance_1_x
 
         distance_screen1x = screen_distance_1_x.DistanceScreen1xClass(
             name="distance1x", screen_manager=self.sm, machine=self.m
@@ -246,19 +247,18 @@ class DistanceScreen2xClass(Screen):
         self.sm.current = "distance1x"
 
     def skip_section(self):
-        # Y STUFF
         self.sm.get_screen("measurement").axis = "Y"
         self.sm.current = "measurement"
 
     def quit_calibration(self):
-        self.sm.get_screen(
-            "tape_measure_alert"
-        ).return_to_screen = "calibration_complete"
+        self.sm.get_screen("tape_measure_alert").return_to_screen = (
+            "calibration_complete"
+        )
         self.sm.get_screen("calibration_complete").calibration_cancelled = True
         self.sm.current = "tape_measure_alert"
 
     def next_screen(self):
-        if not self.sm.has_screen("distance3x"): # only create the new screen if it doesn't exist already
+        if not self.sm.has_screen("distance3x"):
             distance3x_screen = screen_distance_3_x.DistanceScreen3xClass(
                 name="distance3x", screen_manager=self.sm, machine=self.m
             )

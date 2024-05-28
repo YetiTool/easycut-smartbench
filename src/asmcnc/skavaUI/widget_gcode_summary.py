@@ -3,6 +3,7 @@ Created on 26 Jul 2021
 @author: Dennis
 Widget to display gcode as an alternative to a drawing
 """
+
 import kivy
 from kivy.lang import Builder
 from kivy.uix.scrollview import ScrollView
@@ -45,9 +46,10 @@ class ScrollViewGCode(ScrollView):
 
 
 class GCodeSummary(Widget):
+
     def __init__(self, **kwargs):
+        self.jd = kwargs.pop("job")
         super(GCodeSummary, self).__init__(**kwargs)
-        self.jd = kwargs["job"]
 
     def display_summary(self):
         self.gcode_scrollview.text_container.text = self.jd.gcode_summary_string

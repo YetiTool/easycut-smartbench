@@ -2,17 +2,16 @@ import re
 from functools import partial
 import glob
 import os, subprocess
-
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 from kivy.clock import Clock
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from datetime import datetime
-
 from asmcnc.skavaUI import widget_status_bar
 
-Builder.load_string("""
+Builder.load_string(
+    """
 <ZHeadPCBSetUp>:
 
     status_container : status_container
@@ -417,273 +416,272 @@ Builder.load_string("""
             size_hint_y: 0.08
             id: status_container 
             pos: self.pos
-""")
+"""
+)
 
 
 class ZHeadPCBSetUp(Screen):
-
     usb_path = "/media/usb/"
-
     single_stack_single_driver_x_current = 26
     double_stack_single_driver_x_current = 31
     single_stack_dual_driver_x_current = 13
     double_stack_dual_driver_x_current = 27
-
     default_z_current = 31
     default_y_current = 28
-
     default_x_thermal_coefficient = 5000
     default_y_thermal_coefficient = 5000
     default_z_thermal_coefficient = 10000
-
     firmware_version = "2.5.5"
     number_of_drivers = 4
-
     x_current = str(single_stack_dual_driver_x_current)
     y_current = str(default_y_current)
     z_current = str(default_z_current)
-
     x_thermal_coefficient = str(default_x_thermal_coefficient)
     y_thermal_coefficient = str(default_y_thermal_coefficient)
     z_thermal_coefficient = str(default_z_thermal_coefficient)
-
     poll_for_reconnection = None
-
     x_current_single_driver_max = 31
     x_current_dual_driver_max = 31
     z_current_max = 31
     x_current_single_driver_min = 0
     x_current_dual_driver_min = 0
     z_current_min = 0
-
     x_thermal_coefficient_max = 65000
     y_thermal_coefficient_max = 65000
     z_thermal_coefficient_max = 65000
     x_thermal_coefficient_min = 0
     y_thermal_coefficient_min = 0
     z_thermal_coefficient_min = 0
-
     exit_code = None
 
     def __init__(self, **kwargs):
-
+        self.sm = kwargs.pop("sm")
+        self.m = kwargs.pop("m")
         super(ZHeadPCBSetUp, self).__init__(**kwargs)
-
-        self.sm = kwargs['sm']
-        self.m = kwargs['m']
-
-        # Green status bar
-        self.status_bar_widget = widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
+        self.status_bar_widget = widget_status_bar.StatusBar(
+            machine=self.m, screen_manager=self.sm
+        )
         self.status_container.add_widget(self.status_bar_widget)
-
-
-        self.x_current_checkbox_group = [self.other_x_current_checkbox, 
-                                        self.single_stack_x_current_checkbox, 
-                                        self.double_stack_x_current_checkbox]
-
-        self.z_current_checkbox_group = [self.other_z_current_checkbox, 
-                                        self.recommended_z_current_checkbox]
-
-        # # Ensure that textinputs are auto-validated when user presses away from keyboard
-        self.other_x_current_textinput.bind(focus=partial(self.on_focus, self.x_current_checkbox_group))
-        self.other_z_current_textinput.bind(focus=partial(self.on_focus, self.z_current_checkbox_group))
+        self.x_current_checkbox_group = [
+            self.other_x_current_checkbox,
+            self.single_stack_x_current_checkbox,
+            self.double_stack_x_current_checkbox,
+        ]
+        self.z_current_checkbox_group = [
+            self.other_z_current_checkbox,
+            self.recommended_z_current_checkbox,
+        ]
+        self.other_x_current_textinput.bind(
+            focus=partial(self.on_focus, self.x_current_checkbox_group)
+        )
+        self.other_z_current_textinput.bind(
+            focus=partial(self.on_focus, self.z_current_checkbox_group)
+        )
 
     def on_pre_enter(self):
-
         self.ok_button.text = "Flash FW and set up PCB"
         self.exit_code = None
-
         self.set_default_thermal_coefficients()
         self.set_default_z_current()
-
         if not self.m.s.hw_version:
             self.hw_info_label.text = "Can't read HW version :("
             return
-
-        self.number_of_drivers = self.generate_no_drivers_based_on_hw_version(self.m.s.hw_version)
+        self.number_of_drivers = self.generate_no_drivers_based_on_hw_version(
+            self.m.s.hw_version
+        )
         self.set_default_x_current(self.number_of_drivers)
-        self.generate_hw_and_fw_info_label(self.m.s.hw_version, self.m.s.fw_version, self.number_of_drivers)
+        self.generate_hw_and_fw_info_label(
+            self.m.s.hw_version, self.m.s.fw_version, self.number_of_drivers
+        )
         self.set_default_firmware_version()
 
     def go_to_qc_home(self):
         self.sm.current = "qchome"
 
-    # SET DEFAULTS
-
     def set_default_thermal_coefficients(self):
-
         self.x_thermal_coefficient = str(self.default_x_thermal_coefficient)
         self.y_thermal_coefficient = str(self.default_y_thermal_coefficient)
         self.z_thermal_coefficient = str(self.default_z_thermal_coefficient)
-
         self.thermal_coeff_x_textinput.text = str(self.x_thermal_coefficient)
         self.thermal_coeff_y_textinput.text = str(self.y_thermal_coefficient)
         self.thermal_coeff_z_textinput.text = str(self.z_thermal_coefficient)
 
     def set_default_z_current(self):
-
         self.recommended_z_current_checkbox.state = "normal"
         self.other_z_current_checkbox.state = "normal"
-
         self.recommended_z_current_label.text = str(self.default_z_current)
         self.other_z_current_textinput.text = str(self.z_current)
-        self.z_current = self.set_value_to_update_to(self.recommended_z_current_label, self.recommended_z_current_checkbox)
+        self.z_current = self.set_value_to_update_to(
+            self.recommended_z_current_label, self.recommended_z_current_checkbox
+        )
 
     def set_default_x_current(self, number_of_drivers):
-
         self.double_stack_x_current_checkbox.state = "normal"
         self.single_stack_x_current_checkbox.state = "normal"
         self.other_x_current_checkbox.state = "normal"
-        
         self.generate_recommended_x_currents(number_of_drivers)
         self.other_x_current_textinput.text = str(self.x_current)
-        self.x_current = self.set_value_to_update_to(self.double_stack_x_current_label, self.double_stack_x_current_checkbox)
+        self.x_current = self.set_value_to_update_to(
+            self.double_stack_x_current_label, self.double_stack_x_current_checkbox
+        )
 
     def set_default_firmware_version(self):
-
         self.recommended_firmware_checkbox.state = "normal"
         self.alt_v3_firmware_checkbox.state = "normal"
         self.alt_v2_firmware_checkbox.state = "normal"
-
         try:
             self.get_fw_options_from_usb(self.usb_path)
             self.choose_recommended_firmware_from_available(self.m.s.hw_version)
-            self.firmware_version = self.set_value_to_update_to(self.recommended_firmware_label, self.recommended_firmware_checkbox)
-
-        except: 
-            self.hw_info_label.text = self.hw_info_label.text + "\nProblems getting available FW :("
-
-
-    # BUTTON HANDLING
+            self.firmware_version = self.set_value_to_update_to(
+                self.recommended_firmware_label, self.recommended_firmware_checkbox
+            )
+        except:
+            self.hw_info_label.text = (
+                self.hw_info_label.text
+                + """
+Problems getting available FW :("""
+            )
 
     def on_focus(self, radio_button_group, instance, value):
-        if value: 
+        if value:
             radio_button_group[0].state = "down"
-            try: 
+            try:
                 radio_button_group[1].state = "normal"
                 radio_button_group[2].state = "normal"
             except:
                 pass
 
     def set_value_to_update_to(self, text_obj, radio_button):
-        if radio_button != None: 
-            radio_button.state ='down'
+        if radio_button != None:
+            radio_button.state = "down"
             radio_button.active = True
-        value_to_set = re.findall('[0-9.]+', text_obj.text)[0]
+        value_to_set = re.findall("[0-9.]+", text_obj.text)[0]
         return value_to_set
-
-    # VERSION HANDLING
 
     def generate_no_drivers_based_on_hw_version(self, hw_version):
         """
         HW versions from 34 and up have a driver for each X motor (5 drivers in total)
         Hw versions 33 and under have a shared driver for both X motors (4 drivers in total)
         """
-        if int(hw_version) > 33: return 5
-        else: return 4
+        if int(hw_version) > 33:
+            return 5
+        else:
+            return 4
 
     def generate_hw_and_fw_info_label(self, hw, fw, no_drivers):
-        self.hw_info_label.text =   "HW version: " + str(hw) + "\n" + \
-                                    "No. motor drivers: " + str(no_drivers) + "\n" + \
-                                    "FW version: " + str(fw)
+        self.hw_info_label.text = (
+            "HW version: "
+            + str(hw)
+            + "\n"
+            + "No. motor drivers: "
+            + str(no_drivers)
+            + "\n"
+            + "FW version: "
+            + str(fw)
+        )
 
     def generate_recommended_x_currents(self, no_drivers):
-        if no_drivers < 5: 
-            self.single_stack_x_current_label.text = str(self.single_stack_single_driver_x_current) + " (single stack)"
-            self.double_stack_x_current_label.text = str(self.double_stack_single_driver_x_current) + " (double_stack)"
-
-        else: 
-            self.single_stack_x_current_label.text = str(self.single_stack_dual_driver_x_current) + " (single stack)"
-            self.double_stack_x_current_label.text = str(self.double_stack_dual_driver_x_current) + " (double_stack)"
+        if no_drivers < 5:
+            self.single_stack_x_current_label.text = (
+                str(self.single_stack_single_driver_x_current) + " (single stack)"
+            )
+            self.double_stack_x_current_label.text = (
+                str(self.double_stack_single_driver_x_current) + " (double_stack)"
+            )
+        else:
+            self.single_stack_x_current_label.text = (
+                str(self.single_stack_dual_driver_x_current) + " (single stack)"
+            )
+            self.double_stack_x_current_label.text = (
+                str(self.double_stack_dual_driver_x_current) + " (double_stack)"
+            )
 
     def choose_recommended_firmware_from_available(self, hw):
-
         if int(hw) > 33:
             self.recommended_firmware_label.text = self.ver_2_5_drivers_string
             self.alt_v3_firmware_label.text = self.ver_2_4_drivers_string
-
         elif int(hw) > 19:
             self.recommended_firmware_label.text = self.ver_2_4_drivers_string
             self.alt_v3_firmware_label.text = self.ver_2_5_drivers_string
-
-        else: 
+        else:
             self.recommended_firmware_label.text = self.ver_1_string
             self.alt_v3_firmware_label.text = self.ver_2_4_drivers_string
-
         self.alt_v2_firmware_label.text = self.ver_1_string
 
     def get_fw_options_from_usb(self, usb_path):
-
         self.ver_2_5_drivers_filename = glob.glob(usb_path + "GRBL2_*_5.hex")[0]
         self.ver_2_4_drivers_filename = glob.glob(usb_path + "GRBL2_*_4.hex")[0]
         self.ver_1_filename = glob.glob(usb_path + "GRBL1_*.hex")[0]
-
-        self.ver_2_5_drivers_string = self.generate_fw_string_from_path(self.ver_2_5_drivers_filename)
-        self.ver_2_4_drivers_string = self.generate_fw_string_from_path(self.ver_2_4_drivers_filename)
+        self.ver_2_5_drivers_string = self.generate_fw_string_from_path(
+            self.ver_2_5_drivers_filename
+        )
+        self.ver_2_4_drivers_string = self.generate_fw_string_from_path(
+            self.ver_2_4_drivers_filename
+        )
         self.ver_1_string = self.generate_fw_string_from_path(self.ver_1_filename)
 
     def generate_fw_string_from_path(self, fw_path):
-        just_numbers_and_underscores = re.findall('[0-9_]+', os.path.basename(fw_path))[0]
-        return (".".join(just_numbers_and_underscores.split("_")))
+        just_numbers_and_underscores = re.findall("[0-9_]+", os.path.basename(fw_path))[
+            0
+        ]
+        return ".".join(just_numbers_and_underscores.split("_"))
 
     def check_and_set_textinput_values(self):
-
         try:
-
-            if  not (self.x_thermal_coefficient_min <= int(self.thermal_coeff_x_textinput.text) <= self.x_thermal_coefficient_max) \
-                or not (self.y_thermal_coefficient_min <= int(self.thermal_coeff_y_textinput.text) <= self.y_thermal_coefficient_max) \
-                or not (self.z_thermal_coefficient_min <= int(self.thermal_coeff_z_textinput.text) <= self.z_thermal_coefficient_max):
+            if (
+                not self.x_thermal_coefficient_min
+                <= int(self.thermal_coeff_x_textinput.text)
+                <= self.x_thermal_coefficient_max
+                or not self.y_thermal_coefficient_min
+                <= int(self.thermal_coeff_y_textinput.text)
+                <= self.y_thermal_coefficient_max
+                or not self.z_thermal_coefficient_min
+                <= int(self.thermal_coeff_z_textinput.text)
+                <= self.z_thermal_coefficient_max
+            ):
                 return False
-
             self.x_thermal_coefficient = int(self.thermal_coeff_x_textinput.text)
             self.y_thermal_coefficient = int(self.thermal_coeff_y_textinput.text)
             self.z_thermal_coefficient = int(self.thermal_coeff_z_textinput.text)
-
             if self.other_x_current_checkbox.state == "down":
-
                 if int(self.number_of_drivers) > 4:
                     x_min = self.x_current_dual_driver_min
                     x_max = self.x_current_dual_driver_max
-
-                else: 
+                else:
                     x_min = self.x_current_single_driver_min
                     x_max = self.x_current_single_driver_max
-
-                if not (x_min <= int(self.other_x_current_textinput.text) <= x_max): return False
+                if not x_min <= int(self.other_x_current_textinput.text) <= x_max:
+                    return False
                 self.x_current = int(self.other_x_current_textinput.text)
-
-            if self.other_z_current_checkbox.state == "down": 
-                if not (self.z_current_min <= int(self.other_z_current_textinput.text) <= self.z_current_max): return False
+            if self.other_z_current_checkbox.state == "down":
+                if (
+                    not self.z_current_min
+                    <= int(self.other_z_current_textinput.text)
+                    <= self.z_current_max
+                ):
+                    return False
                 self.z_current = int(self.other_z_current_textinput.text)
-
             return True
-
         except:
             return False
 
     def print_settings_to_set(self):
-
         Logger.info("FW version " + str(self.firmware_version))
-
         Logger.info("X current: " + str(self.x_current))
         Logger.info("Y current: " + str(self.y_current))
         Logger.info("Z current: " + str(self.z_current))
-
         Logger.info("X thermal coefficient: " + str(self.x_thermal_coefficient))
         Logger.info("Y thermal coefficient: " + str(self.y_thermal_coefficient))
         Logger.info("Z thermal coefficient: " + str(self.z_thermal_coefficient))
 
-
-    ## Z HEAD DISCONNECT/RECONNECT
-
     def toggle_connection_to_z_head(self):
-
-        if self.connection_button.state == 'normal': 
+        if self.connection_button.state == "normal":
             self.connection_button.text = "Reconnecting..."
             Clock.schedule_once(lambda dt: self.m.reconnect_serial_connection(), 0.2)
-            self.poll_for_reconnection = Clock.schedule_interval(self.try_start_services, 1)
-
-        else: 
+            self.poll_for_reconnection = Clock.schedule_interval(
+                self.try_start_services, 1
+            )
+        else:
             self.connection_button.text = "Reconnect Z Head"
             self.m.s.grbl_scanner_running = False
             Clock.schedule_once(self.m.close_serial_connection, 0.2)
@@ -693,32 +691,23 @@ class ZHeadPCBSetUp(Screen):
             Clock.unschedule(self.poll_for_reconnection)
             Clock.schedule_once(self.m.s.start_services, 1)
             self.connection_button.text = "Disconnect Z Head"
-            self.sm.get_screen('qc1').reset_checkboxes()
-            self.sm.get_screen('qc2').reset_checkboxes()
-            self.sm.get_screen('qcW136').reset_checkboxes()
-            self.sm.get_screen('qcW112').reset_checkboxes()
-            self.sm.get_screen('qc3').reset_timer()
-            self.sm.current = 'qcconnecting'
-
-
-    ## DOING PCB FW UPDATE AND SETTINGS
+            self.sm.get_screen("qc1").reset_checkboxes()
+            self.sm.get_screen("qc2").reset_checkboxes()
+            self.sm.get_screen("qcW136").reset_checkboxes()
+            self.sm.get_screen("qcW112").reset_checkboxes()
+            self.sm.get_screen("qc3").reset_timer()
+            self.sm.current = "qcconnecting"
 
     def do_pcb_update_and_set_settings(self):
-
         self.ok_button.text = "Updating firmware..."
-
         if not self.m.state().startswith("Idle"):
             self.ok_button.text = "Ensure Z Head connected and Idle!"
             return
-
-        # ENSURE VALUES ARE SET
         if not self.check_and_set_textinput_values():
             self.ok_button.text = "Check text inputs, something wrong"
             return
-
         self.print_settings_to_set()
 
-        # DO FW UPDATE
         def disconnect_and_update():
             self.m.s.grbl_scanner_running = False
             Clock.schedule_once(self.m.close_serial_connection, 0.1)
@@ -727,18 +716,20 @@ class ZHeadPCBSetUp(Screen):
 
         def nested_do_fw_update(dt):
             if self.m.set_mode_of_reset_pin():
-                cmd =   "grbl_file=" + self.get_fw_path_from_string(self.firmware_version) + \
-                        " && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
-                proc = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+                cmd = (
+                    "grbl_file="
+                    + self.get_fw_path_from_string(self.firmware_version)
+                    + " && avrdude -patmega2560 -cwiring -P/dev/ttyAMA0 -b115200 -D -Uflash:w:$(echo $grbl_file):i"
+                )
+                proc = subprocess.Popen(
+                    cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True
+                )
                 self.stdout, stderr = proc.communicate()
                 self.exit_code = int(proc.returncode)
-
             else:
                 self.ok_button.text = "Check pigpiod and AMA0 port"
-            
             connect()
 
-        # RECONNECT
         def connect():
             self.m.starting_serial_connection = True
             Clock.schedule_once(do_connection, 0.1)
@@ -746,102 +737,107 @@ class ZHeadPCBSetUp(Screen):
 
         def do_connection(dt):
             self.m.reconnect_serial_connection()
-            self.poll_for_reconnection = Clock.schedule_interval(try_start_services, 0.4)
+            self.poll_for_reconnection = Clock.schedule_interval(
+                try_start_services, 0.4
+            )
 
         def try_start_services(dt):
             if self.m.s.is_connected():
                 Clock.unschedule(self.poll_for_reconnection)
                 Clock.schedule_once(self.m.s.start_services, 1)
-                # 1 second should always be enough to start services
                 Clock.schedule_once(update_complete, 2)
 
-        # CONFIRM THAT IT WAS SUCCESSFUL
         def update_complete(dt):
-
-            try: 
-                if self.exit_code != 0: 
+            try:
+                if self.exit_code != 0:
                     self.sm.get_screen("qcpcbsetupoutcome").fw_update_success = False
                     self.ok_button.text = "Check pigpiod and AMA0 port"
-
                 else:
                     set_settings_if_fw_version_high_enough()
-
-            except: 
+            except:
                 self.ok_button.text = "Check pigpiod and AMA0 port"
 
-        # WAIT TO GET FW VERSION, THEN JUDGE IF PROTOCOL COMMANDS CAN BE SENT
         def set_settings_if_fw_version_high_enough():
-
             if not self.m.s.fw_version:
-                Clock.schedule_once(lambda dt: set_settings_if_fw_version_high_enough(), 1)
+                Clock.schedule_once(
+                    lambda dt: set_settings_if_fw_version_high_enough(), 1
+                )
                 return
-
             if str(self.m.s.fw_version).startswith("2"):
                 set_currents_and_coeffs()
-
             else:
                 self.sm.get_screen("qcpcbsetupoutcome").x_current_correct = False
                 self.sm.get_screen("qcpcbsetupoutcome").y_current_correct = False
                 self.sm.get_screen("qcpcbsetupoutcome").z_current_correct = False
-                self.sm.get_screen("qcpcbsetupoutcome").thermal_coefficients_correct = False
+                self.sm.get_screen("qcpcbsetupoutcome").thermal_coefficients_correct = (
+                    False
+                )
                 self.progress_to_next_screen()
 
-        # SET CURRENTS AND THERMAL COEFFICIENTS
         def set_currents_and_coeffs():
-
             if not self.m.TMC_registers_have_been_read_in():
                 Clock.schedule_once(lambda dt: set_currents_and_coeffs(), 1)
                 return
-
             self.ok_button.text = "Setting currents and coefficients..."
-
-            # SET CURRENTS AND THERMAL COEFFICIENTS
-            if  self.m.set_thermal_coefficients("X", int(self.x_thermal_coefficient)) and \
-                self.m.set_thermal_coefficients("Y", int(self.y_thermal_coefficient)) and \
-                self.m.set_thermal_coefficients("Z", int(self.z_thermal_coefficient)) and \
-                self.m.set_motor_current("Z", int(self.z_current)) and \
-                self.m.set_motor_current("Y", int(self.y_current)) and \
-                self.m.set_motor_current("X", int(self.x_current)):
-
-                # STORE PARAMETERS
+            if (
+                self.m.set_thermal_coefficients("X", int(self.x_thermal_coefficient))
+                and self.m.set_thermal_coefficients(
+                    "Y", int(self.y_thermal_coefficient)
+                )
+                and self.m.set_thermal_coefficients(
+                    "Z", int(self.z_thermal_coefficient)
+                )
+                and self.m.set_motor_current("Z", int(self.z_current))
+                and self.m.set_motor_current("Y", int(self.y_current))
+                and self.m.set_motor_current("X", int(self.x_current))
+            ):
                 Clock.schedule_once(lambda dt: store_params_and_progress(), 1.2)
-
             else:
                 Logger.warning("Z Head not Idle yet, waiting...")
                 Clock.schedule_once(lambda dt: set_currents_and_coeffs(), 0.5)
 
-
         def store_params_and_progress():
-
             self.ok_button.text = "Storing parameters..."
             Logger.info("Storing TMC params...")
             self.m.store_tmc_params_in_eeprom_and_handshake()
             check_registers_are_correct()
 
-
         def check_registers_are_correct():
-
             if not self.m.TMC_registers_have_been_read_in():
                 Clock.schedule_once(lambda dt: check_registers_are_correct(), 0.5)
                 return
-
             self.ok_button.text = "Checking registers..."
-
-            # CHECK REGISTERS
             outcome_screen = self.sm.get_screen("qcpcbsetupoutcome")
-
-            outcome_screen.x_current_correct*=self.check_current(TMC_X1, self.x_current)
-            outcome_screen.x_current_correct*=self.check_current(TMC_X2, self.x_current)
-            outcome_screen.y_current_correct*=self.check_current(TMC_Y1, self.y_current)
-            outcome_screen.y_current_correct*=self.check_current(TMC_Y2, self.y_current)
-            outcome_screen.z_current_correct*=self.check_current(TMC_Z, self.z_current)
-
-            outcome_screen.thermal_coefficients_correct*=self.check_temp_coeff(TMC_X1, self.x_thermal_coefficient)
-            outcome_screen.thermal_coefficients_correct*=self.check_temp_coeff(TMC_X2, self.x_thermal_coefficient)
-            outcome_screen.thermal_coefficients_correct*=self.check_temp_coeff(TMC_Y1, self.y_thermal_coefficient)
-            outcome_screen.thermal_coefficients_correct*=self.check_temp_coeff(TMC_Y2, self.y_thermal_coefficient)
-            outcome_screen.thermal_coefficients_correct*=self.check_temp_coeff(TMC_Z, self.z_thermal_coefficient)
-
+            outcome_screen.x_current_correct *= self.check_current(
+                TMC_X1, self.x_current
+            )
+            outcome_screen.x_current_correct *= self.check_current(
+                TMC_X2, self.x_current
+            )
+            outcome_screen.y_current_correct *= self.check_current(
+                TMC_Y1, self.y_current
+            )
+            outcome_screen.y_current_correct *= self.check_current(
+                TMC_Y2, self.y_current
+            )
+            outcome_screen.z_current_correct *= self.check_current(
+                TMC_Z, self.z_current
+            )
+            outcome_screen.thermal_coefficients_correct *= self.check_temp_coeff(
+                TMC_X1, self.x_thermal_coefficient
+            )
+            outcome_screen.thermal_coefficients_correct *= self.check_temp_coeff(
+                TMC_X2, self.x_thermal_coefficient
+            )
+            outcome_screen.thermal_coefficients_correct *= self.check_temp_coeff(
+                TMC_Y1, self.y_thermal_coefficient
+            )
+            outcome_screen.thermal_coefficients_correct *= self.check_temp_coeff(
+                TMC_Y2, self.y_thermal_coefficient
+            )
+            outcome_screen.thermal_coefficients_correct *= self.check_temp_coeff(
+                TMC_Z, self.z_thermal_coefficient
+            )
             self.progress_to_next_screen()
 
         disconnect_and_update()
@@ -851,41 +847,23 @@ class ZHeadPCBSetUp(Screen):
             return False
         if int(self.m.TMC_motor[motor].standStillCurrentScale) != int(expected_current):
             return False
-
         return True
 
     def check_temp_coeff(self, motor, expected_coeff):
         if int(self.m.TMC_motor[motor].temperatureCoefficient) != int(expected_coeff):
             return False
-
         return True
 
     def get_fw_path_from_string(self, fw_string):
         return self.usb_path + "GRBL" + "_".join(fw_string.split(".")) + ".hex"
 
     def reset_screens(self):
-        self.sm.get_screen('qc1').reset_checkboxes()
-        self.sm.get_screen('qc2').reset_checkboxes()
-        self.sm.get_screen('qcW136').reset_checkboxes()
-        self.sm.get_screen('qcW112').reset_checkboxes()
-        self.sm.get_screen('qc3').reset_timer()
-
+        self.sm.get_screen("qc1").reset_checkboxes()
+        self.sm.get_screen("qc2").reset_checkboxes()
+        self.sm.get_screen("qcW136").reset_checkboxes()
+        self.sm.get_screen("qcW112").reset_checkboxes()
+        self.sm.get_screen("qc3").reset_timer()
 
     def progress_to_next_screen(self):
-        # TAKE USER TO OUTCOME SCREEN 
         self.ok_button.text = "OK"
         self.sm.current = "qcpcbsetupoutcome"
-
-
-
-
-
-
-
-
-
-
-
-
-
-

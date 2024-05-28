@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
 """
 Created on 18 November 2020
 Build info screen for system tools app
 
 @author: Letty
 """
+
 import os, sys
 from kivy.core.window import Window
 from kivy.lang import Builder
@@ -18,7 +18,6 @@ from asmcnc.apps.systemTools_app.screens import popup_system
 from asmcnc.apps.start_up_sequence.data_consent_app import screen_manager_data_consent
 from asmcnc.apps.systemTools_app.screens.popup_system import PopupSSHToggleFailed
 from asmcnc.core_UI import scaling_utils as utils
-
 from asmcnc.comms.model_manager import ModelManagerSingleton
 
 Builder.load_string(
@@ -603,20 +602,18 @@ class BuildInfoScreen(Screen):
     smartbench_name_formatted = "My SmartBench"
 
     def __init__(self, **kwargs):
+        self.systemtools_sm = kwargs.pop("system_tools")
+        self.m = kwargs.pop("machine")
+        self.set = kwargs.pop("settings")
+        self.l = kwargs.pop("localization")
+        self.kb = kwargs.pop("keyboard")
         super(BuildInfoScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs["system_tools"]
-        self.m = kwargs["machine"]
-        self.set = kwargs["settings"]
-        self.l = kwargs["localization"]
-        self.kb = kwargs["keyboard"]
         self.smartbench_location_unformatted = self.l.get_str("SmartBench Location")
         self.smartbench_location_formatted = self.l.get_str("SmartBench Location")
         self.update_strings()
         self.language_button.values = self.l.approved_languages
-
         if ModelManagerSingleton().is_machine_drywall():
             self.language_button.values = [self.l.gb]
-
         self.smartbench_name_input.bind(focus=self.on_focus)
         self.smartbench_location_input.bind(focus=self.on_focus_location)
         self.sw_version_label.text = self.set.sw_version
@@ -635,24 +632,17 @@ class BuildInfoScreen(Screen):
         self.get_smartbench_model()
         self.get_smartbench_name()
         self.get_smartbench_location()
-
-        # Add the IDs of ALL the TextInputs on this screen
         self.text_inputs = [self.smartbench_name_input, self.smartbench_location_input]
-
-        # Hide SSH button if drywall machine (button still works but is hidden)
         if self.m.model_manager.is_machine_drywall():
             self.toggle_ssh_button.opacity = 0
 
-    ## EXIT BUTTONS
     def go_back(self):
         self.systemtools_sm.back_to_menu()
 
     def exit_app(self):
         self.systemtools_sm.exit_app()
 
-    ## GET BUILD INFO
     def on_pre_enter(self, *args):
-        # check if language is up to date, if it isn't update all screen strings
         if self.serial_number_header.text != self.l.get_str("Serial number"):
             self.update_strings()
         self.m.send_any_gcode_command("$I")
@@ -770,7 +760,6 @@ class BuildInfoScreen(Screen):
         if self.reset_language == True:
             popup_system.RebootAfterLanguageChange(self.systemtools_sm, self.l)
 
-    ## SMARTBENCH NAMING
     def on_focus(self, instance, value):
         if not value:
             self.save_new_name()
@@ -802,11 +791,9 @@ class BuildInfoScreen(Screen):
 
     def get_smartbench_name(self):
         self.smartbench_name_unformatted = self.m.device_label
-        # Remove newlines
         self.smartbench_name_formatted = self.smartbench_name_unformatted.replace(
             "\n", " "
         )
-        # Remove trailing and leading whitespaces
         self.smartbench_name_formatted = self.smartbench_name_formatted.strip()
         self.smartbench_name_label.text = (
             "[b]" + self.smartbench_name_formatted + "[/b]"
@@ -821,7 +808,6 @@ class BuildInfoScreen(Screen):
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False
 
-    ## SMARTBENCH LOCATION NAMING
     def on_focus_location(self, instance, value):
         if not value:
             self.save_new_location()
@@ -853,11 +839,9 @@ class BuildInfoScreen(Screen):
 
     def get_smartbench_location(self):
         self.smartbench_location_unformatted = self.m.device_location
-        # Remove newlines
         self.smartbench_location_formatted = (
             self.smartbench_location_unformatted.replace("\n", " ")
         )
-        # Remove trailing and leading whitespaces
         self.smartbench_location_formatted = self.smartbench_location_formatted.strip()
         if self.smartbench_location_formatted == "SmartBench location":
             self.smartbench_location_formatted = self.l.get_str("SmartBench location")

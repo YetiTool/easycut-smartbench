@@ -4,6 +4,7 @@ Screen 25 for the Shape Cutter App
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
@@ -376,12 +377,11 @@ class ShapeCutter25ScreenClass(Screen):
     display_profile = StringProperty()
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
+        self.j = kwargs.pop("job_parameters")
+        self.kb = kwargs.pop("keyboard")
         super(ShapeCutter25ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs["shapecutter"]
-        self.m = kwargs["machine"]
-        self.j = kwargs["job_parameters"]
-        self.kb = kwargs["keyboard"]
-        # Add the IDs of ALL the TextInputs on this screen
         self.text_inputs = [self.file_name]
 
     def on_touch(self):
@@ -396,8 +396,7 @@ class ShapeCutter25ScreenClass(Screen):
 
     def on_enter(self):
         self.kb.setup_text_inputs(self.text_inputs)
-        
-# Action buttons       
+
     def get_info(self):
         pass
 
@@ -406,8 +405,6 @@ class ShapeCutter25ScreenClass(Screen):
 
     def next_screen(self):
         self.shapecutter_sm.position_tab()
-    
-# Tab functions
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()
@@ -426,24 +423,25 @@ class ShapeCutter25ScreenClass(Screen):
 
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
-        
-# Screen commands    
+
     def save_file(self):
         if not self.file_name.text == "":
             self.j.save_parameters(self.file_name.text)
             self.save_image.source = "./asmcnc/apps/shapeCutter_app/img/thumbs_up.png"
-    #         self.j.generate_gCode()
-    #         self.j.save_gCode()
         else:
             description = """Filename input is empty.
 
 Please enter a name for your parameter profile."""
-            WarningPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
-                            main_string=description,
-                            popup_width=400,
-                            popup_height=380,
-                            main_label_size_delta=40,
-                            button_layout_padding=[50,25,50,0],
-                            main_label_h_align='left',
-                            main_layout_padding=[50,20,50,20],
-                            main_label_padding=[20,20]).open()
+            WarningPopup(
+                sm=self.shapecutter_sm,
+                m=self.m,
+                l=self.m.l,
+                main_string=description,
+                popup_width=400,
+                popup_height=380,
+                main_label_size_delta=40,
+                button_layout_padding=[50, 25, 50, 0],
+                main_label_h_align="left",
+                main_layout_padding=[50, 20, 50, 20],
+                main_label_padding=[20, 20],
+            ).open()

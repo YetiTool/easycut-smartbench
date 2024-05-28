@@ -54,67 +54,45 @@ Notes:
 """
 
 import os
-
 from kivy.resources import resource_add_path, resource_find
-
 from asmcnc.comms.logging_system.logging_system import Logger
 
-# Root directory of the repository (easycut-smartbench/src) (working directory)
 ROOT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-# Permanent paths
 EASYCUT_SMARTBENCH_PATH = os.path.dirname(ROOT_PATH)
 ASMCNC_PATH = os.path.join(ROOT_PATH, "asmcnc")
 COMMS_PATH = os.path.join(ASMCNC_PATH, "comms")
-
 SKAVA_UI_PATH = os.path.join(ASMCNC_PATH, "skavaUI")
 SKAVA_UI_IMG_PATH = os.path.join(SKAVA_UI_PATH, "img")
-
 CORE_UI_PATH = os.path.join(ASMCNC_PATH, "core_UI")
-
 APPS_PATH = os.path.join(ASMCNC_PATH, "apps")
-
 SHAPE_CUTTER_APP_PATH = os.path.join(APPS_PATH, "shapeCutter_app")
 SHAPE_CUTTER_IMG_PATH = os.path.join(SHAPE_CUTTER_APP_PATH, "img")
-
 SW_UPDATE_APP_PATH = os.path.join(APPS_PATH, "SWupdater_app")
 SW_UPDATE_IMG_PATH = os.path.join(SW_UPDATE_APP_PATH, "img")
-
 CALIBRATION_APP_PATH = os.path.join(ASMCNC_PATH, "calibration_app")
 CALIBRATION_IMG_PATH = os.path.join(CALIBRATION_APP_PATH, "img")
-
 MAINTENANCE_APP_PATH = os.path.join(APPS_PATH, "maintenance_app")
 MAINTENANCE_IMG_PATH = os.path.join(MAINTENANCE_APP_PATH, "img")
-
 DWT_APP_PATH = os.path.join(APPS_PATH, "drywall_cutter_app")
 DWT_IMG_PATH = os.path.join(DWT_APP_PATH, "img")
-
 SYSTEM_TOOLS_APP_PATH = os.path.join(APPS_PATH, "systemTools_app")
 SYSTEM_TOOLS_IMG_PATH = os.path.join(SYSTEM_TOOLS_APP_PATH, "img")
-
 UPGRADE_APP_PATH = os.path.join(APPS_PATH, "upgrade_app")
 UPGRADE_IMG_PATH = os.path.join(UPGRADE_APP_PATH, "img")
-
 WIFI_APP_PATH = os.path.join(APPS_PATH, "wifi_app")
 WIFI_IMG_PATH = os.path.join(WIFI_APP_PATH, "img")
-
 START_UP_SEQUENCE_PATH = os.path.join(APPS_PATH, "start_up_sequence")
 START_UP_SEQUENCE_IMG_PATH = os.path.join(START_UP_SEQUENCE_PATH, "screens", "img")
-
 DATA_CONSENT_APP_PATH = os.path.join(START_UP_SEQUENCE_PATH, "data_consent_app")
 DATA_CONSENT_IMG_PATH = os.path.join(DATA_CONSENT_APP_PATH, "img")
-
 WARRANTY_APP_PATH = os.path.join(START_UP_SEQUENCE_PATH, "warranty_app")
 WARRANTY_IMG_PATH = os.path.join(WARRANTY_APP_PATH, "img")
-
-WELCOME_TO_SMARTBENCH_APP_PATH = os.path.join(START_UP_SEQUENCE_PATH, "welcome_to_smartbench_app")
+WELCOME_TO_SMARTBENCH_APP_PATH = os.path.join(
+    START_UP_SEQUENCE_PATH, "welcome_to_smartbench_app"
+)
 WELCOME_TO_SMARTBENCH_IMG_PATH = os.path.join(WELCOME_TO_SMARTBENCH_APP_PATH, "img")
-
 JOB_GO_IMG_PATH = os.path.join(CORE_UI_PATH, "job_go", "img")
-
 SEQUENCE_ALARM_IMG_PATH = os.path.join(CORE_UI_PATH, "sequence_alarm", "img")
-
-# Paths that may need to be created
 SB_VALUES_PATH = os.path.join(ROOT_PATH, "sb_values")
 DWT_TEMP_GCODE_PATH = os.path.join(DWT_APP_PATH, "gcode", "temp")
 
@@ -128,7 +106,6 @@ def create_paths():
         os.makedirs(DWT_TEMP_GCODE_PATH)
 
 
-# Register any paths that contain resources
 resource_add_path(SKAVA_UI_IMG_PATH)
 resource_add_path(SHAPE_CUTTER_IMG_PATH)
 resource_add_path(CALIBRATION_IMG_PATH)
@@ -145,7 +122,6 @@ resource_add_path(JOB_GO_IMG_PATH)
 resource_add_path(SEQUENCE_ALARM_IMG_PATH)
 
 
-# Functions for finding resources
 def get_resource(file_name):
     return resource_find(file_name)
 

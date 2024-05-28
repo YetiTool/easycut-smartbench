@@ -4,6 +4,7 @@ Screen 23 for the Shape Cutter App
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
@@ -517,13 +518,12 @@ class ShapeCutter23ScreenClass(Screen):
     user_instructions = StringProperty("")
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
+        self.j = kwargs.pop("job_parameters")
+        self.l = kwargs.pop("localization")
+        self.kb = kwargs.pop("keyboard")
         super(ShapeCutter23ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs["shapecutter"]
-        self.m = kwargs["machine"]
-        self.j = kwargs["job_parameters"]
-        self.l = kwargs["localization"]
-        self.kb = kwargs["keyboard"]
-        # Add the IDs of ALL the TextInputs on this screen
         self.text_inputs = [self.xy_feed, self.z_feed, self.spindle_speed]
 
     def on_touch(self):
@@ -553,27 +553,23 @@ class ShapeCutter23ScreenClass(Screen):
     def on_enter(self):
         self.kb.setup_text_inputs(self.text_inputs)
 
-# Action buttons       
     def get_info(self):
-        # info = "[b]XY Feed Rate:[/b] Feed used in cutting moves.\n\n" \
-        # "[b]Z Feed Rate (Plunge Rate):[/b] Feed when vertically plunging into stock.\n\n" \
-        # "[b]Spindle Speed:[/b] Rotational speed of the tool.\n\n" \
-        # "For more help please visit: https://www.yetitool.com/support/knowledge-\nbase/hardware-smartbench-feeds-speeds"
-        wait_popup = InfoPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
-                               main_string="Please wait, loading feeds and speeds look-up table...",
-                               popup_width=500,
-                               popup_height=400,
-                               main_label_size_delta=140,
-                               button_layout_padding=[0,0,0,0],
-                               main_layout_padding=[40,20,40,20],
-                               main_label_padding=[40,20],
-                               main_label_size_hint_y=1,
-                               main_label_h_align="center")
-        wait_popup.open()
-        Clock.schedule_once(
-            lambda dt: wait_popup.dismiss(),
-            2.5,
+        wait_popup = InfoPopup(
+            sm=self.shapecutter_sm,
+            m=self.m,
+            l=self.m.l,
+            main_string="Please wait, loading feeds and speeds look-up table...",
+            popup_width=500,
+            popup_height=400,
+            main_label_size_delta=140,
+            button_layout_padding=[0, 0, 0, 0],
+            main_layout_padding=[40, 20, 40, 20],
+            main_label_padding=[40, 20],
+            main_label_size_hint_y=1,
+            main_label_h_align="center",
         )
+        wait_popup.open()
+        Clock.schedule_once(lambda dt: wait_popup.dismiss(), 2.5)
         Clock.schedule_once(
             lambda dt: popup_info.PopupFeedsAndSpeedsLookupTable(self.shapecutter_sm),
             1.5,
@@ -584,8 +580,6 @@ class ShapeCutter23ScreenClass(Screen):
 
     def next_screen(self):
         self.check_dimensions()
-    
-# Tab functions
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()
@@ -605,7 +599,6 @@ class ShapeCutter23ScreenClass(Screen):
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
 
-# Screen specific
     def toggle_units(self):
         if self.unit_toggle.active == True:
             self.j.parameter_dict["feed rates"]["units"] = "inches"
@@ -630,7 +623,6 @@ class ShapeCutter23ScreenClass(Screen):
                 self.j.parameter_dict["feed rates"]["units"] = "inches"
             elif self.unit_toggle.active == False:
                 self.j.parameter_dict["feed rates"]["units"] = "mm"
-            # save the dimensions
             input_dim_list = [
                 ("xy feed rate", float(self.xy_feed.text)),
                 ("z feed rate", float(self.z_feed.text)),
@@ -663,15 +655,19 @@ class ShapeCutter23ScreenClass(Screen):
 """
                             + "Please re-enter your parameters."
                         )
-                    WarningPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
-                                 main_string=description,
-                                 popup_width=400,
-                                 popup_height=380,
-                                 main_label_size_delta=40,
-                                 button_layout_padding=[50,25,50,0],
-                                 main_label_h_align='left',
-                                 main_layout_padding=[50,20,50,20],
-                                 main_label_padding=[20,20]).open()
+                    WarningPopup(
+                        sm=self.shapecutter_sm,
+                        m=self.m,
+                        l=self.m.l,
+                        main_string=description,
+                        popup_width=400,
+                        popup_height=380,
+                        main_label_size_delta=40,
+                        button_layout_padding=[50, 25, 50, 0],
+                        main_label_h_align="left",
+                        main_layout_padding=[50, 20, 50, 20],
+                        main_label_padding=[20, 20],
+                    ).open()
                     return False
             self.shapecutter_sm.next_screen()
         else:

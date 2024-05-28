@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from kivy.core.window import Window
 
 """
@@ -16,7 +15,8 @@ from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
 from asmcnc.apps.SWupdater_app import popup_update_SW
 
-Builder.load_string("""
+Builder.load_string(
+    """
 #:import LabelBase asmcnc.core_UI.components.labels.base_label
 
 <SWUpdateScreen>:
@@ -373,22 +373,20 @@ class SWUpdateScreen(Screen):
     poll_wifi = None
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.set = kwargs.pop("settings")
+        self.l = kwargs.pop("localization")
         super(SWUpdateScreen, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.set = kwargs["settings"]
-        self.l = kwargs["localization"]
         self.update_strings()
         self.usb_stick = usb_storage.USB_storage(self.sm, self.l)
         self.sw_version_label.text = "[b]" + self.set.sw_version + "[/b]"
         self.update_screen_with_latest_version()
 
     def on_enter(self):
-        # Keep tabs on wifi connection
         self.check_wifi_connection(1)
         self.poll_wifi = Clock.schedule_interval(
             self.check_wifi_connection, self.WIFI_CHECK_INTERVAL
         )
-        # Set up and keep tabs on usb connection
         self.usb_stick.enable()
         self.check_USB_status(1)
         self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25)
@@ -485,10 +483,7 @@ class SWUpdateScreen(Screen):
                 )
         else:
             self.latest_software_version_label.text = self.l.get_bold("No WiFi or USB!")
-            
-    # Creates a popup message warning the user that the update may take a while and sets the update method as "WiFi"
-    # or "USB" depending on which button was pressed. This function is called from the Builder.load_string when the
-    # buttons are defined
+
     def prep_for_sw_update(self, update_method):
         self.set.usb_or_wifi = update_method
         message = self.l.get_str(

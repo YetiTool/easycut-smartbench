@@ -5,50 +5,40 @@ import sys
 
 LOG_STRING_FORMAT = "[%(asctime)s] - [%(levelname)s] [%(module_name)s] %(message)s"
 LOG_DATE_FORMAT = "%H:%M:%S %d-%m-%Y"
-
 LOG_FOLDER_PATH = os.path.join(os.path.dirname(__file__), "logs")
-
 if not os.path.exists(LOG_FOLDER_PATH):
     os.makedirs(LOG_FOLDER_PATH)
-
 try:
     from colorlog import ColoredFormatter
+
     formatter = ColoredFormatter(
-                fmt="%(log_color)s" + LOG_STRING_FORMAT,
-                datefmt=LOG_DATE_FORMAT,
-                log_colors={
-                    "DEBUG": "cyan",
-                    "INFO": "green",
-                    "WARNING": "yellow",
-                    "ERROR": "red",
-                    "CRITICAL": "red,bg_black",
-                },
-            )
+        fmt="%(log_color)s" + LOG_STRING_FORMAT,
+        datefmt=LOG_DATE_FORMAT,
+        log_colors={
+            "DEBUG": "cyan",
+            "INFO": "green",
+            "WARNING": "yellow",
+            "ERROR": "red",
+            "CRITICAL": "red,bg_black",
+        },
+    )
 except ImportError:
     formatter = logging.Formatter(LOG_STRING_FORMAT, datefmt=LOG_DATE_FORMAT)
 
 
 class ModuleLogger(logging.Logger):
+
     def __init__(self, name, level=logging.DEBUG):
         super(ModuleLogger, self).__init__(name, level)
 
     def _log(self, level, msg, args, exc_info=None, extra=None):
         if extra is None:
             extra = {}
-
-        # Get the caller's stack frame (two f_back as this class called _log) and extract its module name.
-        # https://stackoverflow.com/a/3711243
         frame = inspect.currentframe().f_back.f_back
         module_name = inspect.getmodule(frame).__name__
-
-        # Might want to change this to show more than just the last part of the module name.
         if "." in module_name:
             module_name = module_name.split(".")[-1]
-
-        # Store the module name in the record.
         extra["module_name"] = module_name
-
-        # Call the parent class's _log() method and pass the extra information.
         super(ModuleLogger, self)._log(level, msg, args, exc_info, extra)
 
 

@@ -4,6 +4,7 @@ Screen to help production move through final test more quickly
 
 @author: Letty
 """
+
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.factory import Factory
@@ -199,11 +200,11 @@ class FinalTestScreen(Screen):
     x_neg_command = ""
 
     def __init__(self, **kwargs):
+        self.systemtools_sm = kwargs.pop("system_tools")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
+        self.kb = kwargs.pop("keyboard")
         super(FinalTestScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs["system_tools"]
-        self.m = kwargs["machine"]
-        self.l = kwargs["localization"]
-        self.kb = kwargs["keyboard"]
         self.status_container.add_widget(
             widget_status_bar.StatusBar(
                 machine=self.m, screen_manager=self.systemtools_sm.sm

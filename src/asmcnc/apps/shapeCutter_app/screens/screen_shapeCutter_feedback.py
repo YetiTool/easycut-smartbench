@@ -1,16 +1,16 @@
-'''
+"""
 Created on 4 March 2020
 Feedback Screen for the Shape Cutter App
 
 @author: Letty
-'''
+"""
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty
 
-
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <ShapeCutterFeedbackScreenClass>:
     
@@ -125,22 +125,23 @@ Builder.load_string("""
                 spacing: 0
                 orientation: 'horizontal'
                 pos: self.parent.pos
-""")
+"""
+)
+
 
 class ShapeCutterFeedbackScreenClass(Screen):
+    info_button = ObjectProperty()
 
-    info_button = ObjectProperty()   
-    
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
         super(ShapeCutterFeedbackScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m=kwargs['machine']
-      
+
     def thumbs_up(self):
         self.next_screen()
-    
+
     def thumbs_down(self):
         self.next_screen()
-            
+
     def next_screen(self):
         self.shapecutter_sm.next_screen()

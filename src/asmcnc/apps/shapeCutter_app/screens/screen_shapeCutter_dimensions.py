@@ -4,6 +4,7 @@ Dimensions Entry Screen for the Shape Cutter App
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty
@@ -419,12 +420,11 @@ class ShapeCutterDimensionsScreenClass(Screen):
     dim_4 = StringProperty()
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
+        self.j = kwargs.pop("job_parameters")
+        self.kb = kwargs.pop("keyboard")
         super(ShapeCutterDimensionsScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs["shapecutter"]
-        self.m = kwargs["machine"]
-        self.j = kwargs["job_parameters"]
-        self.kb = kwargs["keyboard"]
-        # Add the IDs of ALL the TextInputs on this screen
         self.text_inputs = [
             self.input_dim1,
             self.input_dim2,
@@ -550,14 +550,12 @@ class ShapeCutterDimensionsScreenClass(Screen):
             self.j.shape_dict["units"] = "mm"
         units = self.j.shape_dict["units"]
         if self.j.shape_dict["shape"] == "rectangle":
-            # if all fields are full
             if (
                 not self.input_dim1.text == ""
                 and not self.input_dim2.text == ""
                 and not self.input_dim3.text == ""
                 and not self.input_dim4.text == ""
             ):
-                # save the dimensions
                 input_dim_list = [
                     ("X", float(self.input_dim1.text)),
                     ("Y", float(self.input_dim2.text)),
@@ -578,22 +576,25 @@ class ShapeCutterDimensionsScreenClass(Screen):
                             + ".\n\n"
                             + "Please re-enter your dimensions."
                         )
-                        WarningPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
-                                    main_string=description,
-                                    popup_width=400,
-                                    popup_height=380,
-                                    main_label_size_delta=40,
-                                    button_layout_padding=[50,25,50,0],
-                                    main_label_h_align='left',
-                                    main_layout_padding=[50,20,50,20],
-                                    main_label_padding=[20,20]).open()
+                        WarningPopup(
+                            sm=self.shapecutter_sm,
+                            m=self.m,
+                            l=self.m.l,
+                            main_string=description,
+                            popup_width=400,
+                            popup_height=380,
+                            main_label_size_delta=40,
+                            button_layout_padding=[50, 25, 50, 0],
+                            main_label_h_align="left",
+                            main_layout_padding=[50, 20, 50, 20],
+                            main_label_padding=[20, 20],
+                        ).open()
                         return False
                 self.next_screen()
             else:
                 pass
         if self.j.shape_dict["shape"] == "circle":
             if not self.input_dim2.text == "" and not self.input_dim3.text == "":
-                # save the dimensions
                 input_dim_list = [
                     ("D", float(self.input_dim2.text)),
                     ("Z", float(self.input_dim3.text)),
@@ -612,15 +613,19 @@ class ShapeCutterDimensionsScreenClass(Screen):
                             + ".\n\n"
                             + "Please re-enter your dimensions."
                         )
-                        WarningPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
-                                    main_string=description,
-                                    popup_width=400,
-                                    popup_height=380,
-                                    main_label_size_delta=40,
-                                    button_layout_padding=[50,25,50,0],
-                                    main_label_h_align='left',
-                                    main_layout_padding=[50,20,50,20],
-                                    main_label_padding=[20,20]).open()
+                        WarningPopup(
+                            sm=self.shapecutter_sm,
+                            m=self.m,
+                            l=self.m.l,
+                            main_string=description,
+                            popup_width=400,
+                            popup_height=380,
+                            main_label_size_delta=40,
+                            button_layout_padding=[50, 25, 50, 0],
+                            main_label_h_align="left",
+                            main_layout_padding=[50, 20, 50, 20],
+                            main_label_padding=[20, 20],
+                        ).open()
                         return False
                 self.next_screen()
             else:

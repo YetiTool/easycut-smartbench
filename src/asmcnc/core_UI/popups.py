@@ -3,6 +3,7 @@
 
 Popup system for easycut-smartbench
 """
+
 from enum import Enum
 from kivy.metrics import dp
 from kivy.properties import ObjectProperty, StringProperty, ListProperty
@@ -14,7 +15,6 @@ from kivy.uix.popup import Popup
 from kivy.uix.rst import RstDocument
 from kivy.uix.scrollview import ScrollView
 from kivy.clock import Clock
-
 from asmcnc.core_UI import scaling_utils as utils
 from asmcnc.core_UI.components.buttons.hold_button import WarningHoldButton
 from asmcnc.comms.logging_system.logging_system import Logger
@@ -48,19 +48,13 @@ class PopupType(Enum):
 
 
 class BasicPopup(Popup):
-    # Fetched by kivy from the kwargs
     sm = ObjectProperty(None)
     m = ObjectProperty(None)
     l = ObjectProperty(None)
-
-    # Widgets of BasicPopup class (if you need the others, navigate to them through these widgets)
     main_layout = None
     button_layout = None
     image = None
     main_label = None
-
-    # Default properties
-    # You can override these properties in the constructor, pass them as kwargs
     separator_color = ListProperty([249 / 255.0, 206 / 255.0, 29 / 255.0, 1.0])
     separator_height = dp(utils.get_scaled_height(4))
     background = StringProperty(
@@ -179,16 +173,14 @@ class BasicPopup(Popup):
         **kwargs
     ):
         super(BasicPopup, self).__init__(**kwargs)
-
         if button_one_callback is None:
             button_one_callback = self.dismiss
         if button_one_background_color is not None:
             self.button_one_background_normal = ""
         if button_two_background_color is not None:
             self.button_two_background_normal = ""
-
         self.title = self.l.get_str(kwargs["title"])
-        self.size_hint = (None, None)
+        self.size_hint = None, None
         self.width = dp(utils.get_scaled_width(popup_width))
         self.height = dp(utils.get_scaled_height(popup_height))
         self.popup_width = popup_width
@@ -229,16 +221,13 @@ class BasicPopup(Popup):
         if self.popup_type is not None:
             if self.popup_type.value is not None:
                 self.separator_color = self.popup_type.value["separator_color"]
-
         self.popup_img_string = "big_image" if utils.is_screen_big() else "small_image"
-
         self.build()
 
     def build(self):
         text_size_x = dp(
             utils.get_scaled_width(self.popup_width - self.main_label_size_delta)
         )
-
         self.main_label = Label(
             size_hint_y=self.main_label_size_hint_y,
             text_size=(text_size_x, None),
@@ -250,7 +239,6 @@ class BasicPopup(Popup):
             markup=True,
             font_size=str(utils.get_scaled_width(15)) + "sp",
         )
-
         self.main_layout = BoxLayout(
             orientation="vertical",
             spacing=utils.get_scaled_tuple(
@@ -258,17 +246,13 @@ class BasicPopup(Popup):
             ),
             padding=utils.get_scaled_tuple(self.main_layout_padding),
         )
-
         image = self.get_image()
         if image is not None:
             self.main_layout.add_widget(image)
-
         self.main_layout.add_widget(self.main_label)
-
         if self.button_one_text:
             self.button_layout = self.build_button_layout()
             self.main_layout.add_widget(self.button_layout)
-
         self.content = self.main_layout
         self.update_font_sizes()
 
@@ -284,7 +268,6 @@ class BasicPopup(Popup):
             ),
             padding=utils.get_scaled_tuple(self.button_layout_padding),
         )
-
         for button in self.build_buttons():
             button_layout.add_widget(button)
         return button_layout
@@ -310,7 +293,6 @@ class BasicPopup(Popup):
     def build_buttons(self):
         if self.button_one_text is None:
             return []
-
         buttons = [
             Button(
                 text=self.l.get_bold(self.button_one_text),
@@ -338,6 +320,7 @@ class BasicPopup(Popup):
 
 
 class InfoPopup(BasicPopup):
+
     def __init__(
         self,
         main_string,
@@ -385,6 +368,7 @@ class InfoPopup(BasicPopup):
 
 
 class ErrorPopup(BasicPopup):
+
     def __init__(
         self,
         main_string,
@@ -432,6 +416,7 @@ class ErrorPopup(BasicPopup):
 
 
 class QRPopup(BasicPopup):
+
     def __init__(
         self,
         main_string,
@@ -471,6 +456,7 @@ class QRPopup(BasicPopup):
 
 
 class MiniInfoPopup(BasicPopup):
+
     def __init__(
         self,
         main_string,
@@ -510,15 +496,16 @@ class MiniInfoPopup(BasicPopup):
 
 
 class StopPopup(BasicPopup):
+
     def __init__(
         self,
         main_string="Is everything OK? You can resume the job, or cancel it completely.",
         popup_width=400,
         popup_height=300,
         button_one_text="Cancel",
-        button_one_background_color=(230 / 255., 74 / 255., 25 / 255., 1.),
+        button_one_background_color=(230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0),
         button_two_text="Resume",
-        button_two_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
+        button_two_background_color=(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0),
         main_label_padding=(0, 0),
         main_layout_padding=(30, 20, 30, 0),
         main_layout_spacing=5,
@@ -531,11 +518,9 @@ class StopPopup(BasicPopup):
         button_layout_size_hint_y=2,
         **kwargs
     ):
-        self.m = kwargs['m']
-
+        self.m = kwargs.pop("m")
         button_one_callback = self.m.resume_from_a_soft_door
         button_two_callback = self.m.stop_from_soft_stop_cancel
-
         super(StopPopup, self).__init__(
             main_string=main_string,
             popup_type=PopupType.ERROR,
@@ -562,15 +547,16 @@ class StopPopup(BasicPopup):
 
 
 class ParkPopup(BasicPopup):
+
     def __init__(
         self,
         main_string,
         popup_width=300,
         popup_height=350,
         button_one_text="No",
-        button_one_background_color=(230 / 255., 74 / 255., 25 / 255., 1.),
+        button_one_background_color=(230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0),
         button_two_text="Yes",
-        button_two_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
+        button_two_background_color=(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0),
         main_label_padding=(40, 20),
         main_layout_padding=(40, 20, 40, 20),
         main_layout_spacing=10,
@@ -582,7 +568,8 @@ class ParkPopup(BasicPopup):
         main_label_size_hint_y=1,
         **kwargs
     ):
-        self.m = kwargs['m']
+        self.m = kwargs.pop("m")
+
         def set_park(*args):
             self.m.set_standby_to_pos()
             self.m.get_grbl_status()
@@ -614,13 +601,14 @@ class ParkPopup(BasicPopup):
 
 
 class SoftwareUpdateSuccessPopup(BasicPopup):
+
     def __init__(
         self,
         main_string,
         popup_width=700,
         popup_height=400,
         button_one_text="Ok",
-        button_one_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
+        button_one_background_color=(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0),
         button_two_text=None,
         button_two_background_color=None,
         main_label_padding=(40, 10),
@@ -634,7 +622,6 @@ class SoftwareUpdateSuccessPopup(BasicPopup):
         main_label_size_hint_y=1.2,
         **kwargs
     ):
-
         super(SoftwareUpdateSuccessPopup, self).__init__(
             main_string=main_string,
             popup_type=PopupType.INFO,
@@ -660,6 +647,7 @@ class SoftwareUpdateSuccessPopup(BasicPopup):
 
 
 class WarningPopup(BasicPopup):
+
     def __init__(
         self,
         main_string,
@@ -707,6 +695,7 @@ class WarningPopup(BasicPopup):
 
 
 class WaitPopup(BasicPopup):
+
     def __init__(
         self,
         main_string=None,
@@ -731,7 +720,6 @@ class WaitPopup(BasicPopup):
     ):
         if not main_string:
             main_string = "Please wait..."
-
         super(WaitPopup, self).__init__(
             main_string=main_string,
             popup_type=PopupType.INFO,
@@ -757,13 +745,14 @@ class WaitPopup(BasicPopup):
 
 
 class UploadSettingsFromUsbPopup(BasicPopup):
+
     def __init__(
         self,
         main_string,
         popup_width=600,
         popup_height=450,
         button_one_text="Ok",
-        button_one_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
+        button_one_background_color=(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0),
         main_label_padding=(40, 20),
         main_layout_padding=(40, 20, 40, 20),
         main_layout_spacing=10,
@@ -775,7 +764,7 @@ class UploadSettingsFromUsbPopup(BasicPopup):
         main_label_size_hint_y=1,
         **kwargs
     ):
-        self.sm = kwargs['sm']
+        self.sm = kwargs.pop("sm")
 
         def button_one_callback(*args):
             self.sm.upload_settings_from_usb(*args)
@@ -797,19 +786,20 @@ class UploadSettingsFromUsbPopup(BasicPopup):
             button_one_background_color=button_one_background_color,
             title=title,
             main_label_size_hint_y=main_label_size_hint_y,
-            button_layout_size_hint_y= 1,
+            button_layout_size_hint_y=1,
             **kwargs
         )
 
 
 class DownloadSettingsToUsbPopup(BasicPopup):
+
     def __init__(
         self,
         main_string,
         popup_width=600,
         popup_height=450,
         button_one_text="Ok",
-        button_one_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
+        button_one_background_color=(76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0),
         main_label_padding=(40, 20),
         main_layout_padding=(40, 20, 40, 20),
         main_layout_spacing=10,
@@ -821,7 +811,7 @@ class DownloadSettingsToUsbPopup(BasicPopup):
         main_label_size_hint_y=1,
         **kwargs
     ):
-        self.sm = kwargs['sm']
+        self.sm = kwargs.pop("sm")
 
         def button_one_callback(*args):
             self.sm.download_settings_to_usb(*args)
@@ -843,19 +833,20 @@ class DownloadSettingsToUsbPopup(BasicPopup):
             button_one_background_color=button_one_background_color,
             title=title,
             main_label_size_hint_y=main_label_size_hint_y,
-            button_layout_size_hint_y= 1,
+            button_layout_size_hint_y=1,
             **kwargs
         )
 
 
 class SpindleSafetyPopup(BasicPopup):
+
     def __init__(
         self,
         popup_width=600,
         popup_height=450,
         button_one_text="Cancel",
         button_one_callback=None,
-        button_one_background_color=(230 / 255., 74 / 255., 25 / 255., 1.),
+        button_one_background_color=(230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0),
         button_two_text=None,
         button_two_callback=None,
         button_two_background_color=None,
@@ -870,15 +861,17 @@ class SpindleSafetyPopup(BasicPopup):
         main_label_size_hint_y=2,
         **kwargs
     ):
-        self.l = kwargs["l"]
-
-        main_string = self.l.get_str("This will start the spindle at 12,000 rpm! Please make sure:")
+        self.l = kwargs.pop("l")
+        main_string = self.l.get_str(
+            "This will start the spindle at 12,000 rpm! Please make sure:"
+        )
         main_string += "\n\n"
-        main_string += " - " + self.l.get_str("The spindle is clamped properly") + "\n\n"
+        main_string += (
+            " - " + self.l.get_str("The spindle is clamped properly") + "\n\n"
+        )
         main_string += " - " + self.l.get_str("The spindle is plugged in") + "\n\n"
         main_string += " - " + self.l.get_str("The dust shoe plug is inserted") + "\n\n"
         main_string += " - " + self.l.get_str("The cutter is free to move")
-
         super(SpindleSafetyPopup, self).__init__(
             main_string=main_string,
             popup_type=PopupType.INFO,
@@ -919,12 +912,13 @@ class SpindleSafetyPopup(BasicPopup):
                 callback=lambda: self.on_button_pressed(self.button_two_callback),
                 font_size=utils.get_scaled_sp("15sp"),
                 color=(0, 0, 0, 1),
-                markup=True
-            )
+                markup=True,
+            ),
         ]
 
 
 class JobValidationPopup(BasicPopup):
+
     def __init__(
         self,
         main_string,
@@ -932,7 +926,7 @@ class JobValidationPopup(BasicPopup):
         popup_height=450,
         button_one_text="Ok",
         button_one_callback=None,
-        button_one_background_color=(230 / 255., 74 / 255., 25 / 255., 1.),
+        button_one_background_color=(230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0),
         button_two_text=None,
         button_two_callback=None,
         button_two_background_color=None,
@@ -975,21 +969,11 @@ class JobValidationPopup(BasicPopup):
         text_size_x = dp(
             utils.get_scaled_width(self.popup_width - self.main_label_size_delta)
         )
-
-        self.scroll_view = ScrollView(
-            padding=utils.get_scaled_tuple((10, 10)),
-        )
-
+        self.scroll_view = ScrollView()
         self.main_label = RstDocument(
-            text_size=(text_size_x, None),
-            text=self.l.get_str(self.main_string),
-            color=(0, 0, 0, 1),
-            background_color=(1, 1, 1, 1),
-            markup=True,
-            font_size=str(utils.get_scaled_width(15)) + "sp",
+            text=self.l.get_str(self.main_string), background_color=(1, 1, 1, 1)
         )
         self.scroll_view.add_widget(self.main_label)
-
         self.main_layout = BoxLayout(
             orientation="vertical",
             spacing=utils.get_scaled_tuple(
@@ -997,22 +981,19 @@ class JobValidationPopup(BasicPopup):
             ),
             padding=utils.get_scaled_tuple(self.main_layout_padding),
         )
-
         image = self.get_image()
         if image is not None:
             self.main_layout.add_widget(image)
-
         self.main_layout.add_widget(self.scroll_view)
-
         if self.button_one_text:
             self.button_layout = self.build_button_layout()
             self.main_layout.add_widget(self.button_layout)
-
         self.content = self.main_layout
         self.update_font_sizes()
 
 
 class SimulatingJobPopup(ErrorPopup):
+
     def __init__(
         self,
         main_string,
@@ -1034,8 +1015,7 @@ class SimulatingJobPopup(ErrorPopup):
         main_label_size_hint_y=1,
         **kwargs
     ):
-        
-        self.m = kwargs['m']
+        self.m = kwargs.pop("m")
 
         def stop(*args):
             Logger.info("User stopped simulation.")

@@ -4,6 +4,7 @@ Landing Screen for the Shape Cutter App
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty
@@ -176,31 +177,36 @@ class ShapeCutterLandingScreenClass(Screen):
     info_button = ObjectProperty()
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
+        self.j = kwargs.pop("job_parameters")
         super(ShapeCutterLandingScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs["shapecutter"]
-        self.m = kwargs["machine"]
-        self.j = kwargs["job_parameters"]
 
     def on_pre_enter(self):
         self.m.get_grbl_settings()
 
     def get_info(self):
-        description = "If this is your first time using the app, please go to the tutorial.\n\n" \
-                            "If you need help or support, please visit customer support at www.yetitool.com/support"
-        InfoPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
-                  main_string=description,
-                  popup_width=400,
-                  popup_height=380,
-                  button_layout_padding=[50,20,50,0],
-                  main_layout_padding=[50,20,50,20],
-                  main_label_padding=[20,20],
-                  main_label_size_hint_y=1,
-                  button_one_text="Tutorial",
-                  button_one_callback=self.shapecutter_sm.tutorial,
-                  button_one_background_color=[0.141, 0.596, 0.957, 1],
-                  button_two_text="Ok",
-                  button_two_callback=None,
-                  button_two_background_color=[76 / 255., 175 / 255., 80 / 255., 1.]).open()
+        description = """If this is your first time using the app, please go to the tutorial.
+
+If you need help or support, please visit customer support at www.yetitool.com/support"""
+        InfoPopup(
+            sm=self.shapecutter_sm,
+            m=self.m,
+            l=self.m.l,
+            main_string=description,
+            popup_width=400,
+            popup_height=380,
+            button_layout_padding=[50, 20, 50, 0],
+            main_layout_padding=[50, 20, 50, 20],
+            main_label_padding=[20, 20],
+            main_label_size_hint_y=1,
+            button_one_text="Tutorial",
+            button_one_callback=self.shapecutter_sm.tutorial,
+            button_one_background_color=[0.141, 0.596, 0.957, 1],
+            button_two_text="Ok",
+            button_two_callback=None,
+            button_two_background_color=[76 / 255.0, 175 / 255.0, 80 / 255.0, 1.0],
+        ).open()
 
     def cut_rectangle(self):
         self.j.shape_dict["shape"] = "rectangle"

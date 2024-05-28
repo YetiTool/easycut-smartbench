@@ -2,6 +2,7 @@
 Created on 31 March 2021
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
@@ -160,9 +161,10 @@ Builder.load_string(
 
 
 class AlarmScreen4(Screen):
+
     def __init__(self, **kwargs):
+        self.a = kwargs.pop("alarm_manager")
         super(AlarmScreen4, self).__init__(**kwargs)
-        self.a = kwargs["alarm_manager"]
         self.alarm_title.text = self.a.l.get_bold("Alarm: Learn more...")
         self.icon.source = "./asmcnc/core_UI/sequence_alarm/img/qr-code.png"
         self.description_label.text = (

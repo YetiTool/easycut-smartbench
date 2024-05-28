@@ -3,9 +3,9 @@ Created on 19 August 2020
 @author: Letty
 widget to hold z lead & probe maintenance save and info
 """
+
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
-
 from asmcnc.core_UI.popups import ErrorPopup, InfoPopup
 
 Builder.load_string(
@@ -57,11 +57,12 @@ Builder.load_string(
 
 
 class ZMiscSaveWidget(Widget):
+
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
         super(ZMiscSaveWidget, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
-        self.l = kwargs["localization"]
 
     def get_info(self):
         z_misc_settings_info = (
@@ -89,8 +90,14 @@ class ZMiscSaveWidget(Widget):
                 "Make sure you press the save button to save your settings."
             )
         )
-        popup = InfoPopup(sm=self.sm, m=self.m, l=self.l, main_string=z_misc_settings_info,
-                          popup_width=750, popup_height=440)
+        popup = InfoPopup(
+            sm=self.sm,
+            m=self.m,
+            l=self.l,
+            main_string=z_misc_settings_info,
+            popup_width=750,
+            popup_height=440,
+        )
         popup.open()
 
     def save(self):

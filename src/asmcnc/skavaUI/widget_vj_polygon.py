@@ -3,12 +3,12 @@ from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from kivy.properties import ObjectProperty, ListProperty
 from kivy.clock import Clock
-
 from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.geometry import geometry
 from asmcnc.gcode_writer import GcodeWriter
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 #:import hex kivy.utils.get_color_from_hex
 
@@ -234,62 +234,53 @@ Builder.load_string("""
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
                             allow_stretch: True 
-""")
+"""
+)
 
 
 class PolygonVJ(Widget):
-
     sm = None
     sides_textinput2 = ObjectProperty()
     rad_textinput2 = ObjectProperty()
     points = ListProperty([])
-    # points = ListProperty([500, 500, 300, 300, 500, 300, 500, 400, 600, 400])
-
 
     def __init__(self, **kwargs):
         super(PolygonVJ, self).__init__(**kwargs)
-
-#        self.sm = kwargs['screen_manager']
-
-        # More kivy hacky crap:  Ensure self ObjectProperties's are set before accessing them. No Widget event that fires after Widget rendered.
         Clock.schedule_once(self.my_callback, 0)
 
-
     def my_callback(self, dt):
-        polygon_vertices = geometry.compute_polygon_points(float(self.sides_textinput2.text), float(self.rad_textinput2.text))
+        polygon_vertices = geometry.compute_polygon_points(
+            float(self.sides_textinput2.text), float(self.rad_textinput2.text)
+        )
         self.plot_ploygon(polygon_vertices)
-
 
     def on_sides_textinput(self):
         if self.sides_textinput2.text and float(self.sides_textinput2.text) > 2:
             Logger.debug("on_sides_textinput " + str(self.sides_textinput2.text))
-            polygon_vertices = geometry.compute_polygon_points(float(self.sides_textinput2.text), float(self.rad_textinput2.text))
+            polygon_vertices = geometry.compute_polygon_points(
+                float(self.sides_textinput2.text), float(self.rad_textinput2.text)
+            )
             self.plot_ploygon(polygon_vertices)
-
 
     def on_rad_textinput(self):
         if self.rad_textinput2.text and float(self.rad_textinput2.text) > 0:
             Logger.debug("on_rad_textinput " + str(self.rad_textinput2.text))
-            polygon_vertices = geometry.compute_polygon_points(float(self.sides_textinput2.text), float(self.rad_textinput2.text))
+            polygon_vertices = geometry.compute_polygon_points(
+                float(self.sides_textinput2.text), float(self.rad_textinput2.text)
+            )
             self.plot_ploygon(polygon_vertices)
-
-
-#    def on_sides_textinput_(self, instance, value):
-#        Logger.debug("on_sides_textinput_aa ", value)
-#        #geometry.compute_polygon(float(self.sides_textinput_.text), float(self.rad_textinput_.text))
-
 
     def on_ok(self):
         Logger.info("on_ok")
         self.generate_gcode()
 
-
     def generate_gcode(self):
         my_gcode_writer = GcodeWriter()
         layers_points = []
         layers_points.append(self.points)
-        my_gcode_writer.write_gcode("ae_test.nc", layers_points, bit_width = 3, depth_increment = 0.1, feedrate = 1000)
-
+        my_gcode_writer.write_gcode(
+            "ae_test.nc", layers_points, bit_width=3, depth_increment=0.1, feedrate=1000
+        )
 
     def plot_ploygon(self, polygon_vertices):
         self.points = []
@@ -297,9 +288,6 @@ class PolygonVJ(Widget):
             self.points.append(point[0])
             self.points.append(point[1])
 
-
     def on_touch_up(self, touch):
-        #Hack to fix nasty event behaviour reported 2 years ago
-        # https://gitlab.com/kivymd/KivyMD/issues/45
         if self.collide_point(touch.x, touch.y):
             return True

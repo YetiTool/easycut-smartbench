@@ -1,10 +1,8 @@
 import os
 from functools import partial
-
 from kivy.clock import Clock
 from kivy.properties import StringProperty, BooleanProperty
 from kivy.uix.image import Image
-
 from asmcnc import paths
 from asmcnc.core_UI.components.buttons.button_base import ImageButtonBase
 from asmcnc.core_UI.components.widgets.blinking_widget import FastBlinkingWidget
@@ -21,27 +19,31 @@ class VacuumButton(ImageButtonBase, FastBlinkingWidget):
 
     def __init__(self, router_machine, serial_connection, **kwargs):
         super(VacuumButton, self).__init__(**kwargs)
-
         self.router_machine = router_machine
         self.serial_connection = serial_connection
-
-        self.overlay_image = Image(source=RED_NO_SIGN_IMAGE, pos_hint={"center_x": 0.75, "center_y": 0.25},
-                                   size_hint=(None, None), size=(self.width / 2, self.height / 2))
-        self.bind(pos=self.__update_overlay_image, size=self.__update_overlay_image)
+        self.overlay_image = Image(
+            source=RED_NO_SIGN_IMAGE,
+            pos_hint={"center_x": 0.75, "center_y": 0.25},
+            size_hint=(None, None),
+            size=(self.width / 2, self.height / 2),
+        )
+        self.bind(pos=self._update_overlay_image, size=self._update_overlay_image)
         self.add_widget(self.overlay_image)
+        self.serial_connection.bind(vacuum_on=self._on_vacuum_on)
+        self.bind(on_press=self._on_press)
 
-        self.serial_connection.bind(vacuum_on=self.__on_vacuum_on)
-        self.bind(on_press=self.__on_press)
-
-    def __update_overlay_image(self, *args):
+    def _update_overlay_image(self, *args):
         """
         Update the overlay image, so it stays in the same position relative to the button.
         :param args:
         :return:
         """
-        self.overlay_image.pos = (self.right - self.overlay_image.width, self.top - self.overlay_image.height)
+        self.overlay_image.pos = (
+            self.right - self.overlay_image.width,
+            self.top - self.overlay_image.height,
+        )
 
-    def __on_press(self, *args):
+    def _on_press(self, *args):
         """
         Handles what happens when the button is pressed.
         If the vacuum is off, it turns it on.
@@ -54,7 +56,7 @@ class VacuumButton(ImageButtonBase, FastBlinkingWidget):
         else:
             self.router_machine.turn_off_vacuum()
 
-    def __on_vacuum_on(self, instance, value):
+    def _on_vacuum_on(self, instance, value):
         """
         Callback for the vacuum_on event. Changes the button image and starts/stops the blinking.
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from kivy.core.window import Window
 
 """
@@ -17,7 +16,7 @@ from asmcnc.apps.systemTools_app.screens import popup_system
 from asmcnc.core_UI import scaling_utils
 
 Builder.load_string(
-"""
+    """
 
 <SystemMenuScreen>
 
@@ -212,10 +211,11 @@ class SystemMenuScreen(Screen):
     default_font_size = scaling_utils.get_scaled_width(16)
 
     def __init__(self, **kwargs):
+        self.systemtools_sm = kwargs.pop("system_tools")
+        self.l = kwargs.pop("localization")
+        self.kb = kwargs.pop("keyboard")
+        self.machine = kwargs.pop("machine")
         super(SystemMenuScreen, self).__init__(**kwargs)
-        self.systemtools_sm = kwargs["system_tools"]
-        self.l = kwargs["localization"]
-        self.kb = kwargs["keyboard"]
         self.id_list = [
             self.button_system_info,
             self.button_support_menu,

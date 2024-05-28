@@ -4,6 +4,7 @@ Tutorial Screen for the Shape Cutter App
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
@@ -317,9 +318,9 @@ class ShapeCutterTutorialScreenClass(Screen):
     ]
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
         super(ShapeCutterTutorialScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs["shapecutter"]
-        self.m = kwargs["machine"]
 
     def on_pre_enter(self):
         self.user_instructions.text = ""
@@ -391,9 +392,6 @@ class ShapeCutterTutorialScreenClass(Screen):
         def cancel_tab_flash():
             Clock.unschedule(tab_flash)
 
-
-# Action buttons       
-
     def flashy_info(self):
         info_flash = Clock.schedule_interval(lambda dt: info_opacity(), 0.2)
         Clock.schedule_once(lambda dt: cancel_info_flash(), 1.9)
@@ -419,19 +417,21 @@ class ShapeCutterTutorialScreenClass(Screen):
 If you get stuck, I'm here to give you some handy hints and tips ;). 
 
 Happy shaping!"""
-        InfoPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
-                  main_string=info,
-                  popup_width=500,
-                  popup_height=400,
-                  main_label_size_delta=140).open()
+        InfoPopup(
+            sm=self.shapecutter_sm,
+            m=self.m,
+            l=self.m.l,
+            main_string=info,
+            popup_width=500,
+            popup_height=400,
+            main_label_size_delta=140,
+        ).open()
 
     def go_back(self):
         self.shapecutter_sm.previous_screen()
 
     def next_screen(self):
         self.shapecutter_sm.next_screen()
-    
-# Tab functions
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()
@@ -450,8 +450,6 @@ Happy shaping!"""
 
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
-
-# Tutorial specific functions
 
     def arrows(self):
         pass

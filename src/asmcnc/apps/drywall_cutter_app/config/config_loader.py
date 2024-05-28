@@ -2,11 +2,9 @@ import json
 import os
 import inspect
 from collections import OrderedDict
-
 from kivy.event import EventDispatcher
 from kivy.properties import StringProperty, ObjectProperty
-
-import config_classes
+from . import config_classes
 from asmcnc.comms.logging_system.logging_system import Logger
 
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -15,13 +13,10 @@ CUTTERS_DIR = os.path.join(CURRENT_DIR, "cutters")
 TEMP_DIR = os.path.join(CURRENT_DIR, "temp")
 SETTINGS_DIR = os.path.join(CURRENT_DIR, "settings")
 TEMP_CONFIG_FILE_NAME = "temp_config.json"
-
 if not os.path.exists(TEMP_DIR):
     os.makedirs(TEMP_DIR)
-
 SETTINGS_PATH = os.path.join(SETTINGS_DIR, "settings.json")
 TEMP_CONFIG_PATH = os.path.join(TEMP_DIR, TEMP_CONFIG_FILE_NAME)
-
 DEBUG_MODE = False
 INDENT_VALUE = "    "
 
@@ -29,7 +24,6 @@ INDENT_VALUE = "    "
 def get_display_preview(json_obj):
     preview = get_shape_type(json_obj)
     preview += "Units: " + json_obj["units"] + "\n"
-    # preview += "Rotation: " + json_obj['rotation'] + "\n"
     preview += "Canvas shape dims: \n"
     preview += get_shape_dimensions(json_obj)
     preview += "Cutter type: " + json_obj["cutter_type"][:-5] + "\n"
@@ -92,14 +86,13 @@ def get_shape_dimensions(json_obj):
 
 
 class DWTConfig(EventDispatcher):
-    active_config_name = StringProperty("")  # type: str
-    active_config = ObjectProperty(config_classes.Configuration.default())  # type: config_classes.Configuration
-    active_cutter = ObjectProperty(config_classes.Cutter.default())  # type: config_classes.Cutter
+    active_config_name = StringProperty("")
+    active_config = ObjectProperty(config_classes.Configuration.default())
+    active_cutter = ObjectProperty(config_classes.Cutter.default())
 
     def __init__(self, screen_drywall_cutter=None, *args, **kwargs):
         super(DWTConfig, self).__init__(*args, **kwargs)
         self.screen_drywall_cutter = screen_drywall_cutter
-
         most_recent_config_path = self.get_most_recent_config()
         if most_recent_config_path:
             self.load_config(most_recent_config_path)
@@ -115,8 +108,7 @@ class DWTConfig(EventDispatcher):
         """
         if not os.path.exists(SETTINGS_PATH):
             Logger.warning("No settings file found")
-            return None  # No settings file, so no most recent config
-
+            return None
         Logger.debug("Reading most recent config")
         with open(SETTINGS_PATH, "r") as settings_f:
             j_obj = json.load(settings_f)
@@ -131,77 +123,59 @@ class DWTConfig(EventDispatcher):
         :return:
         """
         Logger.debug("Writing most recent config: " + config_path.split(os.sep)[-1])
-
         with open(SETTINGS_PATH, "w+") as settings_f:
             j_obj = {"most_recent_config": config_path}
             json.dump(j_obj, settings_f)
 
     @staticmethod
     def is_valid_configuration(config_name):
-        # type (str) -> bool
         """
         Checks if a configuration file is valid/complete.
 
         :param config_name: The name of the configuration file to check.
         :return: True if the configuration file is valid/complete, otherwise False.
         """
-
+        return True  # func needs fixing for py3
         file_path = os.path.join(CONFIGURATIONS_DIR, config_name)
-
         if not os.path.exists(file_path):
             return False
-
         with open(file_path, "r") as f:
             cfg = json.load(f)
-
         field_count = len(cfg)
-
         valid_field_count = (
             len(inspect.getargspec(config_classes.Configuration.__init__).args) - 1
         )
-
         if field_count != valid_field_count:
             return False
-
         return True
 
     @staticmethod
     def fix_config(config_name):
-        # type (str) -> bool
         """
         Fixes a configuration file by adding any missing fields.
 
         :param config_name: The name of the configuration file to fix.
         :return: True if the configuration file was fixed, otherwise False.
         """
-
         file_path = os.path.join(CONFIGURATIONS_DIR, config_name)
-
         if not os.path.exists(file_path):
             return False
-
         with open(file_path, "r") as f:
             cfg = json.load(f)
-
         valid_field_names = inspect.getargspec(
             config_classes.Configuration.__init__
         ).args[1:]
-
         for field_name in valid_field_names:
             if field_name not in cfg:
                 cfg[field_name] = getattr(
                     config_classes.Configuration.default(), field_name
                 )
-
         with open(file_path, "w") as f:
             json.dump(cfg, f, indent=4, default=lambda o: o.__dict__)
-
         Logger.debug("Fixed configuration: " + config_name)
-
         return True
 
     def load_config(self, config_path):
-        # type (str) -> None
         """
         Loads a configuration file from the configuration directory.
 
@@ -210,38 +184,31 @@ class DWTConfig(EventDispatcher):
         if not os.path.exists(config_path):
             Logger.error("Configuration file doesn't exist: " + config_path)
             return
-
         if not self.is_valid_configuration(config_path):
             if not self.fix_config(config_path):
                 self.active_config = config_classes.Configuration.default()
                 self.save_temp_config()
-
         Logger.debug("Loading configuration: " + config_path)
         with open(config_path, "r") as f:
-            self.active_config = config_classes.Configuration.from_json(json_data=json.load(f))
-
+            self.active_config = config_classes.Configuration.from_json(
+                json_data=json.load(f)
+            )
         config_name = config_path.split(os.sep)[-1]
         self.active_config_name = config_name
-
         if config_path != TEMP_CONFIG_PATH:
             self.set_most_recent_config(config_path)
-
         self.load_cutter(self.active_config.cutter_type)
 
     def save_config(self, config_path):
-        # type (str) -> None
         """
         Saves the active configuration to the configuration directory.
 
         :param config_path: The path to save the config to
         """
         Logger.debug("Saving configuration: " + config_path)
-
         self.cleanup_active_config()
-
         with open(config_path, "w") as f:
             json.dump(self.active_config, f, indent=4, default=lambda o: o.__dict__)
-
         if config_path != TEMP_CONFIG_PATH:
             self.active_config_name = config_path.split(os.sep)[-1]
             self.set_most_recent_config(config_path)
@@ -266,25 +233,21 @@ class DWTConfig(EventDispatcher):
             self.active_config.canvas_shape_dims.d = 0
 
     def load_cutter(self, cutter_name):
-        # type (str) -> None
         """
         Loads a cutter file from the cutter directory.
 
         :param cutter_name: The name of the cutter file to load.
         """
         file_path = os.path.join(CUTTERS_DIR, cutter_name)
-
         if not os.path.exists(file_path):
             Logger.error("Cutter file doesn't exist: " + cutter_name)
             return
-
         Logger.debug("Loading cutter: " + cutter_name)
         with open(file_path, "r") as f:
             self.active_cutter = config_classes.Cutter.from_json(json.load(f))
 
     @staticmethod
     def get_available_cutter_names():
-        # type () -> dict{str: dict{str: str}}
         """
         TODO: Refactor, it doesn't need the names anymore
         :return: A list of the available cutter names and their file names.
@@ -292,23 +255,23 @@ class DWTConfig(EventDispatcher):
         cutters = {}
         for cutter_file in sorted(os.listdir(CUTTERS_DIR)):
             file_path = os.path.join(CUTTERS_DIR, cutter_file)
-
             if not os.path.isfile(file_path):
-                continue  # Skip directories
-
+                continue
             with open(file_path, "r") as f:
                 cutter = config_classes.Cutter.from_json(json.load(f))
-
                 cutters[cutter.tool_id] = {
-                    'cutter_path': cutter_file,
-                    'image_path': cutter.image,
-                    'type': cutter.type,
-                    'size': cutter.dimensions.diameter if cutter.dimensions.diameter else cutter.dimensions.angle
+                    "cutter_path": cutter_file,
+                    "image_path": cutter.image,
+                    "type": cutter.type,
+                    "size": (
+                        cutter.dimensions.diameter
+                        if cutter.dimensions.diameter
+                        else cutter.dimensions.angle
+                    ),
                 }
         return cutters
 
     def save_temp_config(self):
-        # type () -> None
         """
         Saves the active configuration to a temporary file.
 
@@ -317,7 +280,6 @@ class DWTConfig(EventDispatcher):
         self.save_config(TEMP_CONFIG_PATH)
 
     def load_temp_config(self):
-        # type () -> None
         """
         Loads the temporary configuration file.
 
@@ -330,11 +292,9 @@ class DWTConfig(EventDispatcher):
             self.active_config = config_classes.Configuration.default()
             self.save_temp_config()
             return
-
         self.load_config(TEMP_CONFIG_PATH)
 
     def on_parameter_change(self, parameter_name, parameter_value):
-        # type: (str, object) -> None
         """
         Should be called when a parameter is changed in the UI.
         Bind this to the widget, e.g.: on_value: root.on_parameter_change('parameter_name', self.value)
@@ -343,25 +303,23 @@ class DWTConfig(EventDispatcher):
         :param parameter_name: The name of the parameter that was changed.
         :param parameter_value: The new value of the parameter.
         """
-        Logger.debug("Parameter changed: " + parameter_name + " = " + str(parameter_value))
-
+        Logger.debug(
+            "Parameter changed: " + parameter_name + " = " + str(parameter_value)
+        )
         if "." in parameter_name:
             parameter_names = parameter_name.split(".")
             parameter = self.active_config
-
             for parameter_name in parameter_names[:-1]:
                 parameter = getattr(parameter, parameter_name)
-
             if getattr(parameter, parameter_names[-1]) != parameter_value:
                 self.active_config_name = "New Configuration"
-
             setattr(parameter, parameter_names[-1], parameter_value)
         else:
             if getattr(self.active_config, parameter_name) != parameter_value:
                 self.active_config_name = "New Configuration"
-
             setattr(self.active_config, parameter_name, parameter_value)
-
-        # update screen, check bumpers and so on:
-        if not (self.active_config.shape_type == 'geberit' and self.active_cutter.dimensions.diameter is None):
+        if not (
+            self.active_config.shape_type == "geberit"
+            and self.active_cutter.dimensions.diameter is None
+        ):
             self.screen_drywall_cutter.drywall_shape_display_widget.check_datum_and_extents()

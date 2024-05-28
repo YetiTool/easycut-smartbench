@@ -1,16 +1,17 @@
-'''
+"""
 Created on 20 February 2020
 Template Screen for the Shape Cutter App
 
 @author: Letty
-'''
+"""
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.tabbedpanel import TabbedPanel
 from kivy.metrics import MetricsBase
 
-Builder.load_string("""
+Builder.load_string(
+    """
 
 <ShapeCutterTemplateButtonsScreenClass>
 
@@ -118,13 +119,13 @@ Builder.load_string("""
                     size: self.size
                     source: "./asmcnc/apps/shapeCutter_app/img/background.png"
 
-""")
+"""
+)
+
 
 class ShapeCutterTemplateButtonsScreenClass(Screen):
-    
-    def __init__(self, **kwargs):
-        super(ShapeCutterTemplateButtonsScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs['shapecutter']
-        self.m=kwargs['machine']
 
-        
+    def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
+        super(ShapeCutterTemplateButtonsScreenClass, self).__init__(**kwargs)

@@ -13,15 +13,14 @@ I didn't end up using it for DWT, but it could be useful going forward.
 class JobChecker(object):
     """Job checking module"""
 
-    router_machine = None  # type: RouterMachine
-    localization = None  # type: Localization
+    router_machine = None
+    localization = None
 
     def __init__(self, router_machine, localization):
         self.router_machine = router_machine
-        self.localization = localization  # TODO: Make localization a singleton
+        self.localization = localization
 
     def get_axis_max_travel(self, axis):
-        # type: (Axis) -> float
         """
         Get the specified axis' max travel (with limit switch distance subtracted)
         :param axis: router_machine.Axis (Axis.X, Axis.Y, Axis.Z)
@@ -44,7 +43,6 @@ class JobChecker(object):
             )
 
     def get_job_bounds(self, bounding_box, axis):
-        # type: (BoundingBox, Axis) -> tuple[float, float]
         """
         Get the boundary of the job in home and far end for an axis
         :param bounding_box: the BoundingBox for the job
@@ -52,45 +50,43 @@ class JobChecker(object):
         :return: {axis}_home_max, {axis}_far_end_max
         """
         if axis == Axis.X:
-            return (-(self.router_machine.x_wco() - bounding_box.range_x[0]),
-                    self.router_machine.x_wco() + bounding_box.range_x[1])
+            return (
+                -(self.router_machine.x_wco() - bounding_box.range_x[0]),
+                self.router_machine.x_wco() + bounding_box.range_x[1],
+            )
         elif axis == Axis.Y:
-            return (-(self.router_machine.y_wco() - bounding_box.range_y[0]),
-                    self.router_machine.y_wco() + bounding_box.range_y[1])
+            return (
+                -(self.router_machine.y_wco() - bounding_box.range_y[0]),
+                self.router_machine.y_wco() + bounding_box.range_y[1],
+            )
         elif axis == Axis.Z:
-            return (-(self.router_machine.z_wco() - bounding_box.range_z[0]),
-                    self.router_machine.z_wco() + bounding_box.range_z[1])
+            return (
+                -(self.router_machine.z_wco() - bounding_box.range_z[0]),
+                self.router_machine.z_wco() + bounding_box.range_z[1],
+            )
 
     def is_job_out_of_bounds(self, job_file_path):
-        # type: (str) -> list[str]
         """
         Checks whether the job file fits within available boundary.
         :param job_file_path: The absolute path to the job file.
         :return: A list of strings telling the user how to make the job within bounds (or [])
         """
         steps = []
-
         job_bounding_box = BoundingBox()
         job_bounding_box.set_job_envelope(job_file_path)
-
         limit_switch_distance = self.router_machine.limit_switch_safety_distance
-
         job_x_home_max, job_x_far_max = self.get_job_bounds(job_bounding_box, Axis.X)
         job_y_home_max, job_y_far_max = self.get_job_bounds(job_bounding_box, Axis.Y)
         job_z_home_max, job_z_far_max = self.get_job_bounds(job_bounding_box, Axis.Z)
-
         Logger.debug("Job X %s, %s" % (str(job_x_home_max), str(job_x_far_max)))
         Logger.debug("Job Y %s, %s" % (str(job_y_home_max), str(job_y_far_max)))
         Logger.debug("Job Z %s, %s" % (str(job_z_home_max), str(job_z_far_max)))
-
         machine_x_max_travel = self.get_axis_max_travel(Axis.X)
         machine_y_max_travel = self.get_axis_max_travel(Axis.Y)
         machine_z_max_travel = self.get_axis_max_travel(Axis.Z)
-
         Logger.debug("Max X %s", str(machine_x_max_travel))
         Logger.debug("Max Y %s", str(machine_y_max_travel))
         Logger.debug("Max Z %s", str(machine_z_max_travel))
-
         if job_x_home_max >= machine_x_max_travel:
             steps.append(
                 self.localization.get_str(
@@ -102,7 +98,6 @@ class JobChecker(object):
                 ).replace("N", "X")
                 + "\n"
             )
-
         if job_y_home_max >= machine_y_max_travel:
             steps.append(
                 self.localization.get_str(
@@ -114,7 +109,6 @@ class JobChecker(object):
                 ).replace("N", "Y")
                 + "\n"
             )
-
         if job_z_home_max >= machine_z_max_travel:
             steps.append(
                 self.localization.get_str(
@@ -126,7 +120,6 @@ class JobChecker(object):
                 )
                 + "\n"
             )
-
         if job_x_far_max >= -limit_switch_distance:
             steps.append(
                 self.localization.get_str(
@@ -138,7 +131,6 @@ class JobChecker(object):
                 ).replace("N", "X")
                 + "\n"
             )
-
         if job_y_far_max >= -limit_switch_distance:
             steps.append(
                 self.localization.get_str(
@@ -150,7 +142,6 @@ class JobChecker(object):
                 ).replace("N", "Y")
                 + "\n"
             )
-
         if job_z_far_max >= -limit_switch_distance:
             steps.append(
                 self.localization.get_str(
@@ -162,5 +153,4 @@ class JobChecker(object):
                 )
                 + "\n"
             )
-
         return steps

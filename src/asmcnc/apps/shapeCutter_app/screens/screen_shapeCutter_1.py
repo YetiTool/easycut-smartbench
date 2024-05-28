@@ -4,12 +4,14 @@ Screen 1 for the Shape Cutter App
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
 from kivy.properties import StringProperty, ObjectProperty
 
-Builder.load_string("""
+Builder.load_string(
+    """
 #:import LabelBase asmcnc.core_UI.components.labels.base_label
 
 <ShapeCutter1ScreenClass>
@@ -330,14 +332,13 @@ Click the button below if you want to calibrate SmartBench.
     )
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
         super(ShapeCutter1ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs["shapecutter"]
-        self.m = kwargs["machine"]
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
 
-# Action buttons
     def get_info(self):
         pass
 
@@ -347,7 +348,6 @@ Click the button below if you want to calibrate SmartBench.
     def next_screen(self):
         self.shapecutter_sm.next_screen()
 
-# Tab functions
     def prepare(self):
         self.shapecutter_sm.prepare_tab()
 
@@ -366,6 +366,5 @@ Click the button below if you want to calibrate SmartBench.
     def exit(self):
         self.shapecutter_sm.exit_shapecutter()
 
-# Screen specific
     def calibrate(self):
         self.shapecutter_sm.am.start_calibration_app("sC1")

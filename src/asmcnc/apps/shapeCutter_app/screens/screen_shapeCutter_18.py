@@ -4,6 +4,7 @@ Screen 18 for the Shape Cutter App
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -313,26 +314,28 @@ class ShapeCutter18ScreenClass(Screen):
     )
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
         super(ShapeCutter18ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs["shapecutter"]
-        self.m = kwargs["machine"]
 
     def on_pre_enter(self):
         self.info_button.opacity = 0
         self.m.jog_absolute_single_axis("Z", -19, 10000)
-        # popup
-        popup_Zmove = WarningPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
-                                   main_string="Please wait while the machine moves...",
-                                   popup_width=400,
-                                   popup_height=200,
-                                   main_label_size_delta=40,
-                                   button_layout_padding=[50,25,50,0],
-                                   main_layout_padding=[50,20,50,20],
-                                   main_label_padding=[20,20],
-                                   button_one_text=None)
+        popup_Zmove = WarningPopup(
+            sm=self.shapecutter_sm,
+            m=self.m,
+            l=self.m.l,
+            main_string="Please wait while the machine moves...",
+            popup_width=400,
+            popup_height=200,
+            main_label_size_delta=40,
+            button_layout_padding=[50, 25, 50, 0],
+            main_layout_padding=[50, 20, 50, 20],
+            main_label_padding=[20, 20],
+            button_one_text=None,
+        )
         popup_Zmove.open()
 
-        # Clock function to check machine state
         def check_Zmove_finished():
             if self.m.state().startswith("Idle"):
                 Clock.unschedule(check_Zmove_status)
@@ -342,7 +345,6 @@ class ShapeCutter18ScreenClass(Screen):
             lambda dt: check_Zmove_finished(), 0.5
         )
 
-# Action buttons       
     def get_info(self):
         pass
 
@@ -351,8 +353,6 @@ class ShapeCutter18ScreenClass(Screen):
 
     def next_screen(self):
         self.shapecutter_sm.next_screen()
-    
-# Tab functions
 
     def prepare(self):
         self.shapecutter_sm.prepare_tab()

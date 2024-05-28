@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created on 19 Feb 2019
 
@@ -8,12 +7,10 @@ Pauses streaming until user returns (and if they are in Go stream until they res
 
 @author: Letty
 """
+
 from kivy.clock import Clock
 from kivy.lang import Builder
-from kivy.properties import (
-    ObjectProperty,
-    StringProperty,
-)
+from kivy.properties import ObjectProperty, StringProperty
 from kivy.uix.screenmanager import Screen
 
 ERROR_CODES = {
@@ -158,12 +155,12 @@ class ErrorScreenClass(Screen):
     return_to_screen = "home"
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.jd = kwargs.pop("job")
+        self.db = kwargs.pop("database")
+        self.l = kwargs.pop("localization")
         super(ErrorScreenClass, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
-        self.jd = kwargs["job"]
-        self.db = kwargs["database"]
-        self.l = kwargs["localization"]
         self.update_strings()
 
     def on_enter(self):

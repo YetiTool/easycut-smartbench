@@ -4,6 +4,7 @@ Screen 28 for the Shape Cutter App
 
 @author: Letty
 """
+
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.metrics import MetricsBase
@@ -309,11 +310,11 @@ class ShapeCutter28ScreenClass(Screen):
     user_instructions = StringProperty()
 
     def __init__(self, **kwargs):
+        self.shapecutter_sm = kwargs.pop("shapecutter")
+        self.m = kwargs.pop("machine")
+        self.l = kwargs.pop("localization")
+        self.j = kwargs.pop("job_parameters")
         super(ShapeCutter28ScreenClass, self).__init__(**kwargs)
-        self.shapecutter_sm = kwargs["shapecutter"]
-        self.m = kwargs["machine"]
-        self.l = kwargs["localization"]
-        self.j = kwargs["job_parameters"]
         self.xy_move_widget = widget_sC28_xy_move.SC28XYMove(
             machine=self.m,
             localization=self.l,
@@ -338,18 +339,21 @@ class ShapeCutter28ScreenClass(Screen):
     def on_pre_leave(self):
         self.m.laser_off()
 
-# Action buttons
     def get_info(self):
         info = """Move the machine by using the arrow buttons.
 
 Set the datum by using the SET buttons.
 
 Move the machine to the datum by using the GO buttons."""
-        InfoPopup(sm=self.shapecutter_sm, m=self.m, l=self.m.l,
-                  main_string=info,
-                  popup_width=500,
-                  popup_height=400,
-                  main_label_size_delta=140).open()
+        InfoPopup(
+            sm=self.shapecutter_sm,
+            m=self.m,
+            l=self.m.l,
+            main_string=info,
+            popup_width=500,
+            popup_height=400,
+            main_label_size_delta=140,
+        ).open()
 
     def go_back(self):
         if not self.m.state().startswith("Jog"):
@@ -362,8 +366,6 @@ Move the machine to the datum by using the GO buttons."""
             self.shapecutter_sm.next_screen()
         else:
             pass
-    
-# Tab functions
 
     def prepare(self):
         if not self.m.state().startswith("Jog"):

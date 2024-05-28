@@ -8,24 +8,19 @@ This screen does three things:
 - Prevents the user from clicking on things while a file is loading or being checked. 
 - Asks the user to check their file before sending it to the machine
 """
+
 import re
 import traceback
 from datetime import datetime
 from functools import partial
-
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.clock import Clock
 from kivy.graphics import Color, Rectangle
 from kivy.lang import Builder
-from kivy.properties import (
-    NumericProperty,
-    StringProperty,
-)
+from kivy.properties import NumericProperty, StringProperty
 from kivy.uix.screenmanager import Screen
-
 from asmcnc.geometry import job_envelope
 from asmcnc.skavaUI import popup_info
-
 from asmcnc.core_UI.scaling_utils import get_scaled_sp
 
 Builder.load_string(
@@ -166,11 +161,11 @@ class LoadingScreen(Screen):
     continuing_to_recovery = False
 
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.m = kwargs.pop("machine")
+        self.jd = kwargs.pop("job")
+        self.l = kwargs.pop("localization")
         super(LoadingScreen, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
-        self.jd = kwargs["job"]
-        self.l = kwargs["localization"]
 
     def on_pre_enter(self):
         self.filename_label.text = self.jd.job_name
@@ -236,7 +231,6 @@ class LoadingScreen(Screen):
                 + "\n\n"
                 + self.l.get_str("Please load a different file.")
             )
-            # popup_info.PopupError(self.sm, self.l, file_empty_warning)
             self.sm.pm.show_error_popup(file_empty_warning)
             self.sm.current = "local_filechooser"
             return
@@ -300,8 +294,6 @@ class LoadingScreen(Screen):
                                     or self.jd.spindle_speed_min == None
                                 ):
                                     self.jd.spindle_speed_min = rpm
-
-                                # Ensure all rpms are above the minimum
                                 if rpm < self.minimum_spindle_rpm:
                                     l_block = "M3S" + str(self.minimum_spindle_rpm)
                                 if rpm > self.maximum_spindle_rpm:
@@ -331,9 +323,9 @@ class LoadingScreen(Screen):
                                         float(feed_rate)
                                         < self.sm.get_screen("check_job").as_low_as
                                     ):
-                                        self.sm.get_screen(
-                                            "check_job"
-                                        ).as_low_as = float(feed_rate)
+                                        self.sm.get_screen("check_job").as_low_as = (
+                                            float(feed_rate)
+                                        )
                                 if float(feed_rate) > self.maximum_feed_rate:
                                     self.sm.get_screen(
                                         "check_job"
@@ -342,9 +334,9 @@ class LoadingScreen(Screen):
                                         float(feed_rate)
                                         > self.sm.get_screen("check_job").as_high_as
                                     ):
-                                        self.sm.get_screen(
-                                            "check_job"
-                                        ).as_high_as = float(feed_rate)
+                                        self.sm.get_screen("check_job").as_high_as = (
+                                            float(feed_rate)
+                                        )
                             except:
                                 Logger.exception(
                                     "Failed to extract feed rate. Probable G-code error!"
@@ -366,12 +358,14 @@ class LoadingScreen(Screen):
                 self.update_screen("Preparing", percentage_progress)
                 Clock.schedule_once(self._scrub_file_loop, self.interrupt_delay)
             else:
-                Logger.info("> Finished scrubbing " + str(self.lines_scrubbed) + " lines.")
+                Logger.info(
+                    "> Finished scrubbing " + str(self.lines_scrubbed) + " lines."
+                )
                 self.jd.job_gcode = self.preloaded_job_gcode
                 self.jd.create_gcode_summary_string()
                 self._get_gcode_preview_and_ranges()
         except:
-            Logger.exception('Failed to scrub file!')
+            Logger.exception("Failed to scrub file!")
             self.update_screen("Could not load")
             self.jd.reset_values()
 

@@ -2,6 +2,7 @@
 Created on 1 Feb 2018
 @author: Ed
 """
+
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 
@@ -48,7 +49,7 @@ Builder.load_string(
 
         GridLayout:
             cols: 3
-            orientation: 'horizontal'
+            orientation: 'lr-tb'
             spacing: 0
             size_hint_y: None
             height: self.width
@@ -180,10 +181,11 @@ Builder.load_string(
 
 
 class MaintenanceXYMove(Widget):
+
     def __init__(self, **kwargs):
+        self.m = kwargs.pop("machine")
+        self.sm = kwargs.pop("screen_manager")
         super(MaintenanceXYMove, self).__init__(**kwargs)
-        self.m = kwargs["machine"]
-        self.sm = kwargs["screen_manager"]
         self.set_jog_speeds()
 
     fast_x_speed = 6000

@@ -163,11 +163,12 @@ Builder.load_string(
 
 
 class ProPlusSafetyScreen(Screen):
+
     def __init__(self, **kwargs):
+        self.sm = kwargs.pop("screen_manager")
+        self.l = kwargs.pop("localization")
+        self.start_seq = kwargs.pop("start_sequence")
         super(ProPlusSafetyScreen, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.l = kwargs["localization"]
-        self.start_seq = kwargs["start_sequence"]
         self.update_strings()
 
     def next_screen(self):

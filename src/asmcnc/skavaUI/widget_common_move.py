@@ -2,13 +2,13 @@
 Created on 1 Feb 2018
 @author: Ed
 """
+
 from kivy.graphics import RoundedRectangle, Color
 from kivy.lang import Builder
 from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.widget import Widget
-
 from asmcnc.core_UI import scaling_utils
 from asmcnc.core_UI.components.buttons.spindle_button import SpindleButton
 from asmcnc.core_UI.components.buttons.vacuum_button import VacuumButton
@@ -88,10 +88,11 @@ Builder.load_string(
 
 
 class CommonMove(Widget):
+
     def __init__(self, **kwargs):
+        self.m = kwargs.pop("machine")
+        self.sm = kwargs.pop("screen_manager")
         super(CommonMove, self).__init__(**kwargs)
-        self.m = kwargs["machine"]
-        self.sm = kwargs["screen_manager"]
         self.set_jog_speeds()
         self.add_buttons()
 
@@ -99,17 +100,28 @@ class CommonMove(Widget):
     vacuum_button = None
 
     def add_buttons(self):
-        self.vacuum_button = VacuumButton(self.m, self.m.s, size_hint=(None, None),
-                                          size=(scaling_utils.get_scaled_dp_width(71),
-                                                scaling_utils.get_scaled_dp_height(72)),
-                                          pos_hint={"center_x": 0.5, "center_y": 0.5})
+        self.vacuum_button = VacuumButton(
+            self.m,
+            self.m.s,
+            size_hint=(None, None),
+            size=(
+                scaling_utils.get_scaled_dp_width(71),
+                scaling_utils.get_scaled_dp_height(72),
+            ),
+            pos_hint={"center_x": 0.5, "center_y": 0.5},
+        )
         self.vacuum_container.add_widget(self.vacuum_button)
-
-        self.spindle_button = SpindleButton(self.m, self.m.s, self.sm,
-                                            size_hint=(None, None),
-                                            size=(scaling_utils.get_scaled_dp_width(71),
-                                                  scaling_utils.get_scaled_dp_height(72)),
-                                            pos_hint={"center_x": 0.5, "center_y": 0.5})
+        self.spindle_button = SpindleButton(
+            self.m,
+            self.m.s,
+            self.sm,
+            size_hint=(None, None),
+            size=(
+                scaling_utils.get_scaled_dp_width(71),
+                scaling_utils.get_scaled_dp_height(72),
+            ),
+            pos_hint={"center_x": 0.5, "center_y": 0.5},
+        )
         self.spindle_container.add_widget(self.spindle_button)
 
     fast_x_speed = 6000
