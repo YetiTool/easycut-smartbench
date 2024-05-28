@@ -6,6 +6,7 @@ www.yetitool.com
 """
 
 from asmcnc import paths
+from mods import fpsgraph
 
 paths.create_paths()
 import logging
@@ -32,7 +33,7 @@ if sys.platform.startswith("linux"):
 else:
     Config.set("graphics", "width", "800")
     Config.set("graphics", "height", "480")
-Config.set("graphics", "maxfps", "60")
+Config.set("graphics", "maxfps", "30000")
 Config.set("kivy", "KIVY_CLOCK", "interrupt")
 Config.write()
 from kivy.app import App
@@ -376,9 +377,12 @@ class SkavaUI(App):
             sm.size_hint = None, None
             sm.size = self.width, self.height
             root.add_widget(sm)
+            fpsgraph.start(Window, root)
             return root
+        fpsgraph.start(Window, sm)
         return sm
 
 
 if __name__ == "__main__":
     SkavaUI().run()
+    fpsgraph.stop(Window, None)

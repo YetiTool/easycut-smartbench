@@ -10,7 +10,6 @@ from kivy.resources import resource_find
 from kivy.core.image import Image
 from kivy.graphics import Color, BorderImage
 from kivy.utils import rgba
-
 try:
     import hgtk
 except:
@@ -21,20 +20,19 @@ class Keyboard(VKeyboard):
     font_color = [0, 0, 0, 1]
 
     def __init__(self, **kwargs):
-        self.l = kwargs.pop("localization")
+        self.l = kwargs.pop('localization')
         super(Keyboard, self).__init__(**kwargs)
-        # reload(sys)
-        # sys.setdefaultencoding('utf-8')
         self.bind(layout=self.set_keyboard_background)
         self.bind(do_translation=self.set_keyboard_background)
         self.text_instance = None
         self.custom_numeric_pos = None
         self.custom_qwerty_pos = None
         dirname = os.path.dirname(__file__)
-        self.kr_layout = os.path.join(dirname, "layouts", "kr.json")
-        self.numeric_layout = os.path.join(dirname, "layouts", "numeric.json")
-        self.qwerty_layout = "data/keyboards/qwerty.json"
-        self.qwertyKR_layout = os.path.join(dirname, "layouts", "qwertyKR.json")
+        self.kr_layout = os.path.join(dirname, 'layouts', 'kr.json')
+        self.numeric_layout = os.path.join(dirname, 'layouts', 'numeric.json')
+        self.qwerty_layout = 'data/keyboards/qwerty.json'
+        self.qwertyKR_layout = os.path.join(dirname, 'layouts', 'qwertyKR.json'
+            )
         self.font_size = scaling_utils.get_scaled_width(20)
         self.background_color = [0, 0, 0, 1]
         try:
@@ -42,7 +40,7 @@ class Keyboard(VKeyboard):
                 self.font = self.l.korean_font
                 self.layout = self.kr_layout
             else:
-                self.font_name = "data/fonts/DejaVuSans.ttf"
+                self.font_name = 'data/fonts/DejaVuSans.ttf'
                 self.layout = self.qwerty_layout
         except:
             pass
@@ -54,7 +52,8 @@ class Keyboard(VKeyboard):
         self.pos = self.default_pos
         self.on_key_up = self.key_up
 
-    def generic_for_loop_alternative(self, func, list_of_items, i=0, end_func=0):
+    def generic_for_loop_alternative(self, func, list_of_items, i=0, end_func=0
+        ):
         """
         This alternative to using for loops prevents the UI from locking up while the "loop" continues in the background.
 
@@ -76,63 +75,52 @@ class Keyboard(VKeyboard):
         try:
             if func(list_of_items[i]):
                 return
-            Clock.schedule_once(
-                lambda dt: self.generic_for_loop_alternative(
-                    func, list_of_items, i + 1, end_func
-                ),
-                -1,
-            )
+            Clock.schedule_once(lambda dt: self.
+                generic_for_loop_alternative(func, list_of_items, i + 1,
+                end_func), -1)
         except IndexError as e:
             if end_func:
                 end_func()
 
     def setup_text_inputs(self, text_inputs):
-        self.generic_for_loop_alternative(self.setup_single_text_input, text_inputs)
+        self.generic_for_loop_alternative(self.setup_single_text_input,
+            text_inputs)
 
     def setup_single_text_input(self, text_input):
-        text_input.keyboard_mode = "managed"
+        text_input.keyboard_mode = 'managed'
         text_input.bind(focus=self.on_focus_raise_keyboard)
 
     def draw_keys(self):
+        return
         layout = self.available_layouts[self.layout]
-        layout_rows = layout["rows"]
+        layout_rows = layout['rows']
         layout_geometry = self.layout_geometry
         layout_mode = self.layout_mode
-        background = resource_find(
-            self.background_disabled if self.disabled else self.background
-        )
+        background = resource_find(self.background_disabled if self.
+            disabled else self.background)
         texture = Image(background, mipmap=True).texture
         self.background_key_layer.clear()
         with self.background_key_layer:
-            BorderImage(texture=texture, size=self.size, border=self.background_border)
-        key_normal = resource_find(
-            self.key_background_disabled_normal
-            if self.disabled
-            else self.key_background_normal
-        )
+            BorderImage(texture=texture, size=self.size, border=self.
+                background_border)
+        key_normal = resource_find(self.key_background_disabled_normal if
+            self.disabled else self.key_background_normal)
         texture = Image(key_normal, mipmap=True).texture
         with self.background_key_layer:
             Color(1, 1, 1, 0.5)
             for line_nb in range(1, layout_rows + 1):
-                for pos, size in layout_geometry["LINE_%d" % line_nb]:
-                    BorderImage(
-                        texture=texture, pos=pos, size=size, border=self.key_border
-                    )
+                for pos, size in layout_geometry['LINE_%d' % line_nb]:
+                    BorderImage(texture=texture, pos=pos, size=size, border
+                        =self.key_border)
         for line_nb in range(1, layout_rows + 1):
             key_nb = 0
-            for pos, size in layout_geometry["LINE_%d" % line_nb]:
-                text = layout[layout_mode + "_" + str(line_nb)][key_nb][0]
-                z = Label(
-                    text=text,
-                    font_size=self.font_size,
-                    pos=pos,
-                    size=size,
-                    font_name=self.font_name,
-                    color=self.font_color,
-                )
+            for pos, size in layout_geometry['LINE_%d' % line_nb]:
+                text = layout[layout_mode + '_' + str(line_nb)][key_nb][0]
+                z = Label(text=text, font_size=self.font_size, pos=pos,
+                    size=size, font_name=self.font_name, color=self.font_color)
                 self.add_widget(z)
-                if z.text == "�\x9c\x93":
-                    z.color = rgba("#4CAF50")
+                if z.text == '�\x9c\x93':
+                    z.color = rgba('#4CAF50')
                     z.font_size += scaling_utils.get_scaled_width(10)
                 key_nb += 1
 
@@ -145,76 +133,64 @@ class Keyboard(VKeyboard):
         with self.active_keys_layer:
             Color(1, 1, 1)
             for line_nb, index in list(active_keys.values()):
-                pos, size = layout_geometry["LINE_%d" % line_nb][index]
-                BorderImage(texture=texture, pos=pos, size=size, border=self.key_border)
+                pos, size = layout_geometry['LINE_%d' % line_nb][index]
+                BorderImage(texture=texture, pos=pos, size=size, border=
+                    self.key_border)
 
     def key_up(self, keycode, internal, modifiers):
         try:
-            if "kr" in self.layout.lower():
-                if keycode == "spacebar":
-                    if (
-                        hgtk.text.compose(self.text_instance.text + "ᴥ")
-                        != self.text_instance.text
-                    ):
-                        self.text_instance.text = hgtk.text.compose(
-                            self.text_instance.text + "ᴥ"
-                        )
+            if 'kr' in self.layout.lower():
+                if keycode == 'spacebar':
+                    if hgtk.text.compose(self.text_instance.text + 'ᴥ'
+                        ) != self.text_instance.text:
+                        self.text_instance.text = hgtk.text.compose(self.
+                            text_instance.text + 'ᴥ')
                         return
         except:
             pass
         if self.text_instance:
             if internal == None:
-                if keycode == "enter":
+                if keycode == 'enter':
                     if not self.text_instance.multiline:
-                        self.text_instance.dispatch("on_text_validate")
-                        if (
-                            self.text_instance
-                            and self.text_instance.text_validate_unfocus
-                        ):
+                        self.text_instance.dispatch('on_text_validate')
+                        if (self.text_instance and self.text_instance.
+                            text_validate_unfocus):
                             self.defocus_text_input(self.text_instance)
                     else:
-                        self.text_instance.insert_text("\n")
-                if keycode == "Han/Yeong":
-                    self.layout = (
-                        self.qwertyKR_layout
-                        if self.layout == self.kr_layout
-                        else self.kr_layout
-                    )
+                        self.text_instance.insert_text('\n')
+                if keycode == 'Han/Yeong':
+                    self.layout = (self.qwertyKR_layout if self.layout ==
+                        self.kr_layout else self.kr_layout)
                     self.previous_layout = self.layout
-                if keycode == "escape":
+                if keycode == 'escape':
                     self.defocus_text_input(self.text_instance)
-                if keycode == "backspace":
+                if keycode == 'backspace':
                     if self.text_instance.selection_text:
                         self.text_instance.delete_selection()
                     else:
                         self.text_instance.do_backspace()
-                if keycode == "layout":
-                    self.layout = (
-                        self.numeric_layout
-                        if self.layout == self.previous_layout
-                        else self.previous_layout
-                    )
+                if keycode == 'layout':
+                    self.layout = (self.numeric_layout if self.layout ==
+                        self.previous_layout else self.previous_layout)
                 return
             if self.text_instance.selection_text:
                 self.text_instance.delete_selection()
             self.text_instance.insert_text(internal)
 
     def set_keyboard_background(self, *args):
-        if self.do_translation == (True, True) and sys.platform != "darwin":
+        if self.do_translation == (True, True) and sys.platform != 'darwin':
             self.margin_hint = [0.15, 0.05, 0.06, 0.05]
             if self.layout == self.numeric_layout:
                 self.background = (
-                    "./asmcnc/keyboard/images/numeric_background_"
-                    + str(Window.width)
-                    + ".png"
-                )
+                    './asmcnc/keyboard/images/numeric_background_' + str(
+                    Window.width) + '.png')
             else:
-                self.background = (
-                    "./asmcnc/keyboard/images/background_" + str(Window.width) + ".png"
-                )
+                self.background = './asmcnc/keyboard/images/background_' + str(
+                    Window.width) + '.png'
         else:
             self.margin_hint = [0.05, 0.06, 0.05, 0.06]
-            self.background = "atlas://data/images/defaulttheme/vkeyboard_background"
+            self.background = (
+                'atlas://data/images/defaulttheme/vkeyboard_background')
         self.setup_layout()
         if self.pos[0] + self.width > scaling_utils.Width:
             self.pos = scaling_utils.Width - self.width, self.pos[1]
@@ -231,36 +207,33 @@ class Keyboard(VKeyboard):
             if self.custom_numeric_pos:
                 self.pos = self.custom_numeric_pos
                 if self.text_instance:
-                    if self.text_instance and self.collide_widget(self.text_instance):
-                        self.pos = (
-                            scaling_utils.Width
-                            - self.custom_numeric_pos[0]
-                            - self.width,
-                            self.custom_numeric_pos[1],
-                        )
+                    if self.text_instance and self.collide_widget(self.
+                        text_instance):
+                        self.pos = (scaling_utils.Width - self.
+                            custom_numeric_pos[0] - self.width, self.
+                            custom_numeric_pos[1])
             else:
                 self.pos = self.default_pos
-                if self.text_instance and self.collide_widget(self.text_instance):
-                    self.pos = (
-                        scaling_utils.Width - self.default_pos[0] - self.width,
-                        self.default_pos[1],
-                    )
+                if self.text_instance and self.collide_widget(self.
+                    text_instance):
+                    self.pos = scaling_utils.Width - self.default_pos[0
+                        ] - self.width, self.default_pos[1]
         else:
             self.width = scaling_utils.Width
             if self.custom_qwerty_pos:
                 self.pos = self.custom_qwerty_pos
-                if self.text_instance and self.collide_widget(self.text_instance):
-                    self.pos = (
-                        self.custom_qwerty_pos[0],
-                        scaling_utils.Height - self.custom_qwerty_pos[1] - self.height,
-                    )
+                if self.text_instance and self.collide_widget(self.
+                    text_instance):
+                    self.pos = self.custom_qwerty_pos[0
+                        ], scaling_utils.Height - self.custom_qwerty_pos[1
+                        ] - self.height
             else:
                 self.pos = self.default_pos
-                if self.text_instance and self.collide_widget(self.text_instance):
-                    self.pos = (
-                        self.default_pos[0],
-                        scaling_utils.Height - self.default_pos[1] - self.height,
-                    )
+                if self.text_instance and self.collide_widget(self.
+                    text_instance):
+                    self.pos = self.default_pos[0
+                        ], scaling_utils.Height - self.default_pos[1
+                        ] - self.height
 
     def set_numeric_pos(self, pos):
         self.custom_numeric_pos = pos
@@ -285,12 +258,8 @@ class Keyboard(VKeyboard):
             self.lower_keyboard_if_not_focused()
 
     def raise_keyboard_if_none_exists(self):
-        self.generic_for_loop_alternative(
-            self.return_if_keyboard_exists,
-            Window.children,
-            i=0,
-            end_func=self.add_keyboard_instance,
-        )
+        self.generic_for_loop_alternative(self.return_if_keyboard_exists,
+            Window.children, i=0, end_func=self.add_keyboard_instance)
 
     def return_if_keyboard_exists(self, child):
         if isinstance(child, Keyboard):
@@ -300,10 +269,11 @@ class Keyboard(VKeyboard):
         try:
             Window.add_widget(self)
         except:
-            Logger.exception("Failed to add keyboard instance to Window!")
+            Logger.exception('Failed to add keyboard instance to Window!')
 
     def lower_keyboard_if_not_focused(self):
-        self.generic_for_loop_alternative(self.remove_children, Window.children)
+        self.generic_for_loop_alternative(self.remove_children, Window.children
+            )
 
     def remove_children(self, child):
         if isinstance(child, Keyboard):
