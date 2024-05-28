@@ -285,13 +285,11 @@ class LoadingScreen(Screen):
                                     )
                                 )
                                 if (
-                                    rpm > self.jd.spindle_speed_max
-                                    or self.jd.spindle_speed_max == None
+                                    rpm > (self.jd.spindle_speed_max or 0)
                                 ):
                                     self.jd.spindle_speed_max = rpm
                                 if (
-                                    rpm < self.jd.spindle_speed_min
-                                    or self.jd.spindle_speed_min == None
+                                    rpm < (self.jd.spindle_speed_min or 0)
                                 ):
                                     self.jd.spindle_speed_min = rpm
                                 if rpm < self.minimum_spindle_rpm:

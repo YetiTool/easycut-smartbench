@@ -1426,7 +1426,7 @@ class SerialConnection(EventDispatcher):
         elif message.startswith("ALARM:"):
             self.grbl_waiting_for_reset = True
             Logger.warning("ALARM from GRBL: " + message)
-            self.alarm.alert_user(message)
+            Clock.schedule_once(lambda dt: self.alarm.alert_user(message))
         elif message.startswith("$"):
             Logger.info(message)
             setting_and_value = message.split("=")
