@@ -19,6 +19,7 @@ from asmcnc.core_UI import scaling_utils
 from asmcnc.core_UI.new_popups.job_validation_popup import JobValidationPopup
 from asmcnc.skavaUI import popup_info
 
+from asmcnc.comms.model_manager import ModelManagerSingleton
 
 class ImageButton(ButtonBehavior, Image):
     pass
@@ -197,6 +198,7 @@ class DrywallCutterScreen(Screen):
         self.jd = kwargs['job']
         self.pm = kwargs['popup_manager']
         self.cs = self.m.cs
+        self.model_manager = ModelManagerSingleton()
 
         self.engine = GCodeEngine(self.m, self.dwt_config, self.cs)
         self.simulation_started = False
@@ -246,6 +248,11 @@ class DrywallCutterScreen(Screen):
         self.pulse_poll = Clock.schedule_interval(self.update_pulse_opacity, 0.04)
         self.kb.set_numeric_pos((scaling_utils.get_scaled_width(565), scaling_utils.get_scaled_height(115)))
         self.drywall_shape_display_widget.check_datum_and_extents()  # update machine value labels
+
+        if not self.model_manager.is_machine_drywall():
+            self.drywall_shape_display_widget.canvas_image.source = "./asmcnc/apps/drywall_cutter_app/img/canvas_with_logo_shapes.png"
+        else:
+            self.drywall_shape_display_widget.canvas_image.source = "./asmcnc/apps/drywall_cutter_app/img/canvas_with_logo.png"
 
     def on_enter(self):
         self.m.laser_on()

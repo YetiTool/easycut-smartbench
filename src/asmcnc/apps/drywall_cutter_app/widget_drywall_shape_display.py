@@ -10,6 +10,8 @@ Builder.load_string("""
 #:import FloatInput asmcnc.core_UI.components.text_inputs.float_input.FloatInput
 <DrywallShapeDisplay>
 
+    canvas_image:canvas_image
+
     shape_dims_image:shape_dims_image
     shape_toolpath_image:shape_toolpath_image
 
@@ -48,6 +50,7 @@ Builder.load_string("""
             pos: self.parent.pos
 
             Image:
+                id: canvas_image
                 source: "./asmcnc/apps/drywall_cutter_app/img/canvas_with_logo.png"
                 size: self.parent.size
                 pos: self.parent.pos
