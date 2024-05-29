@@ -1685,6 +1685,7 @@ class SerialConnection(EventDispatcher):
             try:
                 serialCommand = serialCommand.decode("utf-8")
             except UnicodeDecodeError:
+                Logger.exception("Could not decode serial command")
                 serialCommand = serialCommand.decode("utf-8", errors='replace')
 
         try:
