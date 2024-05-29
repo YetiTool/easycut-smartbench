@@ -1681,23 +1681,25 @@ class SerialConnection(EventDispatcher):
         realtime=False,
         protocol=False,
     ):
-        try:
-            if not serialCommand.startswith("?") and not protocol:
-                Logger.info("> " + serialCommand)
-            if altDisplayText != None:
-                Logger.info("> " + str(altDisplayText))
-            if show_in_console == True and altDisplayText == None:
-                self.dispatch("on_serial_monitor_update", "snd", serialCommand)
-            if altDisplayText != None:
-                self.dispatch("on_serial_monitor_update", "snd", altDisplayText)
-        except:
-            Logger.exception(
-                "FAILED to display on CONSOLE: "
-                + str(serialCommand)
-                + " (Alt text: "
-                + str(altDisplayText)
-                + ")"
+        if not serialCommand and not isinstance(serialCommand, str):
+            serial_command = str(serialCommand)
+
+        if not protocol:
+            if not serialCommand.startswith("?"):
+                self.logger.info(" >>> " + serialCommand)
+
+        if altDisplayText is not None:
+            self.logger.info(" >>> " + altDisplayText)
+
+        if show_in_console and altDisplayText is None:
+            self.sm.get_screen("home").gcode_monitor_widget.update_monitor_text_buffer(
+                "snd", serialCommand
             )
+        elif altDisplayText is not None:
+            self.sm.get_screen("home").gcode_monitor_widget.update_monitor_text_buffer(
+                "snd", altDisplayText
+            )
+
         if "M3" in serialCommand.upper():
             self.spindle_on = True
             if "S" in serialCommand.upper():
