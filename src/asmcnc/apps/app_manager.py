@@ -48,9 +48,9 @@ class AppManagerClass(object):
         maintenance_screen = screen_maintenance.MaintenanceScreenClass(name = 'maintenance', screen_manager = self.sm, machine = self.m, localization = self.l, keyboard = self.kb, job = self.jd)
         self.sm.add_widget(maintenance_screen)
 
-        drywall_cutter_screen = screen_drywall_cutter.DrywallCutterScreen(name = 'drywall_cutter', screen_manager = self.sm, machine = self.m, localization = self.l, keyboard = self.kb, job = self.jd, popup_manager = self.pm)
+        drywall_cutter_screen = screen_drywall_cutter.DrywallCutterScreen(self.sm, self.m, self.kb, self.jd, name="drywall_cutter")
         self.sm.add_widget(drywall_cutter_screen)
-
+        
         # Start start up sequence
         self.start_up = start_up_sequence_manager.StartUpSequence(self, self.sm, self.m, self.set, self.l, self.kb, self.jd, self.db, self.cc, self.v)
 

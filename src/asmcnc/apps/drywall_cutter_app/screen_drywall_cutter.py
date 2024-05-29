@@ -12,6 +12,7 @@ from asmcnc.apps.drywall_cutter_app import widget_drywall_shape_display
 from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
 from asmcnc.apps.drywall_cutter_app.config import config_loader
 from asmcnc.apps.drywall_cutter_app.image_dropdown import ImageDropDownButton
+from asmcnc.comms.localization import Localization
 from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.apps.drywall_cutter_app import material_setup_popup
 from asmcnc.apps.drywall_cutter_app import job_load_helper
@@ -185,18 +186,18 @@ class DrywallCutterScreen(Screen):
 
     pulse_poll = None
 
-    def __init__(self, **kwargs):
+    def __init__(self, screen_manager, machine, keyboard, job, **kwargs):
         self.dwt_config = config_loader.DWTConfig(self)
-        self.tool_options = self.dwt_config.get_available_cutter_names()
-        self.name = 'drywall_cutter'
+        self.tool_options = self.dwt_config.get_available_cutters()
+
         super(DrywallCutterScreen, self).__init__(**kwargs)
 
-        self.sm = kwargs['screen_manager']
-        self.m = kwargs['machine']
-        self.l = kwargs['localization']
-        self.kb = kwargs['keyboard']
-        self.jd = kwargs['job']
-        self.pm = kwargs['popup_manager']
+        self.sm = screen_manager
+        self.m = machine
+        self.l = Localization()
+        self.kb = keyboard
+        self.jd = job
+        self.pm = self.sm.pm
         self.cs = self.m.cs
         self.model_manager = ModelManagerSingleton()
 
