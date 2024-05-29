@@ -6,7 +6,6 @@ Module to manage apps and screens
 
 import os
 
-from asmcnc.apps.shapeCutter_app import screen_manager_shapecutter
 from asmcnc.apps.wifi_app import screen_wifi
 from asmcnc.apps.SWupdater_app import screen_update_SW
 from asmcnc.calibration_app import screen_landing
@@ -40,8 +39,7 @@ class AppManagerClass(object):
         self.pm = popup_manager
 
         
-        # initialise app screen_manager classes     
-        self.shapecutter_sm = screen_manager_shapecutter.ScreenManagerShapeCutter(self, self.sm, self.m, self.l, self.kb, self.jd)
+        # initialise app screen_manager classes
         self.systemtools_sm = screen_manager_systemtools.ScreenManagerSystemTools(self, self.sm, self.m, self.set, self.l, self.kb)
         wifi_screen = screen_wifi.WifiScreen(name = 'wifi', screen_manager = self.sm, settings_manager = self.set, localization = self.l, keyboard = self.kb)
         self.sm.add_widget(wifi_screen)
@@ -50,10 +48,9 @@ class AppManagerClass(object):
         maintenance_screen = screen_maintenance.MaintenanceScreenClass(name = 'maintenance', screen_manager = self.sm, machine = self.m, localization = self.l, keyboard = self.kb, job = self.jd)
         self.sm.add_widget(maintenance_screen)
 
-        if self.model_manager.is_machine_drywall():
-            drywall_cutter_screen = screen_drywall_cutter.DrywallCutterScreen(self.sm, self.m, self.kb, self.jd, name="drywall_cutter")
-            self.sm.add_widget(drywall_cutter_screen)
-
+        drywall_cutter_screen = screen_drywall_cutter.DrywallCutterScreen(self.sm, self.m, self.kb, self.jd, name="drywall_cutter")
+        self.sm.add_widget(drywall_cutter_screen)
+        
         # Start start up sequence
         self.start_up = start_up_sequence_manager.StartUpSequence(self, self.sm, self.m, self.set, self.l, self.kb, self.jd, self.db, self.cc, self.v)
 
@@ -71,10 +68,6 @@ class AppManagerClass(object):
         self.sm.get_screen('calibration_complete').return_to_screen = return_to_screen
         self.sm.get_screen('calibration_landing').return_to_screen = return_to_screen
         self.sm.current = 'calibration_landing'
-       
-    def start_shapecutter_app(self):
-        self.current_app = 'shapecutter'
-        self.shapecutter_sm.open_shapecutter()
     
     def start_pro_app(self):
         self.current_app = 'pro'
