@@ -6,6 +6,8 @@ from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.dropdown import DropDown
 from kivy.uix.image import Image
 
+from asmcnc.core_UI import scaling_utils
+
 """
 This is a custom widget that is used to create a dropdown menu with images.
 
@@ -44,7 +46,7 @@ class ImageDropDown(DropDown):
                 source=image_dict[key]['image_path'],
                 allow_stretch=True,
                 size_hint_y=None,
-                height=dp(75),
+                height=scaling_utils.get_scaled_height(dp(75)),
             )
 
             image.bind(on_release=self.dismiss)
