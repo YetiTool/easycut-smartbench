@@ -2,15 +2,17 @@ from kivy.clock import Clock
 import sys, os
 
 from kivy.lang import Builder
+from kivy.metrics import dp
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen
 
+from asmcnc.apps import widget_tool_material_display
 from asmcnc.apps.drywall_cutter_app import screen_config_filechooser
 from asmcnc.apps.drywall_cutter_app import screen_config_filesaver
 from asmcnc.apps.drywall_cutter_app import widget_drywall_shape_display
 from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
-from asmcnc.apps.drywall_cutter_app.config import config_loader
+from asmcnc.apps.drywall_cutter_app.config import config_loader, config_options
 from asmcnc.apps.drywall_cutter_app.image_dropdown import ImageDropDownButton
 from asmcnc.comms.localization import Localization
 from asmcnc.comms.logging_system.logging_system import Logger
@@ -36,6 +38,8 @@ Builder.load_string("""
     toolpath_selection:toolpath_selection
     shape_display_container:shape_display_container
     xy_move_container:xy_move_container
+    tool_material_display_container:tool_material_display_container
+    right_side_container:right_side_container
     BoxLayout:
         orientation: 'vertical'
         BoxLayout:
@@ -114,13 +118,24 @@ Builder.load_string("""
                 id: shape_display_container
                 size_hint_x: 55
             BoxLayout:
+                id: right_side_container
                 size_hint_x: 23
                 orientation: 'vertical'
                 spacing: dp(10)
                 BoxLayout:
                     id: xy_move_container
-                    size_hint_y: 31
-                    padding: scaling_utils.get_scaled_tuple(dp(0), dp(30))
+                    size_hint_y: 23
+                    padding: [dp(0), dp(0)]
+                    canvas.before:
+                        Color:
+                            rgba: hex('#FFFFFFFF')
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+                BoxLayout:
+                    id: tool_material_display_container
+                    size_hint_y: 8
+                    padding: [dp(0), dp(0)]
                     canvas.before:
                         Color:
                             rgba: hex('#FFFFFFFF')
@@ -211,6 +226,15 @@ class DrywallCutterScreen(Screen):
                                                                    localization=self.l,
                                                                    coordinate_system=self.cs)
         self.xy_move_container.add_widget(self.xy_move_widget)
+
+        if self.dwt_config.app_type == config_options.AppType.SHAPES:
+            self.xy_move_container.size_hint_y = 23
+            self.tool_material_display_widget = widget_tool_material_display.ToolMaterialDisplayWidget(self.dwt_config)
+            self.tool_material_display_container.add_widget(self.tool_material_display_widget)
+        else:
+            self.right_side_container.remove_widget(self.tool_material_display_container)
+            self.xy_move_container.size_hint_y = 31
+            self.xy_move_container.padding = [dp(0), dp(30)]
 
         self.materials_popup = material_setup_popup.CuttingDepthsPopup(self.l, self.kb, self.dwt_config)
         self.drywall_shape_display_widget = widget_drywall_shape_display.DrywallShapeDisplay(machine=self.m,
