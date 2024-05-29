@@ -1682,9 +1682,6 @@ class SerialConnection(EventDispatcher):
         protocol=False,
     ):
         try:
-            if isinstance(serialCommand, bytes):
-                serialCommand = serialCommand.decode("utf-8")
-
             if not serialCommand.startswith("?") and not protocol:
                 Logger.info("> " + serialCommand)
             if altDisplayText != None:
