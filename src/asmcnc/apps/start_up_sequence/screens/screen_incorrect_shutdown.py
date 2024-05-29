@@ -125,7 +125,7 @@ Builder.load_string(
             
             Button:
                 id: next_button
-                on_press: root.next()
+                on_press: root.next_screen()
                 background_normal: "./asmcnc/skavaUI/img/next.png"
                 background_down: "./asmcnc/skavaUI/img/next.png"
                 font_size: app.get_scaled_sp('28sp')
@@ -144,7 +144,7 @@ class IncorrectShutdownScreen(Screen):
         super(IncorrectShutdownScreen, self).__init__(**kwargs)
         self.update_strings()
 
-    def __next__(self):
+    def next_screen(self):
         self.start_seq.next_in_sequence()
 
     def update_strings(self):
