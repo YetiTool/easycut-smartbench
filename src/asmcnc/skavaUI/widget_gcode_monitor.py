@@ -143,7 +143,7 @@ Builder.load_string(
                     font_size: str(0.01875 * app.width) + 'sp'
                     id: settings_button
                     text: "Settings"
-                    on_press: root.send_gcode_preset("$$")
+                    on_press: root.send_settings_and_registers()
                     size_hint_y:0.1
                 Button:
                     font_size: str(0.01875 * app.width) + 'sp'
@@ -330,7 +330,7 @@ class GCodeMonitor(Widget):
     def send_settings_and_registers(self):
         # Clock.schedule_once(lambda dt: self.tmc_handshake(), 0)
         self.m.send_any_gcode_command("$$")
-        self.tmc_handshake()
+        self.m.tmc_handshake()
 
     def toggle_check_mode(self):
         if self.m.s.m_state == "Check":
