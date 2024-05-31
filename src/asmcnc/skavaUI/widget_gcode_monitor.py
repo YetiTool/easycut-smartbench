@@ -13,6 +13,7 @@ from kivy.base import runTouchApp
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty
 from asmcnc.skavaUI import popup_info
+from kivy.clock import Clock
 
 Builder.load_string(
     """
@@ -325,6 +326,10 @@ class GCodeMonitor(Widget):
 
     def send_gcode_preset(self, gcode_input):
         self.m.send_any_gcode_command(gcode_input)
+
+    def send_settings_and_registers(self):
+        self.m.send_any_gcode_command("$$")
+        Clock.schedule_once(lambda dt: self.tmc_handshake(), 0.01)
 
     def toggle_check_mode(self):
         if self.m.s.m_state == "Check":
