@@ -19,6 +19,8 @@ from kivy.core.window import Window
 
 import sys, textwrap
 
+from src.asmcnc.comms.model_manager import ModelManagerSingleton
+
 Builder.load_string("""
 
 
@@ -138,6 +140,8 @@ class QuickCommands(Widget):
         self.sm=kwargs['screen_manager']
         self.jd = kwargs['job']
         self.l=kwargs['localization']
+
+        self.model_manager = ModelManagerSingleton()
       
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
@@ -194,7 +198,7 @@ class QuickCommands(Widget):
             self.jd.screen_to_cancel_to_after_job = 'home'
 
             # Check if stylus option is enabled
-            if self.m.is_stylus_enabled == True:
+            if self.m.is_stylus_enabled == True and not self.model_manager.is_machine_drywall():
                 # Display tool selection screen
                 self.sm.current = 'tool_selection'
 
