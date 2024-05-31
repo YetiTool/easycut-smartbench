@@ -4,6 +4,7 @@ from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.uix.image import Image
 from kivy.uix.popup import Popup
+from asmcnc.core_UI import scaling_utils
 
 Builder.load_string("""
 #:import FloatInput asmcnc.core_UI.components.text_inputs.float_input.FloatInput
@@ -342,6 +343,11 @@ class CuttingDepthsPopup(Popup):
         self.update_strings()
 
     def on_open(self):
+        # Fix weird scaling bug with title label
+        if scaling_utils.Width == 800:
+            self.title_label.pos_hint['y'] = 0.45
+        else:
+            self.title_label.pos_hint['y'] = 0.475
         self.load_active_config()
         self.update_text()
 
