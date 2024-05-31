@@ -328,9 +328,8 @@ class GCodeMonitor(Widget):
         self.m.send_any_gcode_command(gcode_input)
 
     def send_settings_and_registers(self):
-        # Clock.schedule_once(lambda dt: self.tmc_handshake(), 0)
-        self.m.send_any_gcode_command("$$")
-        self.m.tmc_handshake()
+        Clock.schedule_interval(lambda dt: self.m.send_any_gcode_command("$$"), 0.01)
+        Clock.schedule_interval(lambda dt: self.m.tmc_handshake(), 0.01)
 
     def toggle_check_mode(self):
         if self.m.s.m_state == "Check":
