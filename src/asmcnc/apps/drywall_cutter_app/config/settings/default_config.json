@@ -15,7 +15,8 @@
     "material_thickness": 3.0,
     "bottom_offset": 0.5,
     "auto_pass": true,
-    "depth_per_pass": 1.0
+    "depth_per_pass": 1.0,
+    "tabs": false
   },
   "datum_position": {
     "x": 5,
