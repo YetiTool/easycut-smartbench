@@ -65,7 +65,7 @@ from asmcnc.comms import smartbench_flurry_database_connection
 
 # NB: router_machine imports serial_connection
 from asmcnc.apps import app_manager
-from settings import settings_manager
+from easycut.core.settings import settings_manager
 
 # Languages and keyboard
 from asmcnc.comms.localization import Localization

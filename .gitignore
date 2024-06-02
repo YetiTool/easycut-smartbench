@@ -3,11 +3,11 @@ sb_values/
 *.DS_Store
 .DS_Store
 .vscode/
-src/asmcnc/production/database/credentials.py
-src/asmcnc/production/z_head_mechanics_jig/z_head_mechanics_jig_graph.png
-src/asmcnc/production/database/csvs/
-src/asmcnc/apps/systemTools_app/screens/calibration/sg_value_plots.png
-src/asmcnc/job/job_recovery.txt
+src/easycut/production/database/credentials.py
+src/easycut/production/z_head_mechanics_jig/z_head_mechanics_jig_graph.png
+src/easycut/production/database/csvs/
+src/easycut/apps/system_tools_app/screens/calibration/sg_value_plots.png
+src/easycut/core/job/job_recovery.txt
 .coverage
 htmlcov
-src/asmcnc/apps/drywall_cutter_app/config/temp/temp_config.json
+src/easycut/apps/drywall_cutter_app/config/temp/temp_config.json
