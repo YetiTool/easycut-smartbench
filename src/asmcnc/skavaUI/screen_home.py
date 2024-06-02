@@ -5,6 +5,8 @@ Created on 19 Aug 2017
 @author: Ed
 """
 import kivy
+from kivy.app import App
+
 from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.comms.model_manager import ModelManagerSingleton
 from kivy.lang import Builder
@@ -298,6 +300,7 @@ class HomeScreen(Screen):
         self.l = kwargs["localization"]
         self.kb = kwargs["keyboard"]
 
+        self.app = App.get_running_app()
         self.model_manager = ModelManagerSingleton()
 
         self.m.bind(probe_z_coord=self.dismiss_z_datum_reminder)
@@ -311,11 +314,6 @@ class HomeScreen(Screen):
         # Position tab
         self.virtual_bed_container.add_widget(
             widget_virtual_bed.VirtualBed(machine=self.m, screen_manager=self.sm)
-        )
-
-        # Status bar
-        self.status_container.add_widget(
-            widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
         )
 
         # Bed tab
@@ -376,6 +374,9 @@ class HomeScreen(Screen):
                 Logger.exception("Unable to preview file")
 
     def on_pre_enter(self):
+        if self.app.status_bar_widget.parent:
+            self.app.status_bar_widget.parent.remove_widget(self.app.status_bar_widget)
+        self.status_container.add_widget(self.app.status_bar_widget)
         if self.jd.job_gcode == []:
 
             # File label at the top

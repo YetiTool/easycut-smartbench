@@ -1,3 +1,4 @@
+from kivy.app import App
 from kivy.core.window import Window
 import re
 from kivy.uix.screenmanager import Screen
@@ -349,20 +350,21 @@ class JobRecoveryScreen(Screen):
         self.l = kwargs["localization"]
         self.kb = kwargs["keyboard"]
         self.line_input.bind(text=self.jump_to_line)
-        self.status_container.add_widget(
-            widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
-        )
         self.z_move_container.add_widget(
             widget_z_move_recovery.ZMoveRecovery(machine=self.m, screen_manager=self.sm)
         )
         self.update_strings()
         self.text_inputs = [self.line_input]
+        self.app = App.get_running_app()
 
     def on_touch(self):
         for text_input in self.text_inputs:
             text_input.focus = False
 
     def on_pre_enter(self):
+        if self.app.status_bar_widget.parent:
+            self.app.status_bar_widget.parent.remove_widget(self.app.status_bar_widget)
+        self.status_container.add_widget(self.app.status_bar_widget)
         self.m.set_led_colour("WHITE")
 
         def remove_comments(line):

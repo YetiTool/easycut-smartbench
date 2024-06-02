@@ -9,7 +9,7 @@ www.yetitool.com
 from kivy.clock import Clock
 
 from asmcnc import paths
-
+from asmcnc.skavaUI.widget_status_bar import StatusBar
 
 paths.create_paths()
 
@@ -235,6 +235,8 @@ class SkavaUI(App):
         # Server connection object
         if ModelManagerSingleton().get_product_code() != ProductCodes.DRYWALLTEC:
             sc = server_connection.ServerConnection(sett)
+
+        self.status_bar_widget = StatusBar(machine=m, screen_manager=sm)
 
         # initialise the screens (legacy)
         lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager=sm, machine=m, app_manager=am,
