@@ -210,7 +210,7 @@ class SupportMenuScreen(Screen):
         if not self.execute_commands(commands, easycut_path):
             self.sm.pm.show_error_popup("Failed to repair! Please ensure your Wi-Fi connection is stable.")
 
-    def execute_commands(commands, working_directory):
+    def execute_commands(self, commands, working_directory):
         for command in commands:
             process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=working_directory)
             stdout, stderr = process.communicate()
