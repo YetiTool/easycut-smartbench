@@ -7,14 +7,14 @@ from kivy.uix.image import Image
 
 from asmcnc import paths
 from asmcnc.core_UI.components.buttons.button_base import ImageButtonBase
-from asmcnc.core_UI.components.widgets.blinking_widget import FastBlinkingWidget
+from asmcnc.core_UI.components.widgets.blinking_widget import FastBlinkingWidget, BlinkingWidget
 
 SPINDLE_ON_IMAGE = os.path.join(paths.SKAVA_UI_IMG_PATH, "spindle_on.png")
 SPINDLE_OFF_IMAGE = os.path.join(paths.SKAVA_UI_IMG_PATH, "spindle_off.png")
 RED_NO_SIGN_IMAGE = os.path.join(paths.SKAVA_UI_IMG_PATH, "off_icon.png")
 
 
-class SpindleButton(ImageButtonBase, FastBlinkingWidget):
+class SpindleButton(ImageButtonBase, BlinkingWidget):
     """A custom button widget used for spindle functionality."""
 
     source = StringProperty(SPINDLE_OFF_IMAGE)
