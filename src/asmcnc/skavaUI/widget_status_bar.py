@@ -2,6 +2,8 @@
 Created on 1 Feb 2018
 @author: Ed
 """
+from functools import partial
+
 import kivy
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
@@ -17,6 +19,8 @@ from kivy.base import runTouchApp
 from kivy.clock import Clock
 import os, sys
 import socket
+
+from asmcnc.comms.logging_system.logging_system import Logger
 
 Builder.load_string(
     """
@@ -148,8 +152,6 @@ Builder.load_string(
 
 
 class StatusBar(Widget):
-    GRBL_REPORT_INTERVAL = 0.1
-    IP_REPORT_INTERVAL = 2
     cheeky_color = StringProperty("#4CAF50FF")
     wifi_on = "./asmcnc/skavaUI/img/wifi_on.png"
     wifi_off = "./asmcnc/skavaUI/img/wifi_off.png"
@@ -159,13 +161,31 @@ class StatusBar(Widget):
         super(StatusBar, self).__init__(**kwargs)
         self.m = kwargs["machine"]
         self.sm = kwargs["screen_manager"]
-        Clock.schedule_interval(
-            self.refresh_grbl_label_values, self.GRBL_REPORT_INTERVAL
-        )
-        Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)
+        # Clock.schedule_interval(
+        #     self.refresh_grbl_label_values, self.GRBL_REPORT_INTERVAL
+        # )
+        # Clock.schedule_interval(self.refresh_ip_label_value, self.IP_REPORT_INTERVAL)
 
-    def on_enter(self):
-        self.refresh_ip_label_value()
+        if not self.m.s: return
+
+        self.m.s.bind(on_message_processed=self.on_message_processed)
+
+    def on_message_processed(self, *args):
+        Logger.debug("on_message_processed: time: " + str(Clock.get_time()))
+        self.grbl_status_label.text = self.m.state()
+        self.check_limit_switch()
+        self.grbl_xw_label.text = "wX:\n" + str(round(self.m.wpos_x(), 2))
+        self.grbl_yw_label.text = "wY:\n" + str(round(self.m.wpos_y(), 2))
+        self.grbl_zw_label.text = "wZ:\n" + str(round(self.m.wpos_z(), 2))
+
+        self.ip_status_label.text = self.m.sett.ip_address
+        if self.m.sett.wifi_available:
+            self.wifi_image.source = self.wifi_on
+        elif not self.m.sett.ip_address:
+            self.wifi_image.source = self.wifi_off
+        else:
+            self.wifi_image.source = self.wifi_warning
+
 
     def check_limit_switch(self):
         if self.m.s.limit_x:
@@ -209,12 +229,3 @@ class StatusBar(Widget):
             self.grbl_zw_label.text = "wZ:\n" + str(round(self.m.wpos_z(), 2))
         else:
             self.serial_image.source = "./asmcnc/skavaUI/img/serial_off.png"
-
-    def refresh_ip_label_value(self, dt):
-        self.ip_status_label.text = self.m.sett.ip_address
-        if self.m.sett.wifi_available:
-            self.wifi_image.source = self.wifi_on
-        elif not self.m.sett.ip_address:
-            self.wifi_image.source = self.wifi_off
-        else:
-            self.wifi_image.source = self.wifi_warning

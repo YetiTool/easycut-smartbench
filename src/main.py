@@ -6,6 +6,8 @@ Created on 16 Nov 2017
 YetiTool's UI for SmartBench
 www.yetitool.com
 '''
+from kivy.clock import Clock
+
 from asmcnc import paths
 
 
@@ -369,6 +371,7 @@ class SkavaUI(App):
         # Clock.schedule_once(start_loop, 10)
 
         ## -----------------------------------------------------------------------------------
+        Clock.schedule_interval(self.output_clocks, 10)
         if self.height == 768:
             root = BoxLayout(orientation='vertical', size_hint=(None, None), size=(self.width, self.height + 32))
             sm.size_hint = (None, None)
@@ -377,6 +380,11 @@ class SkavaUI(App):
             return root
 
         return sm
+
+    def output_clocks(self, dt):
+        Logger.info("Clocks: " + str(len(Clock.get_events())))
+        for i in Clock.get_events():
+            Logger.info(str(i))
 
 
 if __name__ == '__main__':
