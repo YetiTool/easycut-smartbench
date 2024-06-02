@@ -170,7 +170,7 @@ class StatusBar(Widget):
 
         self.m.s.bind(on_message_processed=self.on_message_processed)
 
-    def on_message_processed(self, message):
+    def on_message_processed(self, instance, message):
         Logger.debug("on_message_processed: time: " + str(Clock.get_time()) + " message: " + str(message))
         self.grbl_status_label.text = self.m.state()
         self.check_limit_switch()
