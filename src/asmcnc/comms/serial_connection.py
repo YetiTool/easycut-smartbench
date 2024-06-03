@@ -196,19 +196,6 @@ class SerialConnection(EventDispatcher):
             Logger.debug("Failed to connect to port: {}, {}".format(port, e))
             return False
 
-    def quick_connect(self, available_port):
-        try:
-            Logger.info("Try to connect to: " + available_port)
-            # set up connection
-            self.s = serial.Serial(str(available_port), BAUD_RATE, timeout=6, writeTimeout=20)  # assign
-            self.s.flushInput()
-            self.s.write("\x18")
-            return available_port
-
-        except:
-            Logger.info("Could not connect to given port.")
-            return ''
-
     SMARTBENCH_PORTS = {
         "win32": [
             "COM3",
