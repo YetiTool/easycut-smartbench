@@ -669,6 +669,7 @@ class LobbyScreen(Screen):
         self.am.start_drywall_cutter_app()
 
     def shutdown_console(self):
+        console_utils.shutdown()
         popup_info.PopupShutdown(self.sm, self.l)
 
     def update_strings(self):

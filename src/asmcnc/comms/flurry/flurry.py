@@ -121,8 +121,7 @@ class Flurry(object):
                     payload['timestamp'] = time.time()  # Insert timestamp just before sending
                     self.__publish(payload, EXCHANGE, queue)
                 self.parameters_to_update = {}
-            else:
-                Logger.debug("No parameters to update")
+
             time.sleep(MESSAGE_INTERVAL)
 
         Logger.info("Connection to {} closed".format(HOST))
