@@ -171,11 +171,15 @@ class StatusBar(Widget):
         self.m.s.bind(on_message_processed=self.on_message_processed)
 
     def on_message_processed(self, instance, message):
-        self.grbl_status_label.text = self.m.state()
-        self.check_limit_switch()
-        self.grbl_xw_label.text = "wX:\n" + str(round(self.m.wpos_x(), 2))
-        self.grbl_yw_label.text = "wY:\n" + str(round(self.m.wpos_y(), 2))
-        self.grbl_zw_label.text = "wZ:\n" + str(round(self.m.wpos_z(), 2))
+        if self.m.is_connected():
+            self.serial_image.source = "./asmcnc/skavaUI/img/serial_on.png"
+            self.grbl_status_label.text = self.m.state()
+            self.check_limit_switch()
+            self.grbl_xw_label.text = "wX:\n" + str(round(self.m.wpos_x(), 2))
+            self.grbl_yw_label.text = "wY:\n" + str(round(self.m.wpos_y(), 2))
+            self.grbl_zw_label.text = "wZ:\n" + str(round(self.m.wpos_z(), 2))
+        else:
+            self.serial_image.source = "./asmcnc/skavaUI/img/serial_off.png"
 
         self.ip_status_label.text = self.m.sett.ip_address
         if self.m.sett.wifi_available:
@@ -217,14 +221,3 @@ class StatusBar(Widget):
             )
         else:
             self.grbl_zm_label.text = "mZ:\n" + str(round(self.m.mpos_z(), 2))
-
-    def refresh_grbl_label_values(self, dt):
-        if self.m.is_connected():
-            self.serial_image.source = "./asmcnc/skavaUI/img/serial_on.png"
-            self.grbl_status_label.text = self.m.state()
-            self.check_limit_switch()
-            self.grbl_xw_label.text = "wX:\n" + str(round(self.m.wpos_x(), 2))
-            self.grbl_yw_label.text = "wY:\n" + str(round(self.m.wpos_y(), 2))
-            self.grbl_zw_label.text = "wZ:\n" + str(round(self.m.wpos_z(), 2))
-        else:
-            self.serial_image.source = "./asmcnc/skavaUI/img/serial_off.png"
