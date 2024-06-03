@@ -380,4 +380,11 @@ class SkavaUI(App):
 
 
 if __name__ == '__main__':
-    SkavaUI().run()
+    import cProfile
+    profiler = cProfile.Profile()
+    profiler.enable()
+    try:
+        SkavaUI().run()
+    except KeyboardInterrupt:
+        profiler.disable()
+        profiler.dump_stats('profile.pstat')
