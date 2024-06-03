@@ -848,7 +848,7 @@ class SerialConnection(EventDispatcher):
     spindle_production_year = None
     spindle_production_week = None
     spindle_firmware_version = None
-    spindle_total_run_time_seconds = None
+    spindle_total_run_time_seconds = NumericProperty(-1)
     spindle_brush_run_time_seconds = None
     spindle_mains_frequency_hertz = None
 
