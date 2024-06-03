@@ -92,7 +92,7 @@ class ZHeadQCHome(Screen):
             self.update_usb_button_label()
 
         except:
-            Logger.info("Can't get HW version or hex file")
+            Logger.exception("Can't get HW version or hex file")
 
     def go_back_to_pcb_setup(self):
         self.sm.current = "qcpcbsetup"  

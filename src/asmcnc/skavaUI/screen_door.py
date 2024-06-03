@@ -266,7 +266,7 @@ class DoorScreen(Screen):
 
     def on_enter(self):
         if not str(self.m.state()).startswith("Door:0"):
-            Logger.info(str(self.m.state()))
+            Logger.debug(str(self.m.state()))
             self.anim_countdown_img.repeat = True
             self.anim_spindle_label.repeat = True
             Clock.schedule_once(self.start_spindle_label_animation, 1.4)

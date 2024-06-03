@@ -1,8 +1,8 @@
 from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 
-Builder.load_string(
-    """
+Builder.load_string("""
+#:import LabelBase asmcnc.core_UI.components.labels.base_label
 
 <WidgetSpindleHealthCheck>
 
@@ -20,7 +20,7 @@ Builder.load_string(
             size_hint_x: 0.88
             spacing:0.00416666666667*app.height
 
-            Label: 
+            LabelBase: 
                 id: title_text
                 size_hint_y: 0.15
                 text: "Spindle motor health check"
@@ -31,7 +31,7 @@ Builder.load_string(
                 markup: True
                 text_size: self.size
 
-            Label: 
+            LabelBase: 
                 id: body_text
                 size_hint_y: 0.85
                 text: ""

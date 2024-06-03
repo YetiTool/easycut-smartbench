@@ -112,19 +112,18 @@ class AlarmSequenceManager(object):
 				self.sm.current = 'alarm_1'
 
 		except:
-			Logger.info("Kivy fail happened, try everything again")
-			Logger.info(traceback.format_exc())
+			Logger.exception("Kivy fail happened, try everything again")
 			self.refire_screen()
 
 		self.handle_alarm_state()
 
 
 	def refire_screen(self):
-		Logger.info("Screen refired")
+		Logger.debug("Screen refired")
 		self.sm.current = 'alarm_2'
-		Logger.info("alarm 2")
+		Logger.debug("alarm 2")
 		self.sm.current = 'alarm_1'
-		Logger.info("alarm 1")
+		Logger.debug("alarm 1")
 		# this is a massive hack to get past random kivy fails
 
 
@@ -366,5 +365,5 @@ class AlarmSequenceManager(object):
 			return True
 
 		except:
-			Logger.info("Unable to write alarm report to file")
+			Logger.exception("Unable to write alarm report to file")
 			return False

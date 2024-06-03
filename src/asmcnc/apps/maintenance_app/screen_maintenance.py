@@ -23,10 +23,12 @@ from asmcnc.apps.maintenance_app import (
     widget_maintenance_touchplate_offset,
     widget_maintenance_z_lubrication_reminder,
     widget_maintenance_spindle_health_check,
+    widget_maintenance_general_settings,
 )
 
-Builder.load_string(
-    """
+Builder.load_string("""
+#:import LabelBase asmcnc.core_UI.components.labels.base_label
+#:import color_provider asmcnc.core_UI.utils.color_provider
 
 <MaintenanceScreenClass>:
 
@@ -61,6 +63,9 @@ Builder.load_string(
     touchplate_offset_container: touchplate_offset_container
     z_lubrication_reminder_container: z_lubrication_reminder_container
 
+    # General settings widgets
+    general_settings_container: general_settings_container
+
     # + tab widgets
     plus_tab : plus_tab
     spindle_health_check_container : spindle_health_check_container
@@ -76,7 +81,7 @@ Builder.load_string(
         do_default_tab: False
         tab_pos: 'top_left'
         tab_height: dp(90.0/480.0)*app.height
-        tab_width: dp(142.0/800.0)*app.width
+        tab_width: dp((710.0/6.0)/800.0)*app.width
         on_touch_down: root.on_tab_switch()
 
 
@@ -126,7 +131,7 @@ Builder.load_string(
                             padding:[dp(0.025)*app.width, 0, dp(0.025)*app.width, 0]
                             orientation: 'horizontal'
 
-                            Label: 
+                            LabelBase: 
                                 id: laser_datum_label
                                 color: 0,0,0,1
                                 font_size: dp(0.0325*app.width)
@@ -270,7 +275,7 @@ Builder.load_string(
                         width: dp(0.95*app.width)
                         padding:[dp(0.0125)*app.width, dp(0.0104166666667)*app.height, dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
                         orientation: 'horizontal'
-                        Label: 
+                        LabelBase: 
                             id: brush_monitor_label
                             color: 0,0,0,1
                             font_size: dp(0.0275*app.width)
@@ -382,6 +387,38 @@ Builder.load_string(
                     canvas:
                         Color:
                             rgba: 1,1,1,1
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
+
+        # General settings tab
+
+        TabbedPanelItem:
+            id: general_settings_tab
+            background_normal: 'asmcnc/apps/maintenance_app/img/general_settings_tab_blue.png'
+            background_down: 'asmcnc/apps/maintenance_app/img/general_settings_tab_grey.png'
+
+            BoxLayout:
+                size_hint: (None,None)
+                width: dp(1.005*app.width)
+                height: dp(0.8125*app.height)
+                orientation: "vertical" 
+                padding:[dp(0.0275)*app.width, dp(0.0416666666667)*app.height, dp(0.0275)*app.width, dp(0.0416666666667)*app.height]
+                spacing:0.0416666666667*app.height
+                canvas:
+                    Color:
+                        rgba: color_provider.get_rgba("grey")
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+
+                BoxLayout: 
+                    id: general_settings_container
+                    height: dp(0.729166666667*app.height)
+                    width: dp(0.95*app.width)
+                    canvas:
+                        Color:
+                            rgba: color_provider.get_rgba("white")
                         RoundedRectangle:
                             size: self.size
                             pos: self.pos
@@ -523,6 +560,14 @@ class MaintenanceScreenClass(Screen):
         self.z_lubrication_reminder_container.add_widget(
             self.z_lubrication_reminder_widget
         )
+        self.general_settings_widget = (
+            widget_maintenance_general_settings.GeneralSettingsWidget(
+                machine=self.m, screen_manager=self.sm, localization=self.l
+            )
+        )
+        self.general_settings_container.add_widget(
+            self.general_settings_widget
+        )
         if self.m.theateam():
             self.add_plus_tab()
         self.update_strings()
@@ -585,14 +630,11 @@ class MaintenanceScreenClass(Screen):
         self.spindle_settings_widget.spindle_brand.values = (
             self.spindle_settings_widget.brand_list_sc1
         )
-        try:
-            self.m.s.setting_51
+        if self.m.get_dollar_setting(51) != -1:
             if self.m.theateam():
                 self.spindle_settings_widget.spindle_brand.values = (
                     self.spindle_settings_widget.brand_list_sc2
                 )
-        except:
-            pass
         self.touchplate_offset_widget.touchplate_offset.text = str(
             self.m.z_touch_plate_thickness
         )

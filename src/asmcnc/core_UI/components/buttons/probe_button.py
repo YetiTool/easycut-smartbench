@@ -1,8 +1,10 @@
-from kivy.uix.button import Button
-from asmcnc.skavaUI.screen_probing import ProbingScreen
-from asmcnc.core_UI import path_utils as pu
-from kivy.uix.image import Image
 import os
+
+from kivy.uix.button import Button
+from kivy.uix.image import Image
+
+from asmcnc import paths
+from asmcnc.skavaUI.screen_probing import ProbingScreen
 
 
 class ProbeButton(Button):
@@ -31,7 +33,7 @@ class ProbeButton(Button):
 
         self.return_screen = None
         
-        self.image = Image(source=pu.get_path("z_probe.png"), size = self.size, pos = self.pos, allow_stretch = True)
+        self.image = Image(source=os.path.join(paths.SKAVA_UI_IMG_PATH, "z_probe.png"), size = self.size, pos = self.pos, allow_stretch = True)
         self.add_widget(self.image)
 
         self.bind(size=self.update_image_size)

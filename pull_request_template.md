@@ -5,7 +5,8 @@
 
 ## Checklist
 - [ ] I have completed a self review
-- [ ] I have updated the [spreadsheet](https://docs.google.com/spreadsheets/d/1277nPOKtBFOk_kCo870_zA460-qlw_kGnYlLPwtnadE/edit#gid=0)
+- [ ] I have set the recent milestone
+- [ ] I have tested graphical changes on all languages
 - [ ] I have updated the jira ticket
 - [ ] I have added the relevant labels to this PR
 - [ ] I have updated documentation (if applicable)

@@ -660,7 +660,7 @@ class ZHeadQCWarrantyAfterApr21(Screen):
                 self.spindle_pass_fail = True
 
             except:
-                Logger.info("Could not show outcome")
+                Logger.exception("Could not show outcome")
 
 
         Clock.schedule_once(lambda dt: show_outcome(), 45)

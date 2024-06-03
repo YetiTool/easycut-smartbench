@@ -22,11 +22,11 @@ import decimal
 import os
 import re
 
+from asmcnc import paths
 from asmcnc.apps.drywall_cutter_app.config.config_options import CuttingDirectionOptions, ShapeOptions
-from asmcnc.core_UI import path_utils as pu
 from asmcnc.comms.logging_system.logging_system import Logger
 
-class GCodeEngine():
+class GCodeEngine(object):
     def __init__(self, router_machine, dwt_config, coordinate_system):
         self.config = dwt_config
         self.m = router_machine
@@ -36,7 +36,7 @@ class GCodeEngine():
         self.x = 0  # Identifier for use in arrays
         self.y = 1  # Identifier for use in arrays
         self.custom_gcode_shapes = ["geberit"]  # List of custom shapes that require gcode files
-        self.source_folder_path = pu.get_path("drywall_cutter_app/gcode")  # Path to the gcode files.
+        self.source_folder_path = os.path.join(paths.DWT_APP_PATH, "gcode")
 
         # Constants
         self.CORNER_RADIUS_THRESHOLD = 0.09  # Minimum corner radius to be considered a corner radius
@@ -80,7 +80,7 @@ class GCodeEngine():
             x1, y1 = coordinates[i]
             x2, y2 = coordinates[(i + 1) % len(coordinates)]  # Handle the wraparound at the end
             total += (x2 - x1) * (y2 + y1)
-        
+
         return total > 0
 
     # Reverse coordinates if need to be clockwise
@@ -94,7 +94,7 @@ class GCodeEngine():
         new_coordinates = []
         for coordinate in coordinates:
             # Bottom left
-            if coordinate[self.x] < shape_centre[self.x] and coordinate[self.y] < shape_centre[self.y]: 
+            if coordinate[self.x] < shape_centre[self.x] and coordinate[self.y] < shape_centre[self.y]:
                 rad_point_1 = coordinate[self.x], coordinate[self.y] + corner_radius
                 rad_point_2 = coordinate[self.x] + corner_radius, coordinate[self.y]
             # Top left
@@ -111,7 +111,7 @@ class GCodeEngine():
                 rad_point_2 = coordinate[self.x], coordinate[self.y] + corner_radius
             new_coordinates.append(rad_point_1)
             new_coordinates.append(rad_point_2)
-        return new_coordinates 
+        return new_coordinates
 
     # Calculate the difference in corner radius depending on offset type
     def calculate_corner_radius_offset(self, offset_type, tool_diamter):
@@ -160,7 +160,7 @@ class GCodeEngine():
     def calculate_pass_depths(self, total_cut_depth, pass_depth):
         if total_cut_depth <= 0 or pass_depth <= 0:
             raise ValueError("Total cut depth and pass depth must be positive values.")
-        
+
         pass_depths = []
         current_depth = pass_depth
         while current_depth < total_cut_depth:
@@ -209,32 +209,32 @@ class GCodeEngine():
     # Produce gcode instructions to cut a rounded (or not) rectangle
     def cut_rectangle(self, coordinates, datum_x, datum_y, offset, tool_diameter, is_climb, corner_radius, pass_depth, feedrate, plungerate, total_cut_depth, z_safe_distance, roughing_pass, simulate):
         # Ensure coordinates are all in clockwise order
-        coordinates = self.correct_orientation(coordinates, self.is_clockwise(coordinates))  
+        coordinates = self.correct_orientation(coordinates, self.is_clockwise(coordinates))
 
         # Find shape centre for further calcs
-        shape_centre = self.find_centre(coordinates[:-1], 0, 0)  
+        shape_centre = self.find_centre(coordinates[:-1], 0, 0)
 
         # Apply offset for toolpath (inside, on, outside the line cutting)
-        offset_coordinates = self.apply_offset(coordinates, offset, tool_diameter, shape_centre)  
+        offset_coordinates = self.apply_offset(coordinates, offset, tool_diameter, shape_centre)
 
         # Add corner coordinates if necessary
-        radii_present = self.find_corner_rads(corner_radius)  
+        radii_present = self.find_corner_rads(corner_radius)
         final_coordinates = offset_coordinates
         if radii_present:
-            adjusted_corner_radius = corner_radius + self.calculate_corner_radius_offset(offset, tool_diameter)  
+            adjusted_corner_radius = corner_radius + self.calculate_corner_radius_offset(offset, tool_diameter)
             if adjusted_corner_radius > 0:
-                final_coordinates = self.add_corner_coordinates(reversed(offset_coordinates), shape_centre, adjusted_corner_radius)  
+                final_coordinates = self.add_corner_coordinates(reversed(offset_coordinates), shape_centre, adjusted_corner_radius)
             else:
                 radii_present = False
 
-        pass_depths = self.calculate_pass_depths(total_cut_depth, pass_depth)  
+        pass_depths = self.calculate_pass_depths(total_cut_depth, pass_depth)
 
         # Correct orientation for climb or conventional cutting
         clockwise_cutting = self.determine_cut_direction_clockwise(offset, is_climb)
 
         if clockwise_cutting:
             final_coordinates = final_coordinates[::-1]
-    
+
         if clockwise_cutting:
             arc_instruction = "G2"
         else:
@@ -332,7 +332,7 @@ class GCodeEngine():
         for file in os.listdir(directory):
             filename = file.lower().strip()
             if shape_type in filename and str(tool_diameter)[:-2] + "mm" in filename and (orientation is None or orientation in filename):
-                file_path = pu.join(directory, filename)
+                file_path = os.path.join(directory, file)
                 if os.path.exists(file_path):
                     try:
                         with open(file_path, 'r') as file:
@@ -400,7 +400,7 @@ class GCodeEngine():
 
     # Replace gcode z data with user-driven z data
     def replace_cut_depth_and_z_safe_distance(self, gcode_lines, gcode_cut_depth, gcode_z_safe_distance, new_cut_depth, new_z_safe_distance):
-        output = []    
+        output = []
 
         for line in gcode_lines:
             if "z" + str(gcode_cut_depth) in line.strip().lower():
@@ -482,11 +482,11 @@ class GCodeEngine():
                 break
         if insert_index is None:
             raise Exception ("Unable to find " + insertion_key + " in gcode")
-        
+
         # Generate partoff line gcode
         partoff_gcode.append("G1 Z" + str(z_safe_distance)) # Lift to Z safe distance
         partoff_gcode.append("G0 X" + str(start_coordinate[x]) + " Y" + str(start_coordinate[y]) + "F" + str(feedrate)) # Go to start position
-        for depth in pass_depths:          
+        for depth in pass_depths:
             if direction_flag: # x min -> x max pass
                 partoff_gcode.append("G1 Z-" + str(depth) + " F" + str(plungerate)) # Plunge to depth
                 partoff_gcode.append("G1 X" + str(end_coordinate[x]) + " Y" + str(end_coordinate[y])+ "F" + str(feedrate)) # Go to end position
@@ -500,7 +500,7 @@ class GCodeEngine():
         gcode_part_1 = gcode_lines[:insert_index]
         gcode_part_2 = gcode_lines[insert_index:]
 
-        return gcode_part_1 + partoff_gcode + gcode_part_2  
+        return gcode_part_1 + partoff_gcode + gcode_part_2
 
     # Extract dimension data from gcode header (manually inserted)
     def read_in_custom_shape_dimensions(self, gcode_lines):
@@ -549,10 +549,10 @@ class GCodeEngine():
         if self.config.active_config.shape_type.lower() in self.custom_gcode_shapes:
             # Read in data
             gcode_lines = self.find_and_read_gcode_file(self.source_folder_path, self.config.active_config.shape_type, self.config.active_cutter.dimensions.diameter, orientation=self.config.active_config.rotation)
-            
+
             # Get dimensions as strings
             x_dim_str, y_dim_str, x_min_str, y_min_str = self.read_in_custom_shape_dimensions(gcode_lines)
-            
+
             # Convert strings to floats
             x_dim = float(x_dim_str)
             y_dim = float(y_dim_str)
@@ -565,9 +565,8 @@ class GCodeEngine():
 
     # Main
     def engine_run(self, simulate=False):
-        temp_gcode_path = pu.get_path('drywall_cutter_app/config/temp', folders_only=True)
         filename = self.config.active_config.shape_type + ".nc"
-        output_path = pu.join(temp_gcode_path, filename)
+        output_path = os.path.join(paths.DWT_TEMP_GCODE_PATH, filename)
         safe_start_position = "X0 Y0 Z10"
         z_safe_distance = 5
         cutting_pass_depth = self.config.active_cutter.parameters.recommended_depth_per_pass if self.config.active_config.cutting_depths.auto_pass else self.config.active_config.cutting_depths.depth_per_pass
@@ -700,7 +699,7 @@ class GCodeEngine():
                 rectangle_parameters["corner_radius"] = 0
 
                 gcode_lines = self.cut_rectangle(**rectangle_parameters)
-            
+
             else:
                 # Remove header info
                 gcode_lines = gcode_lines[next((i for i, s in enumerate(gcode_lines) if re.search(r"T[1-9]", s)), None):]
@@ -714,7 +713,7 @@ class GCodeEngine():
 
                 # Apply pass depths
                 pass_depths = self.calculate_pass_depths(total_cut_depth, self.config.active_config.cutting_depths.depth_per_pass)
-                start_condition = next((i for i, s in enumerate(gcode_lines) if re.search(r"T[1-9]", s)), None)
+                start_condition = next((i for i, s in enumerate(gcode_lines) if re.search(r"M3", s)), None)
                 end_condition = next((i for i, s in enumerate(gcode_lines) if re.search(r"M5", s)), None)
                 gcode_lines = self.repeat_for_depths(gcode_lines, pass_depths, start_condition, end_condition)
 
@@ -787,7 +786,7 @@ class GCodeEngine():
             cutting_lines.insert(0, "G90")
             cutting_lines.append("G0 X{} Y{}".format(-self.m.laser_offset_x_value, -self.m.laser_offset_y_value))
             self.m.s.run_skeleton_buffer_stuffer(cutting_lines)
-            
+
         else:
             if self.config.active_config.shape_type in file_structure_1_shapes:
                 output = "(%s)\nG90\nM3 S%d\nG0 %s\n\n%s(End)\nG0 Z%d\nM5\n" % (

@@ -155,13 +155,13 @@ class Localization(object):
 
         except:
             self.lang = self.default_lang
-            Logger.info("Could not read in language name, using English (GB) as default")
+            Logger.warning("Could not read in language name, using English (GB) as default")
 
         if self.lang in self.supported_languages:
             Logger.info("Loading software in " + self.lang)
 
         else:
-            Logger.info(
+            Logger.warning(
                 "Could not find " + self.lang + " in list of supported_languages, using English (GB) as default")
             self.lang = self.default_lang
 
@@ -174,7 +174,7 @@ class Localization(object):
             Logger.info("Save language name to file")
 
         except:
-            Logger.info("Could not save language name, using English (GB) as default")
+            Logger.error("Could not save language name, using English (GB) as default")
 
     # DICTIONARY
     def load_from_dictionary(self):
@@ -200,7 +200,7 @@ class Localization(object):
 
 
         except:
-            Logger.info("Could not load in from full dictionary")
+            Logger.warning("Could not load in from full dictionary")
 
     # LOAD IN NEW LANGUAGE
     def load_in_new_language(self, language):
@@ -218,7 +218,7 @@ class Localization(object):
     #         Logger.info(self.supported_languages)
 
     #     except:
-    #         Logger.info("Could not load list of supported_languages from dictionary")
+    #         Logger.warning("Could not load list of supported_languages from dictionary")
 
     # FAST DICTIONARY
 
@@ -238,7 +238,7 @@ class Localization(object):
     #         self.dictionary = (list(csv_reader))[0]
     #         Logger.info("Load from fast dictionary")
     #     except:
-    #         Logger.info("Could not load from fast dictionary")
+    #         Logger.error("Could not load from fast dictionary")
 
     #     self.save_fast_dictionary()
 
@@ -254,4 +254,4 @@ class Localization(object):
     #             Logger.info("Save fast dictionary")
 
     #     except:
-    #         Logger.info("Could not save fast dictionary")
+    #         Logger.error("Could not save fast dictionary")

@@ -5,14 +5,12 @@ from kivy.clock import Clock
 from kivy.properties import StringProperty, BooleanProperty
 from kivy.uix.image import Image
 
-from asmcnc.core_UI import path_utils
+from asmcnc import paths
 from asmcnc.core_UI.components.buttons.button_base import ImageButtonBase
 from asmcnc.core_UI.components.widgets.blinking_widget import FastBlinkingWidget
 
-SKAVA_UI_PATH = path_utils.get_path("skavaUI")
-SKAVA_UI_IMG_PATH = os.path.join(SKAVA_UI_PATH, "img")
-EXTRACTOR_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "extraction_on.png")
-RED_NO_SIGN_IMAGE = os.path.join(SKAVA_UI_IMG_PATH, "off_icon.png")
+EXTRACTOR_IMAGE = os.path.join(paths.SKAVA_UI_IMG_PATH, "extraction_on.png")
+RED_NO_SIGN_IMAGE = os.path.join(paths.SKAVA_UI_IMG_PATH, "off_icon.png")
 
 
 class VacuumButton(ImageButtonBase, FastBlinkingWidget):

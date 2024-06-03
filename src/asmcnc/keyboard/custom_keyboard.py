@@ -187,7 +187,7 @@ class Keyboard(VKeyboard):
                 if keycode == "enter":
                     if not self.text_instance.multiline:
                         self.text_instance.dispatch("on_text_validate")
-                        if self.text_instance.text_validate_unfocus:
+                        if self.text_instance and self.text_instance.text_validate_unfocus:
                             self.defocus_text_input(self.text_instance)
                     else:
                         self.text_instance.insert_text(u'\n')
@@ -293,7 +293,7 @@ class Keyboard(VKeyboard):
         try: 
             Window.add_widget(self)
         except:
-            Logger.info(traceback.format_exc())
+            Logger.exception('Failed to add keyboard instance to Window!')
 
     # Functions to lower keyboard
     def lower_keyboard_if_not_focused(self):

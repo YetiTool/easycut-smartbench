@@ -6,8 +6,8 @@ widget to allow user to change touchplate offset
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 
-Builder.load_string(
-    """
+Builder.load_string("""
+#:import LabelBase asmcnc.core_UI.components.labels.base_label
 
 <TouchplateOffsetWidget>
 
@@ -24,7 +24,7 @@ Builder.load_string(
         padding:[dp(0.01875)*app.width, dp(0.03125)*app.height]
         spacing:0.0208333333333*app.height
 
-        Label:
+        LabelBase:
             id: touchplate_offset_label
             color: 0,0,0,1
             font_size: dp(0.03*app.width)
@@ -67,7 +67,7 @@ Builder.load_string(
                 input_filter: 'float'
                 multiline: False
 
-            Label: 
+            LabelBase: 
                 color: 0,0,0,1
                 font_size: dp(0.035*app.width)
                 markup: True

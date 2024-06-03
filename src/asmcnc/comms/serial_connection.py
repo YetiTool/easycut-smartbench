@@ -63,6 +63,7 @@ class SerialConnection(EventDispatcher):
     setting_31 = NumericProperty(-1.0)
     setting_32 = NumericProperty(-1.0)
     setting_50 = NumericProperty(0.0)
+    setting_51 = NumericProperty(-1.0)
     setting_100 = NumericProperty(0.0)
     setting_101 = NumericProperty(0.0)
     setting_102 = NumericProperty(0.0)
@@ -163,8 +164,8 @@ class SerialConnection(EventDispatcher):
                 self.sm.current = 'serialScreen'
 
         except:
-            Logger.info("Serial comms interrupted but no serial screen - are you in diagnostics mode?")
-            Logger.info("Serial error: " + str(serial_error))
+            Logger.error("Serial comms interrupted but no serial screen - are you in diagnostics mode?")
+            Logger.error("Serial error: " + str(serial_error))
 
     def is_port_smartbench(self, port):
         """
@@ -556,7 +557,7 @@ class SerialConnection(EventDispatcher):
             self.response_log.append(message)
 
         if message.startswith('error'):
-            Logger.info('ERROR from GRBL: ' + message)
+            Logger.error('ERROR from GRBL: ' + message)
 
             if not self.suppress_error_screens and self.sm.current != 'errorScreen':
                 self.sm.get_screen('errorScreen').message = message
@@ -874,7 +875,7 @@ class SerialConnection(EventDispatcher):
                     status_parts[0] != "Check" and
                     status_parts[0] != "Home" and
                     status_parts[0] != "Sleep"):
-                Logger.info("ERROR status parse: Status invalid: " + message)
+                Logger.error("ERROR status parse: Status invalid: " + message)
                 return
 
             # If there is no Pn part in the status, set all limits to defaults.
@@ -918,7 +919,7 @@ class SerialConnection(EventDispatcher):
                         float(pos[1])
                         float(pos[2])
                     except:
-                        Logger.info("ERROR status parse: Position invalid: " + message)
+                        Logger.exception("ERROR status parse: Position invalid: " + message)
                         return
 
                     self.x_change = self.m_x != float(pos[0])
@@ -937,7 +938,7 @@ class SerialConnection(EventDispatcher):
                         float(pos[1])
                         float(pos[2])
                     except:
-                        Logger.info("ERROR status parse: Position invalid: " + message)
+                        Logger.exception("ERROR status parse: Position invalid: " + message)
                         return
                     self.w_x = pos[0]
                     self.w_y = pos[1]
@@ -951,7 +952,7 @@ class SerialConnection(EventDispatcher):
                         float(pos[1])
                         float(pos[2])
                     except:
-                        Logger.info("ERROR status parse: Position invalid: " + message)
+                        Logger.exception("ERROR status parse: Position invalid: " + message)
                         return
                     self.wco_x = pos[0]
                     self.wco_y = pos[1]
@@ -965,7 +966,7 @@ class SerialConnection(EventDispatcher):
                         int(buffer_info[0])
                         int(buffer_info[1])
                     except:
-                        Logger.info("ERROR status parse: Buffer status invalid: " + message)
+                        Logger.exception("ERROR status parse: Buffer status invalid: " + message)
                         return
 
                     # if different from last check
@@ -991,7 +992,7 @@ class SerialConnection(EventDispatcher):
                         int(value)
 
                     except:
-                        Logger.info("ERROR status parse: Line number invalid: " + message)
+                        Logger.exception("ERROR status parse: Line number invalid: " + message)
                         return
 
                     if self.grbl_ln is not None:
@@ -1059,7 +1060,7 @@ class SerialConnection(EventDispatcher):
                         self.sm.get_screen('door').db.send_event(2, 'Power loss',
                                                                  'Connection loss: Check power and WiFi', 0)
                         self.m.set_pause(True)
-                        Logger.info("Power loss or DC power supply")
+                        Logger.critical("Power loss or DC power supply")
                         self.power_loss_detected = True
                         Clock.schedule_once(lambda dt: self.m.resume_from_a_soft_door(), 1)
 
@@ -1088,7 +1089,7 @@ class SerialConnection(EventDispatcher):
                             int(digital_spindle_feedback[3])
 
                         except:
-                            Logger.info("ERROR status parse: Digital spindle feedback invalid: " + message)
+                            Logger.exception("ERROR status parse: Digital spindle feedback invalid: " + message)
                             return
 
                         self.digital_spindle_ld_qdA = int(digital_spindle_feedback[0])
@@ -1113,7 +1114,7 @@ class SerialConnection(EventDispatcher):
                         elif self.digital_spindle_kill_time < 10:
                             overload_mV_equivalent_state = 100
                         else:
-                            Logger.info("Killtime value not recognised")
+                            Logger.error("Killtime value not recognised")
 
                     else:
 
@@ -1121,7 +1122,7 @@ class SerialConnection(EventDispatcher):
                             int(spindle_feedback)
 
                         except:
-                            Logger.info("ERROR status parse: Analogue spindle feedback invalid: " + message)
+                            Logger.exception("ERROR status parse: Analogue spindle feedback invalid: " + message)
                             return
 
                         self.spindle_load_voltage = int(spindle_feedback)
@@ -1141,7 +1142,7 @@ class SerialConnection(EventDispatcher):
                         elif self.spindle_load_voltage >= 2500:
                             overload_mV_equivalent_state = 100
                         else:
-                            Logger.info("Overload value not recognised")
+                            Logger.error("Overload value not recognised")
 
                     # update stuff if there's a change
                     if overload_mV_equivalent_state != self.overload_state:
@@ -1158,7 +1159,7 @@ class SerialConnection(EventDispatcher):
                                 Clock.schedule_once(self.check_for_sustained_peak, 1)
 
                         except:
-                            Logger.info('Unable to update overload state on go screen')
+                            Logger.exception('Unable to update overload state on go screen')
 
                     # if it's max load, activate a timer to check back in a second. The "checking back" is about ensuring the signal wasn't a noise event.
                     if self.overload_state == 100 and self.is_ready_to_assess_spindle_for_shutdown:
@@ -1198,7 +1199,7 @@ class SerialConnection(EventDispatcher):
                         int(values[2])
 
                     except:
-                        Logger.info("ERROR status parse: Ov values invalid: " + message)
+                        Logger.exception("ERROR status parse: Ov values invalid: " + message)
                         return
 
                     self.feed_override_percentage = int(values[0])
@@ -1212,7 +1213,7 @@ class SerialConnection(EventDispatcher):
                         float(temps[0])
                         float(temps[1])
                     except:
-                        Logger.info("ERROR status parse: Temperature invalid: " + message)
+                        Logger.exception("ERROR status parse: Temperature invalid: " + message)
                         return
 
                     self.motor_driver_temp = float(temps[0])
@@ -1226,7 +1227,7 @@ class SerialConnection(EventDispatcher):
                         pass
 
                     except:
-                        Logger.info("ERROR status parse: Temperature invalid: " + message)
+                        Logger.exception("ERROR status parse: Temperature invalid: " + message)
                         return
 
                 # VOLTAGES
@@ -1239,7 +1240,7 @@ class SerialConnection(EventDispatcher):
                         float(voltages[3])
 
                     except:
-                        Logger.info("ERROR status parse: Voltage invalid: " + message)
+                        Logger.exception("ERROR status parse: Voltage invalid: " + message)
                         return
 
                     self.microcontroller_mV = float(voltages[0])
@@ -1260,7 +1261,7 @@ class SerialConnection(EventDispatcher):
                         int(sg_values[4])
 
                     except:
-                        Logger.info("ERROR status parse: SG values invalid: " + message)
+                        Logger.exception("ERROR status parse: SG values invalid: " + message)
                         return
 
                     self.sg_z_motor_axis = int(sg_values[0])
@@ -1277,7 +1278,7 @@ class SerialConnection(EventDispatcher):
                         pass
 
                     except:
-                        Logger.info("ERROR status parse: SG values invalid: " + message)
+                        Logger.exception("ERROR status parse: SG values invalid: " + message)
                         return
 
                     else:
@@ -1321,7 +1322,7 @@ class SerialConnection(EventDispatcher):
                         float(sg_alarm_parts[7])
 
                     except:
-                        Logger.info("ERROR status parse: SGALARM pins_info invalid: " + message)
+                        Logger.exception("ERROR status parse: SGALARM pins_info invalid: " + message)
                         return
 
                     self.last_stall_tmc_index = int(sg_alarm_parts[0])
@@ -1349,7 +1350,7 @@ class SerialConnection(EventDispatcher):
                         int(spindle_statistics[6])
 
                     except:
-                        Logger.info("ERROR status parse: Sp values invalid: " + message)
+                        Logger.exception("ERROR status parse: Sp values invalid: " + message)
                         return
 
                     self.spindle_serial_number = int(spindle_statistics[0])
@@ -1378,7 +1379,7 @@ class SerialConnection(EventDispatcher):
                         int(tmc_registers[10])
 
                     except:
-                        Logger.info("ERROR status parse: TMC registers invalid: " + message)
+                        Logger.exception("ERROR status parse: TMC registers invalid: " + message)
                         return
 
                     self.m.TMC_motor[int(tmc_registers[0])].shadowRegisters[0] = int(tmc_registers[1])
@@ -1397,7 +1398,7 @@ class SerialConnection(EventDispatcher):
                         self.m.print_tmc_registers(int(tmc_registers[0]))
 
                     except:
-                        Logger.info("Could not print TMC registers")
+                        Logger.exception("Could not print TMC registers")
 
                 elif part.startswith('TCAL:M'):
 
@@ -1408,7 +1409,7 @@ class SerialConnection(EventDispatcher):
                         map(int, all_cal_data_list)
 
                     except:
-                        Logger.info("ERROR status parse: TCAL registers invalid: " + message)
+                        Logger.exception("ERROR status parse: TCAL registers invalid: " + message)
                         return
 
                     self.m.TMC_motor[int(motor_index)].calibration_dataset_SG_values = [int(i) for i in
@@ -1439,10 +1440,10 @@ class SerialConnection(EventDispatcher):
                         map(Logger.info, calibration_report_string.split("\n"))
 
                     except:
-                        Logger.info("Could not print calibration output")
+                        Logger.exception("Could not print calibration output")
 
             if self.VERBOSE_STATUS:
-                Logger.debug(self.m_state, str(self.m_x), str(self.m_y), str(self.m_z), self.serial_blocks_available, self.serial_chars_available)
+                Logger.debug('state: {} | x: {} | y: {} | z: {} | avail. blocks: {} | avail. chars: {}'.format(self.m_state, str(self.m_x), str(self.m_y), str(self.m_z), self.serial_blocks_available, self.serial_chars_available))
 
             if self.measure_running_data:
 
@@ -1472,7 +1473,7 @@ class SerialConnection(EventDispatcher):
 
         elif message.startswith('ALARM:'):
             self.grbl_waiting_for_reset = True
-            Logger.info('ALARM from GRBL: ' + message)
+            Logger.warning('ALARM from GRBL: ' + message)
             self.alarm.alert_user(message)
 
         elif message.startswith('$'):
@@ -1616,13 +1617,13 @@ class SerialConnection(EventDispatcher):
                     self.fw_version = (fw_hw_versions[1]).split(':')[1]
                     Logger.info('FW version: ' + str(self.fw_version))
                 except:
-                    Logger.info("Could not retrieve FW version")
+                    Logger.exception("Could not retrieve FW version")
 
                 try:
                     self.hw_version = (fw_hw_versions[2]).split(':')[1]
                     Logger.info('HW version: ' + str(self.hw_version))
                 except:
-                    Logger.info("Could not retrieve HW version")
+                    Logger.exception("Could not retrieve HW version")
 
         elif re.match(self.grbl_initialisation_message, message):
             # Let sw know that grbl is unlocked now that statuses are being received
@@ -1643,7 +1644,7 @@ class SerialConnection(EventDispatcher):
                     self.dispatch('on_update_overload_peak', self.overload_state)
 
                 except:
-                    Logger.info('Unable to update overload peak on go screen')
+                    Logger.exception('Unable to update overload peak on go screen')
 
             else:  # must have just been a noisy blip
 
@@ -1651,7 +1652,7 @@ class SerialConnection(EventDispatcher):
 
         except:
 
-            Logger.info("Could not display spindle overload - are you on diagnostics mode?")
+            Logger.exception("Could not display spindle overload - are you on diagnostics mode?")
 
     def check_for_sustained_peak(self, dt):
 
@@ -1772,7 +1773,7 @@ class SerialConnection(EventDispatcher):
                 self.dispatch('on_serial_monitor_update', 'snd', altDisplayText)
 
         except:
-            Logger.info("FAILED to display on CONSOLE: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
+            Logger.exception("FAILED to display on CONSOLE: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
 
         # Catch and correct all instances of the spindle speed command "M3 S{RPM}"
         if "M3" in serialCommand.upper():
@@ -1815,17 +1816,17 @@ class SerialConnection(EventDispatcher):
                 try:
 
                     if not protocol:
-                        Logger.info("FAILED to write to SERIAL: " + str(serialCommand) + " (Alt text: " + str(
+                        Logger.exception("FAILED to write to SERIAL: " + str(serialCommand) + " (Alt text: " + str(
                             altDisplayText) + ")")
                         self.get_serial_screen('Could not write last command to serial buffer.')
 
                     else:
-                        Logger.info("FAILED to write to SERIAL: " + hex(serialCommand) + " (Alt text: " + str(
+                        Logger.exception("FAILED to write to SERIAL: " + hex(serialCommand) + " (Alt text: " + str(
                             altDisplayText) + ")")
                         self.get_serial_screen('Could not write last command to serial buffer.')
 
                 except:
-                    Logger.info("FAILED to write to SERIAL: " + "unprintable command!" + " (Alt text: " + str(
+                    Logger.exception("FAILED to write to SERIAL: " + "unprintable command!" + " (Alt text: " + str(
                         altDisplayText) + ")")
                     self.get_serial_screen('Could not write last command to serial buffer.')
 
@@ -1834,15 +1835,15 @@ class SerialConnection(EventDispatcher):
 
             try:
                 if not protocol:
-                    Logger.info("No serial! Command lost!: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
+                    Logger.error("No serial! Command lost!: " + str(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
                     self.get_serial_screen('Could not write last command to serial buffer.')
 
                 else:
-                    Logger.info("No serial! Command lost!: " + hex(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
+                    Logger.error("No serial! Command lost!: " + hex(serialCommand) + " (Alt text: " + str(altDisplayText) + ")")
                     self.get_serial_screen('Could not write last command to serial buffer.')
             except:
 
-                Logger.info("No serial! Command lost!: " + "unprintable command!" + " (Alt text: " + str(altDisplayText) + ")")
+                Logger.exception("No serial! Command lost!: " + "unprintable command!" + " (Alt text: " + str(altDisplayText) + ")")
                 self.get_serial_screen('Could not write last command to serial buffer.')
 
     def write_command(self, serialCommand, **kwargs):
@@ -1884,6 +1885,6 @@ class SerialConnection(EventDispatcher):
             return new_line
 
         except:
-            Logger.info("Spindle speed command could not be modified")
+            Logger.exception("Spindle speed command could not be modified")
 
         return spindle_speed_line
