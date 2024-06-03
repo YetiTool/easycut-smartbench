@@ -12,6 +12,7 @@ import serial
 import serial.tools.list_ports
 import string
 import sys
+import traceback
 import threading
 import time
 from enum import Enum
@@ -155,6 +156,10 @@ class SerialConnection(EventDispatcher):
             self.yp.use_yp = val
 
     def get_serial_screen(self, serial_error):
+
+        print(serial_error)
+        print(traceback.format_exc())
+        sys.exit()
 
         try:
             if self.sm.current != 'serialScreen' and self.sm.current != 'rebooting':
