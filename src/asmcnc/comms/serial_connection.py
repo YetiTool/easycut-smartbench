@@ -110,6 +110,9 @@ class SerialConnection(EventDispatcher):
     # This flag is set by the serial connection when it sends AE/AF
     vacuum_on = BooleanProperty(False)
 
+    # This total_uptime_seconds is set on connection to the firmware
+    total_uptime_seconds = NumericProperty(-1)
+
     def __init__(self, machine, screen_manager, settings_manager, localization, job, *args, **kwargs):
         super(SerialConnection, self).__init__(*args, **kwargs)
         self.sm = screen_manager
@@ -183,23 +186,30 @@ class SerialConnection(EventDispatcher):
 
             ser.write(WAKE_UP_CMD.encode())
 
-            time.sleep(0.5)
+            time.sleep(1)
+
+            if not ser.inWaiting():
+                ser.close()
+                return False
 
             response = ser.read(ser.inWaiting()).decode()
 
+            self.total_uptime_seconds = int(response.split("\n")[1].split(":")[1].strip().replace("seconds", ""))
+
             Logger.debug("Response from port {}: \n{}".format(port, response))
 
-            # Response should contain "SmartBench"
-            if "SmartBench" in response:
-                self.s = ser
-                return True
+            self.s = ser
+            return True
         except SerialException as e:
             Logger.debug("Failed to connect to port: {}, {}".format(port, e))
+            return False
+        except Exception as e:
+            Logger.error("Error while checking port: {}, {}".format(port, e))
             return False
 
     SMARTBENCH_PORTS = {
         "win32": [
-            "COM3",
+            "COM4",
         ],
         "darwin": [
 
