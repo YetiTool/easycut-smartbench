@@ -164,7 +164,7 @@ class Flurry(object):
                 "screen_version": self.screen_version,
                 "pi_version": self.pi_version,
                 "model_version": self.model_version,
-                "total_uptime": None,  # TODO: Implement uptime
+                "total_uptime": self.machine.s.total_uptime_seconds
             }
         }
 
