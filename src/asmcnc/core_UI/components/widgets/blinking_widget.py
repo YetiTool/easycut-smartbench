@@ -4,7 +4,6 @@ from kivy.lang import Builder
 from kivy.properties import BooleanProperty, ObjectProperty
 from kivy.uix.widget import Widget
 
-
 Builder.load_string("""
 <BlinkingWidget>:
     canvas.before:
@@ -40,8 +39,8 @@ class BlinkingWidget(Widget):
         super(BlinkingWidget, self).__init__(**kwargs)
 
         self.animation = (
-            Animation(bg_color=YELLOW, duration=0.5)
-            + Animation(bg_color=TRANSPARENT_YELLOW, duration=0.5)
+                Animation(bg_color=YELLOW, duration=0.5)
+                + Animation(bg_color=TRANSPARENT_YELLOW, duration=0.5)
         )
         self.animation.repeat = True
 
@@ -55,23 +54,41 @@ class BlinkingWidget(Widget):
             self.bg_color = TRANSPARENT_YELLOW
 
 
+class BlinkEventManager:
+    """Event manager for blinking widgets. Used so that all blinking widgets blink at the same time, and only
+    one event is scheduled at a time."""
+    blink_event = None
+
+
 class FastBlinkingWidget(Widget):
     """Temporary fix for BlinkingWidget. Animation class causes performance issues."""
 
+    # Class variables
+    instances = []
+    blink_color = TRANSPARENT_YELLOW
+
+    # Instance variables
     blinking = BooleanProperty(False)
     bg_color = ObjectProperty(TRANSPARENT_YELLOW)
-    blink_event = None  # Clock event
 
     def __init__(self, **kwargs):
         super(FastBlinkingWidget, self).__init__(**kwargs)
+        self.__class__.instances.append(self)
         self.bind(blinking=self.on_blinking)
 
     def on_blinking(self, *args):
         if self.blinking:
-            self.blink_event = Clock.schedule_interval(self.blink, 0.5)
+            if BlinkEventManager.blink_event is None:
+                BlinkEventManager.blink_event = Clock.schedule_interval(self.__class__.blink_all, 0.5)
         else:
-            self.blink_event.cancel()
+            if not any(instance.blinking for instance in self.__class__.instances):
+                BlinkEventManager.blink_event.cancel()
+                BlinkEventManager.blink_event = None
             self.bg_color = TRANSPARENT_YELLOW
 
-    def blink(self, dt):
-        self.bg_color = YELLOW if self.bg_color == TRANSPARENT_YELLOW else TRANSPARENT_YELLOW
+    @classmethod
+    def blink_all(cls, dt):
+        cls.blink_color = YELLOW if cls.blink_color == TRANSPARENT_YELLOW else TRANSPARENT_YELLOW
+        for instance in cls.instances:
+            if instance.blinking:
+                instance.bg_color = cls.blink_color
