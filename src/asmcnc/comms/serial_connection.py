@@ -43,6 +43,7 @@ class SerialConnection(EventDispatcher):
     setting_1 = NumericProperty(-1.0)
     setting_2 = NumericProperty(-1.0)
     setting_4 = NumericProperty(-1.0)
+    setting_3 = NumericProperty(-1.0)
     setting_5 = NumericProperty(-1.0)
     setting_6 = NumericProperty(-1.0)
     setting_10 = NumericProperty(-1.0)
@@ -944,11 +945,11 @@ class SerialConnection(EventDispatcher):
     record_sg_values_flag = False
 
     # SPINDLE STATISTICS
-    spindle_serial_number = None
+    spindle_serial_number = StringProperty(None)
     spindle_production_year = None
     spindle_production_week = None
     spindle_firmware_version = None
-    spindle_total_run_time_seconds = None
+    spindle_total_run_time_seconds = NumericProperty(-1)
     spindle_brush_run_time_seconds = None
     spindle_mains_frequency_hertz = None
 
