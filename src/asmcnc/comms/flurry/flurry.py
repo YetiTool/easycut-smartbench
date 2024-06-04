@@ -224,6 +224,10 @@ class Flurry(object):
 
     def __add_pending_update(self, queue, key, instance, value):
         """Add an update to the pending messages to be sent to the Flurry server."""
+        if value is None or value == "":
+            Logger.debug("Value is None or empty, not adding to pending updates")
+            return
+
         Logger.info("{}, {}, {}, {}".format(queue, key, instance, value))
         if queue not in self.parameters_to_update:
             self.parameters_to_update[queue] = {
