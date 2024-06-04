@@ -112,8 +112,10 @@ class SerialConnection(EventDispatcher):
     # This flag is set by the serial connection when it sends AE/AF
     vacuum_on = BooleanProperty(False)
 
-    # This total_uptime_seconds is set on connection to the firmware
+    # These values are reported by the firmware on connection
     total_uptime_seconds = NumericProperty(-1)
+    total_resets = NumericProperty(-1)
+    total_distance = NumericProperty(-1)
 
     def __init__(self, machine, screen_manager, settings_manager, localization, job, *args, **kwargs):
         super(SerialConnection, self).__init__(*args, **kwargs)
@@ -172,13 +174,42 @@ class SerialConnection(EventDispatcher):
             Logger.error("Serial comms interrupted but no serial screen - are you in diagnostics mode?")
             Logger.error("Serial error: " + str(serial_error))
 
+    SMARTBENCH_PORTS = {
+        "win32": [
+            "COM4",
+        ],
+        "darwin": [
+
+        ],
+        "linux2": [
+            "/dev/ttyS0",
+            "/dev/ttyUSB0"
+        ]
+    }
+
+    def establish_connection(self):
+        """
+        Attempt to establish a connection with the firmware.
+        """
+        ports_to_try = self.SMARTBENCH_PORTS[sys.platform]
+
+        for port in ports_to_try:
+            if self.is_port_smartbench(port):
+                break
+
+        if not self.s:
+            Logger.warning("Couldn't find a SmartBench connected to any of the ports: " + str(ports_to_try))
+            return
+
+        Logger.info("Serial connected on port: {}".format(self.s.port))
+        self.write_direct("\r\n\r\n", realtime=False, show_in_sys=False, show_in_console=False)
+
     def is_port_smartbench(self, port):
         """
         Check if the port given is a SmartBench
         :param port: port to check
         :return: True if the port is a SmartBench, False otherwise
         """
-
         # Try to open the port
         try:
             ser = serial.Serial(port, BAUD_RATE, timeout=6, writeTimeout=20)
@@ -196,9 +227,9 @@ class SerialConnection(EventDispatcher):
 
             response = ser.read(ser.inWaiting()).decode()
 
-            self.total_uptime_seconds = int(response.split("\n")[1].split(":")[1].strip().replace("seconds", ""))
+            self.parse_grbl_response_on_connect(response)
 
-            Logger.debug("Response from port {}: \n{}".format(port, response))
+            Logger.info("Response from port {}:\n {}".format(port, response))
 
             self.s = ser
             return True
@@ -209,32 +240,19 @@ class SerialConnection(EventDispatcher):
             Logger.error("Error while checking port: {}, {}".format(port, e))
             return False
 
-    SMARTBENCH_PORTS = {
-        "win32": [
-            "COM4",
-        ],
-        "darwin": [
+    def parse_grbl_response_on_connect(self, response):
+        """
+        Parse the response from the SmartBench on connection.
 
-        ],
-        "linux2": [
-            "/dev/ttyS0",
-            "/dev/ttyUSB0"
-        ]
-    }
-
-    def establish_connection(self):
-        ports_to_try = self.SMARTBENCH_PORTS[sys.platform]
-
-        for port in ports_to_try:
-            if self.is_port_smartbench(port):
-                break
-
-        if not self.s:
-            Logger.warning("Couldn't find a SmartBench connected to any of the ports: " + str(ports_to_try))
-            return
-
-        Logger.info("Serial connected on port: {}".format(self.s.port))
-        self.write_direct("\r\n\r\n", realtime=False, show_in_sys=False, show_in_console=False)
+        :param response: response from the SmartBench
+        """
+        for line in response.split("\n"):
+            if line.startswith("Total resets:"):
+                self.total_resets = line.split(":")[1].strip()
+            elif line.startswith("Up time:"):
+                self.total_uptime_seconds = line.split(":")[1].strip().replace("seconds", "")
+            elif line.startswith("Total distance:"):
+                self.total_distance = line.split(":")[1].strip().replace("mm", "")
 
     # is serial port connected?
     def is_connected(self):
