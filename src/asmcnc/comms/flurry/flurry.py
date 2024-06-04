@@ -215,7 +215,7 @@ class Flurry(object):
     def __add_pending_full_payload(self, queue, payload_func, instance, value):
         """Add a full payload to the pending messages to be sent to the Flurry server."""
         payload = payload_func()
-        Logger.info("{}, {}, {}, {}".format(queue, payload, instance, value))
+
         if queue not in self.parameters_to_update:
             self.parameters_to_update[queue] = payload
         else:
@@ -228,7 +228,6 @@ class Flurry(object):
             Logger.debug("Value is None or empty, not adding to pending updates")
             return
 
-        Logger.info("{}, {}, {}, {}".format(queue, key, instance, value))
         if queue not in self.parameters_to_update:
             self.parameters_to_update[queue] = {
                 "hostname": self.hostname,
