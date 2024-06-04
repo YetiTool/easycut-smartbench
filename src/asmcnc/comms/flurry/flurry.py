@@ -102,7 +102,7 @@ class Flurry(object):
 
         Logger.info("Waiting for Smartbench to be ready...")
         self.app.smartbench_ready.wait()
-        self.bind_listeners()  # Bind listeners after the Smartbench is ready
+        self.__bind_listeners()  # Bind listeners after the Smartbench is ready
         Logger.info("Sending initial payloads to Flurry server")
 
         self.__publish(self.__get_full_console_payload(), EXCHANGE, CONSOLE_QUEUE)
@@ -190,7 +190,7 @@ class Flurry(object):
             }
         }
 
-    def bind_listeners(self):
+    def __bind_listeners(self):
         """Bind the listeners for the Flurry connection."""
 
         # Binds for GRBL settings
@@ -215,7 +215,7 @@ class Flurry(object):
     def __add_pending_full_payload(self, queue, payload_func, instance, value):
         """Add a full payload to the pending messages to be sent to the Flurry server."""
         payload = payload_func()
-        Logger.info("{}, {}, {}, {}".format(queue, payload_func, instance, value))
+        Logger.info("{}, {}, {}, {}".format(queue, payload, instance, value))
         if queue not in self.parameters_to_update:
             self.parameters_to_update[queue] = payload
         else:

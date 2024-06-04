@@ -1466,6 +1466,8 @@ class SerialConnection(EventDispatcher):
                         Logger.exception("ERROR status parse: Sp values invalid: " + message)
                         return
 
+                    Logger.info(part)
+
                     self.spindle_serial_number = int(spindle_statistics[0])
                     self.spindle_production_year = int(spindle_statistics[1])
                     self.spindle_production_week = int(spindle_statistics[2])
