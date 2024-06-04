@@ -1895,7 +1895,9 @@ class SerialConnection(EventDispatcher):
             # Set spindle_on flag
             self.spindle_on = True
 
+            Logger.debug("Spindle on flag set to True")
             if self.m.is_using_sc2():
+                Logger.debug("Spindle is SC2")
                 Clock.schedule_once(lambda dt: self.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO"), 0.5)
 
             if "S" in serialCommand.upper():
