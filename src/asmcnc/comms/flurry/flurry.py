@@ -119,8 +119,10 @@ class Flurry(object):
             if self.parameters_to_update:
                 for queue, payload in self.parameters_to_update.items():
                     payload['timestamp'] = time.time()  # Insert timestamp just before sending
-                    self.__publish(payload, EXCHANGE, queue)
-                self.parameters_to_update = {}
+                    published = self.__publish(payload, EXCHANGE, queue)
+
+                    if published:
+                        del self.parameters_to_update[queue]
 
             time.sleep(MESSAGE_INTERVAL)
 
@@ -142,6 +144,7 @@ class Flurry(object):
                 routing_key=routing_key,
                 body=json.dumps(payload)
             )
+            return True
         except UnroutableError:
             Logger.exception("Failed to publish message to queue: {}".format(routing_key))
         except NackError:
