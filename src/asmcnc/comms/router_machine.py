@@ -137,7 +137,7 @@ class RouterMachine(EventDispatcher):
     is_spindle_health_check_enabled_as_default = False
 
     ## DEVICE LABEL
-    device_label = StringProperty("My SmartBench", force_dispatch=True) #TODO needs tying to machine unique ID else all machines will refence this dataseries
+    device_label = StringProperty("My SmartBench") #TODO needs tying to machine unique ID else all machines will refence this dataseries
 
     ## DEVICE LOCATION
     device_location = StringProperty('SmartBench location')

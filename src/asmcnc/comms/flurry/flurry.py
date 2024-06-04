@@ -6,7 +6,6 @@ from functools import partial
 
 import pika
 from kivy.app import App
-from pika.exceptions import UnroutableError, NackError, ConnectionWrongStateError, AMQPHeartbeatTimeout
 
 from asmcnc.comms.grbl_settings_manager import GRBLSettingsManagerSingleton
 from asmcnc.comms.localization import Localization
