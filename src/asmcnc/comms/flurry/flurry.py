@@ -147,12 +147,9 @@ class Flurry(object):
                 body=json.dumps(payload)
             )
             return True
-        except UnroutableError:
+        except Exception:
             Logger.exception("Failed to publish message to queue: {}".format(routing_key))
-        except NackError:
-            Logger.exception("Message to {} was rejected by the consumer".format(routing_key))
-        except AMQPHeartbeatTimeout:
-            Logger.exception("Heartbeat timeout, connection to {} lost".format(HOST))
+            return False
 
     def __get_full_console_payload(self):
         """Get the full console payload to send to the Flurry server."""
