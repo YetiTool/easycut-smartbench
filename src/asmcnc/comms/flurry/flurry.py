@@ -123,6 +123,8 @@ class Flurry(object):
 
                     if published:
                         del self.parameters_to_update[queue]
+                    else:
+                        break
 
             time.sleep(MESSAGE_INTERVAL)
 
