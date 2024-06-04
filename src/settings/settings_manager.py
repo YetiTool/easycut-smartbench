@@ -24,13 +24,14 @@ except:
 
 import socket
 from kivy.clock import Clock
-
+import httplib
 
 class Settings(EventDispatcher):
     
     wifi_check_thread = None
 
     ping_command = 'ping -c1 one.one.one.one'
+    win_ping_cmd = 'ping one.one.one.one'  # -c1 requires admin priv
     wifi_available = BooleanProperty(False)
     ip_address = StringProperty('')
     WIFI_REPORT_INTERVAL = 2
@@ -77,9 +78,10 @@ class Settings(EventDispatcher):
                     # get IP address
                     IPAddr=socket.gethostbyname(self.full_hostname)
                     self.ip_address = str(IPAddr)
-                    self.wifi_available = True
+                    self.wifi_available = self.do_win_internet_check()
 
-                except:
+                except Exception:
+                    Logger.exception("Error in wifi check")
                     self.ip_address = ''
                     self.wifi_available = False
 
@@ -125,7 +127,9 @@ class Settings(EventDispatcher):
         ping_delay = 0.1
         ping_timeout = 1
 
-        proc = subprocess.Popen(self.ping_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+        ping_command = self.ping_command if sys.platform != 'win32' else self.win_ping_cmd
+
+        proc = subprocess.Popen(ping_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
 
         while proc.poll() is None and ping_timeout > 0:
             time.sleep(ping_delay)
@@ -138,6 +142,12 @@ class Settings(EventDispatcher):
 
         else:
             return False
+
+    def do_win_internet_check(self):
+        ping_cmd = 'ping one.one.one.one -n 1'
+        proc = subprocess.Popen(ping_cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+        proc.communicate()
+        return proc.returncode == 0
 
 
     def get_public_ip_address(self):

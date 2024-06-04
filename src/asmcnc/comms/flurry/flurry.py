@@ -70,11 +70,29 @@ class Flurry(object):
         self.connection = None
         self.channel = None
 
-        self.connection_thread = threading.Thread(target=self.__setup)
+        self.__start()
+
+    def __start(self):
+        """Start the Flurry connection. If the WiFi connection is not available, wait for it to become available."""
+        if not self.settings.wifi_available:
+            Logger.warning("No WiFi available, waiting for connection")
+            self.settings.bind(wifi_available=self.on_wifi_available)
+            return
+
+        self.__start_thread()
+
+    def on_wifi_available(self, instance, value):
+        """Callback for when the WiFi connection is available. If the WiFi connection is available, start the connection"""
+        if value:
+            self.__start_thread()
+
+    def __start_thread(self):
+        """Start the connection thread."""
+        self.connection_thread = threading.Thread(target=self.__setup_connection)
         self.connection_thread.daemon = True  # Daemonize the thread, so it closes when the main thread closes
         self.connection_thread.start()
 
-    def __setup(self):
+    def __setup_connection(self):
         """Set up the connection to the Flurry server. Create the connection, channel and start the sending loop."""
         self.__create_connection()
         self.__create_channel()
@@ -86,7 +104,7 @@ class Flurry(object):
         try:
             self.connection = pika.BlockingConnection(CONNECTION_PARAMETERS)
             Logger.info("Connection to {} established".format(HOST))
-        except RuntimeError:
+        except Exception:
             Logger.exception("Failed to create connection to {}".format(HOST))
 
     def __create_channel(self):
@@ -94,17 +112,17 @@ class Flurry(object):
         try:
             self.channel = self.connection.channel()
             Logger.info("Channel created")
-        except ConnectionWrongStateError:
-            Logger.exception("Connection not established, cannot create channel")
+        except Exception:
+            Logger.exception("Failed to create channel")
 
     def __on_start_up(self):
         """Send the initial payloads to the Flurry server on start up to sync."""
-
         Logger.info("Waiting for Smartbench to be ready...")
         self.app.smartbench_ready.wait()
-        self.__bind_listeners()  # Bind listeners after the Smartbench is ready
-        Logger.info("Sending initial payloads to Flurry server")
 
+        self.__bind_listeners()  # Bind listeners after the Smartbench is ready
+
+        Logger.info("Sending initial payloads to Flurry server")
         self.__publish(self.__get_full_console_payload(), EXCHANGE, CONSOLE_QUEUE)
         self.__publish(self.__get_grbl_settings_payload(), EXCHANGE, GRBL_SETTINGS_QUEUE)
 
@@ -115,22 +133,23 @@ class Flurry(object):
         """Main sending loop for the Flurry connection. Publishes the parameter update payloads to the queue every
         MESSAGE_INTERVAL seconds. If the connection is closed, wait RECONNECT_INTERVAL seconds before attempting to
         reconnect."""
-        while self.connection.is_open:
-            if self.parameters_to_update:
-                for queue, payload in self.parameters_to_update.items():
-                    payload['timestamp'] = time.time()  # Insert timestamp just before sending
-                    published = self.__publish(payload, EXCHANGE, queue)
+        if self.connection and self.channel:
+            while self.connection.is_open:
+                if self.parameters_to_update:
+                    for queue, payload in self.parameters_to_update.items():
+                        payload['timestamp'] = time.time()  # Insert timestamp just before sending
+                        published = self.__publish(payload, EXCHANGE, queue)
 
-                    if published:
-                        del self.parameters_to_update[queue]
-                    else:
-                        break
+                        if published:
+                            del self.parameters_to_update[queue]
+                        else:
+                            break
 
-            time.sleep(MESSAGE_INTERVAL)
+                time.sleep(MESSAGE_INTERVAL)
 
         Logger.info("Connection to {} closed".format(HOST))
         time.sleep(RECONNECT_INTERVAL)
-        self.__setup()
+        self.__setup_connection()
 
     def __publish(self, payload, exchange, routing_key):
         """Publish a message to the queue. If the message can't be routed, log the error.
@@ -138,9 +157,13 @@ class Flurry(object):
         :param payload: The message to send.
         :param exchange: The exchange to send the message to.
         :param routing_key: The routing key to use."""
+
+        if not self.channel or not self.connection:
+            Logger.warning("Channel or connection not available to publish to.")
+            return False
+
         try:
             Logger.info("Publishing message to queue: {}".format(routing_key))
-            Logger.debug("Payload: {}".format(payload))
             self.channel.basic_publish(
                 exchange=exchange,
                 routing_key=routing_key,
