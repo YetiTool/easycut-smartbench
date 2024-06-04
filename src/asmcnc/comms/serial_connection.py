@@ -183,6 +183,7 @@ class SerialConnection(EventDispatcher):
         ],
         "linux2": [
             "/dev/ttyS0",
+            "/dev/ttyAMA0",
             "/dev/ttyUSB0"
         ]
     }
@@ -199,6 +200,7 @@ class SerialConnection(EventDispatcher):
 
         if not self.s:
             Logger.warning("Couldn't find a SmartBench connected to any of the ports: " + str(ports_to_try))
+            Clock.schedule_once(lambda dt: self.get_serial_screen("Could not establish a connection a startup."))
             return
 
         Logger.info("Serial connected on port: {}".format(self.s.port))
