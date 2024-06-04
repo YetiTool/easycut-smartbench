@@ -6,7 +6,7 @@ from functools import partial
 
 import pika
 from kivy.app import App
-from pika.exceptions import UnroutableError, NackError, ConnectionWrongStateError
+from pika.exceptions import UnroutableError, NackError, ConnectionWrongStateError, AMQPHeartbeatTimeout
 
 from asmcnc.comms.grbl_settings_manager import GRBLSettingsManagerSingleton
 from asmcnc.comms.localization import Localization
@@ -149,6 +149,8 @@ class Flurry(object):
             Logger.exception("Failed to publish message to queue: {}".format(routing_key))
         except NackError:
             Logger.exception("Message to {} was rejected by the consumer".format(routing_key))
+        except AMQPHeartbeatTimeout:
+            Logger.exception("Heartbeat timeout, connection to {} lost".format(HOST))
 
     def __get_full_console_payload(self):
         """Get the full console payload to send to the Flurry server."""
