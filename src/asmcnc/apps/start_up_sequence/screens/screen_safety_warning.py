@@ -8,6 +8,9 @@ Screen to give a safety warning to the user when they switch on SmartBench.
 """
 from datetime import datetime
 
+from kivy.app import App
+from kivy.clock import Clock
+
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
@@ -289,6 +292,10 @@ class SafetyScreen(Screen):
 
     def on_enter(self):
         Logger.info("Safety screen UP")
+        Clock.schedule_once(self.set_smartbench_ready, 5)  # Ensure everything has been read in
+
+    def set_smartbench_ready(self, *args):
+        App.get_running_app().smartbench_ready.set()
 
     def next_screen(self):
         self.user_has_confirmed = True

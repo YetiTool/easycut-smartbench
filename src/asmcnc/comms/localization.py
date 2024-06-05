@@ -5,6 +5,9 @@ import re
 import threading
 from datetime import datetime
 
+from kivy.event import EventDispatcher
+from kivy.properties import StringProperty
+
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.core.text import LabelBase
 from kivy.lang import Builder
@@ -30,7 +33,7 @@ builder_font_string = """
 """
 
 
-class Localization(object):
+class Localization(EventDispatcher):
     """Class for handling localization of the software. This class is a singleton.
 
     You can access the instance of this class by calling Localization()."""
@@ -68,7 +71,7 @@ class Localization(object):
     complete_foreign_dictionary_path = os.path.join(asmcnc_path, "comms", "foreign_dictionary.txt")
 
     default_lang = 'English (GB)'
-    lang = default_lang
+    lang = StringProperty(default_lang)
 
     standard_font = 'Roboto'
     standard_font_bold = 'Roboto-Bold'

@@ -6,6 +6,10 @@ Module to get and store settings info
 
 import sys, os, subprocess, time, threading
 from time import sleep
+
+from kivy.event import EventDispatcher
+from kivy.properties import StringProperty, BooleanProperty
+
 from asmcnc.core_UI import console_utils
 
 from datetime import datetime
@@ -20,19 +24,20 @@ except:
 
 import socket
 from kivy.clock import Clock
+import httplib
 
-
-class Settings(object):
+class Settings(EventDispatcher):
     
     wifi_check_thread = None
 
     ping_command = 'ping -c1 one.one.one.one'
-    wifi_available = False
-    ip_address = ''
+    win_ping_cmd = 'ping one.one.one.one'  # -c1 requires admin priv
+    wifi_available = BooleanProperty(False)
+    ip_address = StringProperty('')
     WIFI_REPORT_INTERVAL = 2
     full_hostname = socket.gethostname() 
     console_hostname = full_hostname.split('.')[0]
-    public_ip_address = ''
+    public_ip_address = StringProperty('')
     timezone = None
 
     sw_version = ''
@@ -55,6 +60,7 @@ class Settings(object):
 
         self.get_public_ip_address()
         self.get_timezone()
+        self.refresh_all()
 
         self.wifi_check_thread = threading.Thread(target=self.check_wifi_and_refresh_ip_address)
         self.wifi_check_thread.daemon = True
@@ -72,9 +78,10 @@ class Settings(object):
                     # get IP address
                     IPAddr=socket.gethostbyname(self.full_hostname)
                     self.ip_address = str(IPAddr)
-                    self.wifi_available = True
+                    self.wifi_available = self.do_win_internet_check()
 
-                except:
+                except Exception:
+                    Logger.exception("Error in wifi check")
                     self.ip_address = ''
                     self.wifi_available = False
 
@@ -120,7 +127,9 @@ class Settings(object):
         ping_delay = 0.1
         ping_timeout = 1
 
-        proc = subprocess.Popen(self.ping_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+        ping_command = self.ping_command if sys.platform != 'win32' else self.win_ping_cmd
+
+        proc = subprocess.Popen(ping_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
 
         while proc.poll() is None and ping_timeout > 0:
             time.sleep(ping_delay)
@@ -133,6 +142,12 @@ class Settings(object):
 
         else:
             return False
+
+    def do_win_internet_check(self):
+        ping_cmd = 'ping one.one.one.one -n 1'
+        proc = subprocess.Popen(ping_cmd, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+        proc.communicate()
+        return proc.returncode == 0
 
 
     def get_public_ip_address(self):

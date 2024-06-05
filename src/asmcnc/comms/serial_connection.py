@@ -42,6 +42,7 @@ class SerialConnection(EventDispatcher):
     setting_0 = NumericProperty(-1.0)
     setting_1 = NumericProperty(-1.0)
     setting_2 = NumericProperty(-1.0)
+    setting_3 = NumericProperty(-1.0)
     setting_4 = NumericProperty(-1.0)
     setting_5 = NumericProperty(-1.0)
     setting_6 = NumericProperty(-1.0)
@@ -147,7 +148,7 @@ class SerialConnection(EventDispatcher):
     def is_use_yp(self):
         if self.yp:
             return self.yp.use_yp
-        else: 
+        else:
             return False
 
     def set_use_yp(self, val):
@@ -197,9 +198,9 @@ class SerialConnection(EventDispatcher):
 
                     stripped_input = map(strip_and_log, self.s.readlines())
 
-                    # Is this device a SmartBench? 
+                    # Is this device a SmartBench?
                     if any('SmartBench' in ele for ele in stripped_input):
-                        # Found SmartBench! 
+                        # Found SmartBench!
                         SmartBench_port = available_port
                         return SmartBench_port
 
@@ -321,7 +322,7 @@ class SerialConnection(EventDispatcher):
                             lambda dt: self.get_serial_screen('Could not establish a connection on startup.'), 5)
 
             except:
-                # I doubt this will be triggered with all the other try-excepts, but will leave it in anyway. 
+                # I doubt this will be triggered with all the other try-excepts, but will leave it in anyway.
                 Clock.schedule_once(lambda dt: self.get_serial_screen('Could not establish a connection on startup.'),
                                     5)  # necessary bc otherwise screens not initialised yet
 
@@ -378,7 +379,7 @@ class SerialConnection(EventDispatcher):
                 self.s.flushInput()
                 self.FLUSH_FLAG = False
 
-            # Polling 
+            # Polling
             if self.next_poll_time < time.time():
                 self.write_direct('?', realtime=True, show_in_sys=False, show_in_console=False)
                 self.next_poll_time = time.time() + self.STATUS_INTERVAL
@@ -418,7 +419,7 @@ class SerialConnection(EventDispatcher):
             else:
                 rec_temp = ''
 
-            # If something received from serial buffer, process it. 
+            # If something received from serial buffer, process it.
             if len(rec_temp):
 
                 # if not rec_temp.startswith('<Alarm|MPos:') and not rec_temp.startswith('<Idle|MPos:'):
@@ -445,7 +446,7 @@ class SerialConnection(EventDispatcher):
                     Logger.critical('Process response exception:\n' + str(e))
                     self.get_serial_screen('Could not process grbl response. Grbl scanner has been stopped.')
                     raise  # HACK allow error to cause serial comms thread to exit
-                    # What happens here? 
+                    # What happens here?
                     # - this bit grinds to a halt
 
                 # Job streaming: stuff buffer
@@ -542,8 +543,8 @@ class SerialConnection(EventDispatcher):
         self.jd.job_gcode_running = job_object
 
         Logger.info('Job starting...')
-        # SET UP FOR BUFFER STUFFING ONLY: 
-        ### (if not initialised - come back to this one later w/ pausing functionality)    
+        # SET UP FOR BUFFER STUFFING ONLY:
+        ### (if not initialised - come back to this one later w/ pausing functionality)
 
         if self.initialise_job() and self.jd.job_gcode_running:
             Clock.schedule_once(lambda dt: self.set_streaming_flags_to_true(), 2)
@@ -572,8 +573,8 @@ class SerialConnection(EventDispatcher):
         self.m.set_pause(False)
 
         Logger.info('Skeleton buffer stuffing starting...')
-        # SET UP FOR BUFFER STUFFING ONLY: 
-        ### (if not initialised - come back to this one later w/ pausing functionality)    
+        # SET UP FOR BUFFER STUFFING ONLY:
+        ### (if not initialised - come back to this one later w/ pausing functionality)
 
         self.FLUSH_FLAG = True
         self.NOT_SKELETON_STUFF = False
@@ -657,7 +658,7 @@ class SerialConnection(EventDispatcher):
                                         speed),
 
     def remove_from_g_mode_tracker(self, line_diff):
-        if line_diff: 
+        if line_diff:
             del self.jd.grbl_mode_tracker[:line_diff]
 
     # PROCESSING GRBL RESPONSES
@@ -754,7 +755,7 @@ class SerialConnection(EventDispatcher):
             # Flush
             self.FLUSH_FLAG = True
 
-            # Move head up        
+            # Move head up
             Clock.schedule_once(lambda dt: self.m.raise_z_axis_for_collet_access(), 0.5)
             Clock.schedule_once(lambda dt: self.m.turn_off_vacuum(), 1)
 
@@ -801,7 +802,7 @@ class SerialConnection(EventDispatcher):
 
         ## UPDATE MAINTENANCE TRACKING
 
-        # Add time taken in seconds to brush use: 
+        # Add time taken in seconds to brush use:
         if self.m.stylus_router_choice == 'router':  # and not self.m.get_dollar_setting(51):
             self.m.spindle_brush_use_seconds += only_running_time_seconds
             self.m.write_spindle_brush_values(self.m.spindle_brush_use_seconds, self.m.spindle_brush_lifetime_seconds)
@@ -895,7 +896,7 @@ class SerialConnection(EventDispatcher):
     stall_Z = False
     stall_Y = False
 
-    # Is GRBL locked due to an alarm? 
+    # Is GRBL locked due to an alarm?
     grbl_waiting_for_reset = False
 
     serial_blocks_available = GRBL_BLOCK_SIZE
@@ -944,11 +945,11 @@ class SerialConnection(EventDispatcher):
     record_sg_values_flag = False
 
     # SPINDLE STATISTICS
-    spindle_serial_number = None
+    spindle_serial_number = NumericProperty(-1)
     spindle_production_year = None
     spindle_production_week = None
     spindle_firmware_version = None
-    spindle_total_run_time_seconds = None
+    spindle_total_run_time_seconds = NumericProperty(-1)
     spindle_brush_run_time_seconds = None
     spindle_mains_frequency_hertz = None
 
@@ -1141,7 +1142,7 @@ class SerialConnection(EventDispatcher):
 
                     if 'Y' or 'y' in pins_info:
 
-                        # Depending on the firmware version (and the alarm type), 
+                        # Depending on the firmware version (and the alarm type),
                         # Y pin means either Y max limit OR Y stall
                         # and little y could be y home OR y limit
                         if self.fw_version and int(self.fw_version.split('.')[0]) < 2:
@@ -1891,6 +1892,9 @@ class SerialConnection(EventDispatcher):
         if "M3" in serialCommand.upper():
             # Set spindle_on flag
             self.spindle_on = True
+
+            if self.m.is_using_sc2():
+                Clock.schedule_once(lambda dt: self.write_protocol(self.m.p.GetDigitalSpindleInfo(), "GET DIGITAL SPINDLE INFO"), 0.5)
 
             if "S" in serialCommand.upper():
                 # Correct the spindle speed command
