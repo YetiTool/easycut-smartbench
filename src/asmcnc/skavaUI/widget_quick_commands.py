@@ -19,7 +19,7 @@ from kivy.core.window import Window
 
 import sys, textwrap
 
-from src.asmcnc.comms.model_manager import ModelManagerSingleton
+from asmcnc.comms.model_manager import ModelManagerSingleton
 
 Builder.load_string("""
 
