@@ -44,6 +44,8 @@ Builder.load_string("""
     pro_app_container:pro_app_container
     yeti_cut_apps_container:yeti_cut_apps_container
     drywall_app_container:drywall_app_container
+    yeticut_apps_image:yeticut_apps_image
+    yeticut_apps_label:yeticut_apps_label
     upgrade_app_container:upgrade_app_container
 
     canvas.before:
@@ -153,22 +155,23 @@ Builder.load_string("""
                         on_release:
                             self.background_color = hex('#FFFFFF00')
                         on_press:
-                            root.drywall_cutter_app()
+                            root.yeticut_apps()
                             self.background_color = hex('#FFFFFF00')
                         BoxLayout:
                             size: self.parent.size
                             pos: self.parent.pos
                             Image:
-                                id: image_select
-                                source: "./asmcnc/apps/drywall_cutter_app/img/lobby_logo.png"
+                                id: yeticut_apps_image
+                                source: ""
                                 center_x: self.parent.center_x
                                 y: self.parent.y
                                 size: self.parent.width, self.parent.height
                                 allow_stretch: True
                     Label:
+                        id: yeticut_apps_label
                         size_hint_y: 1
                         font_size: str(0.03125*app.width) + 'sp'
-                        text: 'Drywall cutter'
+                        text: 'YetiCut Apps'
                         markup: True
 
                         
@@ -525,6 +528,8 @@ class LobbyScreen(Screen):
         self.remove_everything_but(self.drywall_app_container)
         # If it's a SmartCNC machine, then show the drywalltec app first
         if self.model_manager.is_machine_drywall():
+            self.yeticut_apps_image.source = "./asmcnc/apps/drywall_cutter_app/img/lobby_logo.png"
+            self.yeticut_apps_label.text = "Drywall Cutter"
             self.put_drywall_app_first()
 
     def put_drywall_app_first(self):
@@ -617,8 +622,11 @@ class LobbyScreen(Screen):
         else:
             popup_info.PopupError(self.sm, self.l, self.l.get_str("Please ensure machine is idle before continuing."))
 
-    def drywall_cutter_app(self):
-        self.am.start_drywall_cutter_app()
+    def yeticut_apps(self):
+        if not self.model_manager.is_machine_drywall():
+            self.sm.current = 'yeticut_lobby'
+        else:
+            self.am.start_drywall_cutter_app()
 
     def shutdown_console(self):
         console_utils.shutdown()
