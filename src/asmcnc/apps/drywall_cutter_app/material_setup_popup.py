@@ -4,7 +4,6 @@ from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.uix.image import Image
 from kivy.uix.popup import Popup
-from asmcnc.core_UI import scaling_utils
 
 Builder.load_string("""
 #:import FloatInput asmcnc.core_UI.components.text_inputs.float_input.FloatInput
@@ -18,7 +17,6 @@ Builder.load_string("""
     total_cut_depth:total_cut_depth
     depth_per_pass:depth_per_pass
     auto_pass_checkbox:auto_pass_checkbox
-    tabs_checkbox:tabs_checkbox
     
     title_label:title_label
     material_thickness_label:material_thickness_label
@@ -28,7 +26,6 @@ Builder.load_string("""
     depth_per_pass_label:depth_per_pass_label
     cut_depth_warning:cut_depth_warning
     pass_depth_warning:pass_depth_warning
-    tabs_label:tabs_label
     
     cutter_graphic:cutter_graphic
     total_cut_depth_arrow:total_cut_depth_arrow
@@ -192,7 +189,7 @@ Builder.load_string("""
         
         Label:
             id: pass_depth_warning
-            pos_hint: {'x': 0.2525, 'y': -0.225}
+            pos_hint: {'x': 0.2525, 'y': -0.1}
             text: ''
             font_size: app.get_scaled_sp('14sp')
             markup: True
@@ -200,26 +197,14 @@ Builder.load_string("""
             text_size: (dp(app.get_scaled_width(150)), None) 
         
         GridLayout:
-            rows: 3
+            rows: 2
             cols: 2
             pos_hint: {'x': 0.6, 'y': -0.2}
             row_force_default: True
             col_force_default: True
-            row_default_height: dp(app.get_scaled_height(45))
+            row_default_height: dp(app.get_scaled_height(50))
             col_default_width: dp(app.get_scaled_width(100))
             
-            Label:
-                id: tabs_label
-                text: 'Tabs'
-                font_size: app.get_scaled_sp('16sp')
-                color: hex('#333333')
-                text_size: (dp(app.get_scaled_width(75)), None)
-            
-            CheckBox:
-                id: tabs_checkbox
-                size_hint: (0.3,1)
-                active: True
-                background_checkbox_normal: "./asmcnc/skavaUI/img/checkbox_inactive.png"
             
             Label:
                 id: auto_pass_label
@@ -227,13 +212,12 @@ Builder.load_string("""
                 font_size: app.get_scaled_sp('16sp')
                 color: hex('#333333')
                 text_size: (dp(app.get_scaled_width(75)), None)
-            
             CheckBox:
                 id: auto_pass_checkbox
                 size_hint: (0.3,1)
                 active: True
                 background_checkbox_normal: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                on_active: root.on_auto_pass_checkbox()
+                on_active: root.on_checkbox_active()
             
             Label:
                 id: depth_per_pass_label
@@ -343,11 +327,6 @@ class CuttingDepthsPopup(Popup):
         self.update_strings()
 
     def on_open(self):
-        # Fix weird scaling bug with title label
-        if scaling_utils.Width == 800:
-            self.title_label.pos_hint['y'] = 0.45
-        else:
-            self.title_label.pos_hint['y'] = 0.475
         self.load_active_config()
         self.update_text()
 
@@ -368,7 +347,6 @@ class CuttingDepthsPopup(Popup):
         self.material_thickness.text = str(self.dwt_config.active_config.cutting_depths.material_thickness)
         self.bottom_offset.text = str(self.dwt_config.active_config.cutting_depths.bottom_offset)
         self.auto_pass_checkbox.active = self.dwt_config.active_config.cutting_depths.auto_pass
-        self.tabs_checkbox.active = self.dwt_config.active_config.cutting_depths.tabs
         self.depth_per_pass.text = str(self.dwt_config.active_config.cutting_depths.depth_per_pass)
         self.update_text()
 
@@ -382,7 +360,7 @@ class CuttingDepthsPopup(Popup):
         self.pass_depth_warning.text = self.pass_depth_warning_cutter_max
         self.cut_depth_warning.text = self.cut_depth_warning_soft_limit
 
-    def on_auto_pass_checkbox(self):
+    def on_checkbox_active(self):
         if self.auto_pass_checkbox.active:
             self.depth_per_pass.disabled = True
             self.depth_per_pass.text = str(self.dwt_config.active_cutter.parameters.recommended_depth_per_pass)
@@ -538,7 +516,6 @@ class CuttingDepthsPopup(Popup):
         self.dwt_config.on_parameter_change('cutting_depths.bottom_offset', bottom_offset)
         self.dwt_config.on_parameter_change('cutting_depths.depth_per_pass', depth_per_pass)
         self.dwt_config.on_parameter_change('cutting_depths.auto_pass', self.auto_pass_checkbox.active)
-        self.dwt_config.on_parameter_change('cutting_depths.tabs', self.tabs_checkbox.active)
         self.dismiss()
 
     def cancel(self):
