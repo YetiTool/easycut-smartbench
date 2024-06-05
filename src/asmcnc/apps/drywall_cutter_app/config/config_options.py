@@ -3,6 +3,13 @@
 from enum import Enum
 
 
+class AppType(Enum):
+    """Enum to store the different app types."""
+
+    DRYWALL_CUTTER = "dwt"
+    SHAPES = "shapes"
+
+
 class CuttingDirectionOptions(Enum):
     """Enum to define the cutting direction options."""
     BOTH = "both"
