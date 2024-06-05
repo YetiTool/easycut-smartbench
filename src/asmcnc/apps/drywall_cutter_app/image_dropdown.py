@@ -5,6 +5,11 @@ from kivy.properties import DictProperty, ObjectProperty, StringProperty
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.dropdown import DropDown
 from kivy.uix.image import Image
+from kivy.clock import Clock
+from asmcnc.comms.logging_system.logging_system import Logger
+from asmcnc import paths
+
+
 
 """
 This is a custom widget that is used to create a dropdown menu with images.
@@ -37,7 +42,7 @@ class ImageDropDown(DropDown):
         try:
             sorted_cutter_list = sorted(image_dict.items(), key=lambda x: (x[1]['type'], x[1]['size']))
             image_dict = OrderedDict(sorted_cutter_list)
-        except KeyError: # working through the wrong dict...wait for the next one
+        except KeyError:  # working through the wrong dict...wait for the next one
             pass
         for key in image_dict.keys():
             image = ImageButton(
@@ -63,6 +68,7 @@ class ImageDropDownButton(ButtonBehavior, Image):
     callback = ObjectProperty(None)
     key_name = StringProperty('')
     dropdown = None
+    disable_if_1_option = False
 
     def __init__(self, **kwargs):
         super(ImageDropDownButton, self).__init__(**kwargs)
@@ -80,5 +86,63 @@ class ImageDropDownButton(ButtonBehavior, Image):
 
         self.dropdown = ImageDropDown(self.image_dict, self.callback, self.key_name)
 
+        if self.disable_if_1_option:
+            self.disabled = len(self.image_dict) < 2
+
     def on_release(self):
         self.dropdown.open(self)
+
+    def schedule_image_update(self, image_path):
+        Clock.schedule_once(lambda dt: self.set_image(image_path))
+
+    def set_image(self, image_path):
+        self.source = image_path
+
+    def schedule_image_dict_update(self, image_dict):
+        Clock.schedule_once(lambda dt: self.set_image_dict(image_dict))
+
+    def set_image_dict(self, image_dict):
+        self.image_dict = image_dict
+
+    def set_key(self, key):
+        self.key_name = key
+
+
+class ToolSelectionDropDown(ImageDropDownButton):
+    def __init__(self, **kwargs):
+        super(ToolSelectionDropDown, self).__init__(**kwargs)
+        self.source = paths.get_resource('tool_6mm.png')
+        self.key_name = 'cutter_path'
+        self.config = None
+
+    def bind_to_config(self, config):
+        self.config = config
+        self.config.bind(active_tool=lambda i, value: self.schedule_image_update(value))
+        self.config.bind(available_tools=lambda i, value: self.schedule_image_dict_update(value))
+
+
+class ShapeSelectionDropDown(ImageDropDownButton):
+    def __init__(self, **kwargs):
+        super(ShapeSelectionDropDown, self).__init__(**kwargs)
+        self.source = paths.get_resource('square_shape_button.png')
+        self.key_name = 'key'
+        self.config = None
+
+    def bind_to_config(self, config):
+        self.config = config
+        self.config.bind(active_shape=lambda i, value: self.schedule_image_update(value))
+        self.config.bind(available_shapes=lambda i, value: self.schedule_image_dict_update(value))
+
+
+class ToolPathSelectionDropDown(ImageDropDownButton):
+    def __init__(self, **kwargs):
+        super(ToolPathSelectionDropDown, self).__init__(**kwargs)
+        self.source = paths.get_resource('toolpath_offset_inside_button.png')
+        self.key_name = 'key'
+        self.disable_if_1_option = True
+        self.config = None
+
+    def bind_to_config(self, config):
+        self.config = config
+        self.config.bind(active_toolpath=lambda i, value: self.schedule_image_update(value))
+        self.config.bind(available_toolpaths=lambda i, value: self.schedule_image_dict_update(value))

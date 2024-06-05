@@ -88,6 +88,7 @@ MAINTENANCE_IMG_PATH = os.path.join(MAINTENANCE_APP_PATH, "img")
 
 DWT_APP_PATH = os.path.join(APPS_PATH, "drywall_cutter_app")
 DWT_IMG_PATH = os.path.join(DWT_APP_PATH, "img")
+DWT_CUTTER_IMG_PATH = os.path.join(DWT_IMG_PATH, "config/cutters/images")
 
 SYSTEM_TOOLS_APP_PATH = os.path.join(APPS_PATH, "systemTools_app")
 SYSTEM_TOOLS_IMG_PATH = os.path.join(SYSTEM_TOOLS_APP_PATH, "img")
@@ -128,12 +129,17 @@ def create_paths():
         os.makedirs(DWT_TEMP_GCODE_PATH)
 
 
+def join(*args):
+    return os.path.join(*args)
+
+
 # Register any paths that contain resources
 resource_add_path(SKAVA_UI_IMG_PATH)
 resource_add_path(SHAPE_CUTTER_IMG_PATH)
 resource_add_path(CALIBRATION_IMG_PATH)
 resource_add_path(MAINTENANCE_IMG_PATH)
 resource_add_path(DWT_IMG_PATH)
+resource_add_path(DWT_CUTTER_IMG_PATH)
 resource_add_path(SYSTEM_TOOLS_IMG_PATH)
 resource_add_path(UPGRADE_IMG_PATH)
 resource_add_path(WIFI_IMG_PATH)
