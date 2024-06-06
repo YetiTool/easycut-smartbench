@@ -375,6 +375,8 @@ class HomeScreen(Screen):
             except:
                 Logger.exception("Unable to preview file")
 
+        self.do_write_test()
+
     def on_pre_enter(self):
         if self.jd.job_gcode == []:
 
@@ -458,3 +460,26 @@ class HomeScreen(Screen):
     def dismiss_z_datum_reminder(self, *args):
         self.z_datum_reminder_flag = False
         Logger.debug("Z datum reminder disabled")
+
+
+    def do_write_test(self):
+        # This is just a quick scratch test, don't put it into any production software because it will break things
+        # And it ain't designed to be pretty
+        Clock.schedule_once(lambda dt: self.write_func(20,0), 1)
+        Clock.schedule_once(lambda dt: self.write_func(21,0), 3)
+        Clock.schedule_once(lambda dt: self.write_func(51,0), 5)
+        Clock.schedule_once(lambda dt: self.write_func(20,1), 7)
+        Clock.schedule_once(lambda dt: self.write_func(21,1), 9)
+        Clock.schedule_once(lambda dt: self.write_func(51,1), 11)
+
+        Clock.schedule_once(lambda dt: self.stop_write_test(), 213)
+
+
+    def write_func(dollar, val):
+        dollar_string = "$" + str(dollar) + "=" + str(val)
+        Clock.schedule_interval(lambda dt: self.m.send_any_gcode_command(dollar_string), 12)
+
+
+    def stop_write_test(self):
+        Clock.unschedule(self.m.send_any_gcode_command)
+        sys.exit()
