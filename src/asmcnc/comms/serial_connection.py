@@ -365,7 +365,7 @@ class SerialConnection(EventDispatcher):
     # "Push" is for messages from GRBL to provide more general feedback on what Grbl is doing (e.g. status)
 
     VERBOSE_ALL_PUSH_MESSAGES = False
-    VERBOSE_ALL_RESPONSE = False
+    VERBOSE_ALL_RESPONSE = True
     VERBOSE_STATUS = False
 
     def grbl_scanner(self, run_grbl_scanner_once=False):
