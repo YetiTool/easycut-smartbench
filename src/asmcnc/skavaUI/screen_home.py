@@ -475,7 +475,7 @@ class HomeScreen(Screen):
         Clock.schedule_once(lambda dt: self.stop_write_test(), 213)
 
 
-    def write_func(dollar, val):
+    def write_func(self, dollar, val):
         dollar_string = "$" + str(dollar) + "=" + str(val)
         Clock.schedule_interval(lambda dt: self.m.send_any_gcode_command(dollar_string), 12)
 
