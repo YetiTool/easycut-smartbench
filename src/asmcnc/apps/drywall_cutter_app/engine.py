@@ -651,35 +651,34 @@ class GCodeEngine(object):
             coordinates.append(coordinates[0])
 
             # Create a list of stepovers to add finishing passes
-            finish_passes = 0
+            finish_passes = 1
             finish_stepover = 0.5
-            finish_stepdown = total_cut_depth
+            finish_stepdown = 12
             if finish_passes > 0:
                 stepovers = [finish_stepover * (finish_passes - i) for i in range(finish_passes)]
                 stepovers.append(0)
 
-            additional_pass_stepdown = self.config.active_config.cutting_depths.material_thickness
+            # additional_pass_stepdown = finish_stepdown
 
             if simulate:
                 rectangle = self.cut_rectangle(**rectangle_default_parameters(simulate=True))
+                cutting_lines += rectangle
             else:
                 rectangle_parameters = rectangle_default_parameters()
                 # Produce instructions for each complete rectangle
-                roughing_pass = True
                 for stepover in stepovers:
+                    finish_pass = stepover != max(stepovers)  # Determine if this is a finishing pass
                     # Update these values for each stepover
                     if self.config.active_cutter.dimensions.diameter:
                         rectangle_parameters["tool_diameter"] = self.config.active_cutter.dimensions.diameter + (stepover * 2)
                     else:
                         rectangle_parameters["tool_diameter"] = 0
-                    rectangle_parameters["pass_depth"] = additional_pass_stepdown if stepover != max(stepovers) else cutting_pass_depth
-                    rectangle_parameters["roughing_pass"] = roughing_pass
+                    rectangle_parameters["pass_depth"] = finish_stepdown if finish_pass else cutting_pass_depth
+                    rectangle_parameters["roughing_pass"] = not finish_pass
 
                     rectangle = self.cut_rectangle(**rectangle_parameters)
 
-                    roughing_pass = False
-
-            cutting_lines += rectangle
+                    cutting_lines += rectangle
 
         elif self.config.active_config.shape_type.lower() == "geberit":
 
@@ -737,9 +736,9 @@ class GCodeEngine(object):
             coordinates.append(coordinates[0])
 
             # Create a list of stepovers to add finishing passes
-            finish_passes = 0
+            finish_passes = 1
             finish_stepover = 0.5
-            finish_stepdown = self.config.active_config.cutting_depths.material_thickness
+            finish_stepdown = 12
             if finish_passes > 0:
                 stepovers = [finish_stepover * (finish_passes - i) for i in range(finish_passes)]
                 stepovers.append(0)
@@ -761,11 +760,12 @@ class GCodeEngine(object):
             else:
                 roughing_pass = True
                 for stepover in stepovers:
+                    finish_pass = stepover != max(stepovers)  # Determine if this is a finishing pass
                     effective_tool_diameter = self.config.active_cutter.dimensions.diameter + (stepover * 2)
-                    pass_depth = finish_stepdown if stepover != max(stepovers) else self.config.active_cutter.parameters.recommended_depth_per_pass
+                    pass_depth = cutting_pass_depth
 
                     circle_parameters['tool_diameter'] = effective_tool_diameter
-                    circle_parameters['pass_depth'] = pass_depth
+                    circle_parameters['pass_depth'] = finish_stepdown if finish_pass else pass_depth
                     circle_parameters['roughing_pass'] = roughing_pass
                     circle = self.cut_rectangle(**circle_parameters)
 
