@@ -32,6 +32,10 @@ class GCodeEngine(object):
         self.m = router_machine
         self.cs = coordinate_system
 
+        self.finishing_passes = 1
+        self.finishing_stepover = 0.5
+        self.finishing_stepdown = 12
+
         # Globals
         self.x = 0  # Identifier for use in arrays
         self.y = 1  # Identifier for use in arrays
@@ -651,9 +655,9 @@ class GCodeEngine(object):
             coordinates.append(coordinates[0])
 
             # Create a list of stepovers to add finishing passes
-            finish_passes = 1
-            finish_stepover = 0.5
-            finish_stepdown = 12
+            finish_passes = self.finishing_passes
+            finish_stepover = self.finishing_stepover
+            finish_stepdown = self.finishing_stepdown
             if finish_passes > 0:
                 stepovers = [finish_stepover * (finish_passes - i) for i in range(finish_passes)]
                 stepovers.append(0)
@@ -734,9 +738,9 @@ class GCodeEngine(object):
             coordinates.append(coordinates[0])
 
             # Create a list of stepovers to add finishing passes
-            finish_passes = 1
-            finish_stepover = 0.5
-            finish_stepdown = 12
+            finish_passes = self.finishing_passes
+            finish_stepover = self.finishing_stepover
+            finish_stepdown = self.finishing_stepdown
             if finish_passes > 0:
                 stepovers = [finish_stepover * (finish_passes - i) for i in range(finish_passes)]
                 stepovers.append(0)

@@ -199,6 +199,7 @@ class DrywallCutterScreen(Screen):
         self.cs = self.m.cs
 
         self.engine = GCodeEngine(self.m, self.dwt_config, self.cs)
+        self.engine.finishing_passes = 0  # No finishing passes for drywall
         self.simulation_started = False
         self.ignore_state = True
 
