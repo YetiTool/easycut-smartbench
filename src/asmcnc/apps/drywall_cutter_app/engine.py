@@ -658,8 +658,6 @@ class GCodeEngine(object):
                 stepovers = [finish_stepover * (finish_passes - i) for i in range(finish_passes)]
                 stepovers.append(0)
 
-            # additional_pass_stepdown = finish_stepdown
-
             if simulate:
                 rectangle = self.cut_rectangle(**rectangle_default_parameters(simulate=True))
                 cutting_lines += rectangle
