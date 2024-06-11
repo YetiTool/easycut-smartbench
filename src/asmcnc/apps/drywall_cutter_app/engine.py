@@ -712,7 +712,6 @@ class GCodeEngine(object):
                             rectangle_parameters["pass_type"] = operation_name + " pass"
 
                             rectangle = self.cut_rectangle(**rectangle_parameters)
-
                             cutting_lines += rectangle
 
         elif self.config.active_config.shape_type.lower() == "geberit":
@@ -810,11 +809,16 @@ class GCodeEngine(object):
 
             else:
                 for operation_name, operation_data in operations.items():
+                    # for each operation
                     for pass_depth in operation_data["cutting_depths"]:
-                        if pass_depth != operation_data["cutting_depths"][0]:
-                            circle_parameters["z_safe_distance"] = -1 * pass_depth + optimised_z_retract_distance  # Raise tool by only the retract distance for optimisation if not the first pass
+                        # for each stepdown
                         for stepover in operation_data["stepovers"]:
-                            # Update these values for each stepover
+                            # for each stepover
+                            if stepover != operation_data["stepovers"][-1]:  # If not the last stepover
+                                circle_parameters["z_safe_distance"] = -1 * pass_depth + stepover_z_hop_distance  # Raise tool by the stepover distance for optimisation if not the last stepover
+                            else:
+                                circle_parameters["z_safe_distance"] = z_safe_distance
+
                             if self.config.active_cutter.dimensions.diameter:
                                 circle_parameters["tool_diameter"] = self.config.active_cutter.dimensions.diameter + (stepover * 2)
                             else:
@@ -822,8 +826,8 @@ class GCodeEngine(object):
                             circle_parameters["total_cut_depth"] = pass_depth
                             circle_parameters["pass_depth"] = pass_depth
                             circle_parameters["pass_type"] = operation_name + " pass"
-                            circle = self.cut_rectangle(**circle_parameters)
 
+                            circle = self.cut_rectangle(**circle_parameters)
                             cutting_lines += circle
 
         elif self.config.active_config.shape_type.lower() == "line":
