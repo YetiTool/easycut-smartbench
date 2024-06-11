@@ -181,13 +181,12 @@ class GCodeEngine(object):
 
     # Determine if the cut direction should be clockwise or not
     def determine_cut_direction_clockwise(self, offset_type, climb):
-        if offset_type == "on":
-            return not climb  # climb cut if on the line. Preferred strategy
+        if offset_type in ["inside", "on"]:
+            return climb
         elif offset_type == "outside":
             return not climb
-        elif offset_type == "inside":
-            return climb
-        raise ValueError("Offset type must be 'on, 'inside' or 'outside'. Got '{}'.".format(offset_type))
+        else:
+            raise ValueError("Offset type must be 'on, 'inside' or 'outside'. Got '{}'.".format(offset_type))
 
     # For use when reordering gcode instructions
     def swap_lines_after_keyword(self, input_list, keyword):
