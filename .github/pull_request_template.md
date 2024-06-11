@@ -1,7 +1,6 @@
 # <pull_request_title>
 
 [Jira Ticket](<link_to_jira_ticket>)
-- [ ] Ready for review
 
 ## Checklist
 - [ ] I have completed a self review
@@ -11,12 +10,13 @@
 - [ ] I have added the relevant labels to this PR
 - [ ] I have updated documentation (if applicable)
 - [ ] I have run the unit tests suite and they pass
-- [ ] I have updated the [change log](https://docs.google.com/document/d/1t3s6lQuUcug1Fj8E_i2gBJNvXN0-funwBArG2hsia6k/edit)
-
 
 ## Description
 
-## Notes
+## Changelog ([master doc](https://docs.google.com/document/d/1t3s6lQuUcug1Fj8E_i2gBJNvXN0-funwBArG2hsia6k/edit))
+**On merging your PR, please copy the changelog to the master doc.**
+
+## Screenshots
 
 ## Dependencies for merge
 - [ ] [#<pull_request_number>]
@@ -38,5 +38,3 @@
 ### Unit Tests
 - [ ] Not applicable
 - [ ] Completed
-
-## Screenshots (if applicable)
