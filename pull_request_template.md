@@ -2,6 +2,9 @@
 
 [Jira Ticket](<link_to_jira_ticket>)
 
+## Changelog ([master doc](https://docs.google.com/document/d/1t3s6lQuUcug1Fj8E_i2gBJNvXN0-funwBArG2hsia6k/edit))
+**On merging your PR, please copy the changelog to the master doc.**
+
 ## Checklist
 - [ ] I have completed a self review
 - [ ] I have set the recent milestone
@@ -12,9 +15,6 @@
 - [ ] I have run the unit tests suite and they pass
 
 ## Description
-
-## Changelog ([master doc](https://docs.google.com/document/d/1t3s6lQuUcug1Fj8E_i2gBJNvXN0-funwBArG2hsia6k/edit))
-**On merging your PR, please copy the changelog to the master doc.**
 
 ## Screenshots
 
