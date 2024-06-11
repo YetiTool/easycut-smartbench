@@ -415,7 +415,11 @@ class DrywallCutterScreen(Screen):
     def quit_to_lobby(self):
         self.set_return_screens()
         self.jd.reset_values()
-        self.sm.current = 'lobby'
+
+        if self.dwt_config.app_type == config_options.AppType.SHAPES:
+            self.sm.current = 'yeticut_lobby'
+        else:
+            self.sm.current = 'lobby'
 
     def simulate(self):
         self.popup_watchdog = Clock.schedule_interval(lambda dt: self.set_simulation_popup_state(self.m.s.m_state), 1)
