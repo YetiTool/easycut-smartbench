@@ -162,7 +162,7 @@ Builder.load_string("""
                             pos: self.parent.pos
                             Image:
                                 id: yeticut_apps_image
-                                source: ""
+                                source: "./asmcnc/skavaUI/img/YetiCut_lobby_logo.png"
                                 center_x: self.parent.center_x
                                 y: self.parent.y
                                 size: self.parent.width, self.parent.height

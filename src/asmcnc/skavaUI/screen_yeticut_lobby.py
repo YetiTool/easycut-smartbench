@@ -48,6 +48,17 @@ Builder.load_string("""
 
                     Button:
                         on_press: root.shapes_app()
+                        background_color: hex('#FFFFFF00')
+                        BoxLayout:
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            Image:
+                                id: yeticut_apps_image
+                                source: "./asmcnc/skavaUI/img/Shapes_lobby_logo.png"
+                                center_x: self.parent.center_x
+                                y: self.parent.y
+                                size: self.parent.width, self.parent.height
+                                allow_stretch: True
 
                 Label:
                     text: 'Shapes'
