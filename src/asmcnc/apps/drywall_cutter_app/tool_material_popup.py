@@ -76,12 +76,12 @@ Builder.load_string("""
             font_size: app.get_scaled_sp('15sp')
             color: hex('#333333')
             size_hint: (None, None)
-            pos_hint: {'center_x': 0.15, 'center_y': 0.35}
+            pos_hint: {'center_x': 0.15, 'center_y': 0.55}
 
         Choices:
             id: material_dropdown
             size_hint: (0.65, 0.1)
-            pos_hint: {'center_x': 0.55, 'center_y': 0.35}
+            pos_hint: {'center_x': 0.55, 'center_y': 0.55}
 
         Label:
             id: tool_label
@@ -89,12 +89,12 @@ Builder.load_string("""
             font_size: app.get_scaled_sp('15sp')
             color: hex('#333333')
             size_hint: (None, None)
-            pos_hint: {'center_x': 0.15, 'center_y': 0.55}
+            pos_hint: {'center_x': 0.15, 'center_y': 0.35}
 
         Choices:
             id: tool_dropdown
             size_hint: (0.65, 0.1)
-            pos_hint: {'center_x': 0.55, 'center_y': 0.55}
+            pos_hint: {'center_x': 0.55, 'center_y': 0.35}
         
         BoxLayout:
             orientation: 'horizontal'
@@ -149,20 +149,49 @@ class ToolMaterialPopup(Popup):
     def __init__(self, localization, **kwargs):
         super(ToolMaterialPopup, self).__init__(**kwargs)
 
+        self.tool_dropdown.bind(text=self.on_tool_change)
+        self.material_dropdown.bind(text=self.on_material_change)
+
+        self.material_data = None
+        self.tool_data = None
+        self.profile_data = None
+
+    def on_tool_change(self, instance, value):
+        print("Tool changed to ", value)
+
+    def on_material_change(self, instance, value):
+        print("Material changed to ", value)
+        self.tool_dropdown.values = self.get_tools(value)
+
     def on_open(self):
-        self.material_dropdown.values = self.get_materials()
-        self.tool_dropdown.values = self.get_tools()
-
-    def get_materials(self):
+        # Load the material, tool and profile data
         with open(self.MATERIAL_DB) as f:
-            data = json.load(f)
-        material_names = [material['description'] for material in data]
-        return material_names
+            self.material_data = json.load(f)
 
-    def get_tools(self):
         with open(self.TOOL_DB) as f:
-            data = json.load(f)
-        tool_names = [tool['description'] for tool in data]
+            self.tool_data = json.load(f)
+
+        with open(self.PROFILE_DB) as f:
+            self.profile_data = json.load(f)
+
+        # Set the material dropdown values
+        self.material_dropdown.values = [material['description'] for material in self.material_data]
+
+    def get_tools(self, chosen_material=None):
+        if not chosen_material:
+            tool_names = [tool['description'] for tool in self.tool_data]
+            return tool_names
+
+        material_id = [material['uid'] for material in self.material_data if material['description'] == chosen_material][0]
+        profile_ids = [profile['uid'] for profile in self.profile_data if profile['material']['uid'] == material_id]
+
+        tool_names = []
+
+        for profile in self.profile_data:
+            if profile['uid'] in profile_ids:
+                for tool in profile['applicable_tools']:
+                    tool_names.append(tool['description'])
+
         return tool_names
 
     def confirm(self):

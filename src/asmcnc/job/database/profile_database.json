@@ -1528,7 +1528,12 @@
       "max_feedrate": 8000,
       "target_tool_load": 270
     },
-    "applicable_tools": []
+    "applicable_tools": [
+      {
+        "uid": "0033",
+        "description": "Generic 45° 2 flute V groove"
+      }
+    ]
   },
   {
     "uid": "0052",
