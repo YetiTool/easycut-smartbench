@@ -16,7 +16,7 @@ from asmcnc.apps.drywall_cutter_app.config import config_loader, config_options
 from asmcnc.apps.drywall_cutter_app.image_dropdown import ImageDropDownButton
 from asmcnc.comms.localization import Localization
 from asmcnc.comms.logging_system.logging_system import Logger
-from asmcnc.apps.drywall_cutter_app import material_setup_popup
+from asmcnc.apps.drywall_cutter_app import material_setup_popup, tool_material_popup
 from asmcnc.apps.drywall_cutter_app import job_load_helper
 from asmcnc.core_UI import scaling_utils
 from asmcnc.core_UI.new_popups.job_validation_popup import JobValidationPopup
@@ -237,6 +237,7 @@ class DrywallCutterScreen(Screen):
             self.xy_move_container.padding = [dp(0), dp(30)]
 
         self.materials_popup = material_setup_popup.CuttingDepthsPopup(self.l, self.kb, self.dwt_config)
+        self.tool_material_popup = tool_material_popup.ToolMaterialPopup(self.l)
         self.drywall_shape_display_widget = widget_drywall_shape_display.DrywallShapeDisplay(machine=self.m,
                                                                                              screen_manager=self.sm,
                                                                                              dwt_config=self.dwt_config,
@@ -315,6 +316,7 @@ class DrywallCutterScreen(Screen):
         self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
 
     def select_tool(self, cutter_file, *args):
+        self.tool_material_popup.open()
         self.dwt_config.load_cutter(cutter_file)
 
         # Convert allowed toolpaths object to dict, then put attributes with True into a list

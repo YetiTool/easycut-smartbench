@@ -1,5 +1,6 @@
 from kivy.uix.popup import Popup
 from kivy.lang import Builder
+import json
 
 Builder.load_string("""
 <Options@SpinnerOption>
@@ -37,7 +38,8 @@ Builder.load_string("""
             radius: [dp(5), dp(5)]
 
 <ToolMaterialPopup>:
-
+    tool_dropdown:tool_dropdown
+    material_dropdown:material_dropdown
 
     auto_dismiss: False
     size_hint: (None,None)
@@ -138,9 +140,30 @@ Builder.load_string("""
                         allow_stretch: True
 """)
 
+
 class ToolMaterialPopup(Popup):
+    MATERIAL_DB = 'asmcnc/job/database/material_database.json'
+    PROFILE_DB = 'asmcnc/job/database/profile_database.json'
+    TOOL_DB = 'asmcnc/job/database/tool_database.json'
+
     def __init__(self, localization, **kwargs):
         super(ToolMaterialPopup, self).__init__(**kwargs)
+
+    def on_open(self):
+        self.material_dropdown.values = self.get_materials()
+        self.tool_dropdown.values = self.get_tools()
+
+    def get_materials(self):
+        with open(self.MATERIAL_DB) as f:
+            data = json.load(f)
+        material_names = [material['description'] for material in data]
+        return material_names
+
+    def get_tools(self):
+        with open(self.TOOL_DB) as f:
+            data = json.load(f)
+        tool_names = [tool['description'] for tool in data]
+        return tool_names
 
     def confirm(self):
         self.dismiss()
