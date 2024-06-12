@@ -107,6 +107,7 @@ from asmcnc.skavaUI import screen_job_recovery
 from asmcnc.skavaUI import screen_nudge
 from asmcnc.skavaUI import screen_recovery_decision
 from asmcnc.skavaUI import screen_homing_decision
+from asmcnc.skavaUI import screen_yeticut_lobby
 
 # developer testing
 Cmport = 'COM3'
@@ -301,7 +302,9 @@ class SkavaUI(App):
                                                                                    screen_manager=sm, machine=self.machine, job=jd,
                                                                                    localization=self.l)
         homing_decision_screen = screen_homing_decision.HomingDecisionScreen(name='homing_decision', screen_manager=sm,
-                                                                             machine=self.machine, localization=self.l)
+                                                                             machine=m, localization=self.l)
+        yeticut_lobby_screen = screen_yeticut_lobby.YeticutLobbyScreen(name='yeticut_lobby', screen_manager=sm,
+                                                                       machine=m, localization=self.l, app_manager=am)
 
         # add the screens to screen manager
         sm.add_widget(lobby_screen)
