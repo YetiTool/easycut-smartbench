@@ -102,7 +102,7 @@ class DWTConfig(EventDispatcher):
         super(DWTConfig, self).__init__(*args, **kwargs)
         self.screen_drywall_cutter = screen_drywall_cutter
 
-        if not ModelManagerSingleton().is_machine_drywall():
+        if ModelManagerSingleton().is_machine_drywall():
             self.app_type = config_options.AppType.DRYWALL_CUTTER
         else:
             self.app_type = config_options.AppType.SHAPES
