@@ -38,7 +38,7 @@ class Axis(Enum):
 
 class RouterMachine(EventDispatcher):
     # SETUP
-    
+
     s = None # serial object
 
     # This block of variables reflecting grbl settings (when '$$' is issued, serial reads settings and syncs these params)
@@ -333,7 +333,7 @@ class RouterMachine(EventDispatcher):
             trigger_bool_string  = str(file.read())
             file.close()
 
-            if trigger_bool_string == 'False' or trigger_bool_string == False: self.trigger_setup = False
+            if trigger_bool_string == 'False' or not trigger_bool_string: self.trigger_setup = False
             else: self.trigger_setup = True
 
             Logger.info("Read in set up options")
@@ -1409,10 +1409,10 @@ class RouterMachine(EventDispatcher):
 
         def record_pause_time(prev_state, pauseBool):
             # record pause time
-            if prev_state == False and pauseBool == True:
+            if not prev_state and pauseBool:
                 self.s.stream_pause_start_time = time.time()
 
-            if prev_state == True and pauseBool == False and self.s.stream_pause_start_time != 0:
+            if prev_state and not pauseBool and self.s.stream_pause_start_time != 0:
                 self.s.stream_paused_accumulated_time = self.s.stream_paused_accumulated_time + (time.time() - self.s.stream_pause_start_time)
                 self.s.stream_pause_start_time = 0
 
@@ -1458,8 +1458,8 @@ class RouterMachine(EventDispatcher):
     def _stop_all_streaming(self):
         # Cancel all streams to stop EC continuing to send stuff (required before a RESET)
         Logger.info('Streaming stopped.')
-        if self.s.is_job_streaming == True: self.s.cancel_stream()
-        if self.s.is_sequential_streaming == True: self.s.cancel_sequential_stream() # Cancel sequential stream to stop it continuing to send stuff after reset
+        if self.s.is_job_streaming: self.s.cancel_stream()
+        if self.s.is_sequential_streaming: self.s.cancel_sequential_stream() # Cancel sequential stream to stop it continuing to send stuff after reset
 
     def _grbl_resume(self):
         Logger.info('grbl realtime cmd sent: ~ resume')
@@ -1564,14 +1564,14 @@ class RouterMachine(EventDispatcher):
 
         switch_states = []
 
-        if self.s.limit_x == True: switch_states.append('limit_x') # convention: min is lower_case
-        if self.s.limit_X == True: switch_states.append('limit_X') # convention: MAX is UPPER_CASE
-        if self.s.limit_y == True: switch_states.append('limit_y')
-        if self.s.limit_Y == True: switch_states.append('limit_Y')
-        if self.s.limit_z == True: switch_states.append('limit_z')
-        if self.s.probe == True: switch_states.append('probe')
-        if self.s.dust_shoe_cover == True: switch_states.append('dust_shoe_cover')
-        if self.s.spare_door == True: switch_states.append('spare_door')
+        if self.s.limit_x: switch_states.append('limit_x') # convention: min is lower_case
+        if self.s.limit_X: switch_states.append('limit_X') # convention: MAX is UPPER_CASE
+        if self.s.limit_y: switch_states.append('limit_y')
+        if self.s.limit_Y: switch_states.append('limit_Y')
+        if self.s.limit_z: switch_states.append('limit_z')
+        if self.s.probe: switch_states.append('probe')
+        if self.s.dustshoe_is_closed: switch_states.append('dustshoe_is_closed')
+        if self.s.spare_door: switch_states.append('spare_door')
 
         return switch_states
 
@@ -1882,7 +1882,7 @@ class RouterMachine(EventDispatcher):
         self.raise_z_axis_for_collet_access()
 
     def laser_on(self):
-        if self.is_laser_enabled == True:
+        if self.is_laser_enabled:
 
             if self.hw_can_operate_laser_commands():
                 self.s.write_command('AZ')
@@ -1894,7 +1894,7 @@ class RouterMachine(EventDispatcher):
         self.is_laser_on = False
         if self.hw_can_operate_laser_commands():
             self.s.write_command('AX')
-        if bootup == True:
+        if bootup:
             self.set_led_colour('YELLOW')
         else:
             self.set_led_colour('GREEN')
@@ -2444,7 +2444,7 @@ class RouterMachine(EventDispatcher):
 
 
 
-        # individual motor commands 
+        # individual motor commands
         if command == SET_IDLE_CURRENT:         cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = value
         if command == SET_ACTIVE_CURRENT:       cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = value; val = self.setShadowReg(motor, SGCSCONF, value, CS_MASK     , CS_SHIFT          )
         if command == SET_MOTOR_ENERGIZED:      cmd = command;      len = TMC_GBL_CMD_LENGTH;       val = value
