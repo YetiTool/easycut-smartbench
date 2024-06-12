@@ -1,4 +1,5 @@
 """This module contains the classes used to store the configuration data for the drywall cutter app."""
+import enum
 import json
 import os
 
@@ -25,6 +26,7 @@ class Cutter(object):
         parameters,
         toolpath_offsets,
         image,
+        apps
     ):
         self.tool_id = tool_id.encode("utf-8")  # type: str
         self.manufacturer = str(manufacturer)  # type: str
@@ -37,6 +39,7 @@ class Cutter(object):
             **toolpath_offsets
         )  # type: AllowableToolpathOffsets
         self.image = str(image)  # type: str
+        self.apps = apps  # type: list[str]
 
     @classmethod
     def from_json(cls, json_data):
