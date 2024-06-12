@@ -302,9 +302,9 @@ class SkavaUI(App):
                                                                                    screen_manager=sm, machine=self.machine, job=jd,
                                                                                    localization=self.l)
         homing_decision_screen = screen_homing_decision.HomingDecisionScreen(name='homing_decision', screen_manager=sm,
-                                                                             machine=m, localization=self.l)
+                                                                             machine=self.machine, localization=self.l)
         yeticut_lobby_screen = screen_yeticut_lobby.YeticutLobbyScreen(name='yeticut_lobby', screen_manager=sm,
-                                                                       machine=m, localization=self.l, app_manager=am)
+                                                                       machine=self.machine, localization=self.l, app_manager=am)
 
         # add the screens to screen manager
         sm.add_widget(lobby_screen)
@@ -336,6 +336,7 @@ class SkavaUI(App):
         sm.add_widget(nudge_screen)
         sm.add_widget(recovery_decision_screen)
         sm.add_widget(homing_decision_screen)
+        sm.add_widget(yeticut_lobby_screen)
 
         # Setting the first screen:        
         # sm.current is set at the end of start_services in serial_connection 

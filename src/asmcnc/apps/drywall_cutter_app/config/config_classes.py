@@ -1,4 +1,5 @@
 """This module contains the classes used to store the configuration data for the drywall cutter app."""
+import enum
 import json
 import os
 
@@ -25,6 +26,7 @@ class Cutter(object):
         parameters,
         toolpath_offsets,
         image,
+        apps
     ):
         self.tool_id = tool_id.encode("utf-8")  # type: str
         self.manufacturer = str(manufacturer)  # type: str
@@ -37,6 +39,7 @@ class Cutter(object):
             **toolpath_offsets
         )  # type: AllowableToolpathOffsets
         self.image = str(image)  # type: str
+        self.apps = apps  # type: list[str]
 
     @classmethod
     def from_json(cls, json_data):
@@ -114,12 +117,11 @@ class CanvasShapeDims(object):
 class CuttingDepths(object):
     """Class to store the cutting depths."""
 
-    def __init__(self, material_thickness, bottom_offset, auto_pass, depth_per_pass, tabs):
+    def __init__(self, material_thickness, bottom_offset, auto_pass, depth_per_pass):
         self.material_thickness = material_thickness  # type: float
         self.bottom_offset = bottom_offset  # type: float
         self.auto_pass = auto_pass  # type: bool
         self.depth_per_pass = depth_per_pass  # type: float
-        self.tabs = tabs  # type: bool
 
 
 class DatumPosition(object):

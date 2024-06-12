@@ -27,5 +27,6 @@
     "outside": false,
     "on": true
   },
-  "image": "./asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_90deg.png"
+  "image": "./asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_90deg.png",
+  "apps": ["dwt", "shapes"]
 }
