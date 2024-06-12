@@ -275,7 +275,7 @@ class GCodeEngine(object):
                         gcode_instruction = "%s X%s Y%s R%s %s\n" % (arc_instruction, coordinate[0] + datum_x, coordinate[1] + datum_y, adjusted_corner_radius, 'F%s' % feedrate if second_line else '')
                     arc_flag = not arc_flag
                     cutting_lines.append(gcode_instruction)
-            cutting_lines.append("G1 Z%d F%d\n\n" % (z_safe_distance, plungerate))
+            cutting_lines.append("G1 Z%s F%d\n\n" % (z_safe_distance, plungerate))
 
         gcode_pass_headers = ["New pass", "Roughing pass", "Finishing pass", "Simulation pass"]
         for header in gcode_pass_headers:
@@ -574,7 +574,7 @@ class GCodeEngine(object):
         output_path = os.path.join(paths.DWT_TEMP_GCODE_PATH, filename)
         safe_start_position = "X0 Y0 Z10"
         z_safe_distance = 5
-        optimised_z_retract_distance = 2
+
         stepover_z_hop_distance = 0
         cutting_pass_depth = self.config.active_cutter.parameters.recommended_depth_per_pass if self.config.active_config.cutting_depths.auto_pass else self.config.active_config.cutting_depths.depth_per_pass
         cutting_lines = []
@@ -792,6 +792,10 @@ class GCodeEngine(object):
                     "cutting_depths": finishing_depths
                 }
             }
+
+            for operation_name, operation_data in operations.items():
+                if operation_data["stepovers"] == [0]:
+                    operations.pop(operation_name)
 
             circle_parameters = circle_default_parameters(simulate=simulate)
 
