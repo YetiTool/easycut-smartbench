@@ -1,6 +1,9 @@
+from kivy.app import App
 from kivy.uix.popup import Popup
 from kivy.lang import Builder
 import json
+
+from asmcnc.comms.logging_system.logging_system import Logger
 
 Builder.load_string("""
 <Options@SpinnerOption>
@@ -39,6 +42,7 @@ Builder.load_string("""
 
 <ToolMaterialPopup>:
     tool_dropdown:tool_dropdown
+    confirm_button:confirm_button
     material_dropdown:material_dropdown
 
     auto_dismiss: False
@@ -142,9 +146,6 @@ Builder.load_string("""
 
 
 class ToolMaterialPopup(Popup):
-    MATERIAL_DB = 'asmcnc/job/database/material_database.json'
-    PROFILE_DB = 'asmcnc/job/database/profile_database.json'
-    TOOL_DB = 'asmcnc/job/database/tool_database.json'
 
     def __init__(self, localization, **kwargs):
         super(ToolMaterialPopup, self).__init__(**kwargs)
@@ -152,47 +153,23 @@ class ToolMaterialPopup(Popup):
         self.tool_dropdown.bind(text=self.on_tool_change)
         self.material_dropdown.bind(text=self.on_material_change)
 
-        self.material_data = None
-        self.tool_data = None
-        self.profile_data = None
-
+        self.profile_db = App.get_running_app().profile_db
     def on_tool_change(self, instance, value):
-        print("Tool changed to ", value)
+        if value != '':
+            self.confirm_button.disabled = False
+            Logger.debug("Tool changed to ", value)
 
     def on_material_change(self, instance, value):
         print("Material changed to ", value)
-        self.tool_dropdown.values = self.get_tools(value)
+        self.tool_dropdown.values = self.profile_db.get_tool_names(self.profile_db.get_material_id(value))
+        self.tool_dropdown.text = ''
+        self.confirm_button.disabled = True
 
     def on_open(self):
-        # Load the material, tool and profile data
-        with open(self.MATERIAL_DB) as f:
-            self.material_data = json.load(f)
-
-        with open(self.TOOL_DB) as f:
-            self.tool_data = json.load(f)
-
-        with open(self.PROFILE_DB) as f:
-            self.profile_data = json.load(f)
-
         # Set the material dropdown values
-        self.material_dropdown.values = [material['description'] for material in self.material_data]
+        self.material_dropdown.values = self.profile_db.get_material_names()
+        self.confirm_button.disabled = True
 
-    def get_tools(self, chosen_material=None):
-        if not chosen_material:
-            tool_names = [tool['description'] for tool in self.tool_data]
-            return tool_names
-
-        material_id = [material['uid'] for material in self.material_data if material['description'] == chosen_material][0]
-        profile_ids = [profile['uid'] for profile in self.profile_data if profile['material']['uid'] == material_id]
-
-        tool_names = []
-
-        for profile in self.profile_data:
-            if profile['uid'] in profile_ids:
-                for tool in profile['applicable_tools']:
-                    tool_names.append(tool['description'])
-
-        return tool_names
 
     def confirm(self):
         self.dismiss()
