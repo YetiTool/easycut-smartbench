@@ -1,19 +1,22 @@
-from kivy.clock import Clock
-import sys, os
+import os
+import sys
 
+from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.metrics import dp
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen
 
+from asmcnc import paths
 from asmcnc.apps import widget_tool_material_display
+from asmcnc.apps.drywall_cutter_app import job_load_helper
+from asmcnc.apps.drywall_cutter_app import material_setup_popup
 from asmcnc.apps.drywall_cutter_app import screen_config_filechooser
 from asmcnc.apps.drywall_cutter_app import screen_config_filesaver
 from asmcnc.apps.drywall_cutter_app import widget_drywall_shape_display
 from asmcnc.apps.drywall_cutter_app import widget_xy_move_drywall
 from asmcnc.apps.drywall_cutter_app.config import config_loader, config_options
-from asmcnc.apps.drywall_cutter_app.image_dropdown import ImageDropDownButton
 from asmcnc.comms.localization import Localization
 from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.apps.drywall_cutter_app import material_setup_popup, tool_material_popup
@@ -22,6 +25,7 @@ from asmcnc.core_UI import scaling_utils
 from asmcnc.core_UI.new_popups.job_validation_popup import JobValidationPopup
 from asmcnc.skavaUI import popup_info
 
+
 class ImageButton(ButtonBehavior, Image):
     pass
 
@@ -29,6 +33,9 @@ class ImageButton(ButtonBehavior, Image):
 from engine import GCodeEngine
 
 Builder.load_string("""
+#:import ImageDropDownButton asmcnc.apps.drywall_cutter_app.image_dropdown
+#:import color_provider asmcnc.core_UI.utils.color_provider
+
 <DrywallCutterScreen>:
     shape_selection:shape_selection
     rotate_button:rotate_button
@@ -37,6 +44,14 @@ Builder.load_string("""
     xy_move_container:xy_move_container
     tool_material_display_container:tool_material_display_container
     right_side_container:right_side_container
+    
+    canvas.before:
+        Color:
+            rgba: color_provider.get_rgba('grey')
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    
     BoxLayout:
         orientation: 'vertical'
         BoxLayout:
@@ -84,7 +99,7 @@ Builder.load_string("""
                 allow_stretch: True
                 source: './asmcnc/apps/drywall_cutter_app/img/toolpath_offset_inside_button.png'
             ImageButton:
-                source: './asmcnc/apps/drywall_cutter_app/img/cutting_depths_button.png'
+                source: './asmcnc/apps/drywall_cutter_app/img/settings_button.png'
                 allow_stretch: True
                 size_hint_x: 7
                 text: 'Material setup'
@@ -127,6 +142,12 @@ Builder.load_string("""
                         Rectangle:
                             size: self.size
                             pos: self.pos
+                    canvas.after:
+                        Color:
+                            rgba: (0, 0, 0, 0.5)
+                        Line:
+                            rectangle: self.x, self.y, self.width, self.height
+                            width: 1
                 BoxLayout:
                     id: tool_material_display_container
                     size_hint_y: 8
@@ -137,10 +158,16 @@ Builder.load_string("""
                         Rectangle:
                             size: self.size
                             pos: self.pos
+                    canvas.after:
+                        Color:
+                            rgba: (0, 0, 0, 0.5)
+                        Line:
+                            rectangle: self.x, self.y, self.width, self.height
+                            width: 1
                 BoxLayout:
                     size_hint_y: 7
                     orientation: 'horizontal'
-                    spacing: scaling_utils.get_scaled_tuple(dp(10), dp(10))
+                    spacing: scaling_utils.get_scaled_tuple(dp(10), 0)
                     ImageButton:
                         source: './asmcnc/apps/drywall_cutter_app/img/simulate_button.png'
                         allow_stretch: True
@@ -152,7 +179,7 @@ Builder.load_string("""
                         text: 'Save'
                         on_press: root.save()
                     ImageButton:
-                        source: './asmcnc/apps/drywall_cutter_app/img/start_job_button.png'
+                        source: './asmcnc/apps/drywall_cutter_app/img/go_button.png'
                         allow_stretch: True
                         text: 'Run'
                         on_press: root.run()
@@ -224,15 +251,6 @@ class DrywallCutterScreen(Screen):
                                                                    coordinate_system=self.cs)
         self.xy_move_container.add_widget(self.xy_move_widget)
 
-        if self.dwt_config.app_type == config_options.AppType.SHAPES:
-            self.xy_move_container.size_hint_y = 23
-            self.tool_material_display_widget = widget_tool_material_display.ToolMaterialDisplayWidget(self.dwt_config)
-            self.tool_material_display_container.add_widget(self.tool_material_display_widget)
-        else:
-            self.right_side_container.remove_widget(self.tool_material_display_container)
-            self.xy_move_container.size_hint_y = 31
-            self.xy_move_container.padding = [dp(0), dp(30)]
-
         self.materials_popup = material_setup_popup.CuttingDepthsPopup(self.l, self.kb, self.dwt_config)
         self.tool_material_popup = tool_material_popup.ToolMaterialPopup(self.l)
         self.drywall_shape_display_widget = widget_drywall_shape_display.DrywallShapeDisplay(machine=self.m,
@@ -243,6 +261,17 @@ class DrywallCutterScreen(Screen):
                                                                                              localization=self.l,
                                                                                              cs=self.cs,)
         self.shape_display_container.add_widget(self.drywall_shape_display_widget)
+
+        if self.dwt_config.app_type == config_options.AppType.SHAPES:
+            self.xy_move_container.size_hint_y = 23
+            self.tool_material_display_widget = widget_tool_material_display.ToolMaterialDisplayWidget(self.dwt_config)
+            self.tool_material_display_container.add_widget(self.tool_material_display_widget)
+            self.drywall_shape_display_widget.canvas_image.source = paths.get_resource("canvas_with_logo_shapes.png")
+        else:
+            self.right_side_container.remove_widget(self.tool_material_display_container)
+            self.xy_move_container.size_hint_y = 31
+            self.xy_move_container.padding = [dp(0), dp(30)]
+            self.drywall_shape_display_widget.canvas_image.source = paths.get_resource("canvas_with_logo_dwt.png")
 
         self.show_toolpath_image()
 

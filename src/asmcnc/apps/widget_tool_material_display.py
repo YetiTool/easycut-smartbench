@@ -33,4 +33,4 @@ class ToolMaterialDisplayWidget(BoxLayout):
         self.update_tool_material_label()
 
     def update_tool_material_label(self):
-        self.tool_material_label.text = "Tool:\n{}\nMaterial: {}".format(self.tool_text, self.material_text)
+        self.tool_material_label.text = "Material: {}\nTool:\n{}".format(self.material_text, self.tool_text)

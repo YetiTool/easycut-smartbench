@@ -54,7 +54,7 @@ Builder.load_string("""
 
             Image:
                 id: canvas_image
-                source: "./asmcnc/apps/drywall_cutter_app/img/canvas_with_logo.png"
+                source: "./asmcnc/apps/drywall_cutter_app/img/canvas_with_logo_dwt.png"
                 size: self.parent.size
                 pos: self.parent.pos
                 allow_stretch: True
