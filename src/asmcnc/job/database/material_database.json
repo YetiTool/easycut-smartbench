@@ -1,0 +1,79 @@
+[
+  {
+    "uid": "0000",
+    "description": "Oak worktop",
+    "available_isas": [
+      "shapes"
+    ]
+  },
+  {
+    "uid": "0001",
+    "description": "MDF",
+    "available_isas": [
+      "shapes"
+    ]
+  },
+  {
+    "uid": "0002",
+    "description": "Birch plywood",
+    "available_isas": [
+      "shapes"
+    ]
+  },
+  {
+    "uid": "0003",
+    "description": "MFC",
+    "available_isas": [
+      "shapes"
+    ]
+  },
+  {
+    "uid": "0004",
+    "description": "Aluminium (6082)",
+    "available_isas": [
+      "shapes"
+    ]
+  },
+  {
+    "uid": "0005",
+    "description": "ACM",
+    "available_isas": [
+      "shapes"
+    ]
+  },
+  {
+    "uid": "0006",
+    "description": "Acrylic (extruded)",
+    "available_isas": [
+      "shapes"
+    ]
+  },
+  {
+    "uid": "0007",
+    "description": "Acrylic (cast)",
+    "available_isas": [
+      "shapes"
+    ]
+  },
+  {
+    "uid": "0008",
+    "description": "Solid surface",
+    "available_isas": [
+      "shapes"
+    ]
+  },
+  {
+    "uid": "0009",
+    "description": "Hardwood plywood",
+    "available_isas": [
+      "shapes"
+    ]
+  },
+  {
+    "uid": "0010",
+    "description": "Plasterboard",
+    "available_isas": [
+      "dwt"
+    ]
+  }
+]

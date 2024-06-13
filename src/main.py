@@ -7,7 +7,7 @@ YetiTool's UI for SmartBench
 www.yetitool.com
 '''
 from asmcnc import paths
-
+from asmcnc.job.database.profile_database import ProfileDatabase
 
 paths.create_paths()
 
@@ -174,6 +174,8 @@ class SkavaUI(App):
     l = Localization()
 
     user_settings_manager = UserSettingsManager()
+
+    profile_db = ProfileDatabase()
 
     def get_scaled_width(self, val):
         return scaling_utils.get_scaled_width(val)
