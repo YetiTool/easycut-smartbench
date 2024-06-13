@@ -128,7 +128,7 @@ Builder.load_string("""
                                 allow_stretch: True
             
                 Label:
-                    text: 'Worktop'
+                    text: 'Trace'
                     font_size: scaling_utils.get_scaled_width(dp(20))
                     bold: True
 
