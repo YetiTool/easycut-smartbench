@@ -60,7 +60,7 @@ Builder.load_string("""
         
         Label:
             id: title_label
-            pos_hint: {'x': -0.31, 'y': 0.45}
+            pos_hint: {'x': -0.31, 'y': 0.47}
             text: 'Tool & Material selection'
             font_size: app.get_scaled_sp('20sp')
             color: hex('#F9F9F9')
@@ -69,6 +69,7 @@ Builder.load_string("""
             id: description_label
             text: 'Shapes Lite currently only supports YetiPilot profiles. Full Toolbox coming soon'
             text_size: (0.65*self.parent.width, None)
+            font_size: app.get_scaled_sp('15sp')
             halign: 'center'
             color: hex('#333333')
             size_hint: (0.75, None)
