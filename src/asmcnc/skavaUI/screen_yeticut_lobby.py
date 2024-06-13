@@ -28,7 +28,7 @@ Builder.load_string("""
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:
-                            source: "./asmcnc/skavaUI/img/Shapes_lobby_back_button.png"
+                            source: "./asmcnc/skavaUI/img/shapes_lobby_back_button.png"
                             size_hint: None, None
                             size: self.parent.width * 0.7, self.parent.height * 0.7
                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
@@ -65,7 +65,7 @@ Builder.load_string("""
                             
                             Image:
                                 id: yeticut_apps_image
-                                source: "./asmcnc/skavaUI/img/Shapes_lobby_logo.png"
+                                source: "./asmcnc/skavaUI/img/shapes_lobby_logo.png"
                                 center_x: self.parent.center_x
                                 y: self.parent.y
                                 size: self.parent.width, self.parent.height
@@ -93,7 +93,7 @@ Builder.load_string("""
                             pos: self.parent.pos
                             
                             Image:
-                                source: "./asmcnc/skavaUI/img/Worktop_lobby_logo.png"
+                                source: "./asmcnc/skavaUI/img/worktop_lobby_logo.png"
                                 size_hint: None, None
                                 size: self.parent.width * 1.05, self.parent.height * 1.05
                                 pos_hint: {'center_x': 0.5, 'center_y': 0.525}
@@ -104,7 +104,33 @@ Builder.load_string("""
                     font_size: scaling_utils.get_scaled_width(dp(20))
                     bold: True
 
-            BoxLayout
+            BoxLayout:
+                orientation: 'vertical'
+                
+                BoxLayout:
+                    size_hint_y: 4
+                    padding: [(self.width - self.height) / 2, 0]
+                    
+                    Button:
+                        on_press: pass
+                        background_color: hex('#FFFFFF00')
+                        
+                        FloatLayout:
+                            size_hint: None, None
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            
+                            Image:
+                                source: "./asmcnc/skavaUI/img/trace_lobby_logo.png"
+                                size_hint: None, None
+                                size: self.parent.width * 1.05, self.parent.height * 1.05
+                                pos_hint: {'center_x': 0.5, 'center_y': 0.525}
+                                allow_stretch: True
+            
+                Label:
+                    text: 'Worktop'
+                    font_size: scaling_utils.get_scaled_width(dp(20))
+                    bold: True
 
             BoxLayout
 
