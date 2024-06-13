@@ -50,8 +50,8 @@ Builder.load_string("""
                 
         Label:
             id: title_label
-            pos_hint: {'x': -0.39, 'y': 0.45}
-            text: 'Cutting depths'
+            pos_hint: {'x': -0.44, 'y': 0.45}
+            text: 'Settings'
             font_size: app.get_scaled_sp('20sp')
             color: hex('#F9F9F9')
         
@@ -373,7 +373,7 @@ class CuttingDepthsPopup(Popup):
         self.update_text()
 
     def update_strings(self):
-        self.title_label.text = self.l.get_str("Cutting depths")
+        self.title_label.text = self.l.get_str("Settings")
         self.material_thickness_label.text = self.l.get_str("Material thickness")
         self.bottom_offset_label.text = self.l.get_str("Bottom offset")
         self.total_cut_depth_label.text = self.l.get_str("Total cut depth")
