@@ -153,7 +153,7 @@ Builder.load_string("""
                     pos: self.parent.pos
                     Image:
                         source: "./asmcnc/skavaUI/img/Shapes_lobby_toolbox_button.png"
-                        size_hint: None, None
+                        size_hint: 0.9, 0.9
                         size: self.parent.width, self.parent.height
                         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                         allow_stretch: False
