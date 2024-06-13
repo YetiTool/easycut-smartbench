@@ -110,7 +110,7 @@ Builder.load_string(
                     id: filechooser
                     rootpath: './jobCache/'
                     show_hidden: False
-                    filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
+                    filters: ['*.dwt'] if root.model_manager.is_machine_drywall() else ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
                     on_selection: root.refresh_filechooser()
                     sort_func: root.sort_by_date_reverse
                     FileChooserIconLayout
@@ -354,13 +354,13 @@ class LocalFileChooser(Screen):
     sort_by_name = ObjectProperty(name_order_sort)
     sort_by_name_reverse = ObjectProperty(name_order_sort_reverse)
     is_filechooser_scrolling = False
+    model_manager = ModelManagerSingleton()
 
     def __init__(self, **kwargs):
         super(LocalFileChooser, self).__init__(**kwargs)
         self.sm = kwargs["screen_manager"]
         self.jd = kwargs["job"]
         self.l = kwargs["localization"]
-        self.model_manager = ModelManagerSingleton()
         self.usb_stick = usb_storage.USB_storage(self.sm, self.l)
         self.check_for_job_cache_dir()
         self.usb_status_label.text = self.l.get_str(
@@ -422,18 +422,12 @@ class LocalFileChooser(Screen):
                 file.write("*.nc")
                 file.close()
 
-    def on_pre_enter(self):
-        if self.model_manager.is_machine_drywall():
-            self.button_usb.opacity = 0
-            self.usb_status_label.opacity = 0
     def on_enter(self):
         self.filechooser.path = job_cache_dir
-        if not self.model_manager.is_machine_drywall():
-            self.usb_stick.enable()
+        self.usb_stick.enable()
         self.refresh_filechooser()
-        if not self.model_manager.is_machine_drywall():
-            self.check_USB_status(1)
-            self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25)
+        self.check_USB_status(1)
+        self.poll_USB = Clock.schedule_interval(self.check_USB_status, 0.25)
         self.switch_view()
 
     def on_pre_leave(self):
@@ -441,10 +435,9 @@ class LocalFileChooser(Screen):
             "usb_filechooser"
         ).filechooser_usb.sort_func = self.filechooser.sort_func
         self.sm.get_screen("usb_filechooser").image_sort.source = self.image_sort.source
-        if not self.model_manager.is_machine_drywall():
-            Clock.unschedule(self.poll_USB)
-            if self.sm.current != "usb_filechooser":
-                self.usb_stick.disable()
+        Clock.unschedule(self.poll_USB)
+        if self.sm.current != "usb_filechooser":
+            self.usb_stick.disable()
 
     def on_leave(self):
         self.usb_status_label.size_hint_y = 0
