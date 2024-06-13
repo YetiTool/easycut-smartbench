@@ -157,10 +157,10 @@ class ToolMaterialPopup(Popup):
     def on_tool_change(self, instance, value):
         if value != '':
             self.confirm_button.disabled = False
-            Logger.debug("Tool changed to ", value)
+            Logger.debug("Tool changed to " + value)
 
     def on_material_change(self, instance, value):
-        print("Material changed to ", value)
+        Logger.debug("Material changed to " + value)
         self.tool_dropdown.values = self.profile_db.get_tool_names(self.profile_db.get_material_id(value))
         self.tool_dropdown.text = ''
         self.confirm_button.disabled = True
