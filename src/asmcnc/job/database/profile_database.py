@@ -5,11 +5,15 @@ from asmcnc import paths
 
 
 class ProfileDatabase(object):
-    """This class holds all information about profiles, material and cutters."""
+    """
+    This class holds all information about profiles, material and cutters.
+
+    Dont instantiate yourself. Get your instance from App.get_running_app()."""
 
     MATERIAL_DB = os.path.join(paths.ASMCNC_PATH, 'job/database/material_database.json')
     PROFILE_DB = os.path.join(paths.ASMCNC_PATH, 'job/database/profile_database.json')
     TOOL_DB = os.path.join(paths.ASMCNC_PATH, 'job/database/tool_database.json')
+
     def __init__(self):
         # Load the material, tool and profile data
         with open(self.MATERIAL_DB) as f:
@@ -22,21 +26,21 @@ class ProfileDatabase(object):
             self.profile_data = json.load(f)
 
     def get_material_names(self):
+        """Returns a list of strings with the material names."""
         return [material['description'] for material in self.material_data]
 
     def get_tool_names(self, chosen_material=None):
         """
         Returns a list a tool_names suitable for the given Material.
-        If no material is given, an empty list is returned."""
+        If no material is given, an empty list is returned.
+        """
         if not chosen_material:
             return []
-
-        profile_ids = [profile['uid'] for profile in self.profile_data if profile['material']['uid'] == chosen_material]
 
         tool_names = []
 
         for profile in self.profile_data:
-            if profile['uid'] in profile_ids:
+            if profile['material']['uid'] == chosen_material:
                 for tool in profile['applicable_tools']:
                     tool_names.append(tool['description'])
 
