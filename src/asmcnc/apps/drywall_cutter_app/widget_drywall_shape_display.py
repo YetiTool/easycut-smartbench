@@ -8,7 +8,7 @@ import re
 
 from asmcnc.core_UI import scaling_utils
 
-slider_builder_string = """
+switch_builder_string = """
 #:import FloatInput asmcnc.core_UI.components.text_inputs.float_input.FloatInput
 #:import scaling_utils asmcnc.core_UI.scaling_utils
 <DrywallShapeDisplay>
@@ -723,7 +723,7 @@ replace_unit_switch_with_label = True
 if replace_unit_switch_with_label:
     Builder.load_string(label_builder_string)
 else:
-    Builder.load_string(slider_builder_string)
+    Builder.load_string(switch_builder_string)
 
 
 class DrywallShapeDisplay(Widget):
