@@ -569,6 +569,8 @@ class GCodeEngine(object):
 
     # Main
     def engine_run(self, simulate=False):
+        if self.config.active_config.toolpath_offset == "pocket":
+            self.config.active_config.toolpath_offset = "inside"  # Patch for engine incompatibility
         filename = self.config.active_config.shape_type + ".nc"
         output_path = os.path.join(paths.DWT_TEMP_GCODE_PATH, filename)
         safe_start_position = "X0 Y0 Z10"
