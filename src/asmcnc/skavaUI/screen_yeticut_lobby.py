@@ -25,7 +25,7 @@ Builder.load_string("""
 
                 Button:
                     on_press: root.go_back()
-                    background_color: color_provider.Colors['transparent']
+                    background_color: color_provider.get_rgba('transparent')
                     FloatLayout:
                         size: self.parent.size
                         pos: self.parent.pos
@@ -59,7 +59,7 @@ Builder.load_string("""
                     
                     Button:
                         on_press: root.shapes_app()
-                        background_color: color_provider.Colors['transparent']
+                        background_color: color_provider.get_rgba('transparent')
                         
                         BoxLayout:
                             size: self.parent.size
@@ -87,7 +87,7 @@ Builder.load_string("""
                     
                     Button:
                         on_press: pass
-                        background_color: color_provider.Colors['transparent']
+                        background_color: color_provider.get_rgba('transparent')
                         
                         FloatLayout:
                             size_hint: None, None
@@ -148,7 +148,7 @@ Builder.load_string("""
             padding: scaling_utils.get_scaled_tuple((dp(250), dp(5), dp(250), dp(15)))
 
             Button:
-                background_color: color_provider.Colors['transparent']              
+                background_color: color_provider.get_rgba('transparent')              
                 on_press: root.toolbox_app()
                 FloatLayout:
                     size: self.parent.size
