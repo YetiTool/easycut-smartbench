@@ -4,6 +4,8 @@ from kivy.uix.screenmanager import Screen
 Builder.load_string("""
 
 <YeticutLobbyScreen>:
+#:import paths asmcnc.paths
+#:import color_provider asmcnc.core_UI.utils.color_provider
 
     BoxLayout:
         orientation: 'vertical'
@@ -23,12 +25,12 @@ Builder.load_string("""
 
                 Button:
                     on_press: root.go_back()
-                    background_color: hex('#FFFFFF00')
+                    background_color: color_provider.Colors['transparent']
                     FloatLayout:
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:
-                            source: "./asmcnc/skavaUI/img/shapes_lobby_back_button.png"
+                            source: paths.join(paths.SKAVA_UI_IMG_PATH, "shapes_lobby_back_button.png")
                             size_hint: None, None
                             size: self.parent.width * 0.7, self.parent.height * 0.7
                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
@@ -57,7 +59,7 @@ Builder.load_string("""
                     
                     Button:
                         on_press: root.shapes_app()
-                        background_color: hex('#FFFFFF00')
+                        background_color: color_provider.Colors['transparent']
                         
                         BoxLayout:
                             size: self.parent.size
@@ -65,7 +67,7 @@ Builder.load_string("""
                             
                             Image:
                                 id: yeticut_apps_image
-                                source: "./asmcnc/skavaUI/img/shapes_lobby_logo.png"
+                                source: paths.join(paths.SKAVA_UI_IMG_PATH, "shapes_lobby_logo.png")
                                 center_x: self.parent.center_x
                                 y: self.parent.y
                                 size: self.parent.width, self.parent.height
@@ -85,7 +87,7 @@ Builder.load_string("""
                     
                     Button:
                         on_press: pass
-                        background_color: hex('#FFFFFF00')
+                        background_color: color_provider.Colors['transparent']
                         
                         FloatLayout:
                             size_hint: None, None
@@ -93,7 +95,7 @@ Builder.load_string("""
                             pos: self.parent.pos
                             
                             Image:
-                                source: "./asmcnc/skavaUI/img/worktop_lobby_logo.png"
+                                source: paths.join(paths.SKAVA_UI_IMG_PATH, "worktop_lobby_logo.png")
                                 size_hint: None, None
                                 size: self.parent.width * 1.05, self.parent.height * 1.05
                                 pos_hint: {'center_x': 0.5, 'center_y': 0.525}
@@ -121,7 +123,7 @@ Builder.load_string("""
                             pos: self.parent.pos
                             
                             Image:
-                                source: "./asmcnc/skavaUI/img/trace_lobby_logo.png"
+                                source: paths.join(paths.SKAVA_UI_IMG_PATH, "trace_lobby_logo.png")
                                 size_hint: None, None
                                 size: self.parent.width * 1.05, self.parent.height * 1.05
                                 pos_hint: {'center_x': 0.5, 'center_y': 0.525}
@@ -146,18 +148,17 @@ Builder.load_string("""
             padding: scaling_utils.get_scaled_tuple((dp(250), dp(5), dp(250), dp(15)))
 
             Button:
-                background_color: hex('#FFFFFF00')                
+                background_color: color_provider.Colors['transparent']              
                 on_press: root.toolbox_app()
                 FloatLayout:
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
-                        source: "./asmcnc/skavaUI/img/shapes_lobby_toolbox_button.png"
+                        source: paths.join(paths.SKAVA_UI_IMG_PATH, "shapes_lobby_toolbox_button.png")
                         size_hint: 0.9, 0.9
                         size: self.parent.width, self.parent.height
                         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                         allow_stretch: False
-
 """)
 
 
