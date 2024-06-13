@@ -14,7 +14,7 @@ Builder.load_string("""
     halign: 'center'
     markup: 'True'
     font_size: 0.0175*app.width
-    background_color: 0,0,0,0
+    background_color: color_provider.get_rgba('black')
     text_size : self.width, None
     canvas.before:
         Color:
@@ -154,6 +154,7 @@ class ToolMaterialPopup(Popup):
         self.material_dropdown.bind(text=self.on_material_change)
 
         self.profile_db = App.get_running_app().profile_db
+
     def on_tool_change(self, instance, value):
         if value != '':
             self.confirm_button.disabled = False
@@ -169,7 +170,6 @@ class ToolMaterialPopup(Popup):
         # Set the material dropdown values
         self.material_dropdown.values = self.profile_db.get_material_names()
         self.confirm_button.disabled = True
-
 
     def confirm(self):
         self.dismiss()
