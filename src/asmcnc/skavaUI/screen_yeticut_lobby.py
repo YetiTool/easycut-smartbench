@@ -30,7 +30,7 @@ Builder.load_string("""
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:
-                            source: paths.join(paths.SKAVA_UI_IMG_PATH, "shapes_lobby_back_button.png")
+                            source: paths.get_resource("shapes_lobby_back_button.png")
                             size_hint: None, None
                             size: self.parent.width * 0.7, self.parent.height * 0.7
                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
@@ -67,7 +67,7 @@ Builder.load_string("""
                             
                             Image:
                                 id: yeticut_apps_image
-                                source: paths.join(paths.SKAVA_UI_IMG_PATH, "shapes_lobby_logo.png")
+                                source: paths.get_resource("shapes_lobby_logo.png")
                                 center_x: self.parent.center_x
                                 y: self.parent.y
                                 size: self.parent.width, self.parent.height
@@ -95,7 +95,7 @@ Builder.load_string("""
                             pos: self.parent.pos
                             
                             Image:
-                                source: paths.join(paths.SKAVA_UI_IMG_PATH, "worktop_lobby_logo.png")
+                                source: paths.get_resource("worktop_lobby_logo.png")
                                 size_hint: None, None
                                 size: self.parent.width * 1.05, self.parent.height * 1.05
                                 pos_hint: {'center_x': 0.5, 'center_y': 0.525}
@@ -123,7 +123,7 @@ Builder.load_string("""
                             pos: self.parent.pos
                             
                             Image:
-                                source: paths.join(paths.SKAVA_UI_IMG_PATH, "trace_lobby_logo.png")
+                                source: paths.get_resource("trace_lobby_logo.png")
                                 size_hint: None, None
                                 size: self.parent.width * 1.05, self.parent.height * 1.05
                                 pos_hint: {'center_x': 0.5, 'center_y': 0.525}
@@ -154,7 +154,7 @@ Builder.load_string("""
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
-                        source: paths.join(paths.SKAVA_UI_IMG_PATH, "shapes_lobby_toolbox_button.png")
+                        source: paths.get_resource("shapes_lobby_toolbox_button.png")
                         size_hint: 0.9, 0.9
                         size: self.parent.width, self.parent.height
                         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
