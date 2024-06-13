@@ -3,6 +3,7 @@ Created on 19 Aug 2017
 
 @author: Ed
 """
+from kivy.app import App
 from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
@@ -159,10 +160,13 @@ class DiagnosticsScreen(Screen):
         super(DiagnosticsScreen, self).__init__(**kwargs)
         self.m = kwargs["machine"]
         self.sm = kwargs["screen_manager"]
-        self.status_container.add_widget(
-            widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
-        )
+        self.app = App.get_running_app()
         Clock.schedule_interval(self.limit_switch_check, 0.2)
+
+    def on_pre_enter(self):
+        if self.app.status_bar_widget.parent:
+            self.app.status_bar_widget.parent.remove_widget(self.app.status_bar_widget)
+        self.status_container.add_widget(self.app.status_bar_widget)
 
     def on_enter(self):
         self.m.disable_limit_switches()

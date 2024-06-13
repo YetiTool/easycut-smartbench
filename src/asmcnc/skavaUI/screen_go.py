@@ -8,6 +8,8 @@ import time
 import traceback
 from datetime import datetime
 
+from kivy.app import App
+
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.clock import Clock
 from kivy.core.window import Window
@@ -398,7 +400,6 @@ class GoScreen(Screen):
     feed_rate_max_absolute = 0
     total_runtime_seconds = 0
     dwt_config = None
-
     def __init__(self, **kwargs):
         super(GoScreen, self).__init__(**kwargs)
         self.m = kwargs["machine"]
@@ -411,6 +412,7 @@ class GoScreen(Screen):
         # bind on updates:
         self.m.s.bind(on_update_overload_peak=self.update_overload_peak)
         self.m.s.bind(on_reset_runtime=self.on_reset_runtime)
+        self.app = App.get_running_app()
         self.feedOverride = widget_feed_override.FeedOverride(
             machine=self.m, screen_manager=self.sm, database=self.database
         )
@@ -428,13 +430,6 @@ class GoScreen(Screen):
         )
         self.feed_override_container.add_widget(self.feedOverride)
         self.speed_override_widget_container.add_widget(self.speedOverride)
-
-        # Status bar
-
-        self.status_container.add_widget(
-            widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
-        )
-
         # initialise for db send
 
         self.time_taken_seconds = 0
@@ -459,6 +454,9 @@ class GoScreen(Screen):
 
     ### PRE-ENTER CONTEXTS: Call one before switching to screen
     def on_pre_enter(self, *args):
+        if self.app.status_bar_widget.parent:
+            self.app.status_bar_widget.parent.remove_widget(self.app.status_bar_widget)
+        self.status_container.add_widget(self.app.status_bar_widget)
         self.return_to_screen = self.jd.screen_to_return_to_after_job
         self.cancel_to_screen = self.jd.screen_to_return_to_after_cancel
         self.sm.get_screen("job_feedback").return_to_screen = self.return_to_screen

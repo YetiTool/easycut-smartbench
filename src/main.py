@@ -6,8 +6,10 @@ Created on 16 Nov 2017
 YetiTool's UI for SmartBench
 www.yetitool.com
 '''
-from asmcnc import paths
+from kivy.clock import Clock
 
+from asmcnc import paths
+from asmcnc.skavaUI.widget_status_bar import StatusBar
 
 paths.create_paths()
 
@@ -235,6 +237,8 @@ class SkavaUI(App):
         if ModelManagerSingleton().get_product_code() != ProductCodes.DRYWALLTEC:
             sc = server_connection.ServerConnection(sett)
 
+        self.status_bar_widget = StatusBar(machine=m, screen_manager=sm)
+
         # initialise the screens (legacy)
         lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager=sm, machine=m, app_manager=am,
                                                 localization=self.l)
@@ -373,6 +377,7 @@ class SkavaUI(App):
         # Clock.schedule_once(start_loop, 10)
 
         ## -----------------------------------------------------------------------------------
+        Clock.schedule_interval(self.output_clocks, 10)
         if self.height == 768:
             root = BoxLayout(orientation='vertical', size_hint=(None, None), size=(self.width, self.height + 32))
             sm.size_hint = (None, None)
@@ -381,6 +386,11 @@ class SkavaUI(App):
             return root
 
         return sm
+
+    def output_clocks(self, dt):
+        Logger.info("Clocks: " + str(len(Clock.get_events())))
+        for i in Clock.get_events():
+            Logger.info(str(i))
 
 
 if __name__ == '__main__':

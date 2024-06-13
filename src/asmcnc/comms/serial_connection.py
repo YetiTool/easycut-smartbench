@@ -123,6 +123,7 @@ class SerialConnection(EventDispatcher):
         self.register_event_type('on_update_overload_peak') # new overload peak value
         self.register_event_type('on_reset_runtime') # runtime counter will be reset
         self.register_event_type('on_check_job_finished')
+        self.register_event_type('on_message_processed')
 
     def on_reset_runtime(self, *args):
         """Default callback. Needs to exist."""
@@ -138,6 +139,9 @@ class SerialConnection(EventDispatcher):
 
     def on_check_job_finished(self, *args):
         """Default callback. Needs to exist."""
+        pass
+
+    def on_message_processed(self, *args):
         pass
 
     def __del__(self):
@@ -966,6 +970,8 @@ class SerialConnection(EventDispatcher):
 
     # TMC REGISTERS ARE ALL HANDLED BY TMC_MOTOR CLASSES IN ROUTER MACHINE
 
+    last_grbl_message = ""
+
     def process_grbl_push(self, message):
 
         if self.VERBOSE_ALL_PUSH_MESSAGES: Logger.info(message)
@@ -1553,6 +1559,10 @@ class SerialConnection(EventDispatcher):
 
                     except:
                         Logger.exception("Could not print calibration output")
+
+            if self.last_grbl_message != message:
+                self.dispatch('on_message_processed', message)
+            self.last_grbl_message = message
 
             if self.VERBOSE_STATUS:
                 Logger.debug('state: {} | x: {} | y: {} | z: {} | avail. blocks: {} | avail. chars: {}'.format(self.m_state, str(self.m_x), str(self.m_y), str(self.m_z), self.serial_blocks_available, self.serial_chars_available))

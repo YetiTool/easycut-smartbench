@@ -135,9 +135,9 @@ class VirtualBed(Widget):
             self.virtual_bed_image.source = "./asmcnc/skavaUI/img/virtual_bed_mini.png"
             self.width_modifier = 0.4075 * Window.width
             self.x_pos_modifier = 0.20375 * Window.width
-        Clock.schedule_interval(self.refresh_widget, self.m.s.STATUS_INTERVAL)
+        self.m.s.bind(on_message_processed=self.refresh_widget)
 
-    def refresh_widget(self, dt):
+    def refresh_widget(self, *args):
         self.setG54PosByMachineCoords(self.m.x_wco(), self.m.y_wco())
         self.setG54SizePx()
         self.setG28PosByMachineCoords(self.m.g28_x(), self.m.g28_y())

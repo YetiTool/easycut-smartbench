@@ -220,10 +220,6 @@ Builder.load_string(
 )
 from kivy.clock import Clock
 
-WIDGET_UPDATE_DELAY = 0.2
-STATUS_UPDATE_DELAY = 0.4
-
-
 class ScrollableLabelCommands(ScrollView):
     text = StringProperty("")
 
@@ -243,8 +239,6 @@ class GCodeMonitor(Widget):
         self.m = kwargs["machine"]
         self.sm = kwargs["screen_manager"]
         self.l = kwargs["localization"]
-        Clock.schedule_interval(self.update_display_text, WIDGET_UPDATE_DELAY)
-        Clock.schedule_interval(self.update_status_text, STATUS_UPDATE_DELAY)
         self.popup_flag = True
         self.update_strings()
         self.m.s.bind(on_serial_monitor_update=
@@ -256,6 +250,9 @@ class GCodeMonitor(Widget):
         This function updates both the serial monitor and the status report buffer.
         It is called as a callback when on_serial_monitor_update is fired.
         """
+        self.update_display_text()
+        self.update_status_text()
+
         # Try to chuck out any problem strings
         if isinstance(content, basestring):
             # Don't update if content is to be hidden
@@ -271,13 +268,12 @@ class GCodeMonitor(Widget):
                 self.monitor_text_buffer.append(content)
             if input_or_output == "debug":
                 self.monitor_text_buffer.append(content)
-
-    def update_display_text(self, dt):
+    def update_display_text(self):
         self.consoleScrollText.text = "\n".join(self.monitor_text_buffer)
         if len(self.monitor_text_buffer) > 61:
             del self.monitor_text_buffer[0 : len(self.monitor_text_buffer) - 60]
 
-    def update_status_text(self, dt):
+    def update_status_text(self):
         # this needs fixing
         if self.m.state() == "Alarm" and not any(
             "Alarm" in s for s in self.status_report_buffer

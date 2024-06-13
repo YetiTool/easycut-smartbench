@@ -67,11 +67,12 @@ class VirtualZ(Widget):
         self.m = kwargs["machine"]
         self.sm = kwargs["screen_manager"]
         self.jd = kwargs["job"]
-        Clock.schedule_interval(self.refresh_widget, self.WIDGET_REFRESH_INTERVAL)
 
-    def refresh_widget(self, dt):
-        self.setZones()
-        self.setBitPos()
+        self.m.s.bind(on_message_processed=self.on_message_processed)
+
+    def on_message_processed(self, *args):
+        Clock.schedule_once(lambda dt: self.setZones())
+        Clock.schedule_once(lambda dt: self.setBitPos())
 
     def setZones(self):
         if self.sm.has_screen("home"):
