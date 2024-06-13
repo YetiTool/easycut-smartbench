@@ -8,7 +8,7 @@ import re
 
 from asmcnc.core_UI import scaling_utils
 
-Builder.load_string("""
+switch_builder_string = """
 #:import FloatInput asmcnc.core_UI.components.text_inputs.float_input.FloatInput
 #:import scaling_utils asmcnc.core_UI.scaling_utils
 <DrywallShapeDisplay>
@@ -360,7 +360,370 @@ Builder.load_string("""
                 text: 'Test'
                 color: 0,0,0,1
 
-""")
+"""
+label_builder_string = """
+#:import FloatInput asmcnc.core_UI.components.text_inputs.float_input.FloatInput
+#:import scaling_utils asmcnc.core_UI.scaling_utils
+<DrywallShapeDisplay>
+
+    canvas_image:canvas_image
+
+    shape_dims_image:shape_dims_image
+    shape_toolpath_image:shape_toolpath_image
+
+    unit_switch:unit_switch
+
+    d_input:d_input
+    l_input:l_input
+    r_input:r_input
+    x_input:x_input
+    y_input:y_input
+
+    d_input_validation_label:d_input_validation_label
+    l_input_validation_label:l_input_validation_label
+    r_input_validation_label:r_input_validation_label
+    x_input_validation_label:x_input_validation_label
+    y_input_validation_label:y_input_validation_label
+    x_datum_label:x_datum_label
+    x_datum_validation_label:x_datum_validation_label
+    y_datum_label:y_datum_label
+    y_datum_validation_label:y_datum_validation_label
+
+    bumper_bottom_image:bumper_bottom_image
+    bumper_left_image:bumper_left_image
+    bumper_right_image:bumper_right_image
+    bumper_top_image:bumper_top_image
+
+    config_name_label:config_name_label
+    machine_state_label:machine_state_label
+
+    BoxLayout:
+        size: self.parent.size
+        pos: self.parent.pos
+
+        FloatLayout:
+            size: self.parent.size
+            pos: self.parent.pos
+
+            Image:
+                id: canvas_image
+                source: "./asmcnc/apps/drywall_cutter_app/img/canvas_with_logo.png"
+                size: self.parent.size
+                pos: self.parent.pos
+                allow_stretch: True
+
+            Image:
+                id: shape_toolpath_image
+                opacity: 0
+                size: self.parent.size
+                pos: self.parent.pos
+                allow_stretch: True
+
+            Image:
+                id: shape_dims_image
+                opacity: 0
+                size: self.parent.size
+                pos: self.parent.pos
+                allow_stretch: True
+
+            Label:
+                id: unit_switch
+                text: 'mm'
+                font_size: scaling_utils.get_scaled_width(dp(20))
+                size: self.texture_size[0], scaling_utils.get_scaled_height(dp(40))
+                size_hint: (None, None)
+                pos: self.parent.pos[0] + self.parent.size[0] - self.size[0] - scaling_utils.get_scaled_width(dp(9)), self.parent.pos[1]
+                color: 0,0,0,1
+                
+            BoxLayout:
+                size: scaling_utils.get_scaled_tuple((dp(90), dp(40)))
+                size_hint: (None, None)
+
+                canvas.before:
+                    Color:
+                        rgba: hex('#E5E5E5FF')
+                    Rectangle:
+                        pos: self.x + scaling_utils.get_scaled_width(2.5), self.y + scaling_utils.get_scaled_height(5)
+                        size: self.width - scaling_utils.get_scaled_width(5), self.height - scaling_utils.get_scaled_height(10)
+
+                FloatInput:
+                    id: d_input
+                    font_size: scaling_utils.get_scaled_width(dp(25))
+                    halign: 'center'
+                    multiline: False
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    background_color: (0,0,0,0)
+
+            Label:
+                text: 'D'
+                font_size: scaling_utils.get_scaled_width(dp(25))
+                pos: d_input.pos[0] - self.width - scaling_utils.get_scaled_width(2.5), d_input.pos[1] + scaling_utils.get_scaled_height(dp(3))
+                opacity: d_input.opacity
+                color: 0,0,0,1
+                size: self.texture_size
+                size_hint: (None, None)
+
+            Label:
+                id: d_input_validation_label
+                font_size: scaling_utils.get_scaled_width(dp(15))
+                size: d_input.size
+                size_hint: (None, None)
+                pos: d_input.pos[0], d_input.pos[1] - scaling_utils.get_scaled_height(dp(30))
+                color: 1,0,0,1
+                halign: 'left'
+                opacity: 0
+
+            BoxLayout:
+                size: scaling_utils.get_scaled_tuple((dp(90), dp(40)))
+                size_hint: (None, None)
+
+                canvas.before:
+                    Color:
+                        rgba: hex('#E5E5E5FF')
+                    Rectangle:
+                        pos: self.x + scaling_utils.get_scaled_width(2.5), self.y + scaling_utils.get_scaled_height(5)
+                        size: self.width - scaling_utils.get_scaled_width(5), self.height - scaling_utils.get_scaled_height(10)
+
+                FloatInput:
+                    id: l_input
+                    font_size: scaling_utils.get_scaled_width(dp(25))
+                    halign: 'center'
+                    multiline: False
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    background_color: (0,0,0,0)
+
+            Label:
+                text: 'L'
+                font_size: scaling_utils.get_scaled_width(dp(25))
+                pos: l_input.pos[0] - self.width - scaling_utils.get_scaled_width(2.5), l_input.pos[1] + scaling_utils.get_scaled_height(dp(3))
+                opacity: l_input.opacity
+                color: 0,0,0,1
+                size: self.texture_size
+                size_hint: (None, None)
+
+            Label:
+                id: l_input_validation_label
+                font_size: scaling_utils.get_scaled_width(dp(15))
+                size: l_input.size
+                size_hint: (None, None)
+                pos: l_input.pos[0], l_input.pos[1] - scaling_utils.get_scaled_height(dp(30))
+                color: 1,0,0,1
+                halign: 'left'
+                opacity: 0
+
+            BoxLayout:
+                size: scaling_utils.get_scaled_tuple((dp(90), dp(40)))
+                size_hint: (None, None)
+
+                canvas.before:
+                    Color:
+                        rgba: hex('#E5E5E5FF')
+                    Rectangle:
+                        pos: self.x + scaling_utils.get_scaled_width(2.5), self.y + scaling_utils.get_scaled_height(5)
+                        size: self.width - scaling_utils.get_scaled_width(5), self.height - scaling_utils.get_scaled_height(10)
+
+                FloatInput:
+                    id: r_input
+                    font_size: scaling_utils.get_scaled_width(dp(25))
+                    halign: 'center'
+                    multiline: False
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    background_color: (0,0,0,0)
+
+            Label:
+                text: 'R'
+                font_size: scaling_utils.get_scaled_width(dp(25))
+                pos: r_input.pos[0] - self.width - scaling_utils.get_scaled_width(2.5), r_input.pos[1] + scaling_utils.get_scaled_height(dp(3))
+                opacity: r_input.opacity
+                color: 0,0,0,1
+                size: self.texture_size
+                size_hint: (None, None)
+
+            Label:
+                id: r_input_validation_label
+                font_size: scaling_utils.get_scaled_width(dp(15))
+                size: r_input.size
+                size_hint: (None, None)
+                pos: r_input.pos[0], r_input.pos[1] - scaling_utils.get_scaled_height(dp(30))
+                color: 1,0,0,1
+                halign: 'left'
+                opacity: 0
+
+            BoxLayout:
+                size: scaling_utils.get_scaled_tuple((dp(90), dp(40)))
+                size_hint: (None, None)
+
+                canvas.before:
+                    Color:
+                        rgba: hex('#E5E5E5FF')
+                    Rectangle:
+                        pos: self.x + scaling_utils.get_scaled_width(2.5), self.y + scaling_utils.get_scaled_height(5)
+                        size: self.width - scaling_utils.get_scaled_width(5), self.height - scaling_utils.get_scaled_height(10)
+
+                FloatInput:
+                    id: x_input
+                    font_size: scaling_utils.get_scaled_width(dp(25))
+                    halign: 'center'
+                    multiline: False
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    background_color: (0,0,0,0)
+
+            Label:
+                text: 'X'
+                font_size: scaling_utils.get_scaled_width(dp(25))
+                pos: x_input.pos[0] - self.width - scaling_utils.get_scaled_width(2.5), x_input.pos[1] + scaling_utils.get_scaled_height(dp(3))
+                opacity: x_input.opacity
+                color: 0,0,0,1
+                size: self.texture_size
+                size_hint: (None, None)
+
+            Label:
+                id: x_input_validation_label
+                font_size: scaling_utils.get_scaled_width(dp(15))
+                size: x_input.size
+                size_hint: (None, None)
+                pos: x_input.pos[0], x_input.pos[1] - scaling_utils.get_scaled_height(dp(30))
+                color: 1,0,0,1
+                halign: 'left'
+                opacity: 0
+
+            BoxLayout:
+                size: scaling_utils.get_scaled_tuple((dp(90), dp(40)))
+                size_hint: (None, None)
+
+                canvas.before:
+                    Color:
+                        rgba: hex('#E5E5E5FF')
+                    Rectangle:
+                        pos: self.x + 2.5, self.y + 5
+                        size: self.width - scaling_utils.get_scaled_width(5), self.height - scaling_utils.get_scaled_height(10)
+
+                FloatInput:
+                    id: y_input
+                    font_size: scaling_utils.get_scaled_width(dp(25))
+                    halign: 'center'
+                    multiline: False
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    background_color: (0,0,0,0)
+
+            Label:
+                text: 'Y'
+                font_size: scaling_utils.get_scaled_width(dp(25))
+                pos: y_input.pos[0] - self.width - 2.5, y_input.pos[1] + scaling_utils.get_scaled_height(dp(3))
+                opacity: y_input.opacity
+                color: 0,0,0,1
+                size: self.texture_size
+                size_hint: (None, None)
+
+            Label:
+                id: y_input_validation_label
+                font_size: scaling_utils.get_scaled_width(dp(15))
+                size: y_input.size
+                size_hint: (None, None)
+                pos: y_input.pos[0], y_input.pos[1] - scaling_utils.get_scaled_height(dp(30))
+                color: 1,0,0,1
+                halign: 'left'
+                opacity: 0
+
+            Label:
+                id: x_datum_label
+                font_size: scaling_utils.get_scaled_width(dp(25))
+                size: scaling_utils.get_scaled_tuple((dp(150), dp(40)))
+                size_hint: (None, None)
+                text: 'X:'
+                color: 0,0,0,1
+                halign: 'left'
+
+            Label:
+                id: x_datum_validation_label
+                font_size: scaling_utils.get_scaled_width(dp(15))
+                size: x_datum_label.size
+                size_hint: (None, None)
+                pos: x_datum_label.pos[0], x_datum_label.pos[1] - scaling_utils.get_scaled_height(dp(20))
+                color: 1,0,0,1
+                halign: 'left'
+                opacity: 0
+
+            Label:
+                id: y_datum_label
+                font_size: scaling_utils.get_scaled_width(dp(25))
+                size: scaling_utils.get_scaled_tuple((dp(150), dp(40)))
+                size_hint: (None, None)
+                text: 'Y:'
+                color: 0,0,0,1
+
+            Label:
+                id: y_datum_validation_label
+                font_size: scaling_utils.get_scaled_width(dp(15))
+                size: y_datum_label.size
+                size_hint: (None, None)
+                pos: y_datum_label.pos[0], y_datum_label.pos[1] - scaling_utils.get_scaled_height(dp(35))
+                color: 1,0,0,1
+                halign: 'left'
+                opacity: 0
+
+            Image:
+                id: bumper_bottom_image
+                source: "./asmcnc/apps/drywall_cutter_app/img/bumper_bottom_green.png"
+                size: self.parent.size
+                pos: self.parent.pos
+                allow_stretch: True
+
+            Image:
+                id: bumper_left_image
+                source: "./asmcnc/apps/drywall_cutter_app/img/bumper_left_green.png"
+                size: self.parent.size
+                pos: self.parent.pos
+                allow_stretch: True
+
+            Image:
+                id: bumper_right_image
+                source: "./asmcnc/apps/drywall_cutter_app/img/bumper_right_green.png"
+                size: self.parent.size
+                pos: self.parent.pos
+                allow_stretch: True
+
+            Image:
+                id: bumper_top_image
+                source: "./asmcnc/apps/drywall_cutter_app/img/bumper_top_green.png"
+                size: self.parent.size
+                pos: self.parent.pos
+                allow_stretch: True
+
+            # TextInput instead of Label, as there is no way to left align a Label in a FloatLayout
+            TextInput:
+                id: config_name_label
+                font_size: scaling_utils.get_scaled_width(dp(20))
+                size: self.parent.width, scaling_utils.get_scaled_height(dp(40))
+                size_hint: (None, None)
+                pos: self.parent.pos[0] + scaling_utils.get_scaled_width(dp(5)), self.parent.size[1] - self.height + scaling_utils.get_scaled_height(dp(5))
+                multiline: False
+                background_color: (0,0,0,0)
+                disabled_foreground_color: (0,0,0,1)
+                disabled: True
+
+            Label:
+                id: machine_state_label
+                font_size: scaling_utils.get_scaled_width(dp(20))
+                size: self.texture_size[0], scaling_utils.get_scaled_height(dp(40))
+                size_hint: (None, None)
+                pos: self.parent.pos[0] + self.parent.size[0] - self.texture_size[0] - scaling_utils.get_scaled_width(dp(10)), self.parent.size[1] - self.height + scaling_utils.get_scaled_height(dp(5))
+                text: 'Test'
+                color: 0,0,0,1
+
+"""
+
+replace_unit_switch_with_label = True
+
+if replace_unit_switch_with_label:
+    Builder.load_string(label_builder_string)
+else:
+    Builder.load_string(switch_builder_string)
 
 
 class DrywallShapeDisplay(Widget):
@@ -411,8 +774,9 @@ class DrywallShapeDisplay(Widget):
         }
 
         # Show custom switch image
-        self.unit_switch.canvas.children[5].source = "./asmcnc/apps/drywall_cutter_app/img/unit_toggle.png"
-        self.unit_switch.bind(active=self.toggle_units)
+        if not replace_unit_switch_with_label:
+            self.unit_switch.canvas.children[5].source = "./asmcnc/apps/drywall_cutter_app/img/unit_toggle.png"
+            self.unit_switch.bind(active=self.toggle_units)
 
         self.dwt_config.bind(active_config_name=self.on_config_name_change)
         self.on_config_name_change(self.dwt_config, self.dwt_config.active_config_name)
