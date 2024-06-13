@@ -92,8 +92,17 @@ Builder.load_string("""
             padding: scaling_utils.get_scaled_tuple((dp(250), dp(5), dp(250), dp(15)))
 
             Button:
-                text: 'ToolBox'
+                background_color: hex('#FFFFFF00')                
                 on_press: root.toolbox_app()
+                FloatLayout:
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    Image:
+                        source: "./asmcnc/skavaUI/img/Shapes_lobby_toolbox_button.png"
+                        size_hint: None, None
+                        size: self.parent.width, self.parent.height
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        allow_stretch: False
 
 """)
 
