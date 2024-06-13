@@ -22,8 +22,17 @@ Builder.load_string("""
                 padding: scaling_utils.get_scaled_tuple((dp(10), dp(10)))
 
                 Button:
-                    text: 'Back up ^'
                     on_press: root.go_back()
+                    background_color: hex('#FFFFFF00')
+                    FloatLayout:
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            source: "./asmcnc/skavaUI/img/Shapes_lobby_back_button.png"
+                            size_hint: None, None
+                            size: self.parent.width * 0.7, self.parent.height * 0.7
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            allow_stretch: False
 
             Label:
                 size_hint_x: 4
