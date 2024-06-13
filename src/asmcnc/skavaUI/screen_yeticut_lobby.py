@@ -115,7 +115,7 @@ Builder.load_string("""
                     
                     Button:
                         on_press: pass
-                        background_color: hex('#FFFFFF00')
+                        background_color: color_provider.get_rgba('transparent')
                         
                         FloatLayout:
                             size_hint: None, None
