@@ -531,6 +531,10 @@ class DrywallCutterScreen(Screen):
         self.sm.get_screen('go').cancel_to_screen = 'drywall_cutter' if self.sm.get_screen(
             'go').cancel_to_screen == 'home' else 'home'
 
+    def format_command(self, cmd):
+        wrapped_cmd = textwrap.fill(cmd, width=50, break_long_words=False)
+        return wrapped_cmd
+
     def proceed_to_go_screen(self):
 
         # NON-OPTIONAL CHECKS (bomb if non-satisfactory)
