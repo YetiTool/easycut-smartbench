@@ -103,6 +103,7 @@ START_UP_SEQUENCE_IMG_PATH = os.path.join(START_UP_SEQUENCE_PATH, "screens", "im
 
 DATA_CONSENT_APP_PATH = os.path.join(START_UP_SEQUENCE_PATH, "data_consent_app")
 DATA_CONSENT_IMG_PATH = os.path.join(DATA_CONSENT_APP_PATH, "img")
+PRIVACY_NOTICE_PATHS = os.path.join(DATA_CONSENT_APP_PATH, "privacy_notice")
 
 WARRANTY_APP_PATH = os.path.join(START_UP_SEQUENCE_PATH, "warranty_app")
 WARRANTY_IMG_PATH = os.path.join(WARRANTY_APP_PATH, "img")
@@ -113,6 +114,7 @@ WELCOME_TO_SMARTBENCH_IMG_PATH = os.path.join(WELCOME_TO_SMARTBENCH_APP_PATH, "i
 JOB_GO_IMG_PATH = os.path.join(CORE_UI_PATH, "job_go", "img")
 
 SEQUENCE_ALARM_IMG_PATH = os.path.join(CORE_UI_PATH, "sequence_alarm", "img")
+
 
 # Paths that may need to be created
 SB_VALUES_PATH = os.path.join(ROOT_PATH, "sb_values")
@@ -143,6 +145,7 @@ resource_add_path(WARRANTY_IMG_PATH)
 resource_add_path(WELCOME_TO_SMARTBENCH_IMG_PATH)
 resource_add_path(JOB_GO_IMG_PATH)
 resource_add_path(SEQUENCE_ALARM_IMG_PATH)
+resource_add_path(PRIVACY_NOTICE_PATHS)
 
 
 # Functions for finding resources

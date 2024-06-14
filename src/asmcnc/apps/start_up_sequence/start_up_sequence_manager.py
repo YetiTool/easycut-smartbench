@@ -17,7 +17,7 @@ from asmcnc.apps.start_up_sequence.welcome_to_smartbench_app import screen_manag
 from asmcnc.core_UI import console_utils
 
 
-cc_override = False  # set to true to trigger startup sequence
+cc_override = True  # set to true to trigger startup sequence
 
 class StartUpSequence(object):
 
