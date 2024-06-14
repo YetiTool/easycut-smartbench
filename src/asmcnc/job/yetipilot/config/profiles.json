@@ -895,38 +895,6 @@
           "Value": 22500.0
         }
       ]
-    },
-    {
-      "Material Type": "MDF",
-      "Cutter Diameter": "6 mm",
-      "Cutter Type": "2 flute upcut spiral",
-      "Step Down": "3 mm",
-      "Parameters": [
-        {
-          "Name": "spindle_tool_load_watts",
-          "Value": 360
-        },
-        {
-          "Name": "target_spindle_speed",
-          "Value": 22500.0
-        }
-      ]
-    },
-    {
-      "Material Type": "MDF",
-      "Cutter Diameter": "8 mm",
-      "Cutter Type": "2 flute upcut spiral",
-      "Step Down": "3 mm",
-      "Parameters": [
-        {
-          "Name": "spindle_tool_load_watts",
-          "Value": 370
-        },
-        {
-          "Name": "target_spindle_speed",
-          "Value": 22500.0
-        }
-      ]
     }
   ]
 }
