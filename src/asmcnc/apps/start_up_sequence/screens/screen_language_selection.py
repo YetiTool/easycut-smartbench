@@ -116,17 +116,15 @@ class LanguageSelectionScreen(Screen):
         self.welcome_label.text = self.localisation.get_str(WELCOME_STRINGS[self.update_language_index])
 
     def __next_button_pressed(self, *args):
-        font_changed = self.welcome_label.font_name != self.localisation.font_regular
         for screen_name in self.start_seq.screen_sequence + ["rebooting"]:
             screen = self.screen_manager.get_screen(screen_name)
 
             if hasattr(screen, "update_strings"):
                 screen.update_strings()
 
-            if font_changed:
-                for widget in screen.walk():
-                    if isinstance(widget, Label):
-                        widget.font_name = self.localisation.font_regular
+            for widget in screen.walk():
+                if isinstance(widget, Label):
+                    widget.font_name = self.localisation.font_regular
 
         self.start_seq.next_in_sequence()
 
@@ -164,11 +162,8 @@ class LanguageSelectionScreen(Screen):
             self.welcome_label.font_name = self.localisation.korean_font
             self.next_button.font_name = self.localisation.korean_font
 
-        print(language)
-
         self.localisation.load_in_new_language(language)
         self.next_button.text = self.localisation.get_str("Next") + "..."
-        self.welcome_label.text = self.localisation.get_str(WELCOME_STRINGS[0])
 
     def __update_body(self, *args):
         self.body.canvas.before.clear()

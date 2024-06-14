@@ -238,10 +238,8 @@ class WiFiAndDataConsentScreen3(Screen):
     def update_strings(self):
         self.header_label.text = self.l.get_str("Wi-Fi and Data Consent")
 
-        if self.l.lang.endswith("(KO)"):
-            self.scroll_privacy_notice.privacy_notice.source = paths.get_resource("KO.rst")
-        else:
-            self.scroll_privacy_notice.privacy_notice.source = paths.get_resource(self.l.lang + ".rst")
+        file_name = self.l.lang.split(" ")[1][1:-1].upper() + ".rst"
+        self.scroll_privacy_notice.privacy_notice.source = paths.get_resource(file_name)
 
         self.user_info.text = self.l.get_str(
             "I have read and understood the privacy notice"
