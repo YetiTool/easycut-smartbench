@@ -188,7 +188,7 @@ Builder.load_string("""
 
 
 class DrywallCutterScreen(Screen):
-    shape_options = ['circle', 'square', 'rectangle', 'line', 'geberit']
+    shape_options = ['circle', 'square', 'rectangle', 'line']
     line_cut_options = ['inside', 'on', 'outside']
     rotation = 'horizontal'
 
@@ -202,9 +202,6 @@ class DrywallCutterScreen(Screen):
         },
         'line': {
             'image_path': './asmcnc/apps/drywall_cutter_app/img/line_shape_button.png',
-        },
-        'geberit': {
-            'image_path': './asmcnc/apps/drywall_cutter_app/img/geberit_shape_button.png',
         },
         'rectangle': {
             'image_path': './asmcnc/apps/drywall_cutter_app/img/rectangle_shape_button.png',
