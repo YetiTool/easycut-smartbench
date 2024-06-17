@@ -104,7 +104,7 @@ from asmcnc.skavaUI import screen_homing_decision
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v2.9.0'
+initial_version = 'v2.9.1'
 
 config_flag = False
 
