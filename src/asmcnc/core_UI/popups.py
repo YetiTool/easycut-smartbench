@@ -18,6 +18,8 @@ from kivy.clock import Clock
 from asmcnc.core_UI import scaling_utils as utils
 from asmcnc.core_UI.components.buttons.hold_button import WarningHoldButton
 from asmcnc.comms.logging_system.logging_system import Logger
+from asmcnc.comms.user_settings_manager import UserSettingsManager
+from kivy.uix.switch import Switch
 
 """
 Popup type enum
@@ -1069,3 +1071,114 @@ class SimulatingJobPopup(ErrorPopup):
             main_label_size_hint_y=main_label_size_hint_y,
             **kwargs
         )
+
+
+class DustshoeWarningPopup(BasicPopup):
+    def __init__(
+        self,
+        main_string,
+        popup_width=800,
+        popup_height=480,
+        button_one_text="Ok",
+        button_one_callback=None,
+        button_one_background_color=[230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0],
+        button_two_text=None,
+        button_two_callback=None,
+        button_two_background_color=None,
+        main_label_padding=(0, 0),
+        main_layout_padding=(200, 20, 200, 20),
+        main_layout_spacing=10,
+        main_label_size_delta=140,
+        main_label_h_align="center",
+        title="Warning!",
+        button_layout_padding=(20, 10, 20, 0),
+        button_layout_spacing=10,
+        main_label_size_hint_y=1,
+        **kwargs
+    ):
+        super(DustshoeWarningPopup, self).__init__(
+            main_string=main_string,
+            popup_type=PopupType.ERROR,
+            main_label_padding=main_label_padding,
+            main_layout_padding=main_layout_padding,
+            main_layout_spacing=main_layout_spacing,
+            main_label_size_delta=main_label_size_delta,
+            button_layout_padding=button_layout_padding,
+            button_layout_spacing=button_layout_spacing,
+            main_label_h_align=main_label_h_align,
+            popup_width=popup_width,
+            popup_height=popup_height,
+            button_one_text=button_one_text,
+            button_one_callback=button_one_callback,
+            button_one_background_color=button_one_background_color,
+            button_two_text=button_two_text,
+            button_two_callback=button_two_callback,
+            button_two_background_color=button_two_background_color,
+            title=title,
+            main_label_size_hint_y=main_label_size_hint_y,
+            **kwargs
+        )
+
+    def build(self):
+        usm = UserSettingsManager()
+
+        text_size_x = dp(
+            utils.get_scaled_width(self.popup_width - self.main_label_size_delta)
+        )
+
+        self.main_label = Label(
+            size_hint_y=self.main_label_size_hint_y,
+            text_size=(text_size_x, None),
+            halign=self.main_label_h_align,
+            valign="middle",
+            text="[b]" + self.l.get_str(self.main_string) + "[/b]",
+            color=(0, 0, 0, 1),
+            padding=utils.get_scaled_tuple(self.main_label_padding),
+            markup=True,
+            font_size=str(utils.get_scaled_width(25)) + "sp",
+        )
+
+        dust_shoe_detection_layout = BoxLayout(
+            orientation="horizontal",
+            spacing=utils.get_scaled_width(0),
+            padding=utils.get_scaled_width(0),
+            size_hint_y=1
+        )
+
+        dust_shoe_label = Label(
+            text=self.l.get_str("Dust shoe plug detection"),
+            color=(0, 0, 0, 1),
+            markup=True,
+            font_size=str(utils.get_scaled_width(20)) + "sp",
+        )
+
+        dust_shoe_switch = Switch(size_hint_y=1)
+
+        usm.bind(dust_shoe_detection=lambda i, value: setattr(dust_shoe_switch, 'active', value))
+        dust_shoe_switch.bind(active=lambda i, value: usm.set_value('dust_shoe_detection', value))
+        dust_shoe_switch.active = usm.get_value('dust_shoe_detection')
+
+        dust_shoe_detection_layout.add_widget(dust_shoe_label)
+        dust_shoe_detection_layout.add_widget(dust_shoe_switch)
+
+        self.main_layout = BoxLayout(
+            orientation="vertical",
+            spacing=utils.get_scaled_tuple(
+                self.main_layout_spacing, orientation="vertical"
+            ),
+            padding=utils.get_scaled_tuple(self.main_layout_padding),
+        )
+
+        image = self.get_image()
+        if image is not None:
+            self.main_layout.add_widget(image)
+
+        self.main_layout.add_widget(self.main_label)
+        self.main_layout.add_widget(dust_shoe_detection_layout)
+
+        if self.button_one_text:
+            self.button_layout = self.build_button_layout()
+            self.main_layout.add_widget(self.button_layout)
+
+        self.content = self.main_layout
+        self.update_font_sizes()

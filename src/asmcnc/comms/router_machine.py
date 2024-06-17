@@ -23,6 +23,7 @@ from asmcnc.comms import motors
 from asmcnc.comms.grbl_settings_manager import GRBLSettingsManagerSingleton
 from asmcnc.skavaUI import popup_info
 from asmcnc.comms.coordinate_system import CoordinateSystem
+from asmcnc.comms.user_settings_manager import UserSettingsManager
 
 from kivy.clock import Clock
 from kivy.properties import NumericProperty, ListProperty
@@ -156,6 +157,7 @@ class RouterMachine(EventDispatcher):
         self.model_manager = ModelManagerSingleton()
         self.grbl_manager = GRBLSettingsManagerSingleton()
         self.set_jog_limits()
+        self.user_settings_manager = UserSettingsManager()
 
         self.win_serial_port = win_serial_port   # Need to save so that serial connection can be reopened (for zhead cycle app)
 
@@ -1215,6 +1217,10 @@ class RouterMachine(EventDispatcher):
         :param run_at_grbl_speed: If True, the spindle will run at the last GRBL speed. Defaults to False.
         :return: None
         """
+        dust_shoe_detection = self.user_settings_manager.get_value('dust_shoe_detection')
+        if dust_shoe_detection and not self.s.dustshoe_is_closed:
+            self.sm.pm.show_dustshoe_warning_popup()
+            return
         if run_at_grbl_speed:
             self.s.write_command("M3")
         else:
