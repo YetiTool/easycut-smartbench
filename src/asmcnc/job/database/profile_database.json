@@ -1,0 +1,1566 @@
+[
+  {
+    "uid": "0000",
+    "generic_tool": {
+      "uid": "0006",
+      "description": "3.175 mm 1 flute Upcut"
+    },
+    "material": {
+      "uid": "0000",
+      "description": "Oak worktop"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 6,
+        "stepover": 1.5,
+        "unit": "mm",
+        "cutting_direction": "Climb"
+      },
+      "spindle_speed": 24000,
+      "max_feedrate": 3000,
+      "target_tool_load": 130
+    },
+    "applicable_tools": [
+      {
+        "uid": "0007",
+        "description": "Yeti Tool 21737 Ø 3.175 mm 1 flute Upcut Endmill L22"
+      },
+      {
+        "uid": "0010",
+        "description": "Yeti Tool 21737 Ø 3.175 mm 1 flute Upcut Endmill L22 DLC coated"
+      },
+      {
+        "uid": "0012",
+        "description": "Yeti Tool 21751 Ø 3.175 mm 1 flute Upcut Endmill L12 DLC coated (aluminium)"
+      }
+    ]
+  },
+  {
+    "uid": "0001",
+    "generic_tool": {
+      "uid": "0009",
+      "description": "6 mm 1 flute Upcut"
+    },
+    "material": {
+      "uid": "0000",
+      "description": "Oak worktop"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 3,
+        "stepover": 3,
+        "unit": "mm",
+        "cutting_direction": "Climb"
+      },
+      "spindle_speed": 22000,
+      "max_feedrate": 3000,
+      "target_tool_load": 140
+    },
+    "applicable_tools": [
+      {
+        "uid": "0009",
+        "description": "Yeti Tool 21740 Ø 6 mm 1 flute Upcut Endmill L22"
+      },
+      {
+        "uid": "0011",
+        "description": "Yeti Tool 21740 Ø 6 mm 1 flute Upcut Endmill L22 DLC coated"
+      }
+    ]
+  },
+  {
+    "uid": "0002",
+    "generic_tool": {
+      "uid": "0010",
+      "description": "8 mm 1 flute Upcut"
+    },
+    "material": {
+      "uid": "0000",
+      "description": "Oak worktop"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 4,
+        "stepover": 4,
+        "unit": "mm",
+        "cutting_direction": "Climb"
+      },
+      "spindle_speed": 22000,
+      "max_feedrate": 3500,
+      "target_tool_load": 200
+    },
+    "applicable_tools": [
+      {
+        "uid": "0025",
+        "description": "Rennie Tool Ø 8 mm 1 flute Upcut Endmill L22"
+      }
+    ]
+  },
+  {
+    "uid": "0003",
+    "generic_tool": {
+      "uid": "0002",
+      "description": "3.175 mm 1 flute Downcut"
+    },
+    "material": {
+      "uid": "0000",
+      "description": "Oak worktop"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 4,
+        "stepover": 1.5,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 22000,
+      "max_feedrate": 5000,
+      "target_tool_load": 140
+    },
+    "applicable_tools": [
+      {
+        "uid": "0005",
+        "description": "Yeti Tool 21745 Ø 3.175 mm 1 flute Downcut Endmill L22"
+      }
+    ]
+  },
+  {
+    "uid": "0004",
+    "generic_tool": {
+      "uid": "0003",
+      "description": "6 mm 1 flute Downcut"
+    },
+    "material": {
+      "uid": "0000",
+      "description": "Oak worktop"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 3,
+        "stepover": 3,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 22000,
+      "max_feedrate": 2200,
+      "target_tool_load": 330
+    },
+    "applicable_tools": [
+      {
+        "uid": "0006",
+        "description": "Yeti Tool 21748 Ø 6 mm 1 flute Downcut Endmill L22"
+      }
+    ]
+  },
+  {
+    "uid": "0005",
+    "generic_tool": {
+      "uid": "0004",
+      "description": "8 mm 1 flute Downcut"
+    },
+    "material": {
+      "uid": "0000",
+      "description": "Oak worktop"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 4,
+        "stepover": 4,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 20500,
+      "max_feedrate": 3000,
+      "target_tool_load": 170
+    },
+    "applicable_tools": [
+      {
+        "uid": "0026",
+        "description": "Rennie Tool Ø 8 mm 1 flute Downcut Endmill L22"
+      }
+    ]
+  },
+  {
+    "uid": "0006",
+    "generic_tool": {
+      "uid": "0000",
+      "description": "3.175 mm 1 flute Compression"
+    },
+    "material": {
+      "uid": "0000",
+      "description": "Oak worktop"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 6,
+        "stepover": 1.5,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 2500,
+      "target_tool_load": 210
+    },
+    "applicable_tools": [
+      {
+        "uid": "0003",
+        "description": "Yeti Tool 21741 Ø 3.175 mm 1 flute Compression Endmill L4+18"
+      }
+    ]
+  },
+  {
+    "uid": "0007",
+    "generic_tool": {
+      "uid": "0011",
+      "description": "3.175 mm 2 flute Compression"
+    },
+    "material": {
+      "uid": "0000",
+      "description": "Oak worktop"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 6,
+        "stepover": 1.5,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 18000,
+      "max_feedrate": 2200,
+      "target_tool_load": 270
+    },
+    "applicable_tools": [
+      {
+        "uid": "0015",
+        "description": "Yeti Tool 21733 Ø 3.175 mm 2 flute Compression Endmill L4+18"
+      }
+    ]
+  },
+  {
+    "uid": "0008",
+    "generic_tool": {
+      "uid": "0014",
+      "description": "6 mm 2 flute Compression"
+    },
+    "material": {
+      "uid": "0000",
+      "description": "Oak worktop"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 4,
+        "stepover": 3,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 16500,
+      "max_feedrate": 2600,
+      "target_tool_load": 200
+    },
+    "applicable_tools": [
+      {
+        "uid": "0018",
+        "description": "Yeti Tool 21736 Ø 6 mm 2 flute Compression Endmill L4+18"
+      }
+    ]
+  },
+  {
+    "uid": "0009",
+    "generic_tool": {
+      "uid": "0018",
+      "description": "3.175 mm 2 flute Straight"
+    },
+    "material": {
+      "uid": "0000",
+      "description": "Oak worktop"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 3,
+        "stepover": 1.5,
+        "unit": "mm",
+        "cutting_direction": "Both"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 4000,
+      "target_tool_load": 140
+    },
+    "applicable_tools": [
+      {
+        "uid": "0028",
+        "description": "Rennie Tool Ø 3.175 mm 2 flute Straight Endmill L12"
+      }
+    ]
+  },
+  {
+    "uid": "0010",
+    "generic_tool": {
+      "uid": "0020",
+      "description": "6 mm 2 flute Straight"
+    },
+    "material": {
+      "uid": "0000",
+      "description": "Oak worktop"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 3,
+        "stepover": 3,
+        "unit": "mm",
+        "cutting_direction": "Both"
+      },
+      "spindle_speed": 24000,
+      "max_feedrate": 6000,
+      "target_tool_load": 260
+    },
+    "applicable_tools": [
+      {
+        "uid": "0023",
+        "description": "Yeti Tool 21721 Ø 6 mm 2 flute Straight Endmill L22"
+      }
+    ]
+  },
+  {
+    "uid": "0011",
+    "generic_tool": {
+      "uid": "0021",
+      "description": "8 mm 2 flute Straight"
+    },
+    "material": {
+      "uid": "0000",
+      "description": "Oak worktop"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 4,
+        "stepover": 4,
+        "unit": "mm",
+        "cutting_direction": "Both"
+      },
+      "spindle_speed": 24000,
+      "max_feedrate": 5000,
+      "target_tool_load": 400
+    },
+    "applicable_tools": [
+      {
+        "uid": "0024",
+        "description": "Yeti Tool 21722 Ø 8 mm 2 flute Straight Endmill L32"
+      }
+    ]
+  },
+  {
+    "uid": "0012",
+    "generic_tool": {
+      "uid": "0015",
+      "description": "3.175 mm 2 flute Downcut"
+    },
+    "material": {
+      "uid": "0001",
+      "description": "MDF"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 3,
+        "stepover": 1.5,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 5000,
+      "target_tool_load": 310
+    },
+    "applicable_tools": [
+      {
+        "uid": "0019",
+        "description": "Yeti Tool 21728 Ø 3.175 mm 2 flute Downcut Endmill L22"
+      }
+    ]
+  },
+  {
+    "uid": "0013",
+    "generic_tool": {
+      "uid": "0016",
+      "description": "6 mm 2 flute Downcut"
+    },
+    "material": {
+      "uid": "0001",
+      "description": "MDF"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 6,
+        "stepover": 3,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 20500,
+      "max_feedrate": 6000,
+      "target_tool_load": 510
+    },
+    "applicable_tools": [
+      {
+        "uid": "0020",
+        "description": "Yeti Tool 21731 Ø 6 mm 2 flute Downcut Endmill L24"
+      }
+    ]
+  },
+  {
+    "uid": "0014",
+    "generic_tool": {
+      "uid": "0017",
+      "description": "8 mm 2 flute Downcut"
+    },
+    "material": {
+      "uid": "0001",
+      "description": "MDF"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 6,
+        "stepover": 4,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 6000,
+      "target_tool_load": 500
+    },
+    "applicable_tools": [
+      {
+        "uid": "0021",
+        "description": "Yeti Tool 21732 Ø 8 mm 2 flute Downcut Endmill L42"
+      }
+    ]
+  },
+  {
+    "uid": "0015",
+    "generic_tool": {
+      "uid": "0011",
+      "description": "3.175 mm 2 flute Compression"
+    },
+    "material": {
+      "uid": "0001",
+      "description": "MDF"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 4.175,
+        "stepover": 1.5,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 6000,
+      "target_tool_load": 190
+    },
+    "applicable_tools": [
+      {
+        "uid": "0015",
+        "description": "Yeti Tool 21733 Ø 3.175 mm 2 flute Compression Endmill L4+18"
+      }
+    ]
+  },
+  {
+    "uid": "0016",
+    "generic_tool": {
+      "uid": "0014",
+      "description": "6 mm 2 flute Compression"
+    },
+    "material": {
+      "uid": "0001",
+      "description": "MDF"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 6,
+        "stepover": 3,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 20500,
+      "max_feedrate": 6000,
+      "target_tool_load": 540
+    },
+    "applicable_tools": [
+      {
+        "uid": "0018",
+        "description": "Yeti Tool 21736 Ø 6 mm 2 flute Compression Endmill L4+18"
+      }
+    ]
+  },
+  {
+    "uid": "0017",
+    "generic_tool": {
+      "uid": "0015",
+      "description": "3.175 mm 2 flute Downcut"
+    },
+    "material": {
+      "uid": "0002",
+      "description": "Birch plywood"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 3,
+        "stepover": 1.5,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 6000,
+      "target_tool_load": 120
+    },
+    "applicable_tools": [
+      {
+        "uid": "0019",
+        "description": "Yeti Tool 21728 Ø 3.175 mm 2 flute Downcut Endmill L22"
+      }
+    ]
+  },
+  {
+    "uid": "0018",
+    "generic_tool": {
+      "uid": "0016",
+      "description": "6 mm 2 flute Downcut"
+    },
+    "material": {
+      "uid": "0002",
+      "description": "Birch plywood"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 3,
+        "stepover": 3,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 6000,
+      "target_tool_load": 500
+    },
+    "applicable_tools": [
+      {
+        "uid": "0020",
+        "description": "Yeti Tool 21731 Ø 6 mm 2 flute Downcut Endmill L24"
+      }
+    ]
+  },
+  {
+    "uid": "0019",
+    "generic_tool": {
+      "uid": "0017",
+      "description": "8 mm 2 flute Downcut"
+    },
+    "material": {
+      "uid": "0002",
+      "description": "Birch plywood"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 3,
+        "stepover": 4,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 6000,
+      "target_tool_load": 520
+    },
+    "applicable_tools": [
+      {
+        "uid": "0021",
+        "description": "Yeti Tool 21732 Ø 8 mm 2 flute Downcut Endmill L42"
+      }
+    ]
+  },
+  {
+    "uid": "0020",
+    "generic_tool": {
+      "uid": "0011",
+      "description": "3.175 mm 2 flute Compression"
+    },
+    "material": {
+      "uid": "0002",
+      "description": "Birch plywood"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 6,
+        "stepover": 1.5,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 6000,
+      "target_tool_load": 470
+    },
+    "applicable_tools": [
+      {
+        "uid": "0015",
+        "description": "Yeti Tool 21733 Ø 3.175 mm 2 flute Compression Endmill L4+18"
+      }
+    ]
+  },
+  {
+    "uid": "0021",
+    "generic_tool": {
+      "uid": "0014",
+      "description": "6 mm 2 flute Compression"
+    },
+    "material": {
+      "uid": "0002",
+      "description": "Birch plywood"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 6,
+        "stepover": 3,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 6000,
+      "target_tool_load": 580
+    },
+    "applicable_tools": [
+      {
+        "uid": "0018",
+        "description": "Yeti Tool 21736 Ø 6 mm 2 flute Compression Endmill L4+18"
+      }
+    ]
+  },
+  {
+    "uid": "0022",
+    "generic_tool": {
+      "uid": "0001",
+      "description": "6 mm 1 flute Compression"
+    },
+    "material": {
+      "uid": "0003",
+      "description": "MFC"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 5,
+        "stepover": 3,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 4000,
+      "target_tool_load": 310
+    },
+    "applicable_tools": [
+      {
+        "uid": "0004",
+        "description": "Yeti Tool 21744 Ø 6 mm 1 flute Compression Endmill L4+21"
+      }
+    ]
+  },
+  {
+    "uid": "0023",
+    "generic_tool": {
+      "uid": "0005",
+      "description": "6 mm 1 flute Straight"
+    },
+    "material": {
+      "uid": "0003",
+      "description": "MFC"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 5,
+        "stepover": 3,
+        "unit": "mm",
+        "cutting_direction": "Both"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 4000,
+      "target_tool_load": 290
+    },
+    "applicable_tools": [
+      {
+        "uid": "0029",
+        "description": "Fraiser Bits D302.060.18D Ø 6 mm 1+1 flute Straight Endmill L18 PCD coated"
+      }
+    ]
+  },
+  {
+    "uid": "0024",
+    "generic_tool": {
+      "uid": "0019",
+      "description": "4 mm 2 flute Straight"
+    },
+    "material": {
+      "uid": "0003",
+      "description": "MFC"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 3,
+        "stepover": 2,
+        "unit": "mm",
+        "cutting_direction": "Both"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 3000,
+      "target_tool_load": 200
+    },
+    "applicable_tools": [
+      {
+        "uid": "0022",
+        "description": "Yeti Tool 21720 Ø 4 mm 2 flute Straight Endmill L22"
+      }
+    ]
+  },
+  {
+    "uid": "0025",
+    "generic_tool": {
+      "uid": "0020",
+      "description": "6 mm 2 flute Straight"
+    },
+    "material": {
+      "uid": "0003",
+      "description": "MFC"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 3,
+        "stepover": 3,
+        "unit": "mm",
+        "cutting_direction": "Both"
+      },
+      "spindle_speed": 24000,
+      "max_feedrate": 1500,
+      "target_tool_load": 290
+    },
+    "applicable_tools": [
+      {
+        "uid": "0023",
+        "description": "Yeti Tool 21721 Ø 6 mm 2 flute Straight Endmill L22"
+      }
+    ]
+  },
+  {
+    "uid": "0026",
+    "generic_tool": {
+      "uid": "0021",
+      "description": "8 mm 2 flute Straight"
+    },
+    "material": {
+      "uid": "0003",
+      "description": "MFC"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 4,
+        "stepover": 4,
+        "unit": "mm",
+        "cutting_direction": "Both"
+      },
+      "spindle_speed": 24000,
+      "max_feedrate": 2000,
+      "target_tool_load": 400
+    },
+    "applicable_tools": [
+      {
+        "uid": "0024",
+        "description": "Yeti Tool 21722 Ø 8 mm 2 flute Straight Endmill L32"
+      }
+    ]
+  },
+  {
+    "uid": "0027",
+    "generic_tool": {
+      "uid": "0006",
+      "description": "3.175 mm 1 flute Upcut"
+    },
+    "material": {
+      "uid": "0004",
+      "description": "Aluminium (6082)"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 2,
+        "stepover": 1.5,
+        "unit": "mm",
+        "cutting_direction": "Both"
+      },
+      "spindle_speed": 24000,
+      "max_feedrate": 1000,
+      "target_tool_load": 110
+    },
+    "applicable_tools": [
+      {
+        "uid": "0007",
+        "description": "Yeti Tool 21737 Ø 3.175 mm 1 flute Upcut Endmill L22"
+      },
+      {
+        "uid": "0010",
+        "description": "Yeti Tool 21737 Ø 3.175 mm 1 flute Upcut Endmill L22 DLC coated"
+      },
+      {
+        "uid": "0012",
+        "description": "Yeti Tool 21751 Ø 3.175 mm 1 flute Upcut Endmill L12 DLC coated (aluminium)"
+      }
+    ]
+  },
+  {
+    "uid": "0028",
+    "generic_tool": {
+      "uid": "0007",
+      "description": "4 mm 1 flute Upcut"
+    },
+    "material": {
+      "uid": "0004",
+      "description": "Aluminium (6082)"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 2,
+        "stepover": 2,
+        "unit": "mm",
+        "cutting_direction": "Both"
+      },
+      "spindle_speed": 24000,
+      "max_feedrate": 1000,
+      "target_tool_load": 180
+    },
+    "applicable_tools": [
+      {
+        "uid": "0008",
+        "description": "Yeti Tool 21738 Ø 4 mm 1 flute Upcut Endmill L22"
+      },
+      {
+        "uid": "0013",
+        "description": "Yeti Tool 21752 Ø 4 mm 1 flute Upcut Endmill L15 DLC coated (aluminium)"
+      }
+    ]
+  },
+  {
+    "uid": "0029",
+    "generic_tool": {
+      "uid": "0011",
+      "description": "3.175 mm 2 flute Compression"
+    },
+    "material": {
+      "uid": "0004",
+      "description": "Aluminium (6082)"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 1,
+        "stepover": 2.5,
+        "unit": "mm",
+        "cutting_direction": "Both"
+      },
+      "spindle_speed": 20500,
+      "max_feedrate": 2000,
+      "target_tool_load": 360
+    },
+    "applicable_tools": [
+      {
+        "uid": "0015",
+        "description": "Yeti Tool 21733 Ø 3.175 mm 2 flute Compression Endmill L4+18"
+      }
+    ]
+  },
+  {
+    "uid": "0030",
+    "generic_tool": {
+      "uid": "0000",
+      "description": "3.175 mm 1 flute Compression"
+    },
+    "material": {
+      "uid": "0005",
+      "description": "ACM"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 3,
+        "stepover": 1.5,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 8000,
+      "target_tool_load": 110
+    },
+    "applicable_tools": [
+      {
+        "uid": "0003",
+        "description": "Yeti Tool 21741 Ø 3.175 mm 1 flute Compression Endmill L4+18"
+      }
+    ]
+  },
+  {
+    "uid": "0031",
+    "generic_tool": {
+      "uid": "0008",
+      "description": "5 mm 1 flute Upcut"
+    },
+    "material": {
+      "uid": "0005",
+      "description": "ACM"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 3,
+        "stepover": 2.5,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 8000,
+      "target_tool_load": 300
+    },
+    "applicable_tools": [
+      {
+        "uid": "0014",
+        "description": "Yeti Tool 21753 Ø 5 mm 1 flute Upcut Endmill L22 DLC coated (aluminium)"
+      },
+      {
+        "uid": "0030",
+        "description": "Rennie Tool Ø 5 mm 1 flute Upcut Endmill L22"
+      }
+    ]
+  },
+  {
+    "uid": "0032",
+    "generic_tool": {
+      "uid": "0010",
+      "description": "8 mm 1 flute Upcut"
+    },
+    "material": {
+      "uid": "0005",
+      "description": "ACM"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 3,
+        "stepover": 4,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 8000,
+      "target_tool_load": 510
+    },
+    "applicable_tools": [
+      {
+        "uid": "0025",
+        "description": "Rennie Tool Ø 8 mm 1 flute Upcut Endmill L22"
+      }
+    ]
+  },
+  {
+    "uid": "0033",
+    "generic_tool": {
+      "uid": "0023",
+      "description": "90 ° 2 flute V groove"
+    },
+    "material": {
+      "uid": "0005",
+      "description": "ACM"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 3,
+        "stepover": null,
+        "unit": "mm",
+        "cutting_direction": "Climb"
+      },
+      "spindle_speed": 24000,
+      "max_feedrate": 3000,
+      "target_tool_load": 320
+    },
+    "applicable_tools": [
+      {
+        "uid": "0032",
+        "description": "CMT Orange 715.001.11 90° 2 flute V groove"
+      }
+    ]
+  },
+  {
+    "uid": "0034",
+    "generic_tool": {
+      "uid": "0006",
+      "description": "3.175 mm 1 flute Upcut"
+    },
+    "material": {
+      "uid": "0006",
+      "description": "Acrylic (extruded)"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 2,
+        "stepover": 1.5,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 24000,
+      "max_feedrate": 8000,
+      "target_tool_load": 100
+    },
+    "applicable_tools": [
+      {
+        "uid": "0007",
+        "description": "Yeti Tool 21737 Ø 3.175 mm 1 flute Upcut Endmill L22"
+      },
+      {
+        "uid": "0010",
+        "description": "Yeti Tool 21737 Ø 3.175 mm 1 flute Upcut Endmill L22 DLC coated"
+      },
+      {
+        "uid": "0012",
+        "description": "Yeti Tool 21751 Ø 3.175 mm 1 flute Upcut Endmill L12 DLC coated (aluminium)"
+      }
+    ]
+  },
+  {
+    "uid": "0035",
+    "generic_tool": {
+      "uid": "0007",
+      "description": "4 mm 1 flute Upcut"
+    },
+    "material": {
+      "uid": "0006",
+      "description": "Acrylic (extruded)"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 2,
+        "stepover": 2,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 24000,
+      "max_feedrate": 8000,
+      "target_tool_load": 130
+    },
+    "applicable_tools": [
+      {
+        "uid": "0008",
+        "description": "Yeti Tool 21738 Ø 4 mm 1 flute Upcut Endmill L22"
+      },
+      {
+        "uid": "0013",
+        "description": "Yeti Tool 21752 Ø 4 mm 1 flute Upcut Endmill L15 DLC coated (aluminium)"
+      }
+    ]
+  },
+  {
+    "uid": "0036",
+    "generic_tool": {
+      "uid": "0008",
+      "description": "5 mm 1 flute Upcut"
+    },
+    "material": {
+      "uid": "0006",
+      "description": "Acrylic (extruded)"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 2,
+        "stepover": 2.5,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 8000,
+      "target_tool_load": 130
+    },
+    "applicable_tools": [
+      {
+        "uid": "0014",
+        "description": "Yeti Tool 21753 Ø 5 mm 1 flute Upcut Endmill L22 DLC coated (aluminium)"
+      },
+      {
+        "uid": "0030",
+        "description": "Rennie Tool Ø 5 mm 1 flute Upcut Endmill L22"
+      }
+    ]
+  },
+  {
+    "uid": "0037",
+    "generic_tool": {
+      "uid": "0009",
+      "description": "6 mm 1 flute Upcut"
+    },
+    "material": {
+      "uid": "0006",
+      "description": "Acrylic (extruded)"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 2,
+        "stepover": 3,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 8000,
+      "target_tool_load": 150
+    },
+    "applicable_tools": [
+      {
+        "uid": "0009",
+        "description": "Yeti Tool 21740 Ø 6 mm 1 flute Upcut Endmill L22"
+      },
+      {
+        "uid": "0011",
+        "description": "Yeti Tool 21740 Ø 6 mm 1 flute Upcut Endmill L22 DLC coated"
+      }
+    ]
+  },
+  {
+    "uid": "0038",
+    "generic_tool": {
+      "uid": "0006",
+      "description": "3.175 mm 1 flute Upcut"
+    },
+    "material": {
+      "uid": "0007",
+      "description": "Acrylic (cast)"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 2,
+        "stepover": 1.5,
+        "unit": "mm",
+        "cutting_direction": "Climb"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 6000,
+      "target_tool_load": 100
+    },
+    "applicable_tools": [
+      {
+        "uid": "0007",
+        "description": "Yeti Tool 21737 Ø 3.175 mm 1 flute Upcut Endmill L22"
+      },
+      {
+        "uid": "0010",
+        "description": "Yeti Tool 21737 Ø 3.175 mm 1 flute Upcut Endmill L22 DLC coated"
+      },
+      {
+        "uid": "0012",
+        "description": "Yeti Tool 21751 Ø 3.175 mm 1 flute Upcut Endmill L12 DLC coated (aluminium)"
+      }
+    ]
+  },
+  {
+    "uid": "0039",
+    "generic_tool": {
+      "uid": "0007",
+      "description": "4 mm 1 flute Upcut"
+    },
+    "material": {
+      "uid": "0007",
+      "description": "Acrylic (cast)"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 2,
+        "stepover": 2,
+        "unit": "mm",
+        "cutting_direction": "Both"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 8000,
+      "target_tool_load": 110
+    },
+    "applicable_tools": [
+      {
+        "uid": "0008",
+        "description": "Yeti Tool 21738 Ø 4 mm 1 flute Upcut Endmill L22"
+      },
+      {
+        "uid": "0013",
+        "description": "Yeti Tool 21752 Ø 4 mm 1 flute Upcut Endmill L15 DLC coated (aluminium)"
+      }
+    ]
+  },
+  {
+    "uid": "0040",
+    "generic_tool": {
+      "uid": "0008",
+      "description": "5 mm 1 flute Upcut"
+    },
+    "material": {
+      "uid": "0007",
+      "description": "Acrylic (cast)"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 2,
+        "stepover": 2.5,
+        "unit": "mm",
+        "cutting_direction": "Both"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 6000,
+      "target_tool_load": 150
+    },
+    "applicable_tools": [
+      {
+        "uid": "0014",
+        "description": "Yeti Tool 21753 Ø 5 mm 1 flute Upcut Endmill L22 DLC coated (aluminium)"
+      },
+      {
+        "uid": "0030",
+        "description": "Rennie Tool Ø 5 mm 1 flute Upcut Endmill L22"
+      }
+    ]
+  },
+  {
+    "uid": "0041",
+    "generic_tool": {
+      "uid": "0009",
+      "description": "6 mm 1 flute Upcut"
+    },
+    "material": {
+      "uid": "0007",
+      "description": "Acrylic (cast)"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 2,
+        "stepover": 3,
+        "unit": "mm",
+        "cutting_direction": "Climb"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 6000,
+      "target_tool_load": 270
+    },
+    "applicable_tools": [
+      {
+        "uid": "0009",
+        "description": "Yeti Tool 21740 Ø 6 mm 1 flute Upcut Endmill L22"
+      },
+      {
+        "uid": "0011",
+        "description": "Yeti Tool 21740 Ø 6 mm 1 flute Upcut Endmill L22 DLC coated"
+      }
+    ]
+  },
+  {
+    "uid": "0042",
+    "generic_tool": {
+      "uid": "0006",
+      "description": "3.175 mm 1 flute Upcut"
+    },
+    "material": {
+      "uid": "0008",
+      "description": "Solid surface"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 3,
+        "stepover": 1.5,
+        "unit": "mm",
+        "cutting_direction": "Both"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 6000,
+      "target_tool_load": 220
+    },
+    "applicable_tools": [
+      {
+        "uid": "0007",
+        "description": "Yeti Tool 21737 Ø 3.175 mm 1 flute Upcut Endmill L22"
+      },
+      {
+        "uid": "0010",
+        "description": "Yeti Tool 21737 Ø 3.175 mm 1 flute Upcut Endmill L22 DLC coated"
+      },
+      {
+        "uid": "0012",
+        "description": "Yeti Tool 21751 Ø 3.175 mm 1 flute Upcut Endmill L12 DLC coated (aluminium)"
+      }
+    ]
+  },
+  {
+    "uid": "0043",
+    "generic_tool": {
+      "uid": "0009",
+      "description": "6 mm 1 flute Upcut"
+    },
+    "material": {
+      "uid": "0008",
+      "description": "Solid surface"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 3,
+        "stepover": 3,
+        "unit": "mm",
+        "cutting_direction": "Both"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 7000,
+      "target_tool_load": 170
+    },
+    "applicable_tools": [
+      {
+        "uid": "0009",
+        "description": "Yeti Tool 21740 Ø 6 mm 1 flute Upcut Endmill L22"
+      },
+      {
+        "uid": "0011",
+        "description": "Yeti Tool 21740 Ø 6 mm 1 flute Upcut Endmill L22 DLC coated"
+      }
+    ]
+  },
+  {
+    "uid": "0044",
+    "generic_tool": {
+      "uid": "0010",
+      "description": "8 mm 1 flute Upcut"
+    },
+    "material": {
+      "uid": "0008",
+      "description": "Solid surface"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 3,
+        "stepover": 4,
+        "unit": "mm",
+        "cutting_direction": "Both"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 4000,
+      "target_tool_load": 450
+    },
+    "applicable_tools": [
+      {
+        "uid": "0025",
+        "description": "Rennie Tool Ø 8 mm 1 flute Upcut Endmill L22"
+      }
+    ]
+  },
+  {
+    "uid": "0045",
+    "generic_tool": {
+      "uid": "0015",
+      "description": "3.175 mm 2 flute Downcut"
+    },
+    "material": {
+      "uid": "0009",
+      "description": "Hardwood plywood"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 3,
+        "stepover": 1.5,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 20500,
+      "max_feedrate": 5000,
+      "target_tool_load": 150
+    },
+    "applicable_tools": [
+      {
+        "uid": "0019",
+        "description": "Yeti Tool 21728 Ø 3.175 mm 2 flute Downcut Endmill L22"
+      }
+    ]
+  },
+  {
+    "uid": "0046",
+    "generic_tool": {
+      "uid": "0016",
+      "description": "6 mm 2 flute Downcut"
+    },
+    "material": {
+      "uid": "0009",
+      "description": "Hardwood plywood"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 3,
+        "stepover": 3,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 5000,
+      "target_tool_load": 470
+    },
+    "applicable_tools": [
+      {
+        "uid": "0020",
+        "description": "Yeti Tool 21731 Ø 6 mm 2 flute Downcut Endmill L24"
+      }
+    ]
+  },
+  {
+    "uid": "0047",
+    "generic_tool": {
+      "uid": "0017",
+      "description": "8 mm 2 flute Downcut"
+    },
+    "material": {
+      "uid": "0009",
+      "description": "Hardwood plywood"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 3,
+        "stepover": 4,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 6000,
+      "target_tool_load": 460
+    },
+    "applicable_tools": [
+      {
+        "uid": "0021",
+        "description": "Yeti Tool 21732 Ø 8 mm 2 flute Downcut Endmill L42"
+      }
+    ]
+  },
+  {
+    "uid": "0048",
+    "generic_tool": {
+      "uid": "0011",
+      "description": "3.175 mm 2 flute Compression"
+    },
+    "material": {
+      "uid": "0009",
+      "description": "Hardwood plywood"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 6,
+        "stepover": 1.5,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 6000,
+      "target_tool_load": 420
+    },
+    "applicable_tools": [
+      {
+        "uid": "0015",
+        "description": "Yeti Tool 21733 Ø 3.175 mm 2 flute Compression Endmill L4+18"
+      }
+    ]
+  },
+  {
+    "uid": "0049",
+    "generic_tool": {
+      "uid": "0014",
+      "description": "6 mm 2 flute Compression"
+    },
+    "material": {
+      "uid": "0009",
+      "description": "Hardwood plywood"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 6,
+        "stepover": 3,
+        "unit": "mm",
+        "cutting_direction": "Conventional"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 600,
+      "target_tool_load": 470
+    },
+    "applicable_tools": [
+      {
+        "uid": "0018",
+        "description": "Yeti Tool 21736 Ø 6 mm 2 flute Compression Endmill L4+18"
+      }
+    ]
+  },
+  {
+    "uid": "0050",
+    "generic_tool": {
+      "uid": "0020",
+      "description": "6 mm 2 flute Straight"
+    },
+    "material": {
+      "uid": "0010",
+      "description": "Plasterboard"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 12,
+        "stepover": 3,
+        "unit": "mm",
+        "cutting_direction": "Both"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 8000,
+      "target_tool_load": 110
+    },
+    "applicable_tools": [
+      {
+        "uid": "0023",
+        "description": "Yeti Tool 21721 Ø 6 mm 2 flute Straight Endmill L22"
+      }
+    ]
+  },
+  {
+    "uid": "0051",
+    "generic_tool": {
+      "uid": "0022",
+      "description": "45 ° 2 flute V groove"
+    },
+    "material": {
+      "uid": "0010",
+      "description": "Plasterboard"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 12,
+        "stepover": null,
+        "unit": "mm",
+        "cutting_direction": "Both"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 8000,
+      "target_tool_load": 270
+    },
+    "applicable_tools": [
+      {
+        "uid": "0033",
+        "description": "Generic 45° 2 flute V groove"
+      }
+    ]
+  },
+  {
+    "uid": "0052",
+    "generic_tool": {
+      "uid": "0023",
+      "description": "90 ° 2 flute V groove"
+    },
+    "material": {
+      "uid": "0010",
+      "description": "Plasterboard"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 12,
+        "stepover": null,
+        "unit": "mm",
+        "cutting_direction": "Both"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 8000,
+      "target_tool_load": 240
+    },
+    "applicable_tools": [
+      {
+        "uid": "0032",
+        "description": "CMT Orange 715.001.11 90° 2 flute V groove"
+      }
+    ]
+  }
+]
