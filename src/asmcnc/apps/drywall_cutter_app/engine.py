@@ -36,8 +36,6 @@ class GCodeEngine(object):
         self.finishing_stepover = 0.5
         self.finishing_stepdown = 12
 
-        self.pocketing = False
-
         # Globals
         self.x = 0  # Identifier for use in arrays
         self.y = 1  # Identifier for use in arrays
@@ -213,6 +211,9 @@ class GCodeEngine(object):
 
     # Produce gcode instructions to cut a rounded (or not) rectangle
     def cut_rectangle(self, coordinates, datum_x, datum_y, offset, tool_diameter, is_climb, corner_radius, pass_depth, feedrate, plungerate, total_cut_depth, z_safe_distance, pass_type, simulate):
+        if offset == "pocket":
+            offset = "inside"  # Pocketing operations exist inside the shape perimeter - the additional passes are handled by loops in engine_run
+
         # Ensure coordinates are all in clockwise order
         coordinates = self.correct_orientation(coordinates, self.is_clockwise(coordinates))
 
@@ -643,7 +644,10 @@ class GCodeEngine(object):
                 parameters['total_cut_depth'] = simulation_z_height
             return parameters
 
-        if self.config.active_config.shape_type.lower() == "rectangle" or self.config.active_config.shape_type.lower() == "square":
+        shape_type = self.config.active_config.shape_type.lower()
+        pocketing = self.config.active_config.toolpath_offset == "pocket"
+
+        if shape_type in ["rectangle", "square"]:
             # Produce coordinate list
             y_rect = self.config.active_config.canvas_shape_dims.y
             x_rect = self.config.active_config.canvas_shape_dims.x \
@@ -660,7 +664,7 @@ class GCodeEngine(object):
 
             # Create a dictionary of operations
             length_to_cover_with_passes = 0  # Generate a single pass for roughing
-            if self.pocketing:
+            if pocketing:
                 length_to_cover_with_passes = min(x_rect, y_rect) / 2  # Half the shortest edge length
             length_covered_by_finishing = self.finishing_stepover * self.finishing_passes  # Amount of length covered by finishing passes
             length_to_cover_with_roughing = length_to_cover_with_passes - length_covered_by_finishing  # Remaining length to be covered by roughing passes
@@ -713,7 +717,7 @@ class GCodeEngine(object):
                             rectangle = self.cut_rectangle(**rectangle_parameters)
                             cutting_lines += rectangle
 
-        elif self.config.active_config.shape_type.lower() == "geberit":
+        elif shape_type in ["geberit"]:
 
             # Read in data
             gcode_lines = self.find_and_read_gcode_file(self.source_folder_path, self.config.active_config.shape_type, self.config.active_cutter.dimensions.diameter, orientation=self.config.active_config.rotation)
@@ -761,7 +765,7 @@ class GCodeEngine(object):
 
             cutting_lines = gcode_lines
 
-        elif self.config.active_config.shape_type.lower() == "circle":
+        elif shape_type in ["circle"]:
             circle_coordinates = self.rectangle_coordinates(self.config.active_config.canvas_shape_dims.d, self.config.active_config.canvas_shape_dims.d) # Circles are secretly rounded rectangles
 
             # Add first point to end of coordinate list to complete the contour
@@ -772,7 +776,7 @@ class GCodeEngine(object):
 
             # Create a dictionary of operations
             length_to_cover_with_passes = 0  # Generate a single pass for roughing
-            if self.pocketing:
+            if pocketing:
                 length_to_cover_with_passes = circle_radius
             length_covered_by_finishing = self.finishing_stepover * self.finishing_passes  # Amount of length covered by finishing passes
             length_to_cover_with_roughing = length_to_cover_with_passes - length_covered_by_finishing  # Remaining length to be covered by roughing passes
@@ -833,7 +837,7 @@ class GCodeEngine(object):
                             circle = self.cut_rectangle(**circle_parameters)
                             cutting_lines += circle
 
-        elif self.config.active_config.shape_type.lower() == "line":
+        elif shape_type in ["line"]:
             cutting_lines = self.cut_line(**line_default_parameters(simulate=simulate))
 
         else:
