@@ -718,7 +718,7 @@ class GCodeEngine(object):
                         # for each stepdown
                         for stepover in operation_data["stepovers"]:
                             # for each stepover
-                            first_plunge = stepover == operation_data["stepovers"][0]  #First stepover
+                            first_plunge = stepover == operation_data["stepovers"][0]  # First stepover
                             rectangle_parameters["z_safe_distance"] = -1 * pass_depth + stepover_z_hop_distance  # Raise tool by the stepover distance for optimisation if not the last stepover
 
                             if self.config.active_cutter.dimensions.diameter:
