@@ -106,6 +106,7 @@ from asmcnc.skavaUI import screen_nudge
 from asmcnc.skavaUI import screen_recovery_decision
 from asmcnc.skavaUI import screen_homing_decision
 from asmcnc.skavaUI import screen_yeticut_lobby
+from asmcnc.skavaUI import screen_dust_shoe_alarm
 
 # developer testing
 Cmport = 'COM3'
@@ -298,6 +299,9 @@ class SkavaUI(App):
                                                                              machine=m, localization=self.l)
         yeticut_lobby_screen = screen_yeticut_lobby.YeticutLobbyScreen(name='yeticut_lobby', screen_manager=sm,
                                                                        machine=m, localization=self.l, app_manager=am)
+        dust_shoe_alarm_screen = screen_dust_shoe_alarm.DustShoeAlarmScreen(name='dust_shoe_detection', screen_manager=sm,
+                                                                            machine=m, job=jd, database=db,
+                                                                            localization=self.l)
 
         # add the screens to screen manager
         sm.add_widget(lobby_screen)
@@ -330,6 +334,7 @@ class SkavaUI(App):
         sm.add_widget(recovery_decision_screen)
         sm.add_widget(homing_decision_screen)
         sm.add_widget(yeticut_lobby_screen)
+        sm.add_widget(dust_shoe_alarm_screen)
 
         # Setting the first screen:        
         # sm.current is set at the end of start_services in serial_connection 
