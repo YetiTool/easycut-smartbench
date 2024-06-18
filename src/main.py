@@ -210,7 +210,7 @@ class SkavaUI(App):
         ModelManagerSingleton(m)
 
         # initialise GRBLSettingsManagerSingleton with machine to manage GRBL settings
-        GRBLSettingsManagerSingleton(m)
+        self.grbl_settings_manager = GRBLSettingsManagerSingleton(m)
 
         # Initialise yetipilot
         yp = YetiPilot(screen_manager=sm, machine=m, job_data=jd, localization=self.l)

@@ -117,6 +117,7 @@ SEQUENCE_ALARM_IMG_PATH = os.path.join(CORE_UI_PATH, "sequence_alarm", "img")
 # Paths that may need to be created
 SB_VALUES_PATH = os.path.join(ROOT_PATH, "sb_values")
 DWT_TEMP_GCODE_PATH = os.path.join(DWT_APP_PATH, "gcode", "temp")
+MACHINE_SETTINGS_FILE_PATH = os.path.join(SB_VALUES_PATH, "machine_settings.json")
 
 
 def create_paths():
