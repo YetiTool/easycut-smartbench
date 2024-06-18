@@ -283,7 +283,7 @@ class GCodeEngine(object):
                     else:
                         add_feedrate_to_line = 0 == final_coordinates.index(coordinate)  # First line
                     if first_plunge:
-                        add_feedrate_to_line = 2 == final_coordinates.index(coordinate)  # Third line
+                        add_feedrate_to_line = 1 == final_coordinates.index(coordinate)  # Second line
 
                     if arc_flag:
                         gcode_instruction = "G1 X%s Y%s %s\n" % (coordinate[0] + datum_x, coordinate[1] + datum_y, 'F%s' % feedrate if add_feedrate_to_line else '')
