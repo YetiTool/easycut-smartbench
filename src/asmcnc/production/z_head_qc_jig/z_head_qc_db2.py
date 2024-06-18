@@ -64,7 +64,7 @@ class ZHeadQCDB2(Screen):
                 return
 
             except:
-                Logger.info(traceback.format_exc())
+                Logger.exception('Failed to send calibration payload!')
 
         self.sm.current = 'qcDB4'
 

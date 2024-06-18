@@ -373,7 +373,7 @@ class HomeScreen(Screen):
             try:
                 Clock.schedule_once(self.preview_job_file, 0.05)
             except:
-                Logger.info("Unable to preview file")
+                Logger.exception("Unable to preview file")
 
     def on_pre_enter(self):
         if self.jd.job_gcode == []:
@@ -395,7 +395,7 @@ class HomeScreen(Screen):
                 self.gcode_preview_widget.draw_file_in_xy_plane([])
                 self.gcode_preview_widget.get_non_modal_gcode([])
             except:
-                Logger.info("No G-code loaded.")
+                Logger.exception("No G-code loaded.")
             self.gcode_summary_widget.hide_summary()
         else:
             # File label at the top
@@ -445,11 +445,11 @@ class HomeScreen(Screen):
     def preview_job_file(self, dt):
         # Draw gcode preview
         try:
-            Logger.info("> draw_file_in_xy_plane")
+            Logger.debug("> draw_file_in_xy_plane")
             self.gcode_preview_widget.draw_file_in_xy_plane(self.non_modal_gcode_list)
-            Logger.info("< draw_file_in_xy_plane")
+            Logger.debug("< draw_file_in_xy_plane")
         except:
-            Logger.info("Unable to draw gcode")
+            Logger.exception("Unable to draw gcode")
         Logger.info("DONE")
 
     def on_pre_leave(self):

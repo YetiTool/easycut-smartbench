@@ -145,7 +145,7 @@ class HomingScreenActive(Screen):
         self.sm.current = "squaring_active"
 
     def stop_button_press(self):
-        Logger.info("Homing cancelled by user")
+        Logger.warning("Homing cancelled by user")
         self.cancel_homing()
         self.go_to_cancel_to_screen()
 

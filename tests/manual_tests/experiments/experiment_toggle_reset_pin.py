@@ -9,8 +9,6 @@ python -m tests.manual_tests.experiments.experiment_toggle_reset_pin
 
 import sys, os, subprocess
 
-from asmcnc.comms.logging_system.logging_system import Logger
-
 sys.path.append('./src')
 os.chdir('./src')
 
@@ -26,6 +24,7 @@ Config.write()
 from mock import Mock
 
 from kivy.app import App
+from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.lang import Builder
 
@@ -38,6 +37,7 @@ from asmcnc.comms import localization
 from asmcnc.job import job_data
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.apps.systemTools_app.screens.calibration import widget_sg_status_bar
+from asmcnc.comms.logging_system.logging_system import Logger
 
 Cmport = 'COM3'
 
@@ -130,9 +130,6 @@ Builder.load_string("""
                 Button: 
                     text: "Check Y"
                     on_press: root.check_y()
-
-
-
 
         BoxLayout:
             size_hint_y: 0.08
@@ -265,35 +262,10 @@ class TestScreen(Screen):
 
         disconnect_and_update()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class ScreenTest(App):
+
+    width = Window.width
+    height = Window.height if Window.height == 480 else Window.height - 32
 
     def build(self):
 

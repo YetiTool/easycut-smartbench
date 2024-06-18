@@ -293,7 +293,7 @@ class Keyboard(VKeyboard):
         try: 
             Window.add_widget(self)
         except:
-            Logger.info(traceback.format_exc())
+            Logger.exception('Failed to add keyboard instance to Window!')
 
     # Functions to lower keyboard
     def lower_keyboard_if_not_focused(self):

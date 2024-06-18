@@ -265,8 +265,8 @@ def assert_pns_neutral(serial_comms, pns):
     else: assert not serial_comms.limit_z
     if "P" in pns: assert serial_comms.probe
     else: assert not serial_comms.probe
-    if "G" in pns: assert serial_comms.dust_shoe_cover
-    else: assert not serial_comms.dust_shoe_cover
+    if "G" in pns: assert not serial_comms.dustshoe_is_closed
+    else: assert serial_comms.dustshoe_is_closed
     if "g" in pns: assert serial_comms.spare_door
     else: assert not serial_comms.spare_door
 

@@ -807,7 +807,7 @@ class ZHeadPCBSetUp(Screen):
                 Clock.schedule_once(lambda dt: store_params_and_progress(), 1.2)
 
             else:
-                Logger.info("Z Head not Idle yet, waiting...")
+                Logger.warning("Z Head not Idle yet, waiting...")
                 Clock.schedule_once(lambda dt: set_currents_and_coeffs(), 0.5)
 
 

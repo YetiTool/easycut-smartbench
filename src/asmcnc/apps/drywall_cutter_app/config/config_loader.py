@@ -7,7 +7,9 @@ from kivy.event import EventDispatcher
 from kivy.properties import StringProperty, ObjectProperty
 
 import config_classes
+from asmcnc.apps.drywall_cutter_app.config import config_options
 from asmcnc.comms.logging_system.logging_system import Logger
+from asmcnc.comms.model_manager import ModelManagerSingleton
 
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 CONFIGURATIONS_DIR = os.path.join(CURRENT_DIR, "configurations")
@@ -36,28 +38,28 @@ def get_display_preview(json_obj):
     preview += "Toolpath offset: " + json_obj["toolpath_offset"] + "\n"
     preview += "Cutting depths: \n"
     preview += (
-        INDENT_VALUE
-        + "Material thickness: "
-        + str(json_obj["cutting_depths"]["material_thickness"])
-        + "\n"
+            INDENT_VALUE
+            + "Material thickness: "
+            + str(json_obj["cutting_depths"]["material_thickness"])
+            + "\n"
     )
     preview += (
-        INDENT_VALUE
-        + "Bottom offset: "
-        + str(json_obj["cutting_depths"]["bottom_offset"])
-        + "\n"
+            INDENT_VALUE
+            + "Bottom offset: "
+            + str(json_obj["cutting_depths"]["bottom_offset"])
+            + "\n"
     )
     preview += (
-        INDENT_VALUE
-        + "Auto pass: "
-        + str(json_obj["cutting_depths"]["auto_pass"])
-        + "\n"
+            INDENT_VALUE
+            + "Auto pass: "
+            + str(json_obj["cutting_depths"]["auto_pass"])
+            + "\n"
     )
     preview += (
-        INDENT_VALUE
-        + "Depth per pass: "
-        + str(json_obj["cutting_depths"]["depth_per_pass"])
-        + "\n"
+            INDENT_VALUE
+            + "Depth per pass: "
+            + str(json_obj["cutting_depths"]["depth_per_pass"])
+            + "\n"
     )
     preview += "Datum position: \n"
     preview += INDENT_VALUE + "X: " + str(json_obj["datum_position"]["x"]) + "\n"
@@ -68,7 +70,7 @@ def get_display_preview(json_obj):
 def get_shape_type(json_obj):
     if json_obj["shape_type"] in ["line", "rectangle"]:
         return (
-            "Shape type: " + json_obj["rotation"] + " " + json_obj["shape_type"] + "\n"
+                "Shape type: " + json_obj["rotation"] + " " + json_obj["shape_type"] + "\n"
         )
     else:
         return "Shape type: " + json_obj["shape_type"] + "\n"
@@ -99,6 +101,11 @@ class DWTConfig(EventDispatcher):
     def __init__(self, screen_drywall_cutter=None, *args, **kwargs):
         super(DWTConfig, self).__init__(*args, **kwargs)
         self.screen_drywall_cutter = screen_drywall_cutter
+
+        if ModelManagerSingleton().is_machine_drywall():
+            self.app_type = config_options.AppType.DRYWALL_CUTTER
+        else:
+            self.app_type = config_options.AppType.SHAPES
 
         most_recent_config_path = self.get_most_recent_config()
         if most_recent_config_path:
@@ -157,7 +164,7 @@ class DWTConfig(EventDispatcher):
         field_count = len(cfg)
 
         valid_field_count = (
-            len(inspect.getargspec(config_classes.Configuration.__init__).args) - 1
+                len(inspect.getargspec(config_classes.Configuration.__init__).args) - 1
         )
 
         if field_count != valid_field_count:
@@ -305,6 +312,35 @@ class DWTConfig(EventDispatcher):
                     'type': cutter.type,
                     'size': cutter.dimensions.diameter if cutter.dimensions.diameter else cutter.dimensions.angle
                 }
+        return cutters
+
+    def get_available_cutters(self):
+        """
+        Returns a list of the available cutters for the current configuration.
+        :return: A list of the available cutters.
+        """
+        cutters = {}
+
+        for cutter_file in sorted(os.listdir(CUTTERS_DIR)):
+            file_path = os.path.join(CUTTERS_DIR, cutter_file)
+
+            # Skip any directories
+            if not os.path.isfile(file_path):
+                continue
+
+            with open(file_path, "r") as f:
+                cutter = config_classes.Cutter.from_json(json.load(f))
+
+            # Only get cutters which are available for the current app type (dwt/shapes)
+            if self.app_type.value not in cutter.apps:
+                continue
+
+            cutters[cutter.tool_id] = {
+                'cutter_path': cutter_file,
+                'image_path': cutter.image,
+                'type': cutter.type,
+                'size': cutter.dimensions.diameter if cutter.dimensions.diameter else cutter.dimensions.angle
+            }
         return cutters
 
     def save_temp_config(self):

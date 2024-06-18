@@ -211,7 +211,7 @@ class SpindleHealthCheckActiveScreen(Screen):
                 self.sm.get_screen("go").raise_pause_screens_if_paused(override=True)
 
         def fail_test(reason):
-            Logger.info("Spindle health check failed - " + reason)
+            Logger.warning("Spindle health check failed - " + reason)
             self.m.spindle_health_check_failed = True
             self.m.spindle_health_check_passed = False
             show_fail_screen(reason)

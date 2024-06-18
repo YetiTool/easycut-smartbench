@@ -128,9 +128,9 @@ class LBCalibration4(Screen):
                 self.send_calibration_payload(TMC_Y2, self.serial_number)
                 next_screen_name = 'lbc5'
 
-            except Exception as e:
+            except Exception:
                 next_screen_name = 'lbc6'
-                Logger.info(traceback.format_exc())
+                Logger.exception('Failed to send calibration payload!')
 
         else: 
             next_screen_name = 'lbc6'

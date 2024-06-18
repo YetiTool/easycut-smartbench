@@ -16,8 +16,8 @@ from asmcnc.apps.maintenance_app import (
     widget_maintenance_spindle_save,
 )
 
-Builder.load_string(
-    """
+Builder.load_string("""
+#:import LabelBase asmcnc.core_UI.components.labels.base_label
 
 <SpindleSpinner@SpinnerOption>
 
@@ -116,7 +116,7 @@ Builder.load_string(
                             size: self.size
                             pos: self.pos
 
-                    Label:
+                    LabelBase:
                         id: cooldown_settings_label
                         size_hint_y: 0.5
                         color: 0,0,0,1
@@ -147,7 +147,7 @@ Builder.load_string(
                             max: 20000
                             step: 500
 
-                        Label:
+                        LabelBase:
                             id: rpm_label
                             size_hint_x: 1.5
                             color: 0,0,0,1
@@ -183,7 +183,7 @@ Builder.load_string(
                             size_hint_y: None
                             height: app.get_scaled_height(60)
 
-                        Label:
+                        LabelBase:
                             id: seconds_label
                             size_hint_x: 1.5
                             color: 0,0,0,1
@@ -256,7 +256,7 @@ Builder.load_string(
                                 size: self.size
                                 pos: self.pos
 
-                        Label:
+                        LabelBase:
                             id: get_data_label
                             color: 0,0,0,1
                             font_size: dp(0.03625*app.width)
@@ -293,7 +293,7 @@ Builder.load_string(
                         pos: self.pos
 
     FloatLayout:
-        Label:
+        LabelBase:
             id: min_speed_label
             x: cooldown_speed_slider.pos[0]
             y: cooldown_speed_slider.pos[1] - cooldown_speed_slider.size[1] * 0.1
@@ -303,7 +303,7 @@ Builder.load_string(
             color: hex('#888888ff')
             font_size: dp(0.01625*app.width)
 
-        Label:
+        LabelBase:
             id: max_speed_label
             x: cooldown_speed_slider.pos[0] + cooldown_speed_slider.size[0] * 0.9
             y: cooldown_speed_slider.pos[1] - cooldown_speed_slider.size[1] * 0.1
@@ -313,7 +313,7 @@ Builder.load_string(
             color: hex('#888888ff')
             font_size: dp(0.01625*app.width)
 
-        Label:
+        LabelBase:
             id: min_time_label
             x: cooldown_time_slider.pos[0]
             y: cooldown_time_slider.pos[1] - cooldown_time_slider.size[1] * 0.1
@@ -323,7 +323,7 @@ Builder.load_string(
             color: hex('#888888ff')
             font_size: dp(0.01625*app.width)
 
-        Label:
+        LabelBase:
             id: max_time_label
             x: cooldown_time_slider.pos[0] + cooldown_time_slider.size[0] * 0.9
             y: cooldown_time_slider.pos[1] - cooldown_time_slider.size[1] * 0.1
