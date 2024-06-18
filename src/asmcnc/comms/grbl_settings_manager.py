@@ -305,12 +305,12 @@ class GRBLSettingsManagerSingleton(object):
 
     def overwrite_serial_number(self):
         try:
-            with open(paths.MACHINE_SETTINGS_FILE_PATH, 'r') as f:
+            with open(self.MACHINE_DATA_FILE_PATH, 'r') as f:
                 data = json.load(f)
 
             old_sn = data['50']
             data['50'] = self.machine.s.setting_50
-            with open(paths.MACHINE_SETTINGS_FILE_PATH, 'w') as f:
+            with open(self.MACHINE_DATA_FILE_PATH, 'w') as f:
                 json.dump(data, f)
 
             for key in data:
@@ -318,7 +318,7 @@ class GRBLSettingsManagerSingleton(object):
                     continue
                 self.machine.write_dollar_setting(int(key), data[key])
             Logger.info("Serial number overwritten in {} successfully from {} to {}".format(
-                paths.MACHINE_SETTINGS_FILE_PATH, old_sn, data['50']))
+                self.MACHINE_DATA_FILE_PATH, old_sn, data['50']))
             return True
         except Exception as e:
             Logger.error("Error overwriting serial number: {}".format(e))
