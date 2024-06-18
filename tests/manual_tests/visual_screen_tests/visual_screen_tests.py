@@ -2,7 +2,7 @@
 
 import sys, os
 
-from asmcnc.comms.logging_system.logging_system import Logger
+from src.asmcnc.comms.logging_system.logging_system import Logger
 
 if len(sys.argv) != 2:
     Logger.info("Correct usage: python -m tests.manual_tests.visual_screen_tests.visual_screen_tests <test_function_name>")
@@ -54,12 +54,13 @@ from asmcnc.job.yetipilot.yetipilot import YetiPilot
 from asmcnc.comms.smart_transfer import server_connection
 from asmcnc.core_UI.popup_manager import PopupManager
 from asmcnc.core_UI import scaling_utils
+from asmcnc.comms.user_settings_manager import UserSettingsManager
 
 from asmcnc.skavaUI import screen_error, screen_rebooting, screen_file_loading, screen_lobby
 from asmcnc.skavaUI import screen_job_recovery, screen_nudge, screen_recovery_decision, screen_homing_decision, popup_nudge
 from asmcnc.skavaUI import screen_go, screen_job_feedback, screen_home, screen_spindle_shutdown, screen_stop_or_resume_decision
 from asmcnc.skavaUI import screen_door, screen_mstate_warning, screen_serial_failure, screen_squaring_active, screen_jobstart_warning
-from asmcnc.skavaUI import screen_check_job, popup_info
+from asmcnc.skavaUI import screen_check_job, popup_info, screen_dust_shoe_alarm
 from asmcnc.apps.systemTools_app.screens.calibration import screen_general_measurement
 from asmcnc.apps.start_up_sequence.screens import screen_pro_plus_safety
 from asmcnc.apps.start_up_sequence.data_consent_app.screens import wifi_and_data_consent_1
@@ -96,6 +97,8 @@ Cmport = 'COM3'
 class ScreenTest(App):
     width = Window.width
     height = Window.height if Window.height == 480 else Window.height - 32
+
+    user_settings_manager = UserSettingsManager()
 
     def get_scaled_width(self, val):
         return scaling_utils.get_scaled_width(val)
@@ -623,6 +626,20 @@ class ScreenTest(App):
             # m.s.get_serial_screen('Could not process grbl response. Grbl scanner has been stopped.')
             # m.s.get_serial_screen('Could not write last command to serial buffer.')
 
+        def dust_shoe_alarm_screen_test():
+            m.s.spindle_on = True
+            self.user_settings_manager.set_value('dust_shoe_detection', True)
+
+            set_up_screens([[screen_home.HomeScreen, 'home'],
+                            [screen_dust_shoe_alarm.DustShoeAlarmScreen, 'dust_shoe_alarm']])
+
+            sm.current = 'home'
+
+            def dust_shoe_unplugged(dt):
+                m.s.dustshoe_is_closed = not m.s.dustshoe_is_closed
+
+            Clock.schedule_interval(dust_shoe_unplugged, 5)
+
 
         # FACTORY/PRODUCTION SCREENS
 
@@ -847,10 +864,14 @@ class ScreenTest(App):
         # Create database object to talk to
         db = smartbench_flurry_database_connection.DatabaseEventManager(sm, m, sett)
 
+        # Popup manager
+        pm = PopupManager(sm, m, l)
+        sm.pm = pm  # store in screen manager for access by screens
+
         # App manager object
         config_flag = False
         initial_version = 'v2.7.0'
-        am = app_manager.AppManagerClass(sm, m, sett, l, kb, jd, db, config_flag, initial_version)
+        am = app_manager.AppManagerClass(sm, m, sett, l, kb, jd, db, config_flag, initial_version, pm)
 
         # Server connection object
         sc = server_connection.ServerConnection(sett)
