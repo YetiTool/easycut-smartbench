@@ -686,15 +686,10 @@ class GCodeEngine(object):
             length_covered_by_finishing = self.finishing_stepover * self.finishing_passes  # Amount of length covered by finishing passes
             length_to_cover_with_roughing = length_to_cover_with_passes - length_covered_by_finishing  # Remaining length to be covered by roughing passes
 
-            finishing_stepovers = calculate_stepovers(length_covered_by_finishing, 0, self.finishing_stepover)
+            finishing_stepovers = calculate_stepovers(length_covered_by_finishing, 0, self.finishing_stepover)[1:]
             roughing_stepovers = calculate_stepovers(length_to_cover_with_roughing, finishing_stepovers[0], self.config.active_cutter.dimensions.diameter / 2)[1:]
             finishing_depths = self.calculate_pass_depths(total_cut_depth, self.finishing_stepdown)
             roughing_depths = self.calculate_pass_depths(total_cut_depth, cutting_pass_depth)
-
-            # Bring the first finish stepover into the end of the roughing stepovers
-            if finishing_stepovers:
-                roughing_stepovers.append(finishing_stepovers[0])
-                finishing_stepovers = finishing_stepovers[1:]
 
             operations = {
                 "Roughing": {
@@ -803,7 +798,6 @@ class GCodeEngine(object):
             finishing_depths = self.calculate_pass_depths(total_cut_depth, self.finishing_stepdown)
             roughing_depths = self.calculate_pass_depths(total_cut_depth, cutting_pass_depth)
 
-            # Bring the first finish stepover into the end of the roughing stepovers
             if finishing_stepovers:
                 roughing_stepovers.append(finishing_stepovers[0])
                 finishing_stepovers = finishing_stepovers[1:]
