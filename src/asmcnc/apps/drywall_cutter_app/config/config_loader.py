@@ -165,9 +165,10 @@ class DWTConfig(EventDispatcher):
 
         valid_field_count = (
                 len(inspect.getargspec(config_classes.Configuration.__init__).args) - 1
-        )
+        )  # Subtract 1 for self (kwargs is not counted)
 
-        if field_count != valid_field_count:
+        # Config must have at least the same number of fields as the default config, but can have more (for future updates)
+        if field_count < valid_field_count:
             return False
 
         return True

@@ -26,7 +26,8 @@ class Cutter(object):
         parameters,
         toolpath_offsets,
         image,
-        apps
+        apps,
+        **kwargs
     ):
         self.tool_id = tool_id.encode("utf-8")  # type: str
         self.manufacturer = str(manufacturer)  # type: str
@@ -56,7 +57,7 @@ class Cutter(object):
 class Dimensions(object):
     """Class to store the cutter dimensions."""
 
-    def __init__(self, diameter, angle, units):
+    def __init__(self, diameter, angle, units, **kwargs):
         self.diameter = diameter  # type: float
         self.angle = angle  # type: int
         self.units = str(units)  # type: str
@@ -65,7 +66,7 @@ class Dimensions(object):
 class AllowableToolpathOffsets(object):
     """Class to store the allowable toolpath offsets."""
 
-    def __init__(self, inside, outside, on):
+    def __init__(self, inside, outside, on, **kwargs):
         self.inside = inside  # type: bool
         self.outside = outside  # type: bool
         self.on = on  # type: bool
@@ -74,7 +75,7 @@ class AllowableToolpathOffsets(object):
 class Flutes(object):
     """Class to store the cutter flutes."""
 
-    def __init__(self, count, length):
+    def __init__(self, count, length, **kwargs):
         self.count = count  # type: int
         self.length = length  # type: float
 
@@ -92,6 +93,7 @@ class Parameters(object):
         max_depth_total,
         step_over,
         yetipilot_target_power,
+        **kwargs
     ):
         self.cutting_spindle_speed = cutting_spindle_speed  # type: int
         self.cutting_feed_rate = cutting_feed_rate  # type: float
@@ -106,7 +108,7 @@ class Parameters(object):
 class CanvasShapeDims(object):
     """Class to store the canvas shape dimensions."""
 
-    def __init__(self, x, y, r, d, l):
+    def __init__(self, x, y, r, d, l, **kwargs):
         self.x = x  # type: float
         self.y = y  # type: float
         self.r = r  # type: float
@@ -117,7 +119,7 @@ class CanvasShapeDims(object):
 class CuttingDepths(object):
     """Class to store the cutting depths."""
 
-    def __init__(self, material_thickness, bottom_offset, auto_pass, depth_per_pass):
+    def __init__(self, material_thickness, bottom_offset, auto_pass, depth_per_pass, **kwargs):
         self.material_thickness = material_thickness  # type: float
         self.bottom_offset = bottom_offset  # type: float
         self.auto_pass = auto_pass  # type: bool
@@ -127,7 +129,7 @@ class CuttingDepths(object):
 class DatumPosition(object):
     """Class to store the datum position."""
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, **kwargs):
         self.x = x  # type: float
         self.y = y  # type: float
 
@@ -144,7 +146,8 @@ class Configuration(object):
         cutter_type,
         toolpath_offset,
         cutting_depths,
-        datum_position
+        datum_position,
+        **kwargs
     ):
         self.shape_type = str(shape_type)  # type: str
         self.units = str(units)  # type: str
