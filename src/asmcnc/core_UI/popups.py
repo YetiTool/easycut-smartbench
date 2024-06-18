@@ -4,6 +4,7 @@
 Popup system for easycut-smartbench
 """
 from enum import Enum
+from kivy.app import App
 from kivy.metrics import dp
 from kivy.properties import ObjectProperty, StringProperty, ListProperty
 from kivy.uix.boxlayout import BoxLayout
@@ -18,8 +19,10 @@ from kivy.clock import Clock
 from asmcnc.core_UI import scaling_utils as utils
 from asmcnc.core_UI.components.buttons.hold_button import WarningHoldButton
 from asmcnc.comms.logging_system.logging_system import Logger
-from asmcnc.comms.user_settings_manager import UserSettingsManager
 from kivy.uix.switch import Switch
+
+from asmcnc.core_UI.new_popups.popup_bases import PopupBase, PopupWarningTitle
+from asmcnc.core_UI.utils import color_provider
 
 """
 Popup type enum
@@ -1073,75 +1076,37 @@ class SimulatingJobPopup(ErrorPopup):
         )
 
 
-class DustshoeWarningPopup(BasicPopup):
-    def __init__(
-        self,
-        main_string,
-        popup_width=800,
-        popup_height=480,
-        button_one_text="Ok",
-        button_one_callback=None,
-        button_one_background_color=[230 / 255.0, 74 / 255.0, 25 / 255.0, 1.0],
-        button_two_text=None,
-        button_two_callback=None,
-        button_two_background_color=None,
-        main_label_padding=(0, 0),
-        main_layout_padding=(200, 20, 200, 20),
-        main_layout_spacing=10,
-        main_label_size_delta=140,
-        main_label_h_align="center",
-        title="Warning!",
-        button_layout_padding=(20, 10, 20, 0),
-        button_layout_spacing=10,
-        main_label_size_hint_y=1,
-        **kwargs
-    ):
-        super(DustshoeWarningPopup, self).__init__(
-            main_string=main_string,
-            popup_type=PopupType.ERROR,
-            main_label_padding=main_label_padding,
-            main_layout_padding=main_layout_padding,
-            main_layout_spacing=main_layout_spacing,
-            main_label_size_delta=main_label_size_delta,
-            button_layout_padding=button_layout_padding,
-            button_layout_spacing=button_layout_spacing,
-            main_label_h_align=main_label_h_align,
-            popup_width=popup_width,
-            popup_height=popup_height,
-            button_one_text=button_one_text,
-            button_one_callback=button_one_callback,
-            button_one_background_color=button_one_background_color,
-            button_two_text=button_two_text,
-            button_two_callback=button_two_callback,
-            button_two_background_color=button_two_background_color,
-            title=title,
-            main_label_size_hint_y=main_label_size_hint_y,
-            **kwargs
-        )
+class DustshoeWarningPopup(PopupBase):
+    def __init__(self,**kwargs):
+        super(DustshoeWarningPopup, self).__init__(**kwargs)
 
-    def build(self):
-        usm = UserSettingsManager()
+        self.l = kwargs["l"]
+        self.m = kwargs["m"]
+        self.sm = kwargs["sm"]
+        usm = App.get_running_app().user_settings_manager
 
-        text_size_x = dp(
-            utils.get_scaled_width(self.popup_width - self.main_label_size_delta)
-        )
+        self.width = 800
+        self.height = 480
+
+        title = PopupWarningTitle(size_hint_y=0.15, localisation=self.l)
+        self.root_layout.add_widget(title)
 
         self.main_label = Label(
-            size_hint_y=self.main_label_size_hint_y,
-            text_size=(text_size_x, None),
-            halign=self.main_label_h_align,
+            size_hint_y=1,
+            text_size=(utils.get_scaled_width(self.width - 140), None),
+            halign='center',
             valign="middle",
-            text="[b]" + self.l.get_str(self.main_string) + "[/b]",
+            text="[b]" + self.l.get_str("Please close the dust shoe by fitting the dust shoe plug!") + "[/b]",
             color=(0, 0, 0, 1),
-            padding=utils.get_scaled_tuple(self.main_label_padding),
+            padding=(0, 0),
             markup=True,
             font_size=str(utils.get_scaled_width(25)) + "sp",
         )
 
         dust_shoe_detection_layout = BoxLayout(
             orientation="horizontal",
-            spacing=utils.get_scaled_width(0),
-            padding=utils.get_scaled_width(0),
+            spacing=0,
+            padding=0,
             size_hint_y=1
         )
 
@@ -1163,22 +1128,23 @@ class DustshoeWarningPopup(BasicPopup):
 
         self.main_layout = BoxLayout(
             orientation="vertical",
-            spacing=utils.get_scaled_tuple(
-                self.main_layout_spacing, orientation="vertical"
-            ),
-            padding=utils.get_scaled_tuple(self.main_layout_padding),
+            spacing=utils.get_scaled_tuple(10, orientation="vertical"),
+            padding=utils.get_scaled_tuple((200, 20, 200, 20)),
         )
-
-        image = self.get_image()
-        if image is not None:
-            self.main_layout.add_widget(image)
 
         self.main_layout.add_widget(self.main_label)
         self.main_layout.add_widget(dust_shoe_detection_layout)
 
-        if self.button_one_text:
-            self.button_layout = self.build_button_layout()
-            self.main_layout.add_widget(self.button_layout)
+        self.root_layout.add_widget(self.main_layout)
 
-        self.content = self.main_layout
-        self.update_font_sizes()
+        ok_button = Button(
+            text=self.l.get_str("Ok"),
+            size_hint_y=0.3,
+            size_hint_x=0.5,
+            font_size=str(utils.get_scaled_width(20)) + "sp",
+            background_color=color_provider.get_rgba("red"),
+            on_release=self.dismiss,
+            background_normal=""
+        )
+
+        self.root_layout.add_widget(ok_button)

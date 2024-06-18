@@ -88,7 +88,7 @@ class PopupManager:
 
         self.simulating_job_popup = SimulatingJobPopup(sm=self.sm, m=self.m, l=self.l, main_string="")
 
-        self.dustshoe_warning_popup = DustshoeWarningPopup(sm=self.sm, m=self.m, l=self.l, main_string="Please close the dust shoe by fitting the dust shoe plug!")
+        self.dustshoe_warning_popup = DustshoeWarningPopup(sm=self.sm, m=self.m, l=self.l)
 
     def show_spindle_safety_popup(self, button_one_callback, button_two_callback):
         self.spindle_safety_popup.button_one_callback = button_one_callback
