@@ -10,6 +10,7 @@ import traceback
 from enum import Enum
 from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.comms.model_manager import ModelManagerSingleton, ProductCodes
+from kivy.app import App
 
 try:
     import pigpio
@@ -23,7 +24,6 @@ from asmcnc.comms import motors
 from asmcnc.comms.grbl_settings_manager import GRBLSettingsManagerSingleton
 from asmcnc.skavaUI import popup_info
 from asmcnc.comms.coordinate_system import CoordinateSystem
-from asmcnc.comms.user_settings_manager import UserSettingsManager
 
 from kivy.clock import Clock
 from kivy.properties import NumericProperty, ListProperty
@@ -157,7 +157,7 @@ class RouterMachine(EventDispatcher):
         self.model_manager = ModelManagerSingleton()
         self.grbl_manager = GRBLSettingsManagerSingleton()
         self.set_jog_limits()
-        self.user_settings_manager = UserSettingsManager()
+        self.user_settings_manager = App.get_running_app().user_settings_manager
 
         self.win_serial_port = win_serial_port   # Need to save so that serial connection can be reopened (for zhead cycle app)
 
