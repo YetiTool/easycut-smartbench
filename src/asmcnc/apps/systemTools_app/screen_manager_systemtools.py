@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
+import json
+
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
+from asmcnc import paths
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info, screen_diagnostics
 from asmcnc.apps.systemTools_app.screens import popup_system, screen_system_menu, screen_build_info, screen_beta_testing, \
@@ -157,6 +160,22 @@ class ScreenManagerSystemTools(object):
     '''Copies all the relevant files for upgrading the console to a c10 to the mounted usb stick.'''
     def show_popup_before_download_settings_to_usb(self):
         self.sm.pm.show_download_settings_popup(self)
+
+    def show_popup_before_overwrite_serial_number(self):
+        self.sm.pm.show_overwrite_serial_number_popup(self, button_two_callback=self.overwrite_serial_number)
+
+    def overwrite_serial_number(self):
+        try:
+            MACHINE_DATA_FILE_PATH = os.path.join(paths.SB_VALUES_PATH, "machine_settings.json")
+            with open(MACHINE_DATA_FILE_PATH, 'r') as file:
+                data = json.load(file)
+
+            data['50'] = self.m.s.setting_50
+            with open(MACHINE_DATA_FILE_PATH, 'w') as file:
+                json.dump(data, file)
+            self.sm.pm.show_mini_info_popup("Overwrite was successful!")
+        except:
+            self.sm.pm.show_mini_info_popup("Overwrite failed!")
 
     def download_settings_to_usb(self, *args):
         if self.mutex.locked():
