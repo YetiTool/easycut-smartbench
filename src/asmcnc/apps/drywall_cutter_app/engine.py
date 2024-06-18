@@ -687,9 +687,14 @@ class GCodeEngine(object):
             length_to_cover_with_roughing = length_to_cover_with_passes - length_covered_by_finishing  # Remaining length to be covered by roughing passes
 
             finishing_stepovers = calculate_stepovers(length_covered_by_finishing, 0, self.finishing_stepover)
-            roughing_stepovers = calculate_stepovers(length_to_cover_with_roughing, finishing_stepovers[0], self.config.active_cutter.dimensions.diameter / 2)[1:-1]
+            roughing_stepovers = calculate_stepovers(length_to_cover_with_roughing, finishing_stepovers[0], self.config.active_cutter.dimensions.diameter / 2)[1:]
             finishing_depths = self.calculate_pass_depths(total_cut_depth, self.finishing_stepdown)
             roughing_depths = self.calculate_pass_depths(total_cut_depth, cutting_pass_depth)
+
+            # Bring the first finish stepover into the end of the roughing stepovers
+            if finishing_stepovers:
+                roughing_stepovers.append(finishing_stepovers[0])
+                finishing_stepovers = finishing_stepovers[1:]
 
             operations = {
                 "Roughing": {
@@ -701,10 +706,6 @@ class GCodeEngine(object):
                     "cutting_depths": finishing_depths
                 }
             }
-
-            for operation_name, operation_data in operations.items():
-                if operation_data["stepovers"] == [0]:
-                    operations.pop(operation_name)
 
             if simulate:
                 rectangle = self.cut_rectangle(**rectangle_default_parameters(simulate=True))
@@ -802,6 +803,11 @@ class GCodeEngine(object):
             finishing_depths = self.calculate_pass_depths(total_cut_depth, self.finishing_stepdown)
             roughing_depths = self.calculate_pass_depths(total_cut_depth, cutting_pass_depth)
 
+            # Bring the first finish stepover into the end of the roughing stepovers
+            if finishing_stepovers:
+                roughing_stepovers.append(finishing_stepovers[0])
+                finishing_stepovers = finishing_stepovers[1:]
+
             operations = {
                 "Roughing": {
                     "stepovers": roughing_stepovers,
@@ -812,10 +818,6 @@ class GCodeEngine(object):
                     "cutting_depths": finishing_depths
                 }
             }
-
-            for operation_name, operation_data in operations.items():
-                if operation_data["stepovers"] == [0]:
-                    operations.pop(operation_name)
 
             circle_parameters = circle_default_parameters(simulate=simulate)
 
