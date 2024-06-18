@@ -25,8 +25,7 @@
   "toolpath_offsets": {
     "inside": true,
     "outside": true,
-    "on": true,
-    "pocket": true
+    "on": true
   },
   "image": "./asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_6mm.png",
   "apps": ["dwt", "shapes"]
