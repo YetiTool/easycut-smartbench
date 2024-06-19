@@ -478,3 +478,7 @@ class SpindleSettingsWidget(Widget):
             value.font_size = 0.0275 * Window.width
         else:
             value.font_size = 0.03 * Window.width
+
+    def exit(self):
+        print("save spindle settings")
+        self.spindle_save_widget.save()
