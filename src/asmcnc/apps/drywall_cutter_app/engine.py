@@ -718,6 +718,8 @@ class GCodeEngine(object):
             tab_height = 5
         three_d_tabs = False
 
+        tab_width = tab_width + self.config.active_cutter.dimensions.diameter
+
         is_climb = (self.config.active_cutter.parameters.cutting_direction == CuttingDirectionOptions.CLIMB.value
                     or self.config.active_cutter.parameters.cutting_direction == CuttingDirectionOptions.BOTH.value)
 
