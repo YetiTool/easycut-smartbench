@@ -820,6 +820,11 @@ class GCodeEngine(object):
                 }
             }
 
+            if operations["Roughing"]["stepovers"] == [] and operations["Finishing"]["stepovers"] == [0]:
+                operations["Roughing"]["stepovers"] = [0]
+                operations["Finishing"]["stepovers"] = []
+
+
             if simulate:
                 rectangle = self.cut_rectangle(**rectangle_default_parameters(simulate=True))
                 cutting_lines += rectangle
