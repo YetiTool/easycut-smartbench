@@ -442,17 +442,18 @@ class GCodeEngine(object):
 
                         for tab in tabs_dict.values():
                             tab_cut_height = current_z if current_z > tab_top_z else tab_top_z
-                            if three_d_tabs:
-                                tab_centre_x = (tab['start_x'] + tab['end_x']) / 2
-                                tab_centre_y = (tab['start_y'] + tab['end_y']) / 2
-                                modified_gcode.append('G1 X{} Y{} F4000\n'.format(tab['start_x'], tab['start_y']))
-                                modified_gcode.append('G1 X{} Y{} Z{}\n'.format(tab_centre_x, tab_centre_y, tab_cut_height))
-                                modified_gcode.append('G1 X{} Y{} Z{} F4000\n'.format(tab['end_x'], tab['end_y'], current_z))
-                            else:
-                                modified_gcode.append('G1 X{} Y{} F4000\n'.format(tab['start_x'], tab['start_y']))
-                                modified_gcode.append('G1 Z{} F500\n'.format(tab_cut_height))
-                                modified_gcode.append('G1 X{} Y{} F4000\n'.format(tab['end_x'], tab['end_y']))
-                                modified_gcode.append('G1 Z{} F500\n'.format(current_z))
+                            if current_z < tab_top_z:
+                                if three_d_tabs:
+                                    tab_centre_x = (tab['start_x'] + tab['end_x']) / 2
+                                    tab_centre_y = (tab['start_y'] + tab['end_y']) / 2
+                                    modified_gcode.append('G1 X{} Y{} F4000\n'.format(tab['start_x'], tab['start_y']))
+                                    modified_gcode.append('G1 X{} Y{} Z{}\n'.format(tab_centre_x, tab_centre_y, tab_cut_height))
+                                    modified_gcode.append('G1 X{} Y{} Z{} F4000\n'.format(tab['end_x'], tab['end_y'], current_z))
+                                else:
+                                    modified_gcode.append('G1 X{} Y{} F4000\n'.format(tab['start_x'], tab['start_y']))
+                                    modified_gcode.append('G1 Z{} F500\n'.format(tab_cut_height))
+                                    modified_gcode.append('G1 X{} Y{} F4000\n'.format(tab['end_x'], tab['end_y']))
+                                    modified_gcode.append('G1 Z{} F500\n'.format(current_z))
 
             previous_x_pos = last_x
             previous_y_pos = last_y
@@ -716,8 +717,9 @@ class GCodeEngine(object):
         tab_height = self.config.active_config.cutting_depths.material_thickness * 0.6
         if tab_height > 5:
             tab_height = 5
-        three_d_tabs = False
+        three_d_tabs = True
 
+        # Compensate for tool diameter
         tab_width = tab_width + self.config.active_cutter.dimensions.diameter
 
         is_climb = (self.config.active_cutter.parameters.cutting_direction == CuttingDirectionOptions.CLIMB.value
