@@ -18,9 +18,8 @@ produce gcode
 tidy gcode
 write to output file
 '''
-import decimal
-import os
-import re
+import decimal, os, re
+from collections import OrderedDict
 
 from asmcnc import paths
 from asmcnc.apps.drywall_cutter_app.config.config_options import CuttingDirectionOptions, ShapeOptions
@@ -349,6 +348,118 @@ class GCodeEngine(object):
 
         return gcode_lines
 
+    def add_tabs_to_gcode(self, gcode_lines, total_cut_depth, tab_height, tab_width, tab_spacing, three_d_tabs=False):
+        """
+        Adds tabs of specified height, width, and spacing to the given G-code lines.
+
+        Parameters:
+        - gcode_lines (list of str): The list of G-code lines to modify.
+        - tab_height (float): The height of the tabs.
+        - tab_width (float): The width of the tabs.
+        - tab_spacing (float): The distance between the start of each tab.
+
+        Returns:
+        - list of str: The modified list of G-code lines with tabs.
+        """
+        modified_gcode = []
+        current_z = None
+        current_x = None
+        current_y = None
+        last_x = 0
+        last_y = 0
+        previous_x_pos = 0
+        previous_y_pos = 0
+        distance_moved = 0
+
+        tab_top_z = - (total_cut_depth - tab_height)
+        if tab_top_z > 0:
+            tab_top_z = 0
+
+        for line in gcode_lines:
+            parts = line.split()
+
+            if line.startswith('G0') or line.startswith('G1') or line.startswith('G2') or line.startswith('G3'):
+                for part in parts:
+                    if part.startswith('Z'):
+                        current_z = float(part[1:])
+                    elif part.startswith('X'):
+                        current_x = float(part[1:])
+                    elif part.startswith('Y'):
+                        current_y = float(part[1:])
+
+            # Add tabs if moving in the XY plane at cutting depth
+            if current_z is not None and current_z < 0 and current_x is not None and current_y is not None:
+                if line.startswith('G1') or line.startswith('G2') and ('X' in line or 'Y' in line):
+                    if last_x is not None and last_y is not None:
+                        distance_moved = ((current_x - last_x) ** 2 + (current_y - last_y) ** 2) ** 0.5
+                        x_delta = current_x - last_x
+                        y_delta = current_y - last_y
+
+                    last_x = current_x
+                    last_y = current_y
+
+                    if distance_moved >= tab_spacing:
+                        number_of_tabs = int(distance_moved / (tab_spacing + tab_width))
+                        tab_inset_distance = distance_moved - (
+                                    (tab_width * number_of_tabs) + tab_spacing * (number_of_tabs - 1))
+                        tab_inset_distance /= 2
+
+                        tabs_dict = {}
+
+                        if x_delta:
+                            for i in range(number_of_tabs):
+                                polariser = 1 if x_delta > 0 else -1
+                                tab_x = previous_x_pos + polariser * ((tab_spacing * i) + (tab_width * i) + tab_inset_distance)
+                                tab_y = last_y
+
+                                tab_x = round(tab_x, 2)
+
+                                tabs_dict['tab_{}'.format(i + 1)] = {
+                                    'start_x': tab_x,
+                                    'start_y': tab_y,
+                                    'end_x': tab_x + polariser * tab_width,
+                                    'end_y': tab_y,
+                                    'height': tab_height
+                                }
+
+                        elif y_delta:
+                            for i in range(number_of_tabs):
+                                polariser = 1 if y_delta > 0 else -1
+                                tab_x = last_x
+                                tab_y = previous_y_pos + polariser * ((tab_spacing * i) + (tab_width * i) + tab_inset_distance)
+
+                                tab_y = round(tab_y, 2)
+
+                                tabs_dict['tab_{}'.format(i + 1)] = {
+                                    'start_x': tab_x,
+                                    'start_y': tab_y,
+                                    'end_x': tab_x,
+                                    'end_y': tab_y + polariser * tab_width,
+                                    'height': tab_height
+                                }
+
+                        tabs_dict = OrderedDict(sorted(tabs_dict.items()))
+
+                        for tab in tabs_dict.values():
+                            tab_cut_height = current_z if current_z > tab_top_z else tab_top_z
+                            if three_d_tabs:
+                                tab_centre_x = (tab['start_x'] + tab['end_x']) / 2
+                                tab_centre_y = (tab['start_y'] + tab['end_y']) / 2
+                                modified_gcode.append('G1 X{} Y{} F4000\n'.format(tab['start_x'], tab['start_y']))
+                                modified_gcode.append('G1 X{} Y{} Z{}\n'.format(tab_centre_x, tab_centre_y, tab_cut_height))
+                                modified_gcode.append('G1 X{} Y{} Z{} F4000\n'.format(tab['end_x'], tab['end_y'], current_z))
+                            else:
+                                modified_gcode.append('G1 X{} Y{} F4000\n'.format(tab['start_x'], tab['start_y']))
+                                modified_gcode.append('G1 Z{} F500\n'.format(tab_cut_height))
+                                modified_gcode.append('G1 X{} Y{} F4000\n'.format(tab['end_x'], tab['end_y']))
+                                modified_gcode.append('G1 Z{} F500\n'.format(current_z))
+
+            previous_x_pos = last_x
+            previous_y_pos = last_y
+
+            modified_gcode.append(line)
+        return modified_gcode
+
     # Return lines in appropriate gcode file
     def find_and_read_gcode_file(self, directory, shape_type, tool_diameter, orientation=None):
         for file in os.listdir(directory):
@@ -600,6 +711,13 @@ class GCodeEngine(object):
         simulation_feedrate = 6000 # mm/s
         geberit_partoff = False
 
+        tab_spacing = 20  # mm
+        tab_width = 10  # mm
+        tab_height = self.config.active_config.cutting_depths.material_thickness * 0.6
+        if tab_height > 5:
+            tab_height = 5
+        three_d_tabs = True
+
         is_climb = (self.config.active_cutter.parameters.cutting_direction == CuttingDirectionOptions.CLIMB.value
                     or self.config.active_cutter.parameters.cutting_direction == CuttingDirectionOptions.BOTH.value)
 
@@ -727,6 +845,8 @@ class GCodeEngine(object):
                             rectangle_parameters["first_plunge"] = first_plunge
 
                             rectangle = self.cut_rectangle(**rectangle_parameters)
+                            if not pocketing:
+                                rectangle = self.add_tabs_to_gcode(rectangle, total_cut_depth, tab_height, tab_width, tab_spacing, three_d_tabs=three_d_tabs)
                             cutting_lines += rectangle
 
         elif shape_type in ["geberit"]:
