@@ -716,7 +716,7 @@ class GCodeEngine(object):
         tab_height = self.config.active_config.cutting_depths.material_thickness * 0.6
         if tab_height > 5:
             tab_height = 5
-        three_d_tabs = True
+        three_d_tabs = False
 
         is_climb = (self.config.active_cutter.parameters.cutting_direction == CuttingDirectionOptions.CLIMB.value
                     or self.config.active_cutter.parameters.cutting_direction == CuttingDirectionOptions.BOTH.value)
