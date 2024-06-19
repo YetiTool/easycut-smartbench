@@ -500,6 +500,7 @@ class DrywallCutterScreen(Screen):
         return self.materials_popup.validate_inputs() and self.drywall_shape_display_widget.are_inputs_valid()
 
     def run(self):
+        self.drywall_shape_display_widget.defocus_inputs()
         if self.materials_popup.validate_inputs() and self.drywall_shape_display_widget.are_inputs_valid():
             output_path = self.engine.engine_run()
 
