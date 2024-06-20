@@ -84,6 +84,14 @@ class PopupWarningTitle(PopupTitle):
                                                 "./asmcnc/apps/shapeCutter_app/img/error_icon_scaled_up.png",
                                                 color_provider.get_rgba("red"), **kwargs)
 
+class PopupInfoTitle(PopupTitle):
+    """Title bar for error popups. Contains an icon and a title."""
+
+    def __init__(self, localisation, title_string=None, **kwargs):
+        super(PopupInfoTitle, self).__init__(localisation.get_str("Info!") if title_string is None else localisation.get_str(title_string),
+                                                "./asmcnc/apps/shapeCutter_app/img/info_icon_scaled_up.png",
+                                                color_provider.get_rgba("yellow"), **kwargs)
+
 
 scroll_view_kv = """
 <ScrollView>:

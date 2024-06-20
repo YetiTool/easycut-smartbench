@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
-import json
-
 from asmcnc.comms.logging_system.logging_system import Logger
-from kivy.app import App
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
 import sys, os
-from asmcnc import paths
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info, screen_diagnostics
 from asmcnc.apps.systemTools_app.screens import popup_system, screen_system_menu, screen_build_info, screen_beta_testing, \
@@ -163,14 +159,7 @@ class ScreenManagerSystemTools(object):
         self.sm.pm.show_download_settings_popup(self)
 
     def show_popup_before_overwrite_serial_number(self):
-        self.sm.pm.show_overwrite_serial_number_popup(self, button_two_callback=self.call_grbl_overwrite)
-
-    def call_grbl_overwrite(self):
-        grbl_settings_manager = App.get_running_app().grbl_settings_manager
-        if grbl_settings_manager.overwrite_serial_number():
-            self.sm.pm.show_mini_info_popup(self.l.get_str('Serial number overwritten successfully!'))
-        else:
-            self.sm.pm.show_mini_info_popup(self.l.get_str('Could not overwrite serial number!'))
+        self.sm.pm.show_overwrite_serial_number_popup()
 
     def download_settings_to_usb(self, *args):
         if self.mutex.locked():

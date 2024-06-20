@@ -243,15 +243,7 @@ class PopupManager:
         self.download_settings_to_usb.sm = sm
         self.download_settings_to_usb.open()
 
-    def show_overwrite_serial_number_popup(self, sm, button_one_callback=None, button_two_callback=None):
-        description = self.l.get_str('This will overwrite the serial number of the console.') + \
-            '\n\n' + self.l.get_str('Make sure you have the correct serial number before proceeding!') + \
-            '\n\n' + self.l.get_str('This action cannot be undone.')
-        self.overwrite_serial_number_popup.main_label.text = description
-        self.overwrite_serial_number_popup.main_label.halign = 'center'
-        self.overwrite_serial_number_popup.sm = sm
-        self.overwrite_serial_number_popup.button_one_callback = button_one_callback
-        self.overwrite_serial_number_popup.button_two_callback = button_two_callback
+    def show_overwrite_serial_number_popup(self):
         self.overwrite_serial_number_popup.open()
     def close_upload_settings_popup(self):
         self.upload_settings_from_usb.dismiss()

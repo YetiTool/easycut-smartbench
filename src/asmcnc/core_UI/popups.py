@@ -4,6 +4,7 @@
 Popup system for easycut-smartbench
 """
 from enum import Enum
+from kivy.app import App
 from kivy.metrics import dp
 from kivy.properties import ObjectProperty, StringProperty, ListProperty
 from kivy.uix.boxlayout import BoxLayout
@@ -19,6 +20,8 @@ from asmcnc.core_UI import scaling_utils as utils
 from asmcnc.core_UI.components.buttons.hold_button import WarningHoldButton
 from asmcnc.comms.logging_system.logging_system import Logger
 
+from asmcnc.core_UI.new_popups.popup_bases import PopupBase, PopupInfoTitle
+from asmcnc.core_UI.utils import color_provider
 """
 Popup type enum
 
@@ -847,53 +850,85 @@ class DownloadSettingsToUsbPopup(BasicPopup):
             **kwargs
         )
 
-class OverwriteSerialNumberPopup(BasicPopup):
-    def __init__(
-        self,
-        main_string,
-        popup_width=600,
-        popup_height=450,
-        button_one_text="Cancel",
-        button_one_background_color=(230 / 255., 74 / 255., 25 / 255., 1.),
-        button_two_text="Ok",
-        button_two_background_color=(76 / 255., 175 / 255., 80 / 255., 1.),
-        button_two_callback=None,
-        main_label_padding=(40, 20),
-        main_layout_padding=(40, 20, 40, 20),
-        main_layout_spacing=10,
-        main_label_size_delta=-60,
-        main_label_h_align="left",
-        title="Overwrite serial number?",
-        button_layout_padding=(150, 40, 150, 0),
-        button_layout_spacing=10,
-        main_label_size_hint_y=1,
-        **kwargs
-    ):
+
+class OverwriteSerialNumberPopup(PopupBase):
+    def __init__(self, **kwargs):
+        super(OverwriteSerialNumberPopup, self).__init__(**kwargs)
+
+        self.l = kwargs["l"]
         self.sm = kwargs['sm']
 
-        super(OverwriteSerialNumberPopup, self).__init__(
-            main_string=main_string,
-            popup_type=PopupType.INFO,
-            main_label_padding=main_label_padding,
-            main_layout_padding=main_layout_padding,
-            main_layout_spacing=main_layout_spacing,
-            main_label_size_delta=main_label_size_delta,
-            button_layout_padding=button_layout_padding,
-            button_layout_spacing=button_layout_spacing,
-            main_label_h_align=main_label_h_align,
-            popup_width=popup_width,
-            popup_height=popup_height,
-            button_one_text=button_one_text,
-            button_one_callback=None,
-            button_one_background_color=button_one_background_color,
-            button_two_text=button_two_text,
-            button_two_callback=button_two_callback,
-            button_two_background_color=button_two_background_color,
-            title=title,
-            main_label_size_hint_y=main_label_size_hint_y,
-            button_layout_size_hint_y= 1,
-            **kwargs
+        self.size_hint = (0.75, 0.85)
+
+        title = PopupInfoTitle(size_hint_y=0.15, localisation=self.l, title_string=self.l.get_str('Overwrite serial data?'))
+        self.root_layout.add_widget(title)
+
+        description = self.l.get_str('This will save data from your new Z-Head to the console!') + \
+                      '\n\n' + self.l.get_str('This action can not be undone!')
+
+        self.main_layout = BoxLayout(
+            orientation="vertical",
+            spacing=utils.get_scaled_tuple(10, orientation="vertical"),
+            padding=utils.get_scaled_tuple((200, 20, 200, 20)),
         )
+
+        self.root_layout.add_widget(self.main_layout)
+
+        self.main_label = Label(
+            size_hint_y=1,
+            size_hint_x=1,
+            halign='center',
+            valign="middle",
+            text="[b]" + description + "[/b]",
+            color=(0, 0, 0, 1),
+            padding=(0, 0),
+            markup=True,
+            font_size=str(utils.get_scaled_width(20)) + "sp",
+        )
+
+        self.main_layout.add_widget(self.main_label)
+
+        self.main_label.text_size = (utils.get_scaled_width(600), None)
+
+        self.button_layout = BoxLayout(
+            orientation="horizontal",
+            spacing=utils.get_scaled_width(20),
+            padding=utils.get_scaled_tuple((150, 10, 150, 10)),
+            size_hint_y=0.3,
+            size_hint_x=1
+        )
+
+        cancel_button = Button(
+            text=self.l.get_str("Cancel"),
+            size_hint_y=1,
+            size_hint_x=0.5,
+            font_size=str(utils.get_scaled_width(20)) + "sp",
+            background_color=color_provider.get_rgba("red"),
+            on_release=self.dismiss,
+            background_normal=""
+        )
+
+        ok_button = Button(
+            text=self.l.get_str("Ok"),
+            size_hint_y=1,
+            size_hint_x=0.5,
+            font_size=str(utils.get_scaled_width(20)) + "sp",
+            background_color=color_provider.get_rgba("green"),
+            on_release=self.call_grbl_overwrite,
+            background_normal=""
+        )
+
+        self.button_layout.add_widget(cancel_button)
+        self.button_layout.add_widget(ok_button)
+        self.root_layout.add_widget(self.button_layout)
+
+    def call_grbl_overwrite(self, *args):
+        self.dismiss()
+        grbl_settings_manager = App.get_running_app().grbl_settings_manager
+        if grbl_settings_manager.overwrite_serial_number():
+            self.sm.pm.show_mini_info_popup(self.l.get_str('Z-Head data saved successfully!'))
+        else:
+            self.sm.pm.show_mini_info_popup(self.l.get_str('Could not safe Z-Head data!'))
 
 
 class SpindleSafetyPopup(BasicPopup):

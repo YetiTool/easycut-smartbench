@@ -17,6 +17,8 @@ from asmcnc.apps.systemTools_app.screens import popup_system
 
 Builder.load_string(
 """
+#:import paths asmcnc.paths
+#:import os os
 
 <SupportMenuScreen>
 
@@ -126,15 +128,15 @@ Builder.load_string(
 
         Button:
             id: button_overwrite_serial_number
-            text: 'Overwrite Serial Number'
+            text: 'Update replacement Z-Head'
             on_press: root.overwrite_serial_number()
             valign: "bottom"
             halign: "center"
             markup: True
             font_size: root.default_font_size
             text_size: self.size
-            background_normal: "./asmcnc/apps/systemTools_app/img/upload_from_usb.png"
-            background_down: "./asmcnc/apps/systemTools_app/img/upload_from_usb.png"
+            background_normal: os.path.join(paths.SYSTEM_TOOLS_IMG_PATH, "upload_from_usb.png")
+            background_down: os.path.join(paths.SYSTEM_TOOLS_IMG_PATH, "upload_from_usb.png")
             padding_y: 5.0/800.0*app.width
             border: (0,0,0,0)
 
@@ -205,7 +207,7 @@ class SupportMenuScreen(Screen):
         self.button_git_fsck.txt = self.l.get_str("Git FSCK")
         self.button_download_settings_to_usb.text = self.l.get_str("Save settings")
         self.button_upload_settings_from_usb.text = self.l.get_str("Restore settings")
-        self.button_overwrite_serial_number.text = self.l.get_str("Overwrite Serial Number")
+        self.button_overwrite_serial_number.text = self.l.get_str("Update replacement Z-Head")
         self.button_go_back.text = self.l.get_str("Go Back")
         for id_object in self.id_list:
             self.update_font_size(id_object)

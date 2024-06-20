@@ -317,7 +317,7 @@ class GRBLSettingsManagerSingleton(object):
                 if key == 'type':
                     continue
                 self.machine.write_dollar_setting(int(key), data[key])
-                Logger.info("Sending setting to spindle: {}: {}".format(key, data[key]))
+                Logger.info("Sending setting to spindle: ${}: {}".format(key, data[key]))
             Logger.info("Serial number overwritten in {} successfully from {} to {}".format(
                 self.MACHINE_DATA_FILE_PATH, old_sn, data['50']))
             return True
