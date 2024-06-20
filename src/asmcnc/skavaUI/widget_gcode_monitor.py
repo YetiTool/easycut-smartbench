@@ -297,6 +297,8 @@ class GCodeMonitor(Widget):
                 )
                 + "\n\n"
                 + self.l.get_str("Please exercise caution when using this feature.")
+                + " "
+                + self.l.get_str("Please ensure your dust shoe plug is inserted before sending commands to the machine!")
                 + "\n\n"
             )
             popup_info.PopupWarning(self.sm, self.l, description)
