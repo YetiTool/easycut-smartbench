@@ -630,8 +630,9 @@ class ScreenTest(App):
             m.s.spindle_on = True
             self.user_settings_manager.set_value('dust_shoe_detection', True)
 
-            set_up_screens([[screen_home.HomeScreen, 'home'],
-                            [screen_dust_shoe_alarm.DustShoeAlarmScreen, 'dust_shoe_alarm']])
+            set_up_screens([[screen_home.HomeScreen, 'home']])
+
+            sm.add_widget(screen_dust_shoe_alarm.DustShoeAlarmScreen(sm, m, jd, db, l, name='dust_shoe_alarm'))
 
             sm.current = 'home'
 

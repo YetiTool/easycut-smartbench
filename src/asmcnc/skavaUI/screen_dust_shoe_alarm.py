@@ -204,13 +204,13 @@ class DustShoeAlarmScreen(Screen):
     countdown_image = ObjectProperty()
     spindle_raise_label = ObjectProperty()
 
-    def __init__(self, **kwargs):
+    def __init__(self, screen_manager, machine, job, database, localization, **kwargs):
         super(DustShoeAlarmScreen, self).__init__(**kwargs)
-        self.sm = kwargs["screen_manager"]
-        self.m = kwargs["machine"]
-        self.jd = kwargs["job"]
-        self.db = kwargs["database"]
-        self.l = kwargs["localization"]
+        self.sm = screen_manager
+        self.m = machine
+        self.jd = job
+        self.db = database
+        self.l = localization
         self.usm = App.get_running_app().user_settings_manager
         self.header_label.text = self.l.get_bold("Interrupt bar pushed!")
         self.spindle_raise_label.text = (
