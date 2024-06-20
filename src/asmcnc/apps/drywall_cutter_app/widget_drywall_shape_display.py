@@ -553,8 +553,7 @@ class DrywallShapeDisplay(Widget):
     def text_input_change(self, instance, *args):
         # On startup it seems to call this function and set everything to 0, so check that drywall app is open
         # Also check that the input matches a valid positive float, to allow user to correct mistakes
-        if ((self.dwt_config.app_type == config_options.AppType.SHAPES or
-                self.dwt_config.app_type == config_options.AppType.DRYWALL_CUTTER) and re.match(r'^\d*\.\d+$', instance.text)):
+        if self.sm.current == 'drywall_cutter' and re.match(r'^\d*\.\d+$', instance.text):
             self.do_rectangle_checks()
             self.dwt_config.on_parameter_change('canvas_shape_dims.' + self.input_letter_dict[instance], float(instance.text or 0))
 

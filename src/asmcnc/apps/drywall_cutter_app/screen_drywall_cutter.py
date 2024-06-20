@@ -1,5 +1,6 @@
 import os
 import sys
+import textwrap
 
 from kivy.clock import Clock
 from kivy.lang import Builder
@@ -553,7 +554,7 @@ class DrywallCutterScreen(Screen):
         # elif not self.m.state().startswith('Idle'):
         #     self.sm.current = 'mstate'
 
-        elif self.m.is_machine_homed == False and sys.platform != "win32":
+        if self.m.is_machine_homed == False and sys.platform != "win32":
             self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
 
         elif self.sm.get_screen('home').z_datum_reminder_flag and not self.sm.get_screen('home').has_datum_been_reset:
@@ -586,6 +587,10 @@ class DrywallCutterScreen(Screen):
                     self.sm.current = 'lift_z_on_pause_or_not'
                 else:
                     self.sm.current = 'jobstart_warning'
+
+    def format_command(self, cmd):
+        wrapped_cmd = textwrap.fill(cmd, width=35, break_long_words=False)
+        return wrapped_cmd
 
     def open_filechooser(self):
         if not self.sm.has_screen('config_filechooser'):
