@@ -195,7 +195,7 @@ class YetiPilot(object):
                 percentage_after_adjustments = adjustment + self.m.s.feed_override_percentage
 
                 # If doing feed adjustments and the feed drops below 10% (theoretical), then start the low feed check
-                if percentage_after_adjustments < 10:
+                if percentage_after_adjustments < 30:
                     if not self.waiting_for_feed_too_low_decision:
                         self.start_feed_too_low_check()
 
@@ -295,7 +295,7 @@ class YetiPilot(object):
             self.waiting_for_feed_too_low_decision = False
             return
 
-        if self.m.s.feed_override_percentage == 10:
+        if self.m.s.feed_override_percentage == 30:
             self.stop_and_show_error()
         self.waiting_for_feed_too_low_decision = False
 
