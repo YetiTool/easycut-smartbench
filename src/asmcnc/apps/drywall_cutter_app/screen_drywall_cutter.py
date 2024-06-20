@@ -554,7 +554,7 @@ class DrywallCutterScreen(Screen):
         # elif not self.m.state().startswith('Idle'):
         #     self.sm.current = 'mstate'
 
-        if self.m.is_machine_homed == False and sys.platform != "win32":
+        elif self.m.is_machine_homed == False and sys.platform != "win32":
             self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
 
         elif self.sm.get_screen('home').z_datum_reminder_flag and not self.sm.get_screen('home').has_datum_been_reset:
