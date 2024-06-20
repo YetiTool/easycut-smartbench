@@ -16,12 +16,12 @@ try:
     except:
         import MySQLdb as my_sql_client
 except:
-    Logger.exception("No MySQLdb or pymysql package installed")
+    Logger.warning("No MySQLdb or pymysql package installed")
 
 try:
     from influxdb import InfluxDBClient
 except:
-    Logger.exception('Influxdb not installed')
+    Logger.warning('Influxdb not installed')
 
 
 class CalibrationDatabase(object):

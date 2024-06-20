@@ -117,7 +117,7 @@ class CanvasShapeDims(object):
 class CuttingDepths(object):
     """Class to store the cutting depths."""
 
-    def __init__(self, material_thickness, bottom_offset, auto_pass, depth_per_pass):
+    def __init__(self, material_thickness, bottom_offset, auto_pass, depth_per_pass, **kwargs):
         self.material_thickness = material_thickness  # type: float
         self.bottom_offset = bottom_offset  # type: float
         self.auto_pass = auto_pass  # type: bool

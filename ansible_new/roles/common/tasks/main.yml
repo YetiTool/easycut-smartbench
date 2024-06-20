@@ -1,0 +1,19 @@
+---
+- name: Ensure Python and pip are installed
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - python
+    - python-pip
+
+- name: Create a virtual environment
+  command: python -m venv /opt/venv
+  args:
+      creates: /opt/venv
+
+- name: Install python packages
+  pip:
+      requirements: /home/pi/easycut-smartbench/requirements.txt
+      virtualenv: /opt/venv
+      state: present

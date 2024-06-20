@@ -1,0 +1,4 @@
+---
+- name: Initialise via Ansible
+  hosts: localhost
+  become: yes

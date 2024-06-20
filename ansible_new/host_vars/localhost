@@ -1,0 +1,17 @@
+stretch_pkgs:
+- python-pip
+- python-mysqldb
+
+apt_pkgs:
+- proftpd-basic
+- avrdude
+- git-repair
+- freetds-bin
+- freetds-dev
+- tdsodbc
+- unixodbc-dev
+- pigpio
+- python-pigpio
+
+exim_dc_eximconfig_configtype: internet
+exim_dc_localdelivery: mail_spool
