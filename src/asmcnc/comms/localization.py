@@ -3,18 +3,19 @@ import csv
 import os
 import re
 import threading
-from datetime import datetime
 
-from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.core.text import LabelBase
 from kivy.lang import Builder
 
+from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.comms.model_manager import ModelManagerSingleton
 
 asmcnc_path = os.path.dirname(os.path.dirname(__file__))
 fonts_path = os.path.join(asmcnc_path, "keyboard", "fonts")
 kr_font_path = os.path.join(fonts_path, 'KRFont.ttf')
 kr_font_bold_path = os.path.join(fonts_path, 'KRFont-Bold.ttf')
+jp_font_path = os.path.join(fonts_path, 'NotoSansJP-Regular.ttf')
+jp_font_bold_path = os.path.join(fonts_path, 'NotoSansJP-Bold.ttf')
 
 LabelBase.register(name='KRFont',
                    fn_regular=kr_font_path,
@@ -22,6 +23,12 @@ LabelBase.register(name='KRFont',
 
 LabelBase.register(name='KRFont-Bold',
                    fn_regular=kr_font_bold_path)
+
+LabelBase.register(name='NotoSansJP-Regular',
+                   fn_regular=jp_font_path)
+
+LabelBase.register(name='NotoSansJP-Bold',
+                   fn_regular=jp_font_bold_path)
 
 builder_font_string = """
 <Widget>:
@@ -49,6 +56,7 @@ class Localization(object):
     dk = "Dansk (DK)"
     ko = "한국어 (KO)"
     nl = "Nederlands (NL)"
+    ja = "Japanese (JA)"
 
     approved_languages = [
         gb,
@@ -58,7 +66,8 @@ class Localization(object):
         fr,
         pl,
         dk,
-        ko
+        ko,
+        ja
     ]
 
     supported_languages = approved_languages + [nl]
@@ -74,6 +83,8 @@ class Localization(object):
     standard_font_bold = 'Roboto-Bold'
     korean_font = 'KRFont'
     korean_font_bold = 'KRFont-Bold'
+    japanese_font = 'NotoSansJP-Regular'
+    japanese_font_bold = 'NotoSansJP-Bold'
 
     kivy_markup_regex = re.compile(r"\[.*?\]")
 
@@ -192,13 +203,15 @@ class Localization(object):
 
                 # Only do this load for Korean, as it prevents some spinner weirdness
                 Builder.load_string(builder_font_string % (self.font_regular, self.font_bold))
+            elif self.lang == self.ja:
+                self.font_regular = self.japanese_font
+                self.font_bold = self.japanese_font_bold
 
+                Builder.load_string(builder_font_string % (self.font_regular, self.font_bold))
             else:
                 # Roboto is the standard kivy font
                 self.font_regular = self.standard_font
                 self.font_bold = self.standard_font_bold
-
-
         except:
             Logger.warning("Could not load in from full dictionary")
 
