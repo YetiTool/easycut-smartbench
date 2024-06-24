@@ -11,8 +11,8 @@ from kivy.properties import StringProperty, ObjectProperty
 from asmcnc.apps.shapeCutter_app.screens import popup_info
 from asmcnc.core_UI.popups import InfoPopup
 
-Builder.load_string(
-    """
+Builder.load_string("""
+#:import LabelBase asmcnc.core_UI.components.labels.base_label
 
 <ShapeCutter19ScreenClass>
 
@@ -160,7 +160,7 @@ Builder.load_string(
                                 pos: self.pos
                                 size: self.size
                                 source: "./asmcnc/apps/shapeCutter_app/img/number_box.png"
-                        Label:
+                        LabelBase:
                             text: root.screen_number
                             valign: "middle"
                             halign: "center"
@@ -175,7 +175,7 @@ Builder.load_string(
                         width: dp(0.925*app.width)
                         padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height, 0, 0]
                         
-                        Label:
+                        LabelBase:
                             text: root.title_label
                             color: 0,0,0,1
                             font_size: 0.035*app.width
@@ -207,7 +207,7 @@ Builder.load_string(
                             width: dp(0.84375*app.width)
                             padding:[dp(0.1)*app.width, 0, 0, 0]
                             orientation: "vertical"                       
-                            Label:
+                            LabelBase:
                                 text: root.user_instructions
                                 color: 0,0,0,1
                                 font_size: 0.025*app.width

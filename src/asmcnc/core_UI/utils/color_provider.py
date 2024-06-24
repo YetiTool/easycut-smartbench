@@ -1,4 +1,9 @@
-from typing import Dict, List
+from asmcnc.comms.logging_system.logging_system import Logger
+
+try:
+    from typing import Dict, List
+except ImportError:
+    Logger.warning("Typing module not available.")
 
 """
 A provider for colours that can be used in the application.
@@ -49,6 +54,10 @@ Colors = {
     "secondary": [255 / 255., 109 / 255., 0.0, 1.0],
     "secondary_light": [255 / 255., 158 / 255., 64 / 255., 1.0],
     "secondary_dark": [196 / 255., 60 / 255., 0.0, 1.0],
+    "yellow": [240. / 255, 1, 0, 1],
+    "grey": [229 / 255., 229 / 255., 229 / 255., 1.0],
+    "blue": [25 / 255., 118 / 255., 210 / 255., 1.0],
+    "dark_grey": [51 / 255., 51 / 255., 51 / 255., 1.0],
 }  # type: Dict[str, List[float]]  
 
 

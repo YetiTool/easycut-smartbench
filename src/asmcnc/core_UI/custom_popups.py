@@ -732,7 +732,7 @@ class PopupSpindleSettingsInfo(Widget):
 
 class PopupDatum(Widget):
     def __init__(
-        self, screen_manager, machine, localization, xy, warning_message, **kwargs
+        self, screen_manager, machine, localization, xy, warning_message, jog_after_laser_datum_set=True, **kwargs
     ):
         super(PopupDatum, self).__init__(**kwargs)
         self.sm = screen_manager
@@ -760,7 +760,7 @@ class PopupDatum(Widget):
                 elif xy == "Y":
                     self.m.set_y_datum_with_laser()
                 elif xy == "XY":
-                    self.m.set_workzone_to_pos_xy_with_laser()
+                    self.m.set_workzone_to_pos_xy_with_laser(jog_to_datum=jog_after_laser_datum_set)
             else:
                 if xy == "X":
                     self.m.set_x_datum()
@@ -885,7 +885,7 @@ class PopupSoftwareUpdateWarning(Widget):
             elif update_method == "USB":
                 prep_for_sw_update_over_usb()
             else:  # Fail-safe message to make debugging easier in case usb_or_wifi strings are broken
-                Logger.info("Error getting update method. Please check screen_update_SW.py" + \
+                Logger.error("Error getting update method. Please check screen_update_SW.py" + \
                          "\nShould be: 'WiFi' or 'USB'" + \
                          "\nBut was: " + update_method)
 

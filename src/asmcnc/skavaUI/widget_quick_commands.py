@@ -12,10 +12,14 @@ from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
 from kivy.base import runTouchApp
 from kivy.clock import Clock
+
+from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.skavaUI import popup_info
 from kivy.core.window import Window
 
 import sys, textwrap
+
+from asmcnc.comms.model_manager import ModelManagerSingleton
 
 Builder.load_string("""
 
@@ -136,6 +140,8 @@ class QuickCommands(Widget):
         self.sm=kwargs['screen_manager']
         self.jd = kwargs['job']
         self.l=kwargs['localization']
+
+        self.model_manager = ModelManagerSingleton()
       
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
@@ -150,9 +156,9 @@ class QuickCommands(Widget):
         popup_info.PopupStop(self.m, self.sm, self.l)
 
     def proceed_to_go_screen(self):
-        
+
         # NON-OPTIONAL CHECKS (bomb if non-satisfactory)
-        
+
         # GCode must be loaded.
         # Machine state must be idle.
         # Machine must be homed.
@@ -168,8 +174,8 @@ class QuickCommands(Widget):
 
         elif not self.m.state().startswith('Idle'):
             self.sm.current = 'mstate'
-                
-        elif not self.is_job_within_bounds() and sys.platform != "win32":
+
+        elif not self.do_pre_run_checks():
             self.sm.current = 'boundary'
 
         elif not self.m.is_machine_homed and self.m.is_connected:
@@ -192,85 +198,105 @@ class QuickCommands(Widget):
             self.jd.screen_to_cancel_to_after_job = 'home'
 
             # Check if stylus option is enabled
-            if self.m.is_stylus_enabled == True:
+            if self.m.is_stylus_enabled == True and not self.model_manager.is_machine_drywall():
                 # Display tool selection screen
                 self.sm.current = 'tool_selection'
 
             else:
                 self.m.stylus_router_choice = 'router'
-                
+
                 # is fw capable of auto Z lift?
                 if self.m.fw_can_operate_zUp_on_pause():
                     self.sm.current = 'lift_z_on_pause_or_not'
                 else:
                     self.sm.current = 'jobstart_warning'
 
+    def do_pre_run_checks(self):
+        job_in_bounds = self.is_job_within_bounds()
+        spindle_speeds_in_bounds = self.are_spindle_speeds_within_bounds()
+
+        return job_in_bounds and spindle_speeds_in_bounds
+
+    def are_spindle_speeds_within_bounds(self):
+        minimum_spindle_speed = 4000 if self.m.spindle_voltage == 230 else 10000
+        speed_too_low_string = (
+            self.l.get_bold("SPINDLE SPEED ERROR") + '\n\n' +
+
+            self.l.get_str("It looks like one of the spindle speeds in your job is too low.") + '\n\n' +
+
+            self.l.get_str("The minimum spindle speed is N rpm.").replace("N", str(minimum_spindle_speed)) + '\n\n' +
+
+            self.l.get_bold("Please adjust the spindle speed in your job and try again.")
+        )
+
+        Logger.debug("Spindle speeds: Job: {}, Min: {}".format(self.jd.spindle_speed_min, minimum_spindle_speed))
+        if 0 < self.jd.spindle_speed_min < minimum_spindle_speed:
+            self.sm.get_screen("boundary").job_box_details.append(speed_too_low_string)
+            return False
+
+        return True
         
     def is_job_within_bounds(self):
-
-        errorfound = 0
         job_box = self.sm.get_screen('home').job_box
+
+        to_be_appended = []
         
         # Mins
         if -(self.m.x_wco()+job_box.range_x[0]) >= (self.m.grbl_x_max_travel - self.m.limit_switch_safety_distance):
-            self.sm.get_screen('boundary').job_box_details.append(
+            to_be_appended.append(
                 self.l.get_str("The job extent over-reaches the N axis at the home end.").replace('N', 'X') + \
                 '\n\n' + \
                 self.l.get_bold("Try positioning the machine's N datum further away from home.").replace('N', 'X') + \
                 '\n\n'
                 )
-            errorfound += 1
 
         if -(self.m.y_wco()+job_box.range_y[0]) >= (self.m.grbl_y_max_travel - self.m.limit_switch_safety_distance):
-            self.sm.get_screen('boundary').job_box_details.append(
+            to_be_appended.append(
                 self.l.get_str("The job extent over-reaches the N axis at the home end.").replace('N', 'Y') + \
                 '\n\n' + \
                 self.l.get_bold("Try positioning the machine's N datum further away from home.").replace('N', 'Y') + \
                 '\n\n'
                 )
-            errorfound += 1
 
         if -(self.m.z_wco()+job_box.range_z[0]) >= (self.m.grbl_z_max_travel - self.m.limit_switch_safety_distance):
-            self.sm.get_screen('boundary').job_box_details.append(
+            to_be_appended.append(
                 self.l.get_str("The job extent over-reaches the Z axis at the lower end.") + \
                 '\n\n' + \
                 self.l.get_bold("Try positioning the machine's Z datum higher up.") + \
                 '\n\n'
                 )
-            errorfound += 1
-            
         # Maxs
 
         if self.m.x_wco()+job_box.range_x[1] >= -self.m.limit_switch_safety_distance:
-            self.sm.get_screen('boundary').job_box_details.append(
+            to_be_appended.append(
                 self.l.get_str("The job extent over-reaches the N axis at the far end.").replace('N', 'X') + \
                 '\n\n' + \
                 self.l.get_bold("Try positioning the machine's N datum closer to home.").replace('N', 'X') + \
                 '\n\n'
                 )
-            errorfound += 1
 
         if self.m.y_wco()+job_box.range_y[1] >= -self.m.limit_switch_safety_distance:
-            self.sm.get_screen('boundary').job_box_details.append(
+            to_be_appended.append(
                 self.l.get_str("The job extent over-reaches the N axis at the far end.").replace('N', 'Y') + \
                 '\n\n' + \
                 self.l.get_bold("Try positioning the machine's N datum closer to home.").replace('N', 'Y') + \
                 '\n\n'
                 )
 
-            errorfound += 1
-
         if self.m.z_wco()+job_box.range_z[1] >= -self.m.limit_switch_safety_distance:
-            self.sm.get_screen('boundary').job_box_details.append(
+            to_be_appended.append(
                 self.l.get_str("The job extent over-reaches the Z axis at the upper end.") + \
                 '\n\n' + \
                 self.l.get_bold("Try positioning the machine's Z datum lower down.") + \
                 '\n\n'
                 )
-            errorfound += 1
 
-        if errorfound > 0: return False
-        else: return True
+        if to_be_appended:
+            self.sm.get_screen("boundary").job_box_details.append(self.l.get_bold("DETAILS OF BOUNDARY CONFLICT"))
+            for message in to_be_appended:
+                self.sm.get_screen("boundary").job_box_details.append(message)
+            return False
+        return True
 
     def format_command(self, cmd):
         wrapped_cmd = textwrap.fill(cmd, width=0.0625*Window.width, break_long_words=False)

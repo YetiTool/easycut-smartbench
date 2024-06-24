@@ -613,6 +613,10 @@ class BuildInfoScreen(Screen):
         self.smartbench_location_formatted = self.l.get_str("SmartBench Location")
         self.update_strings()
         self.language_button.values = self.l.approved_languages
+
+        if ModelManagerSingleton().is_machine_drywall():
+            self.language_button.values = [self.l.gb]
+
         self.smartbench_name_input.bind(focus=self.on_focus)
         self.smartbench_location_input.bind(focus=self.on_focus_location)
         self.sw_version_label.text = self.set.sw_version
@@ -634,6 +638,10 @@ class BuildInfoScreen(Screen):
 
         # Add the IDs of ALL the TextInputs on this screen
         self.text_inputs = [self.smartbench_name_input, self.smartbench_location_input]
+
+        # Hide SSH button if drywall machine (button still works but is hidden)
+        # if self.m.model_manager.is_machine_drywall():
+        #     self.toggle_ssh_button.opacity = 0
 
     ## EXIT BUTTONS
     def go_back(self):

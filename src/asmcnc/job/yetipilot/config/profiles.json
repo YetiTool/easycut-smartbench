@@ -600,7 +600,7 @@
       "Parameters": [
         {
           "Name": "spindle_tool_load_watts",
-          "Value": 420
+          "Value": 500
         },
         {
           "Name": "target_spindle_speed",
@@ -616,7 +616,7 @@
       "Parameters": [
         {
           "Name": "spindle_tool_load_watts",
-          "Value": 400
+          "Value": 310
         },
         {
           "Name": "target_spindle_speed",
@@ -648,7 +648,7 @@
       "Parameters": [
         {
           "Name": "spindle_tool_load_watts",
-          "Value": 380
+          "Value": 470
         },
         {
           "Name": "target_spindle_speed",
@@ -664,7 +664,7 @@
       "Parameters": [
         {
           "Name": "spindle_tool_load_watts",
-          "Value": 390
+          "Value": 460
         },
         {
           "Name": "target_spindle_speed",
@@ -895,6 +895,6 @@
           "Value": 22500.0
         }
       ]
-    }  
+    }
   ]
 }

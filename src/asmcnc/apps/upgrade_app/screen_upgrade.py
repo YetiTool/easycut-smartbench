@@ -6,8 +6,10 @@ from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
 from asmcnc.core_UI.popups import ErrorPopup
 
-Builder.load_string(
-    """
+
+Builder.load_string("""
+#:import LabelBase asmcnc.core_UI.components.labels.base_label
+
 <UpgradeScreen>:
 
     title_label:title_label
@@ -40,7 +42,7 @@ Builder.load_string(
             BoxLayout:
                 padding:[dp(0.075)*app.width, 0, 0, 0]
 
-                Label:
+                LabelBase:
                     id: title_label
                     text: 'Upgrade SB V1.3 to PrecisionPro +'
                     halign: 'center'
@@ -87,7 +89,7 @@ Builder.load_string(
             BoxLayout:
                 orientation: 'vertical'
 
-                Label:
+                LabelBase:
                     id: instruction_label
                     size_hint_y: 2
                     font_size: dp(0.03*app.width)
@@ -114,7 +116,7 @@ Builder.load_string(
                 BoxLayout:
                     orientation:'vertical'
 
-                    Label:
+                    LabelBase:
                         id: error_label
                         size_hint_y: 0
                         height: 0
@@ -127,7 +129,7 @@ Builder.load_string(
                     BoxLayout:
                         orientation: 'vertical'
 
-                        Label:
+                        LabelBase:
                             id: support_label
                             size_hint_y: 1.5
                             font_size: dp(0.03*app.width)
@@ -141,7 +143,7 @@ Builder.load_string(
                             size_hint_y: 2
                             source: "./asmcnc/apps/upgrade_app/img/qr_upgrade.png"
 
-                        Label:
+                        LabelBase:
                             id: spindle_label
                             font_size: dp(0.025*app.width)
                             color: 0,0,0,1

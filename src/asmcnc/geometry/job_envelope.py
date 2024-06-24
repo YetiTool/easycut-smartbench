@@ -32,7 +32,7 @@ class BoundingBox(object):
                     if part.startswith(('Y')): y_values.append(float(part[1:]))
                     if part.startswith(('Z')): z_values.append(float(part[1:]))
                 except:
-                    Logger.info("Envelope calculator: skipped '" + part + "'")
+                    Logger.exception("Envelope calculator: skipped '" + part + "'")
         self.range_x[0], self.range_x[1] = min(x_values), max(x_values)
         self.range_y[0], self.range_y[1] = min(y_values), max(y_values)
         self.range_z[0], self.range_z[1] = min(z_values), max(z_values)

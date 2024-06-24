@@ -17,7 +17,7 @@
     "cutting_feed_rate": 4000,
     "plunge_feed_rate": 250,
     "cutting_direction": "both",
-    "recommended_depth_per_pass": 13,
+    "recommended_depth_per_pass": 26,
     "max_depth_total": 26,
     "step_over": 4,
     "yetipilot_target_power": 590
@@ -27,5 +27,6 @@
     "outside": true,
     "on": true
   },
-  "image": "./asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_8mm.png"
+  "image": "./asmcnc/apps/drywall_cutter_app/config/cutters/images/tool_8mm.png",
+  "apps": ["dwt", "shapes"]
 }

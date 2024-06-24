@@ -16,12 +16,12 @@ try:
     except:
         import MySQLdb as my_sql_client
 except:
-    Logger.info("No MySQLdb or pymysql package installed")
+    Logger.exception("No MySQLdb or pymysql package installed")
 
 try:
     from influxdb import InfluxDBClient
 except:
-    Logger.info('Influxdb not installed')
+    Logger.exception('Influxdb not installed')
 
 
 class CalibrationDatabase(object):
@@ -81,9 +81,9 @@ class CalibrationDatabase(object):
             Logger.info("Connected to InfluxDB")
 
         except Exception as e:
-            Logger.info(e)
+            Logger.exception('Failed to import credentials!')
             if sys.platform != 'win32' and sys.platform != 'darwin':
-                Logger.info("Can't import credentials (trying to get local folder creds)")
+                Logger.error("Can't import credentials (trying to get local folder creds)")
                 import credentials
 
     def insert_serial_numbers(self, machine_serial, z_head_serial, lower_beam_serial, upper_beam_serial,
@@ -240,7 +240,7 @@ class CalibrationDatabase(object):
             combined_id = str(sub_serial)[2:] + str(stage_id)
 
             if self.does_calibration_check_stage_already_exist(combined_id):
-                Logger.info("Calibration check stage already exists for this SN")
+                Logger.warning("Calibration check stage already exists for this SN")
                 return
 
             with self.conn.cursor() as cursor:
@@ -253,7 +253,7 @@ class CalibrationDatabase(object):
             self.conn.commit()
 
         except:
-            Logger.info(traceback.format_exc())
+            Logger.exception('Failed to insert calibration check stage!')
 
     def does_calibration_check_stage_already_exist(self, combined_id_only_ints):
 
@@ -275,7 +275,7 @@ class CalibrationDatabase(object):
             combined_id = (machine_serial + str(ft_stage_id))[2:]
 
             if self.does_final_test_stage_already_exist(combined_id):
-                Logger.info("Final test stage already exists for this SN")
+                Logger.warning("Final test stage already exists for this SN")
                 return
 
             with self.conn.cursor() as cursor:
@@ -288,7 +288,7 @@ class CalibrationDatabase(object):
             self.conn.commit()
 
         except:
-            Logger.info("Final test stage already exists for this SN")
+            Logger.warning("Final test stage already exists for this SN")
 
     def does_final_test_stage_already_exist(self, combined_id_only_ints):
 
@@ -330,7 +330,7 @@ class CalibrationDatabase(object):
     # @lettie please ensure data is input in the correct order according to below
     def insert_final_test_statuses(self, statuses):
 
-        Logger.info("Before insert ft status")
+        Logger.debug("Before insert ft status")
 
         try:
             with self.conn.cursor() as cursor:
@@ -344,9 +344,9 @@ class CalibrationDatabase(object):
                 self.conn.commit()
 
         except: 
-            Logger.info(traceback.format_exc())
+            Logger.exception('Failed to insert final test statuses!')
 
-        Logger.info("After insert ft status")
+        Logger.debug("After insert ft status")
 
     def get_serials_by_machine_serial(self, machine_serial):
         with self.conn.cursor() as cursor:
@@ -382,7 +382,7 @@ class CalibrationDatabase(object):
                     "temp": data[131][0],
                 }
             except:
-                Logger.info('Database is empty or incomplete for ' + str(combined_id))
+                Logger.exception('Database is empty or incomplete for ' + str(combined_id))
 
             return parameters
 
@@ -429,7 +429,7 @@ class CalibrationDatabase(object):
         #     stall_coord
         # ]
 
-        Logger.info("Before insert stall events")
+        Logger.debug("Before insert stall events")
 
         try:
 
@@ -442,11 +442,8 @@ class CalibrationDatabase(object):
                 return True
 
         except: 
-            Logger.info(traceback.format_exc())
+            Logger.exception('Failed to execute query!')
             return False
-
-        Logger.info("After insert stall events")
-
 
     processing_running_data = False
     processed_running_data = {
@@ -506,7 +503,7 @@ class CalibrationDatabase(object):
                 self.processed_running_data[str(element[0])][0].append(status)
 
         except:
-            Logger.info(traceback.format_exc())
+            Logger.exception('Something failed!')
 
         self.processing_running_data = False
 
@@ -553,11 +550,11 @@ class CalibrationDatabase(object):
         publisher = DataPublisher(sn_for_db)
 
         if not self.processed_running_data[str(stage_id)][0]:
-            Logger.info("No status data to send for stage id: " + str(stage_id))
+            Logger.warning("No status data to send for stage id: " + str(stage_id))
             return False
 
         response = publisher.run_data_send(*self.processed_running_data[str(stage_id)])
-        Logger.info("Received %s from consumer" % response)
+        Logger.debug("Received %s from consumer" % response)
         return response
 
     def send_ssh_keys(self, serial, key):

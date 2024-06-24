@@ -645,7 +645,7 @@ class LocalFileChooser(Screen):
                 os.remove(filename)
                 self.filechooser.selection = []
             except:
-                Logger.info("attempt to delete folder, or undeletable file")
+                Logger.exception("attempt to delete folder, or undeletable file")
             self.refresh_filechooser()
 
     def delete_all(self):
@@ -658,7 +658,7 @@ class LocalFileChooser(Screen):
                     if files_in_cache.index(file) + 2 >= len(files_in_cache):
                         self.refresh_filechooser()
                 except:
-                    Logger.info("attempt to delete folder, or undeletable file")
+                    Logger.exception("attempt to delete folder, or undeletable file")
         self.filechooser.selection = []
         self.refresh_filechooser()
 

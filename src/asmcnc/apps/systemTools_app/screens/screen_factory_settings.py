@@ -656,7 +656,7 @@ class FactorySettingsScreen(Screen):
                 Logger.info("Credentials file found on USB")
                 self.calibration_db.set_up_connection()
         except:
-            Logger.info("No /media/usb/ folder found")
+            Logger.exception("No /media/usb/ folder found")
 
     def go_back(self):
         self.systemtools_sm.back_to_menu()
@@ -1078,9 +1078,9 @@ $51 is currently set to """
                 message = """This will enable SC2 compatability, are you sure you want to continue?
 
 $51 is currently set to """
-            try:
+            if self.m.get_dollar_setting(51) != -1:
                 message += str(int(self.m.s.setting_51))
-            except:
+            else:
                 message += "N/A"
             popup_factory_settings.PopupSC2Decision(
                 self.systemtools_sm.sm, self.l, message
@@ -1147,7 +1147,7 @@ $51 is currently set to """
             serial_number_from_file = str(file.read())
             file.close()
         except:
-            Logger.info("Could not get serial number! Please contact YetiTool support!")
+            Logger.exception("Could not get serial number! Please contact YetiTool support!")
         return str(serial_number_from_file)
 
     def final_test(self, board):

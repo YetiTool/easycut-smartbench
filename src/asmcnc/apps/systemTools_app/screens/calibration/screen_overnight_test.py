@@ -898,8 +898,7 @@ class OvernightTesting(Screen):
         try:
             self.calibration_db.insert_final_test_stage(self.sn_for_db, self.stage_id)
         except:
-            Logger.info("Could not insert final test stage into DB!!")
-            Logger.info(traceback.format_exc())
+            Logger.exception("Could not insert final test stage into DB!!")
         self.status_data_dict[self.stage]["Statuses"] = []
         Logger.info("Overnight test, stage: " + str(self.stage))
 
@@ -1108,8 +1107,7 @@ class OvernightTesting(Screen):
         try:
             return min(raw_vals)
         except:
-            Logger.info("Min peak error:")
-            Logger.info(traceback.format_exc())
+            Logger.exception("Min peak error:")
             return None
 
     def read_out_peaks(self, stage):
@@ -1171,7 +1169,7 @@ class OvernightTesting(Screen):
                 peak_list[9],
             ]
         except:
-            Logger.info(traceback.format_exc())
+            Logger.exception("Failed to get statistics")
 
     def back_to_fac_settings(self):
         self.systemtools_sm.open_factory_settings_screen()
@@ -1577,12 +1575,12 @@ class OvernightTesting(Screen):
         return latest_file
 
     def show_failed_send_popup(self, csv_name):
-        Logger.info("Transferring file failed, copying to USB stick")
+        Logger.error("Transferring file failed, copying to USB stick")
         if os.path.exists("/media/usb"):
             os.system("sudo cp " + csv_name + " /media/usb/")
             PopupCSVOnUSB()
         else:
-            Logger.info("USB stick not found")
+            Logger.error("USB stick not found")
 
     def _has_data_been_sent(self, stage, checkbox_id):
         sent_data = self.send_data(stage)
@@ -1612,8 +1610,7 @@ class OvernightTesting(Screen):
             log_exporter.create_and_send_logs(self.sn_for_db)
             return done_send
         except:
-            Logger.info("Failed to send data to DB!!")
-            Logger.info(traceback.format_exc())
+            Logger.exception("Failed to send data to DB!!")
             log_exporter.create_and_send_logs(self.sn_for_db)
             return False
 
@@ -1626,8 +1623,7 @@ class OvernightTesting(Screen):
             self.send_calibration_coefficients_for_one_motor(self.zh_serial, 4)
             return True
         except:
-            Logger.info("Failed to send calibration coefficients to DB!!")
-            Logger.info(traceback.format_exc())
+            Logger.exception("Failed to send calibration coefficients to DB!!")
             return False
 
     def send_calibration_coefficients_for_one_motor(self, sub_serial, motor_index):
@@ -1809,5 +1805,5 @@ class OvernightTesting(Screen):
                 return False
             return True
         except:
-            Logger.info(traceback.format_exc())
+            Logger.exception("Check in range failed")
             return False

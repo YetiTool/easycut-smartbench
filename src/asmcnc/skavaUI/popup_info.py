@@ -586,7 +586,7 @@ class PopupSoftwareUpdateWarning(Widget):
             elif update_method == "USB":
                 prep_for_sw_update_over_usb()
             else:  # Fail-safe message to make debugging easier in case usb_or_wifi strings are broken
-                Logger.info("Error getting update method. Please check screen_update_SW.py" + \
+                Logger.error("Error getting update method. Please check screen_update_SW.py" + \
                          "\nShould be: 'WiFi' or 'USB'" + \
                          "\nBut was: " + update_method)
 
@@ -1137,7 +1137,7 @@ class PopupShutdown(Widget):
         popup.separator_color = [249 / 255., 206 / 255., 29 / 255., 1.]
         popup.separator_height = '4dp'
 
-        ok_button.bind(on_press=console_utils.shutdown)
+        ok_button.bind(on_press=console_utils.shutdown_now)
         cancel_button.bind(on_press=console_utils.cancel_shutdown)
         cancel_button.bind(on_press=popup.dismiss)
 

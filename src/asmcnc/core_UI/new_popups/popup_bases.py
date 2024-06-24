@@ -12,6 +12,7 @@ from kivy.uix.scrollview import ScrollView
 from kivy.utils import get_color_from_hex
 
 from asmcnc.core_UI import scaling_utils
+from asmcnc.core_UI.utils import color_provider
 
 
 class PopupBase(ModalView):
@@ -59,8 +60,7 @@ class PopupTitle(BoxLayout):
         self.canvas.before.clear()  # Clear previous drawing
         with self.canvas.before:
             Color(*self.separator_colour)
-            self.line = Line(points=[self.x, self.y, self.x + self.width, self.y],
-                             width=dp(2))
+            Line(points=[self.x + 2, self.y, self.x + self.width - 2, self.y], width=dp(2), cap="square")
 
     def on_label_size(self, instance, value):
         self.label.pos = (self.label.pos[0], self.label.pos[1] + 5)  # Cheat way to center the label
@@ -69,10 +69,20 @@ class PopupTitle(BoxLayout):
 
 class PopupErrorTitle(PopupTitle):
     """Title bar for error popups. Contains an icon and a title."""
+
     def __init__(self, localisation, **kwargs):
         super(PopupErrorTitle, self).__init__(localisation.get_str("Error!"),
                                               "./asmcnc/apps/shapeCutter_app/img/error_icon_scaled_up.png",
                                               (1, 0, 0, 1), **kwargs)
+
+
+class PopupWarningTitle(PopupTitle):
+    """Title bar for error popups. Contains an icon and a title."""
+
+    def __init__(self, localisation, **kwargs):
+        super(PopupWarningTitle, self).__init__(localisation.get_str("Warning!"),
+                                                "./asmcnc/apps/shapeCutter_app/img/error_icon_scaled_up.png",
+                                                color_provider.get_rgba("red"), **kwargs)
 
 
 scroll_view_kv = """
