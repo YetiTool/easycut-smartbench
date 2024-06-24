@@ -146,8 +146,11 @@ Builder.load_string("""
 
 class ToolMaterialPopup(Popup):
 
-    def __init__(self, localization, **kwargs):
+    def __init__(self, localization, config, **kwargs):
         super(ToolMaterialPopup, self).__init__(**kwargs)
+
+        self.l = localization
+        self.dwt_config = config
 
         self.tool_dropdown.bind(text=self.on_tool_change)
         self.material_dropdown.bind(text=self.on_material_change)
@@ -169,7 +172,7 @@ class ToolMaterialPopup(Popup):
 
     def on_open(self):
         # Set the material dropdown values
-        self.material_dropdown.values = self.profile_db.get_material_names()
+        self.material_dropdown.values = self.profile_db.get_material_names(self.dwt_config.app_type)
         self.confirm_button.disabled = True
         self.confirm_button.opacity = 0.5
 

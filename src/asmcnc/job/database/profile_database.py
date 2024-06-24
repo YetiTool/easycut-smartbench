@@ -25,8 +25,10 @@ class ProfileDatabase(object):
         with open(self.PROFILE_DB) as f:
             self.profile_data = json.load(f)
 
-    def get_material_names(self):
+    def get_material_names(self, isa=None):
         """Returns a list of strings with the material names."""
+        if isa:
+            return [material['description'] for material in self.material_data if isa.value in material['available_isas']]
         return [material['description'] for material in self.material_data]
 
     def get_tool_names(self, chosen_material=None):
