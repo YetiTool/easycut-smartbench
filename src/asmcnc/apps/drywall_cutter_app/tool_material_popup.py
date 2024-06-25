@@ -146,11 +146,12 @@ Builder.load_string("""
 
 class ToolMaterialPopup(Popup):
 
-    def __init__(self, localization, config, **kwargs):
+    def __init__(self, localization, config, drywall_cutter_screen, **kwargs):
         super(ToolMaterialPopup, self).__init__(**kwargs)
 
         self.l = localization
         self.dwt_config = config
+        self.drywall_cutter_screen = drywall_cutter_screen
 
         self.tool_dropdown.bind(text=self.on_tool_change)
         self.material_dropdown.bind(text=self.on_material_change)
@@ -171,12 +172,27 @@ class ToolMaterialPopup(Popup):
         self.confirm_button.opacity = 0.5
 
     def on_open(self):
+        self.load_config()
+        if self.material_dropdown.text == '' or self.material_dropdown.text == '':  # Only disable if one is empty
+            self.confirm_button.disabled = True
+            self.confirm_button.opacity = 0.5
+
+    def load_config(self):
+        if self.dwt_config.active_config.material:
+            material = self.profile_db.get_material_name(self.dwt_config.active_config.material)
+            self.material_dropdown.text = material
+        if self.dwt_config.active_config.cutter_type:
+            tool = self.profile_db.get_tool_name(self.dwt_config.active_config.cutter_type)
+            self.tool_dropdown.text = tool
         # Set the material dropdown values
         self.material_dropdown.values = self.profile_db.get_material_names(self.dwt_config.app_type)
-        self.confirm_button.disabled = True
-        self.confirm_button.opacity = 0.5
 
     def confirm(self):
+        self.dwt_config.on_parameter_change('material', self.profile_db.get_material_id(self.material_dropdown.text))
+        self.dwt_config.on_parameter_change('cutter_type', self.profile_db.get_tool_id(self.tool_dropdown.text))
+        self.dwt_config.load_new_profile()
+        self.dwt_config.load_cutter(self.dwt_config.active_config.cutter_type)
+        self.drywall_cutter_screen.update_toolpaths()
         self.dismiss()
 
     def cancel(self):

@@ -228,7 +228,6 @@ class DrywallCutterScreen(Screen):
 
     def __init__(self, screen_manager, machine, keyboard, job, **kwargs):
         self.dwt_config = config_loader.DWTConfig(self)
-        self.tool_options = self.dwt_config.get_available_cutters()
 
         super(DrywallCutterScreen, self).__init__(**kwargs)
 
@@ -252,7 +251,7 @@ class DrywallCutterScreen(Screen):
         self.xy_move_container.add_widget(self.xy_move_widget)
 
         self.materials_popup = material_setup_popup.CuttingDepthsPopup(self.l, self.kb, self.dwt_config)
-        self.tool_material_popup = tool_material_popup.ToolMaterialPopup(self.l, self.dwt_config)
+        self.tool_material_popup = tool_material_popup.ToolMaterialPopup(self.l, self.dwt_config, self)
         self.drywall_shape_display_widget = widget_drywall_shape_display.DrywallShapeDisplay(machine=self.m,
                                                                                              screen_manager=self.sm,
                                                                                              dwt_config=self.dwt_config,
@@ -342,12 +341,19 @@ class DrywallCutterScreen(Screen):
 
     def select_tool(self, cutter_file, *args):
         self.dwt_config.load_cutter(cutter_file)
+        self.update_toolpaths()
+        self.dwt_config.on_parameter_change('cutter_type', cutter_file)
 
+    def update_toolpaths(self, *args):
         # Convert allowed toolpaths object to dict, then put attributes with True into a list
-        allowed_toolpaths = [toolpath for toolpath, allowed in self.dwt_config.active_cutter.toolpath_offsets.__dict__.items() if allowed]
+        print("TOOLPATH OFFSETS: ", self.dwt_config.active_cutter.generic_definition.toolpath_offsets.__dict__.items())
+        allowed_toolpaths = [toolpath for toolpath, allowed in
+                             self.dwt_config.active_cutter.generic_definition.toolpath_offsets.__dict__.items() if
+                             allowed]
         # Add or remove pocket option based on what app is being used
-        if self.dwt_config.app_type == config_options.AppType.SHAPES:
-            allowed_toolpaths.append('pocket')
+        if self.dwt_config.app_type == config_options.AppType.DRYWALL_CUTTER:
+            if 'pocket' in allowed_toolpaths:
+                allowed_toolpaths.remove('pocket')
         # Use allowed toolpath list to create a dict of only allowed toolpaths
         allowed_toolpath_dict = dict([(k, self.toolpath_offset_options_dict[k]) for k in allowed_toolpaths if
                                       k in self.toolpath_offset_options_dict])
@@ -357,8 +363,6 @@ class DrywallCutterScreen(Screen):
         if self.dwt_config.active_config.toolpath_offset not in allowed_toolpaths:
             # Default to first toolpath, so disabled toolpath is never selected
             self.select_toolpath(allowed_toolpaths[0])
-
-        self.dwt_config.on_parameter_change('cutter_type', cutter_file)
 
     def show_tool_image(self):
         self.tool_selection.source = self.dwt_config.active_cutter.image
