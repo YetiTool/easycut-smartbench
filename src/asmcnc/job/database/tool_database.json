@@ -1,5 +1,48 @@
 [
   {
+    "uid": "-0001",
+    "description": "",
+    "manufacturer": "",
+    "manufacturer_part_number": "",
+    "tool_type": "",
+    "generic_definition": {
+      "uid": "-0001",
+      "string": "",
+      "dimension": -1,
+      "unit": "",
+      "type": "",
+      "toolpath_offsets": {
+        "inside": false,
+        "outside": false,
+        "on": false,
+        "pocket": false
+      },
+      "required_operations": {
+        "lead_in": false
+      }
+    },
+    "dimensions": {
+      "shank_diameter": -1,
+      "tool_diameter": -1,
+      "unit": "",
+      "angle": 0
+    },
+    "flutes": {
+      "type": "",
+      "lengths": {
+        "upcut_straight": -1,
+        "downcut": -1,
+        "total": -1,
+        "unit": ""
+      },
+      "quantity": -1,
+      "material": "",
+      "coated": false,
+      "coating": null
+    },
+    "available_isas": []
+  },
+  {
     "uid": "0000",
     "description": "Yeti Tool 21754 60° 3 flute V groove TiAIN coated",
     "manufacturer": "Yeti Tool",

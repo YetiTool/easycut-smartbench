@@ -1,9 +1,14 @@
 [
   {
+    "uid": "-0001",
+    "description": "",
+    "available_isas": []
+  },
+  {
     "uid": "0000",
     "description": "Oak worktop",
     "available_isas": [
-      "dwt"
+      "shapes"
     ]
   },
   {
