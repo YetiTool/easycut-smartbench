@@ -18,7 +18,7 @@ produce gcode
 tidy gcode
 write to output file
 '''
-import decimal, os, re
+import decimal, os, re, math
 from collections import OrderedDict
 
 from asmcnc import paths
@@ -348,6 +348,76 @@ class GCodeEngine(object):
 
         return gcode_lines
 
+    @staticmethod
+    def calculate_arc_point(x1, y1, x2, y2, r, d, clockwise):
+        """
+        Calculate the new point on an arc given the start and end points, radius, distance walked,
+        and direction (clockwise or anticlockwise).
+        """
+
+        if d < 0 or r <= 0 or d > 2 * math.pi * r
+            raise ValueError("Invalid distance or radius")
+
+        # Calculate the midpoint
+        xm = (x1 + x2) / 2
+        ym = (y1 + y2) / 2
+
+        # Calculate the distance between the start and end points
+        dist_between_points = math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+
+        # Calculate the distance from the midpoint to the center
+        h = math.sqrt(r ** 2 - (dist_between_points / 2) ** 2)
+
+        # Calculate the direction vector from start to end
+        dx = x2 - x1
+        dy = y2 - y1
+
+        # Normalize the direction vector
+        mag = math.sqrt(dx ** 2 + dy ** 2)
+        dx /= mag
+        dy /= mag
+
+        # Calculate the perpendicular vector
+        perp_dx = -dy
+        perp_dy = dx
+
+        # Calculate the possible centers
+        center1_x = xm + h * perp_dx
+        center1_y = ym + h * perp_dy
+        center2_x = xm - h * perp_dx
+        center2_y = ym - h * perp_dy
+
+        # Determine which center is correct by checking the radius
+        if abs(math.sqrt((center1_x - x1) ** 2 + (center1_y - y1) ** 2) - r) < 1e-6:
+            center_x, center_y = center1_x, center1_y
+        else:
+            center_x, center_y = center2_x, center2_y
+
+        # Calculate the angles of the start and end points
+        angle1 = math.atan2(y1 - center_y, x1 - center_x)
+        angle2 = math.atan2(y2 - center_y, x2 - center_x)
+
+        # Ensure the angles are in the correct range
+        if clockwise:
+            if angle2 > angle1:
+                angle1 += 2 * math.pi
+        else:
+            if angle2 < angle1:
+                angle2 += 2 * math.pi
+
+        # Calculate the angle corresponding to the distance
+        angle_total = angle2 - angle1 if clockwise else angle1 - angle2
+        angle_walked = (d / r)
+
+        # Determine the new angle
+        new_angle = angle1 - angle_walked if clockwise else angle1 + angle_walked
+
+        # Calculate the coordinates of the new point
+        new_x = center_x + r * math.cos(new_angle)
+        new_y = center_y + r * math.sin(new_angle)
+
+        return new_x, new_y
+
     def add_tabs_to_gcode(self, gcode_lines, total_cut_depth, tab_height, tab_width, tab_spacing, three_d_tabs=False):
         """
         Adds tabs of specified height, width, and spacing to the given G-code lines.
@@ -388,8 +458,8 @@ class GCodeEngine(object):
                         current_y = float(part[1:])
 
             # Add tabs if moving in the XY plane at cutting depth
-            if current_z is not None and current_z < 0 and current_x is not None and current_y is not None:
-                if line.startswith('G1') or line.startswith('G2') and ('X' in line or 'Y' in line):
+            if current_z is not None and current_z <= tab_top_z and current_x is not None and current_y is not None:
+                if line.startswith('G1'):
                     if last_x is not None and last_y is not None:
                         distance_moved = ((current_x - last_x) ** 2 + (current_y - last_y) ** 2) ** 0.5
                         x_delta = current_x - last_x
@@ -400,8 +470,7 @@ class GCodeEngine(object):
 
                     if distance_moved >= tab_spacing:
                         number_of_tabs = int(distance_moved / (tab_spacing + tab_width))
-                        tab_inset_distance = distance_moved - (
-                                    (tab_width * number_of_tabs) + tab_spacing * (number_of_tabs - 1))
+                        tab_inset_distance = distance_moved - ((tab_width * number_of_tabs) + tab_spacing * (number_of_tabs - 1))
                         tab_inset_distance /= 2
 
                         tabs_dict = {}
@@ -409,7 +478,8 @@ class GCodeEngine(object):
                         if x_delta:
                             for i in range(number_of_tabs):
                                 polariser = 1 if x_delta > 0 else -1
-                                tab_x = previous_x_pos + polariser * ((tab_spacing * i) + (tab_width * i) + tab_inset_distance)
+                                tab_x = previous_x_pos + polariser * (
+                                            (tab_spacing * i) + (tab_width * i) + tab_inset_distance)
                                 tab_y = last_y
 
                                 tab_x = round(tab_x, 2)
@@ -426,7 +496,8 @@ class GCodeEngine(object):
                             for i in range(number_of_tabs):
                                 polariser = 1 if y_delta > 0 else -1
                                 tab_x = last_x
-                                tab_y = previous_y_pos + polariser * ((tab_spacing * i) + (tab_width * i) + tab_inset_distance)
+                                tab_y = previous_y_pos + polariser * (
+                                            (tab_spacing * i) + (tab_width * i) + tab_inset_distance)
 
                                 tab_y = round(tab_y, 2)
 
@@ -442,18 +513,81 @@ class GCodeEngine(object):
 
                         for tab in tabs_dict.values():
                             tab_cut_height = current_z if current_z > tab_top_z else tab_top_z
-                            if current_z < tab_top_z:
+                            if current_z < tab_top_z and ('X' in line or 'Y' in line):
+                                if line.startswith('G1'):
+                                    modified_gcode.append("(straight tab)\n")
+                                    if three_d_tabs:
+                                        tab_centre_x = (tab['start_x'] + tab['end_x']) / 2
+                                        tab_centre_y = (tab['start_y'] + tab['end_y']) / 2
+                                        modified_gcode.append('G1 X{} Y{} F4000\n'.format(tab['start_x'], tab['start_y']))
+                                        modified_gcode.append('G1 X{} Y{} Z{}\n'.format(tab_centre_x, tab_centre_y, tab_cut_height))
+                                        modified_gcode.append('G1 X{} Y{} Z{} F4000\n'.format(tab['end_x'], tab['end_y'], current_z))
+                                    else:
+                                        modified_gcode.append('G1 X{} Y{} F4000\n'.format(tab['start_x'], tab['start_y']))
+                                        modified_gcode.append('G1 Z{} F500\n'.format(tab_cut_height))
+                                        modified_gcode.append('G1 X{} Y{} F4000\n'.format(tab['end_x'], tab['end_y']))
+                                        modified_gcode.append('G1 Z{} F500\n'.format(current_z))
+                                    modified_gcode.append("(straight tab end)\n")
+
+                elif line.startswith('G2') or line.startswith('G3'):
+                    modified_gcode.append("(arc tabs)\n")
+                    # Arc tabs
+                    r_value = None
+                    for part in parts:
+                        if part.startswith('G'):
+                            arc_command = part
+                        if part.startswith('R'):
+                            r_value = float(part[1:])
+
+                    if r_value is not None:
+                        cx = (last_x + current_x) / 2
+                        cy = (last_y + current_y) / 2
+                        radius = r_value
+
+                        start_angle = math.atan2(last_y - cy, last_x - cx)
+                        end_angle = math.atan2(current_y - cy, current_x - cx)
+
+                        if line.startswith('G2'):
+                            if end_angle > start_angle:
+                                end_angle -= 2 * math.pi
+                        else:
+                            if start_angle > end_angle:
+                                start_angle -= 2 * math.pi
+
+                        arc_length = abs(end_angle - start_angle) * radius
+                        arc_length /= 2
+
+                        if arc_length >= tab_spacing:
+                            number_of_tabs = int(arc_length / (tab_spacing + tab_width))
+                            tab_inset_distance = arc_length - ((tab_width * number_of_tabs) + tab_spacing * (number_of_tabs - 1))
+                            tab_inset_distance /= 2
+
+                            last_x, last_y, current_x, current_y = current_x, current_y, last_x, last_y
+
+                            for i in range(number_of_tabs):
+                                tab_start_distance = arc_length - ((tab_spacing * i) + (tab_width * i) + tab_inset_distance)
+                                tab_end_distance = arc_length - ((tab_spacing * i) + (tab_width * i) + tab_width + tab_inset_distance)
+                                tab_start_x, tab_start_y = calculate_arc_point(last_x, last_y, current_x, current_y, radius, tab_start_distance, clockwise=arc_command== 'G2')
+                                tab_end_x, tab_end_y = calculate_arc_point(last_x, last_y, current_x, current_y, radius, tab_end_distance, clockwise=arc_command== 'G2')
+
+                                tab_cut_height = current_z if current_z > tab_top_z else tab_top_z
+
                                 if three_d_tabs:
-                                    tab_centre_x = (tab['start_x'] + tab['end_x']) / 2
-                                    tab_centre_y = (tab['start_y'] + tab['end_y']) / 2
-                                    modified_gcode.append('G1 X{} Y{} F4000\n'.format(tab['start_x'], tab['start_y']))
-                                    modified_gcode.append('G1 X{} Y{} Z{}\n'.format(tab_centre_x, tab_centre_y, tab_cut_height))
-                                    modified_gcode.append('G1 X{} Y{} Z{} F4000\n'.format(tab['end_x'], tab['end_y'], current_z))
+                                    tab_centre_x = (tab_start_x + tab_end_x) / 2
+                                    tab_centre_y = (tab_start_y + tab_end_y) / 2
+                                    modified_gcode.append('{} X{} Y{} R{} F4000\n'.format(arc_command, round(tab_start_x, 2), round(tab_start_y, 2), radius))
+                                    modified_gcode.append('{} X{} Y{} Z{} R{}\n'.format(arc_command, round(tab_centre_x, 2), round(tab_centre_y, 2), tab_cut_height, radius))
+                                    modified_gcode.append('{} X{} Y{} Z{} R{} F4000\n'.format(arc_command, round(tab_end_x, 2), round(tab_end_y, 2), current_z, radius))
                                 else:
-                                    modified_gcode.append('G1 X{} Y{} F4000\n'.format(tab['start_x'], tab['start_y']))
+                                    modified_gcode.append('{} X{} Y{} R{} F4000\n'.format(arc_command, round(tab_start_x, 2), round(tab_start_y, 2), radius))
                                     modified_gcode.append('G1 Z{} F500\n'.format(tab_cut_height))
-                                    modified_gcode.append('G1 X{} Y{} F4000\n'.format(tab['end_x'], tab['end_y']))
+                                    modified_gcode.append('{} X{} Y{} R{} F4000\n'.format(arc_command, round(tab_end_x, 2), round(tab_end_y, 2), radius))
                                     modified_gcode.append('G1 Z{} F500\n'.format(current_z))
+
+                    last_x = current_x
+                    last_y = current_y
+
+                    modified_gcode.append("(arc tab end)\n")
 
             previous_x_pos = last_x
             previous_y_pos = last_y
@@ -697,6 +831,43 @@ class GCodeEngine(object):
         else:
             raise Exception ("Shape type: {} is not defined as a custom shape.".format(self.config.active_config.shape_type))
 
+    def remove_redudant_lines(self, gcode_lines):
+        """
+        Remove moves that result in no machine movement
+        """
+        x_pos = 0
+        y_pos = 0
+        z_pos = 0
+
+        last_x = 0
+        last_y = 0
+        last_z = 0
+
+        output = []
+
+        for line in gcode_lines:
+            if line.startswith('G0') or line.startswith('G1') or line.startswith('G2') or line.startswith('G3'):
+                parts = line.split()
+                for part in parts:
+                    if part.startswith('X'):
+                        x_pos = float(part[1:])
+                    elif part.startswith('Y'):
+                        y_pos = float(part[1:])
+                    elif part.startswith('Z'):
+                        z_pos = float(part[1:])
+
+                if x_pos != last_x or y_pos != last_y or z_pos != last_z:
+                    output.append(line)
+                    last_x = x_pos
+                    last_y = y_pos
+                    last_z = z_pos
+            else:
+                output.append(line)
+
+        output.append("\n")
+
+        return output
+
     # Main
     def engine_run(self, simulate=False):
         filename = self.config.active_config.shape_type + ".nc"
@@ -854,7 +1025,9 @@ class GCodeEngine(object):
                             rectangle_parameters["first_plunge"] = first_plunge
 
                             rectangle = self.cut_rectangle(**rectangle_parameters)
+                            rectangle = self.remove_redudant_lines(rectangle)
                             if not pocketing:
+                                pass
                                 rectangle = self.add_tabs_to_gcode(rectangle, total_cut_depth, tab_height, tab_width, tab_spacing, three_d_tabs=three_d_tabs)
                             cutting_lines += rectangle
 
