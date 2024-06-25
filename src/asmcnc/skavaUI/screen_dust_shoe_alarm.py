@@ -268,6 +268,7 @@ class DustShoeAlarmScreen(Screen):
                         self.sm.current = 'dust_shoe_alarm'
 
     def on_pre_enter(self):
+        self.m.soft_stop()
         self.resume_button.disabled = True
         self.cancel_button.disabled = True
         self.resume_button.opacity = 0
@@ -328,7 +329,7 @@ class DustShoeAlarmScreen(Screen):
 
     def resume_stream(self):
         self.db.send_event(0, "Job resumed", "Resumed job: " + self.jd.job_name, 4)
-        self.m.resume_after_a_hard_door()
+        self.m.resume_from_a_soft_door()
         self.return_to_app()
 
     def cancel_stream(self):
@@ -339,7 +340,7 @@ class DustShoeAlarmScreen(Screen):
             self.return_to_screen = "job_incomplete"
         else:
             self.m.s.cancel_sequential_stream(reset_grbl_after_cancel=False)
-        self.m.cancel_after_a_hard_door()
+        self.m.stop_from_soft_stop_cancel()
         self.return_to_app()
 
     def return_to_app(self):
