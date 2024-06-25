@@ -21,6 +21,7 @@ class ToolpathOffsetOptions(Enum):
     INSIDE = "inside"
     OUTSIDE = "outside"
     ON = "on"
+    POCKET = "pocket"
 
 
 class ShapeOptions(Enum):

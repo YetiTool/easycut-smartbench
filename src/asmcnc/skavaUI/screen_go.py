@@ -554,8 +554,8 @@ class GoScreen(Screen):
                 if self.model_manager.is_machine_drywall() and self.return_to_screen == "drywall_cutter":
                     self.yp.enable()
                     
-                    if self.dwt_config.active_cutter.dimensions.diameter:
-                        dwt_cutter_diameter = str(int(self.dwt_config.active_cutter.dimensions.diameter))
+                    if self.dwt_config.active_cutter.dimensions.tool_diameter:
+                        dwt_cutter_diameter = str(int(self.dwt_config.active_cutter.dimensions.tool_diameter))
                     else:
                         dwt_cutter_diameter = str(int(self.dwt_config.active_cutter.dimensions.angle))
                     available_diameters = self.yp.get_sorted_cutter_diameters(self.yp.filter_available_profiles("Drywall"))

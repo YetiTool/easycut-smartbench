@@ -594,7 +594,7 @@ class EngineTests(unittest.TestCase):
         self.engine.config.active_config.shape_type = "custom_shape"
         self.engine.custom_gcode_shapes = ["custom_shape"]
         self.engine.source_folder_path = "/path/to/gcode/files"
-        self.engine.config.active_cutter.dimensions.diameter = 10
+        self.engine.config.active_cutter.dimensions.diameter.tool_diameter = 10
 
         # Mocking the return values of helper methods
         self.engine.find_and_read_gcode_file = lambda path, shape_type, diameter: ["G1 X10 Y20", "G1 X30 Y40"]

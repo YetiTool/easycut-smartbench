@@ -25,6 +25,12 @@ class ProfileDatabase(object):
         with open(self.PROFILE_DB) as f:
             self.profile_data = json.load(f)
 
+    def get_material_name(self, uid):
+        """Returns the material name for a given uid."""
+        for material in self.material_data:
+            if material['uid'] == uid:
+                return material['description']
+
     def get_material_names(self, isa=None):
         """Returns a list of strings with the material names."""
         if isa:
@@ -48,17 +54,46 @@ class ProfileDatabase(object):
 
         return tool_names
 
+    def get_tool_name(self, uid):
+        """Returns the tool name for a given uid."""
+        for tool in self.tool_data:
+            if tool['uid'] == uid:
+                return tool['description']
+
     def get_tool_id(self, description):
         """Returns the uid of a tool for a given description."""
         for tool in self.tool_data:
             if tool['description'] == description:
                 return tool['uid']
 
+    def get_tool_generic_id(self, uid):
+        for tool in self.tool_data:
+            if tool['uid'] == uid:
+                return tool['generic_definition']['uid']
+
+    def get_tool(self, uid):
+        """Returns the tool for a given uid."""
+        for tool in self.tool_data:
+            if tool['uid'] == uid:
+                return tool
+
     def get_material_id(self, description):
         """Returns the uid of a tool for a given description."""
         for material in self.material_data:
             if material['description'] == description:
                 return material['uid']
+
+    def get_profile_id(self, material_id, tool_generic_id):
+        """Returns the profile for a given tool and material."""
+        for profile in self.profile_data:
+            if profile['generic_tool']['uid'] == tool_generic_id and profile['material']['uid'] == material_id:
+                return profile['uid']
+
+    def get_profile(self, profile_id):
+        """Returns the profile for a given profile_id."""
+        for profile in self.profile_data:
+            if profile['uid'] == profile_id:
+                return profile
 
 
 
