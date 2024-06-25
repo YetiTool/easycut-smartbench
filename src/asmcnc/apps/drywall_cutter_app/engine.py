@@ -350,73 +350,52 @@ class GCodeEngine(object):
 
     @staticmethod
     def calculate_arc_point(x1, y1, x2, y2, r, d, clockwise):
-        """
-        Calculate the new point on an arc given the start and end points, radius, distance walked,
-        and direction (clockwise or anticlockwise).
-        """
+        # Calculate the center of the circle (midpoint of start and end)
+        def find_arc_center(x1, y1, x2, y2, clockwise):
+            """
+            Find the center of the circle that the arc is part of.
+            Works only for 90 degree arcs.
+            """
 
-        if d < 0 or r <= 0 or d > 2 * math.pi * r
-            raise ValueError("Invalid distance or radius")
+            x_delta_positive = x2 - x1 > 0
+            y_delta_positive = y2 - y1 > 0
 
-        # Calculate the midpoint
-        xm = (x1 + x2) / 2
-        ym = (y1 + y2) / 2
+            bool = x_delta_positive == y_delta_positive
 
-        # Calculate the distance between the start and end points
-        dist_between_points = math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+            x_use_start = not (bool)
+            y_use_start = bool
 
-        # Calculate the distance from the midpoint to the center
-        h = math.sqrt(r ** 2 - (dist_between_points / 2) ** 2)
+            if not clockwise:
+                x_use_start = not x_use_start
+                y_use_start = not y_use_start
 
-        # Calculate the direction vector from start to end
-        dx = x2 - x1
-        dy = y2 - y1
+            x = x1 if x_use_start else x2
+            y = y1 if y_use_start else y2
 
-        # Normalize the direction vector
-        mag = math.sqrt(dx ** 2 + dy ** 2)
-        dx /= mag
-        dy /= mag
+            return x, y
 
-        # Calculate the perpendicular vector
-        perp_dx = -dy
-        perp_dy = dx
+        cx, cy = find_arc_center(x1, y1, x2, y2, clockwise)
 
-        # Calculate the possible centers
-        center1_x = xm + h * perp_dx
-        center1_y = ym + h * perp_dy
-        center2_x = xm - h * perp_dx
-        center2_y = ym - h * perp_dy
+        # Calculate the starting angle
+        start_angle = math.atan2(y1 - cy, x1 - cx)
 
-        # Determine which center is correct by checking the radius
-        if abs(math.sqrt((center1_x - x1) ** 2 + (center1_y - y1) ** 2) - r) < 1e-6:
-            center_x, center_y = center1_x, center1_y
-        else:
-            center_x, center_y = center2_x, center2_y
+        # Calculate the angle traversed
+        traversed_angle = -d / r
 
-        # Calculate the angles of the start and end points
-        angle1 = math.atan2(y1 - center_y, x1 - center_x)
-        angle2 = math.atan2(y2 - center_y, x2 - center_x)
-
-        # Ensure the angles are in the correct range
+        # Determine the direction
         if clockwise:
-            if angle2 > angle1:
-                angle1 += 2 * math.pi
+            final_angle = start_angle + traversed_angle
         else:
-            if angle2 < angle1:
-                angle2 += 2 * math.pi
+            final_angle = start_angle - traversed_angle
 
-        # Calculate the angle corresponding to the distance
-        angle_total = angle2 - angle1 if clockwise else angle1 - angle2
-        angle_walked = (d / r)
+        # Calculate the new point coordinates
+        new_x = cx + r * math.cos(final_angle)
+        new_y = cy + r * math.sin(final_angle)
 
-        # Determine the new angle
-        new_angle = angle1 - angle_walked if clockwise else angle1 + angle_walked
+        x = 0
 
-        # Calculate the coordinates of the new point
-        new_x = center_x + r * math.cos(new_angle)
-        new_y = center_y + r * math.sin(new_angle)
+        return round(new_x, 2), round(new_y, 2)
 
-        return new_x, new_y
 
     def add_tabs_to_gcode(self, gcode_lines, total_cut_depth, tab_height, tab_width, tab_spacing, three_d_tabs=False):
         """
@@ -468,7 +447,7 @@ class GCodeEngine(object):
                     last_x = current_x
                     last_y = current_y
 
-                    if distance_moved >= tab_spacing:
+                    if distance_moved >= tab_spacing and False:
                         number_of_tabs = int(distance_moved / (tab_spacing + tab_width))
                         tab_inset_distance = distance_moved - ((tab_width * number_of_tabs) + tab_spacing * (number_of_tabs - 1))
                         tab_inset_distance /= 2
@@ -567,8 +546,8 @@ class GCodeEngine(object):
                             for i in range(number_of_tabs):
                                 tab_start_distance = arc_length - ((tab_spacing * i) + (tab_width * i) + tab_inset_distance)
                                 tab_end_distance = arc_length - ((tab_spacing * i) + (tab_width * i) + tab_width + tab_inset_distance)
-                                tab_start_x, tab_start_y = calculate_arc_point(last_x, last_y, current_x, current_y, radius, tab_start_distance, clockwise=arc_command== 'G2')
-                                tab_end_x, tab_end_y = calculate_arc_point(last_x, last_y, current_x, current_y, radius, tab_end_distance, clockwise=arc_command== 'G2')
+                                tab_start_x, tab_start_y = self.calculate_arc_point(last_x, last_y, current_x, current_y, radius, tab_start_distance, clockwise=arc_command== 'G3')
+                                tab_end_x, tab_end_y = self.calculate_arc_point(last_x, last_y, current_x, current_y, radius, tab_end_distance, clockwise=arc_command== 'G3')
 
                                 tab_cut_height = current_z if current_z > tab_top_z else tab_top_z
 
@@ -888,7 +867,7 @@ class GCodeEngine(object):
         tab_height = self.config.active_config.cutting_depths.material_thickness * 0.6
         if tab_height > 5:
             tab_height = 5
-        three_d_tabs = True
+        three_d_tabs = False
 
         # Compensate for tool diameter
         tab_width = tab_width + self.config.active_cutter.dimensions.diameter
