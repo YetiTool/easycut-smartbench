@@ -4,6 +4,7 @@ Created on 1 Feb 2018
 '''
 
 import kivy
+from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, FadeTransition
 from kivy.uix.floatlayout import FloatLayout
@@ -136,6 +137,7 @@ class QuickCommands(Widget):
         self.sm=kwargs['screen_manager']
         self.jd = kwargs['job']
         self.l=kwargs['localization']
+        self.usm = App.get_running_app().user_settings_manager
       
     def quit_to_lobby(self):
         self.sm.current = 'lobby'
@@ -174,6 +176,9 @@ class QuickCommands(Widget):
 
         elif not self.m.is_machine_homed and self.m.is_connected:
             self.m.request_homing_procedure('home','home')
+
+        elif self.usm.get_value('dust_shoe_detection') and not self.m.s.dustshoe_is_closed:
+            self.sm.pm.show_dustshoe_warning_popup()
 
         elif self.sm.get_screen('home').z_datum_reminder_flag and not self.sm.get_screen('home').has_datum_been_reset:
 
