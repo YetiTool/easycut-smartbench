@@ -396,7 +396,7 @@ class GCodeEngine(object):
 
         return round(new_x, 2), round(new_y, 2)
 
-    def add_straight_tabs(self, z_feed, xy_feed, linear_distance_moved, tab_spacing, tab_width, tab_height, previous_x_pos, previous_y_pos, last_x, last_y, x_delta, y_delta, current_z, tab_top_z, line, three_d_tabs):
+    def add_straight_tabs(self, xy_feed, z_feed, linear_distance_moved, tab_spacing, tab_width, tab_height, previous_x_pos, previous_y_pos, last_x, last_y, x_delta, y_delta, current_z, tab_top_z, line, three_d_tabs):
         number_of_tabs = int(linear_distance_moved / (tab_spacing + tab_width))
         tab_inset_distance = linear_distance_moved - ((tab_width * number_of_tabs) + tab_spacing * (number_of_tabs - 1))
         tab_inset_distance /= 2
@@ -458,7 +458,7 @@ class GCodeEngine(object):
 
         return modified_gcode
 
-    def add_arc_tabs(self, z_feed, xy_feed, parts, line, last_x, last_y, current_x, current_y, tab_spacing, tab_width, current_z, tab_top_z, three_d_tabs):
+    def add_arc_tabs(self, xy_feed, z_feed, parts, line, last_x, last_y, current_x, current_y, tab_spacing, tab_width, current_z, tab_top_z, three_d_tabs):
         modified_gcode = []
         r_value = None
         for part in parts:
@@ -544,6 +544,7 @@ class GCodeEngine(object):
             tab_top_z = 0
 
         for line in gcode_lines:
+            tabs_added = False
             parts = line.split()
 
             if line.startswith('G0') or line.startswith('G1') or line.startswith('G2') or line.startswith('G3'):
@@ -572,9 +573,11 @@ class GCodeEngine(object):
                     g1_last_y = current_y
 
                 if linear_distance_moved >= tab_spacing and line.startswith(('G0', 'G1')):
+                    tabs_added = True
                     modified_gcode.extend(self.add_straight_tabs(xy_feed, z_feed, linear_distance_moved, tab_spacing, tab_width, tab_height, previous_x_pos, previous_y_pos, g1_last_x, g1_last_y, x_delta, y_delta, current_z, tab_top_z, line, three_d_tabs))
 
                 if line.startswith('G2') or line.startswith('G3'):
+                    tabs_added = True
                     modified_gcode.extend(self.add_arc_tabs(xy_feed, z_feed, parts, line, last_x, last_y, current_x, current_y, tab_spacing, tab_width, current_z, tab_top_z, three_d_tabs))
 
                 last_x = current_x
@@ -586,7 +589,14 @@ class GCodeEngine(object):
             previous_x_pos = last_x
             previous_y_pos = last_y
 
+            if tabs_added:
+                if ('X' in line or 'Y' in line) and ('F' not in line):
+                    line = line[:-1] + 'F{}\n'.format(xy_feed)
+                if ('Z' in line) and ('F' not in line):
+                    line = line[:-1] + 'F{}\n'.format(z_feed)
+
             modified_gcode.append(line)
+
         return modified_gcode
 
     # Return lines in appropriate gcode file
@@ -1165,7 +1175,7 @@ class GCodeEngine(object):
 
         else:
             if self.config.active_config.shape_type in file_structure_1_shapes:
-                output = "(%s)\nG90\nM3 S%d\nG0 %s\n\n%s(End)\nG0 Z%d\nM5\n" % (
+                output = "(%s)\nG90\nG17\nM3 S%d\nG0 %s\n\n%s(End)\nG0 Z%d\nM5\n" % (
                     filename, self.config.active_cutter.parameters.cutting_spindle_speed, safe_start_position, ''.join(cutting_lines), z_safe_distance)
             else:
                 output = "(%s)\nG90\nG17\nM3 S%d\nG0 %s\n" % (filename, self.config.active_cutter.parameters.cutting_spindle_speed, safe_start_position)
