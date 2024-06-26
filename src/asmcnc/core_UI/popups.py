@@ -1098,7 +1098,7 @@ class DustshoeWarningPopup(PopupBase):
             halign='center',
             valign="middle",
             text="[b]" + self.l.get_str("Please close the dust shoe by fitting the dust shoe plug!") + "[/b]",
-            color=(0, 0, 0, 1),
+            color=color_provider.get_rgba("black"),
             padding=(0, 0),
             markup=True,
             font_size=str(utils.get_scaled_width(25)) + "sp",
@@ -1113,7 +1113,7 @@ class DustshoeWarningPopup(PopupBase):
 
         dust_shoe_label = Label(
             text=self.l.get_str("Dust shoe plug detection"),
-            color=(0, 0, 0, 1),
+            color=color_provider.get_rgba("black"),
             markup=True,
             font_size=str(utils.get_scaled_width(20)) + "sp",
         )
