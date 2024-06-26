@@ -457,4 +457,5 @@ class HomeScreen(Screen):
 
     def dismiss_z_datum_reminder(self, *args):
         self.z_datum_reminder_flag = False
+        self.has_datum_been_reset = True
         Logger.debug("Z datum reminder disabled")
