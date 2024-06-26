@@ -413,6 +413,7 @@ class DrywallCutterScreen(Screen):
         popup_info.PopupStop(self.m, self.sm, self.l)
 
     def quit_to_lobby(self):
+        self.m.stop_machine_movement()
         self.set_return_screens()
         self.jd.reset_values()
 

@@ -144,6 +144,7 @@ class QuickCommands(Widget):
         self.model_manager = ModelManagerSingleton()
       
     def quit_to_lobby(self):
+        self.m.stop_machine_movement()
         self.sm.current = 'lobby'
             
     def home(self):
