@@ -251,7 +251,6 @@ class DWTConfig(EventDispatcher):
             profile_id = self.profile_db.get_profile_id(self.active_config.material, generic_tool_id)
 
             Logger.info("Loading new profile: " + profile_id)
-            print(self.profile_db.get_profile(profile_id))
             self.active_profile = config_classes.Profile.from_json(self.profile_db.get_profile(profile_id))
 
     def save_config(self, config_path):

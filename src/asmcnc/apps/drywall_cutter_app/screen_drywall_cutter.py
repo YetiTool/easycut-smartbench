@@ -346,7 +346,6 @@ class DrywallCutterScreen(Screen):
 
     def update_toolpaths(self, *args):
         # Convert allowed toolpaths object to dict, then put attributes with True into a list
-        print("TOOLPATH OFFSETS: ", self.dwt_config.active_cutter.generic_definition.toolpath_offsets.__dict__.items())
         allowed_toolpaths = [toolpath for toolpath, allowed in
                              self.dwt_config.active_cutter.generic_definition.toolpath_offsets.__dict__.items() if
                              allowed]
