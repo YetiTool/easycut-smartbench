@@ -1085,8 +1085,9 @@ class DustshoeWarningPopup(PopupBase):
         self.sm = kwargs["sm"]
         usm = App.get_running_app().user_settings_manager
 
-        self.width = 800
-        self.height = 480
+        self.width = utils.get_scaled_width(600)
+        self.height = utils.get_scaled_height(360)
+        self.size_hint = (None, None)
 
         title = PopupWarningTitle(size_hint_y=0.15, localisation=self.l)
         self.root_layout.add_widget(title)
@@ -1129,7 +1130,7 @@ class DustshoeWarningPopup(PopupBase):
         self.main_layout = BoxLayout(
             orientation="vertical",
             spacing=utils.get_scaled_tuple(10, orientation="vertical"),
-            padding=utils.get_scaled_tuple((200, 20, 200, 20)),
+            padding=utils.get_scaled_tuple((20, 20, 20, 20)),
         )
 
         self.main_layout.add_widget(self.main_label)
