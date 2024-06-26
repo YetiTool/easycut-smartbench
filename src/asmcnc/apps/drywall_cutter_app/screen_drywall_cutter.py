@@ -496,7 +496,8 @@ class DrywallCutterScreen(Screen):
             self.sm.add_widget(screen_config_filesaver.ConfigFileSaver(name='config_filesaver',
                                                                        screen_manager=self.sm,
                                                                        localization=self.l,
-                                                                       callback=self.dwt_config.save_config))
+                                                                       callback=self.dwt_config.save_config,
+                                                                       kb=self.kb))
         self.sm.current = 'config_filesaver'
 
     def is_config_valid(self):

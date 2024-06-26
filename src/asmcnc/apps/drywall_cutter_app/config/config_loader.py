@@ -220,6 +220,7 @@ class DWTConfig(EventDispatcher):
         """
         if not os.path.exists(config_path):
             Logger.error("Configuration file doesn't exist: " + config_path)
+            self.load_temp_config()
             return
 
         if not self.is_valid_configuration(config_path):

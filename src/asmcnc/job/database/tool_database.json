@@ -14,7 +14,7 @@
       "toolpath_offsets": {
         "inside": false,
         "outside": false,
-        "on": false,
+        "on": true,
         "pocket": false
       },
       "required_operations": {
