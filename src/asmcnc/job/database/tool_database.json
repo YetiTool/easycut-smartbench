@@ -12,7 +12,7 @@
       "unit": "",
       "type": "",
       "toolpath_offsets": {
-        "inside": false,
+        "inside": true,
         "outside": false,
         "on": false,
         "pocket": false

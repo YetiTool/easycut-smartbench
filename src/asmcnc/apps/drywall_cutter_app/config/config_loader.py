@@ -30,13 +30,16 @@ INDENT_VALUE = "    "
 
 
 def get_display_preview(json_obj):
+    profile_db = App.get_running_app().profile_db
+    material_description = profile_db.get_material_name(json_obj["material"])
+    tool_description = profile_db.get_tool_name(json_obj["cutter_type"])
     preview = get_shape_type(json_obj)
     preview += "Units: " + json_obj["units"] + "\n"
     # preview += "Rotation: " + json_obj['rotation'] + "\n"
     preview += "Canvas shape dims: \n"
     preview += get_shape_dimensions(json_obj)
-    preview += "Material: " + json_obj["material"] + "\n"
-    preview += "Cutter type: " + json_obj["cutter_type"] + "\n"
+    preview += "Material: " + material_description + "\n"
+    preview += "Cutter type: " + tool_description + "\n"
     preview += "Toolpath offset: " + json_obj["toolpath_offset"] + "\n"
     preview += "Cutting depths: \n"
     preview += (
@@ -249,9 +252,11 @@ class DWTConfig(EventDispatcher):
         if self.active_config.material != "-0001" and self.active_config.cutter_type != "-0001":
             generic_tool_id = self.profile_db.get_tool_generic_id(self.active_config.cutter_type)
             profile_id = self.profile_db.get_profile_id(self.active_config.material, generic_tool_id)
-
-            Logger.info("Loading new profile: " + profile_id)
-            self.active_profile = config_classes.Profile.from_json(self.profile_db.get_profile(profile_id))
+            if profile_id:  # If the profile exists
+                Logger.info("Loading new profile: " + profile_id)
+                self.active_profile = config_classes.Profile.from_json(self.profile_db.get_profile(profile_id))
+            else:
+                Logger.error("Unable to load profile with material {} and generic tool ID {}".format(self.active_config.material, generic_tool_id))
 
     def save_config(self, config_path):
         # type (str) -> None
@@ -300,7 +305,10 @@ class DWTConfig(EventDispatcher):
         cutter = self.profile_db.get_tool(cutter_uid)
 
         if not cutter:
-            Logger.error("Cutter file doesn't exist: " + cutter_uid)
+            Logger.error("Cutter doesn't exist: " + cutter_uid)
+            Logger.info("Loading default cutter...")
+            self.active_cutter = config_classes.Cutter.default()
+            self.active_config.cutter_type = self.active_cutter.uid
             return
 
         Logger.debug("Loading cutter: " + cutter_uid)
@@ -414,6 +422,11 @@ class DWTConfig(EventDispatcher):
                 self.active_config_name = "New Configuration"
 
             setattr(self.active_config, parameter_name, parameter_value)
+
+        if parameter_name == "cutter_type":
+            self.load_cutter(parameter_value)
+
+        self.load_new_profile()
 
         # update screen, check bumpers and so on:
         if not (self.active_config.shape_type == 'geberit' and self.active_cutter.dimensions.tool_diameter is None):

@@ -1,6 +1,7 @@
 import os
 import sys
 
+from kivy.app import App
 from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.metrics import dp
@@ -10,8 +11,6 @@ from kivy.uix.screenmanager import Screen
 
 from asmcnc import paths
 from asmcnc.apps import widget_tool_material_display
-from asmcnc.apps.drywall_cutter_app import job_load_helper
-from asmcnc.apps.drywall_cutter_app import material_setup_popup
 from asmcnc.apps.drywall_cutter_app import screen_config_filechooser
 from asmcnc.apps.drywall_cutter_app import screen_config_filesaver
 from asmcnc.apps.drywall_cutter_app import widget_drywall_shape_display
@@ -243,6 +242,8 @@ class DrywallCutterScreen(Screen):
         self.simulation_started = False
         self.ignore_state = True
 
+        self.profile_db = App.get_running_app().profile_db
+
         # XY move widget
         self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m,
                                                                    screen_manager=self.sm,
@@ -298,6 +299,10 @@ class DrywallCutterScreen(Screen):
         self.pulse_poll = Clock.schedule_interval(self.update_pulse_opacity, 0.04)
         self.kb.set_numeric_pos((scaling_utils.get_scaled_width(565), scaling_utils.get_scaled_height(115)))
         self.drywall_shape_display_widget.check_datum_and_extents()  # update machine value labels
+
+        if self.dwt_config.app_type == config_options.AppType.SHAPES:
+            self.shape_options_dict.pop("geberit")
+            self.shape_selection.image_dict = self.shape_options_dict
 
         if self.dwt_config.app_type == config_options.AppType.SHAPES:
             self.drywall_shape_display_widget.canvas_image.source = "./asmcnc/apps/drywall_cutter_app/img/canvas_with_logo_shapes.png"
@@ -363,9 +368,6 @@ class DrywallCutterScreen(Screen):
             # Default to first toolpath, so disabled toolpath is never selected
             self.select_toolpath(allowed_toolpaths[0])
 
-    def show_tool_image(self):
-        self.tool_selection.source = self.dwt_config.active_cutter.image
-
     def select_shape(self, shape):
         self.dwt_config.on_parameter_change('shape_type', shape.lower())
 
@@ -398,12 +400,11 @@ class DrywallCutterScreen(Screen):
 
         # handle tool selection for geberit shape:
         if shape is 'geberit':
-            geberit_cutters = {k: v for k, v in self.tool_options.iteritems() if '8 mm' in k or '6 mm' in k}
-            geberit_cutter_names = [v['cutter_path'] for v in geberit_cutters.values()]
-            self.tool_selection.image_dict = geberit_cutters
+            tool_options = self.profile_db.get_geberit_tools()
+
             # check if valid tool is selected:
-            if self.dwt_config.active_config.cutter_type not in geberit_cutter_names:
-                self.select_tool(geberit_cutter_names[0])
+            if self.dwt_config.active_config.cutter_type not in tool_options:
+                self.select_tool(tool_options[0])
 
     def rotate_shape(self, swap_lengths=True):
         if self.rotation == 'horizontal':

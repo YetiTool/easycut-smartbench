@@ -37,6 +37,15 @@ class ProfileDatabase(object):
             return [material['description'] for material in self.material_data if isa.value in material['available_isas']]
         return [material['description'] for material in self.material_data]
 
+    def get_geberit_tools(self):
+        """Returns a list of cutter UIDs  that are appropriate for Geberit."""
+        cutters = []
+        for profile in self.profile_data:
+            if profile["material"]["uid"] == "0010":
+                for tool in profile["applicable_tools"]:
+                    cutters.append(tool["uid"])
+        return cutters
+
     def get_tool_names(self, chosen_material=None):
         """
         Returns a list a tool_names suitable for the given Material.

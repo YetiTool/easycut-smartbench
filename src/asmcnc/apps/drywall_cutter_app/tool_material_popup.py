@@ -190,8 +190,6 @@ class ToolMaterialPopup(Popup):
     def confirm(self):
         self.dwt_config.on_parameter_change('material', self.profile_db.get_material_id(self.material_dropdown.text))
         self.dwt_config.on_parameter_change('cutter_type', self.profile_db.get_tool_id(self.tool_dropdown.text))
-        self.dwt_config.load_cutter(self.dwt_config.active_config.cutter_type)
-        self.dwt_config.load_new_profile()
         self.drywall_cutter_screen.update_toolpaths()
         self.dismiss()
 
