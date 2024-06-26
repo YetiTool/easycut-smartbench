@@ -1,10 +1,5 @@
 from asmcnc.comms.logging_system.logging_system import Logger
 
-try:
-    from typing import Dict, List
-except ImportError:
-    Logger.warning("Typing module not available.")
-
 """
 A provider for colours that can be used in the application.
 Note "Color(s)" spelling is used to keep the naming consistent with Kivy's Color class.
@@ -58,7 +53,7 @@ Colors = {
     "grey": [229 / 255., 229 / 255., 229 / 255., 1.0],
     "blue": [25 / 255., 118 / 255., 210 / 255., 1.0],
     "dark_grey": [51 / 255., 51 / 255., 51 / 255., 1.0],
-}  # type: Dict[str, List[float]]  
+}  # type: dict[str, list[float]]
 
 
 def get_rgba(color_name):
