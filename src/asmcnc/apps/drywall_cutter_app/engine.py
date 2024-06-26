@@ -977,16 +977,20 @@ class GCodeEngine(object):
             coordinates.append(coordinates[0])
 
             # Create a dictionary of operations
-            length_to_cover_with_passes = 0  # Generate a single pass for roughing
+            length_to_cover_with_passes = 0  # Generate a single pass if roughing
             if pocketing:
-                length_to_cover_with_passes = min(x_rect, y_rect) / 2  # Half the shortest edge length
+                length_to_cover_with_passes = min(x_rect, y_rect) / 2 # Half shortest edge length
             length_covered_by_finishing = self.finishing_stepover * self.finishing_passes  # Amount of length covered by finishing passes
             length_to_cover_with_roughing = length_to_cover_with_passes - length_covered_by_finishing  # Remaining length to be covered by roughing passes
 
-            finishing_stepovers = calculate_stepovers(length_covered_by_finishing, 0, self.finishing_stepover)[1:]
+            finishing_stepovers = calculate_stepovers(length_covered_by_finishing, 0, self.finishing_stepover)
             roughing_stepovers = calculate_stepovers(length_to_cover_with_roughing, finishing_stepovers[0], self.config.active_cutter.dimensions.diameter / 2)[1:]
             finishing_depths = self.calculate_pass_depths(total_cut_depth, self.finishing_stepdown)
             roughing_depths = self.calculate_pass_depths(total_cut_depth, cutting_pass_depth)
+
+            if finishing_stepovers:
+                roughing_stepovers.append(finishing_stepovers[0])
+                finishing_stepovers = finishing_stepovers[1:]
 
             operations = {
                 "Roughing": {
@@ -999,9 +1003,9 @@ class GCodeEngine(object):
                 }
             }
 
-            if operations["Roughing"]["stepovers"] == [] and operations["Finishing"]["stepovers"] == [0]:
-                operations["Roughing"]["stepovers"] = [0]
-                operations["Finishing"]["stepovers"] = []
+            # if operations["Roughing"]["stepovers"] == [] and operations["Finishing"]["stepovers"] == [0]:
+            #     operations["Roughing"]["stepovers"] = [0]
+            #     operations["Finishing"]["stepovers"] = []
 
 
             if simulate:
@@ -1093,7 +1097,7 @@ class GCodeEngine(object):
             circle_radius = self.config.active_config.canvas_shape_dims.d / 2
 
             # Create a dictionary of operations
-            length_to_cover_with_passes = 0  # Generate a single pass for roughing
+            length_to_cover_with_passes = 0  # Generate a single pass if roughing
             if pocketing:
                 length_to_cover_with_passes = circle_radius
             length_covered_by_finishing = self.finishing_stepover * self.finishing_passes  # Amount of length covered by finishing passes
