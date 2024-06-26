@@ -1460,6 +1460,7 @@ class RouterMachine(EventDispatcher):
         Logger.info('Streaming stopped.')
         if self.s.is_job_streaming: self.s.cancel_stream()
         if self.s.is_sequential_streaming: self.s.cancel_sequential_stream() # Cancel sequential stream to stop it continuing to send stuff after reset
+        self.s.spindle_on = False
 
     def _grbl_resume(self):
         Logger.info('grbl realtime cmd sent: ~ resume')
