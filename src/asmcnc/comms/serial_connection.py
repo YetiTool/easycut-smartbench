@@ -695,6 +695,9 @@ class SerialConnection(EventDispatcher):
 
         Logger.info("Ending stream...")
 
+        # Always switch to mm, in case the job put you in inches
+        self.m.set_machine_unit_to_mm()
+
         # Reset flags
         self.is_job_streaming = False
         self.is_stream_lines_remaining = False
@@ -737,6 +740,9 @@ class SerialConnection(EventDispatcher):
         self.jd.percent_thru_job = 100
 
     def cancel_stream(self):
+
+        # Always switch to mm, in case the job put you in inches
+        self.m.set_machine_unit_to_mm()
 
         self.is_job_streaming = False  # make grbl_scanner() stop stuffing buffer
         self.is_stream_lines_remaining = False

@@ -341,6 +341,8 @@ class JobRecoveryScreen(Screen):
     scroll_up_event = None
     scroll_down_event = None
 
+    using_inches = False
+
     def __init__(self, **kwargs):
         super(JobRecoveryScreen, self).__init__(**kwargs)
         self.sm = kwargs["screen_manager"]
@@ -540,6 +542,14 @@ class JobRecoveryScreen(Screen):
             )
         else:
             self.pos_z = 0.0
+
+        # Check if these distances are measured in inches, so that GO XY can work correctly
+        unit_line = next((s for s in reversed(self.jd.job_gcode[:self.selected_line_index + 1]) if re.search("G2[0,1]", s)), None)
+        if unit_line:
+            self.using_inches = "G20" in unit_line
+        else:
+            self.using_inches = False
+
         self.pos_label.text = "wX: %s | wY: %s | wZ: %s" % (
             str(self.pos_x),
             str(self.pos_y),
@@ -593,13 +603,18 @@ class JobRecoveryScreen(Screen):
         popup_info.PopupScrollableInfo(self.sm, self.l, 760, info)
 
     def go_xy(self):
+        # Pick min out of safe z height and limit_switch_safety_distance, in case positive value is calculated, which causes errors
         z_safe_height = min(
             self.m.z_wco() + self.sm.get_screen("home").job_box.range_z[1],
             -self.m.limit_switch_safety_distance,
         )
+        # If Z is below safe height, then raise it up
         if self.m.mpos_z() < z_safe_height:
             self.m.s.write_command("G53 G0 Z%s F750" % z_safe_height)
-        self.m.s.write_command("G90 G0 X%s Y%s" % (self.pos_x, self.pos_y))
+        if self.using_inches:
+            self.m.set_machine_unit_to_inch()
+        self.m.s.write_command('G90 G0 X%s Y%s' % (self.pos_x, self.pos_y))
+        self.m.set_machine_unit_to_mm()
 
     def back_to_home(self):
         self.jd.reset_recovery()
