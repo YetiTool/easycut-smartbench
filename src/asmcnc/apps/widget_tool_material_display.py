@@ -12,7 +12,9 @@ class ToolMaterialDisplayWidget(BoxLayout):
     def __init__(self, config, **kwargs):
         super(ToolMaterialDisplayWidget, self).__init__(**kwargs)
 
-        self.material_text = "MDF"
+        self.config = config
+
+        self.material_text = ""
         self.tool_text = ""
 
         self.tool_material_label = Label(text="Tool:", halign="left", valign="top",
@@ -22,14 +24,11 @@ class ToolMaterialDisplayWidget(BoxLayout):
 
         self.add_widget(self.tool_material_label)
 
-        config.bind(active_cutter=self.on_active_cutter)
+        config.bind(active_profile=self.on_active_profile)
 
-    def on_active_cutter(self, instance, value):
-        self.tool_text = value.tool_id
-        self.update_tool_material_label()
-
-    def on_active_material(self, instance, value):
-        self.material_text = value
+    def on_active_profile(self, *args):
+        self.material_text = self.config.active_profile.material.description
+        self.tool_text = self.config.active_cutter.description
         self.update_tool_material_label()
 
     def update_tool_material_label(self):

@@ -27,7 +27,7 @@ class Cutter(object):
         available_isas
     ):
         self.uid = uid  # type: str
-        self.tool_id = description.encode("utf-8")  # type: str
+        self.description = description.encode("utf-8")  # type: str
         self.manufacturer = str(manufacturer)  # type: str
         self.manufacturer_part_number = str(manufacturer_part_number)  # type: str
         self.tool_type = str(tool_type)  # type: str
@@ -282,4 +282,4 @@ class Configuration(object):
 
 
 if __name__ == "__main__":
-    print(Cutter.default().tool_id)
+    print(Cutter.default().description)

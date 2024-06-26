@@ -237,9 +237,9 @@ class DWTConfig(EventDispatcher):
         if config_path != TEMP_CONFIG_PATH:
             self.set_most_recent_config(config_path)
 
-        self.load_new_profile()
-
         self.load_cutter(self.active_config.cutter_type)
+
+        self.load_new_profile()
 
     def load_new_profile(self):
         # type () -> None
@@ -323,7 +323,7 @@ class DWTConfig(EventDispatcher):
             with open(file_path, "r") as f:
                 cutter = config_classes.Cutter.from_json(json.load(f))
 
-                cutters[cutter.tool_id] = {
+                cutters[cutter.description] = {
                     'cutter_path': cutter_file,
                     'image_path': cutter.image,
                     'type': cutter.type,
@@ -352,7 +352,7 @@ class DWTConfig(EventDispatcher):
             if self.app_type.value not in cutter.apps:
                 continue
 
-            cutters[cutter.tool_id] = {
+            cutters[cutter.description] = {
                 'cutter_path': cutter_file,
                 'image_path': cutter.image,
                 'type': cutter.type,
