@@ -155,6 +155,7 @@ class ToolMaterialPopup(Popup):
 
         self.tool_dropdown.bind(text=self.on_tool_change)
         self.material_dropdown.bind(text=self.on_material_change)
+        self.dwt_config.bind(active_profile=self.load_config)
 
         self.profile_db = App.get_running_app().profile_db
 
@@ -177,7 +178,7 @@ class ToolMaterialPopup(Popup):
             self.confirm_button.disabled = True
             self.confirm_button.opacity = 0.5
 
-    def load_config(self):
+    def load_config(self, *args):
         if self.dwt_config.active_config.material:
             material = self.profile_db.get_material_name(self.dwt_config.active_config.material)
             self.material_dropdown.text = material

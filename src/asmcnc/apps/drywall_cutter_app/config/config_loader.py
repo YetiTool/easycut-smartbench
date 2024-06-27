@@ -426,8 +426,7 @@ class DWTConfig(EventDispatcher):
 
         if parameter_name == "cutter_type":
             self.load_cutter(parameter_value)
-
-        self.load_new_profile()
+            self.load_new_profile()
 
         # update screen, check bumpers and so on:
         if not (self.active_config.shape_type == 'geberit' and self.active_cutter.dimensions.tool_diameter is None):
