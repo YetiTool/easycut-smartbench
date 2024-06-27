@@ -446,6 +446,7 @@ class DrywallCutterScreen(Screen):
             self.sm.current = 'lobby'
 
     def simulate(self):
+        self.drywall_shape_display_widget.defocus_inputs()
         self.popup_watchdog = Clock.schedule_interval(lambda dt: self.set_simulation_popup_state(self.m.s.m_state), 1)
         if not self.is_config_valid():
             self.show_validation_popup()
@@ -486,6 +487,7 @@ class DrywallCutterScreen(Screen):
             self.ignore_state = True
             
     def save(self):
+        self.drywall_shape_display_widget.defocus_inputs()
         if not self.is_config_valid():
             self.show_validation_popup()
             return
