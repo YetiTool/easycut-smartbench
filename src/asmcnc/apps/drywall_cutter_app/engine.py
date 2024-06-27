@@ -31,7 +31,12 @@ class GCodeEngine(object):
         self.m = router_machine
         self.cs = coordinate_system
 
-        self.finishing_passes = 0
+        if self.config.active_cutter.dimensions.tool_diameter is not None:
+            self.cutter_diameter = self.config.active_cutter.dimensions.tool_diameter
+        else:
+            self.cutter_diameter = 0
+
+        self.finishing_passes = 1
         self.finishing_stepover = 0.5
         self.finishing_stepdown = 12
 
@@ -819,7 +824,7 @@ class GCodeEngine(object):
     def get_custom_shape_extents(self):
         if self.config.active_config.shape_type.lower() in self.custom_gcode_shapes:
             # Read in data
-            gcode_lines = self.find_and_read_gcode_file(self.source_folder_path, self.config.active_config.shape_type, self.config.active_cutter.dimensions.tool_diameter, orientation=self.config.active_config.rotation)
+            gcode_lines = self.find_and_read_gcode_file(self.source_folder_path, self.config.active_config.shape_type, self.cutter_diameter, orientation=self.config.active_config.rotation)
 
             # Get dimensions as strings
             x_dim_str, y_dim_str, x_min_str, y_min_str = self.read_in_custom_shape_dimensions(gcode_lines)
@@ -894,7 +899,10 @@ class GCodeEngine(object):
         three_d_tabs = True
 
         # Compensate for tool diameter
-        tab_width = tab_width + self.config.active_cutter.dimensions.tool_diameter
+        try:
+            tab_width = tab_width + self.cutter_diameter
+        except:
+            pass
 
         is_climb = (self.config.active_profile.cutting_parameters.recommendations.cutting_direction == CuttingDirectionOptions.CLIMB.value
                     or self.config.active_profile.cutting_parameters.recommendations.cutting_direction == CuttingDirectionOptions.BOTH.value)
@@ -912,7 +920,7 @@ class GCodeEngine(object):
                 'datum_x': 0,
                 'datum_y': 0,
                 'offset': self.config.active_config.toolpath_offset,
-                'tool_diameter': 0 if self.config.active_cutter.dimensions.tool_diameter is None else self.config.active_cutter.dimensions.tool_diameter,
+                'tool_diameter': 0 if self.cutter_diameter is None else self.cutter_diameter,
                 'is_climb': is_climb,
                 'corner_radius': self.config.active_config.canvas_shape_dims.r,
                 'pass_depth': cutting_pass_depth,
@@ -941,7 +949,7 @@ class GCodeEngine(object):
                 'datum_x': self.config.active_config.datum_position.x,
                 'datum_y': self.config.active_config.datum_position.y,
                 'length': self.config.active_config.canvas_shape_dims.l,
-                'tool_diameter': 0 if self.config.active_cutter.dimensions.tool_diameter is None else self.config.active_cutter.dimensions.tool_diameter,
+                'tool_diameter': 0 if self.cutter_diameter is None else self.cutter_diameter,
                 'orientation': self.config.active_config.rotation,
                 'pass_depth': self.config.active_config.cutting_depths.depth_per_pass,
                 'feedrate': self.config.active_profile.cutting_parameters.max_feedrate,
@@ -983,7 +991,7 @@ class GCodeEngine(object):
             length_to_cover_with_roughing = length_to_cover_with_passes - length_covered_by_finishing  # Remaining length to be covered by roughing passes
 
             finishing_stepovers = calculate_stepovers(length_covered_by_finishing, 0, self.finishing_stepover)
-            roughing_stepovers = calculate_stepovers(length_to_cover_with_roughing, finishing_stepovers[0], self.config.active_cutter.dimensions.tool_diameter / 2)[1:]
+            roughing_stepovers = calculate_stepovers(length_to_cover_with_roughing, finishing_stepovers[0], self.cutter_diameter / 2)[1:]
             finishing_depths = self.calculate_pass_depths(total_cut_depth, self.finishing_stepdown)
             roughing_depths = self.calculate_pass_depths(total_cut_depth, cutting_pass_depth)
 
@@ -1022,8 +1030,8 @@ class GCodeEngine(object):
                             first_plunge = stepover == operation_data["stepovers"][0]  # First stepover
                             rectangle_parameters["z_safe_distance"] = -1 * pass_depth + stepover_z_hop_distance  # Raise tool by the stepover distance for optimisation if not the last stepover
 
-                            if self.config.active_cutter.dimensions.tool_diameter:
-                                rectangle_parameters["tool_diameter"] = self.config.active_cutter.dimensions.tool_diameter + (stepover * 2)
+                            if self.cutter_diameter:
+                                rectangle_parameters["tool_diameter"] = self.cutter_diameter + (stepover * 2)
                             else:
                                 rectangle_parameters["tool_diameter"] = 0
                             rectangle_parameters["total_cut_depth"] = pass_depth
@@ -1033,20 +1041,19 @@ class GCodeEngine(object):
 
                             rectangle = self.cut_rectangle(**rectangle_parameters)
                             rectangle = self.remove_redudant_lines(rectangle)
-                            if not pocketing:
-                                pass
+                            if not pocketing and self.config.active_config.cutting_depths.tabs:
                                 rectangle = self.add_tabs_to_gcode(rectangle, total_cut_depth, tab_height, tab_width, tab_spacing, three_d_tabs=three_d_tabs)
                             cutting_lines += rectangle
 
         elif shape_type in ["geberit"]:
 
             # Read in data
-            gcode_lines = self.find_and_read_gcode_file(self.source_folder_path, self.config.active_config.shape_type, self.config.active_cutter.dimensions.tool_diameter, orientation=self.config.active_config.rotation)
+            gcode_lines = self.find_and_read_gcode_file(self.source_folder_path, self.config.active_config.shape_type, self.cutter_diameter, orientation=self.config.active_config.rotation)
             gcode_cut_depth, gcode_z_safe_distance = self.extract_cut_depth_and_z_safe_distance(gcode_lines)
             x_size, y_size, x_minus, y_minus  = self.read_in_custom_shape_dimensions(gcode_lines)
 
             if simulate:
-                coordinates = self.rectangle_coordinates(float(x_size), float(y_size) + self.config.active_cutter.dimensions.tool_diameter/2, float(x_minus), float(y_minus))
+                coordinates = self.rectangle_coordinates(float(x_size), float(y_size) + self.cutter_diameter/2, float(x_minus), float(y_minus))
                 coordinates.append(coordinates[0])
 
                 # Draw a rectangle around the geberit shape
@@ -1074,7 +1081,7 @@ class GCodeEngine(object):
                 end_condition = next((i for i, s in enumerate(gcode_lines) if re.search(r"M5", s)), None)
                 gcode_lines = self.repeat_for_depths(gcode_lines, pass_depths, start_condition, end_condition)
 
-                tool_radius = self.config.active_cutter.dimensions.tool_diameter / 2
+                tool_radius = self.cutter_diameter / 2
 
                 if geberit_partoff:
                     # Add partoff cut
@@ -1103,7 +1110,7 @@ class GCodeEngine(object):
             length_to_cover_with_roughing = length_to_cover_with_passes - length_covered_by_finishing  # Remaining length to be covered by roughing passes
 
             finishing_stepovers = calculate_stepovers(length_covered_by_finishing, 0, self.finishing_stepover)
-            roughing_stepovers = calculate_stepovers(length_to_cover_with_roughing, finishing_stepovers[0], self.config.active_cutter.dimensions.tool_diameter / 2)[1:]
+            roughing_stepovers = calculate_stepovers(length_to_cover_with_roughing, finishing_stepovers[0], self.cutter_diameter / 2)[1:]
             finishing_depths = self.calculate_pass_depths(total_cut_depth, self.finishing_stepdown)
             roughing_depths = self.calculate_pass_depths(total_cut_depth, cutting_pass_depth)
 
@@ -1145,8 +1152,8 @@ class GCodeEngine(object):
                             first_plunge = stepover == operation_data["stepovers"][0]  # First stepover
                             circle_parameters["z_safe_distance"] = -1 * pass_depth + stepover_z_hop_distance  # Raise tool by the stepover distance for optimisation if not the last stepover
 
-                            if self.config.active_cutter.dimensions.tool_diameter:
-                                circle_parameters["tool_diameter"] = self.config.active_cutter.dimensions.tool_diameter + (stepover * 2)
+                            if self.cutter_diameter:
+                                circle_parameters["tool_diameter"] = self.cutter_diameter + (stepover * 2)
                             else:
                                 circle_parameters["tool_diameter"] = 0
 
@@ -1156,8 +1163,8 @@ class GCodeEngine(object):
                             circle_parameters["first_plunge"] = first_plunge
 
                             circle = self.cut_rectangle(**circle_parameters)
-                            if not pocketing:
-                                circle = self.remove_redudant_lines(circle)
+                            circle = self.remove_redudant_lines(circle)
+                            if not pocketing and self.config.active_config.cutting_depths.tabs:
                                 circle = self.add_tabs_to_gcode(circle, total_cut_depth, tab_height, tab_width, tab_spacing, three_d_tabs=three_d_tabs)
                             cutting_lines += circle
 
