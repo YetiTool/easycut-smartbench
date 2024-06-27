@@ -31,7 +31,7 @@ class GCodeEngine(object):
         self.m = router_machine
         self.cs = coordinate_system
 
-        self.finishing_passes = 1
+        self.finishing_passes = 0
         self.finishing_stepover = 0.5
         self.finishing_stepdown = 12
 
@@ -497,12 +497,11 @@ class GCodeEngine(object):
                     tab_end_distance = arc_length - ((tab_spacing * i) + (tab_width * i) + tab_width + tab_inset_distance)
                     tab_start_x, tab_start_y = self.calculate_arc_point(last_x, last_y, current_x, current_y, radius, tab_start_distance, clockwise=arc_command == 'G3')
                     tab_end_x, tab_end_y = self.calculate_arc_point(last_x, last_y, current_x, current_y, radius, tab_end_distance, clockwise=arc_command == 'G3')
+                    tab_centre_x, tab_centre_y = self.calculate_arc_point(last_x, last_y, current_x, current_y, radius, tab_start_distance - tab_width / 2, clockwise=arc_command == 'G3')
 
                     tab_cut_height = current_z if current_z > tab_top_z else tab_top_z
 
                     if three_d_tabs:
-                        tab_centre_x = (tab_start_x + tab_end_x) / 2
-                        tab_centre_y = (tab_start_y + tab_end_y) / 2
                         modified_gcode.append('{} X{} Y{} R{} F{}\n'.format(arc_command, round(tab_start_x, 2), round(tab_start_y, 2), radius, xy_feed))
                         modified_gcode.append('{} X{} Y{} Z{} R{}\n'.format(arc_command, round(tab_centre_x, 2), round(tab_centre_y, 2), tab_cut_height, radius))
                         modified_gcode.append('{} X{} Y{} Z{} R{}\n'.format(arc_command, round(tab_end_x, 2), round(tab_end_y, 2), current_z, radius))
