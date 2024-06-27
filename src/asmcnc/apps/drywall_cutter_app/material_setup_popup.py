@@ -324,6 +324,7 @@ class CuttingDepthsPopup(Popup):
         self.depth_per_pass.bind(text=self.warning_pass_depth)
         self.cut_depth_warning.bind(parent=self.schedule_disable_confirm_button)
         self.pass_depth_warning.bind(parent=self.schedule_disable_confirm_button)
+        self.dwt_config.bind(active_profile=self.on_open)
 
         self.update_strings()
 
@@ -343,7 +344,7 @@ class CuttingDepthsPopup(Popup):
         self.cut_depth_warning_zero = "[color=#FF0000]" + self.l.get_str("Total cut depth must be greater than 0") \
                                       + "[/color]"
 
-    def on_open(self):
+    def on_open(self, *args):
         # Fix weird scaling bug with title label
         if scaling_utils.Width == 800:
             self.title_label.pos_hint['y'] = 0.45
@@ -521,7 +522,7 @@ class CuttingDepthsPopup(Popup):
             if depth_per_pass > max_cut_depth_per_pass:
                 self.depth_per_pass.text = str(max_cut_depth_per_pass)
             else:
-                self.depth_per_pass.text = str(round(depth_per_pass, 1))
+                self.depth_per_pass.text = str(round(depth_per_pass, 3))
 
             self.generate_pass_depth_lines(number_of_passes)
         else:
