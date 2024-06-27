@@ -301,8 +301,9 @@ class DrywallCutterScreen(Screen):
         self.drywall_shape_display_widget.check_datum_and_extents()  # update machine value labels
 
         if self.dwt_config.app_type == config_options.AppType.SHAPES:
-            self.shape_options_dict.pop("geberit")
-            self.shape_selection.image_dict = self.shape_options_dict
+            if 'geberit' in self.shape_options_dict:
+                self.shape_options_dict.pop("geberit")
+                self.shape_selection.image_dict = self.shape_options_dict
 
         if self.dwt_config.app_type == config_options.AppType.SHAPES:
             self.drywall_shape_display_widget.canvas_image.source = "./asmcnc/apps/drywall_cutter_app/img/canvas_with_logo_shapes.png"

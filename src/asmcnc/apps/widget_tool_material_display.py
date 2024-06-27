@@ -17,7 +17,7 @@ class ToolMaterialDisplayWidget(BoxLayout):
         self.material_text = ""
         self.tool_text = ""
 
-        self.tool_material_label = Label(text="Tool:", halign="left", valign="top",
+        self.tool_material_label = Label(text="", halign="left", valign="top",
                                          font_size=scaling_utils.get_scaled_sp("13sp"),
                                          color=color_provider.get_rgba("black"), center_y=self.center_y)
         self.tool_material_label.bind(size=self.tool_material_label.setter("text_size"))
@@ -25,6 +25,8 @@ class ToolMaterialDisplayWidget(BoxLayout):
         self.add_widget(self.tool_material_label)
 
         config.bind(active_profile=self.on_active_profile)
+
+        self.update_tool_material_label()
 
     def on_active_profile(self, *args):
         self.material_text = self.config.active_profile.material.description
