@@ -15,10 +15,10 @@
   "parameters": {
     "cutting_spindle_speed": 21000,
     "cutting_feed_rate": 4000,
-    "plunge_feed_rate": 250,
+    "plunge_feed_rate": 500,
     "cutting_direction": "both",
-    "recommended_depth_per_pass": 13,
-    "max_depth_total": 13,
+    "recommended_depth_per_pass": 4,
+    "max_depth_total": 25,
     "step_over": 3,
     "yetipilot_target_power": 590
   },
