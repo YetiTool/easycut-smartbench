@@ -302,3 +302,25 @@ class GRBLSettingsManagerSingleton(object):
             self._machine_saved_data[setting] = value
             self.save_machine_data_to_file()
             Logger.info('Wrote {} to file: {}'.format(descriptions[setting], value))
+
+    def overwrite_serial_number(self):
+        try:
+            with open(self.MACHINE_DATA_FILE_PATH, 'r') as f:
+                data = json.load(f)
+
+            old_sn = data['50']
+            data['50'] = self.machine.s.setting_50
+            with open(self.MACHINE_DATA_FILE_PATH, 'w') as f:
+                json.dump(data, f)
+
+            for key in data:
+                if key == 'type':
+                    continue
+                self.machine.write_dollar_setting(int(key), data[key])
+                Logger.info("Sending setting to spindle: ${}: {}".format(key, data[key]))
+            Logger.info("Serial number overwritten in {} successfully from {} to {}".format(
+                self.MACHINE_DATA_FILE_PATH, old_sn, data['50']))
+            return True
+        except Exception as e:
+            Logger.error("Error overwriting serial number: {}".format(e))
+            return False

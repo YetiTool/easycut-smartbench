@@ -17,6 +17,8 @@ from asmcnc.apps.systemTools_app.screens import popup_system
 
 Builder.load_string(
 """
+#:import paths asmcnc.paths
+#:import os os
 
 <SupportMenuScreen>
 
@@ -25,6 +27,7 @@ Builder.load_string(
     button_git_fsck : button_git_fsck
     button_download_settings_to_usb : button_download_settings_to_usb
     button_upload_settings_from_usb : button_upload_settings_from_usb
+    button_overwrite_serial_number : button_overwrite_serial_number
     button_go_back: button_go_back
 
     canvas.before:
@@ -123,8 +126,19 @@ Builder.load_string(
             padding_y: 5.0/800.0*app.width
             border: (0,0,0,0)
 
-        BoxLayout:
-            padding: 0
+        Button:
+            id: button_overwrite_serial_number
+            text: 'Update replacement Z-Head'
+            on_press: root.overwrite_serial_number()
+            valign: "bottom"
+            halign: "center"
+            markup: True
+            font_size: root.default_font_size
+            text_size: self.size
+            background_normal: os.path.join(paths.SYSTEM_TOOLS_IMG_PATH, "upload_from_usb.png")
+            background_down: os.path.join(paths.SYSTEM_TOOLS_IMG_PATH, "upload_from_usb.png")
+            padding_y: 5.0/800.0*app.width
+            border: (0,0,0,0)
 
         Button:
             id: button_go_back
@@ -169,6 +183,9 @@ class SupportMenuScreen(Screen):
     def upload_settings_from_usb(self):
         self.systemtools_sm.show_popup_before_upload_settings_from_usb()
 
+    def overwrite_serial_number(self):
+        self.systemtools_sm.show_popup_before_overwrite_serial_number()
+
     def download_logs(self):
         popup_system.PopupDownloadLogs(self.systemtools_sm, self.l)
 
@@ -190,6 +207,7 @@ class SupportMenuScreen(Screen):
         self.button_git_fsck.txt = self.l.get_str("Git FSCK")
         self.button_download_settings_to_usb.text = self.l.get_str("Save settings")
         self.button_upload_settings_from_usb.text = self.l.get_str("Restore settings")
+        self.button_overwrite_serial_number.text = self.l.get_str("Update replacement Z-Head")
         self.button_go_back.text = self.l.get_str("Go Back")
         for id_object in self.id_list:
             self.update_font_size(id_object)

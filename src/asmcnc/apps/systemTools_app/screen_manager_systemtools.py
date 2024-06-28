@@ -158,6 +158,9 @@ class ScreenManagerSystemTools(object):
     def show_popup_before_download_settings_to_usb(self):
         self.sm.pm.show_download_settings_popup(self)
 
+    def show_popup_before_overwrite_serial_number(self):
+        self.sm.pm.show_overwrite_serial_number_popup()
+
     def download_settings_to_usb(self, *args):
         if self.mutex.locked():
             # already running

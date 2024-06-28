@@ -18,7 +18,8 @@ from asmcnc.core_UI.popups import (
     DownloadSettingsToUsbPopup, 
     SpindleSafetyPopup, 
     JobValidationPopup,
-    SimulatingJobPopup
+    SimulatingJobPopup,
+    OverwriteSerialNumberPopup
 )
 
 
@@ -86,6 +87,8 @@ class PopupManager:
         self.job_validation_popup = JobValidationPopup(sm=self.sm, m=self.m, l=self.l, main_string="")
 
         self.simulating_job_popup = SimulatingJobPopup(sm=self.sm, m=self.m, l=self.l, main_string="")
+
+        self.overwrite_serial_number_popup = OverwriteSerialNumberPopup(sm=self.sm, m=self.m, l=self.l, main_string="")
 
     def show_spindle_safety_popup(self, button_one_callback, button_two_callback):
         self.spindle_safety_popup.button_one_callback = button_one_callback
@@ -240,6 +243,8 @@ class PopupManager:
         self.download_settings_to_usb.sm = sm
         self.download_settings_to_usb.open()
 
+    def show_overwrite_serial_number_popup(self):
+        self.overwrite_serial_number_popup.open()
     def close_upload_settings_popup(self):
         self.upload_settings_from_usb.dismiss()
 
