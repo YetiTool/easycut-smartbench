@@ -4,6 +4,7 @@ from kivy.clock import Clock
 
 from asmcnc.apps.drywall_cutter_app.config.config_options import ToolpathOffsetOptions
 from asmcnc.comms.logging_system.logging_system import Logger
+from asmcnc.apps.drywall_cutter_app.config import config_options
 import re
 
 from asmcnc.core_UI import scaling_utils
@@ -1061,3 +1062,7 @@ class DrywallShapeDisplay(Widget):
     def on_config_name_change(self, instance, value):
         Logger.debug("Setting config label to: " + value)
         self.config_name_label.text = "New Configuration" if value == "temp_config.json" else value
+
+    def defocus_inputs(self):
+        self.kb.defocus_all_text_inputs(self.text_inputs)
+        self.check_datum_and_extents()

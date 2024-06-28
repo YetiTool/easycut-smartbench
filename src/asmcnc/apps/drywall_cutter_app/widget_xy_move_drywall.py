@@ -5,6 +5,7 @@ from kivy.uix.widget import Widget
 
 from asmcnc.core_UI.components.buttons import probe_button
 from asmcnc.core_UI.custom_popups import PopupDatum
+from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
 <XYMoveDrywall>
