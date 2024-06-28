@@ -523,6 +523,4 @@ class Settings(object):
         except:
             # this will happen on non linux systems
             Logger.info("Couldn't check status of service: " + service)
-
-
             
