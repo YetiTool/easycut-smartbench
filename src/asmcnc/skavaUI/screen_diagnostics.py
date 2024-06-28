@@ -217,7 +217,7 @@ class DiagnosticsScreen(Screen):
             self.probe_label.text = "Probe - OK"
         else:
             self.probe_label.text = "Probe"
-        if "dust_shoe_cover" in switch_states:
+        if "dustshoe_is_closed" in switch_states:
             self.dust_shoe_cover_label.text = "Dust cover - OK"
         else:
             self.dust_shoe_cover_label.text = "Dust cover"

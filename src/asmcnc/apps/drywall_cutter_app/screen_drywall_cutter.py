@@ -578,19 +578,13 @@ class DrywallCutterScreen(Screen):
             self.jd.screen_to_return_to_after_job = 'drywall_cutter'
             self.jd.screen_to_return_to_after_cancel = 'drywall_cutter'
 
-            # Check if stylus option is enabled
-            if self.m.is_stylus_enabled == True:
-                # Display tool selection screen
-                self.sm.current = 'tool_selection'
+            self.m.stylus_router_choice = 'router'
 
+            # is fw capable of auto Z lift?
+            if self.m.fw_can_operate_zUp_on_pause():
+                self.sm.current = 'lift_z_on_pause_or_not'
             else:
-                self.m.stylus_router_choice = 'router'
-
-                # is fw capable of auto Z lift?
-                if self.m.fw_can_operate_zUp_on_pause():
-                    self.sm.current = 'lift_z_on_pause_or_not'
-                else:
-                    self.sm.current = 'jobstart_warning'
+                self.sm.current = 'jobstart_warning'
 
     def open_filechooser(self):
         if not self.sm.has_screen('config_filechooser'):

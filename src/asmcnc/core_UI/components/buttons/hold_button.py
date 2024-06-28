@@ -23,6 +23,10 @@ class HoldButton(Button):
         self.background_color = background_color
         self.held_background_color = held_background_color
 
+        self.bind(size=self.setter('text_size'))
+        self.valign = 'middle'
+        self.halign = 'center'
+
         self.bind(on_press=self.on_press)
         self.bind(on_release=self.on_release)
 
