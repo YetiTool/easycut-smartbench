@@ -206,12 +206,12 @@ class Tabs(object):
                     tab_start_distance = arc_length - ((tab_spacing * i) + (tab_width * i) + tab_inset_distance)
                     tab_end_distance = arc_length - (
                             (tab_spacing * i) + (tab_width * i) + tab_width + tab_inset_distance)
-                    tab_start_x, tab_start_y = self.calculate_arc_point(last_x, last_y, current_x, current_y, radius,
+                    tab_start_x, tab_start_y = self.calculate_arc_point(self, last_x, last_y, current_x, current_y, radius,
                                                                         tab_start_distance,
                                                                         clockwise=arc_command == 'G3')
-                    tab_end_x, tab_end_y = self.calculate_arc_point(last_x, last_y, current_x, current_y, radius,
+                    tab_end_x, tab_end_y = self.calculate_arc_point(self, last_x, last_y, current_x, current_y, radius,
                                                                     tab_end_distance, clockwise=arc_command == 'G3')
-                    tab_centre_x, tab_centre_y = self.calculate_arc_point(last_x, last_y, current_x, current_y, radius,
+                    tab_centre_x, tab_centre_y = self.calculate_arc_point(self, last_x, last_y, current_x, current_y, radius,
                                                                           tab_start_distance - tab_width / 2,
                                                                           clockwise=arc_command == 'G3')
 
@@ -243,32 +243,10 @@ class Tabs(object):
         return modified_gcode
 
     @staticmethod
-    def calculate_arc_point(x1, y1, x2, y2, r, d, clockwise):
+    def calculate_arc_point(self, x1, y1, x2, y2, r, d, clockwise):
         # Calculate the center of the circle (midpoint of start and end)
-        def find_arc_center(x1, y1, x2, y2, clockwise):
-            """
-            Find the center of the circle that the arc is part of.
-            Works only for 90 degree arcs.
-            """
 
-            x_delta_positive = x2 - x1 > 0
-            y_delta_positive = y2 - y1 > 0
-
-            same_polarity = x_delta_positive == y_delta_positive
-
-            x_use_start = not same_polarity
-            y_use_start = same_polarity
-
-            if not clockwise:
-                x_use_start = not x_use_start
-                y_use_start = not y_use_start
-
-            x = x1 if x_use_start else x2
-            y = y1 if y_use_start else y2
-
-            return x, y
-
-        cx, cy = find_arc_center(x1, y1, x2, y2, clockwise)
+        cx, cy = self.find_arc_center(x1, y1, x2, y2, clockwise)
 
         # Calculate the starting angle
         start_angle = math.atan2(y1 - cy, x1 - cx)
@@ -287,3 +265,27 @@ class Tabs(object):
         new_y = cy + r * math.sin(final_angle)
 
         return round(new_x, 2), round(new_y, 2)
+
+    @staticmethod
+    def find_arc_center(x1, y1, x2, y2, clockwise):
+        """
+        Find the center of the circle that the arc is part of.
+        Works only for 90 degree arcs.
+        """
+
+        x_delta_positive = x2 - x1 > 0
+        y_delta_positive = y2 - y1 > 0
+
+        same_polarity = x_delta_positive == y_delta_positive
+
+        x_use_start = not same_polarity
+        y_use_start = same_polarity
+
+        if not clockwise:
+            x_use_start = not x_use_start
+            y_use_start = not y_use_start
+
+        x = x1 if x_use_start else x2
+        y = y1 if y_use_start else y2
+
+        return x, y
