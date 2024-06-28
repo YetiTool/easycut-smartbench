@@ -1,5 +1,34 @@
 [
   {
+    "uid": "-0001",
+    "generic_tool": {
+      "uid": "-0001",
+      "description": ""
+    },
+    "material": {
+      "uid": "-0001",
+      "description": ""
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": -1,
+        "stepover": -1,
+        "unit": "",
+        "cutting_direction": ""
+      },
+      "spindle_speed": -1,
+      "max_feedrate": -1,
+      "plungerate": -1,
+      "target_tool_load": -1
+    },
+    "applicable_tools": [
+      {
+        "uid": "-0001",
+        "description": ""
+      }
+    ]
+  },
+  {
     "uid": "0000",
     "generic_tool": {
       "uid": "0006",
@@ -14,10 +43,11 @@
         "stepdown": 6,
         "stepover": 1.5,
         "unit": "mm",
-        "cutting_direction": "Climb"
+        "cutting_direction": "climb"
       },
       "spindle_speed": 24000,
       "max_feedrate": 3000,
+      "plungerate": 500,
       "target_tool_load": 130
     },
     "applicable_tools": [
@@ -50,10 +80,11 @@
         "stepdown": 3,
         "stepover": 3,
         "unit": "mm",
-        "cutting_direction": "Climb"
+        "cutting_direction": "climb"
       },
       "spindle_speed": 22000,
       "max_feedrate": 3000,
+      "plungerate": 500,
       "target_tool_load": 140
     },
     "applicable_tools": [
@@ -82,10 +113,11 @@
         "stepdown": 4,
         "stepover": 4,
         "unit": "mm",
-        "cutting_direction": "Climb"
+        "cutting_direction": "climb"
       },
       "spindle_speed": 22000,
       "max_feedrate": 3500,
+      "plungerate": 500,
       "target_tool_load": 200
     },
     "applicable_tools": [
@@ -110,10 +142,11 @@
         "stepdown": 4,
         "stepover": 1.5,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 22000,
       "max_feedrate": 5000,
+      "plungerate": 500,
       "target_tool_load": 140
     },
     "applicable_tools": [
@@ -138,10 +171,11 @@
         "stepdown": 3,
         "stepover": 3,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 22000,
       "max_feedrate": 2200,
+      "plungerate": 500,
       "target_tool_load": 330
     },
     "applicable_tools": [
@@ -166,10 +200,11 @@
         "stepdown": 4,
         "stepover": 4,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 20500,
       "max_feedrate": 3000,
+      "plungerate": 500,
       "target_tool_load": 170
     },
     "applicable_tools": [
@@ -194,10 +229,11 @@
         "stepdown": 6,
         "stepover": 1.5,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 22500,
       "max_feedrate": 2500,
+      "plungerate": 500,
       "target_tool_load": 210
     },
     "applicable_tools": [
@@ -222,10 +258,11 @@
         "stepdown": 6,
         "stepover": 1.5,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 18000,
       "max_feedrate": 2200,
+      "plungerate": 500,
       "target_tool_load": 270
     },
     "applicable_tools": [
@@ -250,10 +287,11 @@
         "stepdown": 4,
         "stepover": 3,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 16500,
       "max_feedrate": 2600,
+      "plungerate": 500,
       "target_tool_load": 200
     },
     "applicable_tools": [
@@ -278,10 +316,11 @@
         "stepdown": 3,
         "stepover": 1.5,
         "unit": "mm",
-        "cutting_direction": "Both"
+        "cutting_direction": "both"
       },
       "spindle_speed": 22500,
       "max_feedrate": 4000,
+      "plungerate": 500,
       "target_tool_load": 140
     },
     "applicable_tools": [
@@ -306,10 +345,11 @@
         "stepdown": 3,
         "stepover": 3,
         "unit": "mm",
-        "cutting_direction": "Both"
+        "cutting_direction": "both"
       },
       "spindle_speed": 24000,
       "max_feedrate": 6000,
+      "plungerate": 500,
       "target_tool_load": 260
     },
     "applicable_tools": [
@@ -334,10 +374,11 @@
         "stepdown": 4,
         "stepover": 4,
         "unit": "mm",
-        "cutting_direction": "Both"
+        "cutting_direction": "both"
       },
       "spindle_speed": 24000,
       "max_feedrate": 5000,
+      "plungerate": 500,
       "target_tool_load": 400
     },
     "applicable_tools": [
@@ -362,10 +403,11 @@
         "stepdown": 3,
         "stepover": 1.5,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 22500,
       "max_feedrate": 5000,
+      "plungerate": 500,
       "target_tool_load": 310
     },
     "applicable_tools": [
@@ -390,10 +432,11 @@
         "stepdown": 6,
         "stepover": 3,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 20500,
       "max_feedrate": 6000,
+      "plungerate": 500,
       "target_tool_load": 510
     },
     "applicable_tools": [
@@ -418,10 +461,11 @@
         "stepdown": 6,
         "stepover": 4,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 22500,
       "max_feedrate": 6000,
+      "plungerate": 500,
       "target_tool_load": 500
     },
     "applicable_tools": [
@@ -446,10 +490,11 @@
         "stepdown": 4.175,
         "stepover": 1.5,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 22500,
       "max_feedrate": 6000,
+      "plungerate": 500,
       "target_tool_load": 190
     },
     "applicable_tools": [
@@ -474,10 +519,11 @@
         "stepdown": 6,
         "stepover": 3,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 20500,
       "max_feedrate": 6000,
+      "plungerate": 500,
       "target_tool_load": 540
     },
     "applicable_tools": [
@@ -502,10 +548,11 @@
         "stepdown": 3,
         "stepover": 1.5,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 22500,
       "max_feedrate": 6000,
+      "plungerate": 500,
       "target_tool_load": 120
     },
     "applicable_tools": [
@@ -530,10 +577,11 @@
         "stepdown": 3,
         "stepover": 3,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 22500,
       "max_feedrate": 6000,
+      "plungerate": 500,
       "target_tool_load": 500
     },
     "applicable_tools": [
@@ -558,10 +606,11 @@
         "stepdown": 3,
         "stepover": 4,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 22500,
       "max_feedrate": 6000,
+      "plungerate": 500,
       "target_tool_load": 520
     },
     "applicable_tools": [
@@ -586,10 +635,11 @@
         "stepdown": 6,
         "stepover": 1.5,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 22500,
       "max_feedrate": 6000,
+      "plungerate": 500,
       "target_tool_load": 470
     },
     "applicable_tools": [
@@ -614,10 +664,11 @@
         "stepdown": 6,
         "stepover": 3,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 22500,
       "max_feedrate": 6000,
+      "plungerate": 500,
       "target_tool_load": 580
     },
     "applicable_tools": [
@@ -642,10 +693,11 @@
         "stepdown": 5,
         "stepover": 3,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 22500,
       "max_feedrate": 4000,
+      "plungerate": 500,
       "target_tool_load": 310
     },
     "applicable_tools": [
@@ -670,10 +722,11 @@
         "stepdown": 5,
         "stepover": 3,
         "unit": "mm",
-        "cutting_direction": "Both"
+        "cutting_direction": "both"
       },
       "spindle_speed": 22500,
       "max_feedrate": 4000,
+      "plungerate": 500,
       "target_tool_load": 290
     },
     "applicable_tools": [
@@ -698,10 +751,11 @@
         "stepdown": 3,
         "stepover": 2,
         "unit": "mm",
-        "cutting_direction": "Both"
+        "cutting_direction": "both"
       },
       "spindle_speed": 22500,
       "max_feedrate": 3000,
+      "plungerate": 500,
       "target_tool_load": 200
     },
     "applicable_tools": [
@@ -726,10 +780,11 @@
         "stepdown": 3,
         "stepover": 3,
         "unit": "mm",
-        "cutting_direction": "Both"
+        "cutting_direction": "both"
       },
       "spindle_speed": 24000,
       "max_feedrate": 1500,
+      "plungerate": 500,
       "target_tool_load": 290
     },
     "applicable_tools": [
@@ -754,10 +809,11 @@
         "stepdown": 4,
         "stepover": 4,
         "unit": "mm",
-        "cutting_direction": "Both"
+        "cutting_direction": "both"
       },
       "spindle_speed": 24000,
       "max_feedrate": 2000,
+      "plungerate": 500,
       "target_tool_load": 400
     },
     "applicable_tools": [
@@ -782,10 +838,11 @@
         "stepdown": 2,
         "stepover": 1.5,
         "unit": "mm",
-        "cutting_direction": "Both"
+        "cutting_direction": "both"
       },
       "spindle_speed": 24000,
       "max_feedrate": 1000,
+      "plungerate": 250,
       "target_tool_load": 110
     },
     "applicable_tools": [
@@ -818,10 +875,11 @@
         "stepdown": 2,
         "stepover": 2,
         "unit": "mm",
-        "cutting_direction": "Both"
+        "cutting_direction": "both"
       },
       "spindle_speed": 24000,
       "max_feedrate": 1000,
+      "plungerate": 250,
       "target_tool_load": 180
     },
     "applicable_tools": [
@@ -850,10 +908,11 @@
         "stepdown": 1,
         "stepover": 2.5,
         "unit": "mm",
-        "cutting_direction": "Both"
+        "cutting_direction": "both"
       },
       "spindle_speed": 20500,
       "max_feedrate": 2000,
+      "plungerate": 250,
       "target_tool_load": 360
     },
     "applicable_tools": [
@@ -878,10 +937,11 @@
         "stepdown": 3,
         "stepover": 1.5,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 22500,
       "max_feedrate": 8000,
+      "plungerate": 500,
       "target_tool_load": 110
     },
     "applicable_tools": [
@@ -906,10 +966,11 @@
         "stepdown": 3,
         "stepover": 2.5,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 22500,
       "max_feedrate": 8000,
+      "plungerate": 500,
       "target_tool_load": 300
     },
     "applicable_tools": [
@@ -938,10 +999,11 @@
         "stepdown": 3,
         "stepover": 4,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 22500,
       "max_feedrate": 8000,
+      "plungerate": 500,
       "target_tool_load": 510
     },
     "applicable_tools": [
@@ -966,10 +1028,11 @@
         "stepdown": 3,
         "stepover": null,
         "unit": "mm",
-        "cutting_direction": "Climb"
+        "cutting_direction": "climb"
       },
       "spindle_speed": 24000,
       "max_feedrate": 3000,
+      "plungerate": 500,
       "target_tool_load": 320
     },
     "applicable_tools": [
@@ -994,10 +1057,11 @@
         "stepdown": 2,
         "stepover": 1.5,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 24000,
       "max_feedrate": 8000,
+      "plungerate": 500,
       "target_tool_load": 100
     },
     "applicable_tools": [
@@ -1030,10 +1094,11 @@
         "stepdown": 2,
         "stepover": 2,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 24000,
       "max_feedrate": 8000,
+      "plungerate": 500,
       "target_tool_load": 130
     },
     "applicable_tools": [
@@ -1062,10 +1127,11 @@
         "stepdown": 2,
         "stepover": 2.5,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 22500,
       "max_feedrate": 8000,
+      "plungerate": 500,
       "target_tool_load": 130
     },
     "applicable_tools": [
@@ -1094,10 +1160,11 @@
         "stepdown": 2,
         "stepover": 3,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 22500,
       "max_feedrate": 8000,
+      "plungerate": 500,
       "target_tool_load": 150
     },
     "applicable_tools": [
@@ -1126,10 +1193,11 @@
         "stepdown": 2,
         "stepover": 1.5,
         "unit": "mm",
-        "cutting_direction": "Climb"
+        "cutting_direction": "climb"
       },
       "spindle_speed": 22500,
       "max_feedrate": 6000,
+      "plungerate": 500,
       "target_tool_load": 100
     },
     "applicable_tools": [
@@ -1162,10 +1230,11 @@
         "stepdown": 2,
         "stepover": 2,
         "unit": "mm",
-        "cutting_direction": "Both"
+        "cutting_direction": "both"
       },
       "spindle_speed": 22500,
       "max_feedrate": 8000,
+      "plungerate": 500,
       "target_tool_load": 110
     },
     "applicable_tools": [
@@ -1194,10 +1263,11 @@
         "stepdown": 2,
         "stepover": 2.5,
         "unit": "mm",
-        "cutting_direction": "Both"
+        "cutting_direction": "both"
       },
       "spindle_speed": 22500,
       "max_feedrate": 6000,
+      "plungerate": 500,
       "target_tool_load": 150
     },
     "applicable_tools": [
@@ -1226,10 +1296,11 @@
         "stepdown": 2,
         "stepover": 3,
         "unit": "mm",
-        "cutting_direction": "Climb"
+        "cutting_direction": "climb"
       },
       "spindle_speed": 22500,
       "max_feedrate": 6000,
+      "plungerate": 500,
       "target_tool_load": 270
     },
     "applicable_tools": [
@@ -1258,10 +1329,11 @@
         "stepdown": 3,
         "stepover": 1.5,
         "unit": "mm",
-        "cutting_direction": "Both"
+        "cutting_direction": "both"
       },
       "spindle_speed": 22500,
       "max_feedrate": 6000,
+      "plungerate": 500,
       "target_tool_load": 220
     },
     "applicable_tools": [
@@ -1294,10 +1366,11 @@
         "stepdown": 3,
         "stepover": 3,
         "unit": "mm",
-        "cutting_direction": "Both"
+        "cutting_direction": "both"
       },
       "spindle_speed": 22500,
       "max_feedrate": 7000,
+      "plungerate": 500,
       "target_tool_load": 170
     },
     "applicable_tools": [
@@ -1326,10 +1399,11 @@
         "stepdown": 3,
         "stepover": 4,
         "unit": "mm",
-        "cutting_direction": "Both"
+        "cutting_direction": "both"
       },
       "spindle_speed": 22500,
       "max_feedrate": 4000,
+      "plungerate": 500,
       "target_tool_load": 450
     },
     "applicable_tools": [
@@ -1354,10 +1428,11 @@
         "stepdown": 3,
         "stepover": 1.5,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 20500,
       "max_feedrate": 5000,
+      "plungerate": 500,
       "target_tool_load": 150
     },
     "applicable_tools": [
@@ -1382,10 +1457,11 @@
         "stepdown": 3,
         "stepover": 3,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 22500,
       "max_feedrate": 5000,
+      "plungerate": 500,
       "target_tool_load": 470
     },
     "applicable_tools": [
@@ -1410,10 +1486,11 @@
         "stepdown": 3,
         "stepover": 4,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 22500,
       "max_feedrate": 6000,
+      "plungerate": 500,
       "target_tool_load": 460
     },
     "applicable_tools": [
@@ -1438,10 +1515,11 @@
         "stepdown": 6,
         "stepover": 1.5,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 22500,
       "max_feedrate": 6000,
+      "plungerate": 500,
       "target_tool_load": 420
     },
     "applicable_tools": [
@@ -1466,10 +1544,11 @@
         "stepdown": 6,
         "stepover": 3,
         "unit": "mm",
-        "cutting_direction": "Conventional"
+        "cutting_direction": "conventional"
       },
       "spindle_speed": 22500,
       "max_feedrate": 600,
+      "plungerate": 500,
       "target_tool_load": 470
     },
     "applicable_tools": [
@@ -1494,10 +1573,11 @@
         "stepdown": 12,
         "stepover": 3,
         "unit": "mm",
-        "cutting_direction": "Both"
+        "cutting_direction": "both"
       },
       "spindle_speed": 22500,
       "max_feedrate": 8000,
+      "plungerate": 500,
       "target_tool_load": 110
     },
     "applicable_tools": [
@@ -1522,10 +1602,11 @@
         "stepdown": 12,
         "stepover": null,
         "unit": "mm",
-        "cutting_direction": "Both"
+        "cutting_direction": "both"
       },
       "spindle_speed": 22500,
       "max_feedrate": 8000,
+      "plungerate": 500,
       "target_tool_load": 270
     },
     "applicable_tools": [
@@ -1550,10 +1631,11 @@
         "stepdown": 12,
         "stepover": null,
         "unit": "mm",
-        "cutting_direction": "Both"
+        "cutting_direction": "both"
       },
       "spindle_speed": 22500,
       "max_feedrate": 8000,
+      "plungerate": 500,
       "target_tool_load": 240
     },
     "applicable_tools": [

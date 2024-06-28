@@ -1,5 +1,48 @@
 [
   {
+    "uid": "-0001",
+    "description": "",
+    "manufacturer": "",
+    "manufacturer_part_number": "",
+    "tool_type": "",
+    "generic_definition": {
+      "uid": "-0001",
+      "string": "",
+      "dimension": -1,
+      "unit": "",
+      "type": "",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": false,
+        "on": true,
+        "pocket": false
+      },
+      "required_operations": {
+        "lead_in": false
+      }
+    },
+    "dimensions": {
+      "shank_diameter": -1,
+      "tool_diameter": -1,
+      "unit": "",
+      "angle": 0
+    },
+    "flutes": {
+      "type": "",
+      "lengths": {
+        "upcut_straight": -1,
+        "downcut": -1,
+        "total": -1,
+        "unit": ""
+      },
+      "quantity": -1,
+      "material": "",
+      "coated": false,
+      "coating": null
+    },
+    "available_isas": []
+  },
+  {
     "uid": "0000",
     "description": "Yeti Tool 21754 60° 3 flute V groove TiAIN coated",
     "manufacturer": "Yeti Tool",
@@ -10,7 +53,16 @@
       "string": "60 ° 3 flute V groove",
       "dimension": 60,
       "unit": "°",
-      "type": "3 flute V groove"
+      "type": "3 flute V groove",
+      "toolpath_offsets": {
+        "inside": false,
+        "outside": false,
+        "on": true,
+        "pocket": false
+      },
+      "required_operations": {
+        "lead_in": false
+      }
     },
     "dimensions": {
       "shank_diameter": 6,
@@ -46,7 +98,16 @@
       "string": "90 ° 3 flute V groove",
       "dimension": 90,
       "unit": "°",
-      "type": "3 flute V groove"
+      "type": "3 flute V groove",
+      "toolpath_offsets": {
+        "inside": false,
+        "outside": false,
+        "on": true,
+        "pocket": false
+      },
+      "required_operations": {
+        "lead_in": false
+      }
     },
     "dimensions": {
       "shank_diameter": 6,
@@ -82,7 +143,16 @@
       "string": "120 ° 3 flute V groove",
       "dimension": 120,
       "unit": "°",
-      "type": "3 flute V groove"
+      "type": "3 flute V groove",
+      "toolpath_offsets": {
+        "inside": false,
+        "outside": false,
+        "on": true,
+        "pocket": false
+      },
+      "required_operations": {
+        "lead_in": false
+      }
     },
     "dimensions": {
       "shank_diameter": 6,
@@ -118,7 +188,16 @@
       "string": "3.175 mm 1 flute Compression",
       "dimension": 3.175,
       "unit": "mm",
-      "type": "1 flute Compression"
+      "type": "1 flute Compression",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": true
+      }
     },
     "dimensions": {
       "shank_diameter": 3.175,
@@ -154,7 +233,16 @@
       "string": "6 mm 1 flute Compression",
       "dimension": 6,
       "unit": "mm",
-      "type": "1 flute Compression"
+      "type": "1 flute Compression",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": true
+      }
     },
     "dimensions": {
       "shank_diameter": 6,
@@ -190,7 +278,16 @@
       "string": "3.175 mm 1 flute Downcut",
       "dimension": 3.175,
       "unit": "mm",
-      "type": "1 flute Downcut"
+      "type": "1 flute Downcut",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": false
+      }
     },
     "dimensions": {
       "shank_diameter": 3.175,
@@ -226,7 +323,16 @@
       "string": "6 mm 1 flute Downcut",
       "dimension": 6,
       "unit": "mm",
-      "type": "1 flute Downcut"
+      "type": "1 flute Downcut",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": false
+      }
     },
     "dimensions": {
       "shank_diameter": 6,
@@ -262,7 +368,16 @@
       "string": "3.175 mm 1 flute Upcut",
       "dimension": 3.175,
       "unit": "mm",
-      "type": "1 flute Upcut"
+      "type": "1 flute Upcut",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": false
+      }
     },
     "dimensions": {
       "shank_diameter": 3.175,
@@ -298,7 +413,16 @@
       "string": "4 mm 1 flute Upcut",
       "dimension": 4,
       "unit": "mm",
-      "type": "1 flute Upcut"
+      "type": "1 flute Upcut",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": false
+      }
     },
     "dimensions": {
       "shank_diameter": 4,
@@ -334,7 +458,16 @@
       "string": "6 mm 1 flute Upcut",
       "dimension": 6,
       "unit": "mm",
-      "type": "1 flute Upcut"
+      "type": "1 flute Upcut",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": false
+      }
     },
     "dimensions": {
       "shank_diameter": 6,
@@ -370,7 +503,16 @@
       "string": "3.175 mm 1 flute Upcut",
       "dimension": 3.175,
       "unit": "mm",
-      "type": "1 flute Upcut"
+      "type": "1 flute Upcut",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": false
+      }
     },
     "dimensions": {
       "shank_diameter": 3.175,
@@ -406,7 +548,16 @@
       "string": "6 mm 1 flute Upcut",
       "dimension": 6,
       "unit": "mm",
-      "type": "1 flute Upcut"
+      "type": "1 flute Upcut",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": false
+      }
     },
     "dimensions": {
       "shank_diameter": 6,
@@ -442,7 +593,16 @@
       "string": "3.175 mm 1 flute Upcut",
       "dimension": 3.175,
       "unit": "mm",
-      "type": "1 flute Upcut"
+      "type": "1 flute Upcut",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": false
+      }
     },
     "dimensions": {
       "shank_diameter": 3.175,
@@ -478,7 +638,16 @@
       "string": "4 mm 1 flute Upcut",
       "dimension": 4,
       "unit": "mm",
-      "type": "1 flute Upcut"
+      "type": "1 flute Upcut",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": false
+      }
     },
     "dimensions": {
       "shank_diameter": 4,
@@ -514,7 +683,16 @@
       "string": "5 mm 1 flute Upcut",
       "dimension": 5,
       "unit": "mm",
-      "type": "1 flute Upcut"
+      "type": "1 flute Upcut",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": false
+      }
     },
     "dimensions": {
       "shank_diameter": 5,
@@ -550,7 +728,16 @@
       "string": "3.175 mm 2 flute Compression",
       "dimension": 3.175,
       "unit": "mm",
-      "type": "2 flute Compression"
+      "type": "2 flute Compression",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": true
+      }
     },
     "dimensions": {
       "shank_diameter": 3.175,
@@ -586,7 +773,16 @@
       "string": "4 mm 2 flute Compression",
       "dimension": 4,
       "unit": "mm",
-      "type": "2 flute Compression"
+      "type": "2 flute Compression",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": true
+      }
     },
     "dimensions": {
       "shank_diameter": 4,
@@ -622,7 +818,16 @@
       "string": "5 mm 2 flute Compression",
       "dimension": 5,
       "unit": "mm",
-      "type": "2 flute Compression"
+      "type": "2 flute Compression",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": true
+      }
     },
     "dimensions": {
       "shank_diameter": 5,
@@ -658,7 +863,16 @@
       "string": "6 mm 2 flute Compression",
       "dimension": 6,
       "unit": "mm",
-      "type": "2 flute Compression"
+      "type": "2 flute Compression",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": true
+      }
     },
     "dimensions": {
       "shank_diameter": 6,
@@ -694,7 +908,16 @@
       "string": "3.175 mm 2 flute Downcut",
       "dimension": 3.175,
       "unit": "mm",
-      "type": "2 flute Downcut"
+      "type": "2 flute Downcut",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": false
+      }
     },
     "dimensions": {
       "shank_diameter": 3.175,
@@ -730,7 +953,16 @@
       "string": "6 mm 2 flute Downcut",
       "dimension": 6,
       "unit": "mm",
-      "type": "2 flute Downcut"
+      "type": "2 flute Downcut",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": false
+      }
     },
     "dimensions": {
       "shank_diameter": 6,
@@ -766,7 +998,16 @@
       "string": "8 mm 2 flute Downcut",
       "dimension": 8,
       "unit": "mm",
-      "type": "2 flute Downcut"
+      "type": "2 flute Downcut",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": false
+      }
     },
     "dimensions": {
       "shank_diameter": 8,
@@ -802,7 +1043,16 @@
       "string": "4 mm 2 flute Straight",
       "dimension": 4,
       "unit": "mm",
-      "type": "2 flute Straight"
+      "type": "2 flute Straight",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": false
+      }
     },
     "dimensions": {
       "shank_diameter": 4,
@@ -838,7 +1088,16 @@
       "string": "6 mm 2 flute Straight",
       "dimension": 6,
       "unit": "mm",
-      "type": "2 flute Straight"
+      "type": "2 flute Straight",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": false
+      }
     },
     "dimensions": {
       "shank_diameter": 6,
@@ -875,7 +1134,16 @@
       "string": "8 mm 2 flute Straight",
       "dimension": 8,
       "unit": "mm",
-      "type": "2 flute Straight"
+      "type": "2 flute Straight",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": false
+      }
     },
     "dimensions": {
       "shank_diameter": 8,
@@ -911,7 +1179,16 @@
       "string": "8 mm 1 flute Upcut",
       "dimension": 8,
       "unit": "mm",
-      "type": "1 flute Upcut"
+      "type": "1 flute Upcut",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": false
+      }
     },
     "dimensions": {
       "shank_diameter": 8,
@@ -947,7 +1224,16 @@
       "string": "8 mm 1 flute Downcut",
       "dimension": 8,
       "unit": "mm",
-      "type": "1 flute Downcut"
+      "type": "1 flute Downcut",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": false
+      }
     },
     "dimensions": {
       "shank_diameter": 8,
@@ -983,7 +1269,16 @@
       "string": "3.175 mm 2 flute Straight",
       "dimension": 3.175,
       "unit": "mm",
-      "type": "2 flute Straight"
+      "type": "2 flute Straight",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": false
+      }
     },
     "dimensions": {
       "shank_diameter": 3.175,
@@ -1019,7 +1314,16 @@
       "string": "6 mm 1 flute Straight",
       "dimension": 6,
       "unit": "mm",
-      "type": "1 flute Straight"
+      "type": "1 flute Straight",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": false
+      }
     },
     "dimensions": {
       "shank_diameter": 8,
@@ -1055,7 +1359,16 @@
       "string": "5 mm 1 flute Upcut",
       "dimension": 5,
       "unit": "mm",
-      "type": "1 flute Upcut"
+      "type": "1 flute Upcut",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": false
+      }
     },
     "dimensions": {
       "shank_diameter": 5,
@@ -1091,7 +1404,16 @@
       "string": "90 ° 2 flute V groove",
       "dimension": 90,
       "unit": "°",
-      "type": "2 flute V groove"
+      "type": "2 flute V groove",
+      "toolpath_offsets": {
+        "inside": false,
+        "outside": false,
+        "on": true,
+        "pocket": false
+      },
+      "required_operations": {
+        "lead_in": false
+      }
     },
     "dimensions": {
       "shank_diameter": 6,
@@ -1127,7 +1449,16 @@
       "string": "45 ° 2 flute V groove",
       "dimension": 45,
       "unit": "°",
-      "type": "2 flute V groove"
+      "type": "2 flute V groove",
+      "toolpath_offsets": {
+        "inside": false,
+        "outside": false,
+        "on": true,
+        "pocket": false
+      },
+      "required_operations": {
+        "lead_in": false
+      }
     },
     "dimensions": {
       "shank_diameter": 6,

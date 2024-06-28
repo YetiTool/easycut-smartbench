@@ -2,6 +2,7 @@ import os
 import sys
 import textwrap
 
+from kivy.app import App
 from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.metrics import dp
@@ -11,8 +12,6 @@ from kivy.uix.screenmanager import Screen
 
 from asmcnc import paths
 from asmcnc.apps import widget_tool_material_display
-from asmcnc.apps.drywall_cutter_app import job_load_helper
-from asmcnc.apps.drywall_cutter_app import material_setup_popup
 from asmcnc.apps.drywall_cutter_app import screen_config_filechooser
 from asmcnc.apps.drywall_cutter_app import screen_config_filesaver
 from asmcnc.apps.drywall_cutter_app import widget_drywall_shape_display
@@ -229,7 +228,6 @@ class DrywallCutterScreen(Screen):
 
     def __init__(self, screen_manager, machine, keyboard, job, **kwargs):
         self.dwt_config = config_loader.DWTConfig(self)
-        self.tool_options = self.dwt_config.get_available_cutters()
 
         super(DrywallCutterScreen, self).__init__(**kwargs)
 
@@ -245,6 +243,8 @@ class DrywallCutterScreen(Screen):
         self.simulation_started = False
         self.ignore_state = True
 
+        self.profile_db = App.get_running_app().profile_db
+
         # XY move widget
         self.xy_move_widget = widget_xy_move_drywall.XYMoveDrywall(machine=self.m,
                                                                    screen_manager=self.sm,
@@ -253,7 +253,7 @@ class DrywallCutterScreen(Screen):
         self.xy_move_container.add_widget(self.xy_move_widget)
 
         self.materials_popup = material_setup_popup.CuttingDepthsPopup(self.l, self.kb, self.dwt_config)
-        self.tool_material_popup = tool_material_popup.ToolMaterialPopup(self.l)
+        self.tool_material_popup = tool_material_popup.ToolMaterialPopup(self.l, self.dwt_config, self)
         self.drywall_shape_display_widget = widget_drywall_shape_display.DrywallShapeDisplay(machine=self.m,
                                                                                              screen_manager=self.sm,
                                                                                              dwt_config=self.dwt_config,
@@ -302,6 +302,11 @@ class DrywallCutterScreen(Screen):
         self.drywall_shape_display_widget.check_datum_and_extents()  # update machine value labels
 
         if self.dwt_config.app_type == config_options.AppType.SHAPES:
+            if 'geberit' in self.shape_options_dict:
+                self.shape_options_dict.pop("geberit")
+                self.shape_selection.image_dict = self.shape_options_dict
+
+        if self.dwt_config.app_type == config_options.AppType.SHAPES:
             self.drywall_shape_display_widget.canvas_image.source = "./asmcnc/apps/drywall_cutter_app/img/canvas_with_logo_shapes.png"
         else:
             self.drywall_shape_display_widget.canvas_image.source = "./asmcnc/apps/drywall_cutter_app/img/canvas_with_logo.png"
@@ -343,12 +348,18 @@ class DrywallCutterScreen(Screen):
 
     def select_tool(self, cutter_file, *args):
         self.dwt_config.load_cutter(cutter_file)
+        self.update_toolpaths()
+        self.dwt_config.on_parameter_change('cutter_type', cutter_file)
 
+    def update_toolpaths(self, *args):
         # Convert allowed toolpaths object to dict, then put attributes with True into a list
-        allowed_toolpaths = [toolpath for toolpath, allowed in self.dwt_config.active_cutter.toolpath_offsets.__dict__.items() if allowed]
+        allowed_toolpaths = [toolpath for toolpath, allowed in
+                             self.dwt_config.active_cutter.generic_definition.toolpath_offsets.__dict__.items() if
+                             allowed]
         # Add or remove pocket option based on what app is being used
-        if self.dwt_config.app_type == config_options.AppType.SHAPES:
-            allowed_toolpaths.append('pocket')
+        if self.dwt_config.app_type == config_options.AppType.DRYWALL_CUTTER:
+            if 'pocket' in allowed_toolpaths:
+                allowed_toolpaths.remove('pocket')
         # Use allowed toolpath list to create a dict of only allowed toolpaths
         allowed_toolpath_dict = dict([(k, self.toolpath_offset_options_dict[k]) for k in allowed_toolpaths if
                                       k in self.toolpath_offset_options_dict])
@@ -358,11 +369,6 @@ class DrywallCutterScreen(Screen):
         if self.dwt_config.active_config.toolpath_offset not in allowed_toolpaths:
             # Default to first toolpath, so disabled toolpath is never selected
             self.select_toolpath(allowed_toolpaths[0])
-
-        self.dwt_config.on_parameter_change('cutter_type', cutter_file)
-
-    def show_tool_image(self):
-        self.tool_selection.source = self.dwt_config.active_cutter.image
 
     def select_shape(self, shape):
         self.dwt_config.on_parameter_change('shape_type', shape.lower())
@@ -396,12 +402,11 @@ class DrywallCutterScreen(Screen):
 
         # handle tool selection for geberit shape:
         if shape is 'geberit':
-            geberit_cutters = {k: v for k, v in self.tool_options.iteritems() if '8 mm' in k or '6 mm' in k}
-            geberit_cutter_names = [v['cutter_path'] for v in geberit_cutters.values()]
-            self.tool_selection.image_dict = geberit_cutters
+            tool_options = self.profile_db.get_geberit_tools()
+
             # check if valid tool is selected:
-            if self.dwt_config.active_config.cutter_type not in geberit_cutter_names:
-                self.select_tool(geberit_cutter_names[0])
+            if self.dwt_config.active_config.cutter_type not in tool_options:
+                self.select_tool(tool_options[0])
 
     def rotate_shape(self, swap_lengths=True):
         if self.rotation == 'horizontal':
@@ -496,7 +501,8 @@ class DrywallCutterScreen(Screen):
             self.sm.add_widget(screen_config_filesaver.ConfigFileSaver(name='config_filesaver',
                                                                        screen_manager=self.sm,
                                                                        localization=self.l,
-                                                                       callback=self.dwt_config.save_config))
+                                                                       callback=self.dwt_config.save_config,
+                                                                       kb=self.kb))
         self.sm.current = 'config_filesaver'
 
     def is_config_valid(self):
@@ -511,7 +517,7 @@ class DrywallCutterScreen(Screen):
                                                    localization=self.l)
             self.jd.set_job_filename(self.drywall_shape_display_widget.config_name_label.text)
             job_loader.load_gcode_file(output_path)
-            os.remove(output_path)
+            # os.remove(output_path)
             self.set_return_screens()
             self.sm.get_screen('go').dwt_config = self.dwt_config
             self.proceed_to_go_screen()
@@ -576,19 +582,13 @@ class DrywallCutterScreen(Screen):
             self.jd.screen_to_return_to_after_job = 'drywall_cutter'
             self.jd.screen_to_return_to_after_cancel = 'drywall_cutter'
 
-            # Check if stylus option is enabled
-            if self.m.is_stylus_enabled == True:
-                # Display tool selection screen
-                self.sm.current = 'tool_selection'
+            self.m.stylus_router_choice = 'router'
 
+            # is fw capable of auto Z lift?
+            if self.m.fw_can_operate_zUp_on_pause():
+                self.sm.current = 'lift_z_on_pause_or_not'
             else:
-                self.m.stylus_router_choice = 'router'
-
-                # is fw capable of auto Z lift?
-                if self.m.fw_can_operate_zUp_on_pause():
-                    self.sm.current = 'lift_z_on_pause_or_not'
-                else:
-                    self.sm.current = 'jobstart_warning'
+                self.sm.current = 'jobstart_warning'
 
     def format_command(self, cmd):
         wrapped_cmd = textwrap.fill(cmd, width=35, break_long_words=False)

@@ -1,5 +1,10 @@
 [
   {
+    "uid": "-0001",
+    "description": "",
+    "available_isas": []
+  },
+  {
     "uid": "0000",
     "description": "Oak worktop",
     "available_isas": [
@@ -10,7 +15,8 @@
     "uid": "0001",
     "description": "MDF",
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -66,7 +72,8 @@
     "uid": "0009",
     "description": "Hardwood plywood",
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {

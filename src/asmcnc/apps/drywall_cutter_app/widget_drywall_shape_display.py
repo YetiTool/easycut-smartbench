@@ -514,13 +514,13 @@ class DrywallShapeDisplay(Widget):
 
         if shape == 'geberit':
             if rotation == 'horizontal':
-                self.place_widget(self.x_datum_label, scaling_utils.get_scaled_tuple((407, 46)))
-                self.place_widget(self.y_datum_label, scaling_utils.get_scaled_tuple((416, 125)))
+                self.place_widget(self.x_datum_label, scaling_utils.get_scaled_tuple((358, 50)))
+                self.place_widget(self.y_datum_label, scaling_utils.get_scaled_tuple((400, 207)))
                 self.place_widget(self.y_datum_validation_label, (self.y_datum_label.pos[0],
                                                                   self.y_datum_label.pos[1] - scaling_utils.get_scaled_height(35)))
             else:
-                self.place_widget(self.x_datum_label, scaling_utils.get_scaled_tuple((360, 47)))
-                self.place_widget(self.y_datum_label, scaling_utils.get_scaled_tuple((390, 94)))
+                self.place_widget(self.x_datum_label, scaling_utils.get_scaled_tuple((285, 32)))
+                self.place_widget(self.y_datum_label, scaling_utils.get_scaled_tuple((370, 87)))
                 self.place_widget(self.y_datum_validation_label, (self.y_datum_label.pos[0],
                                                                   self.y_datum_label.pos[1] - scaling_utils.get_scaled_height(20)))
 
@@ -639,7 +639,7 @@ class DrywallShapeDisplay(Widget):
 
     def tool_offset_value(self):
         # Account for cutter size
-        cutter_radius = (self.dwt_config.active_cutter.dimensions.diameter or 0) / 2  # if angled cutter, get 0
+        cutter_radius = (self.dwt_config.active_cutter.dimensions.tool_diameter or 0) / 2  # if angled cutter, get 0
         if self.dwt_config.active_config.toolpath_offset == ToolpathOffsetOptions.INSIDE.value:
             tool_offset_value = -cutter_radius
         elif self.dwt_config.active_config.toolpath_offset == ToolpathOffsetOptions.OUTSIDE.value:
@@ -812,13 +812,13 @@ class DrywallShapeDisplay(Widget):
         # Otherwise check hardcoded min values
         if self.dwt_config.active_config.shape_type.lower() == "circle":
             if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
-                return float(self.d_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.dimensions.diameter
+                return float(self.d_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter
             else:
                 return float(self.d_input.text or 0) >= 0.1
 
         elif self.dwt_config.active_config.shape_type.lower() == "square":
             if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
-                return float(self.y_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.dimensions.diameter
+                return float(self.y_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter
             elif self.dwt_config.active_config.toolpath_offset.lower() == "outside":
                 return float(self.y_input.text or 0) >= 1
             else:
@@ -826,8 +826,8 @@ class DrywallShapeDisplay(Widget):
 
         elif self.dwt_config.active_config.shape_type.lower() == "rectangle":
             if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
-                return (float(self.x_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.dimensions.diameter) and (
-                            float(self.y_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.dimensions.diameter)
+                return (float(self.x_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter) and (
+                            float(self.y_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter)
             elif self.dwt_config.active_config.toolpath_offset.lower() == "outside":
                 return (float(self.x_input.text or 0) >= 1) and (float(self.y_input.text or 0) >= 1)
             else:
@@ -933,7 +933,7 @@ class DrywallShapeDisplay(Widget):
 
             # ensure the square is not too small
             if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
-                if float(self.y_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.diameter:
+                if float(self.y_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter:
                     steps.append(
                         self.localization.get_str(
                             "The square is too small."
@@ -982,8 +982,8 @@ class DrywallShapeDisplay(Widget):
                 )
 
             if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
-                if (float(self.x_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.diameter) or (
-                        float(self.y_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.diameter):
+                if (float(self.x_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter) or (
+                        float(self.y_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter):
                     steps.append(
                         self.localization.get_str(
                             "The rectangle's sides are too small."
@@ -1020,7 +1020,7 @@ class DrywallShapeDisplay(Widget):
                     )
         elif self.dwt_config.active_config.shape_type.lower() == "circle":
             if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
-                if float(self.d_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.diameter:
+                if float(self.d_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter:
                     steps.append(
                         self.localization.get_str(
                             "The circle's diameter is too small."

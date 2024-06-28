@@ -1,7 +1,6 @@
 from kivy.app import App
 from kivy.uix.popup import Popup
 from kivy.lang import Builder
-import json
 
 from asmcnc.comms.logging_system.logging_system import Logger
 
@@ -147,17 +146,23 @@ Builder.load_string("""
 
 class ToolMaterialPopup(Popup):
 
-    def __init__(self, localization, **kwargs):
+    def __init__(self, localization, config, drywall_cutter_screen, **kwargs):
         super(ToolMaterialPopup, self).__init__(**kwargs)
+
+        self.l = localization
+        self.dwt_config = config
+        self.drywall_cutter_screen = drywall_cutter_screen
 
         self.tool_dropdown.bind(text=self.on_tool_change)
         self.material_dropdown.bind(text=self.on_material_change)
+        self.dwt_config.bind(active_profile=self.load_config)
 
         self.profile_db = App.get_running_app().profile_db
 
     def on_tool_change(self, instance, value):
         if value != '':
             self.confirm_button.disabled = False
+            self.confirm_button.opacity = 1
             Logger.debug("Tool changed to " + value)
 
     def on_material_change(self, instance, value):
@@ -165,13 +170,28 @@ class ToolMaterialPopup(Popup):
         self.tool_dropdown.values = self.profile_db.get_tool_names(self.profile_db.get_material_id(value))
         self.tool_dropdown.text = ''
         self.confirm_button.disabled = True
+        self.confirm_button.opacity = 0.5
 
     def on_open(self):
+        self.load_config()
+        if self.material_dropdown.text == '' or self.material_dropdown.text == '':  # Only disable if one is empty
+            self.confirm_button.disabled = True
+            self.confirm_button.opacity = 0.5
+
+    def load_config(self, *args):
+        if self.dwt_config.active_config.material:
+            material = self.profile_db.get_material_name(self.dwt_config.active_config.material)
+            self.material_dropdown.text = material
+        if self.dwt_config.active_config.cutter_type:
+            tool = self.profile_db.get_tool_name(self.dwt_config.active_config.cutter_type)
+            self.tool_dropdown.text = tool
         # Set the material dropdown values
-        self.material_dropdown.values = self.profile_db.get_material_names()
-        self.confirm_button.disabled = True
+        self.material_dropdown.values = self.profile_db.get_material_names(self.dwt_config.app_type)
 
     def confirm(self):
+        self.dwt_config.on_parameter_change('material', self.profile_db.get_material_id(self.material_dropdown.text))
+        self.dwt_config.on_parameter_change('cutter_type', self.profile_db.get_tool_id(self.tool_dropdown.text))
+        self.drywall_cutter_screen.update_toolpaths()
         self.dismiss()
 
     def cancel(self):
