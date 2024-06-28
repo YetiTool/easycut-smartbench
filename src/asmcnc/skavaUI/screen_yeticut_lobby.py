@@ -154,7 +154,7 @@ Builder.load_string("""
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
-                        source: paths.get_resource("shapes_lobby_toolbox_button.png")
+                        source: paths.get_resource("shapes_lobby_toolbox_button_coming_soon.png")
                         size_hint: 0.9, 0.9
                         size: self.parent.width, self.parent.height
                         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
