@@ -10,6 +10,7 @@ import sys, os
 from kivy.clock import Clock
 from kivy.uix.label import Label
 
+from asmcnc.comms.localization import Localization
 
 """
 DEPRECATED, NOW USING: src/asmcnc/apps/start_up_sequence/screens/screen_language_selection.py
@@ -347,7 +348,7 @@ class LanguageSelectScreen(Screen):
         super(LanguageSelectScreen, self).__init__(**kwargs)
         self.start_seq = kwargs["start_sequence"]
         self.sm = kwargs["screen_manager"]
-        self.l = kwargs["localization"]
+        self.l = Localization()
         self.row_1_col_1.text = self.l.approved_languages[0]
         self.row_1_col_2.text = self.l.approved_languages[1]
         self.row_1_col_3.text = self.l.approved_languages[2]
