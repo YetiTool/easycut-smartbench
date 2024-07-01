@@ -22,7 +22,7 @@ import decimal, os, re
 
 from asmcnc import paths
 from asmcnc.apps.drywall_cutter_app.config.config_options import CuttingDirectionOptions, ShapeOptions
-from asmcnc.apps.drywall_cutter_app.engine_utils.tabs import Tabs
+from asmcnc.apps.drywall_cutter_app.engine_utils.tab_utilities import Tab_utilities
 from asmcnc.comms.logging_system.logging_system import Logger
 
 
@@ -31,12 +31,9 @@ class GCodeEngine(object):
         self.config = dwt_config
         self.m = router_machine
         self.cs = coordinate_system
-        self.tab_utils = Tabs(self.config)
+        self.tab_utils = Tab_utilities(self.config)
 
-        if self.config.active_cutter.dimensions.tool_diameter is not None:
-            self.cutter_diameter = self.config.active_cutter.dimensions.tool_diameter
-        else:
-            self.cutter_diameter = 0
+        self.cutter_diameter = 0
 
         self.finishing_passes = 1
         self.finishing_stepover = 0.5
@@ -651,14 +648,15 @@ class GCodeEngine(object):
             tab_height = 5
         three_d_tabs = True
 
-        # Compensate for tool diameter
-        try:
-            tab_width = tab_width + self.cutter_diameter
-        except:
-            pass
+        tab_width = tab_width + self.cutter_diameter
 
         is_climb = (self.config.active_profile.cutting_parameters.recommendations.cutting_direction == CuttingDirectionOptions.CLIMB.value
                     or self.config.active_profile.cutting_parameters.recommendations.cutting_direction == CuttingDirectionOptions.BOTH.value)
+
+        if self.config.active_cutter.dimensions.tool_diameter is not None:
+            self.cutter_diameter = self.config.active_cutter.dimensions.tool_diameter
+        else:
+            self.cutter_diameter = 0
 
         # Calculated parameters
         total_cut_depth = self.config.active_config.cutting_depths.material_thickness + self.config.active_config.cutting_depths.bottom_offset
@@ -795,7 +793,7 @@ class GCodeEngine(object):
                             rectangle = self.cut_rectangle(**rectangle_parameters)
                             rectangle = self.remove_redudant_lines(rectangle)
                             if not pocketing and self.config.active_config.cutting_depths.tabs:
-                                rectangle = self.tab_utils.add_tabs_to_gcode(rectangle, total_cut_depth, tab_height, tab_width, tab_spacing, three_d_tabs=three_d_tabs)
+                                rectangle = self.tab_utils.add_tabs_to_gcode(rectangle, total_cut_depth, tab_height, tab_width, tab_spacing, self.cutter_diameter, three_d_tabs=three_d_tabs)
                             cutting_lines += rectangle
 
         elif shape_type in ["geberit"]:
@@ -918,7 +916,7 @@ class GCodeEngine(object):
                             circle = self.cut_rectangle(**circle_parameters)
                             circle = self.remove_redudant_lines(circle)
                             if not pocketing and self.config.active_config.cutting_depths.tabs:
-                                circle = self.tab_utils.add_tabs_to_gcode(circle, total_cut_depth, tab_height, tab_width, tab_spacing, three_d_tabs=three_d_tabs)
+                                circle = self.tab_utils.add_tabs_to_gcode(circle, total_cut_depth, tab_height, tab_width, tab_spacing, self.cutter_diameter, three_d_tabs=three_d_tabs)
                             cutting_lines += circle
 
         elif shape_type in ["line"]:

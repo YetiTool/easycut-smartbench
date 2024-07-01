@@ -2,11 +2,13 @@ import math
 from collections import OrderedDict
 
 
-class Tabs(object):
+class TabUtilities:
     def __init__(self, config):
         self.config = config
+        self.arc_args = {}
 
-    def add_tabs_to_gcode(self, gcode_lines, total_cut_depth, tab_height, tab_width, tab_spacing, three_d_tabs=False):
+    def add_tabs_to_gcode(self, gcode_lines, total_cut_depth, tab_height, tab_width, tab_spacing, tool_diameter,
+                          three_d_tabs=False):
         """
         Adds tabs of specified height, width, and spacing to the given G-code lines.
 
@@ -71,7 +73,7 @@ class Tabs(object):
                 if linear_distance_moved >= tab_spacing and line.startswith(('G0', 'G1')):
                     tabs_added = True
                     modified_gcode.extend(
-                        self.add_straight_tabs(xy_feed, z_feed, linear_distance_moved, tab_spacing, tab_width,
+                        self.add_straight_tabs(self, tool_diameter, xy_feed, z_feed, linear_distance_moved, tab_spacing, tab_width,
                                                tab_height,
                                                previous_x_pos, previous_y_pos, g1_last_x, g1_last_y, x_delta, y_delta,
                                                current_z, tab_top_z, line, three_d_tabs))
@@ -81,7 +83,7 @@ class Tabs(object):
                     modified_gcode.extend(
                         self.add_arc_tabs(xy_feed, z_feed, parts, line, last_x, last_y, current_x, current_y,
                                           tab_spacing,
-                                          tab_width, current_z, tab_top_z, three_d_tabs))
+                                          tab_width, current_z, tab_top_z, tool_diameter, three_d_tabs))
 
                 last_x = current_x
                 last_y = current_y
@@ -103,7 +105,7 @@ class Tabs(object):
         return modified_gcode
 
     @staticmethod
-    def add_straight_tabs(xy_feed, z_feed, linear_distance_moved, tab_spacing, tab_width, tab_height, previous_x_pos,
+    def add_straight_tabs(self, tool_diameter, xy_feed, z_feed, linear_distance_moved, tab_spacing, tab_width, tab_height, previous_x_pos,
                           previous_y_pos, last_x, last_y, x_delta, y_delta, current_z, tab_top_z, line, three_d_tabs):
         number_of_tabs = int(linear_distance_moved / (tab_spacing + tab_width))
         tab_inset_distance = linear_distance_moved - ((tab_width * number_of_tabs) + tab_spacing * (number_of_tabs - 1))
@@ -152,22 +154,13 @@ class Tabs(object):
             tab_cut_height = current_z if current_z > tab_top_z else tab_top_z
             if current_z < tab_top_z and ('X' in line or 'Y' in line):
                 if line.startswith('G1'):
-                    if three_d_tabs:
-                        tab_centre_x = (tab['start_x'] + tab['end_x']) / 2
-                        tab_centre_y = (tab['start_y'] + tab['end_y']) / 2
-                        modified_gcode.append('G1 X{} Y{} F{}\n'.format(tab['start_x'], tab['start_y'], xy_feed))
-                        modified_gcode.append('G1 X{} Y{} Z{}\n'.format(tab_centre_x, tab_centre_y, tab_cut_height))
-                        modified_gcode.append('G1 X{} Y{} Z{}\n'.format(tab['end_x'], tab['end_y'], current_z))
-                    else:
-                        modified_gcode.append('G1 X{} Y{} F{}\n'.format(tab['start_x'], tab['start_y'], xy_feed))
-                        modified_gcode.append('G1 Z{} F{}\n'.format(tab_cut_height, z_feed))
-                        modified_gcode.append('G1 X{} Y{} F{}\n'.format(tab['end_x'], tab['end_y'], xy_feed))
-                        modified_gcode.append('G1 Z{} F{}\n'.format(current_z, z_feed))
+                    tab_gcode = self.add_tab(self, "G1", ((tab['start_x'], tab['start_y']), (tab['end_x'], tab['end_y'])), current_z, tab_cut_height, xy_feed, z_feed, tool_diameter, three_d_tabs)
+                    modified_gcode.extend(tab_gcode)
 
         return modified_gcode
 
     def add_arc_tabs(self, xy_feed, z_feed, parts, line, last_x, last_y, current_x, current_y, tab_spacing, tab_width,
-                     current_z, tab_top_z, three_d_tabs):
+                     current_z, tab_top_z, tool_diameter, three_d_tabs):
         modified_gcode = []
         r_value = None
         arc_command = None
@@ -200,45 +193,30 @@ class Tabs(object):
                 tab_inset_distance = arc_length - ((tab_width * number_of_tabs) + tab_spacing * (number_of_tabs - 1))
                 tab_inset_distance /= 2
 
-                last_x, last_y, current_x, current_y = current_x, current_y, last_x, last_y
+                self.arc_args = {
+                    'self': self,
+                    'x1': last_x,
+                    'y1': last_y,
+                    'x2': current_x,
+                    'y2': current_y,
+                    'r': radius,
+                    'd': 0,
+                    'clockwise': arc_command == 'G2'
+                }
 
-                for i in range(number_of_tabs):
-                    tab_start_distance = arc_length - ((tab_spacing * i) + (tab_width * i) + tab_inset_distance)
+                for tab_index in range(number_of_tabs):
+                    reverse_index = number_of_tabs - 1 - tab_index
+                    total_tab_width = tab_width * (reverse_index + 1)
+                    total_tab_spacing = tab_spacing * reverse_index
+
+                    tab_start_distance = arc_length - (total_tab_width + total_tab_spacing + tab_inset_distance)
                     tab_end_distance = arc_length - (
-                            (tab_spacing * i) + (tab_width * i) + tab_width + tab_inset_distance)
-                    tab_start_x, tab_start_y = self.calculate_arc_point(self, last_x, last_y, current_x, current_y, radius,
-                                                                        tab_start_distance,
-                                                                        clockwise=arc_command == 'G3')
-                    tab_end_x, tab_end_y = self.calculate_arc_point(self, last_x, last_y, current_x, current_y, radius,
-                                                                    tab_end_distance, clockwise=arc_command == 'G3')
-                    tab_centre_x, tab_centre_y = self.calculate_arc_point(self, last_x, last_y, current_x, current_y, radius,
-                                                                          tab_start_distance - tab_width / 2,
-                                                                          clockwise=arc_command == 'G3')
+                                total_tab_width - tab_width + total_tab_spacing + tab_inset_distance)
 
                     tab_cut_height = current_z if current_z > tab_top_z else tab_top_z
 
-                    if three_d_tabs:
-                        modified_gcode.append(
-                            '{} X{} Y{} R{} F{}\n'.format(arc_command, round(tab_start_x, 2), round(tab_start_y, 2),
-                                                          radius,
-                                                          xy_feed))
-                        modified_gcode.append(
-                            '{} X{} Y{} Z{} R{}\n'.format(arc_command, round(tab_centre_x, 2), round(tab_centre_y, 2),
-                                                          tab_cut_height, radius))
-                        modified_gcode.append(
-                            '{} X{} Y{} Z{} R{}\n'.format(arc_command, round(tab_end_x, 2), round(tab_end_y, 2),
-                                                          current_z,
-                                                          radius))
-                    else:
-                        modified_gcode.append(
-                            '{} X{} Y{} R{} F{}\n'.format(arc_command, round(tab_start_x, 2), round(tab_start_y, 2),
-                                                          radius,
-                                                          xy_feed))
-                        modified_gcode.append('G1 Z{} F{}\n'.format(tab_cut_height, z_feed))
-                        modified_gcode.append(
-                            '{} X{} Y{} R{} F{}\n'.format(arc_command, round(tab_end_x, 2), round(tab_end_y, 2), radius,
-                                                          xy_feed))
-                        modified_gcode.append('G1 Z{} F{}\n'.format(current_z, z_feed))
+                    modified_gcode += self.add_tab(self, arc_command, (tab_start_distance, tab_end_distance), current_z,
+                                                   tab_cut_height, xy_feed, z_feed, tool_diameter, three_d_tabs, radius)
 
         return modified_gcode
 
@@ -289,3 +267,100 @@ class Tabs(object):
         y = y1 if y_use_start else y2
 
         return x, y
+
+    @staticmethod
+    def add_tab(self, command, boundaries, current_z, tab_cut_height, xy_feed, z_feed, tool_diameter, three_d, radius=None):
+        z_param = ""
+        radius = round(radius, 2) if radius else None
+        radius_param = " R{}".format(radius) if radius else ""
+        gcode = []
+        tool_radius = tool_diameter / 2
+        start_x, start_y = None, None
+        start_point, second_point, third_point, end_point = [None] * 4
+
+        if command in ['G2', 'G3']:
+            start_distance, end_distance = boundaries
+
+            start_distance = start_distance - tool_radius
+            end_distance = end_distance + tool_radius
+
+            self.arc_args['d'] = start_distance
+            start_x, start_y = self.calculate_arc_point(**self.arc_args)
+
+            self.arc_args['d'] = end_distance
+            end_x, end_y = self.calculate_arc_point(**self.arc_args)
+
+            centre_distance = (start_distance + end_distance) / 2
+
+            start_x = round(start_x, 2)
+            start_y = round(start_y, 2)
+            end_x = round(end_x, 2)
+            end_y = round(end_y, 2)
+            current_z = round(current_z, 2)
+            tab_cut_height = round(tab_cut_height, 2)
+
+            start_point = (start_x, start_y, current_z)
+            end_point = (end_x, end_y, current_z)
+
+            if three_d:
+                self.arc_args['d'] = centre_distance - tool_radius
+                x, y = self.calculate_arc_point(**self.arc_args)
+                second_point = x, y, tab_cut_height
+                self.arc_args['d'] = centre_distance + tool_radius
+                x, y = self.calculate_arc_point(**self.arc_args)
+                third_point = x, y, tab_cut_height
+            else:
+                second_point = (start_x, start_y, tab_cut_height)
+                third_point = (end_x, end_y, tab_cut_height)
+
+        elif command in ['G1']:
+            start_point, end_point = boundaries
+
+            x_move = abs(end_point[0] - start_point[0]) > abs(end_point[1] - start_point[1])
+            x_move_positive = end_point[0] - start_point[0] > 0
+            y_move_positive = end_point[1] - start_point[1] > 0
+
+            if x_move:
+                polariser = 1 if x_move_positive else -1
+                x_compensation = tool_radius * polariser
+                y_compensation = 0
+            else:
+                polariser = 1 if y_move_positive else -1
+                x_compensation = 0
+                y_compensation = tool_radius * polariser
+
+            start_point = start_point[0] - x_compensation, start_point[1] - y_compensation, current_z
+            end_point = end_point[0] + x_compensation, end_point[1] + y_compensation, current_z
+
+            if three_d:
+                tab_centre_x = (start_point[0] + end_point[0]) / 2
+                tab_centre_y = (start_point[1] + end_point[1]) / 2
+
+                second_point = tab_centre_x - x_compensation, tab_centre_y - y_compensation, tab_cut_height
+                third_point = tab_centre_x + x_compensation, tab_centre_y + y_compensation, tab_cut_height
+            else:
+                second_point = start_point[0] - x_compensation, start_point[1] - y_compensation, tab_cut_height
+                third_point = end_point[0] + x_compensation, end_point[1] + y_compensation, tab_cut_height
+
+        else:
+            raise ValueError("Invalid command: {}".format(command))
+
+        points = [start_point, second_point, third_point, end_point]
+
+        previous_z = current_z
+
+        for point in points:
+            x, y, z = point
+            x, y, z = round(x, 2), round(y, 2), round(z, 2)
+
+            feed_param = " F{}".format(int(xy_feed))
+
+            if z != previous_z:
+                # Move in Z
+                z_param = " Z{}".format(z)
+
+            previous_z = z
+
+            gcode.append("{} X{} Y{}{}{}{}\n".format(command, x, y, z_param, radius_param, feed_param))
+
+        return gcode
