@@ -356,7 +356,7 @@ class DrywallCutterScreen(Screen):
                 # default to 'on'
                 self.select_toolpath('on')
             else:
-                self.drywall_shape_display_widget.shape_toolpath_image.opacity = 0
+                self.drywall_shape_display_widget.select_toolpath(self.dwt_config.active_config.shape_type, 'on', self.rotation)
         else:
             self.select_toolpath(self.dwt_config.active_config.toolpath_offset)
             self.toolpath_selection.disabled = False
