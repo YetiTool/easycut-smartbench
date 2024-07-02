@@ -22,7 +22,7 @@ import decimal, os, re
 
 from asmcnc import paths
 from asmcnc.apps.drywall_cutter_app.config.config_options import CuttingDirectionOptions, ShapeOptions
-from asmcnc.apps.drywall_cutter_app.engine_utils.tab_utilities import Tabutilities
+from asmcnc.apps.drywall_cutter_app.engine_utils.tabutilities import Tabutilities
 from asmcnc.comms.logging_system.logging_system import Logger
 
 
