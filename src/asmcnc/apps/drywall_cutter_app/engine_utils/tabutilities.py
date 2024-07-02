@@ -4,23 +4,29 @@ from collections import OrderedDict
 
 class TabUtilities:
     def __init__(self, config):
+        """
+        Initialize TabUtilities with a configuration object.
+
+        config: Configuration object containing profiles and cutting parameters.
+        """
         self.config = config
         self.arc_args = {}
 
-    def add_tabs_to_gcode(self, gcode_lines, total_cut_depth, tab_height, tab_width, tab_spacing, tool_diameter,
-                          three_d_tabs=False):
+    def add_tabs_to_gcode(self, gcode_lines, total_cut_depth, tab_height, tab_width, tab_spacing, tool_diameter, three_d_tabs=False):
         """
-        Adds tabs of specified height, width, and spacing to the given G-code lines.
+        Add tabs to a list of gcode lines.
 
-        Parameters:
-        - gcode_lines (list of str): The list of G-code lines to modify.
-        - tab_height (float): The height of the tabs.
-        - tab_width (float): The width of the tabs.
-        - tab_spacing (float): The distance between the start of each tab.
+        gcode_lines: List[str]. The list of gcode lines to modify.
+        total_cut_depth: float. The total depth of the cut.
+        tab_height: float. The height of the tabs.
+        tab_width: float. The width of the tabs.
+        tab_spacing: float. The spacing between the tabs.
+        tool_diameter: float. The diameter of the tool.
+        three_d_tabs: bool. Whether to cut the tabs in 3D.
 
-        Returns:
-        - list of str: The modified list of G-code lines with tabs.
+        Returns the modified gcode as a list of strings.
         """
+
         modified_gcode = []
         current_z = None
         current_x = None
@@ -73,7 +79,7 @@ class TabUtilities:
                 if linear_distance_moved >= tab_spacing and line.startswith(('G0', 'G1')):
                     tabs_added = True
                     modified_gcode.extend(
-                        self.add_straight_tabs(self, tool_diameter, xy_feed, z_feed, linear_distance_moved, tab_spacing, tab_width,
+                        self.add_straight_tabs(self, tool_diameter, xy_feed, linear_distance_moved, tab_spacing, tab_width,
                                                tab_height,
                                                previous_x_pos, previous_y_pos, g1_last_x, g1_last_y, x_delta, y_delta,
                                                current_z, tab_top_z, line, three_d_tabs))
@@ -81,7 +87,7 @@ class TabUtilities:
                 if line.startswith('G2') or line.startswith('G3'):
                     tabs_added = True
                     modified_gcode.extend(
-                        self.add_arc_tabs(xy_feed, z_feed, parts, line, last_x, last_y, current_x, current_y,
+                        self.add_arc_tabs(xy_feed, parts, line, last_x, last_y, current_x, current_y,
                                           tab_spacing,
                                           tab_width, current_z, tab_top_z, tool_diameter, three_d_tabs))
 
@@ -105,7 +111,7 @@ class TabUtilities:
         return modified_gcode
 
     @staticmethod
-    def add_straight_tabs(self, tool_diameter, xy_feed, z_feed, linear_distance_moved, tab_spacing, tab_width, tab_height, previous_x_pos,
+    def add_straight_tabs(self, tool_diameter, xy_feed, linear_distance_moved, tab_spacing, tab_width, tab_height, previous_x_pos,
                           previous_y_pos, last_x, last_y, x_delta, y_delta, current_z, tab_top_z, line, three_d_tabs):
         number_of_tabs = int(linear_distance_moved / (tab_spacing + tab_width))
         tab_inset_distance = linear_distance_moved - ((tab_width * number_of_tabs) + tab_spacing * (number_of_tabs - 1))
@@ -154,12 +160,12 @@ class TabUtilities:
             tab_cut_height = current_z if current_z > tab_top_z else tab_top_z
             if current_z < tab_top_z and ('X' in line or 'Y' in line):
                 if line.startswith('G1'):
-                    tab_gcode = self.add_tab(self, "G1", ((tab['start_x'], tab['start_y']), (tab['end_x'], tab['end_y'])), current_z, tab_cut_height, xy_feed, z_feed, tool_diameter, three_d_tabs)
+                    tab_gcode = self.add_tab(self, "G1", ((tab['start_x'], tab['start_y']), (tab['end_x'], tab['end_y'])), current_z, tab_cut_height, xy_feed, tool_diameter, three_d_tabs)
                     modified_gcode.extend(tab_gcode)
 
         return modified_gcode
 
-    def add_arc_tabs(self, xy_feed, z_feed, parts, line, last_x, last_y, current_x, current_y, tab_spacing, tab_width,
+    def add_arc_tabs(self, xy_feed, parts, line, last_x, last_y, current_x, current_y, tab_spacing, tab_width,
                      current_z, tab_top_z, tool_diameter, three_d_tabs):
         modified_gcode = []
         r_value = None
@@ -216,13 +222,23 @@ class TabUtilities:
                     tab_cut_height = current_z if current_z > tab_top_z else tab_top_z
 
                     modified_gcode += self.add_tab(self, arc_command, (tab_start_distance, tab_end_distance), current_z,
-                                                   tab_cut_height, xy_feed, z_feed, tool_diameter, three_d_tabs, radius)
+                                                   tab_cut_height, xy_feed, tool_diameter, three_d_tabs, radius)
 
         return modified_gcode
 
     @staticmethod
     def calculate_arc_point(self, x1, y1, x2, y2, r, d, clockwise):
-        # Calculate the center of the circle (midpoint of start and end)
+        """
+        Calculate the coordinates of a point on an arc.
+
+        x1, y1: The coordinates of the starting point of the arc.
+        x2, y2: The coordinates of the ending point of the arc.
+        r: The radius of the arc.
+        d: The distance from the starting point to the point of interest.
+        clockwise: The direction of the arc.
+
+        Returns the coordinates of the point.
+        """
 
         cx, cy = self.find_arc_center(x1, y1, x2, y2, clockwise)
 
@@ -249,6 +265,12 @@ class TabUtilities:
         """
         Find the center of the circle that the arc is part of.
         Works only for 90 degree arcs.
+
+        x1, y1: The coordinates of the starting point of the arc.
+        x2, y2: The coordinates of the ending point of the arc.
+        clockwise: The direction of the arc.
+
+        Returns the coordinates of the center of the circle.
         """
 
         x_delta_positive = x2 - x1 > 0
@@ -269,14 +291,24 @@ class TabUtilities:
         return x, y
 
     @staticmethod
-    def add_tab(self, command, boundaries, current_z, tab_cut_height, xy_feed, z_feed, tool_diameter, three_d, radius=None):
+    def add_tab(self, command, boundaries, current_z, tab_cut_height, xy_feed, tool_diameter, three_d, radius=None):
+        """
+        Produce gcode to insert a tab at a given location on a straight line or arc.
+
+        command: The gcode command to use. (G1, G2, G3)
+        boundaries: The start and end points of the line or arc.
+        current_z: The current Z position.
+        tab_cut_height: The height of the tab.
+        xy_feed: The feedrate to use.
+        tool_diameter: The diameter of the tool.
+        three_d: Whether to cut the tab in 3D.
+        radius: The radius of the arc. (Only for arcs)
+        """
         z_param = ""
         radius = round(radius, 2) if radius else None
         radius_param = " R{}".format(radius) if radius else ""
         gcode = []
         tool_radius = tool_diameter / 2
-        start_x, start_y = None, None
-        start_point, second_point, third_point, end_point = [None] * 4
 
         if command in ['G2', 'G3']:
             start_distance, end_distance = boundaries
