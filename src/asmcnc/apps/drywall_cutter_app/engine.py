@@ -289,9 +289,9 @@ class GCodeEngine(object):
                         add_feedrate_to_line = 1 == final_coordinates.index(coordinate)  # Second line
 
                     if arc_flag:
-                        gcode_instruction = "G1 X%s Y%s %s\n" % (coordinate[0] + datum_x, coordinate[1] + datum_y, 'F%s' % feedrate if add_feedrate_to_line else '')
+                        gcode_instruction = "G1 X%s Y%s %s\n" % (round(coordinate[0] + datum_x, 2), round(coordinate[1] + datum_y, 2), 'F%s' % feedrate if add_feedrate_to_line else '')
                     else:
-                        gcode_instruction = "%s X%s Y%s R%s %s\n" % (arc_instruction, coordinate[0] + datum_x, coordinate[1] + datum_y, adjusted_corner_radius, 'F%s' % feedrate if add_feedrate_to_line else '')
+                        gcode_instruction = "%s X%s Y%s R%s %s\n" % (arc_instruction, round(coordinate[0] + datum_x, 2), round(coordinate[1] + datum_y, 2), round(adjusted_corner_radius, 2), 'F%s' % feedrate if add_feedrate_to_line else '')
                     arc_flag = not arc_flag
                     cutting_lines.append(gcode_instruction)
             cutting_lines.append("G1 Z%s F%d\n\n" % (z_safe_distance, plungerate))
