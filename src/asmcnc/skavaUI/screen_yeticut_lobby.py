@@ -22,7 +22,6 @@ Builder.load_string("""
             orientation: 'horizontal'
 
             BoxLayout:
-                padding: scaling_utils.get_scaled_tuple((dp(10), dp(10)))
 
                 Button:
                     on_press: root.go_back()
@@ -32,13 +31,12 @@ Builder.load_string("""
                         pos: self.parent.pos
                         Image:
                             source: paths.get_resource("back_yc.png")
-                            size_hint: None, None
-                            size: self.parent.width * 0.9, self.parent.height * 0.9
-                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                             allow_stretch: False
+                            size: self.parent.size
+                            pos: self.parent.pos
 
             Label:
-                size_hint_x: 5
+                size_hint_x: 6
                 text: ''
                 font_size: scaling_utils.get_scaled_width(dp(45))
                 bold: True
@@ -49,8 +47,8 @@ Builder.load_string("""
             size_hint_y: 3
             rows: 1
             cols: 3
-            padding: [scaling_utils.get_scaled_width(dp(100)), scaling_utils.get_scaled_width(dp(40))]
-            spacing: [scaling_utils.get_scaled_width(dp(80)), 0]
+            padding: [scaling_utils.get_scaled_width(dp(70)), scaling_utils.get_scaled_width(dp(20)), scaling_utils.get_scaled_width(dp(70)), scaling_utils.get_scaled_width(dp(40))]
+            spacing: [scaling_utils.get_scaled_width(dp(120)), 0]
 
             BoxLayout:
                 orientation: 'vertical'
@@ -71,8 +69,8 @@ Builder.load_string("""
                             Image:
                                 source: paths.get_resource("shapes.png")
                                 size_hint: None, None
-                                size: self.parent.width * 1.05, self.parent.height * 1.05
-                                pos_hint: {'center_x': 0.5, 'center_y': 0.525}
+                                size: self.parent.width * 1.15, self.parent.height * 1.15
+                                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                                 allow_stretch: True
                                     
             
@@ -100,7 +98,7 @@ Builder.load_string("""
                                 source: paths.get_resource("worktop.png")
                                 size_hint: None, None
                                 size: self.parent.width * 1.15, self.parent.height * 1.15
-                                pos_hint: {'center_x': 0.5, 'center_y': 0.525}
+                                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                                 allow_stretch: True
                                 
                                 Image:
@@ -135,7 +133,7 @@ Builder.load_string("""
                                 source: paths.get_resource("trace.png")
                                 size_hint: None, None
                                 size: self.parent.width * 1.15, self.parent.height * 1.15
-                                pos_hint: {'center_x': 0.5, 'center_y': 0.525}
+                                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                                 allow_stretch: True
                                 
                                 Image:
@@ -150,7 +148,7 @@ Builder.load_string("""
                     font_size: scaling_utils.get_scaled_width(dp(24))
 
         BoxLayout:
-            padding: scaling_utils.get_scaled_tuple((dp(250), dp(5), dp(250), dp(15)))
+            padding: scaling_utils.get_scaled_tuple((dp(240), dp(5), dp(240), dp(25)))
 
             Button:
                 background_color: color_provider.get_rgba('transparent')              
@@ -159,11 +157,17 @@ Builder.load_string("""
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
-                        source: paths.get_resource("shapes_lobby_toolbox_button_coming_soon.png")
-                        size_hint: 0.9, 0.9
+                        source: paths.get_resource("toolbox.png")
                         size: self.parent.width, self.parent.height
                         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                         allow_stretch: False
+                        
+                    Image:
+                        source: paths.get_resource("coming_soon.png")
+                        size_hint: None, None
+                        size: self.parent.width / 1.5, self.parent.height / 1.25
+                        allow_stretch: True
+                        pos: self.parent.right - self.width / 1.3, self.parent.top - self.height / 1.3
 """)
 
 
