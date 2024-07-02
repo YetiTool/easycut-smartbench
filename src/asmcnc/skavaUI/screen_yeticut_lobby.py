@@ -46,16 +46,17 @@ Builder.load_string("""
 
         GridLayout:
             size_hint_y: 3
-            rows: 2
-            cols: 4
-            padding: [scaling_utils.get_scaled_width(dp(120)), 0]
+            rows: 1
+            cols: 3
+            padding: [scaling_utils.get_scaled_width(dp(100)), scaling_utils.get_scaled_width(dp(40))]
+            spacing: [scaling_utils.get_scaled_width(dp(30)), 0]
 
             BoxLayout:
                 orientation: 'vertical'
                 
                 BoxLayout:
                     size_hint_y: 4
-                    padding: [(self.width - self.height) / 2, 0]
+                    # padding: [(self.width - self.height) / 2, 0]
                     
                     Button:
                         on_press: root.shapes_app()
@@ -83,7 +84,7 @@ Builder.load_string("""
                 
                 BoxLayout:
                     size_hint_y: 4
-                    padding: [(self.width - self.height) / 2, 0]
+                    # padding: [(self.width - self.height) / 2, 0]
                     
                     Button:
                         on_press: pass
@@ -111,7 +112,7 @@ Builder.load_string("""
                 
                 BoxLayout:
                     size_hint_y: 4
-                    padding: [(self.width - self.height) / 2, 0]
+                    # padding: [(self.width - self.height) / 2, 0]
                     
                     Button:
                         on_press: pass
@@ -133,16 +134,6 @@ Builder.load_string("""
                     text: 'Trace'
                     font_size: scaling_utils.get_scaled_width(dp(20))
                     bold: True
-
-            BoxLayout
-
-            BoxLayout
-
-            BoxLayout
-
-            BoxLayout
-
-            BoxLayout
 
         BoxLayout:
             padding: scaling_utils.get_scaled_tuple((dp(250), dp(5), dp(250), dp(15)))
