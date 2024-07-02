@@ -888,7 +888,7 @@ class SerialConnection(EventDispatcher):
     limit_Y = False
     limit_z = False
     probe = False
-    dust_shoe_cover = False
+    dustshoe_is_closed = BooleanProperty(True)
     spare_door = False
     limit_Y_axis = False
     stall_X = False
@@ -999,7 +999,7 @@ class SerialConnection(EventDispatcher):
                 self.limit_Y = False
                 self.limit_z = False
                 self.probe = False
-                self.dust_shoe_cover = False
+                self.dustshoe_is_closed = True
                 self.spare_door = False
                 self.limit_Y_axis = False
                 self.stall_X = False
@@ -1135,9 +1135,9 @@ class SerialConnection(EventDispatcher):
                         self.spare_door = False
 
                     if 'G' in pins_info:
-                        self.dust_shoe_cover = True
+                        self.dustshoe_is_closed = False
                     else:
-                        self.dust_shoe_cover = False
+                        self.dustshoe_is_closed = True
 
                     if 'Y' or 'y' in pins_info:
 

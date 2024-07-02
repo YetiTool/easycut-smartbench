@@ -8,7 +8,6 @@ This screen checks the users job, and allows them to review any errors
 """
 from functools import partial
 
-from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.lang import Builder
@@ -17,6 +16,7 @@ from kivy.properties import (
 )
 from kivy.uix.screenmanager import Screen
 
+from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.geometry import job_envelope
 from asmcnc.skavaUI import widget_gcode_view
 
@@ -261,6 +261,7 @@ class CheckingScreen(Screen):
         try:
             self.check_gcode()
         except:
+            Logger.exception("Error checking gcode")
             self.toggle_boundary_buttons(True)
             self.job_checking_checked = self.l.get_str("Cannot Check Job")
             self.check_outcome = (
@@ -273,121 +274,130 @@ class CheckingScreen(Screen):
             self.jd.reset_values()
 
     def boundary_check(self):
-        bounds_output = self.is_job_within_bounds()
-        if bounds_output == "job is within bounds":
-            Logger.debug("In bounds...")
+        spindle_speeds_output, job_bounds_output = self.do_pre_run_checks()
+        just_spindle_speeds_invalid = spindle_speeds_output and not job_bounds_output
+        if not spindle_speeds_output and not job_bounds_output:
+            Logger.info("In bounds...")
             self.check_outcome = self.l.get_str("Job is within bounds.")
             Clock.schedule_once(lambda dt: self.try_gcode_check(), 0.4)
         else:
-            Logger.debug("Out of bounds...")
-            self.job_checking_checked = self.l.get_str("Boundary issue!")
-            self.toggle_boundary_buttons(False)
+            Logger.info("Out of bounds...")
+            self.job_checking_checked = self.l.get_str("Issues found with your job")
+            self.toggle_boundary_buttons(just_spindle_speeds_invalid)
             self.check_outcome = (
-                self.l.get_str(
-                    "The job would exceed the working volume of the machine in one or more axes."
-                )
+                self.l.get_bold("WARNING")
+                + "[b]:[/b]\n"
+                + self.l.get_bold("SmartBench has found issues with your job.")
                 + "\n\n"
-                + self.l.get_str("See help notes (right).")
+                + self.l.get_str("See help notes on the right and adjust your job accordingly.")
             )
             self.jd.check_warning = self.l.get_str(
                 "The job would exceed the working volume of the machine in one or more axes."
             )
             self.jd.checked = True
-            self.write_boundary_output(bounds_output)
+            self.write_boundary_output(spindle_speeds_output, job_bounds_output)
+
+    def do_pre_run_checks(self):
+        job_bounds_output = self.is_job_within_bounds()
+        spindle_speeds_output = self.are_spindle_speeds_within_bounds()
+
+        return spindle_speeds_output, job_bounds_output
+
+    def are_spindle_speeds_within_bounds(self):
+        minimum_spindle_speed = 4000 if self.m.spindle_voltage == 230 else 10000
+        speed_too_low_string = (
+            self.l.get_bold("SPINDLE SPEED ERROR") + '\n\n' +
+
+            self.l.get_str("It looks like one of the spindle speeds in your job is too low.") + '\n\n' +
+
+            self.l.get_str("The minimum spindle speed is N rpm.").replace("N", str(minimum_spindle_speed)) + '\n\n' +
+
+            self.l.get_bold("Please adjust the spindle speed in your job and try again.")
+        )
+
+        Logger.debug("Spindle speeds: Job: {}, Min: {}".format(self.jd.spindle_speed_min, minimum_spindle_speed))
+        if 0 < self.jd.spindle_speed_min < minimum_spindle_speed:
+            return [speed_too_low_string]
+        return []
 
     def is_job_within_bounds(self):
-        errorfound = 0
-        error_message = ""
-        job_box = self.sm.get_screen("home").job_box
-        if (
-            -(self.m.x_wco() + job_box.range_x[0])
-            >= self.m.grbl_x_max_travel - self.m.limit_switch_safety_distance
-        ):
-            error_message = error_message + (
-                "\n\n\t"
-                + self.l.get_str(
-                    "The job extent over-reaches the N axis at the home end."
-                ).replace("N", "X")
-                + "\n\n\t"
-                + self.l.get_bold(
-                    "Try positioning the machine's N datum further away from home."
-                ).replace("N", "X")
-            )
-            errorfound += 1
-        if (
-            -(self.m.y_wco() + job_box.range_y[0])
-            >= self.m.grbl_y_max_travel - self.m.limit_switch_safety_distance
-        ):
-            error_message = error_message + (
-                "\n\n\t"
-                + self.l.get_str(
-                    "The job extent over-reaches the N axis at the home end."
-                ).replace("N", "Y")
-                + "\n\n\t"
-                + self.l.get_bold(
-                    "Try positioning the machine's N datum further away from home."
-                ).replace("N", "Y")
-            )
-            errorfound += 1
-        if (
-            -(self.m.z_wco() + job_box.range_z[0])
-            >= self.m.grbl_z_max_travel - self.m.limit_switch_safety_distance
-        ):
-            error_message = error_message + (
-                "\n\n\t"
-                + self.l.get_str(
-                    "The job extent over-reaches the Z axis at the lower end."
-                )
-                + "\n\n\t"
-                + self.l.get_bold("Try positioning the machine's Z datum higher up.")
-            )
-            errorfound += 1
-        if self.m.x_wco() + job_box.range_x[1] >= -self.m.limit_switch_safety_distance:
-            error_message = error_message + (
-                "\n\n\t"
-                + self.l.get_str(
-                    "The job extent over-reaches the N axis at the far end."
-                ).replace("N", "X")
-                + "\n\n\t"
-                + self.l.get_bold(
-                    "Try positioning the machine's N datum closer to home."
-                ).replace("N", "X")
-            )
-            errorfound += 1
-        if self.m.y_wco() + job_box.range_y[1] >= -self.m.limit_switch_safety_distance:
-            error_message = error_message + (
-                "\n\n\t"
-                + self.l.get_str(
-                    "The job extent over-reaches the N axis at the far end."
-                ).replace("N", "Y")
-                + "\n\n\t"
-                + self.l.get_bold(
-                    "Try positioning the machine's N datum closer to home."
-                ).replace("N", "Y")
-            )
-            errorfound += 1
-        if self.m.z_wco() + job_box.range_z[1] >= -self.m.limit_switch_safety_distance:
-            error_message = error_message + (
-                "\n\n\t"
-                + self.l.get_str(
-                    "The job extent over-reaches the Z axis at the upper end."
-                )
-                + "\n\n\t"
-                + self.l.get_bold("Try positioning the machine's Z datum lower down.")
-            )
-            errorfound += 1
-        if errorfound > 0:
-            return error_message
-        else:
-            return "job is within bounds"
+        job_box = self.sm.get_screen('home').job_box
 
-    def write_boundary_output(self, bounds_output):
-        self.display_output = (
+        to_be_appended = []
+
+        # Mins
+        if -(self.m.x_wco() + job_box.range_x[0]) >= (self.m.grbl_x_max_travel - self.m.limit_switch_safety_distance):
+            to_be_appended.append(
+                "\t" +
+                self.l.get_str("The job extent over-reaches the N axis at the home end.").replace('N', 'X') + \
+                '\n\n\t' + \
+                self.l.get_bold("Try positioning the machine's N datum further away from home.").replace('N', 'X') + \
+                '\n\n'
+            )
+
+        if -(self.m.y_wco() + job_box.range_y[0]) >= (self.m.grbl_y_max_travel - self.m.limit_switch_safety_distance):
+            to_be_appended.append(
+                "\t" +
+                self.l.get_str("The job extent over-reaches the N axis at the home end.").replace('N', 'Y') + \
+                '\n\n\t' + \
+                self.l.get_bold("Try positioning the machine's N datum further away from home.").replace('N', 'Y') + \
+                '\n\n'
+            )
+
+        if -(self.m.z_wco() + job_box.range_z[0]) >= (self.m.grbl_z_max_travel - self.m.limit_switch_safety_distance):
+            to_be_appended.append(
+                "\t" +
+                self.l.get_str("The job extent over-reaches the Z axis at the lower end.") + \
+                '\n\n\t' + \
+                self.l.get_bold("Try positioning the machine's Z datum higher up.") + \
+                '\n\n'
+            )
+        # Maxs
+
+        if self.m.x_wco() + job_box.range_x[1] >= -self.m.limit_switch_safety_distance:
+            to_be_appended.append(
+                "\t" +
+                self.l.get_str("The job extent over-reaches the N axis at the far end.").replace('N', 'X') + \
+                '\n\n\t' + \
+                self.l.get_bold("Try positioning the machine's N datum closer to home.").replace('N', 'X') + \
+                '\n\n'
+            )
+
+        if self.m.y_wco() + job_box.range_y[1] >= -self.m.limit_switch_safety_distance:
+            to_be_appended.append(
+                "\t" +
+                self.l.get_str("The job extent over-reaches the N axis at the far end.").replace('N', 'Y') + \
+                '\n\n\t' + \
+                self.l.get_bold("Try positioning the machine's N datum closer to home.").replace('N', 'Y') + \
+                '\n\n'
+            )
+
+        if self.m.z_wco() + job_box.range_z[1] >= -self.m.limit_switch_safety_distance:
+            to_be_appended.append(
+                "\t" +
+                self.l.get_str("The job extent over-reaches the Z axis at the upper end.") + \
+                '\n\n\t' + \
+                self.l.get_bold("Try positioning the machine's Z datum lower down.") + \
+                '\n\n'
+            )
+
+        if to_be_appended:
+            to_be_appended.insert(0, self.l.get_bold("DETAILS OF BOUNDARY CONFLICT") + '\n\n')
+            return to_be_appended
+        return []
+
+    def write_boundary_output(self, spindle_speeds_output, job_bounds_output):
+        message = ""
+        if spindle_speeds_output:
+            message += "\n".join(spindle_speeds_output) + "\n\n"
+
+        if job_bounds_output:
+            message += (
             self.l.get_bold("BOUNDARY CONFLICT HELP")
             + "\n\n"
             + self.l.get_str("It looks like your job exceeds the bounds of the machine")
             + ":\n\n"
-            + bounds_output
+            + "\n".join(job_bounds_output)
             + "\n\n"
             + self.l.get_str("The job datum is set in the wrong place.")
             + " "
@@ -428,6 +438,8 @@ class CheckingScreen(Screen):
             )
             + "\n\n"
         )
+
+        self.display_output = message
 
     def toggle_boundary_buttons(self, hide_boundary_buttons):
         if hide_boundary_buttons:

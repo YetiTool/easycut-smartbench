@@ -4,6 +4,7 @@ from kivy.clock import Clock
 
 from asmcnc.apps.drywall_cutter_app.config.config_options import ToolpathOffsetOptions
 from asmcnc.comms.logging_system.logging_system import Logger
+from asmcnc.apps.drywall_cutter_app.config import config_options
 import re
 
 from asmcnc.core_UI import scaling_utils
@@ -513,13 +514,13 @@ class DrywallShapeDisplay(Widget):
 
         if shape == 'geberit':
             if rotation == 'horizontal':
-                self.place_widget(self.x_datum_label, scaling_utils.get_scaled_tuple((407, 46)))
-                self.place_widget(self.y_datum_label, scaling_utils.get_scaled_tuple((416, 125)))
+                self.place_widget(self.x_datum_label, scaling_utils.get_scaled_tuple((358, 50)))
+                self.place_widget(self.y_datum_label, scaling_utils.get_scaled_tuple((400, 207)))
                 self.place_widget(self.y_datum_validation_label, (self.y_datum_label.pos[0],
                                                                   self.y_datum_label.pos[1] - scaling_utils.get_scaled_height(35)))
             else:
-                self.place_widget(self.x_datum_label, scaling_utils.get_scaled_tuple((360, 47)))
-                self.place_widget(self.y_datum_label, scaling_utils.get_scaled_tuple((390, 94)))
+                self.place_widget(self.x_datum_label, scaling_utils.get_scaled_tuple((285, 32)))
+                self.place_widget(self.y_datum_label, scaling_utils.get_scaled_tuple((370, 87)))
                 self.place_widget(self.y_datum_validation_label, (self.y_datum_label.pos[0],
                                                                   self.y_datum_label.pos[1] - scaling_utils.get_scaled_height(20)))
 
@@ -1061,3 +1062,7 @@ class DrywallShapeDisplay(Widget):
     def on_config_name_change(self, instance, value):
         Logger.debug("Setting config label to: " + value)
         self.config_name_label.text = "New Configuration" if value == "temp_config.json" else value
+
+    def defocus_inputs(self):
+        self.kb.defocus_all_text_inputs(self.text_inputs)
+        self.check_datum_and_extents()

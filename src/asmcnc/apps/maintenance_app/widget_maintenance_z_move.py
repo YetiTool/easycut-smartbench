@@ -167,21 +167,35 @@ class MaintenanceZMove(Widget):
         info = (
             self.l.get_bold("To set, if laser hardware is fitted:")
             + "\n\n"
-            + self.l.get_str("1. Enable laser crosshair (switch to on).").replace(
-                self.l.get_str("on"), self.l.get_bold("on")
-            )
-            + "\n"
-            + self.l.get_str("2. On a test piece, cut a mark using manual moves.")
+            + self.l.get_str("1. Secure a scrap piece of material to your machine.")
             + "\n"
             + self.l.get_str(
-                "3. Lift Z Head and press the reset button in the bottom left."
+                "2. Enable laser crosshair (switch to on)."
+            ).replace(self.l.get_str("on"), self.l.get_bold("on"))
+            + "\n"
+            + self.l.get_str(
+                "3. Move the Z axis down so that it is around 5mm away from the material."
+            ).replace(self.l.get_str("5mm"), self.l.get_bold("5mm"))
+            + "\n"
+            + self.l.get_str(
+                "4. Ensure the dust shoe plug is fitted."
+            ).replace(self.l.get_str("dust shoe plug is fitted"), self.l.get_bold("dust shoe plug is fitted"))
+            + "\n"
+            + self.l.get_str(
+                "5. Turn on the spindle, and move the Z axis down in 1mm increments."
+            ).replace(self.l.get_str("1mm"), self.l.get_bold("1mm"))
+            + "\n"
+            + self.l.get_str("6. Make a mark on your scrap material.")
+            + "\n"
+            + self.l.get_str(
+                "7. Lift Z Head and press the reset button in the bottom left."
             ).replace(self.l.get_str("reset"), self.l.get_bold("reset"))
             + "\n"
             + self.l.get_str(
-                "4. Move the Z Head so that the cross hair lines up with the mark centre."
+                "8. Move the Z Head so that the cross hair lines up with the mark centre."
             )
             + "\n"
-            + self.l.get_str("5. Press save.").replace(
+            + self.l.get_str("9. Press save.").replace(
                 self.l.get_str("save"), self.l.get_bold("save")
             )
         )

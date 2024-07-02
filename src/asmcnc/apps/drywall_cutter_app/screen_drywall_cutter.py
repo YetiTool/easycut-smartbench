@@ -1,5 +1,6 @@
 import os
 import sys
+import textwrap
 
 from kivy.app import App
 from kivy.clock import Clock
@@ -450,6 +451,7 @@ class DrywallCutterScreen(Screen):
             self.sm.current = 'lobby'
 
     def simulate(self):
+        self.drywall_shape_display_widget.defocus_inputs()
         self.popup_watchdog = Clock.schedule_interval(lambda dt: self.set_simulation_popup_state(self.m.s.m_state), 1)
         if not self.is_config_valid():
             self.show_validation_popup()
@@ -490,6 +492,7 @@ class DrywallCutterScreen(Screen):
             self.ignore_state = True
             
     def save(self):
+        self.drywall_shape_display_widget.defocus_inputs()
         if not self.is_config_valid():
             self.show_validation_popup()
             return
@@ -506,6 +509,7 @@ class DrywallCutterScreen(Screen):
         return self.materials_popup.validate_inputs() and self.drywall_shape_display_widget.are_inputs_valid()
 
     def run(self):
+        self.drywall_shape_display_widget.defocus_inputs()
         if self.materials_popup.validate_inputs() and self.drywall_shape_display_widget.are_inputs_valid():
             output_path = self.engine.engine_run()
 
@@ -578,19 +582,17 @@ class DrywallCutterScreen(Screen):
             self.jd.screen_to_return_to_after_job = 'drywall_cutter'
             self.jd.screen_to_return_to_after_cancel = 'drywall_cutter'
 
-            # Check if stylus option is enabled
-            if self.m.is_stylus_enabled == True:
-                # Display tool selection screen
-                self.sm.current = 'tool_selection'
+            self.m.stylus_router_choice = 'router'
 
+            # is fw capable of auto Z lift?
+            if self.m.fw_can_operate_zUp_on_pause():
+                self.sm.current = 'lift_z_on_pause_or_not'
             else:
-                self.m.stylus_router_choice = 'router'
+                self.sm.current = 'jobstart_warning'
 
-                # is fw capable of auto Z lift?
-                if self.m.fw_can_operate_zUp_on_pause():
-                    self.sm.current = 'lift_z_on_pause_or_not'
-                else:
-                    self.sm.current = 'jobstart_warning'
+    def format_command(self, cmd):
+        wrapped_cmd = textwrap.fill(cmd, width=35, break_long_words=False)
+        return wrapped_cmd
 
     def open_filechooser(self):
         if not self.sm.has_screen('config_filechooser'):

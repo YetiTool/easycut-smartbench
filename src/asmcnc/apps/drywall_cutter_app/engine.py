@@ -824,7 +824,7 @@ class GCodeEngine(object):
                 gcode_lines = self.replace_cut_depth_and_z_safe_distance(gcode_lines, gcode_cut_depth, gcode_z_safe_distance, "[cut depth] ", z_safe_distance)
 
                 # Apply datum offset
-                gcode_lines = self.apply_datum_offset(gcode_lines, self.config.active_config.datum_position.x, self.config.active_config.datum_position.y)
+                gcode_lines = self.apply_datum_offset(gcode_lines, 0, 0)
 
                 # Apply pass depths
                 pass_depths = self.calculate_pass_depths(total_cut_depth, self.config.active_config.cutting_depths.depth_per_pass)
