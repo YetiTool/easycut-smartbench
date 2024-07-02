@@ -22,7 +22,7 @@ import decimal, os, re
 
 from asmcnc import paths
 from asmcnc.apps.drywall_cutter_app.config.config_options import CuttingDirectionOptions, ShapeOptions
-from asmcnc.apps.drywall_cutter_app.engine_utils.tab_utilities import Tab_utilities
+from asmcnc.apps.drywall_cutter_app.engine_utils.tab_utilities import Tabutilities
 from asmcnc.comms.logging_system.logging_system import Logger
 
 
@@ -31,7 +31,7 @@ class GCodeEngine(object):
         self.config = dwt_config
         self.m = router_machine
         self.cs = coordinate_system
-        self.tab_utils = Tab_utilities(self.config)
+        self.tab_utils = Tabutilities(self.config)
 
         self.cutter_diameter = 0
 
