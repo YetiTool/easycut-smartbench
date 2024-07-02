@@ -86,6 +86,12 @@ class ProfileDatabase(object):
             if tool['uid'] == uid:
                 return tool
 
+    def get_tool_by_description(self, description):
+        """Returns the tool for a given description."""
+        for tool in self.tool_data:
+            if tool['description'] == description:
+                return tool
+
     def get_material_id(self, description):
         """Returns the uid of a tool for a given description."""
         for material in self.material_data:
@@ -103,6 +109,5 @@ class ProfileDatabase(object):
         for profile in self.profile_data:
             if profile['uid'] == profile_id:
                 return profile
-
 
 
