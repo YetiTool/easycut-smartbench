@@ -579,6 +579,7 @@ class MaintenanceScreenClass(Screen):
 
     def quit_to_lobby(self):
         self.on_tab_switch()
+        self.spindle_settings_widget.exit()
         self.sm.current = "lobby"
 
     def on_pre_enter(self):
