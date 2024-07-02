@@ -382,7 +382,7 @@ class CuttingDepthsPopup(Popup):
         self.material_thickness_label.text = self.l.get_str("Material thickness")
         self.bottom_offset_label.text = self.l.get_str("Bottom offset")
         self.total_cut_depth_label.text = self.l.get_str("Total cut depth")
-        self.auto_pass_label.text = self.l.get_str("Auto pass")
+        self.auto_pass_label.text = self.l.get_str("Auto pass depth")
         self.depth_per_pass_label.text = self.l.get_str("Depth per pass")
         self.pass_depth_warning.text = self.pass_depth_warning_cutter_max
         self.cut_depth_warning.text = self.cut_depth_warning_soft_limit

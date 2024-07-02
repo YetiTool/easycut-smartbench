@@ -56,7 +56,7 @@ def get_display_preview(json_obj):
     )
     preview += (
             INDENT_VALUE
-            + "Auto pass: "
+            + "Auto pass depth: "
             + str(json_obj["cutting_depths"]["auto_pass"])
             + "\n"
     )
