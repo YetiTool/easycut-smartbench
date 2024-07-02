@@ -44,7 +44,7 @@ Builder.load_string("""
 
     BoxLayout:
         padding: 0
-        spacing: 10
+        spacing: app.get_scaled_tuple([10,10])
         size: root.size
         pos: root.pos
         orientation: "vertical"
@@ -61,11 +61,11 @@ Builder.load_string("""
                 text: root.filename_selected_label_text
                 markup: True
                 color: hex('#FFFFFFFF')
-                font_size: '18sp'   
+                font_size: app.get_scaled_sp('18sp')
                 valign: 'middle'
                 halign: 'center'
                 bold: True
-                padding: 10, 10
+                padding: app.get_scaled_tuple([10,10])
                 multiline: False
                 size_hint_x: 1
 
@@ -96,13 +96,14 @@ Builder.load_string("""
                         size_hint_y: None
                         height: self.texture_size[1]
                         text_size: self.width, None
-                        padding: 10, 10
+                        padding: app.get_scaled_tuple([10,10])
                         markup: True
+                        font_size: app.get_scaled_sp('15sp')
 
 
         BoxLayout:
             size_hint_y: None
-            height: 100
+            height: app.get_scaled_height(100)
 
             ToggleButton:
                 id: toggle_view_button
@@ -110,7 +111,7 @@ Builder.load_string("""
                 on_press: root.switch_view()
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_tuple([25,25])
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -127,7 +128,7 @@ Builder.load_string("""
                 on_press: root.switch_sort()
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_tuple([25,25])
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -143,7 +144,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_tuple([25,25])
                     size: self.parent.size
                     pos: self.parent.pos
                     
@@ -152,7 +153,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_tuple([25,25])
                     size: self.parent.size
                     pos: self.parent.pos
                     
@@ -161,7 +162,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_tuple([25,25])
                     size: self.parent.size
                     pos: self.parent.pos
             Button:
@@ -169,7 +170,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_tuple([25,25])
                     size: self.parent.size
                     pos: self.parent.pos
             Button:
@@ -182,7 +183,7 @@ Builder.load_string("""
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_tuple([25,25])
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -202,7 +203,7 @@ Builder.load_string("""
                     root.save_config_and_return_to_dwt()
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_tuple([25,25])
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -266,6 +267,7 @@ class ConfigFileSaver(Screen):
         self.l = kwargs['localization']
         self.callback = kwargs['callback']
         self.kb = kwargs['kb']
+        self.dwt_config = kwargs['dwt_config']
         self.usb_stick = usb_storage.USB_storage(self.sm,
                                                  self.l)  # object to manage presence of USB stick (fun in Linux)
 
@@ -328,6 +330,10 @@ class ConfigFileSaver(Screen):
                 file = open(configs_dir + '.gitignore', "w+")
                 file.write('*')
                 file.close()
+
+    def on_pre_enter(self):
+        initial_name = self.dwt_config.active_config_name
+        self.file_selected_label.text = "New Configuration" if initial_name == "temp_config.json" else initial_name
 
     def on_enter(self):
 

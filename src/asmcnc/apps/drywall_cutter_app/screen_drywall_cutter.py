@@ -502,7 +502,8 @@ class DrywallCutterScreen(Screen):
                                                                        screen_manager=self.sm,
                                                                        localization=self.l,
                                                                        callback=self.dwt_config.save_config,
-                                                                       kb=self.kb))
+                                                                       kb=self.kb,
+                                                                       dwt_config=self.dwt_config))
         self.sm.current = 'config_filesaver'
 
     def is_config_valid(self):
