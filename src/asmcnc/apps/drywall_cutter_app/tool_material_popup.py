@@ -96,7 +96,7 @@ Builder.load_string("""
             id: lead_in_warning_label
             text: 'WARNING: Using a compression tool will add a lead in to your toolpath automatically'
             text_size: (0.65*self.parent.width, None)
-            pos_hint: {'center_x': 0.5, 'center_y': 0.35}
+            pos_hint: {'center_x': 0.5, 'center_y': 0.40}
             color: hex('#333333')
             size_hint: (0.75, None)
             halign: 'center'
@@ -178,8 +178,10 @@ class ToolMaterialPopup(Popup):
             tool = self.profile_db.get_tool_by_description(value)
             if tool['generic_definition']['required_operations']['lead_in']:
                 self.ids['lead_in_warning_label'].opacity = 1
-            else:
-                self.ids['lead_in_warning_label'].opacity = 0
+                return
+
+        # Always hide the warning if the tool is not a compression tool
+        self.ids['lead_in_warning_label'].opacity = 0
 
     def on_material_change(self, instance, value):
         Logger.debug("Material changed to " + value)
