@@ -332,6 +332,7 @@ class ConfigFileSaver(Screen):
                 file.close()
 
     def on_pre_enter(self):
+        self.filechooser.selection = []
         initial_name = self.dwt_config.active_config_name
         self.file_selected_label.text = "New Configuration" if initial_name == "temp_config.json" else initial_name
 
