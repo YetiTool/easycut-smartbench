@@ -48,8 +48,8 @@ Builder.load_string("""
             size_hint_y: 3
             rows: 1
             cols: 3
-            padding: [scaling_utils.get_scaled_width(dp(100)), scaling_utils.get_scaled_width(dp(40))]
-            spacing: [scaling_utils.get_scaled_width(dp(30)), 0]
+            padding: [scaling_utils.get_scaled_width(dp(104)), scaling_utils.get_scaled_width(dp(44))]
+            spacing: [scaling_utils.get_scaled_width(dp(40)), 0]
 
             BoxLayout:
                 orientation: 'vertical'
