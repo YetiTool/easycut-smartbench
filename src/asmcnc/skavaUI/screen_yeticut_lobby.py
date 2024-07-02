@@ -6,14 +6,15 @@ Builder.load_string("""
 <YeticutLobbyScreen>:
 #:import paths asmcnc.paths
 #:import color_provider asmcnc.core_UI.utils.color_provider
+#:import get_color_from_hex kivy.utils.get_color_from_hex
 
     BoxLayout:
         orientation: 'vertical'
 
         canvas.before:
-            Color: 
-                rgba: hex('#0d47a1FF')
-            Rectangle: 
+            Color:
+                rgba: color_provider.get_rgba('primary')
+            Rectangle:
                 size: self.size
                 pos: self.pos
 
@@ -30,15 +31,15 @@ Builder.load_string("""
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:
-                            source: paths.get_resource("shapes_lobby_back_button.png")
+                            source: paths.get_resource("back_yc.png")
                             size_hint: None, None
-                            size: self.parent.width * 0.7, self.parent.height * 0.7
+                            size: self.parent.width * 0.9, self.parent.height * 0.9
                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                             allow_stretch: False
 
             Label:
-                size_hint_x: 4
-                text: 'YetiCut'
+                size_hint_x: 5
+                text: ''
                 font_size: scaling_utils.get_scaled_width(dp(45))
                 bold: True
 
@@ -49,7 +50,7 @@ Builder.load_string("""
             rows: 1
             cols: 3
             padding: [scaling_utils.get_scaled_width(dp(100)), scaling_utils.get_scaled_width(dp(40))]
-            spacing: [scaling_utils.get_scaled_width(dp(30)), 0]
+            spacing: [scaling_utils.get_scaled_width(dp(80)), 0]
 
             BoxLayout:
                 orientation: 'vertical'
@@ -59,25 +60,25 @@ Builder.load_string("""
                     # padding: [(self.width - self.height) / 2, 0]
                     
                     Button:
-                        on_press: root.shapes_app()
+                        on_press: pass
                         background_color: color_provider.get_rgba('transparent')
                         
-                        BoxLayout:
+                        FloatLayout:
+                            size_hint: None, None
                             size: self.parent.size
                             pos: self.parent.pos
                             
                             Image:
-                                id: yeticut_apps_image
-                                source: paths.get_resource("shapes_lobby_logo.png")
-                                center_x: self.parent.center_x
-                                y: self.parent.y
-                                size: self.parent.width, self.parent.height
+                                source: paths.get_resource("shapes.png")
+                                size_hint: None, None
+                                size: self.parent.width * 1.05, self.parent.height * 1.05
+                                pos_hint: {'center_x': 0.5, 'center_y': 0.525}
                                 allow_stretch: True
-                                
+                                    
+            
                 Label:
                     text: 'Shapes'
-                    font_size: scaling_utils.get_scaled_width(dp(20))
-                    bold: True
+                    font_size: scaling_utils.get_scaled_width(dp(24))
                     
             BoxLayout:
                 orientation: 'vertical'
@@ -96,16 +97,23 @@ Builder.load_string("""
                             pos: self.parent.pos
                             
                             Image:
-                                source: paths.get_resource("worktop_lobby_logo.png")
+                                source: paths.get_resource("worktop.png")
                                 size_hint: None, None
-                                size: self.parent.width * 1.05, self.parent.height * 1.05
+                                size: self.parent.width * 1.15, self.parent.height * 1.15
                                 pos_hint: {'center_x': 0.5, 'center_y': 0.525}
                                 allow_stretch: True
+                                
+                                Image:
+                                    source: paths.get_resource("coming_soon.png")
+                                    size_hint: None, None
+                                    size: self.parent.width / 1.75, self.parent.height / 1.75
+                                    allow_stretch: True
+                                    pos: self.parent.right - self.width / 1.3, self.parent.top - self.height / 1.3
+                                    
             
                 Label:
                     text: 'Worktop'
-                    font_size: scaling_utils.get_scaled_width(dp(20))
-                    bold: True
+                    font_size: scaling_utils.get_scaled_width(dp(24))
 
             BoxLayout:
                 orientation: 'vertical'
@@ -124,16 +132,22 @@ Builder.load_string("""
                             pos: self.parent.pos
                             
                             Image:
-                                source: paths.get_resource("trace_lobby_logo.png")
+                                source: paths.get_resource("trace.png")
                                 size_hint: None, None
-                                size: self.parent.width * 1.05, self.parent.height * 1.05
+                                size: self.parent.width * 1.15, self.parent.height * 1.15
                                 pos_hint: {'center_x': 0.5, 'center_y': 0.525}
                                 allow_stretch: True
+                                
+                                Image:
+                                    source: paths.get_resource("coming_soon.png")
+                                    size_hint: None, None
+                                    size: self.parent.width / 1.75, self.parent.height / 1.75
+                                    allow_stretch: True
+                                    pos: self.parent.right - self.width / 1.3, self.parent.top - self.height / 1.3
             
                 Label:
                     text: 'Trace'
-                    font_size: scaling_utils.get_scaled_width(dp(20))
-                    bold: True
+                    font_size: scaling_utils.get_scaled_width(dp(24))
 
         BoxLayout:
             padding: scaling_utils.get_scaled_tuple((dp(250), dp(5), dp(250), dp(15)))

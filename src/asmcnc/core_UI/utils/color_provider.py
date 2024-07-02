@@ -100,3 +100,6 @@ def get_markup_string(text, color_name):
     color_hex = get_hex(color_name)
 
     return "[color={}]{}[/color]".format(color_hex, text)
+
+
+print(get_hex('primary'))
