@@ -109,7 +109,7 @@ Builder.load_string("""
                                     size_hint: None, None
                                     size: self.parent.width / 1.75, self.parent.height / 1.75
                                     allow_stretch: True
-                                    pos: self.parent.right - self.width / 1.3, self.parent.top - self.height / 1.3
+                                    pos: self.parent.right - self.width / 1.2, self.parent.top - self.height / 1.2
                                     
             
                 Label:
@@ -144,7 +144,7 @@ Builder.load_string("""
                                     size_hint: None, None
                                     size: self.parent.width / 1.75, self.parent.height / 1.75
                                     allow_stretch: True
-                                    pos: self.parent.right - self.width / 1.3, self.parent.top - self.height / 1.3
+                                    pos: self.parent.right - self.width / 1.2, self.parent.top - self.height / 1.2
             
                 Label:
                     text: 'Trace'
