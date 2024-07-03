@@ -21,19 +21,18 @@ Builder.load_string("""
         BoxLayout:
             orientation: 'horizontal'
 
-            BoxLayout:
-
-                Button:
-                    on_press: root.go_back()
-                    background_color: color_provider.get_rgba('transparent')
-                    FloatLayout:
-                        size: self.parent.size
-                        pos: self.parent.pos
-                        Image:
-                            source: paths.get_resource("back_yc.png")
-                            allow_stretch: False
-                            size: self.parent.size
-                            pos: self.parent.pos
+            Button:
+                on_press: root.go_back()
+                background_color: color_provider.get_rgba('transparent')
+                size: self.parent.size
+                FloatLayout:
+                    pos: self.parent.pos
+                    size_hint: 0.75, 0.75
+                    
+                    Image:
+                        source: paths.get_resource("back_yc.png")
+                        allow_stretch: True
+                        pos_hint: {'center_y': 0.5, 'left': 0.95}
 
             Label:
                 size_hint_x: 6
@@ -160,7 +159,8 @@ Builder.load_string("""
                         source: paths.get_resource("toolbox.png")
                         size: self.parent.width, self.parent.height
                         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        allow_stretch: False
+                        allow_stretch: True
+                        
                         
                     Image:
                         source: paths.get_resource("coming_soon.png")
