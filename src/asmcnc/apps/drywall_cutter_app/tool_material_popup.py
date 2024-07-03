@@ -58,7 +58,7 @@ Builder.load_string("""
         
         Label:
             id: title_label
-            pos_hint: {'x': -0.31, 'y': 0.61}
+            pos_hint: {'x': -0.31, 'y': 0.64}
             text: 'Tool & Material selection'
             font_size: app.get_scaled_sp('20sp')
             color: hex('#F9F9F9')
@@ -67,6 +67,7 @@ Builder.load_string("""
             id: description_label
             text: 'Shapes Lite currently only supports YetiPilot profiles. Full Toolbox coming soon'
             text_size: (0.65*self.parent.width, None)
+            font_size: app.get_scaled_sp('12sp')
             halign: 'center'
             color: hex('#333333')
             size_hint: (0.75, None)
@@ -76,6 +77,8 @@ Builder.load_string("""
             id: material_label
             source: paths.get_resource('material_icon.png')
             pos_hint: {'center_x': 0.1, 'center_y': 0.75}
+            size_hint: (0.1, 0.1)
+            allow_stretch: True
 
         Choices:
             id: material_dropdown
@@ -86,6 +89,8 @@ Builder.load_string("""
             id: tool_label
             source: paths.get_resource('tool_icon.png')
             pos_hint: {'center_x': 0.1, 'center_y': 0.55}
+            size_hint: (0.1, 0.1)
+            allow_stretch: True
 
         Choices:
             id: tool_dropdown
@@ -96,6 +101,7 @@ Builder.load_string("""
             id: lead_in_warning_label
             text: 'WARNING: Using a compression tool will add a lead in to your toolpath automatically'
             text_size: (0.65*self.parent.width, None)
+            font_size: app.get_scaled_sp('12sp')
             pos_hint: {'center_x': 0.5, 'center_y': 0.40}
             color: hex('#333333')
             size_hint: (0.75, None)
@@ -106,6 +112,7 @@ Builder.load_string("""
             id: cutter_link_label
             text: 'Yeti Tool cutters available from www.yetitool.com/about/partners'
             pos_hint: {'center_x': 0.5, 'center_y': 0.25}
+            font_size: app.get_scaled_sp('12sp')
             color: hex('#333333')
             halign: 'center'
             
