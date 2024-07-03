@@ -176,7 +176,7 @@ class ToolMaterialPopup(Popup):
             Logger.debug("Tool changed to " + value)
 
             tool = self.profile_db.get_tool_by_description(value)
-            if tool['generic_definition']['required_operations']['lead_in']:
+            if tool['generic_definition']['required_operations']['lead_in'] and False:  # Disabled for now
                 self.ids['lead_in_warning_label'].opacity = 1
                 return
 
