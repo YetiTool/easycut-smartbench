@@ -71,6 +71,7 @@ Builder.load_string("""
             color: hex('#333333')
             size_hint: (0.75, None)
             pos_hint: {'center_x': 0.5, 'center_y': 0.95}
+            font_size: app.get_scaled_sp('16sp')
             
         Image:
             id: material_label
@@ -86,6 +87,8 @@ Builder.load_string("""
             id: tool_label
             source: paths.get_resource('tool_icon.png')
             pos_hint: {'center_x': 0.1, 'center_y': 0.55}
+            size_hint: None, None
+            size: app.get_scaled_width(68), app.get_scaled_height(16)
 
         Choices:
             id: tool_dropdown
@@ -101,6 +104,7 @@ Builder.load_string("""
             size_hint: (0.75, None)
             halign: 'center'
             opacity: 0
+            font_size: app.get_scaled_sp('16sp')
             
         Label:
             id: cutter_link_label
@@ -108,6 +112,7 @@ Builder.load_string("""
             pos_hint: {'center_x': 0.5, 'center_y': 0.25}
             color: hex('#333333')
             halign: 'center'
+            font_size: app.get_scaled_sp('16sp')
             
         BoxLayout:
             orientation: 'horizontal'
