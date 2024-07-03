@@ -502,7 +502,8 @@ class DrywallCutterScreen(Screen):
                                                                        screen_manager=self.sm,
                                                                        localization=self.l,
                                                                        callback=self.dwt_config.save_config,
-                                                                       kb=self.kb))
+                                                                       kb=self.kb,
+                                                                       dwt_config=self.dwt_config))
         self.sm.current = 'config_filesaver'
 
     def is_config_valid(self):
@@ -634,7 +635,7 @@ class DrywallCutterScreen(Screen):
         self.drywall_shape_display_widget.x_input.text = str(self.dwt_config.active_config.canvas_shape_dims.x)
         self.drywall_shape_display_widget.y_input.text = str(self.dwt_config.active_config.canvas_shape_dims.y)
 
-        self.drywall_shape_display_widget.unit_switch.active = self.dwt_config.active_config.units == 'mm'
+        # self.drywall_shape_display_widget.unit_switch.active = self.dwt_config.active_config.units == 'mm'
 
         # Vlad set your text inputs here:
 
