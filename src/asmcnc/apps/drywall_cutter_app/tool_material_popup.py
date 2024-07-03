@@ -6,6 +6,7 @@ from asmcnc.comms.logging_system.logging_system import Logger
 
 Builder.load_string("""
 #:import paths asmcnc.paths
+
 <Options@SpinnerOption>
 
     background_normal: ''
@@ -58,7 +59,7 @@ Builder.load_string("""
         
         Label:
             id: title_label
-            pos_hint: {'x': -0.31, 'y': 0.61}
+            pos_hint: {'x': -0.31, 'y': 0.61 if app.width == 800 else 0.64}
             text: 'Tool & Material selection'
             font_size: app.get_scaled_sp('20sp')
             color: hex('#F9F9F9')
