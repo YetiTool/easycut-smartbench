@@ -25,14 +25,18 @@ Builder.load_string("""
                 on_press: root.go_back()
                 background_color: color_provider.get_rgba('transparent')
                 size: self.parent.size
+            
                 FloatLayout:
                     pos: self.parent.pos
-                    size_hint: 0.75, 0.75
+                    size: self.parent.size
+                    padding: [dp(app.get_scaled_width(10)), dp(app.get_scaled_width(10))]
                     
                     Image:
                         source: paths.get_resource("back_yc.png")
                         allow_stretch: True
-                        pos_hint: {'center_y': 0.5, 'left': 0.95}
+                        size_hint: None, None
+                        size: dp(app.get_scaled_width(80)), dp(app.get_scaled_height(80))
+                        pos_hint: {'top': 0.95, 'left': 1}
 
             Label:
                 size_hint_x: 6
