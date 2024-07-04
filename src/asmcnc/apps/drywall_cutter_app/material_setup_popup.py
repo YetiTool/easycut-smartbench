@@ -593,6 +593,13 @@ class CuttingDepthsPopup(Popup):
 
         max_cut_depth_per_pass = self.dwt_config.active_profile.cutting_parameters.recommendations.stepdown
 
+        if self.dwt_config.active_cutter.uid == "-0001" or self.dwt_config.active_config.material == "-0001":
+            steps.append(self.l.get_str("Invalid material or cutter selected.")
+                         + "\n\n"
+                         + self.l.get_bold("Please select a tool and material before continuing.")
+                         + "\n\n")
+            return steps
+
         # Check for negative material thickness
         if material_thickness < 0:
             steps.append(
