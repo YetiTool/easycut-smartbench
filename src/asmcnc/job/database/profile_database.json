@@ -31,7 +31,7 @@
   {
     "uid": "0000",
     "generic_tool": {
-      "uid": "0006",
+      "uid": "0008",
       "description": "3.175 mm 1 flute Upcut"
     },
     "material": {
@@ -68,7 +68,7 @@
   {
     "uid": "0001",
     "generic_tool": {
-      "uid": "0009",
+      "uid": "0010",
       "description": "6 mm 1 flute Upcut"
     },
     "material": {
@@ -101,7 +101,7 @@
   {
     "uid": "0002",
     "generic_tool": {
-      "uid": "0010",
+      "uid": "0022",
       "description": "8 mm 1 flute Upcut"
     },
     "material": {
@@ -130,7 +130,7 @@
   {
     "uid": "0003",
     "generic_tool": {
-      "uid": "0002",
+      "uid": "0006",
       "description": "3.175 mm 1 flute Downcut"
     },
     "material": {
@@ -159,7 +159,7 @@
   {
     "uid": "0004",
     "generic_tool": {
-      "uid": "0003",
+      "uid": "0007",
       "description": "6 mm 1 flute Downcut"
     },
     "material": {
@@ -188,7 +188,7 @@
   {
     "uid": "0005",
     "generic_tool": {
-      "uid": "0004",
+      "uid": "0023",
       "description": "8 mm 1 flute Downcut"
     },
     "material": {
@@ -217,7 +217,7 @@
   {
     "uid": "0006",
     "generic_tool": {
-      "uid": "0000",
+      "uid": "0004",
       "description": "3.175 mm 1 flute Compression"
     },
     "material": {
@@ -246,7 +246,7 @@
   {
     "uid": "0007",
     "generic_tool": {
-      "uid": "0011",
+      "uid": "0012",
       "description": "3.175 mm 2 flute Compression"
     },
     "material": {
@@ -275,7 +275,7 @@
   {
     "uid": "0008",
     "generic_tool": {
-      "uid": "0014",
+      "uid": "0015",
       "description": "6 mm 2 flute Compression"
     },
     "material": {
@@ -304,7 +304,7 @@
   {
     "uid": "0009",
     "generic_tool": {
-      "uid": "0018",
+      "uid": "0024",
       "description": "3.175 mm 2 flute Straight"
     },
     "material": {
@@ -391,7 +391,7 @@
   {
     "uid": "0012",
     "generic_tool": {
-      "uid": "0015",
+      "uid": "0016",
       "description": "3.175 mm 2 flute Downcut"
     },
     "material": {
@@ -420,7 +420,7 @@
   {
     "uid": "0013",
     "generic_tool": {
-      "uid": "0016",
+      "uid": "0017",
       "description": "6 mm 2 flute Downcut"
     },
     "material": {
@@ -449,7 +449,7 @@
   {
     "uid": "0014",
     "generic_tool": {
-      "uid": "0017",
+      "uid": "0018",
       "description": "8 mm 2 flute Downcut"
     },
     "material": {
@@ -478,7 +478,7 @@
   {
     "uid": "0015",
     "generic_tool": {
-      "uid": "0011",
+      "uid": "0012",
       "description": "3.175 mm 2 flute Compression"
     },
     "material": {
@@ -507,7 +507,7 @@
   {
     "uid": "0016",
     "generic_tool": {
-      "uid": "0014",
+      "uid": "0015",
       "description": "6 mm 2 flute Compression"
     },
     "material": {
@@ -536,7 +536,7 @@
   {
     "uid": "0017",
     "generic_tool": {
-      "uid": "0015",
+      "uid": "0016",
       "description": "3.175 mm 2 flute Downcut"
     },
     "material": {
@@ -565,7 +565,7 @@
   {
     "uid": "0018",
     "generic_tool": {
-      "uid": "0016",
+      "uid": "0017",
       "description": "6 mm 2 flute Downcut"
     },
     "material": {
@@ -594,7 +594,7 @@
   {
     "uid": "0019",
     "generic_tool": {
-      "uid": "0017",
+      "uid": "0018",
       "description": "8 mm 2 flute Downcut"
     },
     "material": {
@@ -623,7 +623,7 @@
   {
     "uid": "0020",
     "generic_tool": {
-      "uid": "0011",
+      "uid": "0012",
       "description": "3.175 mm 2 flute Compression"
     },
     "material": {
@@ -652,7 +652,7 @@
   {
     "uid": "0021",
     "generic_tool": {
-      "uid": "0014",
+      "uid": "0015",
       "description": "6 mm 2 flute Compression"
     },
     "material": {
@@ -681,7 +681,7 @@
   {
     "uid": "0022",
     "generic_tool": {
-      "uid": "0001",
+      "uid": "0005",
       "description": "6 mm 1 flute Compression"
     },
     "material": {
@@ -710,7 +710,7 @@
   {
     "uid": "0023",
     "generic_tool": {
-      "uid": "0005",
+      "uid": "0025",
       "description": "6 mm 1 flute Straight"
     },
     "material": {
@@ -826,7 +826,7 @@
   {
     "uid": "0027",
     "generic_tool": {
-      "uid": "0006",
+      "uid": "0008",
       "description": "3.175 mm 1 flute Upcut"
     },
     "material": {
@@ -863,7 +863,7 @@
   {
     "uid": "0028",
     "generic_tool": {
-      "uid": "0007",
+      "uid": "0009",
       "description": "4 mm 1 flute Upcut"
     },
     "material": {
@@ -896,7 +896,7 @@
   {
     "uid": "0029",
     "generic_tool": {
-      "uid": "0011",
+      "uid": "0012",
       "description": "3.175 mm 2 flute Compression"
     },
     "material": {
@@ -925,7 +925,7 @@
   {
     "uid": "0030",
     "generic_tool": {
-      "uid": "0000",
+      "uid": "0004",
       "description": "3.175 mm 1 flute Compression"
     },
     "material": {
@@ -954,7 +954,7 @@
   {
     "uid": "0031",
     "generic_tool": {
-      "uid": "0008",
+      "uid": "0011",
       "description": "5 mm 1 flute Upcut"
     },
     "material": {
@@ -987,7 +987,7 @@
   {
     "uid": "0032",
     "generic_tool": {
-      "uid": "0010",
+      "uid": "0022",
       "description": "8 mm 1 flute Upcut"
     },
     "material": {
@@ -1016,7 +1016,7 @@
   {
     "uid": "0033",
     "generic_tool": {
-      "uid": "0023",
+      "uid": "0026",
       "description": "90 ° 2 flute V groove"
     },
     "material": {
@@ -1045,7 +1045,7 @@
   {
     "uid": "0034",
     "generic_tool": {
-      "uid": "0006",
+      "uid": "0008",
       "description": "3.175 mm 1 flute Upcut"
     },
     "material": {
@@ -1082,7 +1082,7 @@
   {
     "uid": "0035",
     "generic_tool": {
-      "uid": "0007",
+      "uid": "0009",
       "description": "4 mm 1 flute Upcut"
     },
     "material": {
@@ -1115,7 +1115,7 @@
   {
     "uid": "0036",
     "generic_tool": {
-      "uid": "0008",
+      "uid": "0011",
       "description": "5 mm 1 flute Upcut"
     },
     "material": {
@@ -1148,7 +1148,7 @@
   {
     "uid": "0037",
     "generic_tool": {
-      "uid": "0009",
+      "uid": "0010",
       "description": "6 mm 1 flute Upcut"
     },
     "material": {
@@ -1181,7 +1181,7 @@
   {
     "uid": "0038",
     "generic_tool": {
-      "uid": "0006",
+      "uid": "0008",
       "description": "3.175 mm 1 flute Upcut"
     },
     "material": {
@@ -1218,7 +1218,7 @@
   {
     "uid": "0039",
     "generic_tool": {
-      "uid": "0007",
+      "uid": "0009",
       "description": "4 mm 1 flute Upcut"
     },
     "material": {
@@ -1251,7 +1251,7 @@
   {
     "uid": "0040",
     "generic_tool": {
-      "uid": "0008",
+      "uid": "0011",
       "description": "5 mm 1 flute Upcut"
     },
     "material": {
@@ -1284,7 +1284,7 @@
   {
     "uid": "0041",
     "generic_tool": {
-      "uid": "0009",
+      "uid": "0010",
       "description": "6 mm 1 flute Upcut"
     },
     "material": {
@@ -1317,7 +1317,7 @@
   {
     "uid": "0042",
     "generic_tool": {
-      "uid": "0006",
+      "uid": "0008",
       "description": "3.175 mm 1 flute Upcut"
     },
     "material": {
@@ -1354,7 +1354,7 @@
   {
     "uid": "0043",
     "generic_tool": {
-      "uid": "0009",
+      "uid": "0010",
       "description": "6 mm 1 flute Upcut"
     },
     "material": {
@@ -1387,7 +1387,7 @@
   {
     "uid": "0044",
     "generic_tool": {
-      "uid": "0010",
+      "uid": "0022",
       "description": "8 mm 1 flute Upcut"
     },
     "material": {
@@ -1416,7 +1416,7 @@
   {
     "uid": "0045",
     "generic_tool": {
-      "uid": "0015",
+      "uid": "0016",
       "description": "3.175 mm 2 flute Downcut"
     },
     "material": {
@@ -1445,7 +1445,7 @@
   {
     "uid": "0046",
     "generic_tool": {
-      "uid": "0016",
+      "uid": "0017",
       "description": "6 mm 2 flute Downcut"
     },
     "material": {
@@ -1474,7 +1474,7 @@
   {
     "uid": "0047",
     "generic_tool": {
-      "uid": "0017",
+      "uid": "0018",
       "description": "8 mm 2 flute Downcut"
     },
     "material": {
@@ -1503,7 +1503,7 @@
   {
     "uid": "0048",
     "generic_tool": {
-      "uid": "0011",
+      "uid": "0012",
       "description": "3.175 mm 2 flute Compression"
     },
     "material": {
@@ -1532,7 +1532,7 @@
   {
     "uid": "0049",
     "generic_tool": {
-      "uid": "0014",
+      "uid": "0015",
       "description": "6 mm 2 flute Compression"
     },
     "material": {
@@ -1590,7 +1590,7 @@
   {
     "uid": "0051",
     "generic_tool": {
-      "uid": "0022",
+      "uid": "0027",
       "description": "45 ° 2 flute V groove"
     },
     "material": {
@@ -1619,7 +1619,7 @@
   {
     "uid": "0052",
     "generic_tool": {
-      "uid": "0023",
+      "uid": "0026",
       "description": "90 ° 2 flute V groove"
     },
     "material": {
@@ -1642,6 +1642,64 @@
       {
         "uid": "0032",
         "description": "CMT Orange 715.001.11 90° 2 flute V groove"
+      }
+    ]
+  },
+  {
+    "uid": "0053",
+    "generic_tool": {
+      "uid": "0028",
+      "description": "60 ° 2 flute V groove"
+    },
+    "material": {
+      "uid": "0010",
+      "description": "Plasterboard"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 12,
+        "stepover": null,
+        "unit": "mm",
+        "cutting_direction": "both"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 8000,
+      "plungerate": 500,
+      "target_tool_load": 250
+    },
+    "applicable_tools": [
+      {
+        "uid": "0034",
+        "description": "Generic 60° 2 flute V groove"
+      }
+    ]
+  },
+  {
+    "uid": "0054",
+    "generic_tool": {
+      "uid": "0021",
+      "description": "8 mm 2 flute Straight"
+    },
+    "material": {
+      "uid": "0010",
+      "description": "Plasterboard"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 12,
+        "stepover": 4,
+        "unit": "mm",
+        "cutting_direction": "both"
+      },
+      "spindle_speed": 22500,
+      "max_feedrate": 8000,
+      "plungerate": 500,
+      "target_tool_load": 150
+    },
+    "applicable_tools": [
+      {
+        "uid": "0024",
+        "description": "Yeti Tool 21722 Ø 8 mm 2 flute Straight Endmill L32"
       }
     ]
   }
