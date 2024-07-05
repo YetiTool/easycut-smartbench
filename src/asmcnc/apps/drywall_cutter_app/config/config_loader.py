@@ -257,6 +257,38 @@ class DWTConfig(EventDispatcher):
 
         return True
 
+    @staticmethod
+    def get_config_version(config_name):
+        # type (str) -> str
+        """
+        Get the version of a configuration file.
+
+        :param config_name: The name of the configuration file to get the version of.
+        :return: The version of the configuration file.
+        """
+        file_path = os.path.join(CONFIGURATIONS_DIR, config_name)
+
+        if not os.path.exists(file_path):
+            return None
+
+        with open(file_path, "r") as f:
+            cfg = json.load(f)
+
+        try:
+            return cfg["version"]
+        except KeyError:
+            return "1.0"
+
+    @staticmethod
+    def get_latest_config_version():
+        # type () -> str
+        """
+        Get the latest version of the configuration file.
+
+        :return: The latest version of the configuration file.
+        """
+        return config_classes.Configuration.default().version
+
     def load_config(self, config_path):
         # type (str) -> None
         """
