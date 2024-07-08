@@ -579,8 +579,13 @@ class MaintenanceScreenClass(Screen):
 
     def quit_to_lobby(self):
         self.on_tab_switch()
-        self.spindle_settings_widget.exit()
+        self.save_all_settings()
         self.sm.current = "lobby"
+
+    def save_all_settings(self):
+        self.spindle_settings_widget.exit()
+        self.brush_save_widget.save()
+        self.z_misc_save_widget.save()
 
     def on_pre_enter(self):
         if self.m.is_laser_enabled == True:
