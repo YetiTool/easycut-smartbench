@@ -238,10 +238,9 @@ class DWTConfig(EventDispatcher):
             config_classes.Configuration.__init__
         ).args[1:]
 
-        try:
-            # Get the version of the configuration file
-            config_version = cfg["version"]
-        except:  # If no version is found, assume it's version 1.0
+        # Get the version of the configuration file
+        config_version = cfg.get("version", "1.0")
+        if config_version == "1.0":
             cfg = migrate_10_to_20(cfg, file_path)
 
         for field_name in valid_field_names:
