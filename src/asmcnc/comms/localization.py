@@ -16,8 +16,8 @@ fonts_path = os.path.join(asmcnc_path, "keyboard", "fonts")
 kr_font_path = os.path.join(fonts_path, 'KRFont.ttf')
 kr_font_bold_path = os.path.join(fonts_path, 'KRFont-Bold.ttf')
 
-jap_font_path = "../tests/manual_tests/experiments/NotoSansJP-Regular.ttf"
-jap_font_path_bold = "../tests/manual_tests/experiments/NotoSansJP-Regular.ttf"
+jap_font_path = os.path.join(fonts_path, 'NotoSansJP-Regular.ttf')
+jap_font_path_bold = os.path.join(fonts_path, 'NotoSansJP-Bold.ttf')
 
 LabelBase.register(name='KRFont',
                    fn_regular=kr_font_path,
