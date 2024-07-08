@@ -16,12 +16,22 @@ fonts_path = os.path.join(asmcnc_path, "keyboard", "fonts")
 kr_font_path = os.path.join(fonts_path, 'KRFont.ttf')
 kr_font_bold_path = os.path.join(fonts_path, 'KRFont-Bold.ttf')
 
+jap_font_path = os.path.join(fonts_path, 'NotoSansJP-Regular.ttf')
+jap_font_path_bold = os.path.join(fonts_path, 'NotoSansJP-Bold.ttf')
+
 LabelBase.register(name='KRFont',
                    fn_regular=kr_font_path,
                    fn_bold=kr_font_bold_path)
 
 LabelBase.register(name='KRFont-Bold',
                    fn_regular=kr_font_bold_path)
+
+LabelBase.register(name='JapFont',
+                   fn_regular=jap_font_path,
+                   fn_bold=jap_font_path_bold)
+
+LabelBase.register(name='JapFont-Bold',
+                   fn_regular=jap_font_path_bold)
 
 builder_font_string = """
 <Widget>:
@@ -49,6 +59,7 @@ class Localization(object):
     dk = "Dansk (DK)"
     ko = "한국어 (KO)"
     nl = "Nederlands (NL)"
+    ja = 'Japanese (JA)'
 
     approved_languages = [
         gb,
@@ -61,7 +72,7 @@ class Localization(object):
         ko
     ]
 
-    supported_languages = approved_languages + [nl]
+    supported_languages = approved_languages + [nl] + [ja]
 
     # use this for just getting user language, and if it's empty just assume english
     persistent_language_path = './sb_values/user_language.txt'
@@ -74,6 +85,8 @@ class Localization(object):
     standard_font_bold = 'Roboto-Bold'
     korean_font = 'KRFont'
     korean_font_bold = 'KRFont-Bold'
+    jap_font = 'JapFont'
+    jap_font_bold = 'JapFont-Bold'
 
     kivy_markup_regex = re.compile(r"\[.*?\]")
 
@@ -191,6 +204,12 @@ class Localization(object):
                 self.font_bold = self.korean_font_bold
 
                 # Only do this load for Korean, as it prevents some spinner weirdness
+                Builder.load_string(builder_font_string % (self.font_regular, self.font_bold))
+
+            elif self.lang == self.ja:
+                self.font_regular = self.jap_font
+                self.font_bold = self.jap_font_bold
+
                 Builder.load_string(builder_font_string % (self.font_regular, self.font_bold))
 
             else:
