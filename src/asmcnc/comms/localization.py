@@ -59,7 +59,7 @@ class Localization(object):
     dk = "Dansk (DK)"
     ko = "한국어 (KO)"
     nl = "Nederlands (NL)"
-    ja = 'Japanese (JA)'
+    ja = "日本語 (JA)"
 
     approved_languages = [
         gb,

@@ -3,28 +3,30 @@
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
-import os
+import sys
 
 '''
 ########################################################
 IMPORTANT!!
 Run from easycut-smartbench folder, with 
-python -m tests.manual_tests.experiments.experiment_japanese
+python -m tests.manual_tests.experiments.experiment_fonts
 
 '''
 
-font_path = "./tests/manual_tests/experiments/NotoSansJP-Regular.ttf"
+sys.path.append('./src')
 
 
 Builder.load_string('''
 <TestScreen>
     Label:
-        font_name: "./tests/manual_tests/experiments/NotoSansJP-Regular.ttf"
-        text: "速い茶色のキツネは、のろまな古いイヌに飛びかかった。"
+        font_name: root.font_path
+        text: root.test_text
 ''')
 
 class TestScreen(Screen):
-    pass
+
+    font_path = "./src/asmcnc/keyboard/fonts/NotoSansJP-Bold.ttf"
+    test_text = "速い茶色のキツネは、のろまな古いイヌに飛びかかった。"
 
 class TestApp(App):
 
