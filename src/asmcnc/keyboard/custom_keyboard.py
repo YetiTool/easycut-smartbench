@@ -41,9 +41,11 @@ class Keyboard(VKeyboard):
         dirname = os.path.dirname(__file__)
 
         self.kr_layout = os.path.join(dirname, "layouts", "kr.json")
+        self.ja_layout = os.path.join(dirname, "layouts", "ja.json")
         self.numeric_layout = os.path.join(dirname, "layouts", "numeric.json")
         self.qwerty_layout = "data/keyboards/qwerty.json"
         self.qwertyKR_layout = os.path.join(dirname, "layouts", "qwertyKR.json")
+        self.qwertyJA_layout = os.path.join(dirname, "layouts", "qwertyJA.json")
         self.font_size = scaling_utils.get_scaled_width(20)
 
         self.background_color = [0, 0, 0, 1]
@@ -52,6 +54,9 @@ class Keyboard(VKeyboard):
             if self.l.lang == self.l.ko:
                 self.font = self.l.korean_font
                 self.layout = self.kr_layout
+            elif self.l.lang == self.l.ja:
+                self.font = self.l.jap_font
+                self.layout = self.ja_layout
             else:
                 self.font_name = "data/fonts/DejaVuSans.ttf"
                 self.layout = self.qwerty_layout
@@ -195,6 +200,12 @@ class Keyboard(VKeyboard):
                     # https://en.wikipedia.org/wiki/Language_input_keys#Keys_for_Korean_Keyboards
                     self.layout = self.qwertyKR_layout if self.layout == self.kr_layout else self.kr_layout
                     self.previous_layout = self.layout
+
+                if keycode == "Romaji":
+                    # This is just a placeholder
+                    self.layout = self.qwertyJA_layout if self.layout == self.ja_layout else self.ja_layout
+                    self.previous_layout = self.layout
+
                 if keycode == "escape":
                     self.defocus_text_input(self.text_instance)
                 if keycode == "backspace":
