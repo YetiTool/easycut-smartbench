@@ -898,6 +898,11 @@ class GCodeEngine(object):
             tab_height = 5
         three_d_tabs = True
 
+        if self.config.active_cutter.dimensions.tool_diameter is not None:
+            self.cutter_diameter = self.config.active_cutter.dimensions.tool_diameter
+        else:
+            self.cutter_diameter = 0
+
         # Compensate for tool diameter
         try:
             tab_width = tab_width + self.cutter_diameter
