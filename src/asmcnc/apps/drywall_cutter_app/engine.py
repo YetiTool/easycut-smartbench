@@ -946,8 +946,8 @@ class GCodeEngine(object):
 
         def line_default_parameters(simulate=False):
             parameters = {
-                'datum_x': self.config.active_config.datum_position.x,
-                'datum_y': self.config.active_config.datum_position.y,
+                'datum_x': 0,
+                'datum_y': 0,
                 'length': self.config.active_config.canvas_shape_dims.l,
                 'tool_diameter': 0 if self.cutter_diameter is None else self.cutter_diameter,
                 'orientation': self.config.active_config.rotation,
