@@ -15,6 +15,13 @@ Builder.load_string("""
     go_to_datum_button_image:go_to_datum_button_image
     go_to_datum_button_overlay:go_to_datum_button_overlay
     
+    canvas.before:
+        Color:
+            rgba: hex('#f9f9f9ff')
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    
     BoxLayout:
     
         size: self.parent.size
