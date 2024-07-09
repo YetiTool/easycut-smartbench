@@ -9,10 +9,6 @@ from asmcnc.core_UI import scaling_utils
 from asmcnc.core_UI.utils import color_provider
 
 
-def hex_to_rgba(hex_color):
-    return kivy.utils.get_color_from_hex(hex_color)
-
-
 class ToolMaterialDisplayWidget(BoxLayout):
     padding = (dp(3), dp(3), dp(3), dp(3))
 
@@ -25,9 +21,9 @@ class ToolMaterialDisplayWidget(BoxLayout):
         self.tool_text = ""
 
         # Set the background color
-        rgba_color = hex_to_rgba("#f9f9f9ff")
+        background_color = color_provider.get_rgba("shapes_white")
         with self.canvas.before:
-            Color(*rgba_color)
+            Color(*background_color)
             self.rect = Rectangle(size=self.size, pos=self.pos)
             self.bind(pos=self.update_rect, size=self.update_rect)
 

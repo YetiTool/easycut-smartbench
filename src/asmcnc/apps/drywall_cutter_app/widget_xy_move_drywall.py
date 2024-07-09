@@ -8,7 +8,10 @@ from asmcnc.core_UI.custom_popups import PopupDatum
 from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
+#:import color_provider asmcnc.core_UI.utils.color_provider
+
 <XYMoveDrywall>
+
     jogModeButtonImage:jogModeButtonImage
     speed_toggle:speed_toggle
     speed_image:speed_image
@@ -17,7 +20,7 @@ Builder.load_string("""
     
     canvas.before:
         Color:
-            rgba: hex('#f9f9f9ff')
+            rgba: color_provider.get_rgba('shapes_white')
         Rectangle:
             pos: self.pos
             size: self.size
