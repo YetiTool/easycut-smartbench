@@ -99,7 +99,7 @@ def get_shape_dimensions(json_obj):
     return dims
 
 
-def migrate_10_to_20(config, file_path):
+def migrate_v1_to_v2(config, file_path):
     """
     Migrate a configuration from version 1.0 to 2.0.
     The changes include:
@@ -241,7 +241,7 @@ class DWTConfig(EventDispatcher):
         # Get the version of the configuration file
         config_version = cfg.get("version", "1.0")
         if config_version == "1.0":
-            cfg = migrate_10_to_20(cfg, file_path)
+            cfg = migrate_v1_to_v2(cfg, file_path)
 
         for field_name in valid_field_names:
             if field_name not in cfg:
