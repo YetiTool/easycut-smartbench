@@ -962,7 +962,10 @@ class GCodeEngine(object):
         total_cut_depth = self.config.active_config.cutting_depths.material_thickness + self.config.active_config.cutting_depths.bottom_offset
 
         def calculate_stepovers(start, stop, step):
-            return [round(start - i * step, 3) for i in range(int((start - stop) / step) + 1)]
+            if step is not 0:
+                return [round(start - i * step, 3) for i in range(int((start - stop) / step) + 1)]
+            else:
+                return [start]
 
         # Assign defaults
         def rectangle_default_parameters(simulate=False):
@@ -1042,8 +1045,7 @@ class GCodeEngine(object):
             length_to_cover_with_roughing = length_to_cover_with_passes - length_covered_by_finishing  # Remaining length to be covered by roughing passes
 
             finishing_stepovers = calculate_stepovers(length_covered_by_finishing, 0, self.finishing_stepover)
-            roughing_stepovers = calculate_stepovers(length_to_cover_with_roughing, finishing_stepovers[0],
-                                                     self.cutter_diameter / 2)[1:]
+            roughing_stepovers = calculate_stepovers(length_to_cover_with_roughing, finishing_stepovers[0], self.cutter_diameter / 2)[1:]
             finishing_depths = self.calculate_pass_depths(total_cut_depth, self.finishing_stepdown)
             roughing_depths = self.calculate_pass_depths(total_cut_depth, cutting_pass_depth)
 
