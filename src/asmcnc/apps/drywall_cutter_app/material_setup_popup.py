@@ -568,7 +568,8 @@ class CuttingDepthsPopup(Popup):
             if bottom_offset < 0:
                 return False
 
-        if total_cut_depth < 0 or total_cut_depth > self.soft_limit_total_cut_depth:
+        if (total_cut_depth < 0 or total_cut_depth > self.soft_limit_total_cut_depth
+                or total_cut_depth > self.dwt_config.active_cutter.flutes.lengths.total):
             return False
 
         if total_cut_depth != material_thickness + bottom_offset:

@@ -1,0 +1,22 @@
+{
+	"tool_6mm.json":{
+		"uid": "0023",
+		"description": "Yeti Tool 21721 Ø 6 mm 2 flute Straight Endmill L22"
+	},
+	"tool_8mm.json":{
+		"uid": "0024",
+		"description": "Yeti Tool 21722 Ø 8 mm 2 flute Straight Endmill L32"
+	},
+	"tool_45deg.json": {
+		"uid": "0033",
+		"description": "Generic 45° 2 flute V groove"
+	},
+	"tool_60deg.json": {
+		"uid": "0034",
+		"description": "Generic 60° 2 flute V groove"
+	},
+	"tool_90deg.json": {
+		"uid": "0032",
+		"description": "CMT Orange 715.001.11 90° 2 flute V groove"
+	}
+}
