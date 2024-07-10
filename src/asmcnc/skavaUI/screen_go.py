@@ -32,6 +32,7 @@ from asmcnc.skavaUI import (
 )
 from asmcnc.apps.drywall_cutter_app.config import config_loader
 from asmcnc.comms.model_manager import ModelManagerSingleton
+from asmcnc.job.yetipilot.config.yetipilot_profile import YetiPilotProfile
 
 Builder.load_string(
     """
@@ -551,17 +552,23 @@ class GoScreen(Screen):
                 self.yp_widget.switch.disabled = False
                 self.yp_widget.yp_cog_button.disabled = False
 
-                if self.model_manager.is_machine_drywall() and self.return_to_screen == "drywall_cutter":
+                if self.return_to_screen == "drywall_cutter":
                     self.yp.enable()
-                    
-                    if self.dwt_config.active_cutter.dimensions.tool_diameter:
-                        dwt_cutter_diameter = str(int(self.dwt_config.active_cutter.dimensions.tool_diameter))
-                    else:
-                        dwt_cutter_diameter = str(int(self.dwt_config.active_cutter.dimensions.angle))
-                    available_diameters = self.yp.get_sorted_cutter_diameters(self.yp.filter_available_profiles("Drywall"))
-                    cutter_diameter = next((x for x in available_diameters if dwt_cutter_diameter in x), None)
 
-                    chosen_profile = self.yp.filter_available_profiles(cutter_diameter=cutter_diameter,material_type="Drywall")[0]
+                    diameter = str(self.dwt_config.active_cutter.generic_definition.dimension)
+                    unit = self.dwt_config.active_cutter.generic_definition.unit.encode('utf-8')
+
+                    chosen_profile = YetiPilotProfile(
+                        cutter_diameter=(diameter + unit).encode('utf-8'),
+                        cutter_type=self.dwt_config.active_cutter.generic_definition.type,
+                        material_type=self.dwt_config.active_profile.material.description,
+                        step_down=self.dwt_config.active_profile.cutting_parameters.recommendations.stepdown,
+                        parameters=[
+                            {"Name": "spindle_tool_load_watts", "Value": self.dwt_config.active_profile.cutting_parameters.target_tool_load},
+                            {"Name": "target_spindle_speed", "Value": self.dwt_config.active_profile.cutting_parameters.spindle_speed}
+                        ]
+                    )                    
+
                     self.yp.use_profile(chosen_profile)
                     self.yp_widget.update_profile_selection()
             else:
