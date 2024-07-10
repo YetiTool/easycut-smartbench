@@ -727,9 +727,16 @@ class DrywallShapeDisplay(Widget):
 
        # Now show a message if any dimensions are too big
         d_limit = self.X_MAX
-        if current_shape == 'circle' and float(self.d_input.text or 0) > d_limit:
-            self.d_input_validation_label.text = 'MAX: ' + str(d_limit)
-            self.d_input_validation_label.opacity = 1
+        if current_shape == 'circle':
+            if float(self.d_input.text or 0) > d_limit:
+                self.d_input_validation_label.text = 'MAX: ' + str(d_limit)
+                self.d_input_validation_label.opacity = 1
+            elif self.dwt_config.active_config.toolpath_offset.lower() == "inside" and \
+                float(self.d_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter:
+                self.d_input_validation_label.text = 'MIN: ' + str(0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter)
+                self.d_input_validation_label.opacity = 1
+            else:
+                self.d_input_validation_label.opacity = 0
         else:
             self.d_input_validation_label.opacity = 0
 
@@ -761,6 +768,16 @@ class DrywallShapeDisplay(Widget):
                     self.y_input_validation_label.opacity = 1
                 else:
                     self.y_input_validation_label.opacity = 0
+
+            # For inside toolpath, shape needs to be larger than tool diameter
+            if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
+                if float(self.y_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter:
+                    self.y_input_validation_label.text = 'MIN: ' + str(0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter)
+                    self.y_input_validation_label.opacity = 1
+
+                if current_shape == 'rectangle' and float(self.x_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter:
+                    self.x_input_validation_label.text = 'MIN: ' + str(0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter)
+                    self.x_input_validation_label.opacity = 1
 
             if float(self.r_input.text or 0) > r_limit:
                 self.r_input_validation_label.text = 'MAX: ' + str(r_limit)
