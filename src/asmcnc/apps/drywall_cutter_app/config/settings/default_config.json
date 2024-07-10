@@ -9,13 +9,15 @@
     "d": 15,
     "l": 30
   },
-  "cutter_type": "tool_6mm.json",
+  "cutter_type": "-0001",
+  "material": "-0001",
   "toolpath_offset": "inside",
   "cutting_depths": {
     "material_thickness": 3.0,
     "bottom_offset": 0.5,
     "auto_pass": true,
-    "depth_per_pass": 1.0
+    "depth_per_pass": 1.0,
+    "tabs": false
   },
   "datum_position": {
     "x": 5,

@@ -20,6 +20,7 @@ from kivy.properties import (
     StringProperty,
 )
 from kivy.uix.screenmanager import Screen
+from asmcnc.comms.model_manager import ModelManagerSingleton
 
 Builder.load_string(
     """
@@ -91,7 +92,7 @@ Builder.load_string(
                 padding:[0, dp(0.0208333333333)*app.height]
                 id: filechooser_usb
                 show_hidden: False
-                filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
+                filters: ['*.dwt'] if root.model_manager.is_machine_drywall() else ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
                 on_selection: root.refresh_filechooser()
                 FileChooserIconLayout
                     id: icon_layout_fc
@@ -266,6 +267,7 @@ class USBFileChooser(Screen):
     sort_by_date = ObjectProperty(date_order_sort)
     sort_by_date_reverse = ObjectProperty(date_order_sort_reverse)
     is_filechooser_scrolling = False
+    model_manager = ModelManagerSingleton()
 
     def __init__(self, **kwargs):
         super(USBFileChooser, self).__init__(**kwargs)

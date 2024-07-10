@@ -4,6 +4,8 @@ from kivy.uix.screenmanager import Screen
 Builder.load_string("""
 
 <YeticutLobbyScreen>:
+#:import paths asmcnc.paths
+#:import color_provider asmcnc.core_UI.utils.color_provider
 
     BoxLayout:
         orientation: 'vertical'
@@ -22,8 +24,17 @@ Builder.load_string("""
                 padding: scaling_utils.get_scaled_tuple((dp(10), dp(10)))
 
                 Button:
-                    text: 'Back up ^'
                     on_press: root.go_back()
+                    background_color: color_provider.get_rgba('transparent')
+                    FloatLayout:
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        Image:
+                            source: paths.get_resource("shapes_lobby_back_button.png")
+                            size_hint: None, None
+                            size: self.parent.width * 0.7, self.parent.height * 0.7
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            allow_stretch: False
 
             Label:
                 size_hint_x: 4
@@ -41,33 +52,87 @@ Builder.load_string("""
 
             BoxLayout:
                 orientation: 'vertical'
-
+                
                 BoxLayout:
                     size_hint_y: 4
                     padding: [(self.width - self.height) / 2, 0]
-
+                    
                     Button:
                         on_press: root.shapes_app()
-                        background_color: hex('#FFFFFF00')
+                        background_color: color_provider.get_rgba('transparent')
+                        
                         BoxLayout:
                             size: self.parent.size
                             pos: self.parent.pos
+                            
                             Image:
                                 id: yeticut_apps_image
-                                source: "./asmcnc/skavaUI/img/Shapes_lobby_logo.png"
+                                source: paths.get_resource("shapes_lobby_logo.png")
                                 center_x: self.parent.center_x
                                 y: self.parent.y
                                 size: self.parent.width, self.parent.height
                                 allow_stretch: True
-
+                                
                 Label:
                     text: 'Shapes'
                     font_size: scaling_utils.get_scaled_width(dp(20))
                     bold: True
+                    
+            BoxLayout:
+                orientation: 'vertical'
+                
+                BoxLayout:
+                    size_hint_y: 4
+                    padding: [(self.width - self.height) / 2, 0]
+                    
+                    Button:
+                        on_press: pass
+                        background_color: color_provider.get_rgba('transparent')
+                        
+                        FloatLayout:
+                            size_hint: None, None
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            
+                            Image:
+                                source: paths.get_resource("worktop_lobby_logo.png")
+                                size_hint: None, None
+                                size: self.parent.width * 1.05, self.parent.height * 1.05
+                                pos_hint: {'center_x': 0.5, 'center_y': 0.525}
+                                allow_stretch: True
+            
+                Label:
+                    text: 'Worktop'
+                    font_size: scaling_utils.get_scaled_width(dp(20))
+                    bold: True
 
-            BoxLayout
-
-            BoxLayout
+            BoxLayout:
+                orientation: 'vertical'
+                
+                BoxLayout:
+                    size_hint_y: 4
+                    padding: [(self.width - self.height) / 2, 0]
+                    
+                    Button:
+                        on_press: pass
+                        background_color: color_provider.get_rgba('transparent')
+                        
+                        FloatLayout:
+                            size_hint: None, None
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            
+                            Image:
+                                source: paths.get_resource("trace_lobby_logo.png")
+                                size_hint: None, None
+                                size: self.parent.width * 1.05, self.parent.height * 1.05
+                                pos_hint: {'center_x': 0.5, 'center_y': 0.525}
+                                allow_stretch: True
+            
+                Label:
+                    text: 'Trace'
+                    font_size: scaling_utils.get_scaled_width(dp(20))
+                    bold: True
 
             BoxLayout
 
@@ -83,9 +148,17 @@ Builder.load_string("""
             padding: scaling_utils.get_scaled_tuple((dp(250), dp(5), dp(250), dp(15)))
 
             Button:
-                text: 'ToolBox'
+                background_color: color_provider.get_rgba('transparent')              
                 on_press: root.toolbox_app()
-
+                FloatLayout:
+                    size: self.parent.size
+                    pos: self.parent.pos
+                    Image:
+                        source: paths.get_resource("shapes_lobby_toolbox_button_coming_soon.png")
+                        size_hint: 0.9, 0.9
+                        size: self.parent.width, self.parent.height
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        allow_stretch: False
 """)
 
 

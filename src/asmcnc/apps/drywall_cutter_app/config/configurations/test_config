@@ -6,6 +6,7 @@
         "material_thickness": 12.0
     }, 
     "toolpath_offset": "inside", 
+    "material": "-0001", 
     "canvas_shape_dims": {
         "y": 1.0, 
         "x": 0, 
@@ -14,7 +15,7 @@
         "l": 0
     }, 
     "shape_type": "square", 
-    "cutter_type": "tool_6mm.json", 
+    "cutter_type": "-0001",
     "units": "mm", 
     "rotation": "horizontal", 
     "datum_position": {

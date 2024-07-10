@@ -5,14 +5,25 @@ from kivy.uix.widget import Widget
 
 from asmcnc.core_UI.components.buttons import probe_button
 from asmcnc.core_UI.custom_popups import PopupDatum
+from asmcnc.skavaUI import popup_info
 
 Builder.load_string("""
+#:import color_provider asmcnc.core_UI.utils.color_provider
+
 <XYMoveDrywall>
+
     jogModeButtonImage:jogModeButtonImage
     speed_toggle:speed_toggle
     speed_image:speed_image
     go_to_datum_button_image:go_to_datum_button_image
     go_to_datum_button_overlay:go_to_datum_button_overlay
+    
+    canvas.before:
+        Color:
+            rgba: color_provider.get_rgba('shapes_white')
+        Rectangle:
+            pos: self.pos
+            size: self.size
     
     BoxLayout:
     

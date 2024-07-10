@@ -15,7 +15,7 @@
   "parameters": {
     "cutting_spindle_speed": 21000,
     "cutting_feed_rate": 4000,
-    "plunge_feed_rate": 250,
+    "plunge_feed_rate": 500,
     "cutting_direction": "both",
     "recommended_depth_per_pass": 26,
     "max_depth_total": 26,

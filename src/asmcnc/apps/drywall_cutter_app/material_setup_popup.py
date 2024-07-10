@@ -4,6 +4,7 @@ from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.uix.image import Image
 from kivy.uix.popup import Popup
+from asmcnc.core_UI import scaling_utils
 
 Builder.load_string("""
 #:import FloatInput asmcnc.core_UI.components.text_inputs.float_input.FloatInput
@@ -17,6 +18,7 @@ Builder.load_string("""
     total_cut_depth:total_cut_depth
     depth_per_pass:depth_per_pass
     auto_pass_checkbox:auto_pass_checkbox
+    tabs_checkbox:tabs_checkbox
     
     title_label:title_label
     material_thickness_label:material_thickness_label
@@ -26,6 +28,7 @@ Builder.load_string("""
     depth_per_pass_label:depth_per_pass_label
     cut_depth_warning:cut_depth_warning
     pass_depth_warning:pass_depth_warning
+    tabs_label:tabs_label
     
     cutter_graphic:cutter_graphic
     total_cut_depth_arrow:total_cut_depth_arrow
@@ -189,7 +192,7 @@ Builder.load_string("""
         
         Label:
             id: pass_depth_warning
-            pos_hint: {'x': 0.2525, 'y': -0.1}
+            pos_hint: {'x': 0.2525, 'y': -0.225}
             text: ''
             font_size: app.get_scaled_sp('14sp')
             markup: True
@@ -197,14 +200,26 @@ Builder.load_string("""
             text_size: (dp(app.get_scaled_width(150)), None) 
         
         GridLayout:
-            rows: 2
+            rows: 3
             cols: 2
             pos_hint: {'x': 0.6, 'y': -0.2}
             row_force_default: True
             col_force_default: True
-            row_default_height: dp(app.get_scaled_height(50))
+            row_default_height: dp(app.get_scaled_height(45))
             col_default_width: dp(app.get_scaled_width(100))
             
+            Label:
+                id: tabs_label
+                text: 'Tabs'
+                font_size: app.get_scaled_sp('16sp')
+                color: hex('#333333')
+                text_size: (dp(app.get_scaled_width(75)), None)
+            
+            CheckBox:
+                id: tabs_checkbox
+                size_hint: (0.3,1)
+                active: True
+                background_checkbox_normal: "./asmcnc/skavaUI/img/checkbox_inactive.png"
             
             Label:
                 id: auto_pass_label
@@ -212,12 +227,13 @@ Builder.load_string("""
                 font_size: app.get_scaled_sp('16sp')
                 color: hex('#333333')
                 text_size: (dp(app.get_scaled_width(75)), None)
+            
             CheckBox:
                 id: auto_pass_checkbox
                 size_hint: (0.3,1)
                 active: True
                 background_checkbox_normal: "./asmcnc/skavaUI/img/checkbox_inactive.png"
-                on_active: root.on_checkbox_active()
+                on_active: root.on_auto_pass_checkbox()
             
             Label:
                 id: depth_per_pass_label
@@ -308,11 +324,15 @@ class CuttingDepthsPopup(Popup):
         self.depth_per_pass.bind(text=self.warning_pass_depth)
         self.cut_depth_warning.bind(parent=self.schedule_disable_confirm_button)
         self.pass_depth_warning.bind(parent=self.schedule_disable_confirm_button)
+        self.dwt_config.bind(active_profile=self.on_open)
 
+        self.update_strings()
+
+    def update_error_messages(self):
         # Defining the error messages in one place since they need to be changed throughout the popup
         self.pass_depth_warning_cutter_max = "[color=#FF0000]" + self.l.get_str("Max depth per pass for this tool is") \
                                              + " Xmm[/color]".replace("X",
-                                                                      str(self.dwt_config.active_cutter.parameters.recommended_depth_per_pass))
+                                                                      str(self.dwt_config.active_profile.cutting_parameters.recommendations.stepdown))
         self.pass_depth_warning_zero = "[color=#FF0000]" + self.l.get_str("Depth per pass must be greater than 0") \
                                        + "[/color]"
 
@@ -320,15 +340,20 @@ class CuttingDepthsPopup(Popup):
                                             " Xmm[/color]".replace("X", str(self.soft_limit_total_cut_depth))
         self.cut_depth_warning_cutter_max = "[color=#FF0000]" + self.l.get_str("Max depth of tool is") + \
                                             " Xmm[/color]".replace("X",
-                                                                   str(self.dwt_config.active_cutter.parameters.max_depth_total))
+                                                                   str(self.dwt_config.active_cutter.flutes.lengths.total))
         self.cut_depth_warning_zero = "[color=#FF0000]" + self.l.get_str("Total cut depth must be greater than 0") \
                                       + "[/color]"
 
+    def on_open(self, *args):
+        # Fix weird scaling bug with title label
+        if scaling_utils.Width == 800:
+            self.title_label.pos_hint['y'] = 0.45
+        else:
+            self.title_label.pos_hint['y'] = 0.475
         self.update_strings()
-
-    def on_open(self):
         self.load_active_config()
         self.update_text()
+        self.on_auto_pass_checkbox()
 
     def get_safe_float(self, val):
         try:
@@ -347,10 +372,12 @@ class CuttingDepthsPopup(Popup):
         self.material_thickness.text = str(self.dwt_config.active_config.cutting_depths.material_thickness)
         self.bottom_offset.text = str(self.dwt_config.active_config.cutting_depths.bottom_offset)
         self.auto_pass_checkbox.active = self.dwt_config.active_config.cutting_depths.auto_pass
+        self.tabs_checkbox.active = self.dwt_config.active_config.cutting_depths.tabs
         self.depth_per_pass.text = str(self.dwt_config.active_config.cutting_depths.depth_per_pass)
         self.update_text()
 
     def update_strings(self):
+        self.update_error_messages()
         self.title_label.text = self.l.get_str("Cutting depths")
         self.material_thickness_label.text = self.l.get_str("Material thickness")
         self.bottom_offset_label.text = self.l.get_str("Bottom offset")
@@ -360,10 +387,10 @@ class CuttingDepthsPopup(Popup):
         self.pass_depth_warning.text = self.pass_depth_warning_cutter_max
         self.cut_depth_warning.text = self.cut_depth_warning_soft_limit
 
-    def on_checkbox_active(self):
+    def on_auto_pass_checkbox(self):
         if self.auto_pass_checkbox.active:
             self.depth_per_pass.disabled = True
-            self.depth_per_pass.text = str(self.dwt_config.active_cutter.parameters.recommended_depth_per_pass)
+            self.depth_per_pass.text = str(self.dwt_config.active_profile.cutting_parameters.recommendations.stepdown)
             self.update_animations()
         else:
             self.depth_per_pass.disabled = False
@@ -383,7 +410,7 @@ class CuttingDepthsPopup(Popup):
         self.cutter_layout.do_layout()
 
     def update_text(self):
-        cutter_max_depth_total = self.dwt_config.active_cutter.parameters.max_depth_total
+        cutter_max_depth_total = self.dwt_config.active_cutter.flutes.lengths.total
 
         # Update warning label text
         if self.soft_limit_total_cut_depth < cutter_max_depth_total:
@@ -431,7 +458,7 @@ class CuttingDepthsPopup(Popup):
 
     def warning_pass_depth(self, *args):
         if self.auto_pass_checkbox.active:
-            depth_per_pass = self.dwt_config.active_cutter.parameters.recommended_depth_per_pass
+            depth_per_pass = self.dwt_config.active_profile.cutting_parameters.recommendations.stepdown
             if self.pass_depth_warning not in self.float_layout.children:
                 self.float_layout.add_widget(self.pass_depth_warning)
             if depth_per_pass <= 0:
@@ -442,7 +469,7 @@ class CuttingDepthsPopup(Popup):
             depth_per_pass = self.get_safe_float(self.depth_per_pass.text)
             if self.pass_depth_warning not in self.float_layout.children:
                 self.float_layout.add_widget(self.pass_depth_warning)
-            if depth_per_pass > self.dwt_config.active_cutter.parameters.recommended_depth_per_pass:
+            if depth_per_pass > self.dwt_config.active_profile.cutting_parameters.recommendations.stepdown:
                 self.pass_depth_warning.text = self.pass_depth_warning_cutter_max
             elif depth_per_pass <= 0:
                 self.pass_depth_warning.text = self.pass_depth_warning_zero
@@ -485,7 +512,7 @@ class CuttingDepthsPopup(Popup):
         self.cutter_layout.do_layout()
 
     def calculate_depth_per_pass(self):
-        max_cut_depth_per_pass = self.dwt_config.active_cutter.parameters.recommended_depth_per_pass
+        max_cut_depth_per_pass = self.dwt_config.active_profile.cutting_parameters.recommendations.stepdown
         if self.auto_pass_checkbox.active:
 
             depth_per_pass = max_cut_depth_per_pass
@@ -495,7 +522,7 @@ class CuttingDepthsPopup(Popup):
             if depth_per_pass > max_cut_depth_per_pass:
                 self.depth_per_pass.text = str(max_cut_depth_per_pass)
             else:
-                self.depth_per_pass.text = str(round(depth_per_pass, 1))
+                self.depth_per_pass.text = str(round(depth_per_pass, 3))
 
             self.generate_pass_depth_lines(number_of_passes)
         else:
@@ -516,6 +543,7 @@ class CuttingDepthsPopup(Popup):
         self.dwt_config.on_parameter_change('cutting_depths.bottom_offset', bottom_offset)
         self.dwt_config.on_parameter_change('cutting_depths.depth_per_pass', depth_per_pass)
         self.dwt_config.on_parameter_change('cutting_depths.auto_pass', self.auto_pass_checkbox.active)
+        self.dwt_config.on_parameter_change('cutting_depths.tabs', self.tabs_checkbox.active)
         self.dismiss()
 
     def cancel(self):
@@ -529,7 +557,7 @@ class CuttingDepthsPopup(Popup):
         total_cut_depth = self.get_safe_float(self.total_cut_depth.text)
         depth_per_pass = self.get_safe_float(self.depth_per_pass.text)
         auto_pass_checkbox = self.auto_pass_checkbox.active
-        max_cut_depth_per_pass = self.dwt_config.active_cutter.parameters.recommended_depth_per_pass
+        max_cut_depth_per_pass = self.dwt_config.active_profile.cutting_parameters.recommendations.stepdown
 
         # Check for negative material thickness
         if material_thickness < 0:
@@ -563,7 +591,7 @@ class CuttingDepthsPopup(Popup):
         depth_per_pass = 0 if self.depth_per_pass.text == '' or self.depth_per_pass.text == '-' else float(
             self.depth_per_pass.text)
 
-        max_cut_depth_per_pass = self.dwt_config.active_cutter.parameters.recommended_depth_per_pass
+        max_cut_depth_per_pass = self.dwt_config.active_profile.cutting_parameters.recommendations.stepdown
 
         # Check for negative material thickness
         if material_thickness < 0:
@@ -622,7 +650,7 @@ class CuttingDepthsPopup(Popup):
                 + "\n\n"
             )
 
-        if total_cut_depth > self.dwt_config.active_cutter.parameters.max_depth_total:
+        if total_cut_depth > self.dwt_config.active_cutter.flutes.lengths.total:
             steps.append(
                 self.l.get_str("Total cut depth exceeds max depth of tool.")
                 + "\n\n"
