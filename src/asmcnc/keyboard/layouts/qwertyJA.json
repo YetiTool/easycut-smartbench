@@ -1,6 +1,6 @@
 {
     "title": "Qwerty",
-    "description": "A typical Japanses QWERTY keyboard layout",
+    "description": "Japanses QWERTY keyboard layout",
 	"cols": 15,
     "rows": 5,
     "normal_1": [
