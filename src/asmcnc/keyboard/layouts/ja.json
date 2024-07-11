@@ -31,7 +31,7 @@
         ["る", "る", "る", 1],    ["め", "め", "め", 1],    ["\u21e7", null, "shift", 2.5]
     ],
     "normal_5": [
-        [" ", " ", "spacebar", 10],["ROM",null,"Romaji",2], ["\u2b12", null, "layout", 1.5], ["\u2a2f", null, "escape", 1.5]
+        [" ", " ", "spacebar", 10],["ローマ字",null,"Romaji",2], ["\u2b12", null, "layout", 1.5], ["\u2a2f", null, "escape", 1.5]
     ],
     "shift_1": [
         ["〜", "〜", "〜", 1],    ["ぬ", "ぬ", "ぬ", 1],    ["ふ", "ふ", "ふ", 1],
@@ -61,6 +61,6 @@
         ["。", "。", "。", 1],    ["・", "・", "・", 1.5],    ["\u21e7", null, "shift", 2.5]
     ],
     "shift_5": [
-        [" ", " ", "spacebar", 10],["ROM",null,"Romaji",2], ["\u2b12", null, "layout", 1.5], ["\u2a2f", null, "escape", 1.5]
+        [" ", " ", "spacebar", 10],["ローマ字",null,"Romaji",2], ["\u2b12", null, "layout", 1.5], ["\u2a2f", null, "escape", 1.5]
     ]
 }
