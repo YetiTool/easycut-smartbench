@@ -58,7 +58,7 @@ Builder.load_string("""
         
         Label:
             id: title_label
-            pos_hint: {'x': -0.31, 'y': 0.64}
+            pos_hint: {'x': -0.31, 'y': 0.61}
             text: 'Tool & Material selection'
             font_size: app.get_scaled_sp('20sp')
             color: hex('#F9F9F9')
