@@ -128,6 +128,8 @@ class DWTConfig(EventDispatcher):
     active_cutter = ObjectProperty(config_classes.Cutter.default())  # type: config_classes.Cutter
     active_profile = ObjectProperty(config_classes.Profile.default())  # type: config_classes.Profile
 
+    show_z_height_reminder = True
+
     def __init__(self, screen_drywall_cutter=None, *args, **kwargs):
         super(DWTConfig, self).__init__(*args, **kwargs)
         self.screen_drywall_cutter = screen_drywall_cutter
@@ -449,6 +451,18 @@ class DWTConfig(EventDispatcher):
         """
         Logger.debug("Parameter changed: " + parameter_name + " = " + str(parameter_value))
 
+        # Ensure Z height datum warning is shown
+        if parameter_name == "material" and parameter_value != self.active_config.material:
+            self.show_z_height_reminder = True
+
+        if "." in parameter_name and parameter_name.split(".")[-1] == "material_thickness" and parameter_value != self.active_config.cutting_depths.material_thickness:
+            self.show_z_height_reminder = True
+
+        if parameter_name == "cutter_type" and parameter_value != self.active_config.cutter_type:
+            self.load_cutter(parameter_value)
+            self.load_new_profile()
+            self.show_z_height_reminder = True
+
         if "." in parameter_name:
             parameter_names = parameter_name.split(".")
             parameter = self.active_config
@@ -465,10 +479,6 @@ class DWTConfig(EventDispatcher):
                 self.active_config_name = "New Configuration"
 
             setattr(self.active_config, parameter_name, parameter_value)
-
-        if parameter_name == "cutter_type":
-            self.load_cutter(parameter_value)
-            self.load_new_profile()
 
         # update screen, check bumpers and so on:
         if not (self.active_config.shape_type == 'geberit' and self.active_cutter.dimensions.tool_diameter is None):

@@ -23,7 +23,7 @@ from kivy.uix.screenmanager import Screen
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
 
-from src.asmcnc.apps.drywall_cutter_app.config.config_loader import DWTConfig
+from asmcnc.apps.drywall_cutter_app.config.config_loader import DWTConfig
 
 Builder.load_string("""
 
