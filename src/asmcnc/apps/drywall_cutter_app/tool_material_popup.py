@@ -78,6 +78,9 @@ Builder.load_string("""
             id: material_label
             source: paths.get_resource('material_icon.png')
             pos_hint: {'center_x': 0.1, 'center_y': 0.75}
+            allow_stretch: True
+            size_hint: None, None
+            size: app.get_scaled_width(68), app.get_scaled_height(29)
 
         Choices:
             id: material_dropdown
@@ -90,6 +93,7 @@ Builder.load_string("""
             pos_hint: {'center_x': 0.1, 'center_y': 0.55}
             size_hint: None, None
             size: app.get_scaled_width(68), app.get_scaled_height(16)
+            allow_stretch: True
 
         Choices:
             id: tool_dropdown
