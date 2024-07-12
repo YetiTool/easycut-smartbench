@@ -14,6 +14,7 @@ from asmcnc.comms.model_manager import ModelManagerSingleton
 
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 CONFIGURATIONS_DIR = os.path.join(CURRENT_DIR, "configurations")
+MIGRATION_DIR = os.path.join(CURRENT_DIR, "migration")
 CUTTERS_DIR = os.path.join(CURRENT_DIR, "cutters")
 TEMP_DIR = os.path.join(CURRENT_DIR, "temp")
 SETTINGS_DIR = os.path.join(CURRENT_DIR, "settings")
@@ -98,6 +99,29 @@ def get_shape_dimensions(json_obj):
     return dims
 
 
+def migrate_v1_to_v2(config, file_path):
+    """
+    Migrate a configuration from version 1.0 to 2.0.
+    The changes include:
+        - Changing the cutter_type from the "tool_6mm.json" format to the "0000" format.
+        - Adding a 'material' field with the Plasterboard uid as the default value.
+    """
+    tool_migration = os.path.join(MIGRATION_DIR, "tool_migration_0_1.json")
+
+    with open(tool_migration, "r") as f:
+        tool_migration = json.load(f)
+
+    for field_name in config:
+        if field_name == "cutter_type" and config[field_name] in tool_migration:
+            config[field_name] = tool_migration[config[field_name]]['uid']
+            break
+    config["material"] = "0010"
+    config["version"] = "2.0"
+
+    Logger.info("Migrated configuration '{}' to version 2.0".format(os.path.basename(file_path)))
+    return config
+
+
 class DWTConfig(EventDispatcher):
     active_config_name = StringProperty("")  # type: str
     active_config = ObjectProperty(config_classes.Configuration.default())  # type: config_classes.Configuration
@@ -170,13 +194,26 @@ class DWTConfig(EventDispatcher):
         with open(file_path, "r") as f:
             cfg = json.load(f)
 
+        valid_field_names = inspect.getargspec(
+            config_classes.Configuration.__init__
+        ).args[1:]
+
+        for field_name in valid_field_names:
+            if field_name not in cfg:
+                return False
+
         field_count = len(cfg)
 
         valid_field_count = (
-                len(inspect.getargspec(config_classes.Configuration.__init__).args) - 1
-        )
+            len(inspect.getargspec(config_classes.Configuration.__init__).args[1:])
+        )  # Subtract 1 for self (kwargs is not counted)
 
-        if field_count != valid_field_count:
+        # Config must have at least the same number of fields as the default config, but can have more (for future updates)
+        if field_count < valid_field_count:
+            return False
+
+        # If the cutter type is a json file, it's invalid
+        if cfg["cutter_type"].endswith(".json"):
             return False
 
         return True
@@ -202,6 +239,11 @@ class DWTConfig(EventDispatcher):
         valid_field_names = inspect.getargspec(
             config_classes.Configuration.__init__
         ).args[1:]
+
+        # Get the version of the configuration file
+        config_version = cfg.get("version", "1.0")
+        if config_version == "1.0":
+            cfg = migrate_v1_to_v2(cfg, file_path)
 
         for field_name in valid_field_names:
             if field_name not in cfg:
