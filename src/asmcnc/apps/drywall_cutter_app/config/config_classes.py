@@ -24,7 +24,8 @@ class Cutter(object):
         generic_definition,
         dimensions,
         flutes,
-        available_isas
+        available_isas,
+        **kwargs
     ):
         self.uid = uid  # type: str
         self.description = description.encode("utf-8")  # type: str
@@ -59,7 +60,8 @@ class ToolGenericDefinition(object):
                  unit,
                  type,
                  toolpath_offsets,
-                 required_operations):
+                 required_operations,
+                 **kwargs):
         self.uid = uid  # type: str
         self.string = str(string)  # type: str
         self.dimension = int(dimension)  # type: int
@@ -72,14 +74,14 @@ class ToolGenericDefinition(object):
 class RequiredOperations(object):
     """Class to store the required operations."""
 
-    def __init__(self, lead_in):
+    def __init__(self, lead_in, **kwargs):
         self.lead_in = bool(lead_in)  # type: bool
 
 
 class Dimensions(object):
     """Class to store the cutter dimensions."""
 
-    def __init__(self, shank_diameter, tool_diameter, unit, angle):
+    def __init__(self, shank_diameter, tool_diameter, unit, angle, **kwargs):
         self.shank_diameter = float(shank_diameter)  # type: float
         self.tool_diameter = float(tool_diameter) if tool_diameter else None  # type: float
         self.unit = str(unit)  # type: str
@@ -89,7 +91,7 @@ class Dimensions(object):
 class AllowableToolpathOffsets(object):
     """Class to store the allowable toolpath offsets."""
 
-    def __init__(self, inside, outside, on, pocket):
+    def __init__(self, inside, outside, on, pocket, **kwargs):
         self.inside = inside  # type: bool
         self.outside = outside  # type: bool
         self.on = on  # type: bool
@@ -105,7 +107,8 @@ class Flutes(object):
                  quantity,
                  material,
                  coated,
-                 coating):
+                 coating,
+                 **kwargs):
         self.type = str(type)  # type: str
         self.lengths = FluteLengths(**lengths)  # type: FluteLengths
         self.quantity = int(quantity)  # type: int
@@ -117,7 +120,7 @@ class Flutes(object):
 class FluteLengths(object):
     """Class to store the cutter flute lengths."""
 
-    def __init__(self, upcut_straight, downcut, total, unit):
+    def __init__(self, upcut_straight, downcut, total, unit, **kwargs):
         self.upcut_straight = int(upcut_straight)  # type: int
         self.downcut = int(downcut)  # type: int
         self.total = int(total)  # type: int
@@ -127,7 +130,7 @@ class FluteLengths(object):
 class CanvasShapeDims(object):
     """Class to store the canvas shape dimensions."""
 
-    def __init__(self, x, y, r, d, l):
+    def __init__(self, x, y, r, d, l, **kwargs):
         self.x = x  # type: float
         self.y = y  # type: float
         self.r = r  # type: float
@@ -149,7 +152,7 @@ class CuttingDepths(object):
 class DatumPosition(object):
     """Class to store the datum position."""
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, **kwargs):
         self.x = x  # type: float
         self.y = y  # type: float
 
@@ -163,7 +166,8 @@ class Profile(object):
         generic_tool,
         material,
         cutting_parameters,
-        applicable_tools
+        applicable_tools,
+        **kwargs
     ):
         self.uid = str(uid)  # type: str
         self.generic_tool = ProfileGenericTool(**generic_tool)  # type: ProfileGenericTool
@@ -190,7 +194,8 @@ class ProfileGenericTool(object):
     def __init__(
         self,
         uid,
-        description
+        description,
+        **kwargs
     ):
         self.uid = str(uid)  # type: str
         self.description = str(description)  # type: str
@@ -202,7 +207,8 @@ class ProfileMaterial(object):
     def __init__(
         self,
         uid,
-        description
+        description,
+        **kwargs
     ):
         self.uid = str(uid)  # type: str
         self.description = str(description)  # type: str
@@ -217,7 +223,8 @@ class ProfileCuttingParameters(object):
         spindle_speed,
         max_feedrate,
         plungerate,
-        target_tool_load
+        target_tool_load,
+        **kwargs
     ):
         self.recommendations = ProfileRecommendations(**recommendations)  # type: ProfileRecommendations
         self.spindle_speed = int(spindle_speed)  # type: int
@@ -234,7 +241,8 @@ class ProfileRecommendations(object):
         stepdown,
         stepover,
         unit,
-        cutting_direction
+        cutting_direction,
+        **kwargs
     ):
         self.stepdown = float(stepdown)  # type: float
         self.stepover = float(stepover) if stepover else None  # type: float
@@ -255,8 +263,13 @@ class Configuration(object):
         cutter_type,
         toolpath_offset,
         cutting_depths,
-        datum_position
+        datum_position,
+        **kwargs
     ):
+        try:
+            self.version = str(kwargs['version'])  # type: str
+        except KeyError:
+            self.version = "1.0"  # Default version for DWT configs
         self.shape_type = str(shape_type)  # type: str
         self.units = str(units)  # type: str
         self.rotation = str(rotation)

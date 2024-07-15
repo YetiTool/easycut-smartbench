@@ -23,6 +23,8 @@ from kivy.uix.screenmanager import Screen
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
 
+from asmcnc.apps.drywall_cutter_app.config.config_loader import DWTConfig
+
 Builder.load_string("""
 
 #:import hex kivy.utils.get_color_from_hex
@@ -49,7 +51,7 @@ Builder.load_string("""
 
     BoxLayout:
         padding: 0
-        spacing: 10
+        spacing: app.get_scaled_tuple([10,10])
         size: root.size
         pos: root.pos
         orientation: "vertical"
@@ -71,7 +73,7 @@ Builder.load_string("""
                 size_hint_y: 1
                 text: root.filename_selected_label_text
                 markup: True
-                font_size: '18sp'   
+                font_size: app.get_scaled_sp('18sp')  
                 valign: 'middle'
                 halign: 'center'
                 bold: True
@@ -103,13 +105,14 @@ Builder.load_string("""
                         size_hint_y: None
                         height: self.texture_size[1]
                         text_size: self.width, None
-                        padding: 10, 10
+                        padding: app.get_scaled_tuple([10,10])
                         markup: True
+                        font_size: app.get_scaled_sp('15sp')
 
 
         BoxLayout:
             size_hint_y: None
-            height: 100
+            height: app.get_scaled_height(100)
 
             ToggleButton:
                 id: toggle_view_button
@@ -117,7 +120,7 @@ Builder.load_string("""
                 on_press: root.switch_view()
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_tuple([25,25])
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -134,7 +137,7 @@ Builder.load_string("""
                 on_press: root.switch_sort()
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_tuple([25,25])
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -150,7 +153,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_tuple([25,25])
                     size: self.parent.size
                     pos: self.parent.pos
                     
@@ -159,7 +162,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_tuple([25,25])
                     size: self.parent.size
                     pos: self.parent.pos
                     
@@ -174,7 +177,7 @@ Builder.load_string("""
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_tuple([25,25])
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -195,7 +198,7 @@ Builder.load_string("""
                     root.delete_popup(file_selection = 'all')
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_tuple([25,25])
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -215,7 +218,7 @@ Builder.load_string("""
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_tuple([25,25])
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -235,7 +238,7 @@ Builder.load_string("""
                     root.load_config_and_return_to_dwt()
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_tuple([25,25])
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -399,6 +402,8 @@ class ConfigFileChooser(Screen):
 
         try:
             if self.filechooser.selection[0] != 'C':
+                if not DWTConfig.is_valid_configuration(self.filechooser.selection[0]):
+                    DWTConfig.fix_config(self.filechooser.selection[0])
                 self.display_selected_file()
 
             else:

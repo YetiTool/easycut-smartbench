@@ -502,7 +502,8 @@ class DrywallCutterScreen(Screen):
                                                                        screen_manager=self.sm,
                                                                        localization=self.l,
                                                                        callback=self.dwt_config.save_config,
-                                                                       kb=self.kb))
+                                                                       kb=self.kb,
+                                                                       dwt_config=self.dwt_config))
         self.sm.current = 'config_filesaver'
 
     def is_config_valid(self):
@@ -565,7 +566,7 @@ class DrywallCutterScreen(Screen):
         elif self.m.is_machine_homed == False and sys.platform != "win32":
             self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
 
-        elif self.sm.get_screen('home').z_datum_reminder_flag and not self.sm.get_screen('home').has_datum_been_reset:
+        elif (self.sm.get_screen('home').z_datum_reminder_flag or self.dwt_config.show_z_height_reminder) and not self.sm.get_screen('home').has_datum_been_reset:
 
             z_datum_reminder_message = (
                     self.format_command(
@@ -576,6 +577,7 @@ class DrywallCutterScreen(Screen):
 
             popup_info.PopupWarning(self.sm, self.l, z_datum_reminder_message)
             self.sm.get_screen('home').z_datum_reminder_flag = False
+            self.dwt_config.show_z_height_reminder = False
 
         else:
             # clear to proceed
