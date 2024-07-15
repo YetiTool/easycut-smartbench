@@ -662,7 +662,10 @@ class GCodeEngine(object):
         total_cut_depth = self.config.active_config.cutting_depths.material_thickness + self.config.active_config.cutting_depths.bottom_offset
 
         def calculate_stepovers(start, stop, step):
-            return [round(start - i * step, 3) for i in range(int((start - stop) / step) + 1)]
+            if step is not 0:
+                return [round(start - i * step, 3) for i in range(int((start - stop) / step) + 1)]
+            else:
+                return [start]
 
         # Assign defaults
         def rectangle_default_parameters(simulate=False):
