@@ -19,7 +19,7 @@ Builder.load_string("""
     shape_dims_image:shape_dims_image
     shape_toolpath_image:shape_toolpath_image
 
-    unit_switch:unit_switch
+    # unit_switch:unit_switch
 
     d_input:d_input
     l_input:l_input
@@ -74,11 +74,19 @@ Builder.load_string("""
                 pos: self.parent.pos
                 allow_stretch: True
 
-            Switch:
-                id: unit_switch
-                size: scaling_utils.get_scaled_tuple((dp(83), dp(32)))
+            # Switch:
+            #     id: unit_switch
+            #     size: scaling_utils.get_scaled_tuple((dp(83), dp(32)))
+            #     size_hint: (None, None)
+            #     pos: self.parent.pos[0] + self.parent.size[0] - self.size[0] - scaling_utils.get_scaled_width(dp(7)), self.parent.pos[1] + scaling_utils.get_scaled_height(dp(4))
+
+            Label:
+                text: 'mm'
+                color: 0,0,0,1
+                font_size: scaling_utils.get_scaled_width(dp(25))
+                size: self.texture_size
                 size_hint: (None, None)
-                pos: self.parent.pos[0] + self.parent.size[0] - self.size[0] - scaling_utils.get_scaled_width(dp(9)), self.parent.pos[1] + scaling_utils.get_scaled_height(dp(6))
+                pos: self.parent.pos[0] + self.parent.size[0] - self.size[0] - scaling_utils.get_scaled_width(dp(11)), self.parent.pos[1] + scaling_utils.get_scaled_height(dp(6))
 
             BoxLayout:
                 size: scaling_utils.get_scaled_tuple((dp(90), dp(40)))
@@ -412,8 +420,8 @@ class DrywallShapeDisplay(Widget):
         }
 
         # Show custom switch image
-        self.unit_switch.canvas.children[5].source = "./asmcnc/apps/drywall_cutter_app/img/unit_toggle.png"
-        self.unit_switch.bind(active=self.toggle_units)
+        # self.unit_switch.canvas.children[5].source = "./asmcnc/apps/drywall_cutter_app/img/unit_toggle.png"
+        # self.unit_switch.bind(active=self.toggle_units)
 
         self.dwt_config.bind(active_config_name=self.on_config_name_change)
         self.on_config_name_change(self.dwt_config, self.dwt_config.active_config_name)
