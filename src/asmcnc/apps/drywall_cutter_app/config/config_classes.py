@@ -253,7 +253,8 @@ class Configuration(object):
         canvas_shape_dims,
         material,
         cutter_type,
-        toolpath_offset, cutting_depths,
+        toolpath_offset,
+        cutting_depths,
         datum_position
     ):
         self.shape_type = str(shape_type)  # type: str
