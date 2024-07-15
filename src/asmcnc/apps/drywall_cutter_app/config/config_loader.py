@@ -9,6 +9,7 @@ from kivy.properties import StringProperty, ObjectProperty
 
 import config_classes
 from asmcnc.apps.drywall_cutter_app.config import config_options
+from asmcnc.comms.localization import Localization
 from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.comms.model_manager import ModelManagerSingleton
 
@@ -30,69 +31,70 @@ INDENT_VALUE = "    "
 
 
 def get_display_preview(json_obj):
+    l = Localization()
     profile_db = App.get_running_app().profile_db
     material_description = profile_db.get_material_name(json_obj["material"])
     tool_description = profile_db.get_tool_name(json_obj["cutter_type"])
-    preview = get_shape_type(json_obj)
-    preview += "Units: " + json_obj["units"] + "\n"
+    preview = get_shape_type(json_obj, l)
+    preview += l.get_str("Units") + ": " + json_obj["units"] + "\n"
     # preview += "Rotation: " + json_obj['rotation'] + "\n"
-    preview += "Canvas shape dims: \n"
-    preview += get_shape_dimensions(json_obj)
-    preview += "Material: " + material_description + "\n"
-    preview += "Cutter type: " + tool_description + "\n"
-    preview += "Toolpath offset: " + json_obj["toolpath_offset"] + "\n"
-    preview += "Cutting depths: \n"
+    preview += l.get_str("Canvas shape dims") + ": \n"
+    preview += get_shape_dimensions(json_obj, l)
+    preview += l.get_str("Material") + ": " + material_description + "\n"
+    preview += l.get_str("Cutter type") + ": " + tool_description + "\n"
+    preview += l.get_str("Toolpath offset") + ": " + json_obj["toolpath_offset"] + "\n"
+    preview += l.get_str("Cutting depths") + ": \n"
     preview += (
             INDENT_VALUE
-            + "Material thickness: "
+            + l.get_str("Material thickness") + ": "
             + str(json_obj["cutting_depths"]["material_thickness"])
             + "\n"
     )
     preview += (
             INDENT_VALUE
-            + "Bottom offset: "
+            + l.get_str("Bottom offset") + ": "
             + str(json_obj["cutting_depths"]["bottom_offset"])
             + "\n"
     )
     preview += (
             INDENT_VALUE
-            + "Auto pass depth: "
+            + l.get_str("Auto pass depth") + ": "
             + str(json_obj["cutting_depths"]["auto_pass"])
             + "\n"
     )
     preview += (
             INDENT_VALUE
-            + "Depth per pass: "
+            + l.get_str("Depth per pass") + ": "
             + str(json_obj["cutting_depths"]["depth_per_pass"])
             + "\n"
     )
-    preview += "Datum position: \n"
-    preview += INDENT_VALUE + "X: " + str(json_obj["datum_position"]["x"]) + "\n"
-    preview += INDENT_VALUE + "Y: " + str(json_obj["datum_position"]["y"]) + "\n"
+    preview += l.get_str("Datum position") + ": \n"
+    preview += INDENT_VALUE + l.get_str("X") + ": " + str(json_obj["datum_position"]["x"]) + "\n"
+    preview += INDENT_VALUE + l.get_str("Y") + ": " + str(json_obj["datum_position"]["y"]) + "\n"
     return preview
 
 
-def get_shape_type(json_obj):
+def get_shape_type(json_obj, l):
     if json_obj["shape_type"] in ["line", "rectangle"]:
         return (
-                "Shape type: " + json_obj["rotation"] + " " + json_obj["shape_type"] + "\n"
+                l.get_str("Shape type") + ": " + json_obj["rotation"] + " " + json_obj["shape_type"] + "\n"
         )
     else:
-        return "Shape type: " + json_obj["shape_type"] + "\n"
+        return l.get_str("Shape type") + ": " + json_obj["shape_type"] + "\n"
 
 
-def get_shape_dimensions(json_obj):
+def get_shape_dimensions(json_obj, l):
     if json_obj["shape_type"] == "rectangle":
-        dims = INDENT_VALUE + "X: " + str(json_obj["canvas_shape_dims"]["x"]) + "\n"
-        dims += INDENT_VALUE + "Y: " + str(json_obj["canvas_shape_dims"]["y"]) + "\n"
-        dims += INDENT_VALUE + "R: " + str(json_obj["canvas_shape_dims"]["r"]) + "\n"
+        dims = INDENT_VALUE + l.get_str("X") + ": " + str(json_obj["canvas_shape_dims"]["x"]) + "\n"
+        dims += INDENT_VALUE + l.get_str("Y") + ": " + str(json_obj["canvas_shape_dims"]["y"]) + "\n"
+        dims += INDENT_VALUE + l.get_str("R") + ": " + str(json_obj["canvas_shape_dims"]["r"]) + "\n"
     elif json_obj["shape_type"] == "square":
-        dims = INDENT_VALUE + "Y: " + str(json_obj["canvas_shape_dims"]["y"]) + "\n"
-        dims += INDENT_VALUE + "R: " + str(json_obj["canvas_shape_dims"]["r"]) + "\n"
+        dims = INDENT_VALUE + l.get_str("Y") + ": " + str(json_obj["canvas_shape_dims"]["y"]) + "\n"
+        dims += INDENT_VALUE + l.get_str("R") + ": " + str(json_obj["canvas_shape_dims"]["r"]) + "\n"
     elif json_obj["shape_type"] == "circle":
-        dims = INDENT_VALUE + "D: " + str(json_obj["canvas_shape_dims"]["d"]) + "\n"
+        dims = INDENT_VALUE + l.get_str("D") + ": " + str(json_obj["canvas_shape_dims"]["d"]) + "\n"
     elif json_obj["shape_type"] == "line":
-        dims = INDENT_VALUE + "L: " + str(json_obj["canvas_shape_dims"]["l"]) + "\n"
+        dims = INDENT_VALUE + l.get_str("L") + ": " + str(json_obj["canvas_shape_dims"]["l"]) + "\n"
     else:
         dims = ""
     return dims
