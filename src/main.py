@@ -7,36 +7,13 @@ YetiTool's UI for SmartBench
 www.yetitool.com
 '''
 from asmcnc import paths
-from asmcnc.job.database.profile_database import ProfileDatabase
-
-paths.create_paths()
-
-import logging
-from asmcnc.comms.user_settings_manager import UserSettingsManager
-# config
-# import os
-# os.environ['KIVY_GL_BACKEND'] = 'sdl2'
-
-# try:
-# 	from hanging_threads import start_monitoring
-# 	monitoring_thread = start_monitoring(seconds_frozen=3, test_interval=100)
-# except:
-# 	Logger.info("Could not import hanging_threads")
 
 import os
 import os.path
 import sys
 
-from kivy import Logger
 from kivy.config import Config
-from kivy.lang import Builder
-from kivy.uix.boxlayout import BoxLayout
-
-from asmcnc.comms.grbl_settings_manager import GRBLSettingsManagerSingleton
-from asmcnc.core_UI import scaling_utils, console_utils
-from asmcnc.comms.model_manager import ProductCodes
-from asmcnc.core_UI.popup_manager import PopupManager
-from asmcnc.comms.model_manager import ModelManagerSingleton
+paths.create_paths()
 
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
 
@@ -47,12 +24,36 @@ if sys.platform.startswith("linux"):
     Config.set('graphics', 'width', width)
     Config.set('graphics', 'height', height)
 else:
-    Config.set('graphics', 'width', '800')
-    Config.set('graphics', 'height', '480')
+    Config.set('graphics', 'width', '1280')
+    Config.set('graphics', 'height', '800')
 
 Config.set('graphics', 'maxfps', '60')
 Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
 Config.write()
+
+import logging
+from asmcnc.comms.user_settings_manager import UserSettingsManager
+from asmcnc.job.database.profile_database import ProfileDatabase
+# config
+# import os
+# os.environ['KIVY_GL_BACKEND'] = 'sdl2'
+
+# try:
+# 	from hanging_threads import start_monitoring
+# 	monitoring_thread = start_monitoring(seconds_frozen=3, test_interval=100)
+# except:
+# 	Logger.info("Could not import hanging_threads")
+
+
+from kivy import Logger
+from kivy.lang import Builder
+from kivy.uix.boxlayout import BoxLayout
+
+from asmcnc.comms.grbl_settings_manager import GRBLSettingsManagerSingleton
+from asmcnc.core_UI import scaling_utils, console_utils
+from asmcnc.comms.model_manager import ProductCodes
+from asmcnc.core_UI.popup_manager import PopupManager
+from asmcnc.comms.model_manager import ModelManagerSingleton
 
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, NoTransition

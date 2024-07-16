@@ -5,16 +5,17 @@ from kivy.lang import Builder
 from asmcnc.comms.logging_system.logging_system import Logger
 
 Builder.load_string("""
+#:import paths asmcnc.paths
+
 <Options@SpinnerOption>
 
     background_normal: ''
     size: self.size
     color: hex('#333333ff')
-    halign: 'center'
+    halign: 'left'
     markup: 'True'
     font_size: 0.0175*app.width
     background_color: color_provider.get_rgba('black')
-    text_size : self.width, None
     canvas.before:
         Color:
             rgba: hex('#e5e5e5ff')
@@ -29,8 +30,7 @@ Builder.load_string("""
     size: self.size
     color: hex('#333333ff')
     background_color: 0,0,0,0
-    text_size : self.width, None
-    halign: 'center'
+    halign: 'left'
     canvas.before:
         Color:
             rgba: hex('ccccccff')
@@ -46,7 +46,7 @@ Builder.load_string("""
 
     auto_dismiss: False
     size_hint: (None,None)
-    size: (dp(app.get_scaled_width(577)), dp(app.get_scaled_height(301)))
+    size: (dp(app.get_scaled_width(577)), dp(app.get_scaled_height(350)))
     title: ''
     separator_height: 0
     background: './asmcnc/apps/drywall_cutter_app/img/cutting_depths_popup.png'
@@ -59,7 +59,7 @@ Builder.load_string("""
         
         Label:
             id: title_label
-            pos_hint: {'x': -0.31, 'y': 0.45}
+            pos_hint: {'x': -0.31, 'y': 0.61 if app.width == 800 else 0.64}
             text: 'Tool & Material selection'
             font_size: app.get_scaled_sp('20sp')
             color: hex('#F9F9F9')
@@ -71,34 +71,54 @@ Builder.load_string("""
             halign: 'center'
             color: hex('#333333')
             size_hint: (0.75, None)
-            pos_hint: {'center_x': 0.5, 'center_y': 0.75}
+            pos_hint: {'center_x': 0.5, 'center_y': 0.95}
+            font_size: app.get_scaled_sp('16sp')
             
-        Label:
+        Image:
             id: material_label
-            text: 'Material'
-            font_size: app.get_scaled_sp('15sp')
-            color: hex('#333333')
-            size_hint: (None, None)
-            pos_hint: {'center_x': 0.15, 'center_y': 0.55}
+            source: paths.get_resource('material_icon.png')
+            pos_hint: {'center_x': 0.1, 'center_y': 0.75}
+            allow_stretch: True
+            size_hint: None, None
+            size: app.get_scaled_width(68), app.get_scaled_height(29)
 
         Choices:
             id: material_dropdown
-            size_hint: (0.65, 0.1)
-            pos_hint: {'center_x': 0.55, 'center_y': 0.55}
+            size_hint: (0.7, 0.13)
+            pos_hint: {'center_x': 0.55, 'center_y': 0.75}
 
-        Label:
+        Image:
             id: tool_label
-            text: 'Tool'
-            font_size: app.get_scaled_sp('15sp')
-            color: hex('#333333')
-            size_hint: (None, None)
-            pos_hint: {'center_x': 0.15, 'center_y': 0.35}
+            source: paths.get_resource('tool_icon.png')
+            pos_hint: {'center_x': 0.1, 'center_y': 0.55}
+            size_hint: None, None
+            size: app.get_scaled_width(68), app.get_scaled_height(16)
+            allow_stretch: True
 
         Choices:
             id: tool_dropdown
-            size_hint: (0.65, 0.1)
-            pos_hint: {'center_x': 0.55, 'center_y': 0.35}
-        
+            size_hint: (0.7, 0.13)
+            pos_hint: {'center_x': 0.55, 'center_y': 0.55}
+            
+        Label:
+            id: lead_in_warning_label
+            text: 'WARNING: Using a compression tool will add a lead in to your toolpath automatically'
+            text_size: (0.65*self.parent.width, None)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.40}
+            color: hex('#333333')
+            size_hint: (0.75, None)
+            halign: 'center'
+            opacity: 0
+            font_size: app.get_scaled_sp('16sp')
+            
+        Label:
+            id: cutter_link_label
+            text: 'Yeti Tool cutters available from www.yetitool.com/about/partners'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.25}
+            color: hex('#333333')
+            halign: 'center'
+            font_size: app.get_scaled_sp('16sp')
+            
         BoxLayout:
             orientation: 'horizontal'
             pos_hint: {'x': 0.625, 'y': 0.075}
@@ -164,6 +184,14 @@ class ToolMaterialPopup(Popup):
             self.confirm_button.disabled = False
             self.confirm_button.opacity = 1
             Logger.debug("Tool changed to " + value)
+
+            tool = self.profile_db.get_tool_by_description(value)
+            if tool['generic_definition']['required_operations']['lead_in'] and False:  # Disabled for now
+                self.ids['lead_in_warning_label'].opacity = 1
+                return
+
+        # Always hide the warning if the tool is not a compression tool
+        self.ids['lead_in_warning_label'].opacity = 0
 
     def on_material_change(self, instance, value):
         Logger.debug("Material changed to " + value)
