@@ -43,6 +43,3 @@ def test_generate_kanji_suggestions(kb):
     kana_string = "まほうしょうじょ"
     kanji_output = ['魔法少女','魔法省所','魔法省女','魔法消除','魔法小所','魔法昇叙','魔法証所','魔法性所','魔法症所']
     assert kb.generate_kanji_suggestions(kana_string) == kanji_output
-
-def test_create_kanji_layout(kb):
-    assert kb.build_layout_with_kanji()
