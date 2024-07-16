@@ -2,8 +2,12 @@ import os
 import sys
 import textwrap
 
+
 from kivy.app import App
 from kivy.clock import Clock
+
+
+from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.metrics import dp
 from kivy.uix.behaviors import ButtonBehavior
@@ -238,6 +242,7 @@ class DrywallCutterScreen(Screen):
         self.jd = job
         self.pm = self.sm.pm
         self.cs = self.m.cs
+        self.usm = App.get_running_app().user_settings_manager
 
         self.engine = GCodeEngine(self.m, self.dwt_config, self.cs)
         self.simulation_started = False
@@ -383,7 +388,7 @@ class DrywallCutterScreen(Screen):
                 # default to 'on'
                 self.select_toolpath('on')
             else:
-                self.drywall_shape_display_widget.shape_toolpath_image.opacity = 0
+                self.drywall_shape_display_widget.select_toolpath(self.dwt_config.active_config.shape_type, 'on', self.rotation)
         else:
             self.select_toolpath(self.dwt_config.active_config.toolpath_offset)
             self.toolpath_selection.disabled = False
@@ -562,6 +567,8 @@ class DrywallCutterScreen(Screen):
 
         # elif not self.m.state().startswith('Idle'):
         #     self.sm.current = 'mstate'
+        elif self.usm.get_value('dust_shoe_detection') and not self.m.s.dustshoe_is_closed:
+            self.sm.pm.show_dustshoe_warning_popup()
 
         elif self.m.is_machine_homed == False and sys.platform != "win32":
             self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
@@ -642,3 +649,7 @@ class DrywallCutterScreen(Screen):
 
     def on_leave(self, *args):
         self.dwt_config.save_temp_config()
+
+    def format_command(self, cmd):
+        wrapped_cmd = textwrap.fill(cmd, width=0.0625*Window.width, break_long_words=False)
+        return wrapped_cmd

@@ -1,4 +1,4 @@
-English (GB)	Deutsch (DE)	Français (FR)	Italiano (IT)	Suomalainen (FI)	Nederlands (NL)	Polski (PL)	Dansk (DK)	한국어 (KO)	Svenska (SE)	Japanese (JA)	Español (ES)
+English (GB)	Deutsch (DE)	Français (FR)	Italiano (IT)	Suomalainen (FI)	Nederlands (NL)	Polski (PL)	Dansk (DK)	한국어 (KO)	Svenska (SE)	日本語 (JA)	Español (ES)
 System Information	System-Informationen	Informations système	Informazioni di Sistema	Järjestelmätiedot	Systeeminformatie	Informacje o systemie	Systemoplysninger	시스템정보	Systeminformation	システムインフォメーション	Información del sistema
 Serial number	Seriennummer	Numéro de série	Numero di serie	Sarjanumero	Serienummer	Numer seryjny	Serienummer	일련번호	Serienummer	シリアルナンバー	Número de serie
 Console hostname	Hostname der Konsole	Nom d'hôte de la console	Nome Host console	Konsolin isäntänimi	Hostnaam console	Nazwa hosta konsoli	Brugernavn på konsollen	콘솔 호스트 이름	Värdnamn för enheten	コンソールホスト名	Nombre de host de la consola

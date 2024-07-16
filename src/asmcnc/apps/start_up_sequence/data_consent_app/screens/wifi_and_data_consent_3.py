@@ -3,6 +3,8 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.scrollview import ScrollView
 from kivy.properties import StringProperty, DictProperty
+
+from asmcnc import paths
 from asmcnc.skavaUI import popup_info
 
 Builder.load_string(
@@ -235,9 +237,10 @@ class WiFiAndDataConsentScreen3(Screen):
 
     def update_strings(self):
         self.header_label.text = self.l.get_str("Wi-Fi and Data Consent")
-        self.scroll_privacy_notice.privacy_notice.source = (
-            self.privacy_notice_path + self.l.lang + ".rst"
-        )
+
+        file_name = self.l.lang.split(" ")[1][1:-1].upper() + ".rst"
+        self.scroll_privacy_notice.privacy_notice.source = paths.get_resource(file_name)
+
         self.user_info.text = self.l.get_str(
             "I have read and understood the privacy notice"
         )
