@@ -549,11 +549,13 @@ class DrywallShapeDisplay(Widget):
         text_input.parent.opacity = 0
 
     def select_toolpath(self, shape, toolpath, rotation):
-        if shape in ['line', 'geberit']:
+        if shape == 'geberit':
             self.shape_toolpath_image.opacity = 0
         else:
             if shape == 'rectangle':
                 self.shape_toolpath_image.source = self.image_filepath + shape + "_" + rotation + "_" + toolpath + "_toolpath.png"
+            elif shape == 'line':
+                self.shape_toolpath_image.source = self.image_filepath + shape + "_" + rotation + "_toolpath.png"
             else:
                 self.shape_toolpath_image.source = self.image_filepath + shape + "_" + toolpath + "_toolpath.png"
             self.shape_toolpath_image.opacity = 1
