@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import sys, os
+import sys, os, subprocess
 
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.core.window import Window
@@ -46,9 +46,12 @@ class Keyboard(VKeyboard):
         self.qwerty_layout = "data/keyboards/qwerty.json"
         self.qwertyKR_layout = os.path.join(dirname, "layouts", "qwertyKR.json")
         self.qwertyJA_layout = os.path.join(dirname, "layouts", "qwertyJA.json")
-        self.font_size = scaling_utils.get_scaled_width(20)
+        
+        self.use_mozcpy_converter = os.path.join(dirname, "helper_scripts", "use_mozcpy_converter.py")
 
+        self.font_size = scaling_utils.get_scaled_width(20)
         self.background_color = [0, 0, 0, 1]
+
 
         try:
             if self.l.lang == self.l.ko:
@@ -321,3 +324,74 @@ class Keyboard(VKeyboard):
         text_input.focus = False
         if self.text_instance == text_input:
             self.text_instance = None
+
+
+    # JAPANESE KANJI
+
+    # Generate Kanji suggestions
+    def generate_kanji_suggestions(self, text_input):
+
+        # text_input = "まほうしょうじょ"
+        # returns ['魔法少女', '魔法省所', '魔法省女', '魔法消除', '魔法小所', '魔法昇叙', '魔法証所', '魔法性所', '魔法症所']
+
+        # Needs error handling etc. 
+
+        command = ["python3", self.use_mozcpy_converter, text_input]
+        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = process.communicate()
+
+        # # Decode the output from bytes to string
+        output = stdout.decode('utf-8').strip("[]\n' ").replace("'", "").replace(" ","").split(",")
+        return output
+
+    def build_layout_with_kanji(self):
+        return self.ja_layout
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
