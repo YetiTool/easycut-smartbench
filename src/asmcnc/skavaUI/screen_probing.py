@@ -60,7 +60,7 @@ Builder.load_string("""
                 valign: 'middle'
                 halign: 'center'
                 size:self.texture_size
-                text_size: self.size
+                text_size: self.size[0], app.height
                 color: hex('#333333ff')
                         
             Button:
@@ -101,7 +101,7 @@ class ProbingScreen(Screen):
         self.function_debug = False
 
     def update_text(self, string):
-        self.probing_label.text = self.l.get_str(string) + "..."
+        self.probing_label.text = self.l.get_str(string) + "...\n\n" + self.l.get_str("Place your probe plate flat on top of your material")
 
     def on_enter(self):
         if self.function_debug:
