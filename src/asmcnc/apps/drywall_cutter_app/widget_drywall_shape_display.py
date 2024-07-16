@@ -731,9 +731,9 @@ class DrywallShapeDisplay(Widget):
             if float(self.d_input.text or 0) > d_limit:
                 self.d_input_validation_label.text = 'MAX: ' + str(d_limit)
                 self.d_input_validation_label.opacity = 1
-            elif self.dwt_config.active_config.toolpath_offset.lower() == "inside" and \
-                float(self.d_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter:
-                self.d_input_validation_label.text = 'MIN: ' + str(0.2 + self.dwt_config.active_cutter.dimensions.tool_diameter)
+            elif self.dwt_config.active_config.toolpath_offset.lower() in ["inside", "pocket"] and \
+                float(self.d_input.text or 0) < 0.11 + self.dwt_config.active_cutter.dimensions.tool_diameter:
+                self.d_input_validation_label.text = 'MIN: ' + str(0.11 + self.dwt_config.active_cutter.dimensions.tool_diameter)
                 self.d_input_validation_label.opacity = 1
             else:
                 self.d_input_validation_label.opacity = 0
@@ -769,14 +769,14 @@ class DrywallShapeDisplay(Widget):
                 else:
                     self.y_input_validation_label.opacity = 0
 
-            # For inside toolpath, shape needs to be larger than tool diameter
-            if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
-                if float(self.y_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter:
-                    self.y_input_validation_label.text = 'MIN: ' + str(0.2 + self.dwt_config.active_cutter.dimensions.tool_diameter)
+            # For inside/pocket toolpaths, shape needs to be larger than tool diameter
+            if self.dwt_config.active_config.toolpath_offset.lower() in ["inside", "pocket"]:
+                if float(self.y_input.text or 0) < 0.11 + self.dwt_config.active_cutter.dimensions.tool_diameter:
+                    self.y_input_validation_label.text = 'MIN: ' + str(0.11 + self.dwt_config.active_cutter.dimensions.tool_diameter)
                     self.y_input_validation_label.opacity = 1
 
-                if current_shape == 'rectangle' and float(self.x_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter:
-                    self.x_input_validation_label.text = 'MIN: ' + str(0.2 + self.dwt_config.active_cutter.dimensions.tool_diameter)
+                if current_shape == 'rectangle' and float(self.x_input.text or 0) < 0.11 + self.dwt_config.active_cutter.dimensions.tool_diameter:
+                    self.x_input_validation_label.text = 'MIN: ' + str(0.11 + self.dwt_config.active_cutter.dimensions.tool_diameter)
                     self.x_input_validation_label.opacity = 1
 
             if float(self.r_input.text or 0) > r_limit:
@@ -828,13 +828,13 @@ class DrywallShapeDisplay(Widget):
 
         # Otherwise check hardcoded min values
         if self.dwt_config.active_config.shape_type.lower() == "circle":
-            if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
+            if self.dwt_config.active_config.toolpath_offset.lower() in ["inside", "pocket"]:
                 return float(self.d_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter
             else:
                 return float(self.d_input.text or 0) >= 0.1
 
         elif self.dwt_config.active_config.shape_type.lower() == "square":
-            if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
+            if self.dwt_config.active_config.toolpath_offset.lower() in ["inside", "pocket"]:
                 return float(self.y_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter
             elif self.dwt_config.active_config.toolpath_offset.lower() == "outside":
                 return float(self.y_input.text or 0) >= 1
@@ -842,7 +842,7 @@ class DrywallShapeDisplay(Widget):
                 return float(self.y_input.text or 0) >= 0.1
 
         elif self.dwt_config.active_config.shape_type.lower() == "rectangle":
-            if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
+            if self.dwt_config.active_config.toolpath_offset.lower() in ["inside", "pocket"]:
                 return (float(self.x_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter) and (
                             float(self.y_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter)
             elif self.dwt_config.active_config.toolpath_offset.lower() == "outside":
@@ -949,7 +949,7 @@ class DrywallShapeDisplay(Widget):
                 )
 
             # ensure the square is not too small
-            if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
+            if self.dwt_config.active_config.toolpath_offset.lower() in ["inside", "pocket"]:
                 if float(self.y_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter:
                     steps.append(
                         self.localization.get_str(
@@ -998,7 +998,7 @@ class DrywallShapeDisplay(Widget):
                     + "\n\n"
                 )
 
-            if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
+            if self.dwt_config.active_config.toolpath_offset.lower() in ["inside", "pocket"]:
                 if (float(self.x_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter) or (
                         float(self.y_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter):
                     steps.append(
@@ -1036,7 +1036,7 @@ class DrywallShapeDisplay(Widget):
                         + "\n\n"
                     )
         elif self.dwt_config.active_config.shape_type.lower() == "circle":
-            if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
+            if self.dwt_config.active_config.toolpath_offset.lower() in ["inside", "pocket"]:
                 if float(self.d_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter:
                     steps.append(
                         self.localization.get_str(
