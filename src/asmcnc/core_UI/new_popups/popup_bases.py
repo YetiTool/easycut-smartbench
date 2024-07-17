@@ -55,6 +55,7 @@ class PopupTitle(BoxLayout):
         self.add_widget(image_label_layout)
 
         self.bind(size=self.update_separator_line)
+        self.bind(pos=self.update_separator_line)
 
     def update_separator_line(self, instance, value):
         self.canvas.before.clear()  # Clear previous drawing
