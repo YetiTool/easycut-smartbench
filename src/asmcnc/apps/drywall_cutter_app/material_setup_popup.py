@@ -50,10 +50,12 @@ Builder.load_string("""
                 
         Label:
             id: title_label
-            pos_hint: {'x': -0.39, 'y': 0.45}
+            size_hint: None, None
+            pos_hint: {'x': 0}
             text: 'Cutting depths'
             font_size: app.get_scaled_sp('20sp')
             color: hex('#F9F9F9')
+            size: self.texture_size
         
         Label:
             id: Z0
@@ -76,7 +78,7 @@ Builder.load_string("""
             text: ''
             font_size: app.get_scaled_sp('16sp')
             color: hex('#333333')
-            text_size: (dp(app.get_scaled_width(75)), None)
+            text_size: (dp(app.get_scaled_width(80)), None)
             
         Image:
             id: material_thickness_dims
@@ -104,7 +106,7 @@ Builder.load_string("""
             text: ''
             font_size: app.get_scaled_sp('16sp')
             color: hex('#333333')
-            text_size: (dp(app.get_scaled_width(75)), None)
+            text_size: (dp(app.get_scaled_width(80)), None)
             
         Image:
             id: bottom_offset_graphic
@@ -141,7 +143,7 @@ Builder.load_string("""
             text: ''
             font_size: app.get_scaled_sp('16sp')
             color: hex('#333333')
-            text_size: (dp(app.get_scaled_width(75)), None)
+            text_size: (dp(app.get_scaled_width(80)), None)
             
         FloatInput:
             id: total_cut_depth
@@ -188,7 +190,7 @@ Builder.load_string("""
             font_size: app.get_scaled_sp('14sp')
             markup: True
             color: hex('#FF0000')
-            text_size: (dp(app.get_scaled_width(175)), None)
+            text_size: (dp(app.get_scaled_width(180)), None)
         
         Label:
             id: pass_depth_warning
@@ -197,15 +199,15 @@ Builder.load_string("""
             font_size: app.get_scaled_sp('14sp')
             markup: True
             color: hex('#FF0000')
-            text_size: (dp(app.get_scaled_width(150)), None) 
+            text_size: (dp(app.get_scaled_width(180)), None) 
         
         GridLayout:
             rows: 3
             cols: 2
-            pos_hint: {'x': 0.6, 'y': -0.2}
+            pos_hint: {'x': 0.6, 'y': -0.1}
             row_force_default: True
             col_force_default: True
-            row_default_height: dp(app.get_scaled_height(45))
+            row_default_height: dp(app.get_scaled_height(55))
             col_default_width: dp(app.get_scaled_width(100))
             
             Label:
@@ -213,7 +215,7 @@ Builder.load_string("""
                 text: 'Tabs'
                 font_size: app.get_scaled_sp('16sp')
                 color: hex('#333333')
-                text_size: (dp(app.get_scaled_width(75)), None)
+                text_size: (dp(app.get_scaled_width(100)), None)
             
             CheckBox:
                 id: tabs_checkbox
@@ -226,7 +228,7 @@ Builder.load_string("""
                 text: ''
                 font_size: app.get_scaled_sp('16sp')
                 color: hex('#333333')
-                text_size: (dp(app.get_scaled_width(75)), None)
+                text_size: (dp(app.get_scaled_width(100)), None)
             
             CheckBox:
                 id: auto_pass_checkbox
@@ -240,13 +242,14 @@ Builder.load_string("""
                 text: ''
                 font_size: app.get_scaled_sp('16sp')
                 color: hex('#333333')
-                text_size: (dp(app.get_scaled_width(75)), None)
+                text_size: (dp(app.get_scaled_width(100)), None)
                 
             FloatInput:
                 id: depth_per_pass
                 padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
                 halign: 'center'
-                size_hint: (0, 0)
+                size_hint: (None, None)
+                size: (dp(app.get_scaled_width(100)), dp(app.get_scaled_height(45)))
                 text_size: self.size
                 font_size: app.get_scaled_sp('16sp')
                 markup: True
@@ -346,10 +349,11 @@ class CuttingDepthsPopup(Popup):
 
     def on_open(self, *args):
         # Fix weird scaling bug with title label
+        self.title_label.pos_hint['x'] = 0
         if scaling_utils.Width == 800:
-            self.title_label.pos_hint['y'] = 0.45
+            self.title_label.pos_hint['y'] = 0.9
         else:
-            self.title_label.pos_hint['y'] = 0.475
+            self.title_label.pos_hint['y'] = 0.93
         self.update_strings()
         self.load_active_config()
         self.update_text()
