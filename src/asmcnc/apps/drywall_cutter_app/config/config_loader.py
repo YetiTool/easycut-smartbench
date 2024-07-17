@@ -34,16 +34,16 @@ INDENT_VALUE = "    "
 def get_display_preview(json_obj):
     l = Localization()
     profile_db = App.get_running_app().profile_db
-    material_description = profile_db.get_material_name(json_obj["material"])
     tool_description = profile_db.get_tool_name(json_obj["cutter_type"])
+    material_description = profile_db.get_material_name(json_obj["material"])
     preview = get_shape_type(json_obj, l)
     preview += l.get_str("Units") + ": " + json_obj["units"] + "\n"
     # preview += "Rotation: " + json_obj['rotation'] + "\n"
     preview += l.get_str("Canvas shape dims") + ": \n"
     preview += get_shape_dimensions(json_obj, l)
-    preview += l.get_str("Material") + ": " + material_description + "\n"
-    preview += l.get_str("Cutter type") + ": " + tool_description + "\n"
-    preview += l.get_str("Toolpath offset") + ": " + json_obj["toolpath_offset"] + "\n"
+    preview += l.get_str("Material") + ": " + get_translated_description(material_description) + "\n"
+    preview += l.get_str("Cutter type") + ": " + get_translated_description(tool_description) + "\n"
+    preview += l.get_str("Toolpath offset") + ": " + l.get_str(json_obj["toolpath_offset"]) + "\n"
     preview += l.get_str("Cutting depths") + ": \n"
     preview += (
             INDENT_VALUE
@@ -60,7 +60,7 @@ def get_display_preview(json_obj):
     preview += (
             INDENT_VALUE
             + l.get_str("Auto pass depth") + ": "
-            + str(json_obj["cutting_depths"]["auto_pass"])
+            + str(l.get_str('Yes') if json_obj["cutting_depths"]["auto_pass"] else l.get_str('No'))
             + "\n"
     )
     preview += (
@@ -69,19 +69,27 @@ def get_display_preview(json_obj):
             + str(json_obj["cutting_depths"]["depth_per_pass"])
             + "\n"
     )
-    preview += l.get_str("Datum position") + ": \n"
-    preview += INDENT_VALUE + l.get_str("X") + ": " + str(json_obj["datum_position"]["x"]) + "\n"
-    preview += INDENT_VALUE + l.get_str("Y") + ": " + str(json_obj["datum_position"]["y"]) + "\n"
+    preview += l.get_str("Datum position") + ": " + str(json_obj["datum_position"]["x"]) + " / " + str(json_obj["datum_position"]["y"]) + "\n"
+    # preview += INDENT_VALUE + l.get_str("X") + ": " +  + "\n"
+    # preview += INDENT_VALUE + l.get_str("Y") + ": " + str(json_obj["datum_position"]["y"]) + "\n"
     return preview
+
+
+def get_translated_description(material_description):
+    l = Localization()
+    desc = ''
+    for elem in material_description.split(' '):
+        desc += l.get_str(elem) + ' '
+    return desc.strip()
 
 
 def get_shape_type(json_obj, l):
     if json_obj["shape_type"] in ["line", "rectangle"]:
         return (
-                l.get_str("Shape type") + ": " + json_obj["rotation"] + " " + json_obj["shape_type"] + "\n"
+                l.get_str("Shape type") + ": " + l.get_str(json_obj["rotation"]) + " " + l.get_str(json_obj["shape_type"]) + "\n"
         )
     else:
-        return l.get_str("Shape type") + ": " + json_obj["shape_type"] + "\n"
+        return l.get_str("Shape type") + ": " + l.get_str(json_obj["shape_type"]) + "\n"
 
 
 def get_shape_dimensions(json_obj, l):
