@@ -1889,8 +1889,9 @@ class SerialConnection(EventDispatcher):
 
         # Catch and correct all instances of the spindle speed command "M3 S{RPM}"
         if "M3" in serialCommand.upper():
-            # Set spindle_on flag
-            self.spindle_on = True
+            if self.m_state != "Check":
+                # Set spindle_on flag
+                self.spindle_on = True
 
             if "S" in serialCommand.upper():
                 # Correct the spindle speed command
