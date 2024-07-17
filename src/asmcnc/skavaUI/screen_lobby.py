@@ -162,7 +162,7 @@ Builder.load_string("""
                             pos: self.parent.pos
                             Image:
                                 id: yeticut_apps_image
-                                source: "./asmcnc/skavaUI/img/YetiCut_lobby_logo.png"
+                                source: "./asmcnc/skavaUI/img/shapes_lobby_logo.png"
                                 center_x: self.parent.center_x
                                 y: self.parent.y
                                 size: self.parent.width, self.parent.height
@@ -171,7 +171,7 @@ Builder.load_string("""
                         id: yeticut_apps_label
                         size_hint_y: 1
                         font_size: str(0.03125*app.width) + 'sp'
-                        text: 'YetiCut Apps'
+                        text: 'Shapes'
                         markup: True
 
                         
@@ -623,10 +623,7 @@ class LobbyScreen(Screen):
             popup_info.PopupError(self.sm, self.l, self.l.get_str("Please ensure machine is idle before continuing."))
 
     def yeticut_apps(self):
-        if not self.model_manager.is_machine_drywall():
-            self.sm.current = 'yeticut_lobby'
-        else:
-            self.am.start_drywall_cutter_app()
+        self.am.start_drywall_cutter_app()
 
     def shutdown_console(self):
         console_utils.shutdown()

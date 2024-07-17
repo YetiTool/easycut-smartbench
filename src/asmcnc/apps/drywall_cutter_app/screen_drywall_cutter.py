@@ -449,11 +449,7 @@ class DrywallCutterScreen(Screen):
     def quit_to_lobby(self):
         self.set_return_screens()
         self.jd.reset_values()
-
-        if self.dwt_config.app_type == config_options.AppType.SHAPES:
-            self.sm.current = 'yeticut_lobby'
-        else:
-            self.sm.current = 'lobby'
+        self.sm.current = 'lobby'
 
     def simulate(self):
         self.drywall_shape_display_widget.defocus_inputs()
