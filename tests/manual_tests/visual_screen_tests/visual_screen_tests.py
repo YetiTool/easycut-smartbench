@@ -616,7 +616,8 @@ class ScreenTest(App):
 
         def serial_failure_screen_test():
             set_up_screens([[screen_home.HomeScreen, 'home'],
-                            [screen_serial_failure.SerialFailureClass, 'serialScreen']])
+                            [screen_serial_failure.SerialFailureClass, 'serialScreen'],
+                            [screen_lobby.LobbyScreen, 'lobby']])
 
             sm.current = 'home'
 
