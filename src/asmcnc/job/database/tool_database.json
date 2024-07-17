@@ -14,7 +14,7 @@
       "toolpath_offsets": {
         "inside": true,
         "outside": false,
-        "on": true,
+        "on": false,
         "pocket": false
       },
       "required_operations": {
@@ -46,10 +46,10 @@
     "uid": "0000",
     "description": "Yeti Tool 21754 60° 3 flute V groove TiAIN coated",
     "manufacturer": "Yeti Tool",
-    "manufacturer_part_number": 21754,
+    "manufacturer_part_number": "21754",
     "tool_type": "V groove",
     "generic_definition": {
-      "uid": "0024",
+      "uid": "0001",
       "string": "60 ° 3 flute V groove",
       "dimension": 60,
       "unit": "°",
@@ -91,10 +91,10 @@
     "uid": "0001",
     "description": "Yeti Tool 21755 90° 3 flute V groove TiAIN coated",
     "manufacturer": "Yeti Tool",
-    "manufacturer_part_number": 21755,
+    "manufacturer_part_number": "21755",
     "tool_type": "V groove",
     "generic_definition": {
-      "uid": "0025",
+      "uid": "0002",
       "string": "90 ° 3 flute V groove",
       "dimension": 90,
       "unit": "°",
@@ -136,10 +136,10 @@
     "uid": "0002",
     "description": "Yeti Tool 21756 120° 3 flute V groove TiAIN coated",
     "manufacturer": "Yeti Tool",
-    "manufacturer_part_number": 21756,
+    "manufacturer_part_number": "21756",
     "tool_type": "V groove",
     "generic_definition": {
-      "uid": "0026",
+      "uid": "0003",
       "string": "120 ° 3 flute V groove",
       "dimension": 120,
       "unit": "°",
@@ -181,10 +181,10 @@
     "uid": "0003",
     "description": "Yeti Tool 21741 Ø 3.175 mm 1 flute Compression Endmill L4+18",
     "manufacturer": "Yeti Tool",
-    "manufacturer_part_number": 21741,
+    "manufacturer_part_number": "21741",
     "tool_type": "Endmill",
     "generic_definition": {
-      "uid": "0000",
+      "uid": "0004",
       "string": "3.175 mm 1 flute Compression",
       "dimension": 3.175,
       "unit": "mm",
@@ -226,10 +226,10 @@
     "uid": "0004",
     "description": "Yeti Tool 21744 Ø 6 mm 1 flute Compression Endmill L4+21",
     "manufacturer": "Yeti Tool",
-    "manufacturer_part_number": 21744,
+    "manufacturer_part_number": "21744",
     "tool_type": "Endmill",
     "generic_definition": {
-      "uid": "0001",
+      "uid": "0005",
       "string": "6 mm 1 flute Compression",
       "dimension": 6,
       "unit": "mm",
@@ -271,10 +271,10 @@
     "uid": "0005",
     "description": "Yeti Tool 21745 Ø 3.175 mm 1 flute Downcut Endmill L22",
     "manufacturer": "Yeti Tool",
-    "manufacturer_part_number": 21745,
+    "manufacturer_part_number": "21745",
     "tool_type": "Endmill",
     "generic_definition": {
-      "uid": "0002",
+      "uid": "0006",
       "string": "3.175 mm 1 flute Downcut",
       "dimension": 3.175,
       "unit": "mm",
@@ -316,10 +316,10 @@
     "uid": "0006",
     "description": "Yeti Tool 21748 Ø 6 mm 1 flute Downcut Endmill L22",
     "manufacturer": "Yeti Tool",
-    "manufacturer_part_number": 21748,
+    "manufacturer_part_number": "21748",
     "tool_type": "Endmill",
     "generic_definition": {
-      "uid": "0003",
+      "uid": "0007",
       "string": "6 mm 1 flute Downcut",
       "dimension": 6,
       "unit": "mm",
@@ -361,10 +361,10 @@
     "uid": "0007",
     "description": "Yeti Tool 21737 Ø 3.175 mm 1 flute Upcut Endmill L22",
     "manufacturer": "Yeti Tool",
-    "manufacturer_part_number": 21737,
+    "manufacturer_part_number": "21737",
     "tool_type": "Endmill",
     "generic_definition": {
-      "uid": "0006",
+      "uid": "0008",
       "string": "3.175 mm 1 flute Upcut",
       "dimension": 3.175,
       "unit": "mm",
@@ -406,10 +406,10 @@
     "uid": "0008",
     "description": "Yeti Tool 21738 Ø 4 mm 1 flute Upcut Endmill L22",
     "manufacturer": "Yeti Tool",
-    "manufacturer_part_number": 21738,
+    "manufacturer_part_number": "21738",
     "tool_type": "Endmill",
     "generic_definition": {
-      "uid": "0007",
+      "uid": "0009",
       "string": "4 mm 1 flute Upcut",
       "dimension": 4,
       "unit": "mm",
@@ -451,10 +451,10 @@
     "uid": "0009",
     "description": "Yeti Tool 21740 Ø 6 mm 1 flute Upcut Endmill L22",
     "manufacturer": "Yeti Tool",
-    "manufacturer_part_number": 21740,
+    "manufacturer_part_number": "21740",
     "tool_type": "Endmill",
     "generic_definition": {
-      "uid": "0009",
+      "uid": "0010",
       "string": "6 mm 1 flute Upcut",
       "dimension": 6,
       "unit": "mm",
@@ -496,10 +496,10 @@
     "uid": "0010",
     "description": "Yeti Tool 21737 Ø 3.175 mm 1 flute Upcut Endmill L22 DLC coated",
     "manufacturer": "Yeti Tool",
-    "manufacturer_part_number": 21737,
+    "manufacturer_part_number": "21737",
     "tool_type": "Endmill",
     "generic_definition": {
-      "uid": "0006",
+      "uid": "0008",
       "string": "3.175 mm 1 flute Upcut",
       "dimension": 3.175,
       "unit": "mm",
@@ -541,10 +541,10 @@
     "uid": "0011",
     "description": "Yeti Tool 21740 Ø 6 mm 1 flute Upcut Endmill L22 DLC coated",
     "manufacturer": "Yeti Tool",
-    "manufacturer_part_number": 21740,
+    "manufacturer_part_number": "21740",
     "tool_type": "Endmill",
     "generic_definition": {
-      "uid": "0009",
+      "uid": "0010",
       "string": "6 mm 1 flute Upcut",
       "dimension": 6,
       "unit": "mm",
@@ -586,10 +586,10 @@
     "uid": "0012",
     "description": "Yeti Tool 21751 Ø 3.175 mm 1 flute Upcut Endmill L12 DLC coated (aluminium)",
     "manufacturer": "Yeti Tool",
-    "manufacturer_part_number": 21751,
+    "manufacturer_part_number": "21751",
     "tool_type": "Endmill",
     "generic_definition": {
-      "uid": "0006",
+      "uid": "0008",
       "string": "3.175 mm 1 flute Upcut",
       "dimension": 3.175,
       "unit": "mm",
@@ -631,10 +631,10 @@
     "uid": "0013",
     "description": "Yeti Tool 21752 Ø 4 mm 1 flute Upcut Endmill L15 DLC coated (aluminium)",
     "manufacturer": "Yeti Tool",
-    "manufacturer_part_number": 21752,
+    "manufacturer_part_number": "21752",
     "tool_type": "Endmill",
     "generic_definition": {
-      "uid": "0007",
+      "uid": "0009",
       "string": "4 mm 1 flute Upcut",
       "dimension": 4,
       "unit": "mm",
@@ -676,10 +676,10 @@
     "uid": "0014",
     "description": "Yeti Tool 21753 Ø 5 mm 1 flute Upcut Endmill L22 DLC coated (aluminium)",
     "manufacturer": "Yeti Tool",
-    "manufacturer_part_number": 21753,
+    "manufacturer_part_number": "21753",
     "tool_type": "Endmill",
     "generic_definition": {
-      "uid": "0008",
+      "uid": "0011",
       "string": "5 mm 1 flute Upcut",
       "dimension": 5,
       "unit": "mm",
@@ -721,10 +721,10 @@
     "uid": "0015",
     "description": "Yeti Tool 21733 Ø 3.175 mm 2 flute Compression Endmill L4+18",
     "manufacturer": "Yeti Tool",
-    "manufacturer_part_number": 21733,
+    "manufacturer_part_number": "21733",
     "tool_type": "Endmill",
     "generic_definition": {
-      "uid": "0011",
+      "uid": "0012",
       "string": "3.175 mm 2 flute Compression",
       "dimension": 3.175,
       "unit": "mm",
@@ -766,10 +766,10 @@
     "uid": "0016",
     "description": "Yeti Tool 21734 Ø 4 mm 2 flute Compression Endmill L4+18",
     "manufacturer": "Yeti Tool",
-    "manufacturer_part_number": 21734,
+    "manufacturer_part_number": "21734",
     "tool_type": "Endmill",
     "generic_definition": {
-      "uid": "0012",
+      "uid": "0013",
       "string": "4 mm 2 flute Compression",
       "dimension": 4,
       "unit": "mm",
@@ -811,10 +811,10 @@
     "uid": "0017",
     "description": "Yeti Tool 21735 Ø 5 mm 2 flute Compression Endmill L4+18",
     "manufacturer": "Yeti Tool",
-    "manufacturer_part_number": 21735,
+    "manufacturer_part_number": "21735",
     "tool_type": "Endmill",
     "generic_definition": {
-      "uid": "0013",
+      "uid": "0014",
       "string": "5 mm 2 flute Compression",
       "dimension": 5,
       "unit": "mm",
@@ -856,10 +856,10 @@
     "uid": "0018",
     "description": "Yeti Tool 21736 Ø 6 mm 2 flute Compression Endmill L4+18",
     "manufacturer": "Yeti Tool",
-    "manufacturer_part_number": 21736,
+    "manufacturer_part_number": "21736",
     "tool_type": "Endmill",
     "generic_definition": {
-      "uid": "0014",
+      "uid": "0015",
       "string": "6 mm 2 flute Compression",
       "dimension": 6,
       "unit": "mm",
@@ -901,10 +901,10 @@
     "uid": "0019",
     "description": "Yeti Tool 21728 Ø 3.175 mm 2 flute Downcut Endmill L22",
     "manufacturer": "Yeti Tool",
-    "manufacturer_part_number": 21728,
+    "manufacturer_part_number": "21728",
     "tool_type": "Endmill",
     "generic_definition": {
-      "uid": "0015",
+      "uid": "0016",
       "string": "3.175 mm 2 flute Downcut",
       "dimension": 3.175,
       "unit": "mm",
@@ -946,10 +946,10 @@
     "uid": "0020",
     "description": "Yeti Tool 21731 Ø 6 mm 2 flute Downcut Endmill L24",
     "manufacturer": "Yeti Tool",
-    "manufacturer_part_number": 21731,
+    "manufacturer_part_number": "21731",
     "tool_type": "Endmill",
     "generic_definition": {
-      "uid": "0016",
+      "uid": "0017",
       "string": "6 mm 2 flute Downcut",
       "dimension": 6,
       "unit": "mm",
@@ -991,10 +991,10 @@
     "uid": "0021",
     "description": "Yeti Tool 21732 Ø 8 mm 2 flute Downcut Endmill L42",
     "manufacturer": "Yeti Tool",
-    "manufacturer_part_number": 21732,
+    "manufacturer_part_number": "21732",
     "tool_type": "Endmill",
     "generic_definition": {
-      "uid": "0017",
+      "uid": "0018",
       "string": "8 mm 2 flute Downcut",
       "dimension": 8,
       "unit": "mm",
@@ -1036,7 +1036,7 @@
     "uid": "0022",
     "description": "Yeti Tool 21720 Ø 4 mm 2 flute Straight Endmill L22",
     "manufacturer": "Yeti Tool",
-    "manufacturer_part_number": 21720,
+    "manufacturer_part_number": "21720",
     "tool_type": "Endmill",
     "generic_definition": {
       "uid": "0019",
@@ -1081,7 +1081,7 @@
     "uid": "0023",
     "description": "Yeti Tool 21721 Ø 6 mm 2 flute Straight Endmill L22",
     "manufacturer": "Yeti Tool",
-    "manufacturer_part_number": 21721,
+    "manufacturer_part_number": "21721",
     "tool_type": "Endmill",
     "generic_definition": {
       "uid": "0020",
@@ -1127,7 +1127,7 @@
     "uid": "0024",
     "description": "Yeti Tool 21722 Ø 8 mm 2 flute Straight Endmill L32",
     "manufacturer": "Yeti Tool",
-    "manufacturer_part_number": 21722,
+    "manufacturer_part_number": "21722",
     "tool_type": "Endmill",
     "generic_definition": {
       "uid": "0021",
@@ -1165,7 +1165,8 @@
       "coating": null
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -1175,7 +1176,7 @@
     "manufacturer_part_number": "-",
     "tool_type": "Endmill",
     "generic_definition": {
-      "uid": "0010",
+      "uid": "0022",
       "string": "8 mm 1 flute Upcut",
       "dimension": 8,
       "unit": "mm",
@@ -1220,7 +1221,7 @@
     "manufacturer_part_number": "-",
     "tool_type": "Endmill",
     "generic_definition": {
-      "uid": "0004",
+      "uid": "0023",
       "string": "8 mm 1 flute Downcut",
       "dimension": 8,
       "unit": "mm",
@@ -1265,7 +1266,7 @@
     "manufacturer_part_number": "-",
     "tool_type": "Endmill",
     "generic_definition": {
-      "uid": "0018",
+      "uid": "0024",
       "string": "3.175 mm 2 flute Straight",
       "dimension": 3.175,
       "unit": "mm",
@@ -1310,7 +1311,7 @@
     "manufacturer_part_number": "D302.060.18D",
     "tool_type": "Endmill",
     "generic_definition": {
-      "uid": "0005",
+      "uid": "0025",
       "string": "6 mm 1 flute Straight",
       "dimension": 6,
       "unit": "mm",
@@ -1355,7 +1356,7 @@
     "manufacturer_part_number": "-",
     "tool_type": "Endmill",
     "generic_definition": {
-      "uid": "0008",
+      "uid": "0011",
       "string": "5 mm 1 flute Upcut",
       "dimension": 5,
       "unit": "mm",
@@ -1400,7 +1401,7 @@
     "manufacturer_part_number": "715.001.11",
     "tool_type": "V groove",
     "generic_definition": {
-      "uid": "0023",
+      "uid": "0026",
       "string": "90 ° 2 flute V groove",
       "dimension": 90,
       "unit": "°",
@@ -1435,7 +1436,7 @@
       "coating": null
     },
     "available_isas": [
-      "shapes"
+      "dwt"
     ]
   },
   {
@@ -1445,7 +1446,7 @@
     "manufacturer_part_number": "-",
     "tool_type": "V groove",
     "generic_definition": {
-      "uid": "0022",
+      "uid": "0027",
       "string": "45 ° 2 flute V groove",
       "dimension": 45,
       "unit": "°",
@@ -1480,7 +1481,53 @@
       "coating": null
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
+    ]
+  },
+  {
+    "uid": "0034",
+    "description": "Generic 60° 2 flute V groove",
+    "manufacturer": "Generic",
+    "manufacturer_part_number": "-",
+    "tool_type": "V groove",
+    "generic_definition": {
+      "uid": "0028",
+      "string": "60 ° 2 flute V groove",
+      "dimension": 60,
+      "unit": "°",
+      "type": "2 flute V groove",
+      "toolpath_offsets": {
+        "inside": false,
+        "outside": false,
+        "on": true,
+        "pocket": false
+      },
+      "required_operations": {
+        "lead_in": false
+      }
+    },
+    "dimensions": {
+      "shank_diameter": 6,
+      "tool_diameter": null,
+      "unit": "mm",
+      "angle": 60
+    },
+    "flutes": {
+      "type": "Straight",
+      "lengths": {
+        "upcut_straight": 19,
+        "downcut": 0,
+        "total": 19,
+        "unit": "mm"
+      },
+      "quantity": 2,
+      "material": "Carbide",
+      "coated": false,
+      "coating": null
+    },
+    "available_isas": [
+      "dwt"
     ]
   }
 ]

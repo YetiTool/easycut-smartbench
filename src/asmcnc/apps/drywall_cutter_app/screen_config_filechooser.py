@@ -23,6 +23,8 @@ from kivy.uix.screenmanager import Screen
 from asmcnc.comms import usb_storage
 from asmcnc.skavaUI import popup_info
 
+from asmcnc.apps.drywall_cutter_app.config.config_loader import DWTConfig
+
 Builder.load_string("""
 
 #:import hex kivy.utils.get_color_from_hex
@@ -400,6 +402,8 @@ class ConfigFileChooser(Screen):
 
         try:
             if self.filechooser.selection[0] != 'C':
+                if not DWTConfig.is_valid_configuration(self.filechooser.selection[0]):
+                    DWTConfig.fix_config(self.filechooser.selection[0])
                 self.display_selected_file()
 
             else:
