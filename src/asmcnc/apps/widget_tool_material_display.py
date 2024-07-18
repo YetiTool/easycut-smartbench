@@ -45,13 +45,13 @@ class ToolMaterialDisplayWidget(BoxLayout):
         self.rect.size = self.size
 
     def on_active_profile(self, *args):
-        self.material_text = self.get_translated_description(self.config.active_profile.material.description)
+        self.material_text = self.config.active_profile.material.description
         self.tool_text = self.get_translated_description(self.config.active_cutter.description)
         self.update_tool_material_label()
 
     def update_tool_material_label(self):
         self.tool_material_label.text = (self.l.get_str("Material") + ": " +
-                                         self.material_text + "\n" + self.l.get_str("Tool") + ":\n" + self.tool_text)
+                                         self.l.get_str(self.material_text) + "\n" + self.l.get_str("Tool") + ":\n" + self.tool_text)
 
     def get_translated_description(self, material_description):
         desc = ''

@@ -41,7 +41,7 @@ def get_display_preview(json_obj):
     # preview += "Rotation: " + json_obj['rotation'] + "\n"
     preview += l.get_str("Canvas shape dims") + ": \n"
     preview += get_shape_dimensions(json_obj, l)
-    preview += l.get_str("Material") + ": " + get_translated_description(material_description) + "\n"
+    preview += l.get_str("Material") + ": " + l.get_str(material_description) + "\n"
     preview += l.get_str("Cutter type") + ": " + get_translated_description(tool_description) + "\n"
     preview += l.get_str("Toolpath offset") + ": " + l.get_str(json_obj["toolpath_offset"]) + "\n"
     preview += l.get_str("Cutting depths") + ": \n"
@@ -69,16 +69,22 @@ def get_display_preview(json_obj):
             + str(json_obj["cutting_depths"]["depth_per_pass"])
             + "\n"
     )
+    preview += (
+            INDENT_VALUE
+            + l.get_str("Tabs") + ": "
+            + str(l.get_str('Yes') if json_obj["cutting_depths"]["tabs"] else l.get_str('No'))
+            + "\n"
+    )
     preview += l.get_str("Datum position") + ": " + str(json_obj["datum_position"]["x"]) + " / " + str(json_obj["datum_position"]["y"]) + "\n"
     # preview += INDENT_VALUE + l.get_str("X") + ": " +  + "\n"
     # preview += INDENT_VALUE + l.get_str("Y") + ": " + str(json_obj["datum_position"]["y"]) + "\n"
     return preview
 
 
-def get_translated_description(material_description):
+def get_translated_description(description):
     l = Localization()
     desc = ''
-    for elem in material_description.split(' '):
+    for elem in description.split(' '):
         desc += l.get_str(elem) + ' '
     return desc.strip()
 
