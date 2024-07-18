@@ -38,7 +38,7 @@ class ToolMaterialDisplayWidget(BoxLayout):
 
         config.bind(active_profile=self.on_active_profile)
 
-        self.update_tool_material_label()
+        self.on_active_profile(None)
 
     def update_rect(self, *args):
         self.rect.pos = self.pos
