@@ -12,7 +12,6 @@ from kivy.resources import resource_find
 from kivy.core.image import Image
 from kivy.graphics import Color, BorderImage
 from kivy.utils import rgba
-from itertools import cycle
 
 try:
     import hgtk
@@ -47,14 +46,13 @@ class Keyboard(VKeyboard):
         self.qwerty_layout = "data/keyboards/qwerty.json"
         self.qwertyKR_layout = os.path.join(dirname, "layouts", "qwertyKR.json")
         self.qwertyJA_layout = os.path.join(dirname, "layouts", "qwertyJA.json")
-        
-        self.use_mozcpy_converter = os.path.join(dirname, "helper_scripts", "use_mozcpy_converter.py")
-        self.kanji_iterator = None
-        self.new_gen = True
 
         self.font_size = scaling_utils.get_scaled_width(20)
         self.background_color = [0, 0, 0, 1]
 
+        self.use_mozcpy_converter = os.path.join(dirname, "helper_scripts", "use_mozcpy_converter.py")
+        self.kanji_iterator = None
+        self.new_gen = True
 
         try:
             if self.l.lang == self.l.ko:
@@ -202,7 +200,6 @@ class Keyboard(VKeyboard):
                     if self.new_text:
                         self.text_instance.text = self.new_text
                         self.refresh(force=True)
-
                 else:
                     self.new_gen = True
         except:
@@ -240,6 +237,7 @@ class Keyboard(VKeyboard):
                 if keycode == "layout":
                     self.layout = self.numeric_layout if self.layout == self.previous_layout else self.previous_layout
                 return
+
             if self.text_instance.selection_text:
                 self.text_instance.delete_selection()
             self.text_instance.insert_text(internal)
@@ -345,9 +343,6 @@ class Keyboard(VKeyboard):
         if self.text_instance == text_input:
             self.text_instance = None
 
-
-    # JAPANESE KANJI
-
     # Generate Kanji suggestions
     def generate_kanji_suggestions(self, text_input):
 
@@ -357,6 +352,6 @@ class Keyboard(VKeyboard):
         process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = process.communicate()
 
-        # # Decode the output from bytes to string
+        # # Decode the output from bytes to string, and then format it into a list
         output = stdout.decode('utf-8').strip("[]\n' ").replace("'", "").replace(" ","").split(",")
         return output
