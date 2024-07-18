@@ -212,7 +212,7 @@ Builder.load_string("""
             
             Label:
                 id: tabs_label
-                text: 'Tabs'
+                text: ''
                 font_size: app.get_scaled_sp('16sp')
                 color: hex('#333333')
                 text_size: (dp(app.get_scaled_width(100)), None)
@@ -386,6 +386,7 @@ class CuttingDepthsPopup(Popup):
         self.material_thickness_label.text = self.l.get_str("Material thickness")
         self.bottom_offset_label.text = self.l.get_str("Bottom offset")
         self.total_cut_depth_label.text = self.l.get_str("Total cut depth")
+        self.tabs_label.text = self.l.get_str("Tabs")
         self.auto_pass_label.text = self.l.get_str("Auto pass depth")
         self.depth_per_pass_label.text = self.l.get_str("Depth per pass")
         self.pass_depth_warning.text = self.pass_depth_warning_cutter_max
