@@ -51,7 +51,6 @@ class Keyboard(VKeyboard):
         self.use_mozcpy_converter = os.path.join(dirname, "helper_scripts", "use_mozcpy_converter.py")
         self.kanji_iterator = None
         self.new_gen = True
-        # self.kanji_iterator =  iter(self.generate_kanji_suggestions("まほうしょうじょ"))
 
         self.font_size = scaling_utils.get_scaled_width(20)
         self.background_color = [0, 0, 0, 1]
@@ -199,8 +198,10 @@ class Keyboard(VKeyboard):
                 if keycode == "spacebar":
                     if self.new_gen: self.kanji_iterator = cycle(self.generate_kanji_suggestions(self.text_instance.text))
                     self.new_gen = False
-                    self.text_instance.text = next(self.kanji_iterator).strip(" ")
-                    self.refresh(force=True)
+                    self.new_text = next(self.kanji_iterator).strip(" ")
+                    if self.new_text:
+                        self.text_instance.text = self.new_text
+                        self.refresh(force=True)
 
                 else:
                     self.new_gen = True
@@ -359,52 +360,3 @@ class Keyboard(VKeyboard):
         # # Decode the output from bytes to string
         output = stdout.decode('utf-8').strip("[]\n' ").replace("'", "").replace(" ","").split(",")
         return output
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
