@@ -41,6 +41,33 @@
       src: starteasycut.sh
       dest: /home/pi/starteasycut.sh
       mode: '0755'
+
+  - name:
+    lineinfile:
+      name: /etc/apt/sources.list
+      state: present
+      insertafter: 'deb http://raspbian.raspberrypi.org/raspbian/ stretch main contrib non-free rpi'
+      line: 'deb http://legacy.raspberrypi.org/raspbian/ stretch main contrib non-free rpi'
+  - name:
+    lineinfile:
+      name: /etc/apt/sources.list
+      state: present
+      insertafter: 'deb http://raspbian.raspberrypi.org/raspbian/ stretch main contrib non-free rpi'
+      line: 'deb http://raspbian.raspberrypi.org/raspbian/ buster main contrib non-free rpi'
+  - name:
+    lineinfile:
+      name: /etc/apt/sources.list.d/raspi.list
+      state: present
+      insertafter: 'deb http://raspbian.raspberrypi.org/raspbian/ stretch main contrib non-free rpi'
+      line: 'deb http://legacy.raspberrypi.org/raspbian/ stretch main contrib non-free rpi'
+  - name:
+    lineinfile:
+      name: /etc/apt/sources.list.d/raspi.list
+      state: present
+      insertafter: 'deb http://raspbian.raspberrypi.org/raspbian/ stretch main contrib non-free rpi'
+      line: 'deb http://raspbian.raspberrypi.org/raspbian/ buster main contrib non-free rpi'
+
+
     # Python2 pip and mysqldb are only available on stretch
   - name: Install packages for Raspbian Stretch
     package:
