@@ -896,8 +896,8 @@
   {
     "uid": "0029",
     "generic_tool": {
-      "uid": "0012",
-      "description": "3.175 mm 2 flute Compression"
+      "uid": "0011",
+      "description": "5 mm 1 flute Upcut"
     },
     "material": {
       "uid": "0004",
@@ -917,8 +917,12 @@
     },
     "applicable_tools": [
       {
-        "uid": "0015",
-        "description": "Yeti Tool 21733 Ø 3.175 mm 2 flute Compression Endmill L4+18"
+        "uid": "0014",
+        "description": "Yeti Tool 21753 Ø 5 mm 1 flute Upcut Endmill L22 DLC coated (aluminium)"
+      },
+      {
+        "uid": "0030",
+        "description": "Rennie Tool Ø 5 mm 1 flute Upcut Endmill L22"
       }
     ]
   },
