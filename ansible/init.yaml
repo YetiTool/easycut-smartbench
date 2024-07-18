@@ -109,6 +109,12 @@
       name: six==1.16.0
     ignore_errors: yes
 
+  - name: Install mecab & mozcpy 
+    command: python3 -m pip install mecab-python3 mozcpy
+    become: true
+    become_user: pi
+    ignore_errors: yes
+
   - name: Copying the odbcinst ini script
     template:
       src: odbcinst.ini
