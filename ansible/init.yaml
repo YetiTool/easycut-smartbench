@@ -136,6 +136,12 @@
       name: six==1.16.0
     ignore_errors: yes
 
+  # Install python3 packages for japanese
+  - name: Install python3 pip setuptools wheel
+    command: python3 -m pip install --upgrade pip setuptools wheel
+    become: true
+    become_user: pi
+    ignore_errors: yes
   - name: Install mecab & mozcpy 
     command: python3 -m pip install mecab-python3 mozcpy
     become: true
