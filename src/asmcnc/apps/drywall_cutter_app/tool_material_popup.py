@@ -4,6 +4,8 @@ from kivy.lang import Builder
 
 from asmcnc.comms.logging_system.logging_system import Logger
 
+from asmcnc.core_UI import scaling_utils
+
 Builder.load_string("""
 <Options@SpinnerOption>
 
@@ -43,6 +45,8 @@ Builder.load_string("""
     tool_dropdown:tool_dropdown
     confirm_button:confirm_button
     material_dropdown:material_dropdown
+    float_layout:float_layout
+    title_label:title_label
 
     auto_dismiss: False
     size_hint: (None,None)
@@ -59,10 +63,12 @@ Builder.load_string("""
         
         Label:
             id: title_label
-            pos_hint: {'x': -0.31, 'y': 0.45}
+            size_hint: None, None
+            pos_hint: {'x': 0}
             text: 'Tool & Material selection'
             font_size: app.get_scaled_sp('20sp')
             color: hex('#F9F9F9')
+            size: self.texture_size
         
         Label:
             id: description_label
@@ -173,6 +179,11 @@ class ToolMaterialPopup(Popup):
         self.confirm_button.opacity = 0.5
 
     def on_open(self):
+        if scaling_utils.Width == 800:
+            self.title_label.pos_hint['y'] = 0.9
+        else:
+            self.title_label.pos_hint['y'] = 0.93
+        self.float_layout.do_layout()
         self.load_config()
         if self.material_dropdown.text == '' or self.material_dropdown.text == '':  # Only disable if one is empty
             self.confirm_button.disabled = True
