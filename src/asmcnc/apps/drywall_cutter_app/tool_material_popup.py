@@ -114,7 +114,7 @@ Builder.load_string("""
             
         Label:
             id: cutter_link_label
-            text: root.l.get_str('Yeti Tool cutters available from') + ' www.yetitool.com/about/partners'
+            text: root.l.get_str('Yeti Tool cutters available from <url>').replace('<url>', 'www.yetitool.com/about/partners')
             pos_hint: {'center_x': 0.5, 'center_y': 0.25}
             color: hex('#333333')
             halign: 'center'
