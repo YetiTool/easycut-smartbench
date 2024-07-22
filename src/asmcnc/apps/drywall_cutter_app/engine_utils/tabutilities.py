@@ -406,7 +406,7 @@ class TabUtilities:
         Adjust tab spacing based on the distance moved to avoid having loads of tabs on large segments.
         """
 
-        k = 1  # adjustment factor
+        k = 4  # adjustment factor
 
-        return base_tab_spacing * k * movement_distance ** 0.5
+        return round(base_tab_spacing * k * movement_distance ** 0.5)
 

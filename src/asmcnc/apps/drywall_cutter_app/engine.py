@@ -641,7 +641,7 @@ class GCodeEngine(object):
         simulation_feedrate = 6000 # mm/s
         geberit_partoff = False
 
-        base_tab_spacing = 5  # mm
+        base_tab_spacing = 1  # mm
         tab_width = 10  # mm
         tab_height = self.config.active_config.cutting_depths.material_thickness * 0.6
         if tab_height > 5:
