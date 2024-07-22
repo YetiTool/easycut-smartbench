@@ -36,7 +36,7 @@ Builder.load_string(
         pos: (dp(148.0/800.0)*app.width, dp(80.0/480.0)*app.height)
         Image:
             id: x_beam
-            source: "./asmcnc/skavaUI/img/door_x_beam.png"
+            source: "./asmcnc/skavaUI/img/dust_shoe_plug.png"
             size: self.parent.width, self.parent.height
             pos: self.parent.pos
             allow_stretch: True
@@ -141,8 +141,8 @@ Builder.load_string(
                     width: dp(0.9*app.width)
                     text_size: self.size
                     size: self.parent.size
-                    x: self.parent.x + 80.0/800*app.width
-                    y: self.parent.y
+                    x: self.parent.x
+                    y: self.parent.y - 80.0/800*app.width
                     opacity: 1
 
                 Image:
@@ -212,46 +212,10 @@ class DustShoeAlarmScreen(Screen):
         self.db = database
         self.l = localization
         self.usm = App.get_running_app().user_settings_manager
-        self.header_label.text = self.l.get_bold("Interrupt bar pushed!")
+        self.header_label.text = self.l.get_bold("Warning!")
         self.spindle_raise_label.text = (
-            self.l.get_str("Preparing to resume, please wait") + "..."
+            self.l.get_str("Please close the dust shoe by fitting the dust shoe plug!")
         )
-        self.anim_spindle_label = (
-            Animation(opacity=1, duration=1.5)
-            + Animation(opacity=0, duration=0.5)
-            + Animation(opacity=0, duration=1.5)
-            + Animation(opacity=1, duration=0.5)
-        )
-        self.anim_countdown_img = (
-            Animation(opacity=0, duration=1.5)
-            + Animation(opacity=1, duration=0.5)
-            + Animation(opacity=1, duration=1.5)
-            + Animation(opacity=0, duration=0.5)
-        )
-        self.anim_stop_bar = (
-            Animation(x=150, duration=0.3)
-            + Animation(x=153, duration=0.2)
-            + Animation(x=151, duration=0.2)
-            + Animation(x=152, duration=0.2)
-            + Animation(x=152, duration=0.2)
-            + Animation(x=152, duration=0.2)
-            + Animation(x=152, duration=1.6)
-            + Animation(x=140, duration=2)
-            + Animation(x=140, duration=2)
-        )
-        self.anim_stop_img = (
-            Animation(opacity=0, duration=0.3)
-            + Animation(opacity=1, duration=0.2)
-            + Animation(opacity=0.8, duration=0.2)
-            + Animation(opacity=1, duration=0.2)
-            + Animation(opacity=0.8, duration=0.2)
-            + Animation(opacity=1, duration=0.2)
-            + Animation(opacity=1, duration=1.6)
-            + Animation(opacity=0, duration=2)
-            + Animation(opacity=0, duration=2)
-        )
-        self.anim_spindle_label_end = Animation(opacity=0, duration=0.5)
-        self.anim_countdown_img_end = Animation(opacity=0, duration=0.5)
 
         self.m.s.bind(dustshoe_is_closed=lambda _, value: self.dust_shoe_state_change(value))
 
@@ -276,54 +240,32 @@ class DustShoeAlarmScreen(Screen):
 
     def on_enter(self):
         Logger.debug(str(self.m.state()))
-        self.anim_countdown_img.repeat = True
-        self.anim_spindle_label.repeat = True
-        Clock.schedule_once(self.start_spindle_label_animation, 1.4)
         self.poll_for_resume = Clock.schedule_interval(
             lambda dt: self.check_dust_shoe_plug_replaced(), 0.2
         )
         self.db.send_event(
             1, "Job paused", "Paused job (Dust shoe unplugged): " + self.jd.job_name, 3
         )
-        self.start_x_beam_animation(0)
 
     def on_pre_leave(self):
         if self.poll_for_resume != None:
             Clock.unschedule(self.poll_for_resume)
-        self.anim_stop_bar.repeat = False
-        self.anim_stop_img.repeat = False
 
     def on_leave(self):
         self.spindle_raise_label.text = (
-            self.l.get_str("Preparing to resume, please wait") + "..."
+            self.l.get_str("Please close the dust shoe by fitting the dust shoe plug!")
         )
-
-    def start_x_beam_animation(self, dt):
-        self.anim_stop_bar.start(self.x_beam)
-        self.anim_stop_img.start(self.stop_img)
-
-    def start_spindle_label_animation(self, dt):
-        self.anim_spindle_label.start(self.spindle_raise_label)
-        self.anim_countdown_img.start(self.countdown_image)
 
     def check_dust_shoe_plug_replaced(self):
         if self.m.s.dustshoe_is_closed:
             Clock.unschedule(self.poll_for_resume)
-            self.anim_spindle_label.repeat = False
-            self.anim_countdown_img.repeat = False
-            self.anim_spindle_label.cancel(self.spindle_raise_label)
-            self.anim_countdown_img.cancel(self.countdown_image)
-            self.anim_countdown_img_end.start(self.countdown_image)
             Clock.schedule_once(self.ready_to_resume, 0.2)
-            self.start_x_beam_animation(1.5)
 
     def ready_to_resume(self, dt):
         self.resume_button.opacity = 1
         self.cancel_button.opacity = 1
         self.resume_button.disabled = False
         self.cancel_button.disabled = False
-        self.anim_stop_bar.repeat = True
-        self.anim_stop_img.repeat = True
         self.spindle_raise_label.text = "..." + self.l.get_str("ready to resume")
         self.spindle_raise_label.opacity = 1
 
