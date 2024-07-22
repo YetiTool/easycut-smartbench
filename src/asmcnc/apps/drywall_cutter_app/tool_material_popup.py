@@ -2,6 +2,7 @@ from kivy.app import App
 from kivy.uix.popup import Popup
 from kivy.lang import Builder
 
+from asmcnc.comms.localization import Localization
 from asmcnc.comms.logging_system.logging_system import Logger
 
 Builder.load_string("""
@@ -60,13 +61,13 @@ Builder.load_string("""
         Label:
             id: title_label
             pos_hint: {'x': -0.31, 'y': 0.61 if app.width == 800 else 0.64}
-            text: 'Tool & Material selection'
+            text: root.l.get_str('Tool & Material selection')
             font_size: app.get_scaled_sp('20sp')
             color: hex('#F9F9F9')
         
         Label:
             id: description_label
-            text: 'Shapes Lite currently only supports YetiPilot profiles. Full Toolbox coming soon'
+            text: root.l.get_str('Shapes only supports YetiPilot profiles.')
             text_size: (0.65*self.parent.width, None)
             halign: 'center'
             color: hex('#333333')
@@ -102,7 +103,7 @@ Builder.load_string("""
             
         Label:
             id: lead_in_warning_label
-            text: 'WARNING: Using a compression tool will add a lead in to your toolpath automatically'
+            text: root.l.get_str('WARNING: Using a compression tool will add a lead in to your toolpath automatically')
             text_size: (0.65*self.parent.width, None)
             pos_hint: {'center_x': 0.5, 'center_y': 0.40}
             color: hex('#333333')
@@ -113,7 +114,7 @@ Builder.load_string("""
             
         Label:
             id: cutter_link_label
-            text: 'Yeti Tool cutters available from www.yetitool.com/about/partners'
+            text: root.l.get_str('Yeti Tool cutters available from') + ' www.yetitool.com/about/partners'
             pos_hint: {'center_x': 0.5, 'center_y': 0.25}
             color: hex('#333333')
             halign: 'center'
@@ -166,10 +167,11 @@ Builder.load_string("""
 
 class ToolMaterialPopup(Popup):
 
+    l = Localization()
+
     def __init__(self, localization, config, drywall_cutter_screen, **kwargs):
         super(ToolMaterialPopup, self).__init__(**kwargs)
 
-        self.l = localization
         self.dwt_config = config
         self.drywall_cutter_screen = drywall_cutter_screen
 
