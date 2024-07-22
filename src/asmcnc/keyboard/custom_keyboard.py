@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import sys, os
+import sys, os, subprocess
 
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.core.window import Window
@@ -46,9 +46,13 @@ class Keyboard(VKeyboard):
         self.qwerty_layout = "data/keyboards/qwerty.json"
         self.qwertyKR_layout = os.path.join(dirname, "layouts", "qwertyKR.json")
         self.qwertyJA_layout = os.path.join(dirname, "layouts", "qwertyJA.json")
-        self.font_size = scaling_utils.get_scaled_width(20)
 
+        self.font_size = scaling_utils.get_scaled_width(20)
         self.background_color = [0, 0, 0, 1]
+
+        self.use_mozcpy_converter = os.path.join(dirname, "helper_scripts", "use_mozcpy_converter.py")
+        self.kanji_iterator = None
+        self.new_gen = True
 
         try:
             if self.l.lang == self.l.ko:
@@ -187,6 +191,20 @@ class Keyboard(VKeyboard):
         except:
             pass
 
+        try: 
+            if "ja" in self.layout.lower():
+                if keycode == "spacebar":
+                    if self.new_gen: self.kanji_iterator = cycle(self.generate_kanji_suggestions(self.text_instance.text))
+                    self.new_gen = False
+                    self.new_text = next(self.kanji_iterator).strip(" ")
+                    if self.new_text:
+                        self.text_instance.text = self.new_text
+                        self.refresh(force=True)
+                else:
+                    self.new_gen = True
+        except:
+            self.new_gen = True
+
         if self.text_instance:
             if internal == None:
                 if keycode == "enter":
@@ -196,6 +214,7 @@ class Keyboard(VKeyboard):
                             self.defocus_text_input(self.text_instance)
                     else:
                         self.text_instance.insert_text(u'\n')
+
                 if keycode == "Han/Yeong":
                     # https://en.wikipedia.org/wiki/Language_input_keys#Keys_for_Korean_Keyboards
                     self.layout = self.qwertyKR_layout if self.layout == self.kr_layout else self.kr_layout
@@ -208,6 +227,7 @@ class Keyboard(VKeyboard):
 
                 if keycode == "escape":
                     self.defocus_text_input(self.text_instance)
+
                 if keycode == "backspace":
                     if self.text_instance.selection_text:
                         self.text_instance.delete_selection()
@@ -217,6 +237,7 @@ class Keyboard(VKeyboard):
                 if keycode == "layout":
                     self.layout = self.numeric_layout if self.layout == self.previous_layout else self.previous_layout
                 return
+
             if self.text_instance.selection_text:
                 self.text_instance.delete_selection()
             self.text_instance.insert_text(internal)
@@ -321,3 +342,16 @@ class Keyboard(VKeyboard):
         text_input.focus = False
         if self.text_instance == text_input:
             self.text_instance = None
+
+    # Generate Kanji suggestions
+    def generate_kanji_suggestions(self, text_input):
+
+        # text_input = "まほうしょうじょ"
+        # returns ['魔法少女', '魔法省所', '魔法省女', '魔法消除', '魔法小所', '魔法昇叙', '魔法証所', '魔法性所', '魔法症所']
+        command = ["python3", self.use_mozcpy_converter, text_input]
+        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = process.communicate()
+
+        # # Decode the output from bytes to string, and then format it into a list
+        output = stdout.decode('utf-8').strip("[]\n' ").replace("'", "").replace(" ","").split(",")
+        return output
