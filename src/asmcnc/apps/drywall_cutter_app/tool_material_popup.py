@@ -206,11 +206,6 @@ class ToolMaterialPopup(Popup):
         self.confirm_button.opacity = 0.5
 
     def on_open(self):
-        if scaling_utils.Width == 800:
-            self.title_label.pos_hint['y'] = 0.9
-        else:
-            self.title_label.pos_hint['y'] = 0.93
-        self.float_layout.do_layout()
         self.load_config()
         if self.material_dropdown.text == '' or self.material_dropdown.text == '':  # Only disable if one is empty
             self.confirm_button.disabled = True
