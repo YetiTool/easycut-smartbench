@@ -71,12 +71,10 @@ Builder.load_string("""
             text: root.l.get_str('Tool & Material selection')
             font_size: app.get_scaled_sp('20sp')
             color: hex('#F9F9F9')
-            size: self.texture_size
         
         Label:
             id: description_label
             text: root.l.get_str('Shapes only supports YetiPilot profiles.')
-            text_size: (0.65*self.parent.width, None)
             halign: 'center'
             color: hex('#333333')
             size_hint: (0.75, None)
