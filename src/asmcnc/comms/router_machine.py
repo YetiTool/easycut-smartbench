@@ -1986,6 +1986,12 @@ class RouterMachine(EventDispatcher):
 
         return True
 
+    def set_machine_unit_to_inch(self):
+        self.s.write_command('G20')
+
+    def set_machine_unit_to_mm(self):
+        self.s.write_command('G21')
+
     # Realtime XYZ feed adjustment
     def feed_override_reset(self):
         self.s.write_realtime('\x90', altDisplayText = 'Feed override RESET')
