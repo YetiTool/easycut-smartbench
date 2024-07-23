@@ -36,7 +36,7 @@ Builder.load_string(
         pos: (dp(148.0/800.0)*app.width, dp(80.0/480.0)*app.height)
         Image:
             id: x_beam
-            source: "./asmcnc/skavaUI/img/dust_shoe_plug.png"
+            source: "./asmcnc/skavaUI/img/dustshoe_plugs.png"
             size: self.parent.width, self.parent.height
             pos: self.parent.pos
             allow_stretch: True
