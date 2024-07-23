@@ -1089,12 +1089,11 @@ class DustshoeWarningPopup(PopupBase):
         self.height = utils.get_scaled_height(360)
         self.size_hint = (None, None)
 
-        title = PopupWarningTitle(size_hint_y=0.15, localisation=self.l)
+        title = PopupWarningTitle(size_hint_y=0.2, localisation=self.l)
         self.root_layout.add_widget(title)
 
         self.main_label = Label(
             size_hint_y=1,
-            text_size=(utils.get_scaled_width(self.width - 140), None),
             halign='center',
             valign="middle",
             text="[b]" + self.l.get_str("Please close the dust shoe by fitting the dust shoe plug!") + "[/b]",
@@ -1103,6 +1102,11 @@ class DustshoeWarningPopup(PopupBase):
             markup=True,
             font_size=str(utils.get_scaled_width(25)) + "sp",
         )
+
+        if utils.is_screen_big():
+            self.main_label.text_size = (utils.get_scaled_width(0.55 * self.width), None)
+        else:
+            self.main_label.text_size = (utils.get_scaled_width(0.75 * self.width), None)
 
         dust_shoe_detection_layout = BoxLayout(
             orientation="horizontal",
