@@ -1120,6 +1120,8 @@ class DustshoeWarningPopup(PopupBase):
             color=color_provider.get_rgba("black"),
             markup=True,
             font_size=str(utils.get_scaled_width(20)) + "sp",
+            text_size=(utils.get_scaled_width(0.4 * self.width), None),
+            halign="center",
         )
 
         dust_shoe_switch = Switch(size_hint_y=1)
