@@ -18,11 +18,11 @@ produce gcode
 tidy gcode
 write to output file
 '''
-import decimal, os, re, math
-from collections import OrderedDict
+import decimal, os, re
 
 from asmcnc import paths
 from asmcnc.apps.drywall_cutter_app.config.config_options import CuttingDirectionOptions, ShapeOptions
+from asmcnc.apps.drywall_cutter_app.engine_utils.tabutilities import TabUtilities
 from asmcnc.comms.logging_system.logging_system import Logger
 
 
@@ -31,11 +31,9 @@ class GCodeEngine(object):
         self.config = dwt_config
         self.m = router_machine
         self.cs = coordinate_system
+        self.tab_utils = TabUtilities(self.config)
 
-        if self.config.active_cutter.dimensions.tool_diameter is not None:
-            self.cutter_diameter = self.config.active_cutter.dimensions.tool_diameter
-        else:
-            self.cutter_diameter = 0
+        self.cutter_diameter = 0
 
         self.finishing_passes = 1
         self.finishing_stepover = 0.5
@@ -65,7 +63,7 @@ class GCodeEngine(object):
         return [bottom_left, top_left, top_right, bottom_right]
 
     # Find the shape centre coordinates
-    def find_centre(self, coordinates, x_offset=0, y_offset=0):
+    def find_centre(self, coordinates, x_offset = 0, y_offset = 0):
         x_sum = 0
         y_sum = 0
         # Remove duplicates from the list
@@ -215,8 +213,7 @@ class GCodeEngine(object):
         return input_list
 
     # Produce gcode instructions to cut a rounded (or not) rectangle
-    def cut_rectangle(self, coordinates, datum_x, datum_y, offset, tool_diameter, is_climb, corner_radius, pass_depth,
-                      feedrate, plungerate, total_cut_depth, z_safe_distance, pass_type, simulate, first_plunge=True):
+    def cut_rectangle(self, coordinates, datum_x, datum_y, offset, tool_diameter, is_climb, corner_radius, pass_depth, feedrate, plungerate, total_cut_depth, z_safe_distance, pass_type, simulate, first_plunge=True):
         if offset == "pocket":
             offset = "inside"  # Pocketing operations exist inside the shape perimeter - the additional passes are handled by loops in engine_run
 
@@ -235,8 +232,7 @@ class GCodeEngine(object):
         if radii_present:
             adjusted_corner_radius = corner_radius + self.calculate_corner_radius_offset(offset, tool_diameter)
             if adjusted_corner_radius > 0:
-                final_coordinates = self.add_corner_coordinates(reversed(offset_coordinates), shape_centre,
-                                                                adjusted_corner_radius)
+                final_coordinates = self.add_corner_coordinates(reversed(offset_coordinates), shape_centre, adjusted_corner_radius)
             else:
                 radii_present = False
 
@@ -279,8 +275,7 @@ class GCodeEngine(object):
                     if first_plunge:
                         add_feedrate_to_line = 3 == final_coordinates.index(coordinate)  # Fourth line
 
-                    gcode_instruction = "G1 X%s Y%s %s\n" % (
-                    coordinate[0] + datum_x, coordinate[1] + datum_y, 'F%s' % feedrate if add_feedrate_to_line else '')
+                    gcode_instruction = "G1 X%s Y%s %s\n" % (coordinate[0] + datum_x, coordinate[1] + datum_y, 'F%s' % feedrate if add_feedrate_to_line else '')
                     cutting_lines.append(gcode_instruction)
             else:
                 # Logic for when corner rads are present
@@ -294,12 +289,9 @@ class GCodeEngine(object):
                         add_feedrate_to_line = 1 == final_coordinates.index(coordinate)  # Second line
 
                     if arc_flag:
-                        gcode_instruction = "G1 X%s Y%s %s\n" % (coordinate[0] + datum_x, coordinate[1] + datum_y,
-                                                                 'F%s' % feedrate if add_feedrate_to_line else '')
+                        gcode_instruction = "G1 X%s Y%s %s\n" % (round(coordinate[0] + datum_x, 2), round(coordinate[1] + datum_y, 2), 'F%s' % feedrate if add_feedrate_to_line else '')
                     else:
-                        gcode_instruction = "%s X%s Y%s R%s %s\n" % (
-                        arc_instruction, coordinate[0] + datum_x, coordinate[1] + datum_y, adjusted_corner_radius,
-                        'F%s' % feedrate if add_feedrate_to_line else '')
+                        gcode_instruction = "%s X%s Y%s R%s %s\n" % (arc_instruction, round(coordinate[0] + datum_x, 2), round(coordinate[1] + datum_y, 2), round(adjusted_corner_radius, 2), 'F%s' % feedrate if add_feedrate_to_line else '')
                     arc_flag = not arc_flag
                     cutting_lines.append(gcode_instruction)
             cutting_lines.append("G1 Z%s F%d\n\n" % (z_safe_distance, plungerate))
@@ -316,8 +308,7 @@ class GCodeEngine(object):
         return cutting_lines
 
     # Produce gcode instructions to cut a line
-    def cut_line(self, datum_x, datum_y, length, tool_diameter, orientation, pass_depth, feedrate, plungerate,
-                 total_cut_depth, z_safe_distance, simulate=False):
+    def cut_line(self, datum_x, datum_y, length, tool_diameter, orientation, pass_depth, feedrate, plungerate, total_cut_depth, z_safe_distance, simulate=False):
         pass_depths = self.calculate_pass_depths(total_cut_depth, pass_depth)
         tool_radius = tool_diameter / 2
         x = 0
@@ -338,310 +329,35 @@ class GCodeEngine(object):
             raise ValueError("Orientation must be 'vertical' or 'horizontal'. Got '{}'".format(orientation))
 
         # Add line cutting gcode
-        gcode_lines.append("G0 X{} Y{}".format(start_coordinate[x], start_coordinate[y]))  # Move to start position
+        gcode_lines.append("G0 X{} Y{}".format(start_coordinate[x], start_coordinate[y])) # Move to start position
 
         for depth in pass_depths:
 
             if simulate:
-                gcode_lines.append("G1 Z{} F{}".format(depth, plungerate))  # Raise to height {depth}
+                gcode_lines.append("G1 Z{} F{}".format(depth, plungerate)) # Raise to height {depth}
             else:
-                gcode_lines.append("G1 Z-{} F{}".format(depth, plungerate))  # Plunge to depth
+                gcode_lines.append("G1 Z-{} F{}".format(depth, plungerate)) # Plunge to depth
 
-            if not (direction_flag):
-                gcode_lines.append("G1 X{} Y{} F{}".format(start_coordinate[x], start_coordinate[y],
-                                                           feedrate))  # Move to start position
+
+            if not(direction_flag):
+                gcode_lines.append("G1 X{} Y{} F{}".format(start_coordinate[x], start_coordinate[y], feedrate)) # Move to start position
             else:
-                gcode_lines.append(
-                    "G1 X{} Y{} F{}".format(end_coordinate[x], end_coordinate[y], feedrate))  # Move to end position
-            direction_flag = not (direction_flag)
+                gcode_lines.append("G1 X{} Y{} F{}".format(end_coordinate[x], end_coordinate[y], feedrate)) # Move to end position
+            direction_flag = not(direction_flag)
 
-        gcode_lines.append("G1 Z{} F{}".format(z_safe_distance, plungerate))  # Lift to Z safe distance
+        gcode_lines.append("G1 Z{} F{}".format(z_safe_distance, plungerate)) # Lift to Z safe distance
 
         for i in range(len(gcode_lines)):
             gcode_lines[i] = gcode_lines[i] + "\n"
 
         return gcode_lines
 
-    @staticmethod
-    def calculate_arc_point(x1, y1, x2, y2, r, d, clockwise):
-        # Calculate the center of the circle (midpoint of start and end)
-        def find_arc_center(x1, y1, x2, y2, clockwise):
-            """
-            Find the center of the circle that the arc is part of.
-            Works only for 90 degree arcs.
-            """
-
-            x_delta_positive = x2 - x1 > 0
-            y_delta_positive = y2 - y1 > 0
-
-            bool = x_delta_positive == y_delta_positive
-
-            x_use_start = not (bool)
-            y_use_start = bool
-
-            if not clockwise:
-                x_use_start = not x_use_start
-                y_use_start = not y_use_start
-
-            x = x1 if x_use_start else x2
-            y = y1 if y_use_start else y2
-
-            return x, y
-
-        cx, cy = find_arc_center(x1, y1, x2, y2, clockwise)
-
-        # Calculate the starting angle
-        start_angle = math.atan2(y1 - cy, x1 - cx)
-
-        # Calculate the angle traversed
-        traversed_angle = -d / r
-
-        # Determine the direction
-        if clockwise:
-            final_angle = start_angle + traversed_angle
-        else:
-            final_angle = start_angle - traversed_angle
-
-        # Calculate the new point coordinates
-        new_x = cx + r * math.cos(final_angle)
-        new_y = cy + r * math.sin(final_angle)
-
-        x = 0
-
-        return round(new_x, 2), round(new_y, 2)
-
-    def add_straight_tabs(self, xy_feed, z_feed, linear_distance_moved, tab_spacing, tab_width, tab_height,
-                          previous_x_pos, previous_y_pos, last_x, last_y, x_delta, y_delta, current_z, tab_top_z, line,
-                          three_d_tabs):
-        number_of_tabs = int(linear_distance_moved / (tab_spacing + tab_width))
-        tab_inset_distance = linear_distance_moved - ((tab_width * number_of_tabs) + tab_spacing * (number_of_tabs - 1))
-        tab_inset_distance /= 2
-
-        tabs_dict = {}
-
-        if x_delta:
-            for i in range(number_of_tabs):
-                polariser = 1 if x_delta > 0 else -1
-                tab_x = previous_x_pos + polariser * ((tab_spacing * i) + (tab_width * i) + tab_inset_distance)
-                tab_y = last_y
-
-                tab_x = round(tab_x, 2)
-
-                tabs_dict['tab_{}'.format(i + 1)] = {
-                    'start_x': tab_x,
-                    'start_y': tab_y,
-                    'end_x': tab_x + polariser * tab_width,
-                    'end_y': tab_y,
-                    'height': tab_height
-                }
-
-        elif y_delta:
-            for i in range(number_of_tabs):
-                polariser = 1 if y_delta > 0 else -1
-                tab_x = last_x
-                tab_y = previous_y_pos + polariser * (
-                        (tab_spacing * i) + (tab_width * i) + tab_inset_distance)
-
-                tab_y = round(tab_y, 2)
-
-                tabs_dict['tab_{}'.format(i + 1)] = {
-                    'start_x': tab_x,
-                    'start_y': tab_y,
-                    'end_x': tab_x,
-                    'end_y': tab_y + polariser * tab_width,
-                    'height': tab_height
-                }
-
-        tabs_dict = OrderedDict(sorted(tabs_dict.items()))
-
-        modified_gcode = []
-
-        for tab in tabs_dict.values():
-            tab_cut_height = current_z if current_z > tab_top_z else tab_top_z
-            if current_z < tab_top_z and ('X' in line or 'Y' in line):
-                if line.startswith('G1'):
-                    if three_d_tabs:
-                        tab_centre_x = (tab['start_x'] + tab['end_x']) / 2
-                        tab_centre_y = (tab['start_y'] + tab['end_y']) / 2
-                        modified_gcode.append('G1 X{} Y{} F{}\n'.format(tab['start_x'], tab['start_y'], xy_feed))
-                        modified_gcode.append('G1 X{} Y{} Z{}\n'.format(tab_centre_x, tab_centre_y, tab_cut_height))
-                        modified_gcode.append('G1 X{} Y{} Z{}\n'.format(tab['end_x'], tab['end_y'], current_z))
-                    else:
-                        modified_gcode.append('G1 X{} Y{} F{}\n'.format(tab['start_x'], tab['start_y'], xy_feed))
-                        modified_gcode.append('G1 Z{} F{}\n'.format(tab_cut_height, z_feed))
-                        modified_gcode.append('G1 X{} Y{} F{}\n'.format(tab['end_x'], tab['end_y'], xy_feed))
-                        modified_gcode.append('G1 Z{} F{}\n'.format(current_z, z_feed))
-
-        return modified_gcode
-
-    def add_arc_tabs(self, xy_feed, z_feed, parts, line, last_x, last_y, current_x, current_y, tab_spacing, tab_width,
-                     current_z, tab_top_z, three_d_tabs):
-        modified_gcode = []
-        r_value = None
-        for part in parts:
-            if part.startswith('G'):
-                arc_command = part
-            if part.startswith('R'):
-                r_value = float(part[1:])
-
-        if r_value is not None:
-            cx = (last_x + current_x) / 2
-            cy = (last_y + current_y) / 2
-            radius = r_value
-
-            start_angle = math.atan2(last_y - cy, last_x - cx)
-            end_angle = math.atan2(current_y - cy, current_x - cx)
-
-            if line.startswith('G2'):
-                if end_angle > start_angle:
-                    end_angle -= 2 * math.pi
-            else:
-                if start_angle > end_angle:
-                    start_angle -= 2 * math.pi
-
-            arc_length = abs(end_angle - start_angle) * radius
-            arc_length /= 2
-
-            if arc_length >= tab_spacing:
-                number_of_tabs = int(arc_length / (tab_spacing + tab_width))
-                tab_inset_distance = arc_length - ((tab_width * number_of_tabs) + tab_spacing * (number_of_tabs - 1))
-                tab_inset_distance /= 2
-
-                last_x, last_y, current_x, current_y = current_x, current_y, last_x, last_y
-
-                for i in range(number_of_tabs):
-                    tab_start_distance = arc_length - ((tab_spacing * i) + (tab_width * i) + tab_inset_distance)
-                    tab_end_distance = arc_length - (
-                                (tab_spacing * i) + (tab_width * i) + tab_width + tab_inset_distance)
-                    tab_start_x, tab_start_y = self.calculate_arc_point(last_x, last_y, current_x, current_y, radius,
-                                                                        tab_start_distance,
-                                                                        clockwise=arc_command == 'G3')
-                    tab_end_x, tab_end_y = self.calculate_arc_point(last_x, last_y, current_x, current_y, radius,
-                                                                    tab_end_distance, clockwise=arc_command == 'G3')
-                    tab_centre_x, tab_centre_y = self.calculate_arc_point(last_x, last_y, current_x, current_y, radius,
-                                                                          tab_start_distance - tab_width / 2,
-                                                                          clockwise=arc_command == 'G3')
-
-                    tab_cut_height = current_z if current_z > tab_top_z else tab_top_z
-
-                    if three_d_tabs:
-                        modified_gcode.append(
-                            '{} X{} Y{} R{} F{}\n'.format(arc_command, round(tab_start_x, 2), round(tab_start_y, 2),
-                                                          radius, xy_feed))
-                        modified_gcode.append(
-                            '{} X{} Y{} Z{} R{}\n'.format(arc_command, round(tab_centre_x, 2), round(tab_centre_y, 2),
-                                                          tab_cut_height, radius))
-                        modified_gcode.append(
-                            '{} X{} Y{} Z{} R{}\n'.format(arc_command, round(tab_end_x, 2), round(tab_end_y, 2),
-                                                          current_z, radius))
-                    else:
-                        modified_gcode.append(
-                            '{} X{} Y{} R{} F{}\n'.format(arc_command, round(tab_start_x, 2), round(tab_start_y, 2),
-                                                          radius, xy_feed))
-                        modified_gcode.append('G1 Z{} F{}\n'.format(tab_cut_height, z_feed))
-                        modified_gcode.append(
-                            '{} X{} Y{} R{} F{}\n'.format(arc_command, round(tab_end_x, 2), round(tab_end_y, 2), radius,
-                                                          xy_feed))
-                        modified_gcode.append('G1 Z{} F{}\n'.format(current_z, z_feed))
-
-        return modified_gcode
-
-    def add_tabs_to_gcode(self, gcode_lines, total_cut_depth, tab_height, tab_width, tab_spacing, three_d_tabs=False):
-        """
-        Adds tabs of specified height, width, and spacing to the given G-code lines.
-
-        Parameters:
-        - gcode_lines (list of str): The list of G-code lines to modify.
-        - tab_height (float): The height of the tabs.
-        - tab_width (float): The width of the tabs.
-        - tab_spacing (float): The distance between the start of each tab.
-
-        Returns:
-        - list of str: The modified list of G-code lines with tabs.
-        """
-        modified_gcode = []
-        current_z = None
-        current_x = None
-        current_y = None
-        xy_feed = self.config.active_profile.cutting_parameters.max_feedrate
-        z_feed = self.config.active_profile.cutting_parameters.plungerate
-        last_x = 0
-        last_y = 0
-        previous_x_pos = 0
-        previous_y_pos = 0
-        linear_distance_moved = 0
-
-        tab_top_z = - (total_cut_depth - tab_height)
-        if tab_top_z > 0:
-            tab_top_z = 0
-
-        for line in gcode_lines:
-            tabs_added = False
-            parts = line.split()
-
-            if line.startswith('G0') or line.startswith('G1') or line.startswith('G2') or line.startswith('G3'):
-                for part in parts:
-                    if part.startswith('Z'):
-                        current_z = float(part[1:])
-                    elif part.startswith('X'):
-                        current_x = float(part[1:])
-                    elif part.startswith('Y'):
-                        current_y = float(part[1:])
-                    elif part.startswith('F'):
-                        if 'X' in line or 'Y' in line:
-                            xy_feed = float(part[1:])
-                        elif 'Z' in line:
-                            z_feed = float(part[1:])
-
-            # Add tabs if moving in the XY plane at cutting depth
-            if current_z is not None and current_z <= tab_top_z and current_x is not None and current_y is not None:
-                if line.startswith(('G0', 'G1', 'G2', 'G3')):
-                    if last_x is not None and last_y is not None:
-                        linear_distance_moved = ((current_x - last_x) ** 2 + (current_y - last_y) ** 2) ** 0.5
-                        x_delta = current_x - last_x
-                        y_delta = current_y - last_y
-
-                    g1_last_x = current_x
-                    g1_last_y = current_y
-
-                if linear_distance_moved >= tab_spacing and line.startswith(('G0', 'G1')):
-                    tabs_added = True
-                    modified_gcode.extend(
-                        self.add_straight_tabs(xy_feed, z_feed, linear_distance_moved, tab_spacing, tab_width,
-                                               tab_height, previous_x_pos, previous_y_pos, g1_last_x, g1_last_y,
-                                               x_delta, y_delta, current_z, tab_top_z, line, three_d_tabs))
-
-                if line.startswith('G2') or line.startswith('G3'):
-                    tabs_added = True
-                    modified_gcode.extend(
-                        self.add_arc_tabs(xy_feed, z_feed, parts, line, last_x, last_y, current_x, current_y,
-                                          tab_spacing, tab_width, current_z, tab_top_z, three_d_tabs))
-
-                last_x = current_x
-                last_y = current_y
-
-                g1_last_x = current_x
-                g1_last_y = current_y
-
-            previous_x_pos = last_x
-            previous_y_pos = last_y
-
-            if tabs_added:
-                if ('X' in line or 'Y' in line) and ('F' not in line):
-                    line = line[:-1] + 'F{}\n'.format(xy_feed)
-                if ('Z' in line) and ('F' not in line):
-                    line = line[:-1] + 'F{}\n'.format(z_feed)
-
-            modified_gcode.append(line)
-
-        return modified_gcode
 
     # Return lines in appropriate gcode file
     def find_and_read_gcode_file(self, directory, shape_type, tool_diameter, orientation=None):
         for file in os.listdir(directory):
             filename = file.lower().strip()
-            if shape_type in filename and str(tool_diameter)[:-2] + "mm" in filename and (
-                    orientation is None or orientation in filename):
+            if shape_type in filename and str(tool_diameter)[:-2] + "mm" in filename and (orientation is None or orientation in filename):
                 file_path = os.path.join(directory, file)
                 if os.path.exists(file_path):
                     try:
@@ -709,16 +425,14 @@ class GCodeEngine(object):
         return cut_depth_value, z_safe_distance_value
 
     # Replace gcode z data with user-driven z data
-    def replace_cut_depth_and_z_safe_distance(self, gcode_lines, gcode_cut_depth, gcode_z_safe_distance, new_cut_depth,
-                                              new_z_safe_distance):
+    def replace_cut_depth_and_z_safe_distance(self, gcode_lines, gcode_cut_depth, gcode_z_safe_distance, new_cut_depth, new_z_safe_distance):
         output = []
 
         for line in gcode_lines:
             if "z" + str(gcode_cut_depth) in line.strip().lower():
                 # Replace Z cut depth
                 line = re.sub(r'Z[-+]?\d*\.?\d+', 'Z{}'.format(new_cut_depth), line)
-            elif "z" + str(
-                    gcode_z_safe_distance) in line.strip().lower():  # Only 1 Z value will be present per line, hence using elif
+            elif "z" + str(gcode_z_safe_distance) in line.strip().lower(): # Only 1 Z value will be present per line, hence using elif
                 # Replace Z safe distance
                 line = re.sub(r'Z[-+]?\d*\.?\d+', 'Z{}'.format(new_z_safe_distance), line)
 
@@ -746,7 +460,7 @@ class GCodeEngine(object):
                 elif part.startswith('Y'):
                     y_value = float(part[1:])
                     adjusted_y = y_value + y_adjustment
-                    adjusted_parts += (' Y{}'.format(self.format_float(adjusted_y)))
+                    adjusted_parts +=(' Y{}'.format(self.format_float(adjusted_y)))
                 else:
                     adjusted_parts += part
             adjusted_lines.append(adjusted_parts)
@@ -779,12 +493,11 @@ class GCodeEngine(object):
         return output
 
     # Add partoff cut for geberit shape
-    def add_partoff(self, gcode_lines, insertion_key, start_coordinate, end_coordinate, pass_depths, feedrate,
-                    plungerate, z_safe_distance):
+    def add_partoff(self, gcode_lines, insertion_key, start_coordinate, end_coordinate, pass_depths, feedrate, plungerate, z_safe_distance):
         x = 0
         y = 1
         insert_index = None
-        partoff_gcode = ["(Partoff)"]  # First line of partoff section
+        partoff_gcode = ["(Partoff)"] # First line of partoff section
         direction_flag = True
 
         # Find index to insert partoff line
@@ -794,23 +507,20 @@ class GCodeEngine(object):
                 insert_index = i
                 break
         if insert_index is None:
-            raise Exception("Unable to find " + insertion_key + " in gcode")
+            raise Exception ("Unable to find " + insertion_key + " in gcode")
 
         # Generate partoff line gcode
-        partoff_gcode.append("G1 Z" + str(z_safe_distance))  # Lift to Z safe distance
-        partoff_gcode.append("G0 X" + str(start_coordinate[x]) + " Y" + str(start_coordinate[y]) + "F" + str(
-            feedrate))  # Go to start position
+        partoff_gcode.append("G1 Z" + str(z_safe_distance)) # Lift to Z safe distance
+        partoff_gcode.append("G0 X" + str(start_coordinate[x]) + " Y" + str(start_coordinate[y]) + "F" + str(feedrate)) # Go to start position
         for depth in pass_depths:
-            if direction_flag:  # x min -> x max pass
-                partoff_gcode.append("G1 Z-" + str(depth) + " F" + str(plungerate))  # Plunge to depth
-                partoff_gcode.append("G1 X" + str(end_coordinate[x]) + " Y" + str(end_coordinate[y]) + "F" + str(
-                    feedrate))  # Go to end position
-            else:  # x max -> x min pass
-                partoff_gcode.append("G1 Z-" + str(depth) + " F" + str(plungerate))  # Plunge to depth
-                partoff_gcode.append("G1 X" + str(start_coordinate[x]) + " Y" + str(start_coordinate[y]) + "F" + str(
-                    feedrate))  # Go to start position
-            direction_flag = not (direction_flag)
-        partoff_gcode.append("G1 Z" + str(z_safe_distance))  # Lift to Z safe distance
+            if direction_flag: # x min -> x max pass
+                partoff_gcode.append("G1 Z-" + str(depth) + " F" + str(plungerate)) # Plunge to depth
+                partoff_gcode.append("G1 X" + str(end_coordinate[x]) + " Y" + str(end_coordinate[y])+ "F" + str(feedrate)) # Go to end position
+            else: # x max -> x min pass
+                partoff_gcode.append("G1 Z-" + str(depth) + " F" + str(plungerate)) # Plunge to depth
+                partoff_gcode.append("G1 X" + str(start_coordinate[x]) + " Y" + str(start_coordinate[y])+ "F" + str(feedrate)) # Go to start position
+            direction_flag = not(direction_flag)
+        partoff_gcode.append("G1 Z" + str(z_safe_distance)) # Lift to Z safe distance
 
         # Insert partoff gcode
         gcode_part_1 = gcode_lines[:insert_index]
@@ -854,11 +564,9 @@ class GCodeEngine(object):
             if x_dim and y_dim and x_min and y_min:
                 break  # Exit the loop once all values have been found
 
-        missing_values = [dim for dim, value in zip(['x_dim', 'y_dim', 'x_min', 'y_min'], [x_dim, y_dim, x_min, y_min])
-                          if value is None]
+        missing_values = [dim for dim, value in zip(['x_dim', 'y_dim', 'x_min', 'y_min'], [x_dim, y_dim, x_min, y_min]) if value is None]
         if missing_values:
-            raise Exception(
-                "Unable to gather shape dimension data. Missing values: {}".format(', '.join(missing_values)))
+            raise Exception("Unable to gather shape dimension data. Missing values: {}".format(', '.join(missing_values)))
 
         return x_dim, y_dim, x_min, y_min
 
@@ -866,9 +574,7 @@ class GCodeEngine(object):
     def get_custom_shape_extents(self):
         if self.config.active_config.shape_type.lower() in self.custom_gcode_shapes:
             # Read in data
-            gcode_lines = self.find_and_read_gcode_file(self.source_folder_path, self.config.active_config.shape_type,
-                                                        self.cutter_diameter,
-                                                        orientation=self.config.active_config.rotation)
+            gcode_lines = self.find_and_read_gcode_file(self.source_folder_path, self.config.active_config.shape_type, self.cutter_diameter, orientation=self.config.active_config.rotation)
 
             # Get dimensions as strings
             x_dim_str, y_dim_str, x_min_str, y_min_str = self.read_in_custom_shape_dimensions(gcode_lines)
@@ -881,8 +587,7 @@ class GCodeEngine(object):
 
             return x_dim, y_dim, x_min, y_min
         else:
-            raise Exception(
-                "Shape type: {} is not defined as a custom shape.".format(self.config.active_config.shape_type))
+            raise Exception ("Shape type: {} is not defined as a custom shape.".format(self.config.active_config.shape_type))
 
     def remove_redudant_lines(self, gcode_lines):
         """
@@ -931,32 +636,27 @@ class GCodeEngine(object):
         stepover_z_hop_distance = 0
         cutting_pass_depth = self.config.active_profile.cutting_parameters.recommendations.stepdown if self.config.active_config.cutting_depths.auto_pass else self.config.active_config.cutting_depths.depth_per_pass
         cutting_lines = []
-        simulation_z_height = 5  # mm
-        simulation_plunge_rate = 750  # mm/s
-        simulation_feedrate = 6000  # mm/s
+        simulation_z_height = 5 # mm
+        simulation_plunge_rate = 750 # mm/s
+        simulation_feedrate = 6000 # mm/s
         geberit_partoff = False
 
-        tab_spacing = 20  # mm
+        base_tab_spacing = 1  # mm
         tab_width = 10  # mm
         tab_height = self.config.active_config.cutting_depths.material_thickness * 0.6
         if tab_height > 5:
             tab_height = 5
         three_d_tabs = True
 
+        tab_width = tab_width + self.cutter_diameter
+
+        is_climb = (self.config.active_profile.cutting_parameters.recommendations.cutting_direction == CuttingDirectionOptions.CLIMB.value
+                    or self.config.active_profile.cutting_parameters.recommendations.cutting_direction == CuttingDirectionOptions.BOTH.value)
+
         if self.config.active_cutter.dimensions.tool_diameter is not None:
             self.cutter_diameter = self.config.active_cutter.dimensions.tool_diameter
         else:
             self.cutter_diameter = 0
-
-        # Compensate for tool diameter
-        try:
-            tab_width = tab_width + self.cutter_diameter
-        except:
-            pass
-
-        is_climb = (
-                    self.config.active_profile.cutting_parameters.recommendations.cutting_direction == CuttingDirectionOptions.CLIMB.value
-                    or self.config.active_profile.cutting_parameters.recommendations.cutting_direction == CuttingDirectionOptions.BOTH.value)
 
         # Calculated parameters
         total_cut_depth = self.config.active_config.cutting_depths.material_thickness + self.config.active_config.cutting_depths.bottom_offset
@@ -985,7 +685,7 @@ class GCodeEngine(object):
                 'pass_type': "Roughing pass",
                 'simulate': simulate,
                 'first_plunge': True
-            }
+                }
             if simulate:
                 parameters['pass_depth'] = simulation_z_height
                 parameters['feedrate'] = simulation_feedrate
@@ -995,7 +695,7 @@ class GCodeEngine(object):
 
         def circle_default_parameters(simulate=False):
             parameters = rectangle_default_parameters(simulate=simulate)
-            parameters['corner_radius'] = self.config.active_config.canvas_shape_dims.d / 2
+            parameters['corner_radius'] = self.config.active_config.canvas_shape_dims.d/2
             return parameters
 
         def line_default_parameters(simulate=False):
@@ -1011,7 +711,7 @@ class GCodeEngine(object):
                 'total_cut_depth': total_cut_depth,
                 'z_safe_distance': z_safe_distance,
                 'simulate': simulate
-            }
+                }
             if simulate:
                 parameters['pass_depth'] = simulation_z_height
                 parameters['feedrate'] = simulation_feedrate
@@ -1040,7 +740,7 @@ class GCodeEngine(object):
             # Create a dictionary of operations
             length_to_cover_with_passes = 0  # Generate a single pass if roughing
             if pocketing:
-                length_to_cover_with_passes = min(x_rect, y_rect) / 2  # Half shortest edge length
+                length_to_cover_with_passes = min(x_rect, y_rect) / 2 # Half shortest edge length
             length_covered_by_finishing = self.finishing_stepover * self.finishing_passes  # Amount of length covered by finishing passes
             length_to_cover_with_roughing = length_to_cover_with_passes - length_covered_by_finishing  # Remaining length to be covered by roughing passes
 
@@ -1068,6 +768,7 @@ class GCodeEngine(object):
             #     operations["Roughing"]["stepovers"] = [0]
             #     operations["Finishing"]["stepovers"] = []
 
+
             if simulate:
                 rectangle = self.cut_rectangle(**rectangle_default_parameters(simulate=True))
                 cutting_lines += rectangle
@@ -1081,8 +782,7 @@ class GCodeEngine(object):
                         for stepover in operation_data["stepovers"]:
                             # for each stepover
                             first_plunge = stepover == operation_data["stepovers"][0]  # First stepover
-                            rectangle_parameters[
-                                "z_safe_distance"] = -1 * pass_depth + stepover_z_hop_distance  # Raise tool by the stepover distance for optimisation if not the last stepover
+                            rectangle_parameters["z_safe_distance"] = -1 * pass_depth + stepover_z_hop_distance  # Raise tool by the stepover distance for optimisation if not the last stepover
 
                             if self.cutter_diameter:
                                 rectangle_parameters["tool_diameter"] = self.cutter_diameter + (stepover * 2)
@@ -1096,22 +796,18 @@ class GCodeEngine(object):
                             rectangle = self.cut_rectangle(**rectangle_parameters)
                             rectangle = self.remove_redudant_lines(rectangle)
                             if not pocketing and self.config.active_config.cutting_depths.tabs:
-                                rectangle = self.add_tabs_to_gcode(rectangle, total_cut_depth, tab_height, tab_width,
-                                                                   tab_spacing, three_d_tabs=three_d_tabs)
+                                rectangle = self.tab_utils.add_tabs_to_gcode(rectangle, total_cut_depth, tab_height, tab_width, base_tab_spacing, self.cutter_diameter, three_d_tabs=three_d_tabs)
                             cutting_lines += rectangle
 
         elif shape_type in ["geberit"]:
 
             # Read in data
-            gcode_lines = self.find_and_read_gcode_file(self.source_folder_path, self.config.active_config.shape_type,
-                                                        self.cutter_diameter,
-                                                        orientation=self.config.active_config.rotation)
+            gcode_lines = self.find_and_read_gcode_file(self.source_folder_path, self.config.active_config.shape_type, self.cutter_diameter, orientation=self.config.active_config.rotation)
             gcode_cut_depth, gcode_z_safe_distance = self.extract_cut_depth_and_z_safe_distance(gcode_lines)
-            x_size, y_size, x_minus, y_minus = self.read_in_custom_shape_dimensions(gcode_lines)
+            x_size, y_size, x_minus, y_minus  = self.read_in_custom_shape_dimensions(gcode_lines)
 
             if simulate:
-                coordinates = self.rectangle_coordinates(float(x_size), float(y_size) + self.cutter_diameter / 2,
-                                                         float(x_minus), float(y_minus))
+                coordinates = self.rectangle_coordinates(float(x_size), float(y_size) + self.cutter_diameter/2, float(x_minus), float(y_minus))
                 coordinates.append(coordinates[0])
 
                 # Draw a rectangle around the geberit shape
@@ -1124,24 +820,17 @@ class GCodeEngine(object):
 
             else:
                 # Remove header info
-                gcode_lines = gcode_lines[
-                              next((i for i, s in enumerate(gcode_lines) if re.search(r"T[1-9]", s)), None):]
+                gcode_lines = gcode_lines[next((i for i, s in enumerate(gcode_lines) if re.search(r"T[1-9]", s)), None):]
 
                 # Adjust feeds, speeds, and Z values
-                gcode_lines = self.adjust_feeds_and_speeds(gcode_lines,
-                                                           self.config.active_profile.cutting_parameters.max_feedrate,
-                                                           self.config.active_profile.cutting_parameters.plungerate,
-                                                           self.config.active_profile.cutting_parameters.spindle_speed)
-                gcode_lines = self.replace_cut_depth_and_z_safe_distance(gcode_lines, gcode_cut_depth,
-                                                                         gcode_z_safe_distance, "[cut depth] ",
-                                                                         z_safe_distance)
+                gcode_lines = self.adjust_feeds_and_speeds(gcode_lines, self.config.active_profile.cutting_parameters.max_feedrate, self.config.active_profile.cutting_parameters.plungerate, self.config.active_profile.cutting_parameters.spindle_speed)
+                gcode_lines = self.replace_cut_depth_and_z_safe_distance(gcode_lines, gcode_cut_depth, gcode_z_safe_distance, "[cut depth] ", z_safe_distance)
 
                 # Apply datum offset
                 gcode_lines = self.apply_datum_offset(gcode_lines, 0, 0)
 
                 # Apply pass depths
-                pass_depths = self.calculate_pass_depths(total_cut_depth,
-                                                         self.config.active_config.cutting_depths.depth_per_pass)
+                pass_depths = self.calculate_pass_depths(total_cut_depth, self.config.active_config.cutting_depths.depth_per_pass)
                 start_condition = next((i for i, s in enumerate(gcode_lines) if re.search(r"M3", s)), None)
                 end_condition = next((i for i, s in enumerate(gcode_lines) if re.search(r"M5", s)), None)
                 gcode_lines = self.repeat_for_depths(gcode_lines, pass_depths, start_condition, end_condition)
@@ -1151,21 +840,15 @@ class GCodeEngine(object):
                 if geberit_partoff:
                     # Add partoff cut
                     partoff_start_coordinate = [(-1 * tool_radius) + self.config.active_config.datum_position.x,
-                                                float(
-                                                    y_size) + tool_radius + self.config.active_config.datum_position.y]
+                                                float(y_size) + tool_radius + self.config.active_config.datum_position.y]
                     partoff_end_coordinate = [tool_radius + float(x_size) + self.config.active_config.datum_position.x,
-                                              tool_radius + float(y_size) + self.config.active_config.datum_position.y]
-                    gcode_lines = self.add_partoff(gcode_lines, "M5", partoff_start_coordinate, partoff_end_coordinate,
-                                                   pass_depths,
-                                                   self.config.active_profile.cutting_parameters.max_feedrate,
-                                                   self.config.active_profile.cutting_parameters.plungerate,
-                                                   z_safe_distance)
+                                            tool_radius + float(y_size) + self.config.active_config.datum_position.y]
+                    gcode_lines = self.add_partoff(gcode_lines, "M5", partoff_start_coordinate, partoff_end_coordinate, pass_depths, self.config.active_profile.cutting_parameters.max_feedrate, self.config.active_profile.cutting_parameters.plungerate, z_safe_distance)
 
             cutting_lines = gcode_lines
 
         elif shape_type in ["circle"]:
-            circle_coordinates = self.rectangle_coordinates(self.config.active_config.canvas_shape_dims.d,
-                                                            self.config.active_config.canvas_shape_dims.d)  # Circles are secretly rounded rectangles
+            circle_coordinates = self.rectangle_coordinates(self.config.active_config.canvas_shape_dims.d, self.config.active_config.canvas_shape_dims.d) # Circles are secretly rounded rectangles
 
             # Add first point to end of coordinate list to complete the contour
             coordinates = circle_coordinates
@@ -1181,8 +864,7 @@ class GCodeEngine(object):
             length_to_cover_with_roughing = length_to_cover_with_passes - length_covered_by_finishing  # Remaining length to be covered by roughing passes
 
             finishing_stepovers = calculate_stepovers(length_covered_by_finishing, 0, self.finishing_stepover)
-            roughing_stepovers = calculate_stepovers(length_to_cover_with_roughing, finishing_stepovers[0],
-                                                     self.cutter_diameter / 2)[1:]
+            roughing_stepovers = calculate_stepovers(length_to_cover_with_roughing, finishing_stepovers[0], self.cutter_diameter / 2)[1:]
             finishing_depths = self.calculate_pass_depths(total_cut_depth, self.finishing_stepdown)
             roughing_depths = self.calculate_pass_depths(total_cut_depth, cutting_pass_depth)
 
@@ -1222,8 +904,7 @@ class GCodeEngine(object):
                         for stepover in operation_data["stepovers"]:
                             # for each stepover
                             first_plunge = stepover == operation_data["stepovers"][0]  # First stepover
-                            circle_parameters[
-                                "z_safe_distance"] = -1 * pass_depth + stepover_z_hop_distance  # Raise tool by the stepover distance for optimisation if not the last stepover
+                            circle_parameters["z_safe_distance"] = -1 * pass_depth + stepover_z_hop_distance  # Raise tool by the stepover distance for optimisation if not the last stepover
 
                             if self.cutter_diameter:
                                 circle_parameters["tool_diameter"] = self.cutter_diameter + (stepover * 2)
@@ -1238,8 +919,7 @@ class GCodeEngine(object):
                             circle = self.cut_rectangle(**circle_parameters)
                             circle = self.remove_redudant_lines(circle)
                             if not pocketing and self.config.active_config.cutting_depths.tabs:
-                                circle = self.add_tabs_to_gcode(circle, total_cut_depth, tab_height, tab_width,
-                                                                tab_spacing, three_d_tabs=three_d_tabs)
+                                circle = self.tab_utils.add_tabs_to_gcode(circle, total_cut_depth, tab_height, tab_width, base_tab_spacing, self.cutter_diameter, three_d_tabs=three_d_tabs)
                             cutting_lines += circle
 
         elif shape_type in ["line"]:
@@ -1260,16 +940,13 @@ class GCodeEngine(object):
         else:
             if self.config.active_config.shape_type in file_structure_1_shapes:
                 output = "(%s)\nG90\nG17\nM3 S%d\nG0 %s\n\n%s(End)\nG0 Z%d\nM5\n" % (
-                    filename, self.config.active_profile.cutting_parameters.spindle_speed, safe_start_position,
-                    ''.join(cutting_lines), z_safe_distance)
+                    filename, self.config.active_profile.cutting_parameters.spindle_speed, safe_start_position, ''.join(cutting_lines), z_safe_distance)
             else:
-                output = "(%s)\nG90\nG17\nM3 S%d\nG0 %s\n" % (
-                filename, self.config.active_profile.cutting_parameters.spindle_speed, safe_start_position)
+                output = "(%s)\nG90\nG17\nM3 S%d\nG0 %s\n" % (filename, self.config.active_profile.cutting_parameters.spindle_speed, safe_start_position)
                 output += "\n".join(cutting_lines)
 
             with open(output_path, 'w+') as out_file:
-                out_file.write(
-                    output)  # Use write() to write the entire output as a single string since we use \n in the string
+                out_file.write(output)  # Use write() to write the entire output as a single string since we use \n in the string
 
                 Logger.info("%s written" % filename)
                 return output_path  # return path to the file

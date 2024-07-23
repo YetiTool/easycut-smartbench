@@ -5,6 +5,7 @@ from kivy.graphics import Color, Rectangle
 
 import kivy.utils
 
+from asmcnc.comms.localization import Localization
 from asmcnc.core_UI import scaling_utils
 from asmcnc.core_UI.utils import color_provider
 
@@ -19,6 +20,7 @@ class ToolMaterialDisplayWidget(BoxLayout):
 
         self.material_text = ""
         self.tool_text = ""
+        self.l = Localization()
 
         # Set the background color
         background_color = color_provider.get_rgba("shapes_white")
@@ -36,7 +38,7 @@ class ToolMaterialDisplayWidget(BoxLayout):
 
         config.bind(active_profile=self.on_active_profile)
 
-        self.update_tool_material_label()
+        self.on_active_profile(None)
 
     def update_rect(self, *args):
         self.rect.pos = self.pos
@@ -44,8 +46,15 @@ class ToolMaterialDisplayWidget(BoxLayout):
 
     def on_active_profile(self, *args):
         self.material_text = self.config.active_profile.material.description
-        self.tool_text = self.config.active_cutter.description
+        self.tool_text = self.get_translated_description(self.config.active_cutter.description)
         self.update_tool_material_label()
 
     def update_tool_material_label(self):
-        self.tool_material_label.text = "Material: {}\nTool:\n{}".format(self.material_text, self.tool_text)
+        self.tool_material_label.text = (self.l.get_str("Material") + ": " +
+                                         self.l.get_str(self.material_text) + "\n" + self.l.get_str("Tool") + ":\n" + self.tool_text)
+
+    def get_translated_description(self, material_description):
+        desc = ''
+        for elem in material_description.split(' '):
+            desc += self.l.get_str(elem) + ' '
+        return desc.strip()

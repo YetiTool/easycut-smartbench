@@ -22,6 +22,7 @@ Builder.load_string(
 <SerialFailureClass>:
 
     title_string : title_string
+    back_to_lobby_string:back_to_lobby_string
     reboot_button : reboot_button
     reboot_string : reboot_string
 
@@ -75,13 +76,34 @@ Builder.load_string(
                     
             BoxLayout:
                 orientation: 'horizontal'
-                padding:[dp(0.25)*app.width, 0]
+                padding:[dp(0.05)*app.width, 0]
                 spacing:0.05*app.width
                         
                 Button:
                     font_size: str(0.01875 * app.width) + 'sp'
                     size_hint_y: 0.9
-                    size_hint_x: 0.3
+                    size: self.texture_size
+                    valign: 'top'
+                    halign: 'center'
+                    disabled: False
+                    on_press:
+                        root.quit_to_lobby()
+                        
+                    BoxLayout:
+                        padding:[dp(0.00625)*app.width, dp(0.0104166666667)*app.height]
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        
+                        Label:
+                            id: back_to_lobby_string
+                            valign: 'middle'
+                            halign: 'center'
+                            text_size: self.size
+                            font_size: str(0.0375*app.width) + 'sp'
+                        
+                Button:
+                    font_size: str(0.01875 * app.width) + 'sp'
+                    size_hint_y: 0.9
                     id: reboot_button
                     size: self.texture_size
                     valign: 'top'
@@ -126,8 +148,8 @@ class SerialFailureClass(Screen):
     def return_to_go_screen(self):
         self.sm.current = "go"
 
-    def quit_to_home(self):
-        self.sm.current = "home"
+    def quit_to_lobby(self):
+        self.sm.current = "lobby"
 
     def update_strings(self):
         self.title_string.text = (
@@ -138,6 +160,7 @@ class SerialFailureClass(Screen):
         self.user_instruction = self.l.get_str(
             "Please check that Z head is connected, and then reboot the console."
         )
+        self.back_to_lobby_string.text = self.l.get_str("Back to lobby")
         self.reboot_string.text = self.l.get_str("Reboot")
         self.update_font_size(self.reboot_string)
 

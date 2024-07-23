@@ -40,6 +40,7 @@ Builder.load_string("""
                     font_size: str(0.0225*app.width) + 'sp'
                     halign: "left"
                     markup: True
+                    size_hint_y: None
                     text_size: self.size
 
             BoxLayout:

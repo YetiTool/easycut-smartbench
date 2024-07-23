@@ -2,6 +2,7 @@
 import os
 from functools import partial
 
+from kivy.clock import Clock
 from kivy.graphics import Color, Rectangle
 from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
@@ -38,23 +39,24 @@ def get_language_flag_path(language):
 
 class LanguageSelectionScreen(Screen):
 
-    __model_manager = ModelManagerSingleton()
-    __localisation = Localization()
-
-    __language_chosen = ""
-
     def __init__(self, screen_manager, start_seq, **kwargs):
         super(LanguageSelectionScreen, self).__init__(**kwargs)
+
+        self.model_manager = ModelManagerSingleton()
+        self.localisation = Localization()
+        self.language_chosen = ""
+        self.update_welcome_label_clock = None
+        self.update_language_index = 0
 
         self.screen_manager = screen_manager
         self.start_seq = start_seq
 
         self.root_layout = BoxLayout(orientation='vertical')
 
-        self.header = BoxLayout(size_hint=(1, 0.1))
+        self.header = BoxLayout(size_hint=(1, (800.0 / 60.0 / 100.0)))
         self.header.bind(size=self.__update_header, pos=self.__update_header)
 
-        self.welcome_label = Label(text=self.__localisation.get_str(WELCOME_STRINGS[0]),
+        self.welcome_label = Label(text=self.localisation.get_str(WELCOME_STRINGS[0]),
                                    font_size="30sp", color=color_provider.get_rgba("white"))
         self.header.add_widget(self.welcome_label)
 
@@ -64,10 +66,10 @@ class LanguageSelectionScreen(Screen):
         self.language_flags_container = GridLayout(cols=3, size_hint=(0.8, 0.8), pos_hint={"center_x": 0.5,
                                                                                            "center_y": 0.5})
 
-        for language in self.__localisation.approved_languages:
+        for language in self.localisation.approved_languages:
             localisation_choice_option = self.__get_language_option_widget(language)
 
-            if self.__model_manager.is_machine_drywall() and language != self.__localisation.gb:
+            if self.model_manager.is_machine_drywall() and language != self.localisation.gb:
                 localisation_choice_option.opacity = 0
 
             self.language_flags_container.add_widget(localisation_choice_option)
@@ -77,7 +79,7 @@ class LanguageSelectionScreen(Screen):
         self.footer = BoxLayout(size_hint=(1, 0.35))
         self.footer.bind(size=self.__update_footer, pos=self.__update_footer)
 
-        next_string = self.__localisation.get_str("Next") + "..."
+        next_string = self.localisation.get_str("Next") + "..."
         spacer = Label(text="", size_hint=(0.3, 0.8))
         self.next_button = Button(text=next_string, size_hint=(None, None), width=dp(291), height=dp(79),
                                   pos_hint={"center_x": 0.5, "center_y": 0.5},
@@ -96,20 +98,33 @@ class LanguageSelectionScreen(Screen):
         self.root_layout.add_widget(self.footer)
         self.add_widget(self.root_layout)
 
-    def __next_button_pressed(self, *args):
-        self.__localisation.load_in_new_language(self.__language_chosen)
+    def on_enter(self, *args):
+        self.update_welcome_label_clock = Clock.schedule_interval(self.__update_welcome_label, 1)
 
-        font_changed = self.welcome_label.font_name != self.__localisation.font_regular
+    def on_leave(self, *args):
+        self.update_welcome_label_clock.cancel()
+
+    def __update_welcome_label(self, *args):
+        self.update_language_index += 1
+        self.update_language_index %= len(WELCOME_STRINGS)
+
+        if self.update_language_index == 7:
+            self.welcome_label.font_name = self.localisation.korean_font
+        else:
+            self.welcome_label.font_name = self.localisation.font_regular
+
+        self.welcome_label.text = self.localisation.get_str(WELCOME_STRINGS[self.update_language_index])
+
+    def __next_button_pressed(self, *args):
         for screen_name in self.start_seq.screen_sequence + ["rebooting"]:
             screen = self.screen_manager.get_screen(screen_name)
 
             if hasattr(screen, "update_strings"):
                 screen.update_strings()
 
-            if font_changed:
-                for widget in screen.walk():
-                    if isinstance(widget, Label):
-                        widget.font_name = self.__localisation.font_regular
+            for widget in screen.walk():
+                if isinstance(widget, Label):
+                    widget.font_name = self.localisation.font_regular
 
         self.start_seq.next_in_sequence()
 
@@ -123,7 +138,7 @@ class LanguageSelectionScreen(Screen):
         language_label = Label(text=language, color=color_provider.get_rgba("black"), valign="middle", halign="left")
 
         if flag_path.endswith("ko.png"):
-            language_label.font_name = self.__localisation.korean_font
+            language_label.font_name = self.localisation.korean_font
 
         language_label.bind(size=language_label.setter('text_size'))
         root_layout.add_widget(check_box)
@@ -133,15 +148,22 @@ class LanguageSelectionScreen(Screen):
 
     def __on_language_selected(self, language, instance):
         if instance.parent.opacity == 0 or not instance.active:
-            self.__language_chosen = ""
+            self.language_chosen = ""
             self.next_button.disabled = True
             self.next_button.opacity = 0
             return
 
         instance.color = color_provider.get_rgba("blue")
-        self.__language_chosen = language
+        self.language_chosen = language
         self.next_button.disabled = False
         self.next_button.opacity = 1
+
+        if language == self.localisation.ko:
+            self.welcome_label.font_name = self.localisation.korean_font
+            self.next_button.font_name = self.localisation.korean_font
+
+        self.localisation.load_in_new_language(language)
+        self.next_button.text = self.localisation.get_str("Next") + "..."
 
     def __update_body(self, *args):
         self.body.canvas.before.clear()

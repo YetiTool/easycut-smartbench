@@ -9,6 +9,7 @@ from kivy.properties import StringProperty, ObjectProperty
 
 import config_classes
 from asmcnc.apps.drywall_cutter_app.config import config_options
+from asmcnc.comms.localization import Localization
 from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.comms.model_manager import ModelManagerSingleton
 
@@ -31,69 +32,82 @@ INDENT_VALUE = "    "
 
 
 def get_display_preview(json_obj):
+    l = Localization()
     profile_db = App.get_running_app().profile_db
-    material_description = profile_db.get_material_name(json_obj["material"])
     tool_description = profile_db.get_tool_name(json_obj["cutter_type"])
-    preview = get_shape_type(json_obj)
-    preview += "Units: " + json_obj["units"] + "\n"
-    # preview += "Rotation: " + json_obj['rotation'] + "\n"
-    preview += "Canvas shape dims: \n"
-    preview += get_shape_dimensions(json_obj)
-    preview += "Material: " + material_description + "\n"
-    preview += "Cutter type: " + tool_description + "\n"
-    preview += "Toolpath offset: " + json_obj["toolpath_offset"] + "\n"
-    preview += "Cutting depths: \n"
+    material_description = profile_db.get_material_name(json_obj["material"])
+    preview = get_shape_type(json_obj, l)
+    preview += l.get_str("Units") + ": " + json_obj["units"] + "\n"
+    preview += l.get_str("Canvas shape dims") + ": \n"
+    preview += get_shape_dimensions(json_obj, l)
+    preview += l.get_str("Material") + ": " + l.get_str(material_description) + "\n"
+    preview += l.get_str("Cutter type") + ": " + get_translated_description(tool_description) + "\n"
+    preview += l.get_str("Toolpath offset") + ": " + l.get_str(json_obj["toolpath_offset"]) + "\n"
+    preview += l.get_str("Cutting depths") + ": \n"
     preview += (
             INDENT_VALUE
-            + "Material thickness: "
+            + l.get_str("Material thickness") + ": "
             + str(json_obj["cutting_depths"]["material_thickness"])
             + "\n"
     )
     preview += (
             INDENT_VALUE
-            + "Bottom offset: "
+            + l.get_str("Bottom offset") + ": "
             + str(json_obj["cutting_depths"]["bottom_offset"])
             + "\n"
     )
     preview += (
             INDENT_VALUE
-            + "Auto pass: "
-            + str(json_obj["cutting_depths"]["auto_pass"])
+            + l.get_str("Auto pass depth") + ": "
+            + str(l.get_str('Yes') if json_obj["cutting_depths"]["auto_pass"] else l.get_str('No'))
             + "\n"
     )
     preview += (
             INDENT_VALUE
-            + "Depth per pass: "
+            + l.get_str("Depth per pass") + ": "
             + str(json_obj["cutting_depths"]["depth_per_pass"])
             + "\n"
     )
-    preview += "Datum position: \n"
-    preview += INDENT_VALUE + "X: " + str(json_obj["datum_position"]["x"]) + "\n"
-    preview += INDENT_VALUE + "Y: " + str(json_obj["datum_position"]["y"]) + "\n"
+    preview += (
+            INDENT_VALUE
+            + l.get_str("Tabs") + ": "
+            + str(l.get_str('Yes') if json_obj["cutting_depths"]["tabs"] else l.get_str('No'))
+            + "\n"
+    )
+    preview += (l.get_str("Datum position") + ": X: " + str(round(json_obj["datum_position"]["x"], 1)) + " / Y: " +
+                str(round(json_obj["datum_position"]["y"], 1)) + "\n")
     return preview
 
 
-def get_shape_type(json_obj):
+def get_translated_description(description):
+    l = Localization()
+    desc = ''
+    for elem in description.split(' '):
+        desc += l.get_str(elem) + ' '
+    return desc.strip()
+
+
+def get_shape_type(json_obj, l):
     if json_obj["shape_type"] in ["line", "rectangle"]:
         return (
-                "Shape type: " + json_obj["rotation"] + " " + json_obj["shape_type"] + "\n"
+                l.get_str("Shape type") + ": " + l.get_str(json_obj["rotation"]) + " " + l.get_str(json_obj["shape_type"]) + "\n"
         )
     else:
-        return "Shape type: " + json_obj["shape_type"] + "\n"
+        return l.get_str("Shape type") + ": " + l.get_str(json_obj["shape_type"]) + "\n"
 
 
-def get_shape_dimensions(json_obj):
+def get_shape_dimensions(json_obj, l):
     if json_obj["shape_type"] == "rectangle":
-        dims = INDENT_VALUE + "X: " + str(json_obj["canvas_shape_dims"]["x"]) + "\n"
-        dims += INDENT_VALUE + "Y: " + str(json_obj["canvas_shape_dims"]["y"]) + "\n"
-        dims += INDENT_VALUE + "R: " + str(json_obj["canvas_shape_dims"]["r"]) + "\n"
+        dims = INDENT_VALUE + l.get_str("X") + ": " + str(json_obj["canvas_shape_dims"]["x"]) + "\n"
+        dims += INDENT_VALUE + l.get_str("Y") + ": " + str(json_obj["canvas_shape_dims"]["y"]) + "\n"
+        dims += INDENT_VALUE + l.get_str("R") + ": " + str(json_obj["canvas_shape_dims"]["r"]) + "\n"
     elif json_obj["shape_type"] == "square":
-        dims = INDENT_VALUE + "Y: " + str(json_obj["canvas_shape_dims"]["y"]) + "\n"
-        dims += INDENT_VALUE + "R: " + str(json_obj["canvas_shape_dims"]["r"]) + "\n"
+        dims = INDENT_VALUE + l.get_str("Y") + ": " + str(json_obj["canvas_shape_dims"]["y"]) + "\n"
+        dims += INDENT_VALUE + l.get_str("R") + ": " + str(json_obj["canvas_shape_dims"]["r"]) + "\n"
     elif json_obj["shape_type"] == "circle":
-        dims = INDENT_VALUE + "D: " + str(json_obj["canvas_shape_dims"]["d"]) + "\n"
+        dims = INDENT_VALUE + l.get_str("D") + ": " + str(json_obj["canvas_shape_dims"]["d"]) + "\n"
     elif json_obj["shape_type"] == "line":
-        dims = INDENT_VALUE + "L: " + str(json_obj["canvas_shape_dims"]["l"]) + "\n"
+        dims = INDENT_VALUE + l.get_str("L") + ": " + str(json_obj["canvas_shape_dims"]["l"]) + "\n"
     else:
         dims = ""
     return dims
@@ -127,6 +141,8 @@ class DWTConfig(EventDispatcher):
     active_config = ObjectProperty(config_classes.Configuration.default())  # type: config_classes.Configuration
     active_cutter = ObjectProperty(config_classes.Cutter.default())  # type: config_classes.Cutter
     active_profile = ObjectProperty(config_classes.Profile.default())  # type: config_classes.Profile
+
+    show_z_height_reminder = True
 
     def __init__(self, screen_drywall_cutter=None, *args, **kwargs):
         super(DWTConfig, self).__init__(*args, **kwargs)
@@ -356,6 +372,7 @@ class DWTConfig(EventDispatcher):
 
         Logger.debug("Loading cutter: " + cutter_uid)
         self.active_cutter = config_classes.Cutter.from_json(cutter)
+        self.active_config.cutter_type = self.active_cutter.uid
 
     @staticmethod
     def get_available_cutter_names():
@@ -449,6 +466,18 @@ class DWTConfig(EventDispatcher):
         """
         Logger.debug("Parameter changed: " + parameter_name + " = " + str(parameter_value))
 
+        # Ensure Z height datum warning is shown
+        if parameter_name == "material" and parameter_value != self.active_config.material:
+            self.show_z_height_reminder = True
+
+        if "." in parameter_name and parameter_name.split(".")[-1] == "material_thickness" and parameter_value != self.active_config.cutting_depths.material_thickness:
+            self.show_z_height_reminder = True
+
+        if parameter_name == "cutter_type" and parameter_value != self.active_config.cutter_type:
+            self.load_cutter(parameter_value)
+            self.load_new_profile()
+            self.show_z_height_reminder = True
+
         if "." in parameter_name:
             parameter_names = parameter_name.split(".")
             parameter = self.active_config
@@ -465,10 +494,6 @@ class DWTConfig(EventDispatcher):
                 self.active_config_name = "New Configuration"
 
             setattr(self.active_config, parameter_name, parameter_value)
-
-        if parameter_name == "cutter_type":
-            self.load_cutter(parameter_value)
-            self.load_new_profile()
 
         # update screen, check bumpers and so on:
         if not (self.active_config.shape_type == 'geberit' and self.active_cutter.dimensions.tool_diameter is None):

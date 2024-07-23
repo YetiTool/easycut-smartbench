@@ -4,6 +4,7 @@
 Popup system for easycut-smartbench
 """
 from enum import Enum
+from kivy.app import App
 from kivy.metrics import dp
 from kivy.properties import ObjectProperty, StringProperty, ListProperty
 from kivy.uix.boxlayout import BoxLayout
@@ -18,6 +19,10 @@ from kivy.clock import Clock
 from asmcnc.core_UI import scaling_utils as utils
 from asmcnc.core_UI.components.buttons.hold_button import WarningHoldButton
 from asmcnc.comms.logging_system.logging_system import Logger
+from kivy.uix.switch import Switch
+
+from asmcnc.core_UI.new_popups.popup_bases import PopupBase, PopupWarningTitle
+from asmcnc.core_UI.utils import color_provider
 
 """
 Popup type enum
@@ -1069,3 +1074,84 @@ class SimulatingJobPopup(ErrorPopup):
             main_label_size_hint_y=main_label_size_hint_y,
             **kwargs
         )
+
+
+class DustshoeWarningPopup(PopupBase):
+    def __init__(self,**kwargs):
+        super(DustshoeWarningPopup, self).__init__(**kwargs)
+
+        self.l = kwargs["l"]
+        self.m = kwargs["m"]
+        self.sm = kwargs["sm"]
+        usm = App.get_running_app().user_settings_manager
+
+        self.width = utils.get_scaled_width(600)
+        self.height = utils.get_scaled_height(360)
+        self.size_hint = (None, None)
+
+        title = PopupWarningTitle(size_hint_y=0.2, localisation=self.l)
+        self.root_layout.add_widget(title)
+
+        self.main_label = Label(
+            size_hint_y=1,
+            halign='center',
+            valign="middle",
+            text="[b]" + self.l.get_str("Please close the dust shoe by fitting the dust shoe plug!") + "[/b]",
+            color=color_provider.get_rgba("black"),
+            padding=(0, 0),
+            markup=True,
+            font_size=str(utils.get_scaled_width(25)) + "sp",
+        )
+
+        if utils.is_screen_big():
+            self.main_label.text_size = (utils.get_scaled_width(0.55 * self.width), None)
+        else:
+            self.main_label.text_size = (utils.get_scaled_width(0.75 * self.width), None)
+
+        dust_shoe_detection_layout = BoxLayout(
+            orientation="horizontal",
+            spacing=0,
+            padding=0,
+            size_hint_y=1
+        )
+
+        dust_shoe_label = Label(
+            text=self.l.get_str("Dust shoe plug detection"),
+            color=color_provider.get_rgba("black"),
+            markup=True,
+            font_size=str(utils.get_scaled_width(20)) + "sp",
+            text_size=(utils.get_scaled_width(0.4 * self.width), None),
+            halign="center",
+        )
+
+        dust_shoe_switch = Switch(size_hint_y=1)
+
+        usm.bind(dust_shoe_detection=lambda i, value: setattr(dust_shoe_switch, 'active', value))
+        dust_shoe_switch.bind(active=lambda i, value: usm.set_value('dust_shoe_detection', value))
+        dust_shoe_switch.active = usm.get_value('dust_shoe_detection')
+
+        dust_shoe_detection_layout.add_widget(dust_shoe_label)
+        dust_shoe_detection_layout.add_widget(dust_shoe_switch)
+
+        self.main_layout = BoxLayout(
+            orientation="vertical",
+            spacing=utils.get_scaled_tuple(10, orientation="vertical"),
+            padding=utils.get_scaled_tuple((20, 20, 20, 20)),
+        )
+
+        self.main_layout.add_widget(self.main_label)
+        self.main_layout.add_widget(dust_shoe_detection_layout)
+
+        self.root_layout.add_widget(self.main_layout)
+
+        ok_button = Button(
+            text=self.l.get_str("Ok"),
+            size_hint_y=0.3,
+            size_hint_x=0.5,
+            font_size=str(utils.get_scaled_width(20)) + "sp",
+            background_color=color_provider.get_rgba("red"),
+            on_release=self.dismiss,
+            background_normal=""
+        )
+
+        self.root_layout.add_widget(ok_button)

@@ -4,6 +4,7 @@ import textwrap
 
 from kivy.app import App
 from kivy.clock import Clock
+from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.metrics import dp
 from kivy.uix.behaviors import ButtonBehavior
@@ -238,6 +239,7 @@ class DrywallCutterScreen(Screen):
         self.jd = job
         self.pm = self.sm.pm
         self.cs = self.m.cs
+        self.usm = App.get_running_app().user_settings_manager
 
         self.engine = GCodeEngine(self.m, self.dwt_config, self.cs)
         self.simulation_started = False
@@ -383,7 +385,7 @@ class DrywallCutterScreen(Screen):
                 # default to 'on'
                 self.select_toolpath('on')
             else:
-                self.drywall_shape_display_widget.shape_toolpath_image.opacity = 0
+                self.drywall_shape_display_widget.select_toolpath(self.dwt_config.active_config.shape_type, 'on', self.rotation)
         else:
             self.select_toolpath(self.dwt_config.active_config.toolpath_offset)
             self.toolpath_selection.disabled = False
@@ -444,11 +446,7 @@ class DrywallCutterScreen(Screen):
     def quit_to_lobby(self):
         self.set_return_screens()
         self.jd.reset_values()
-
-        if self.dwt_config.app_type == config_options.AppType.SHAPES:
-            self.sm.current = 'yeticut_lobby'
-        else:
-            self.sm.current = 'lobby'
+        self.sm.current = 'lobby'
 
     def simulate(self):
         self.drywall_shape_display_widget.defocus_inputs()
@@ -502,7 +500,8 @@ class DrywallCutterScreen(Screen):
                                                                        screen_manager=self.sm,
                                                                        localization=self.l,
                                                                        callback=self.dwt_config.save_config,
-                                                                       kb=self.kb))
+                                                                       kb=self.kb,
+                                                                       dwt_config=self.dwt_config))
         self.sm.current = 'config_filesaver'
 
     def is_config_valid(self):
@@ -561,11 +560,13 @@ class DrywallCutterScreen(Screen):
 
         # elif not self.m.state().startswith('Idle'):
         #     self.sm.current = 'mstate'
+        elif self.usm.get_value('dust_shoe_detection') and not self.m.s.dustshoe_is_closed:
+            self.sm.pm.show_dustshoe_warning_popup()
 
         elif self.m.is_machine_homed == False and sys.platform != "win32":
             self.m.request_homing_procedure('drywall_cutter', 'drywall_cutter')
 
-        elif self.sm.get_screen('home').z_datum_reminder_flag and not self.sm.get_screen('home').has_datum_been_reset:
+        elif (self.sm.get_screen('home').z_datum_reminder_flag or self.dwt_config.show_z_height_reminder) and not self.sm.get_screen('home').has_datum_been_reset:
 
             z_datum_reminder_message = (
                     self.format_command(
@@ -576,6 +577,7 @@ class DrywallCutterScreen(Screen):
 
             popup_info.PopupWarning(self.sm, self.l, z_datum_reminder_message)
             self.sm.get_screen('home').z_datum_reminder_flag = False
+            self.dwt_config.show_z_height_reminder = False
 
         else:
             # clear to proceed
@@ -634,9 +636,13 @@ class DrywallCutterScreen(Screen):
         self.drywall_shape_display_widget.x_input.text = str(self.dwt_config.active_config.canvas_shape_dims.x)
         self.drywall_shape_display_widget.y_input.text = str(self.dwt_config.active_config.canvas_shape_dims.y)
 
-        self.drywall_shape_display_widget.unit_switch.active = self.dwt_config.active_config.units == 'mm'
+        # self.drywall_shape_display_widget.unit_switch.active = self.dwt_config.active_config.units == 'mm'
 
         # Vlad set your text inputs here:
 
     def on_leave(self, *args):
         self.dwt_config.save_temp_config()
+
+    def format_command(self, cmd):
+        wrapped_cmd = textwrap.fill(cmd, width=0.0625*Window.width, break_long_words=False)
+        return wrapped_cmd

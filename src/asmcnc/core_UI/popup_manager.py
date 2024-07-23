@@ -18,7 +18,8 @@ from asmcnc.core_UI.popups import (
     DownloadSettingsToUsbPopup, 
     SpindleSafetyPopup, 
     JobValidationPopup,
-    SimulatingJobPopup
+    SimulatingJobPopup,
+    DustshoeWarningPopup
 )
 
 
@@ -86,6 +87,8 @@ class PopupManager:
         self.job_validation_popup = JobValidationPopup(sm=self.sm, m=self.m, l=self.l, main_string="")
 
         self.simulating_job_popup = SimulatingJobPopup(sm=self.sm, m=self.m, l=self.l, main_string="")
+
+        self.dustshoe_warning_popup = DustshoeWarningPopup(sm=self.sm, m=self.m, l=self.l)
 
     def show_spindle_safety_popup(self, button_one_callback, button_two_callback):
         self.spindle_safety_popup.button_one_callback = button_one_callback
@@ -459,3 +462,9 @@ class PopupManager:
 
     def close_simulating_job_popup(self):
         self.simulating_job_popup.dismiss()
+
+    def show_dustshoe_warning_popup(self):
+        self.dustshoe_warning_popup.open()
+
+    def close_dustshoe_warning_popup(self):
+        self.dustshoe_warning_popup.dismiss()
