@@ -396,7 +396,7 @@ class ConfigFileSaver(Screen):
         with open(self.filechooser.selection[0], 'r') as f:
             json_obj = json.load(f)
 
-        self.metadata_preview.text = config_loader.get_display_preview(json_obj)
+        self.metadata_preview.text = self.dwt_config.get_display_preview(json_obj)
 
         self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'
 
