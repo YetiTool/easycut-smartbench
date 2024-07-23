@@ -217,6 +217,7 @@ class ToolMaterialPopup(Popup):
             self.title_label.pos_hint['y'] = 1.1
         else:
             self.title_label.pos_hint['y'] = 1.075
+        self.float_layout.do_layout()
         self.update_strings()
         self.load_config()
         if self.material_dropdown.text == '' or self.material_dropdown.text == '':  # Only disable if one is empty
