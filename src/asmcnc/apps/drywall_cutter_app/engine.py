@@ -641,7 +641,7 @@ class GCodeEngine(object):
         simulation_feedrate = 6000 # mm/s
         geberit_partoff = False
 
-        tab_spacing = 20  # mm
+        base_tab_spacing = 1  # mm
         tab_width = 10  # mm
         tab_height = self.config.active_config.cutting_depths.material_thickness * 0.6
         if tab_height > 5:
@@ -796,7 +796,7 @@ class GCodeEngine(object):
                             rectangle = self.cut_rectangle(**rectangle_parameters)
                             rectangle = self.remove_redudant_lines(rectangle)
                             if not pocketing and self.config.active_config.cutting_depths.tabs:
-                                rectangle = self.tab_utils.add_tabs_to_gcode(rectangle, total_cut_depth, tab_height, tab_width, tab_spacing, self.cutter_diameter, three_d_tabs=three_d_tabs)
+                                rectangle = self.tab_utils.add_tabs_to_gcode(rectangle, total_cut_depth, tab_height, tab_width, base_tab_spacing, self.cutter_diameter, three_d_tabs=three_d_tabs)
                             cutting_lines += rectangle
 
         elif shape_type in ["geberit"]:
@@ -919,7 +919,7 @@ class GCodeEngine(object):
                             circle = self.cut_rectangle(**circle_parameters)
                             circle = self.remove_redudant_lines(circle)
                             if not pocketing and self.config.active_config.cutting_depths.tabs:
-                                circle = self.tab_utils.add_tabs_to_gcode(circle, total_cut_depth, tab_height, tab_width, tab_spacing, self.cutter_diameter, three_d_tabs=three_d_tabs)
+                                circle = self.tab_utils.add_tabs_to_gcode(circle, total_cut_depth, tab_height, tab_width, base_tab_spacing, self.cutter_diameter, three_d_tabs=three_d_tabs)
                             cutting_lines += circle
 
         elif shape_type in ["line"]:

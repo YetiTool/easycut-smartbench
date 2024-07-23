@@ -12,7 +12,7 @@ class TabUtilities:
         self.config = config
         self.arc_args = {}
 
-    def add_tabs_to_gcode(self, gcode_lines, total_cut_depth, tab_height, tab_width, tab_spacing, tool_diameter, three_d_tabs=False):
+    def add_tabs_to_gcode(self, gcode_lines, total_cut_depth, tab_height, tab_width, base_tab_spacing, tool_diameter, three_d_tabs=False):
         """
         Add tabs to a list of gcode lines.
 
@@ -20,7 +20,7 @@ class TabUtilities:
         total_cut_depth: float. The total depth of the cut.
         tab_height: float. The height of the tabs.
         tab_width: float. The width of the tabs.
-        tab_spacing: float. The spacing between the tabs.
+        base_tab_spacing: float. The spacing between the tabs.
         tool_diameter: float. The diameter of the tool.
         three_d_tabs: bool. Whether to cut the tabs in 3D.
 
@@ -76,10 +76,10 @@ class TabUtilities:
                     g1_last_x = current_x
                     g1_last_y = current_y
 
-                if linear_distance_moved >= tab_spacing and line.startswith(('G0', 'G1')):
+                if linear_distance_moved >= base_tab_spacing and line.startswith(('G0', 'G1')):
                     tabs_added = True
                     modified_gcode.extend(
-                        self.add_straight_tabs(self, tool_diameter, xy_feed, linear_distance_moved, tab_spacing, tab_width,
+                        self.add_straight_tabs(self, tool_diameter, xy_feed, linear_distance_moved, base_tab_spacing, tab_width,
                                                tab_height,
                                                previous_x_pos, previous_y_pos, g1_last_x, g1_last_y, x_delta, y_delta,
                                                current_z, tab_top_z, line, three_d_tabs))
@@ -88,7 +88,7 @@ class TabUtilities:
                     tabs_added = True
                     modified_gcode.extend(
                         self.add_arc_tabs(xy_feed, parts, line, last_x, last_y, current_x, current_y,
-                                          tab_spacing,
+                                          base_tab_spacing,
                                           tab_width, current_z, tab_top_z, tool_diameter, three_d_tabs))
 
                 last_x = current_x
@@ -111,8 +111,9 @@ class TabUtilities:
         return modified_gcode
 
     @staticmethod
-    def add_straight_tabs(self, tool_diameter, xy_feed, linear_distance_moved, tab_spacing, tab_width, tab_height, previous_x_pos,
+    def add_straight_tabs(self, tool_diameter, xy_feed, linear_distance_moved, base_tab_spacing, tab_width, tab_height, previous_x_pos,
                           previous_y_pos, last_x, last_y, x_delta, y_delta, current_z, tab_top_z, line, three_d_tabs):
+        tab_spacing = self.adjust_tab_spacing(base_tab_spacing, linear_distance_moved)
         number_of_tabs = int(linear_distance_moved / (tab_spacing + tab_width))
         tab_inset_distance = linear_distance_moved - ((tab_width * number_of_tabs) + tab_spacing * (number_of_tabs - 1))
         tab_inset_distance /= 2
@@ -165,7 +166,7 @@ class TabUtilities:
 
         return modified_gcode
 
-    def add_arc_tabs(self, xy_feed, parts, line, last_x, last_y, current_x, current_y, tab_spacing, tab_width,
+    def add_arc_tabs(self, xy_feed, parts, line, last_x, last_y, current_x, current_y, base_tab_spacing, tab_width,
                      current_z, tab_top_z, tool_diameter, three_d_tabs):
         modified_gcode = []
         r_value = None
@@ -194,6 +195,8 @@ class TabUtilities:
             arc_length = abs(end_angle - start_angle) * radius
             arc_length /= 2
 
+            tab_spacing = self.adjust_tab_spacing(base_tab_spacing, arc_length)
+
             if arc_length >= tab_spacing:
                 number_of_tabs = int(arc_length / (tab_spacing + tab_width))
                 tab_inset_distance = arc_length - ((tab_width * number_of_tabs) + tab_spacing * (number_of_tabs - 1))
@@ -213,11 +216,11 @@ class TabUtilities:
                 for tab_index in range(number_of_tabs):
                     reverse_index = number_of_tabs - 1 - tab_index
                     total_tab_width = tab_width * (reverse_index + 1)
-                    total_tab_spacing = tab_spacing * reverse_index
+                    total_base_tab_spacing = tab_spacing * reverse_index
 
-                    tab_start_distance = arc_length - (total_tab_width + total_tab_spacing + tab_inset_distance)
+                    tab_start_distance = arc_length - (total_tab_width + total_base_tab_spacing + tab_inset_distance)
                     tab_end_distance = arc_length - (
-                                total_tab_width - tab_width + total_tab_spacing + tab_inset_distance)
+                                total_tab_width - tab_width + total_base_tab_spacing + tab_inset_distance)
 
                     tab_cut_height = current_z if current_z > tab_top_z else tab_top_z
 
@@ -396,3 +399,14 @@ class TabUtilities:
             gcode.append("{} X{} Y{}{}{}{}\n".format(command, x, y, z_param, radius_param, feed_param))
 
         return gcode
+
+    @staticmethod
+    def adjust_tab_spacing(base_tab_spacing, movement_distance):
+        """
+        Adjust tab spacing based on the distance moved to avoid having loads of tabs on large segments.
+        """
+
+        k = 4  # adjustment factor
+
+        return round(base_tab_spacing * k * movement_distance ** 0.5)
+
