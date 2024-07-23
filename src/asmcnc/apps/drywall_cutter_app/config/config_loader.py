@@ -38,7 +38,6 @@ def get_display_preview(json_obj):
     material_description = profile_db.get_material_name(json_obj["material"])
     preview = get_shape_type(json_obj, l)
     preview += l.get_str("Units") + ": " + json_obj["units"] + "\n"
-    # preview += "Rotation: " + json_obj['rotation'] + "\n"
     preview += l.get_str("Canvas shape dims") + ": \n"
     preview += get_shape_dimensions(json_obj, l)
     preview += l.get_str("Material") + ": " + l.get_str(material_description) + "\n"
@@ -75,9 +74,8 @@ def get_display_preview(json_obj):
             + str(l.get_str('Yes') if json_obj["cutting_depths"]["tabs"] else l.get_str('No'))
             + "\n"
     )
-    preview += l.get_str("Datum position") + ": " + str(json_obj["datum_position"]["x"]) + " / " + str(json_obj["datum_position"]["y"]) + "\n"
-    # preview += INDENT_VALUE + l.get_str("X") + ": " +  + "\n"
-    # preview += INDENT_VALUE + l.get_str("Y") + ": " + str(json_obj["datum_position"]["y"]) + "\n"
+    preview += (l.get_str("Datum position") + ": X: " + str(round(json_obj["datum_position"]["x"], 1)) + " / Y: " +
+                str(round(json_obj["datum_position"]["y"], 1)) + "\n")
     return preview
 
 
