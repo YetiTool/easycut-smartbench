@@ -374,6 +374,7 @@ class DWTConfig(EventDispatcher):
 
         Logger.debug("Loading cutter: " + cutter_uid)
         self.active_cutter = config_classes.Cutter.from_json(cutter)
+        self.active_config.cutter_type = self.active_cutter.uid
 
     @staticmethod
     def get_available_cutter_names():

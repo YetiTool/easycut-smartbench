@@ -47,6 +47,9 @@ Builder.load_string("""
     material_dropdown:material_dropdown
     float_layout:float_layout
     title_label:title_label
+    description_label:description_label
+    lead_in_warning_label:lead_in_warning_label
+    cutter_link_label:cutter_link_label
 
     auto_dismiss: False
     size_hint: (None,None)
@@ -63,15 +66,16 @@ Builder.load_string("""
         
         Label:
             id: title_label
-            pos_hint: {'x': -0.31, 'y': 0.61 if app.width == 800 else 0.64}
+            size_hint: None, None
             text: 'Tool & Material selection'
+            pos_hint: {'x': 0}
             font_size: app.get_scaled_sp('20sp')
             color: hex('#F9F9F9')
             size: self.texture_size
         
         Label:
             id: description_label
-            text: 'Shapes Lite currently only supports YetiPilot profiles. Full Toolbox coming soon'
+            text: 'Shapes only supports YetiPilot profiles.'
             text_size: (0.65*self.parent.width, None)
             halign: 'center'
             color: hex('#333333')
@@ -123,6 +127,7 @@ Builder.load_string("""
             color: hex('#333333')
             halign: 'center'
             font_size: app.get_scaled_sp('16sp')
+            text_size: (0.65*self.parent.width, None)
             
         BoxLayout:
             orientation: 'horizontal'
@@ -206,15 +211,24 @@ class ToolMaterialPopup(Popup):
         self.confirm_button.opacity = 0.5
 
     def on_open(self):
-        if scaling_utils.Width == 800:
-            self.title_label.pos_hint['y'] = 0.9
+        # Fix weird scaling bug with title label
+        self.title_label.pos_hint['x'] = 0
+        if scaling_utils.is_screen_big():
+            self.title_label.pos_hint['y'] = 1.1
         else:
-            self.title_label.pos_hint['y'] = 0.93
+            self.title_label.pos_hint['y'] = 1.075
         self.float_layout.do_layout()
+        self.update_strings()
         self.load_config()
         if self.material_dropdown.text == '' or self.material_dropdown.text == '':  # Only disable if one is empty
             self.confirm_button.disabled = True
             self.confirm_button.opacity = 0.5
+
+    def update_strings(self):
+        self.title_label.text = self.l.get_str('Tool & Material selection')
+        self.description_label.text = self.l.get_str('Shapes only supports YetiPilot profiles.')
+        self.lead_in_warning_label.text = self.l.get_str('WARNING: Using a compression tool will add a lead in to your toolpath automatically')
+        self.cutter_link_label.text = self.l.get_str('Yeti Tool cutters available from') + ' www.yetitool.com/about/partners'
 
     def load_config(self, *args):
         if self.dwt_config.active_config.material:
