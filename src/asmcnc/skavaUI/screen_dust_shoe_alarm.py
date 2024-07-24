@@ -224,7 +224,7 @@ class DustShoeAlarmScreen(Screen):
             # Check dust shoe detection enabled in maintenance
             if self.usm.get_value('dust_shoe_detection'):
                 # Only check during job or when spindle is enabled
-                if self.m.s.m_state == "Run" or self.m.s.spindle_on:
+                if self.m.s.is_job_streaming or self.m.s.spindle_on:
                     self.m.set_pause(True)
                     if self.sm.current != 'dust_shoe_alarm':
                         Logger.info("Dust shoe unplugged")
