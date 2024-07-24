@@ -356,8 +356,8 @@ class BetaTestingScreen(Screen):
                     pull_exit_code = os.system("git pull")
                     Logger.debug('"git pull" returned: {}'.format(pull_exit_code))
                 else:
-                    current_version_split = [int(i) for i in self.set.sw_version.split("v")[1].split(".")]
-                    checkout_version_split = [int(i) for i in branch_name_formatted.split("v")[1].split(".")]
+                    current_version_split = [int(i.split("-")[0]) for i in self.set.sw_version.split("v")[1].split(".")]
+                    checkout_version_split = [int(i.split("-")[0]) for i in branch_name_formatted.split("v")[1].split(".")]
 
                     if current_version_split > checkout_version_split:
                         os.system("rm -r /home/pi/easycut-smartbench/src/asmcnc/apps/drywall_cutter_app/config")
