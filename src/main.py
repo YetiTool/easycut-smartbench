@@ -203,6 +203,7 @@ class SkavaUI(App):
 
         # Initialise settings object
         sett = settings_manager.Settings(sm)
+        sett.enable_ssh()
 
         # Initialise 'j'ob 'd'ata object
         jd = job_data.JobData(localization=self.l, settings_manager=sett)
