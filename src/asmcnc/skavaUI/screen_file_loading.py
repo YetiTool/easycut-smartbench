@@ -243,11 +243,11 @@ class LoadingScreen(Screen):
             self.sm.pm.show_error_popup(file_empty_warning)
             self.sm.current = "local_filechooser"
             return
-        if self.model_manager.is_machine_drywall():
-            if not self.dwt_file_id_line in self.job_file_as_list:
-                self.sm.pm.show_error_popup("Please choose a valid .dwt file!")
-                self.sm.current = "local_filechooser"
-                return
+        # if self.model_manager.is_machine_drywall():
+        #     if not self.dwt_file_id_line in self.job_file_as_list:
+        #         self.sm.pm.show_error_popup("Please choose a valid .dwt file!")
+        #         self.sm.current = "local_filechooser"
+        # f        return
         self.jd.generate_job_data(self.job_file_as_list)
         self.total_lines_in_job_file_pre_scrubbed = len(self.job_file_as_list)
         self.load_value = 1
