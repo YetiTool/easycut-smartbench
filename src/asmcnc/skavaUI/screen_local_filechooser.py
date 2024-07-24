@@ -110,7 +110,7 @@ Builder.load_string(
                     id: filechooser
                     rootpath: './jobCache/'
                     show_hidden: False
-                    filters: ['*.dwt'] if root.model_manager.is_machine_drywall() else ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
+                    filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
                     on_selection: root.refresh_filechooser()
                     sort_func: root.sort_by_date_reverse
                     FileChooserIconLayout

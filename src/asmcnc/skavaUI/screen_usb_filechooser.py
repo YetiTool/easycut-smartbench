@@ -92,7 +92,7 @@ Builder.load_string(
                 padding:[0, dp(0.0208333333333)*app.height]
                 id: filechooser_usb
                 show_hidden: False
-                filters: ['*.dwt'] if root.model_manager.is_machine_drywall() else ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
+                filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
                 on_selection: root.refresh_filechooser()
                 FileChooserIconLayout
                     id: icon_layout_fc
