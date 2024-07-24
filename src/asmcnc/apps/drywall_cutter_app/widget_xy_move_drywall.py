@@ -223,6 +223,7 @@ class XYMoveDrywall(Widget):
         self.sm=kwargs['screen_manager']
         self.l=kwargs['localization']
         self.cs = kwargs['coordinate_system']
+        self.dwt_config = kwargs['dwt_config']
 
         self.set_jog_speeds()
         self.ids.probe_button_container.add_widget(probe_button.ProbeButton(self.m, self.sm, self.l, fast_probe=True))
@@ -325,6 +326,8 @@ class XYMoveDrywall(Widget):
             )
 
         PopupDatum(self.sm, self.m, self.l, 'XY', warning, jog_after_laser_datum_set=False)
+        self.dwt_config.on_parameter_change('datum_position.x', self.m.s.m_x)
+        self.dwt_config.on_parameter_change('datum_position.y', self.m.s.m_y)
 
     def format_command(self, cmd):
         wrapped_cmd = textwrap.fill(cmd, width=35, break_long_words=False)
