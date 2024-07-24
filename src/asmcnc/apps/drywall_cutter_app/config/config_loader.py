@@ -455,8 +455,8 @@ class DWTConfig(EventDispatcher):
             self.screen_drywall_cutter.drywall_shape_display_widget.check_datum_and_extents()
 
     def get_display_preview(self, json_obj):
-        offset_x = 5.0
-        offset_y = 14.0
+        offset_x = self.screen_drywall_cutter.m.laser_offset_x
+        offset_y = self.screen_drywall_cutter.m.laser_offset_y
 
         tool_description = self.profile_db.get_tool_name(json_obj["cutter_type"])
         material_description = self.profile_db.get_material_name(json_obj["material"])
