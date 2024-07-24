@@ -1803,7 +1803,7 @@ class RouterMachine(EventDispatcher):
                 popup_info.PopupError(self.sm, self.l, error_message)
         else:
             self.set_datum(x=-self.laser_offset_x_value, y=-self.laser_offset_y_value)
-            self.datum_position = [self.s.m_x-self.laser_offset_x_value, self.s.m_y-self.laser_offset_y_value]
+            self.datum_position = [self.s.m_x+self.laser_offset_x_value, self.s.m_y+self.laser_offset_y_value]
 
     def set_x_datum_with_laser(self):
         if self.jog_spindle_to_laser_datum('X'):
