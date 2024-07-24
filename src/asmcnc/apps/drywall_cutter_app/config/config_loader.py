@@ -131,6 +131,7 @@ def migrate_v1_to_v2(config, file_path):
             break
     config["material"] = "0010"
     config["version"] = "2.0"
+    config["cutting_depths"]["tabs"] = False
 
     Logger.info("Migrated configuration '{}' to version 2.0".format(os.path.basename(file_path)))
     return config
