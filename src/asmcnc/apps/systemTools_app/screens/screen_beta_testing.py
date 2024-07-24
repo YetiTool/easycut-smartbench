@@ -348,6 +348,15 @@ class BetaTestingScreen(Screen):
                 branch_name_formatted = str(self.user_branch.text).translate(None, " ")
                 checkout_call = ("cd /home/pi/easycut-smartbench/ && git fetch origin && git checkout "
                                  + branch_name_formatted)
+
+                if re.match("v\d\.\d\.\d", branch_name_formatted):
+                    current_version_split = [int(i.split("-")[0]) for i in self.set.sw_version.split("v")[1].split(".")]
+                    checkout_version_split = [int(i.split("-")[0]) for i in branch_name_formatted.split("v")[1].split(".")]
+
+                    if current_version_split > checkout_version_split:
+                        os.system("rm -r /home/pi/easycut-smartbench/src/asmcnc/apps/drywall_cutter_app/config")
+                        Logger.info("Purged shapes configurations before downgrade")
+
                 checkout_exit_code = os.system(checkout_call)
                 Logger.debug('Checkout call: {} | Returns: {}'.format(checkout_call,checkout_exit_code))
                 # check if branch name is a tag like v2.8.1:
@@ -355,13 +364,6 @@ class BetaTestingScreen(Screen):
                 if not re.match("v\d\.\d\.\d", branch_name_formatted):
                     pull_exit_code = os.system("git pull")
                     Logger.debug('"git pull" returned: {}'.format(pull_exit_code))
-                else:
-                    current_version_split = [int(i.split("-")[0]) for i in self.set.sw_version.split("v")[1].split(".")]
-                    checkout_version_split = [int(i.split("-")[0]) for i in branch_name_formatted.split("v")[1].split(".")]
-
-                    if current_version_split > checkout_version_split:
-                        os.system("rm -r /home/pi/easycut-smartbench/src/asmcnc/apps/drywall_cutter_app/config")
-                        Logger.info("Purged shapes configurations before downgrade")
 
                 if checkout_exit_code == 0 and pull_exit_code == 0:
                     self.set.ansible_service_run_without_reboot()
