@@ -355,6 +355,14 @@ class BetaTestingScreen(Screen):
                 if not re.match("v\d\.\d\.\d", branch_name_formatted):
                     pull_exit_code = os.system("git pull")
                     Logger.debug('"git pull" returned: {}'.format(pull_exit_code))
+                else:
+                    current_version_split = [int(i) for i in self.set.sw_version.split("v")[1].split(".")]
+                    checkout_version_split = [int(i) for i in branch_name_formatted.split("v")[1].split(".")]
+
+                    if current_version_split > checkout_version_split:
+                        os.system("rm -r /home/pi/easycut-smartbench/src/asmcnc/apps/drywall_cutter_app/config")
+                        Logger.info("Purged shapes configurations before downgrade")
+
                 if checkout_exit_code == 0 and pull_exit_code == 0:
                     self.set.ansible_service_run_without_reboot()
                     wait_popup.popup.dismiss()
