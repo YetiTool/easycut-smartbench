@@ -96,7 +96,7 @@ Builder.load_string("""
                     Color:
                         rgba: hex('#E5E5E5FF')
                     Rectangle:
-                        pos: self.x + scaling_utils.get_scaled_width(2.5), self.y + scaling_utils.get_scaled_height(5)
+                        pos: self.x + scaling_utils.get_scaled_width(2.5), self.y + scaling_utils.get_scaled_height(5.75)
                         size: self.width - scaling_utils.get_scaled_width(5), self.height - scaling_utils.get_scaled_height(10)
 
                 FloatInput:
@@ -135,7 +135,7 @@ Builder.load_string("""
                     Color:
                         rgba: hex('#E5E5E5FF')
                     Rectangle:
-                        pos: self.x + scaling_utils.get_scaled_width(2.5), self.y + scaling_utils.get_scaled_height(5)
+                        pos: self.x + scaling_utils.get_scaled_width(2.5), self.y + scaling_utils.get_scaled_height(5.75)
                         size: self.width - scaling_utils.get_scaled_width(5), self.height - scaling_utils.get_scaled_height(10)
 
                 FloatInput:
@@ -174,7 +174,7 @@ Builder.load_string("""
                     Color:
                         rgba: hex('#E5E5E5FF')
                     Rectangle:
-                        pos: self.x + scaling_utils.get_scaled_width(2.5), self.y + scaling_utils.get_scaled_height(5)
+                        pos: self.x + scaling_utils.get_scaled_width(2.5), self.y + scaling_utils.get_scaled_height(5.75)
                         size: self.width - scaling_utils.get_scaled_width(5), self.height - scaling_utils.get_scaled_height(10)
 
                 FloatInput:
@@ -213,7 +213,7 @@ Builder.load_string("""
                     Color:
                         rgba: hex('#E5E5E5FF')
                     Rectangle:
-                        pos: self.x + scaling_utils.get_scaled_width(2.5), self.y + scaling_utils.get_scaled_height(5)
+                        pos: self.x + scaling_utils.get_scaled_width(2.5), self.y + scaling_utils.get_scaled_height(5.75)
                         size: self.width - scaling_utils.get_scaled_width(5), self.height - scaling_utils.get_scaled_height(10)
 
                 FloatInput:
@@ -252,7 +252,7 @@ Builder.load_string("""
                     Color:
                         rgba: hex('#E5E5E5FF')
                     Rectangle:
-                        pos: self.x + 2.5, self.y + 5
+                        pos: self.x + scaling_utils.get_scaled_width(2.5), self.y + scaling_utils.get_scaled_height(5.75)
                         size: self.width - scaling_utils.get_scaled_width(5), self.height - scaling_utils.get_scaled_height(10)
 
                 FloatInput:
@@ -267,7 +267,7 @@ Builder.load_string("""
             Label:
                 text: 'Y'
                 font_size: scaling_utils.get_scaled_width(dp(25))
-                pos: y_input.pos[0] - self.width - 2.5, y_input.pos[1] + scaling_utils.get_scaled_height(dp(3))
+                pos: y_input.pos[0] - self.width - scaling_utils.get_scaled_width(2.5), y_input.pos[1] + scaling_utils.get_scaled_height(dp(3))
                 opacity: y_input.opacity
                 color: 0,0,0,1
                 size: self.texture_size
@@ -465,7 +465,7 @@ class DrywallShapeDisplay(Widget):
             self.swapping_lengths = False
 
         if shape == 'circle':
-            self.enable_input(self.d_input, scaling_utils.get_scaled_tuple((458, 310)))
+            self.enable_input(self.d_input, scaling_utils.get_scaled_tuple((458, 309)))
             self.place_widget(self.x_datum_label, scaling_utils.get_scaled_tuple((278, 27)))
             self.place_widget(self.y_datum_label, scaling_utils.get_scaled_tuple((403, 196)))
             self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
@@ -475,26 +475,26 @@ class DrywallShapeDisplay(Widget):
 
         if shape in ['square', 'rectangle']:
             if shape == 'square':
-                self.enable_input(self.r_input, scaling_utils.get_scaled_tuple((411, 311)))
+                self.enable_input(self.r_input, scaling_utils.get_scaled_tuple((411, 310)))
                 self.disable_input(self.x_input)
-                self.enable_input(self.y_input, scaling_utils.get_scaled_tuple((238, 327)))
+                self.enable_input(self.y_input, scaling_utils.get_scaled_tuple((238, 326)))
                 self.place_widget(self.x_datum_label, scaling_utils.get_scaled_tuple((365, 55)))
                 self.place_widget(self.y_datum_label, scaling_utils.get_scaled_tuple((398, 113)))
                 self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
                                                                   self.y_datum_label.y - scaling_utils.get_scaled_height(35)))
             else:
                 if rotation == 'horizontal':
-                    self.enable_input(self.r_input, scaling_utils.get_scaled_tuple((453, 311)))
-                    self.enable_input(self.x_input, scaling_utils.get_scaled_tuple((33, 175)))
-                    self.enable_input(self.y_input, scaling_utils.get_scaled_tuple((238, 327)))
+                    self.enable_input(self.r_input, scaling_utils.get_scaled_tuple((453, 310)))
+                    self.enable_input(self.x_input, scaling_utils.get_scaled_tuple((33, 174)))
+                    self.enable_input(self.y_input, scaling_utils.get_scaled_tuple((238, 326)))
                     self.place_widget(self.x_datum_label, scaling_utils.get_scaled_tuple((397, 55)))
                     self.place_widget(self.y_datum_label, scaling_utils.get_scaled_tuple((416, 114)))
                     self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
                                                                       self.y_datum_label.y - scaling_utils.get_scaled_height(35)))
                 else:
-                    self.enable_input(self.r_input, scaling_utils.get_scaled_tuple((409, 333)))
-                    self.enable_input(self.x_input, scaling_utils.get_scaled_tuple((78, 155)))
-                    self.enable_input(self.y_input, scaling_utils.get_scaled_tuple((238, 331)))
+                    self.enable_input(self.r_input, scaling_utils.get_scaled_tuple((409, 332)))
+                    self.enable_input(self.x_input, scaling_utils.get_scaled_tuple((78, 154)))
+                    self.enable_input(self.y_input, scaling_utils.get_scaled_tuple((238, 330)))
                     self.place_widget(self.x_datum_label, scaling_utils.get_scaled_tuple((235, 20)))
                     self.place_widget(self.y_datum_label, scaling_utils.get_scaled_tuple((395, 63)))
                     self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
@@ -506,13 +506,13 @@ class DrywallShapeDisplay(Widget):
 
         if shape == 'line':
             if rotation == 'horizontal':
-                self.enable_input(self.l_input, scaling_utils.get_scaled_tuple((240, 228)))
+                self.enable_input(self.l_input, scaling_utils.get_scaled_tuple((240, 227)))
                 self.place_widget(self.x_datum_label, scaling_utils.get_scaled_tuple((414, 75)))
                 self.place_widget(self.y_datum_label, scaling_utils.get_scaled_tuple((422, 195)))
                 self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
                                                                   self.y_datum_label.y - scaling_utils.get_scaled_height(35)))
             else:
-                self.enable_input(self.l_input, scaling_utils.get_scaled_tuple((158, 173)))
+                self.enable_input(self.l_input, scaling_utils.get_scaled_tuple((158, 172)))
                 self.place_widget(self.x_datum_label, scaling_utils.get_scaled_tuple((275, 20)))
                 self.place_widget(self.y_datum_label, scaling_utils.get_scaled_tuple((350, 70)))
                 self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
