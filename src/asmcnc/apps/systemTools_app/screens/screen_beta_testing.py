@@ -354,7 +354,8 @@ class BetaTestingScreen(Screen):
                     checkout_version_split = [int(i.split("-")[0]) for i in branch_name_formatted.split("v")[1].split(".")]
 
                     if current_version_split > checkout_version_split:
-                        os.system("rm -r /home/pi/easycut-smartbench/src/asmcnc/apps/drywall_cutter_app/config")
+                        os.system("rm /home/pi/easycut-smartbench/src/asmcnc/apps/drywall_cutter_app/config/configurations/*")
+                        os.system("rm /home/pi/easycut-smartbench/src/asmcnc/apps/drywall_cutter_app/config/temp/*")
                         Logger.info("Purged shapes configurations before downgrade")
 
                 checkout_exit_code = os.system(checkout_call)
