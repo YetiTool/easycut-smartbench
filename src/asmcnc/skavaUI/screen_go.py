@@ -467,7 +467,7 @@ class GoScreen(Screen):
         self.poll_for_job_progress(0)
         # show overload status if running precision pro
         if (
-                str(self.m.serial_number()).endswith("03")
+                self.model_manager.get_product_code().value >= 03
                 or self.show_spindle_overload == True
         ) and self.m.stylus_router_choice != "stylus":
             # self.update_overload_label(self.m.s.overload_state)
