@@ -499,6 +499,7 @@ class DrywallCutterScreen(Screen):
             self.sm.add_widget(screen_config_filesaver.ConfigFileSaver(name='config_filesaver',
                                                                        screen_manager=self.sm,
                                                                        localization=self.l,
+                                                                       machine=self.m,
                                                                        callback=self.dwt_config.save_config,
                                                                        kb=self.kb,
                                                                        dwt_config=self.dwt_config))
@@ -601,6 +602,7 @@ class DrywallCutterScreen(Screen):
             self.sm.add_widget(screen_config_filechooser.ConfigFileChooser(name='config_filechooser',
                                                                            screen_manager=self.sm,
                                                                            localization=self.l,
+                                                                           machine=self.m,
                                                                            callback=self.dwt_config.load_config))
         self.sm.current = 'config_filechooser'
 

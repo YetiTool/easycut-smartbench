@@ -301,6 +301,7 @@ class ConfigFileChooser(Screen):
         super(ConfigFileChooser, self).__init__(**kwargs)
         self.sm = kwargs['screen_manager']
         self.l = kwargs['localization']
+        self.m = kwargs['machine']
         self.callback = kwargs['callback']
         self.usb_stick = usb_storage.USB_storage(self.sm,
                                                  self.l)  # object to manage presence of USB stick (fun in Linux)
@@ -441,7 +442,7 @@ class ConfigFileChooser(Screen):
         with open(self.filechooser.selection[0], 'r') as f:
             json_obj = json.load(f)
 
-        self.metadata_preview.text = config_loader.get_display_preview(json_obj)
+        self.metadata_preview.text = config_loader.get_display_preview(self.m, json_obj)
 
         self.load_button.disabled = False
         self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'

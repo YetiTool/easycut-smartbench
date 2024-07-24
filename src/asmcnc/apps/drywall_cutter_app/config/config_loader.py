@@ -31,11 +31,15 @@ DEBUG_MODE = False
 INDENT_VALUE = "    "
 
 
-def get_display_preview(json_obj):
+def get_display_preview(machine, json_obj):
     l = Localization()
     profile_db = App.get_running_app().profile_db
     tool_description = profile_db.get_tool_name(json_obj["cutter_type"])
     material_description = profile_db.get_material_name(json_obj["material"])
+    x_corrective_offset = machine.laser_offset_x_value
+    y_corrective_offset = machine.laser_offset_y_value
+    x_datum_value = str(round(json_obj["datum_position"]["x"] + x_corrective_offset))
+    y_datum_value = str(round(json_obj["datum_position"]["y"] + y_corrective_offset))
     preview = get_shape_type(json_obj, l)
     preview += l.get_str("Units") + ": " + json_obj["units"] + "\n"
     preview += l.get_str("Canvas shape dims") + ": \n"
@@ -74,8 +78,8 @@ def get_display_preview(json_obj):
             + str(l.get_str('Yes') if json_obj["cutting_depths"]["tabs"] else l.get_str('No'))
             + "\n"
     )
-    preview += (l.get_str("Datum position") + ": X: " + str(round(json_obj["datum_position"]["x"], 1)) + " / Y: " +
-                str(round(json_obj["datum_position"]["y"], 1)) + "\n")
+    preview += (l.get_str("Datum position") + ": X: " + x_datum_value + " / Y: " +
+                y_datum_value + "\n")
     return preview
 
 
