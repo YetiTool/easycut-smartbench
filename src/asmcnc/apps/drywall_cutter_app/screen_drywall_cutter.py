@@ -228,7 +228,7 @@ class DrywallCutterScreen(Screen):
     pulse_poll = None
 
     def __init__(self, screen_manager, machine, keyboard, job, **kwargs):
-        self.dwt_config = config_loader.DWTConfig(self)
+        self.dwt_config = config_loader.DWTConfig(machine=machine, screen_drywall_cutter=self)
 
         super(DrywallCutterScreen, self).__init__(**kwargs)
 
@@ -597,6 +597,7 @@ class DrywallCutterScreen(Screen):
     def open_filechooser(self):
         if not self.sm.has_screen('config_filechooser'):
             self.sm.add_widget(screen_config_filechooser.ConfigFileChooser(name='config_filechooser',
+                                                                           dwt_config=self.dwt_config,
                                                                            screen_manager=self.sm,
                                                                            localization=self.l,
                                                                            callback=self.dwt_config.load_config))

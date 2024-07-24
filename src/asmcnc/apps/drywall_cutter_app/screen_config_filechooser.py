@@ -297,8 +297,9 @@ class ConfigFileChooser(Screen):
         u'datum_position': 6
     }
 
-    def __init__(self, **kwargs):
+    def __init__(self, dwt_config, **kwargs):
         super(ConfigFileChooser, self).__init__(**kwargs)
+        self.dwt_config = dwt_config
         self.sm = kwargs['screen_manager']
         self.l = kwargs['localization']
         self.callback = kwargs['callback']
@@ -441,7 +442,7 @@ class ConfigFileChooser(Screen):
         with open(self.filechooser.selection[0], 'r') as f:
             json_obj = json.load(f)
 
-        self.metadata_preview.text = config_loader.get_display_preview(json_obj)
+        self.metadata_preview.text = self.dwt_config.get_display_preview(json_obj)
 
         self.load_button.disabled = False
         self.image_select.source = './asmcnc/skavaUI/img/file_select_select.png'

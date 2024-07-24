@@ -31,54 +31,6 @@ DEBUG_MODE = False
 INDENT_VALUE = "    "
 
 
-def get_display_preview(json_obj):
-    l = Localization()
-    profile_db = App.get_running_app().profile_db
-    tool_description = profile_db.get_tool_name(json_obj["cutter_type"])
-    material_description = profile_db.get_material_name(json_obj["material"])
-    preview = get_shape_type(json_obj, l)
-    preview += l.get_str("Units") + ": " + json_obj["units"] + "\n"
-    preview += l.get_str("Canvas shape dims") + ": \n"
-    preview += get_shape_dimensions(json_obj, l)
-    preview += l.get_str("Material") + ": " + l.get_str(material_description) + "\n"
-    preview += l.get_str("Cutter type") + ": " + get_translated_description(tool_description) + "\n"
-    preview += l.get_str("Toolpath offset") + ": " + l.get_str(json_obj["toolpath_offset"]) + "\n"
-    preview += l.get_str("Cutting depths") + ": \n"
-    preview += (
-            INDENT_VALUE
-            + l.get_str("Material thickness") + ": "
-            + str(json_obj["cutting_depths"]["material_thickness"])
-            + "\n"
-    )
-    preview += (
-            INDENT_VALUE
-            + l.get_str("Bottom offset") + ": "
-            + str(json_obj["cutting_depths"]["bottom_offset"])
-            + "\n"
-    )
-    preview += (
-            INDENT_VALUE
-            + l.get_str("Auto pass depth") + ": "
-            + str(l.get_str('Yes') if json_obj["cutting_depths"]["auto_pass"] else l.get_str('No'))
-            + "\n"
-    )
-    preview += (
-            INDENT_VALUE
-            + l.get_str("Depth per pass") + ": "
-            + str(json_obj["cutting_depths"]["depth_per_pass"])
-            + "\n"
-    )
-    preview += (
-            INDENT_VALUE
-            + l.get_str("Tabs") + ": "
-            + str(l.get_str('Yes') if json_obj["cutting_depths"]["tabs"] else l.get_str('No'))
-            + "\n"
-    )
-    preview += (l.get_str("Datum position") + ": X: " + str(round(json_obj["datum_position"]["x"], 1)) + " / Y: " +
-                str(round(json_obj["datum_position"]["y"], 1)) + "\n")
-    return preview
-
-
 def get_translated_description(description):
     l = Localization()
     desc = ''
@@ -143,11 +95,14 @@ class DWTConfig(EventDispatcher):
     active_cutter = ObjectProperty(config_classes.Cutter.default())  # type: config_classes.Cutter
     active_profile = ObjectProperty(config_classes.Profile.default())  # type: config_classes.Profile
 
+    l = Localization()
+
     show_z_height_reminder = True
 
-    def __init__(self, screen_drywall_cutter=None, *args, **kwargs):
+    def __init__(self, machine, screen_drywall_cutter=None, *args, **kwargs):
         super(DWTConfig, self).__init__(*args, **kwargs)
         self.screen_drywall_cutter = screen_drywall_cutter
+        self.machine = machine
         self.profile_db = App.get_running_app().profile_db
 
         if ModelManagerSingleton().is_machine_drywall():
@@ -499,3 +454,52 @@ class DWTConfig(EventDispatcher):
         # update screen, check bumpers and so on:
         if not (self.active_config.shape_type == 'geberit' and self.active_cutter.dimensions.tool_diameter is None):
             self.screen_drywall_cutter.drywall_shape_display_widget.check_datum_and_extents()
+
+    def get_display_preview(self, json_obj):
+        offset_x = self.screen_drywall_cutter.m.laser_offset_x
+        offset_y = self.screen_drywall_cutter.m.laser_offset_y
+
+        tool_description = self.profile_db.get_tool_name(json_obj["cutter_type"])
+        material_description = self.profile_db.get_material_name(json_obj["material"])
+        preview = get_shape_type(json_obj, self.l)
+        preview += self.l.get_str("Units") + ": " + json_obj["units"] + "\n"
+        preview += self.l.get_str("Canvas shape dims") + ": \n"
+        preview += get_shape_dimensions(json_obj, self.l)
+        preview += self.l.get_str("Material") + ": " + self.l.get_str(material_description) + "\n"
+        preview += self.l.get_str("Cutter type") + ": " + get_translated_description(tool_description) + "\n"
+        preview += self.l.get_str("Toolpath offset") + ": " + self.l.get_str(json_obj["toolpath_offset"]) + "\n"
+        preview += self.l.get_str("Cutting depths") + ": \n"
+        preview += (
+                INDENT_VALUE
+                + self.l.get_str("Material thickness") + ": "
+                + str(json_obj["cutting_depths"]["material_thickness"])
+                + "\n"
+        )
+        preview += (
+                INDENT_VALUE
+                + self.l.get_str("Bottom offset") + ": "
+                + str(json_obj["cutting_depths"]["bottom_offset"])
+                + "\n"
+        )
+        preview += (
+                INDENT_VALUE
+                + self.l.get_str("Auto pass depth") + ": "
+                + str(self.l.get_str('Yes') if json_obj["cutting_depths"]["auto_pass"] else self.l.get_str('No'))
+                + "\n"
+        )
+        preview += (
+                INDENT_VALUE
+                + self.l.get_str("Depth per pass") + ": "
+                + str(json_obj["cutting_depths"]["depth_per_pass"])
+                + "\n"
+        )
+        preview += (
+                INDENT_VALUE
+                + self.l.get_str("Tabs") + ": "
+                + str(self.l.get_str('Yes') if json_obj["cutting_depths"]["tabs"] else self.l.get_str('No'))
+                + "\n"
+        )
+        preview += (self.l.get_str("Datum position") + ": X: " + str(
+            round(json_obj["datum_position"]["x"] + offset_x, 1)) + " / Y: " +
+                    str(round(json_obj["datum_position"]["y"] + offset_y, 1)) + "\n")
+        return preview
