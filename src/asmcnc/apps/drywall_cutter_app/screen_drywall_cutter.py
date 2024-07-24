@@ -265,15 +265,13 @@ class DrywallCutterScreen(Screen):
                                                                                              cs=self.cs,)
         self.shape_display_container.add_widget(self.drywall_shape_display_widget)
 
+        self.xy_move_container.size_hint_y = 23
+        self.tool_material_display_widget = widget_tool_material_display.ToolMaterialDisplayWidget(self.dwt_config)
+        self.tool_material_display_container.add_widget(self.tool_material_display_widget)
+
         if self.dwt_config.app_type == config_options.AppType.SHAPES:
-            self.xy_move_container.size_hint_y = 23
-            self.tool_material_display_widget = widget_tool_material_display.ToolMaterialDisplayWidget(self.dwt_config)
-            self.tool_material_display_container.add_widget(self.tool_material_display_widget)
             self.drywall_shape_display_widget.canvas_image.source = paths.get_resource("canvas_with_logo_shapes.png")
         else:
-            self.right_side_container.remove_widget(self.tool_material_display_container)
-            self.xy_move_container.size_hint_y = 31
-            self.xy_move_container.padding = [dp(0), dp(30)]
             self.drywall_shape_display_widget.canvas_image.source = paths.get_resource("canvas_with_logo_dwt.png")
 
         self.show_toolpath_image()
@@ -284,6 +282,7 @@ class DrywallCutterScreen(Screen):
                             self.drywall_shape_display_widget.bumper_left_image]
 
         self.dwt_config.bind(active_config=self.on_load_config)
+        self.dwt_config.bind(active_profile=self.on_active_profile)
         self.m.bind(datum_position=self.set_datum_position)
 
     def set_datum_position(self, *args):
@@ -298,6 +297,7 @@ class DrywallCutterScreen(Screen):
 
     def on_pre_enter(self):
         self.apply_active_config()
+        self.on_active_profile()
         self.materials_popup.on_open()  # to make sure material values are set correctly
         self.pulse_poll = Clock.schedule_interval(self.update_pulse_opacity, 0.04)
         self.kb.set_numeric_pos((scaling_utils.get_scaled_width(565), scaling_utils.get_scaled_height(115)))
@@ -353,15 +353,21 @@ class DrywallCutterScreen(Screen):
         self.update_toolpaths()
         self.dwt_config.on_parameter_change('cutter_type', cutter_file)
 
+    def on_active_profile(self, *args):
+        if self.dwt_config.active_config.material != '0010' or self.dwt_config.active_cutter.dimensions.tool_diameter not in [6, 8]:
+            if 'geberit' in self.shape_options_dict:
+                shapes_options = self.shape_options_dict.copy()
+                shapes_options.pop('geberit')
+                self.shape_selection.image_dict = shapes_options
+        else:
+            self.shape_selection.image_dict = self.shape_options_dict
+
     def update_toolpaths(self, *args):
         # Convert allowed toolpaths object to dict, then put attributes with True into a list
         allowed_toolpaths = [toolpath for toolpath, allowed in
                              self.dwt_config.active_cutter.generic_definition.toolpath_offsets.__dict__.items() if
                              allowed]
-        # Add or remove pocket option based on what app is being used
-        if self.dwt_config.app_type == config_options.AppType.DRYWALL_CUTTER:
-            if 'pocket' in allowed_toolpaths:
-                allowed_toolpaths.remove('pocket')
+
         # Use allowed toolpath list to create a dict of only allowed toolpaths
         allowed_toolpath_dict = dict([(k, self.toolpath_offset_options_dict[k]) for k in allowed_toolpaths if
                                       k in self.toolpath_offset_options_dict])
@@ -401,14 +407,6 @@ class DrywallCutterScreen(Screen):
 
         if self.drywall_shape_display_widget.rotation_required():
             self.rotate_shape(swap_lengths=False)
-
-        # handle tool selection for geberit shape:
-        if shape is 'geberit':
-            tool_options = self.profile_db.get_geberit_tools()
-
-            # check if valid tool is selected:
-            if self.dwt_config.active_config.cutter_type not in tool_options:
-                self.select_tool(tool_options[0])
 
     def rotate_shape(self, swap_lengths=True):
         if self.rotation == 'horizontal':

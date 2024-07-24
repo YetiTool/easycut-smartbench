@@ -737,13 +737,17 @@ class DrywallShapeDisplay(Widget):
 
        # Now show a message if any dimensions are too big
         d_limit = self.X_MAX
+        if self.dwt_config.active_cutter.dimensions.tool_diameter:
+            tool_diameter = self.dwt_config.active_cutter.dimensions.tool_diameter
+        else:
+            tool_diameter = 0
         if current_shape == 'circle':
             if float(self.d_input.text or 0) > d_limit:
                 self.d_input_validation_label.text = 'MAX: ' + str(d_limit)
                 self.d_input_validation_label.opacity = 1
             elif self.dwt_config.active_config.toolpath_offset.lower() in ["inside", "pocket"] and \
-                float(self.d_input.text or 0) < 0.11 + self.dwt_config.active_cutter.dimensions.tool_diameter:
-                self.d_input_validation_label.text = 'MIN: ' + str(0.11 + self.dwt_config.active_cutter.dimensions.tool_diameter)
+                float(self.d_input.text or 0) < 0.11 + tool_diameter:
+                self.d_input_validation_label.text = 'MIN: ' + str(0.11 + tool_diameter)
                 self.d_input_validation_label.opacity = 1
             else:
                 self.d_input_validation_label.opacity = 0
@@ -781,12 +785,12 @@ class DrywallShapeDisplay(Widget):
 
             # For inside/pocket toolpaths, shape needs to be larger than tool diameter
             if self.dwt_config.active_config.toolpath_offset.lower() in ["inside", "pocket"]:
-                if float(self.y_input.text or 0) < 0.11 + self.dwt_config.active_cutter.dimensions.tool_diameter:
-                    self.y_input_validation_label.text = 'MIN: ' + str(0.11 + self.dwt_config.active_cutter.dimensions.tool_diameter)
+                if float(self.y_input.text or 0) < 0.11 + tool_diameter:
+                    self.y_input_validation_label.text = 'MIN: ' + str(0.11 + tool_diameter)
                     self.y_input_validation_label.opacity = 1
 
-                if current_shape == 'rectangle' and float(self.x_input.text or 0) < 0.11 + self.dwt_config.active_cutter.dimensions.tool_diameter:
-                    self.x_input_validation_label.text = 'MIN: ' + str(0.11 + self.dwt_config.active_cutter.dimensions.tool_diameter)
+                if current_shape == 'rectangle' and float(self.x_input.text or 0) < 0.11 + tool_diameter:
+                    self.x_input_validation_label.text = 'MIN: ' + str(0.11 + tool_diameter)
                     self.x_input_validation_label.opacity = 1
 
             if float(self.r_input.text or 0) > r_limit:
@@ -837,15 +841,19 @@ class DrywallShapeDisplay(Widget):
                 return False
 
         # Otherwise check hardcoded min values
+        if self.dwt_config.active_cutter.dimensions.tool_diameter:
+            tool_diameter = self.dwt_config.active_cutter.dimensions.tool_diameter
+        else:
+            tool_diameter = 0
         if self.dwt_config.active_config.shape_type.lower() == "circle":
             if self.dwt_config.active_config.toolpath_offset.lower() in ["inside", "pocket"]:
-                return float(self.d_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter
+                return float(self.d_input.text or 0) >= 0.1 + tool_diameter
             else:
                 return float(self.d_input.text or 0) >= 0.1
 
         elif self.dwt_config.active_config.shape_type.lower() == "square":
             if self.dwt_config.active_config.toolpath_offset.lower() in ["inside", "pocket"]:
-                return float(self.y_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter
+                return float(self.y_input.text or 0) >= 0.1 + tool_diameter
             elif self.dwt_config.active_config.toolpath_offset.lower() == "outside":
                 return float(self.y_input.text or 0) >= 1
             else:
@@ -853,8 +861,8 @@ class DrywallShapeDisplay(Widget):
 
         elif self.dwt_config.active_config.shape_type.lower() == "rectangle":
             if self.dwt_config.active_config.toolpath_offset.lower() in ["inside", "pocket"]:
-                return (float(self.x_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter) and (
-                            float(self.y_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter)
+                return (float(self.x_input.text or 0) >= 0.1 + tool_diameter) and (
+                        float(self.y_input.text or 0) >= 0.1 + tool_diameter)
             elif self.dwt_config.active_config.toolpath_offset.lower() == "outside":
                 return (float(self.x_input.text or 0) >= 1) and (float(self.y_input.text or 0) >= 1)
             else:
@@ -943,7 +951,10 @@ class DrywallShapeDisplay(Widget):
                 ).replace("N", "Y")
                 + "\n\n"
             )
-
+        if self.dwt_config.active_cutter.dimensions.tool_diameter:
+            tool_diameter = self.dwt_config.active_cutter.dimensions.tool_diameter
+        else:
+            tool_diameter = 0
         if self.dwt_config.active_config.shape_type.lower() == "square":
             # ensure roundness not too large
             if float(self.r_input.text or 0) > float(self.y_input.text or 0) / 2:
@@ -960,7 +971,7 @@ class DrywallShapeDisplay(Widget):
 
             # ensure the square is not too small
             if self.dwt_config.active_config.toolpath_offset.lower() in ["inside", "pocket"]:
-                if float(self.y_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter:
+                if float(self.y_input.text or 0) <= 0.1 + tool_diameter:
                     steps.append(
                         self.localization.get_str(
                             "The square is too small."
@@ -1009,8 +1020,8 @@ class DrywallShapeDisplay(Widget):
                 )
 
             if self.dwt_config.active_config.toolpath_offset.lower() in ["inside", "pocket"]:
-                if (float(self.x_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter) or (
-                        float(self.y_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter):
+                if (float(self.x_input.text or 0) <= 0.1 + tool_diameter) or (
+                        float(self.y_input.text or 0) <= 0.1 + tool_diameter):
                     steps.append(
                         self.localization.get_str(
                             "The rectangle's sides are too small."
@@ -1047,7 +1058,7 @@ class DrywallShapeDisplay(Widget):
                     )
         elif self.dwt_config.active_config.shape_type.lower() == "circle":
             if self.dwt_config.active_config.toolpath_offset.lower() in ["inside", "pocket"]:
-                if float(self.d_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.tool_diameter:
+                if float(self.d_input.text or 0) <= 0.1 + tool_diameter:
                     steps.append(
                         self.localization.get_str(
                             "The circle's diameter is too small."

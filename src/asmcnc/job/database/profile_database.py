@@ -44,6 +44,11 @@ class ProfileDatabase(object):
             if profile["material"]["uid"] == "0010":
                 for tool in profile["applicable_tools"]:
                     cutters.append(tool["uid"])
+        for cutter in cutters:
+            for tool in self.tool_data:
+                if tool["uid"] == cutter:
+                    if tool["dimensions"]["tool_diameter"] not in [6, 8]:
+                        cutters.remove(cutter)
         return cutters
 
     def get_tool_names(self, chosen_material=None):
