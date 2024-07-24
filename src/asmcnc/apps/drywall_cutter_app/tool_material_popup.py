@@ -67,10 +67,12 @@ Builder.load_string("""
         
         Label:
             id: title_label
-            pos_hint: {'x': -0.31, 'y': 0.61 if app.width == 800 else 0.64}
+            size_hint: None, None
+            pos_hint: {'x': 0}
             text: root.l.get_str('Tool & Material selection')
             font_size: app.get_scaled_sp('20sp')
             color: hex('#F9F9F9')
+            size: self.texture_size
         
         Label:
             id: description_label
@@ -78,6 +80,7 @@ Builder.load_string("""
             halign: 'center'
             color: hex('#333333')
             size_hint: (0.75, None)
+            text_size: (0.65*self.parent.width, None)
             pos_hint: {'center_x': 0.5, 'center_y': 0.95}
             font_size: app.get_scaled_sp('16sp')
             
@@ -211,11 +214,11 @@ class ToolMaterialPopup(Popup):
 
     def on_open(self):
         # Fix weird scaling bug with title label
-        # self.title_label.pos_hint['x'] = 0
-        # if scaling_utils.is_screen_big():
-        #     self.title_label.pos_hint['y'] = 1.1
-        # else:
-        #     self.title_label.pos_hint['y'] = 1.075
+        self.title_label.pos_hint['x'] = 0
+        if scaling_utils.is_screen_big():
+            self.title_label.pos_hint['y'] = 1.1
+        else:
+            self.title_label.pos_hint['y'] = 1.075
         self.float_layout.do_layout()
         self.update_strings()
         self.load_config()
