@@ -349,13 +349,16 @@ class BetaTestingScreen(Screen):
                 checkout_call = ("cd /home/pi/easycut-smartbench/ && git fetch origin && git checkout "
                                  + branch_name_formatted)
 
-                if re.match("v\d\.\d\.\d", branch_name_formatted):
-                    checkout_version_split = [int(i.split("-")[0]) for i in branch_name_formatted.split("v")[1].split(".")]
+                try:
+                    if re.match("v\d\.\d\.\d", branch_name_formatted):
+                        checkout_version_split = [int(i.split("-")[0]) for i in branch_name_formatted.split("v")[1].split(".")]
 
-                    if [2, 9, 2] > checkout_version_split:
-                        os.system("rm /home/pi/easycut-smartbench/src/asmcnc/apps/drywall_cutter_app/config/configurations/*")
-                        os.system("rm /home/pi/easycut-smartbench/src/asmcnc/apps/drywall_cutter_app/config/temp/*")
-                        Logger.info("Purged shapes configurations before downgrade")
+                        if [2, 9, 2] > checkout_version_split:
+                            os.system("rm /home/pi/easycut-smartbench/src/asmcnc/apps/drywall_cutter_app/config/configurations/*")
+                            os.system("rm /home/pi/easycut-smartbench/src/asmcnc/apps/drywall_cutter_app/config/temp/*")
+                            Logger.info("Purged shapes configurations before downgrade")
+                except:
+                    Logger.warning("Failed to get version - not purging configs")
 
                 checkout_exit_code = os.system(checkout_call)
                 Logger.debug('Checkout call: {} | Returns: {}'.format(checkout_call,checkout_exit_code))
