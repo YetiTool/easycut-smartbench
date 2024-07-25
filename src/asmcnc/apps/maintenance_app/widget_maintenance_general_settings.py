@@ -39,7 +39,9 @@ Builder.load_string("""
                     color: color_provider.get_rgba("black")
                     font_size: str(0.0225*app.width) + 'sp'
                     halign: "left"
+                    valign: "top"
                     markup: True
+                    size_hint_y: None
                     text_size: self.size
 
             BoxLayout:

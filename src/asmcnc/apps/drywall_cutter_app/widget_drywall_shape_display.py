@@ -4,6 +4,7 @@ from kivy.clock import Clock
 
 from asmcnc.apps.drywall_cutter_app.config.config_options import ToolpathOffsetOptions
 from asmcnc.comms.logging_system.logging_system import Logger
+from asmcnc.apps.drywall_cutter_app.config import config_options
 import re
 
 from asmcnc.core_UI import scaling_utils
@@ -18,7 +19,7 @@ Builder.load_string("""
     shape_dims_image:shape_dims_image
     shape_toolpath_image:shape_toolpath_image
 
-    unit_switch:unit_switch
+    # unit_switch:unit_switch
 
     d_input:d_input
     l_input:l_input
@@ -54,7 +55,7 @@ Builder.load_string("""
 
             Image:
                 id: canvas_image
-                source: "./asmcnc/apps/drywall_cutter_app/img/canvas_with_logo.png"
+                source: "./asmcnc/apps/drywall_cutter_app/img/canvas_with_logo_dwt.png"
                 size: self.parent.size
                 pos: self.parent.pos
                 allow_stretch: True
@@ -73,11 +74,19 @@ Builder.load_string("""
                 pos: self.parent.pos
                 allow_stretch: True
 
-            Switch:
-                id: unit_switch
-                size: scaling_utils.get_scaled_tuple((dp(83), dp(32)))
+            # Switch:
+            #     id: unit_switch
+            #     size: scaling_utils.get_scaled_tuple((dp(83), dp(32)))
+            #     size_hint: (None, None)
+            #     pos: self.parent.pos[0] + self.parent.size[0] - self.size[0] - scaling_utils.get_scaled_width(dp(7)), self.parent.pos[1] + scaling_utils.get_scaled_height(dp(4))
+
+            Label:
+                text: 'mm'
+                color: 0,0,0,1
+                font_size: scaling_utils.get_scaled_width(dp(25))
+                size: self.texture_size
                 size_hint: (None, None)
-                pos: self.parent.pos[0] + self.parent.size[0] - self.size[0] - scaling_utils.get_scaled_width(dp(9)), self.parent.pos[1] + scaling_utils.get_scaled_height(dp(6))
+                pos: self.parent.pos[0] + self.parent.size[0] - self.size[0] - scaling_utils.get_scaled_width(dp(11)), self.parent.pos[1] + scaling_utils.get_scaled_height(dp(6))
 
             BoxLayout:
                 size: scaling_utils.get_scaled_tuple((dp(90), dp(40)))
@@ -87,7 +96,7 @@ Builder.load_string("""
                     Color:
                         rgba: hex('#E5E5E5FF')
                     Rectangle:
-                        pos: self.x + scaling_utils.get_scaled_width(2.5), self.y + scaling_utils.get_scaled_height(5)
+                        pos: self.x + scaling_utils.get_scaled_width(2.5), self.y + scaling_utils.get_scaled_height(5.75)
                         size: self.width - scaling_utils.get_scaled_width(5), self.height - scaling_utils.get_scaled_height(10)
 
                 FloatInput:
@@ -126,7 +135,7 @@ Builder.load_string("""
                     Color:
                         rgba: hex('#E5E5E5FF')
                     Rectangle:
-                        pos: self.x + scaling_utils.get_scaled_width(2.5), self.y + scaling_utils.get_scaled_height(5)
+                        pos: self.x + scaling_utils.get_scaled_width(2.5), self.y + scaling_utils.get_scaled_height(5.75)
                         size: self.width - scaling_utils.get_scaled_width(5), self.height - scaling_utils.get_scaled_height(10)
 
                 FloatInput:
@@ -165,7 +174,7 @@ Builder.load_string("""
                     Color:
                         rgba: hex('#E5E5E5FF')
                     Rectangle:
-                        pos: self.x + scaling_utils.get_scaled_width(2.5), self.y + scaling_utils.get_scaled_height(5)
+                        pos: self.x + scaling_utils.get_scaled_width(2.5), self.y + scaling_utils.get_scaled_height(5.75)
                         size: self.width - scaling_utils.get_scaled_width(5), self.height - scaling_utils.get_scaled_height(10)
 
                 FloatInput:
@@ -204,7 +213,7 @@ Builder.load_string("""
                     Color:
                         rgba: hex('#E5E5E5FF')
                     Rectangle:
-                        pos: self.x + scaling_utils.get_scaled_width(2.5), self.y + scaling_utils.get_scaled_height(5)
+                        pos: self.x + scaling_utils.get_scaled_width(2.5), self.y + scaling_utils.get_scaled_height(5.75)
                         size: self.width - scaling_utils.get_scaled_width(5), self.height - scaling_utils.get_scaled_height(10)
 
                 FloatInput:
@@ -243,7 +252,7 @@ Builder.load_string("""
                     Color:
                         rgba: hex('#E5E5E5FF')
                     Rectangle:
-                        pos: self.x + 2.5, self.y + 5
+                        pos: self.x + scaling_utils.get_scaled_width(2.5), self.y + scaling_utils.get_scaled_height(5.75)
                         size: self.width - scaling_utils.get_scaled_width(5), self.height - scaling_utils.get_scaled_height(10)
 
                 FloatInput:
@@ -258,7 +267,7 @@ Builder.load_string("""
             Label:
                 text: 'Y'
                 font_size: scaling_utils.get_scaled_width(dp(25))
-                pos: y_input.pos[0] - self.width - 2.5, y_input.pos[1] + scaling_utils.get_scaled_height(dp(3))
+                pos: y_input.pos[0] - self.width - scaling_utils.get_scaled_width(2.5), y_input.pos[1] + scaling_utils.get_scaled_height(dp(3))
                 opacity: y_input.opacity
                 color: 0,0,0,1
                 size: self.texture_size
@@ -411,8 +420,8 @@ class DrywallShapeDisplay(Widget):
         }
 
         # Show custom switch image
-        self.unit_switch.canvas.children[5].source = "./asmcnc/apps/drywall_cutter_app/img/unit_toggle.png"
-        self.unit_switch.bind(active=self.toggle_units)
+        # self.unit_switch.canvas.children[5].source = "./asmcnc/apps/drywall_cutter_app/img/unit_toggle.png"
+        # self.unit_switch.bind(active=self.toggle_units)
 
         self.dwt_config.bind(active_config_name=self.on_config_name_change)
         self.on_config_name_change(self.dwt_config, self.dwt_config.active_config_name)
@@ -456,7 +465,7 @@ class DrywallShapeDisplay(Widget):
             self.swapping_lengths = False
 
         if shape == 'circle':
-            self.enable_input(self.d_input, scaling_utils.get_scaled_tuple((458, 310)))
+            self.enable_input(self.d_input, scaling_utils.get_scaled_tuple((458, 309)))
             self.place_widget(self.x_datum_label, scaling_utils.get_scaled_tuple((278, 27)))
             self.place_widget(self.y_datum_label, scaling_utils.get_scaled_tuple((403, 196)))
             self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
@@ -466,26 +475,26 @@ class DrywallShapeDisplay(Widget):
 
         if shape in ['square', 'rectangle']:
             if shape == 'square':
-                self.enable_input(self.r_input, scaling_utils.get_scaled_tuple((411, 311)))
+                self.enable_input(self.r_input, scaling_utils.get_scaled_tuple((411, 310)))
                 self.disable_input(self.x_input)
-                self.enable_input(self.y_input, scaling_utils.get_scaled_tuple((238, 327)))
+                self.enable_input(self.y_input, scaling_utils.get_scaled_tuple((238, 326)))
                 self.place_widget(self.x_datum_label, scaling_utils.get_scaled_tuple((365, 55)))
                 self.place_widget(self.y_datum_label, scaling_utils.get_scaled_tuple((398, 113)))
                 self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
                                                                   self.y_datum_label.y - scaling_utils.get_scaled_height(35)))
             else:
                 if rotation == 'horizontal':
-                    self.enable_input(self.r_input, scaling_utils.get_scaled_tuple((453, 311)))
-                    self.enable_input(self.x_input, scaling_utils.get_scaled_tuple((33, 175)))
-                    self.enable_input(self.y_input, scaling_utils.get_scaled_tuple((238, 327)))
+                    self.enable_input(self.r_input, scaling_utils.get_scaled_tuple((453, 310)))
+                    self.enable_input(self.x_input, scaling_utils.get_scaled_tuple((33, 174)))
+                    self.enable_input(self.y_input, scaling_utils.get_scaled_tuple((238, 326)))
                     self.place_widget(self.x_datum_label, scaling_utils.get_scaled_tuple((397, 55)))
                     self.place_widget(self.y_datum_label, scaling_utils.get_scaled_tuple((416, 114)))
                     self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
                                                                       self.y_datum_label.y - scaling_utils.get_scaled_height(35)))
                 else:
-                    self.enable_input(self.r_input, scaling_utils.get_scaled_tuple((409, 333)))
-                    self.enable_input(self.x_input, scaling_utils.get_scaled_tuple((78, 155)))
-                    self.enable_input(self.y_input, scaling_utils.get_scaled_tuple((238, 331)))
+                    self.enable_input(self.r_input, scaling_utils.get_scaled_tuple((409, 332)))
+                    self.enable_input(self.x_input, scaling_utils.get_scaled_tuple((78, 154)))
+                    self.enable_input(self.y_input, scaling_utils.get_scaled_tuple((238, 330)))
                     self.place_widget(self.x_datum_label, scaling_utils.get_scaled_tuple((235, 20)))
                     self.place_widget(self.y_datum_label, scaling_utils.get_scaled_tuple((395, 63)))
                     self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
@@ -497,13 +506,13 @@ class DrywallShapeDisplay(Widget):
 
         if shape == 'line':
             if rotation == 'horizontal':
-                self.enable_input(self.l_input, scaling_utils.get_scaled_tuple((240, 228)))
+                self.enable_input(self.l_input, scaling_utils.get_scaled_tuple((240, 227)))
                 self.place_widget(self.x_datum_label, scaling_utils.get_scaled_tuple((414, 75)))
                 self.place_widget(self.y_datum_label, scaling_utils.get_scaled_tuple((422, 195)))
                 self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
                                                                   self.y_datum_label.y - scaling_utils.get_scaled_height(35)))
             else:
-                self.enable_input(self.l_input, scaling_utils.get_scaled_tuple((158, 173)))
+                self.enable_input(self.l_input, scaling_utils.get_scaled_tuple((158, 172)))
                 self.place_widget(self.x_datum_label, scaling_utils.get_scaled_tuple((275, 20)))
                 self.place_widget(self.y_datum_label, scaling_utils.get_scaled_tuple((350, 70)))
                 self.place_widget(self.y_datum_validation_label, (self.y_datum_label.x,
@@ -640,7 +649,7 @@ class DrywallShapeDisplay(Widget):
 
     def tool_offset_value(self):
         # Account for cutter size
-        cutter_radius = (self.dwt_config.active_cutter.dimensions.diameter or 0) / 2  # if angled cutter, get 0
+        cutter_radius = (self.dwt_config.active_cutter.dimensions.tool_diameter or 0) / 2  # if angled cutter, get 0
         if self.dwt_config.active_config.toolpath_offset == ToolpathOffsetOptions.INSIDE.value:
             tool_offset_value = -cutter_radius
         elif self.dwt_config.active_config.toolpath_offset == ToolpathOffsetOptions.OUTSIDE.value:
@@ -728,9 +737,20 @@ class DrywallShapeDisplay(Widget):
 
        # Now show a message if any dimensions are too big
         d_limit = self.X_MAX
-        if current_shape == 'circle' and float(self.d_input.text or 0) > d_limit:
-            self.d_input_validation_label.text = 'MAX: ' + str(d_limit)
-            self.d_input_validation_label.opacity = 1
+        if self.dwt_config.active_cutter.dimensions.tool_diameter:
+            tool_diameter = self.dwt_config.active_cutter.dimensions.tool_diameter
+        else:
+            tool_diameter = 0
+        if current_shape == 'circle':
+            if float(self.d_input.text or 0) > d_limit:
+                self.d_input_validation_label.text = 'MAX: ' + str(d_limit)
+                self.d_input_validation_label.opacity = 1
+            elif self.dwt_config.active_config.toolpath_offset.lower() in ["inside", "pocket"] and \
+                float(self.d_input.text or 0) < 0.11 + tool_diameter:
+                self.d_input_validation_label.text = 'MIN: ' + str(0.11 + tool_diameter)
+                self.d_input_validation_label.opacity = 1
+            else:
+                self.d_input_validation_label.opacity = 0
         else:
             self.d_input_validation_label.opacity = 0
 
@@ -762,6 +782,16 @@ class DrywallShapeDisplay(Widget):
                     self.y_input_validation_label.opacity = 1
                 else:
                     self.y_input_validation_label.opacity = 0
+
+            # For inside/pocket toolpaths, shape needs to be larger than tool diameter
+            if self.dwt_config.active_config.toolpath_offset.lower() in ["inside", "pocket"]:
+                if float(self.y_input.text or 0) < 0.11 + tool_diameter:
+                    self.y_input_validation_label.text = 'MIN: ' + str(0.11 + tool_diameter)
+                    self.y_input_validation_label.opacity = 1
+
+                if current_shape == 'rectangle' and float(self.x_input.text or 0) < 0.11 + tool_diameter:
+                    self.x_input_validation_label.text = 'MIN: ' + str(0.11 + tool_diameter)
+                    self.x_input_validation_label.opacity = 1
 
             if float(self.r_input.text or 0) > r_limit:
                 self.r_input_validation_label.text = 'MAX: ' + str(r_limit)
@@ -811,24 +841,28 @@ class DrywallShapeDisplay(Widget):
                 return False
 
         # Otherwise check hardcoded min values
+        if self.dwt_config.active_cutter.dimensions.tool_diameter:
+            tool_diameter = self.dwt_config.active_cutter.dimensions.tool_diameter
+        else:
+            tool_diameter = 0
         if self.dwt_config.active_config.shape_type.lower() == "circle":
-            if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
-                return float(self.d_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.dimensions.diameter
+            if self.dwt_config.active_config.toolpath_offset.lower() in ["inside", "pocket"]:
+                return float(self.d_input.text or 0) >= 0.1 + tool_diameter
             else:
                 return float(self.d_input.text or 0) >= 0.1
 
         elif self.dwt_config.active_config.shape_type.lower() == "square":
-            if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
-                return float(self.y_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.dimensions.diameter
+            if self.dwt_config.active_config.toolpath_offset.lower() in ["inside", "pocket"]:
+                return float(self.y_input.text or 0) >= 0.1 + tool_diameter
             elif self.dwt_config.active_config.toolpath_offset.lower() == "outside":
                 return float(self.y_input.text or 0) >= 1
             else:
                 return float(self.y_input.text or 0) >= 0.1
 
         elif self.dwt_config.active_config.shape_type.lower() == "rectangle":
-            if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
-                return (float(self.x_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.dimensions.diameter) and (
-                            float(self.y_input.text or 0) >= 0.1 + self.dwt_config.active_cutter.dimensions.diameter)
+            if self.dwt_config.active_config.toolpath_offset.lower() in ["inside", "pocket"]:
+                return (float(self.x_input.text or 0) >= 0.1 + tool_diameter) and (
+                        float(self.y_input.text or 0) >= 0.1 + tool_diameter)
             elif self.dwt_config.active_config.toolpath_offset.lower() == "outside":
                 return (float(self.x_input.text or 0) >= 1) and (float(self.y_input.text or 0) >= 1)
             else:
@@ -917,7 +951,10 @@ class DrywallShapeDisplay(Widget):
                 ).replace("N", "Y")
                 + "\n\n"
             )
-
+        if self.dwt_config.active_cutter.dimensions.tool_diameter:
+            tool_diameter = self.dwt_config.active_cutter.dimensions.tool_diameter
+        else:
+            tool_diameter = 0
         if self.dwt_config.active_config.shape_type.lower() == "square":
             # ensure roundness not too large
             if float(self.r_input.text or 0) > float(self.y_input.text or 0) / 2:
@@ -933,8 +970,8 @@ class DrywallShapeDisplay(Widget):
                 )
 
             # ensure the square is not too small
-            if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
-                if float(self.y_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.diameter:
+            if self.dwt_config.active_config.toolpath_offset.lower() in ["inside", "pocket"]:
+                if float(self.y_input.text or 0) <= 0.1 + tool_diameter:
                     steps.append(
                         self.localization.get_str(
                             "The square is too small."
@@ -982,9 +1019,9 @@ class DrywallShapeDisplay(Widget):
                     + "\n\n"
                 )
 
-            if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
-                if (float(self.x_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.diameter) or (
-                        float(self.y_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.diameter):
+            if self.dwt_config.active_config.toolpath_offset.lower() in ["inside", "pocket"]:
+                if (float(self.x_input.text or 0) <= 0.1 + tool_diameter) or (
+                        float(self.y_input.text or 0) <= 0.1 + tool_diameter):
                     steps.append(
                         self.localization.get_str(
                             "The rectangle's sides are too small."
@@ -1020,8 +1057,8 @@ class DrywallShapeDisplay(Widget):
                         + "\n\n"
                     )
         elif self.dwt_config.active_config.shape_type.lower() == "circle":
-            if self.dwt_config.active_config.toolpath_offset.lower() == "inside":
-                if float(self.d_input.text or 0) <= 0.1 + self.dwt_config.active_cutter.dimensions.diameter:
+            if self.dwt_config.active_config.toolpath_offset.lower() in ["inside", "pocket"]:
+                if float(self.d_input.text or 0) <= 0.1 + tool_diameter:
                     steps.append(
                         self.localization.get_str(
                             "The circle's diameter is too small."
@@ -1063,3 +1100,7 @@ class DrywallShapeDisplay(Widget):
     def on_config_name_change(self, instance, value):
         Logger.debug("Setting config label to: " + value)
         self.config_name_label.text = "New Configuration" if value == "temp_config.json" else value
+
+    def defocus_inputs(self):
+        self.kb.defocus_all_text_inputs(self.text_inputs)
+        self.check_datum_and_extents()

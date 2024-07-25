@@ -3,16 +3,19 @@ import os
 import inspect
 from collections import OrderedDict
 
+from kivy.app import App
 from kivy.event import EventDispatcher
 from kivy.properties import StringProperty, ObjectProperty
 
 import config_classes
 from asmcnc.apps.drywall_cutter_app.config import config_options
+from asmcnc.comms.localization import Localization
 from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.comms.model_manager import ModelManagerSingleton
 
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 CONFIGURATIONS_DIR = os.path.join(CURRENT_DIR, "configurations")
+MIGRATION_DIR = os.path.join(CURRENT_DIR, "migration")
 CUTTERS_DIR = os.path.join(CURRENT_DIR, "cutters")
 TEMP_DIR = os.path.join(CURRENT_DIR, "temp")
 SETTINGS_DIR = os.path.join(CURRENT_DIR, "settings")
@@ -29,78 +32,125 @@ INDENT_VALUE = "    "
 
 
 def get_display_preview(json_obj):
-    preview = get_shape_type(json_obj)
-    preview += "Units: " + json_obj["units"] + "\n"
-    # preview += "Rotation: " + json_obj['rotation'] + "\n"
-    preview += "Canvas shape dims: \n"
-    preview += get_shape_dimensions(json_obj)
-    preview += "Cutter type: " + json_obj["cutter_type"][:-5] + "\n"
-    preview += "Toolpath offset: " + json_obj["toolpath_offset"] + "\n"
-    preview += "Cutting depths: \n"
+    l = Localization()
+    profile_db = App.get_running_app().profile_db
+    tool_description = profile_db.get_tool_name(json_obj["cutter_type"])
+    material_description = profile_db.get_material_name(json_obj["material"])
+    x_corrective_offset = 5
+    y_corrective_offset = 14
+    preview = get_shape_type(json_obj, l)
+    preview += l.get_str("Units") + ": " + json_obj["units"] + "\n"
+    preview += l.get_str("Canvas shape dims") + ": \n"
+    preview += get_shape_dimensions(json_obj, l)
+    preview += l.get_str("Material") + ": " + l.get_str(material_description) + "\n"
+    preview += l.get_str("Cutter type") + ": " + get_translated_description(tool_description) + "\n"
+    preview += l.get_str("Toolpath offset") + ": " + l.get_str(json_obj["toolpath_offset"]) + "\n"
+    preview += l.get_str("Cutting depths") + ": \n"
     preview += (
             INDENT_VALUE
-            + "Material thickness: "
+            + l.get_str("Material thickness") + ": "
             + str(json_obj["cutting_depths"]["material_thickness"])
             + "\n"
     )
     preview += (
             INDENT_VALUE
-            + "Bottom offset: "
+            + l.get_str("Bottom offset") + ": "
             + str(json_obj["cutting_depths"]["bottom_offset"])
             + "\n"
     )
     preview += (
             INDENT_VALUE
-            + "Auto pass: "
-            + str(json_obj["cutting_depths"]["auto_pass"])
+            + l.get_str("Auto pass depth") + ": "
+            + str(l.get_str('Yes') if json_obj["cutting_depths"]["auto_pass"] else l.get_str('No'))
             + "\n"
     )
     preview += (
             INDENT_VALUE
-            + "Depth per pass: "
+            + l.get_str("Depth per pass") + ": "
             + str(json_obj["cutting_depths"]["depth_per_pass"])
             + "\n"
     )
-    preview += "Datum position: \n"
-    preview += INDENT_VALUE + "X: " + str(json_obj["datum_position"]["x"]) + "\n"
-    preview += INDENT_VALUE + "Y: " + str(json_obj["datum_position"]["y"]) + "\n"
+    preview += (
+            INDENT_VALUE
+            + l.get_str("Tabs") + ": "
+            + str(l.get_str('Yes') if json_obj["cutting_depths"]["tabs"] else l.get_str('No'))
+            + "\n"
+    )
+    preview += (l.get_str("Datum position") + ": X: " + str(round(json_obj["datum_position"]["x"] + x_corrective_offset, 1)) + " / Y: " +
+                str(round(json_obj["datum_position"]["y"] + y_corrective_offset, 1)) + "\n")
     return preview
 
 
-def get_shape_type(json_obj):
+def get_translated_description(description):
+    l = Localization()
+    desc = ''
+    for elem in description.split(' '):
+        desc += l.get_str(elem) + ' '
+    return desc.strip()
+
+
+def get_shape_type(json_obj, l):
     if json_obj["shape_type"] in ["line", "rectangle"]:
         return (
-                "Shape type: " + json_obj["rotation"] + " " + json_obj["shape_type"] + "\n"
+                l.get_str("Shape type") + ": " + l.get_str(json_obj["rotation"]) + " " + l.get_str(json_obj["shape_type"]) + "\n"
         )
     else:
-        return "Shape type: " + json_obj["shape_type"] + "\n"
+        return l.get_str("Shape type") + ": " + l.get_str(json_obj["shape_type"]) + "\n"
 
 
-def get_shape_dimensions(json_obj):
+def get_shape_dimensions(json_obj, l):
     if json_obj["shape_type"] == "rectangle":
-        dims = INDENT_VALUE + "X: " + str(json_obj["canvas_shape_dims"]["x"]) + "\n"
-        dims += INDENT_VALUE + "Y: " + str(json_obj["canvas_shape_dims"]["y"]) + "\n"
-        dims += INDENT_VALUE + "R: " + str(json_obj["canvas_shape_dims"]["r"]) + "\n"
+        dims = INDENT_VALUE + l.get_str("X") + ": " + str(json_obj["canvas_shape_dims"]["x"]) + "\n"
+        dims += INDENT_VALUE + l.get_str("Y") + ": " + str(json_obj["canvas_shape_dims"]["y"]) + "\n"
+        dims += INDENT_VALUE + l.get_str("R") + ": " + str(json_obj["canvas_shape_dims"]["r"]) + "\n"
     elif json_obj["shape_type"] == "square":
-        dims = INDENT_VALUE + "Y: " + str(json_obj["canvas_shape_dims"]["y"]) + "\n"
-        dims += INDENT_VALUE + "R: " + str(json_obj["canvas_shape_dims"]["r"]) + "\n"
+        dims = INDENT_VALUE + l.get_str("Y") + ": " + str(json_obj["canvas_shape_dims"]["y"]) + "\n"
+        dims += INDENT_VALUE + l.get_str("R") + ": " + str(json_obj["canvas_shape_dims"]["r"]) + "\n"
     elif json_obj["shape_type"] == "circle":
-        dims = INDENT_VALUE + "D: " + str(json_obj["canvas_shape_dims"]["d"]) + "\n"
+        dims = INDENT_VALUE + l.get_str("D") + ": " + str(json_obj["canvas_shape_dims"]["d"]) + "\n"
     elif json_obj["shape_type"] == "line":
-        dims = INDENT_VALUE + "L: " + str(json_obj["canvas_shape_dims"]["l"]) + "\n"
+        dims = INDENT_VALUE + l.get_str("L") + ": " + str(json_obj["canvas_shape_dims"]["l"]) + "\n"
     else:
         dims = ""
     return dims
+
+
+def migrate_v1_to_v2(config, file_path):
+    """
+    Migrate a configuration from version 1.0 to 2.0.
+    The changes include:
+        - Changing the cutter_type from the "tool_6mm.json" format to the "0000" format.
+        - Adding a 'material' field with the Plasterboard uid as the default value.
+    """
+    tool_migration = os.path.join(MIGRATION_DIR, "tool_migration_0_1.json")
+
+    with open(tool_migration, "r") as f:
+        tool_migration = json.load(f)
+
+    for field_name in config:
+        if field_name == "cutter_type" and config[field_name] in tool_migration:
+            config[field_name] = tool_migration[config[field_name]]['uid']
+            break
+    config["material"] = "0010"
+    config["version"] = "2.0"
+    config["cutting_depths"]["tabs"] = False
+
+    Logger.info("Migrated configuration '{}' to version 2.0".format(os.path.basename(file_path)))
+    return config
 
 
 class DWTConfig(EventDispatcher):
     active_config_name = StringProperty("")  # type: str
     active_config = ObjectProperty(config_classes.Configuration.default())  # type: config_classes.Configuration
     active_cutter = ObjectProperty(config_classes.Cutter.default())  # type: config_classes.Cutter
+    active_profile = ObjectProperty(config_classes.Profile.default())  # type: config_classes.Profile
+
+    show_z_height_reminder = True
 
     def __init__(self, screen_drywall_cutter=None, *args, **kwargs):
         super(DWTConfig, self).__init__(*args, **kwargs)
         self.screen_drywall_cutter = screen_drywall_cutter
+        self.profile_db = App.get_running_app().profile_db
 
         if ModelManagerSingleton().is_machine_drywall():
             self.app_type = config_options.AppType.DRYWALL_CUTTER
@@ -161,13 +211,26 @@ class DWTConfig(EventDispatcher):
         with open(file_path, "r") as f:
             cfg = json.load(f)
 
+        valid_field_names = inspect.getargspec(
+            config_classes.Configuration.__init__
+        ).args[1:]
+
+        for field_name in valid_field_names:
+            if field_name not in cfg:
+                return False
+
         field_count = len(cfg)
 
         valid_field_count = (
-                len(inspect.getargspec(config_classes.Configuration.__init__).args) - 1
-        )
+            len(inspect.getargspec(config_classes.Configuration.__init__).args[1:])
+        )  # Subtract 1 for self (kwargs is not counted)
 
-        if field_count != valid_field_count:
+        # Config must have at least the same number of fields as the default config, but can have more (for future updates)
+        if field_count < valid_field_count:
+            return False
+
+        # If the cutter type is a json file, it's invalid
+        if cfg["cutter_type"].endswith(".json"):
             return False
 
         return True
@@ -194,6 +257,11 @@ class DWTConfig(EventDispatcher):
             config_classes.Configuration.__init__
         ).args[1:]
 
+        # Get the version of the configuration file
+        config_version = cfg.get("version", "1.0")
+        if config_version == "1.0":
+            cfg = migrate_v1_to_v2(cfg, file_path)
+
         for field_name in valid_field_names:
             if field_name not in cfg:
                 cfg[field_name] = getattr(
@@ -216,6 +284,7 @@ class DWTConfig(EventDispatcher):
         """
         if not os.path.exists(config_path):
             Logger.error("Configuration file doesn't exist: " + config_path)
+            self.load_temp_config()
             return
 
         if not self.is_valid_configuration(config_path):
@@ -234,6 +303,22 @@ class DWTConfig(EventDispatcher):
             self.set_most_recent_config(config_path)
 
         self.load_cutter(self.active_config.cutter_type)
+
+        self.load_new_profile()
+
+    def load_new_profile(self):
+        # type () -> None
+        """
+        Loads a new profile based on the active configuration.
+        """
+        if self.active_config.material != "-0001" and self.active_config.cutter_type != "-0001":
+            generic_tool_id = self.profile_db.get_tool_generic_id(self.active_config.cutter_type)
+            profile_id = self.profile_db.get_profile_id(self.active_config.material, generic_tool_id)
+            if profile_id:  # If the profile exists
+                Logger.info("Loading new profile: " + profile_id)
+                self.active_profile = config_classes.Profile.from_json(self.profile_db.get_profile(profile_id))
+            else:
+                Logger.error("Unable to load profile with material {} and generic tool ID {}".format(self.active_config.material, generic_tool_id))
 
     def save_config(self, config_path):
         # type (str) -> None
@@ -272,22 +357,25 @@ class DWTConfig(EventDispatcher):
             self.active_config.canvas_shape_dims.r = 0
             self.active_config.canvas_shape_dims.d = 0
 
-    def load_cutter(self, cutter_name):
+    def load_cutter(self, cutter_uid):
         # type (str) -> None
         """
-        Loads a cutter file from the cutter directory.
+        Loads a cutter from the database.
 
-        :param cutter_name: The name of the cutter file to load.
+        :param cutter_uid: The uid of the cutter to load.
         """
-        file_path = os.path.join(CUTTERS_DIR, cutter_name)
+        cutter = self.profile_db.get_tool(cutter_uid)
 
-        if not os.path.exists(file_path):
-            Logger.error("Cutter file doesn't exist: " + cutter_name)
+        if not cutter:
+            Logger.error("Cutter doesn't exist: " + cutter_uid)
+            Logger.info("Loading default cutter...")
+            self.active_cutter = config_classes.Cutter.default()
+            self.active_config.cutter_type = self.active_cutter.uid
             return
 
-        Logger.debug("Loading cutter: " + cutter_name)
-        with open(file_path, "r") as f:
-            self.active_cutter = config_classes.Cutter.from_json(json.load(f))
+        Logger.debug("Loading cutter: " + cutter_uid)
+        self.active_cutter = config_classes.Cutter.from_json(cutter)
+        self.active_config.cutter_type = self.active_cutter.uid
 
     @staticmethod
     def get_available_cutter_names():
@@ -306,7 +394,7 @@ class DWTConfig(EventDispatcher):
             with open(file_path, "r") as f:
                 cutter = config_classes.Cutter.from_json(json.load(f))
 
-                cutters[cutter.tool_id] = {
+                cutters[cutter.description] = {
                     'cutter_path': cutter_file,
                     'image_path': cutter.image,
                     'type': cutter.type,
@@ -335,7 +423,7 @@ class DWTConfig(EventDispatcher):
             if self.app_type.value not in cutter.apps:
                 continue
 
-            cutters[cutter.tool_id] = {
+            cutters[cutter.description] = {
                 'cutter_path': cutter_file,
                 'image_path': cutter.image,
                 'type': cutter.type,
@@ -381,6 +469,18 @@ class DWTConfig(EventDispatcher):
         """
         Logger.debug("Parameter changed: " + parameter_name + " = " + str(parameter_value))
 
+        # Ensure Z height datum warning is shown
+        if parameter_name == "material" and parameter_value != self.active_config.material:
+            self.show_z_height_reminder = True
+
+        if "." in parameter_name and parameter_name.split(".")[-1] == "material_thickness" and parameter_value != self.active_config.cutting_depths.material_thickness:
+            self.show_z_height_reminder = True
+
+        if parameter_name == "cutter_type" and parameter_value != self.active_config.cutter_type:
+            self.load_cutter(parameter_value)
+            self.load_new_profile()
+            self.show_z_height_reminder = True
+
         if "." in parameter_name:
             parameter_names = parameter_name.split(".")
             parameter = self.active_config
@@ -399,5 +499,5 @@ class DWTConfig(EventDispatcher):
             setattr(self.active_config, parameter_name, parameter_value)
 
         # update screen, check bumpers and so on:
-        if not (self.active_config.shape_type == 'geberit' and self.active_cutter.dimensions.diameter is None):
+        if not (self.active_config.shape_type == 'geberit' and self.active_cutter.dimensions.tool_diameter is None):
             self.screen_drywall_cutter.drywall_shape_display_widget.check_datum_and_extents()

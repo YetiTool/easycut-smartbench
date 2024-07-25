@@ -69,7 +69,7 @@ def test_load_cutter():
 
     dwt_config.load_cutter('tool_6mm.json')
 
-    assert dwt_config.active_cutter.cutter_description == '6mm drywall cutter'
+    assert dwt_config.active_cutter.description == '6mm drywall cutter'
 
 
 def test_save_temp_config():

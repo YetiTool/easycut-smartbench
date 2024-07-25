@@ -27,6 +27,7 @@ from asmcnc.geometry import job_envelope
 from asmcnc.skavaUI import popup_info
 
 from asmcnc.core_UI.scaling_utils import get_scaled_sp
+from asmcnc.comms.model_manager import ModelManagerSingleton
 
 Builder.load_string(
     """
@@ -164,6 +165,7 @@ class LoadingScreen(Screen):
     default_font_size = get_scaled_sp("30sp")
     skip_check_decision = False
     continuing_to_recovery = False
+    dwt_file_id_line = "(DE590B1913285EFD678EFD0420ACD6B2)\n"
 
     def __init__(self, **kwargs):
         super(LoadingScreen, self).__init__(**kwargs)
@@ -171,6 +173,7 @@ class LoadingScreen(Screen):
         self.m = kwargs["machine"]
         self.jd = kwargs["job"]
         self.l = kwargs["localization"]
+        self.model_manager = ModelManagerSingleton()
 
     def on_pre_enter(self):
         self.filename_label.text = self.jd.job_name
@@ -240,6 +243,11 @@ class LoadingScreen(Screen):
             self.sm.pm.show_error_popup(file_empty_warning)
             self.sm.current = "local_filechooser"
             return
+        # if self.model_manager.is_machine_drywall():
+        #     if not self.dwt_file_id_line in self.job_file_as_list:
+        #         self.sm.pm.show_error_popup("Please choose a valid .dwt file!")
+        #         self.sm.current = "local_filechooser"
+        # f        return
         self.jd.generate_job_data(self.job_file_as_list)
         self.total_lines_in_job_file_pre_scrubbed = len(self.job_file_as_list)
         self.load_value = 1

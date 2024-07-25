@@ -7,6 +7,8 @@ Created Feb 2024
 import sys
 from datetime import datetime
 
+from kivy.app import App
+
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
@@ -100,10 +102,16 @@ class ProbingScreen(Screen):
         self.variable_debug = False
         self.function_debug = False
 
+        self.current_dust_shoe_setting = None
+        self.usm = App.get_running_app().user_settings_manager
+
     def update_text(self, string):
         self.probing_label.text = self.l.get_str(string) + "..."
 
     def on_enter(self):
+        self.current_dust_shoe_setting = self.usm.get_value('dust_shoe_detection')
+        self.usm.set_value('dust_shoe_detection', False)
+
         if self.function_debug:
             Logger.debug("**** on_enter called")
         if self.variable_debug:
@@ -202,6 +210,7 @@ class ProbingScreen(Screen):
         Clock.schedule_once(lambda dt: self.m._grbl_soft_reset(), 0.5) # Wait before reseting to avoid alarm
 
     def exit(self):
+        self.usm.set_value('dust_shoe_detection', self.current_dust_shoe_setting)
         if self.function_debug:
             Logger.debug("**** exit called")
         # Should only be called if sm.current == 'probing'

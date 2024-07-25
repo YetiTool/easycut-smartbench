@@ -28,6 +28,7 @@ Builder.load_string("""
 <ConfigFileSaver>:
 
     on_enter: root.refresh_filechooser()
+    on_touch_down: root.on_touch()
 
     filechooser : filechooser
     icon_layout_fc : icon_layout_fc
@@ -43,7 +44,7 @@ Builder.load_string("""
 
     BoxLayout:
         padding: 0
-        spacing: 10
+        spacing: app.get_scaled_tuple([10,10])
         size: root.size
         pos: root.pos
         orientation: "vertical"
@@ -60,11 +61,11 @@ Builder.load_string("""
                 text: root.filename_selected_label_text
                 markup: True
                 color: hex('#FFFFFFFF')
-                font_size: '18sp'   
+                font_size: app.get_scaled_sp('18sp')
                 valign: 'middle'
                 halign: 'center'
                 bold: True
-                padding: 10, 10
+                padding: app.get_scaled_tuple([10,10])
                 multiline: False
                 size_hint_x: 1
 
@@ -95,13 +96,14 @@ Builder.load_string("""
                         size_hint_y: None
                         height: self.texture_size[1]
                         text_size: self.width, None
-                        padding: 10, 10
+                        padding: app.get_scaled_tuple([10,10])
                         markup: True
+                        font_size: app.get_scaled_sp('15sp')
 
 
         BoxLayout:
             size_hint_y: None
-            height: 100
+            height: app.get_scaled_height(100)
 
             ToggleButton:
                 id: toggle_view_button
@@ -109,7 +111,7 @@ Builder.load_string("""
                 on_press: root.switch_view()
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_tuple([25,25])
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -126,7 +128,7 @@ Builder.load_string("""
                 on_press: root.switch_sort()
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_tuple([25,25])
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -142,7 +144,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_tuple([25,25])
                     size: self.parent.size
                     pos: self.parent.pos
                     
@@ -151,7 +153,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_tuple([25,25])
                     size: self.parent.size
                     pos: self.parent.pos
                     
@@ -160,7 +162,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_tuple([25,25])
                     size: self.parent.size
                     pos: self.parent.pos
             Button:
@@ -168,7 +170,7 @@ Builder.load_string("""
                 size_hint_x: 1
                 background_color: hex('#FFFFFF00')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_tuple([25,25])
                     size: self.parent.size
                     pos: self.parent.pos
             Button:
@@ -181,7 +183,7 @@ Builder.load_string("""
                 on_press:
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_tuple([25,25])
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -201,7 +203,7 @@ Builder.load_string("""
                     root.save_config_and_return_to_dwt()
                     self.background_color = hex('#FFFFFFFF')
                 BoxLayout:
-                    padding: 25
+                    padding: app.get_scaled_tuple([25,25])
                     size: self.parent.size
                     pos: self.parent.pos
                     Image:
@@ -264,10 +266,15 @@ class ConfigFileSaver(Screen):
         self.sm = kwargs['screen_manager']
         self.l = kwargs['localization']
         self.callback = kwargs['callback']
+        self.kb = kwargs['kb']
+        self.dwt_config = kwargs['dwt_config']
         self.usb_stick = usb_storage.USB_storage(self.sm,
                                                  self.l)  # object to manage presence of USB stick (fun in Linux)
 
         self.check_for_job_cache_dir()
+
+        self.text_inputs = [self.file_selected_label]
+        self.kb.setup_text_inputs(self.text_inputs)
 
         # MANAGING KIVY SCROLL BUG
 
@@ -283,6 +290,10 @@ class ConfigFileSaver(Screen):
         self.list_layout_fc.ids.scrollview.funbind('scroll_y', self.list_layout_fc.ids.scrollview._update_effect_bounds)
         self.icon_layout_fc.ids.scrollview.fbind('scroll_y', self.alternate_update_effect_bounds_icon)
         self.list_layout_fc.ids.scrollview.fbind('scroll_y', self.alternate_update_effect_bounds_list)
+
+    def on_touch(self):
+        for text_input in self.text_inputs:
+            text_input.focus = False
 
     def alternate_update_effect_bounds_icon(self, *args):
         self.update_y_bounds_try_except(self.icon_layout_fc.ids.scrollview)
@@ -319,6 +330,11 @@ class ConfigFileSaver(Screen):
                 file = open(configs_dir + '.gitignore', "w+")
                 file.write('*')
                 file.close()
+
+    def on_pre_enter(self):
+        self.filechooser.selection = []
+        initial_name = self.dwt_config.active_config_name
+        self.file_selected_label.text = "New Configuration" if initial_name == "temp_config.json" else initial_name
 
     def on_enter(self):
 

@@ -129,7 +129,6 @@ def create_paths():
         Logger.warning("Drywall cutter temp gcode directory not found, creating...")
         os.makedirs(DWT_TEMP_GCODE_PATH)
 
-
 # Register any paths that contain resources
 resource_add_path(SKAVA_UI_IMG_PATH)
 resource_add_path(SHAPE_CUTTER_IMG_PATH)
