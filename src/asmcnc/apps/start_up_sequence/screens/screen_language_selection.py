@@ -69,12 +69,10 @@ class LanguageSelectionScreen(Screen):
         self.language_flags_container = GridLayout(cols=3, size_hint=(0.8, 0.8), pos_hint={"center_x": 0.5,
                                                                                            "center_y": 0.5})
 
-        for language in self.localisation.approved_languages:
+        languages = self.localisation.dwt_languages if self.model_manager.is_machine_drywall() else self.localisation.approved_languages
+
+        for language in languages:
             localisation_choice_option = self.__get_language_option_widget(language)
-
-            if self.model_manager.is_machine_drywall() and language not in self.localisation.dwt_languages:
-                localisation_choice_option.opacity = 0
-
             self.language_flags_container.add_widget(localisation_choice_option)
 
         self.body.add_widget(self.language_flags_container)
