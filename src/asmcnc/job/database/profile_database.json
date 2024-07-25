@@ -1706,5 +1706,150 @@
         "description": "Yeti Tool 21722 Ø 8 mm 2 flute Straight Endmill L32"
       }
     ]
+  },
+  {
+    "uid": "0055",
+    "generic_tool": {
+      "uid": "0019",
+      "description": "4 mm 2 flute Straight"
+    },
+    "material": {
+      "uid": "0011",
+      "description": "Trespa"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 1.5,
+        "stepover": 2,
+        "unit": "mm",
+        "cutting_direction": "conventional"
+      },
+      "spindle_speed": 19000,
+      "max_feedrate": 2000,
+      "plungerate": 500,
+      "target_tool_load": 350
+    },
+    "applicable_tools": [
+      {
+        "uid": "0022",
+        "description": "Yeti Tool 21720 Ø 4 mm 2 flute Straight Endmill L22"
+      }
+    ]
+  },
+  {
+    "uid": "0056",
+    "generic_tool": {
+      "uid": "0020",
+      "description": "6 mm 2 flute Straight"
+    },
+    "material": {
+      "uid": "0011",
+      "description": "Trespa"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 1.5,
+        "stepover": 3,
+        "unit": "mm",
+        "cutting_direction": "conventional"
+      },
+      "spindle_speed": 19000,
+      "max_feedrate": 2000,
+      "plungerate": 500,
+      "target_tool_load": 340
+    },
+    "applicable_tools": [
+      {
+        "uid": "0023",
+        "description": "Yeti Tool 21721 Ø 6 mm 2 flute Straight Endmill L22"
+      }
+    ]
+  },
+  {
+    "uid": "0057",
+    "generic_tool": {
+      "uid": "0021",
+      "description": "8 mm 2 flute Straight"
+    },
+    "material": {
+      "uid": "0011",
+      "description": "Trespa"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 1,
+        "stepover": 4,
+        "unit": "mm",
+        "cutting_direction": "conventional"
+      },
+      "spindle_speed": 19000,
+      "max_feedrate": 2000,
+      "plungerate": 500,
+      "target_tool_load": 360
+    },
+    "applicable_tools": [
+      {
+        "uid": "0024",
+        "description": "Yeti Tool 21722 Ø 8 mm 2 flute Straight Endmill L32"
+      }
+    ]
+  },
+  {
+    "uid": "0058",
+    "generic_tool": {
+      "uid": "0029",
+      "description": "6 mm 3 flute Chipbreaker"
+    },
+    "material": {
+      "uid": "0011",
+      "description": "Trespa"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 3,
+        "stepover": 3,
+        "unit": "mm",
+        "cutting_direction": "climb"
+      },
+      "spindle_speed": 21000,
+      "max_feedrate": 2000,
+      "plungerate": 500,
+      "target_tool_load": 340
+    },
+    "applicable_tools": [
+      {
+        "uid": "0035",
+        "description": "Rennie Tool Ø 6 mm 3 flute Chipbreaker Endmill L32"
+      }
+    ]
+  },
+  {
+    "uid": "0059",
+    "generic_tool": {
+      "uid": "0025",
+      "description": "6 mm 1 flute Straight"
+    },
+    "material": {
+      "uid": "0011",
+      "description": "Trespa"
+    },
+    "cutting_parameters": {
+      "recommendations": {
+        "stepdown": 1,
+        "stepover": 3,
+        "unit": "mm",
+        "cutting_direction": "conventional"
+      },
+      "spindle_speed": 19000,
+      "max_feedrate": 2000,
+      "plungerate": 500,
+      "target_tool_load": 360
+    },
+    "applicable_tools": [
+      {
+        "uid": "0029",
+        "description": "Fraiser Bits D302.060.18D Ø 6 mm 1+1 flute Straight Endmill L18 PCD coated"
+      }
+    ]
   }
 ]
