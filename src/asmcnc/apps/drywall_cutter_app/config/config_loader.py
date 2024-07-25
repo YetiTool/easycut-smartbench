@@ -36,8 +36,8 @@ def get_display_preview(json_obj):
     profile_db = App.get_running_app().profile_db
     tool_description = profile_db.get_tool_name(json_obj["cutter_type"])
     material_description = profile_db.get_material_name(json_obj["material"])
-    x_corrective_offset = 4
-    y_corrective_offset = 15
+    x_corrective_offset = 5
+    y_corrective_offset = 14
     preview = get_shape_type(json_obj, l)
     preview += l.get_str("Units") + ": " + json_obj["units"] + "\n"
     preview += l.get_str("Canvas shape dims") + ": \n"
