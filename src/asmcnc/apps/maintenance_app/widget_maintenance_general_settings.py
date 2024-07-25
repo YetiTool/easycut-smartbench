@@ -19,12 +19,13 @@ Builder.load_string("""
         padding: [dp(0.025)*app.width, 0]
 
         BoxLayout:
-            size_hint_y: 0.4
+            size_hint_y: 0.5
             orientation: 'horizontal'
 
             BoxLayout:
                 orientation: 'vertical'
                 size_hint_x: 2
+                padding: [0,50,0,0]
 
                 Label:
                     id: dust_shoe_title_label
@@ -39,7 +40,6 @@ Builder.load_string("""
                     color: color_provider.get_rgba("black")
                     font_size: str(0.0225*app.width) + 'sp'
                     halign: "left"
-                    valign: "top"
                     markup: True
                     size_hint_y: None
                     text_size: self.size
