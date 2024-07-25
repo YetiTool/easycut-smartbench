@@ -1,0 +1,16 @@
+.. _top:
+
+Shapes, safety features, bug fixes and improvements
+=======================================================
+The Shapes app is now released! Find it in the console lobby.
+
+New safety feature: SmartBench will now ensure the dust-shoe plug is inserted before starting a job (can be disabled via the maintenance app).
+
+Various elements of the UI have been improved, including the probing screen and the go screen.
+
+Support for Trespa added to YetiPilot.
+
+Japanese is now available as a beta language.
+**Find full release notes on our website, by scanning the QR code on the right.**
+
+.. _bottom:
