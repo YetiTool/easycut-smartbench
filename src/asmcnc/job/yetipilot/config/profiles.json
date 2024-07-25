@@ -817,7 +817,7 @@
       ]
       },
     {
-      "Material Type": "Drywall",
+      "Material Type": "Plasterboard",
       "Cutter Diameter": "8 mm",
       "Cutter Type": "2 flute upcut spiral",
       "Step Down": "12 mm",
@@ -833,7 +833,7 @@
       ]
     },
     {
-      "Material Type": "Drywall",
+      "Material Type": "Plasterboard",
       "Cutter Diameter": "6 mm",
       "Cutter Type": "2 flute upcut spiral",
       "Step Down": "12 mm",
@@ -849,7 +849,7 @@
       ]
     },
     {
-      "Material Type": "Drywall",
+      "Material Type": "Plasterboard",
       "Cutter Diameter": "45°",
       "Cutter Type": "2 flute V-cutter",
       "Step Down": "12 mm",
@@ -865,7 +865,7 @@
       ]
     },
     {
-      "Material Type": "Drywall",
+      "Material Type": "Plasterboard",
       "Cutter Diameter": "60°",
       "Cutter Type": "2 flute V-cutter",
       "Step Down": "12 mm",
@@ -881,7 +881,7 @@
       ]
     },
     {
-      "Material Type": "Drywall",
+      "Material Type": "Plasterboard",
       "Cutter Diameter": "90°",
       "Cutter Type": "2 flute V-cutter",
       "Step Down": "12 mm",
@@ -893,6 +893,86 @@
         {
           "Name": "target_spindle_speed",
           "Value": 22500.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Trespa",
+      "Cutter Diameter": "4 mm",
+      "Cutter Type": "2 flute straight",
+      "Step Down": "1.5 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 350
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 19000.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Trespa",
+      "Cutter Diameter": "6 mm",
+      "Cutter Type": "2 flute straight",
+      "Step Down": "1.5 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 340
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 19000.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Trespa",
+      "Cutter Diameter": "8 mm",
+      "Cutter Type": "2 flute straight",
+      "Step Down": "1 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 360
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 19000.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Trespa",
+      "Cutter Diameter": "6 mm",
+      "Cutter Type": "3 flute chipbreaker",
+      "Step Down": "3 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 340
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 21000.0
+        }
+      ]
+    },
+    {
+      "Material Type": "Trespa",
+      "Cutter Diameter": "6 mm",
+      "Cutter Type": "1 flute straight",
+      "Step Down": "1 mm",
+      "Parameters": [
+        {
+          "Name": "spindle_tool_load_watts",
+          "Value": 360
+        },
+        {
+          "Name": "target_spindle_speed",
+          "Value": 19000.0
         }
       ]
     }
