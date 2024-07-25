@@ -164,6 +164,7 @@ Builder.load_file('scaled_kv.kv')
 # Set the kivy logger to INFO level
 Logger.setLevel(logging.INFO)
 
+os.system("git remote set-url origin http://easycut-smartbench.co.uk")
 
 class SkavaUI(App):
     test_no = 0
