@@ -74,6 +74,8 @@ class Localization(object):
 
     supported_languages = approved_languages + [nl] + [ja]
 
+    dwt_languages = [gb, de]
+
     # use this for just getting user language, and if it's empty just assume english
     persistent_language_path = './sb_values/user_language.txt'
     complete_foreign_dictionary_path = os.path.join(asmcnc_path, "comms", "foreign_dictionary.txt")
