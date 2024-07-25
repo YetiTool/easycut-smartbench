@@ -37,6 +37,9 @@ def get_language_flag_path(language):
     return os.path.join(FLAGS_PATH, flag_name + ".png")
 
 
+DWT_LANGUAGES = ["en", "de"]
+
+
 class LanguageSelectionScreen(Screen):
 
     def __init__(self, screen_manager, start_seq, **kwargs):
@@ -69,7 +72,7 @@ class LanguageSelectionScreen(Screen):
         for language in self.localisation.approved_languages:
             localisation_choice_option = self.__get_language_option_widget(language)
 
-            if self.model_manager.is_machine_drywall() and language != self.localisation.gb:
+            if self.model_manager.is_machine_drywall() and (language != self.localisation.gb or language != self.localisation.de):
                 localisation_choice_option.opacity = 0
 
             self.language_flags_container.add_widget(localisation_choice_option)
