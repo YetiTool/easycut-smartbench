@@ -1,0 +1,17 @@
+.. _top:
+
+More materials & tools and support for German
+=======================================================
+Added various materials & tools to DryWallTec.
+
+New safety feature: SmartBench will now ensure the dust-shoe plug is inserted before starting a job (can be disabled via the maintenance app).
+
+Various elements of the UI have been improved, including the probing screen and the go screen.
+
+GCode files can now be loaded in the PRO app.
+
+Support for German in the DWT app (System Tools -> System Info)
+
+**Find full release notes on our website, by scanning the QR code on the right.**
+
+.. _bottom:

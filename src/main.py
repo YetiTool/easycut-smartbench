@@ -113,7 +113,7 @@ from asmcnc.skavaUI import screen_dust_shoe_alarm
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v2.9.1'
+initial_version = 'v2.9.2'
 
 config_flag = False
 
