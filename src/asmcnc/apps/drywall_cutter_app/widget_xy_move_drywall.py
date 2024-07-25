@@ -223,7 +223,6 @@ class XYMoveDrywall(Widget):
         self.sm=kwargs['screen_manager']
         self.l=kwargs['localization']
         self.cs = kwargs['coordinate_system']
-        self.dwt_config = kwargs['dwt_config']
 
         self.set_jog_speeds()
         self.ids.probe_button_container.add_widget(probe_button.ProbeButton(self.m, self.sm, self.l, fast_probe=True))
