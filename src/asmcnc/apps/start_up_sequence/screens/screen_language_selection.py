@@ -37,9 +37,6 @@ def get_language_flag_path(language):
     return os.path.join(FLAGS_PATH, flag_name + ".png")
 
 
-DWT_LANGUAGES = ["en", "de"]
-
-
 class LanguageSelectionScreen(Screen):
 
     def __init__(self, screen_manager, start_seq, **kwargs):
