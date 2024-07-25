@@ -63,9 +63,9 @@ class Localization(object):
 
     approved_languages = [
         gb,
+        de,
         it,
         fi,
-        de,
         fr,
         pl,
         dk,
@@ -73,6 +73,8 @@ class Localization(object):
     ]
 
     supported_languages = approved_languages + [nl] + [ja]
+
+    dwt_languages = [gb, de]
 
     # use this for just getting user language, and if it's empty just assume english
     persistent_language_path = './sb_values/user_language.txt'
