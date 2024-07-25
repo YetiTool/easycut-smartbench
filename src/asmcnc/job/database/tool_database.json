@@ -84,7 +84,8 @@
       "coating": "TiAIN"
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -129,7 +130,8 @@
       "coating": "TiAIN"
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -174,7 +176,8 @@
       "coating": "TiAIN"
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -219,7 +222,8 @@
       "coating": null
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -264,7 +268,8 @@
       "coating": null
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -309,7 +314,8 @@
       "coating": null
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -354,7 +360,8 @@
       "coating": null
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -399,7 +406,8 @@
       "coating": null
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -444,7 +452,8 @@
       "coating": null
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -489,7 +498,8 @@
       "coating": null
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -534,7 +544,8 @@
       "coating": "DLC"
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -579,7 +590,8 @@
       "coating": "DLC"
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -624,7 +636,8 @@
       "coating": "DLC"
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -669,7 +682,8 @@
       "coating": "DLC"
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -714,7 +728,8 @@
       "coating": "DLC"
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -759,7 +774,8 @@
       "coating": null
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -804,7 +820,8 @@
       "coating": null
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -849,7 +866,8 @@
       "coating": null
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -894,7 +912,8 @@
       "coating": null
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -939,7 +958,8 @@
       "coating": null
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -984,7 +1004,8 @@
       "coating": null
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -1029,7 +1050,8 @@
       "coating": null
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -1074,7 +1096,8 @@
       "coating": null
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -1211,7 +1234,8 @@
       "coating": null
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -1256,7 +1280,8 @@
       "coating": null
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -1301,7 +1326,8 @@
       "coating": null
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -1346,7 +1372,8 @@
       "coating": "PCD"
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -1391,7 +1418,8 @@
       "coating": null
     },
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -1436,6 +1464,7 @@
       "coating": null
     },
     "available_isas": [
+      "shapes",
       "dwt"
     ]
   },
@@ -1527,6 +1556,53 @@
       "coating": null
     },
     "available_isas": [
+      "shapes",
+      "dwt"
+    ]
+  },
+  {
+    "uid": "0035",
+    "description": "Rennie Tool Ø 6 mm 3 flute Chipbreaker Endmill L32",
+    "manufacturer": "Rennie Tool",
+    "manufacturer_part_number": "-",
+    "tool_type": "Endmill",
+    "generic_definition": {
+      "uid": "0029",
+      "string": "6 mm 3 flute Chipbreaker",
+      "dimension": 6,
+      "unit": "mm",
+      "type": "3 flute Chipbreaker",
+      "toolpath_offsets": {
+        "inside": true,
+        "outside": true,
+        "on": true,
+        "pocket": true
+      },
+      "required_operations": {
+        "lead_in": false
+      }
+    },
+    "dimensions": {
+      "shank_diameter": 6,
+      "tool_diameter": 6,
+      "unit": "mm",
+      "angle": null
+    },
+    "flutes": {
+      "type": "Chipbreaker",
+      "lengths": {
+        "upcut_straight": 32,
+        "downcut": 0,
+        "total": 32,
+        "unit": "mm"
+      },
+      "quantity": 3,
+      "material": "Carbide",
+      "coated": false,
+      "coating": null
+    },
+    "available_isas": [
+      "shapes",
       "dwt"
     ]
   }

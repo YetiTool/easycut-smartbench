@@ -8,7 +8,8 @@
     "uid": "0000",
     "description": "Oak worktop",
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -23,49 +24,56 @@
     "uid": "0002",
     "description": "Birch plywood",
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
     "uid": "0003",
     "description": "MFC",
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
     "uid": "0004",
     "description": "Aluminium (6082)",
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
     "uid": "0005",
     "description": "ACM",
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
     "uid": "0006",
     "description": "Acrylic (extruded)",
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
     "uid": "0007",
     "description": "Acrylic (cast)",
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
     "uid": "0008",
     "description": "Solid surface",
     "available_isas": [
-      "shapes"
+      "shapes",
+      "dwt"
     ]
   },
   {
@@ -80,6 +88,15 @@
     "uid": "0010",
     "description": "Plasterboard",
     "available_isas": [
+      "shapes",
+      "dwt"
+    ]
+  },
+  {
+    "uid": "0011",
+    "description": "Trespa",
+    "available_isas": [
+      "shapes",
       "dwt"
     ]
   }
