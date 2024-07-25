@@ -12,6 +12,7 @@ from kivy.resources import resource_find
 from kivy.core.image import Image
 from kivy.graphics import Color, BorderImage
 from kivy.utils import rgba
+from itertools import cycle
 
 try:
     import hgtk

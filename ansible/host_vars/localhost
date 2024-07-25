@@ -12,6 +12,10 @@ apt_pkgs:
 - unixodbc-dev
 - pigpio
 - python-pigpio
+- mecab
+- libmecab-dev
+- mecab-ipadic-utf8
+- python3-pip
 
 exim_dc_eximconfig_configtype: internet
 exim_dc_localdelivery: mail_spool
