@@ -222,7 +222,7 @@ class ToolMaterialPopup(Popup):
         self.float_layout.do_layout()
         self.update_strings()
         self.load_config()
-        if self.material_dropdown.text == '' or self.material_dropdown.text == '':  # Only disable if one is empty
+        if self.material_dropdown.text == '' or self.tool_dropdown.text == '':  # Only disable if one is empty
             self.confirm_button.disabled = True
             self.confirm_button.opacity = 0.5
 
