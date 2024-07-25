@@ -350,10 +350,9 @@ class BetaTestingScreen(Screen):
                                  + branch_name_formatted)
 
                 if re.match("v\d\.\d\.\d", branch_name_formatted):
-                    current_version_split = [int(i.split("-")[0]) for i in self.set.sw_version.split("v")[1].split(".")]
                     checkout_version_split = [int(i.split("-")[0]) for i in branch_name_formatted.split("v")[1].split(".")]
 
-                    if current_version_split > checkout_version_split:
+                    if [2, 9, 2] > checkout_version_split:
                         os.system("rm /home/pi/easycut-smartbench/src/asmcnc/apps/drywall_cutter_app/config/configurations/*")
                         os.system("rm /home/pi/easycut-smartbench/src/asmcnc/apps/drywall_cutter_app/config/temp/*")
                         Logger.info("Purged shapes configurations before downgrade")
