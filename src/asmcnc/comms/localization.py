@@ -63,9 +63,9 @@ class Localization(object):
 
     approved_languages = [
         gb,
+        de,
         it,
         fi,
-        de,
         fr,
         pl,
         dk,
