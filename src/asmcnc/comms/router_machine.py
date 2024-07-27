@@ -163,7 +163,7 @@ class RouterMachine(EventDispatcher):
 
         # Establish 's'erial comms and initialise
         self.s = serial_connection.SerialConnection(self, self.sm, self.sett, self.l, self.jd)
-        self.s.establish_connection(win_serial_port)
+        self.s.establish_connection()
 
         # Object to construct and send custom YETI GRBL commands
         self.p = protocol.protocol_v2()
