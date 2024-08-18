@@ -115,3 +115,7 @@ class AppManagerClass(object):
     def start_drywall_cutter_app(self):
         self.current_app = 'drywall_cutter'
         self.sm.current = 'drywall_cutter'
+
+    def start_trace_app(self):
+        self.current_app = 'trace'
+        self.sm.current = 'trace'

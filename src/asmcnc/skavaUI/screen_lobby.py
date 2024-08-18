@@ -39,6 +39,7 @@ Builder.load_string("""
     maintenance_app_label: maintenance_app_label
     system_tools_app_label: system_tools_app_label
     upgrade_app_label:upgrade_app_label
+    trace_app_label:trace_app_label
 
     carousel_pane_1:carousel_pane_1
     pro_app_container:pro_app_container
@@ -47,6 +48,7 @@ Builder.load_string("""
     yeticut_apps_image:yeticut_apps_image
     yeticut_apps_label:yeticut_apps_label
     upgrade_app_container:upgrade_app_container
+    
 
     canvas.before:
         Color: 
@@ -390,6 +392,39 @@ Builder.load_string("""
                         font_size: str(0.03125*app.width) + 'sp'
                         text: 'System Tools'
                         markup: True
+                        
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint_x: 1
+                    spacing:0.0416666666667*app.height
+                
+                    Button:
+                        font_size: str(0.01875 * app.width) + 'sp'
+                        size_hint_y: 8
+                        disabled: False
+                        background_color: hex('#FFFFFF00')
+                        on_release: 
+                            self.background_color = hex('#FFFFFF00')
+                        on_press:
+                            root.trace_app()
+                            self.background_color = hex('#FFFFFF00')
+                        BoxLayout:
+                            padding: 0
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            Image:
+                                id: image_select
+                                # source: "./asmcnc/apps/systemTools_app/img/lobby_system.png"
+                                center_x: self.parent.center_x
+                                center_y: self.parent.center_y
+                                size: self.parent.width, self.parent.height
+                                allow_stretch: True 
+                    Label:
+                        id: trace_app_label
+                        size_hint_y: 1
+                        font_size: str(0.03125*app.width) + 'sp'
+                        text: 'Trace'
+                        markup: True
 
         BoxLayout:
             size_hint_y: 6
@@ -624,6 +659,9 @@ class LobbyScreen(Screen):
 
     def yeticut_apps(self):
         self.am.start_drywall_cutter_app()
+
+    def trace_app(self):
+        self.am.start_trace_app()
 
     def shutdown_console(self):
         console_utils.shutdown()
