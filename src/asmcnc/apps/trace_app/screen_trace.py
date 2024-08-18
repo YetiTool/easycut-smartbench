@@ -218,7 +218,7 @@ class TraceScreenClass(Screen):
             print(segment)
 
     def build_svg_string(self):
-        dwg = svgwrite.Drawing(filename="geometry.svg", size=('2500mm', '1250mm'))
+        dwg = svgwrite.Drawing(filename="geometry.svg", size=('2500mm', '1250mm'), viewBox=('0 0 2500 1250'))
 
         path_data = []
         start_point = self.geometry_segments[0].get_start()
