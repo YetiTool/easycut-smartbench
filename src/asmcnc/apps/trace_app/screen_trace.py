@@ -11,6 +11,7 @@ from src.asmcnc.apps.maintenance_app import widget_maintenance_xy_move
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivy.uix.image import Image
+from kivy.graphics.svg import Svg
 
 from src.asmcnc.skavaUI import widget_virtual_bed
 
@@ -40,14 +41,16 @@ Builder.load_string("""
                 padding: dp(5)
                 spacing: dp(10)
                 
-                ImageButton:
-                    source: './asmcnc/apps/trace_app/img/home_button.png'
+                Button:
+                    # source: './asmcnc/apps/trace_app/img/home_button.png'
+                    text: 'Home'
                     allow_stretch: False
                     size_hint_x: 1
                     on_press: root.home()
                     
-                ImageButton:
-                    source: './asmcnc/apps/trace_app/img/capture_point_button.png'
+                Button:
+                    # source: './asmcnc/apps/trace_app/img/capture_point_button.png'
+                    text: 'Capture Point'
                     allow_stretch: False
                     size_hint_x: 1
                     on_press: root.add_segment()
@@ -236,4 +239,9 @@ class TraceScreenClass(Screen):
         print(self.build_svg_string())
 
     def display_svg(self):
-        self.svg_container.add_widget(Image(source='geometry.svg'))
+        # Clear the svg_container before adding new content
+        self.svg_container.clear_widgets()
+
+        # Add the SVG file using the Svg class
+        with self.svg_container.canvas:
+            svg = Svg("geometry.svg")
