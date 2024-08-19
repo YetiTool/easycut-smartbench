@@ -9,8 +9,9 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib.path import Path
 
-from src.asmcnc.apps.maintenance_app import widget_maintenance_xy_move
+from src.asmcnc.apps.trace_app import widget_xy_move_trace
 from src.asmcnc.skavaUI import widget_virtual_bed
+from asmcnc.skavaUI import popup_info
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
@@ -27,62 +28,90 @@ Builder.load_string("""
     
     canvas.before:
         Color:
-            rgba: 0.9, 0.9, 0.9, 1  # Light grey color
+            rgba: color_provider.get_rgba('shapes_white')
         Rectangle:
             pos: self.pos
             size: self.size
     
     GridLayout:
         cols: 2
-        row_default_height: 270
+        row_default_height: 768*0.5
+        row_force_default: True
         
         ### Top ###
         
-        # Buttons
+        # Buttons            
         BoxLayout:
+            padding: [10, 10]
+            spacing: 10
             size_hint_x: None
-            height: dp(768 * 0.5)
-            width: dp(600)
+            size_hint_y: None
+            height: dp(app.height * 0.5)
+            width: self.height
             orientation: 'vertical'
             
             GridLayout:
                 cols: 2
                 
                 Button:
-                    text: 'Home'
+                    text: 'Home machine'
                     allow_stretch: False
                     size_hint_x: 1
+                    font_size: sp(20)
                     on_press: root.home()
                     
                 Button:
                     text: 'Capture Point'
                     allow_stretch: False
                     size_hint_x: 1
+                    font_size: sp(20)
                     on_press: root.add_segment()
                     
                 Button:
-                    text: 'Clear'
+                    text: 'Clear geometry'
                     size_hint_x: 1
+                    font_size: sp(20)
                     on_press: root.clear()
                 
                 Button:
                     text: 'Close contour'
                     size_hint_x: 1
+                    font_size: sp(20)
                     on_press: root.close_contour()
                     
                 Button:
-                    text: 'Exit'
+                    text: 'Exit app'
                     size_hint_x: 1
+                    font_size: sp(20)
                     on_press: root.exit()
                     
                 Button:
                     text: 'Export SVG'
                     size_hint_x: 1
+                    font_size: sp(20)
                     on_press: root.print_svg_string()
+                    
+            Button:
+                text: 'Stop'
+                size_hint_x: 1
+                size_hint_y: 0.5
+                font_size: sp(38)
+                on_press: root.stop()
                 
-        # SVG container - second column
+        # SVG container
         BoxLayout:
             id: svg_container
+            size_hint_y: 1
+            canvas:
+                Color:
+                    rgba: color_provider.get_rgba('shapes_white')
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            Label:
+                text: 'Awaiting geometry...'
+                font_size: sp(38)
+                color: color_provider.get_rgba('black')
             
         ### Bottom ###
         
@@ -91,17 +120,18 @@ Builder.load_string("""
             id: xy_move_container
             orientation: 'vertical'
             size_hint: (None, None)
-            height: dp(0.6875 * app.height)
-            width: dp(0.35 * app.width)
+            padding: [10, 10]
+            height: dp(0.5 * app.height)
+            width: self.height
             
         # Virtual bed widget
         BoxLayout:
             orientation: 'vertical'
-            padding: [dp(0.025) * app.width, dp(0.0416666666667) * app.height]
-            spacing: dp(0.0416666666667) * app.height
+            # padding: [dp(0.025) * app.width, dp(0.0416666666667) * app.height]
+            # spacing: dp(0.0416666666667) * app.height
             canvas:
                 Color:
-                    rgba: hex('#E5E5E5FF')
+                    rgba: color_provider.get_rgba('shapes_white')
                 Rectangle:
                     size: self.size
                     pos: self.pos
@@ -112,8 +142,8 @@ Builder.load_string("""
                 padding: [dp(0.0125) * app.width, dp(0.0208333333333) * app.height]
                 canvas:
                     Color:
-                        rgba: 1, 1, 1, 1
-                    RoundedRectangle:
+                        rgba: color_provider.get_rgba('shapes_white')
+                    Rectangle:
                         size: self.size
                         pos: self.pos
         
@@ -196,15 +226,16 @@ class TraceScreenClass(Screen):
         super(TraceScreenClass, self).__init__(**kwargs)
         self.m = kwargs["machine"]
         self.sm = kwargs["screen_manager"]
+        self.l = kwargs["localization"]
         self.cs = self.m.cs
 
         # Widgets
-        self.xy_move_widget = widget_maintenance_xy_move.MaintenanceXYMove(
-            machine=self.m, screen_manager=self.sm
+        self.xy_move_widget = widget_xy_move_trace.XYMoveTrace(
+            machine=self.m, localization=self.l, screen_manager=self.sm
         )
         self.xy_move_container.add_widget(self.xy_move_widget)
         self.virtual_bed_container.add_widget(
-            widget_virtual_bed.VirtualBed(machine=self.m, screen_manager=self.sm)
+            widget_virtual_bed.VirtualBed(machine=self.m,  screen_manager=self.sm)
         )
 
     def exit(self):
@@ -218,6 +249,9 @@ class TraceScreenClass(Screen):
 
     def home(self):
         self.m.request_homing_procedure('trace', 'trace')
+
+    def stop(self):
+        popup_info.PopupStop(self.m, self.sm, self.l)
 
     def capture_point(self):
         # Make sure the machine has stopped moving
