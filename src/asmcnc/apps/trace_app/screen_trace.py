@@ -164,8 +164,8 @@ class Point:
 
 class Segment:
     def __init__(self, start, end, radius_x=None, radius_y=None):
-        self.start = Point(start.x, start.y)  # Create a copy of the start point
-        self.end = Point(end.x, end.y)  # Create a copy of the end point
+        self.start = Point(start.x, start.y)
+        self.end = Point(end.x, end.y)
         self.radius_x = radius_x
         self.radius_y = radius_y
 
@@ -335,7 +335,7 @@ class TraceScreenClass(Screen):
         path = Path(vertices, codes)
 
         fig, ax = plt.subplots()
-        patch = patches.PathPatch(path, facecolor='yellow', edgecolor='blue', linewidth=3)
+        patch = patches.PathPatch(path, facecolor='yellow', edgecolor='blue', linewidth=1)
 
         ax.add_patch(patch)
         ax.set_xlim(0, 2500)
