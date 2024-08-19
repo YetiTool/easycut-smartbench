@@ -5,23 +5,25 @@ Trace app concept screen
 @author: Benji
 """
 import svgwrite
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
+from matplotlib.path import Path
 
 from src.asmcnc.apps.maintenance_app import widget_maintenance_xy_move
+from src.asmcnc.skavaUI import widget_virtual_bed
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivy.uix.image import Image
-from kivy.graphics.svg import Svg
-
-from src.asmcnc.skavaUI import widget_virtual_bed
+from kivy.clock import Clock
 
 Builder.load_string("""
 #:import color_provider asmcnc.core_UI.utils.color_provider
 
 <TraceScreenClass>:
-    xy_move_container:xy_move_container
-    virtual_bed_container:virtual_bed_container
-    svg_container:svg_container
+    xy_move_container: xy_move_container
+    virtual_bed_container: virtual_bed_container
+    svg_container: svg_container
     
     canvas.before:
         Color:
@@ -30,26 +32,29 @@ Builder.load_string("""
             pos: self.pos
             size: self.size
     
-    BoxLayout:
-        orientation: 'vertical'
+    GridLayout:
+        cols: 2
+        row_default_height: 270
         
+        ### Top ###
+        
+        # Buttons
         BoxLayout:
+            size_hint_x: None
+            height: dp(768 * 0.5)
+            width: dp(600)
             orientation: 'vertical'
             
-            BoxLayout:
-                orientation: 'horizontal'
-                padding: dp(5)
-                spacing: dp(10)
+            GridLayout:
+                cols: 2
                 
                 Button:
-                    # source: './asmcnc/apps/trace_app/img/home_button.png'
                     text: 'Home'
                     allow_stretch: False
                     size_hint_x: 1
                     on_press: root.home()
                     
                 Button:
-                    # source: './asmcnc/apps/trace_app/img/capture_point_button.png'
                     text: 'Capture Point'
                     allow_stretch: False
                     size_hint_x: 1
@@ -58,47 +63,60 @@ Builder.load_string("""
                 Button:
                     text: 'Clear'
                     size_hint_x: 1
-                    on_press: root.geometry_segments = []
+                    on_press: root.clear()
                 
                 Button:
-                    text: 'Finish'
+                    text: 'Close contour'
+                    size_hint_x: 1
+                    on_press: root.close_contour()
+                    
+                Button:
+                    text: 'Exit'
+                    size_hint_x: 1
+                    on_press: root.exit()
+                    
+                Button:
+                    text: 'Export SVG'
                     size_hint_x: 1
                     on_press: root.print_svg_string()
-                    
-            BoxLayout:
-                id: svg_container
                 
+        # SVG container - second column
         BoxLayout:
-            orientation: 'horizontal'
+            id: svg_container
+            
+        ### Bottom ###
+        
+        # XY move widget
+        BoxLayout:
+            id: xy_move_container
+            orientation: 'vertical'
+            size_hint: (None, None)
+            height: dp(0.6875 * app.height)
+            width: dp(0.35 * app.width)
+            
+        # Virtual bed widget
+        BoxLayout:
+            orientation: 'vertical'
+            padding: [dp(0.025) * app.width, dp(0.0416666666667) * app.height]
+            spacing: dp(0.0416666666667) * app.height
+            canvas:
+                Color:
+                    rgba: hex('#E5E5E5FF')
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
         
             BoxLayout:
-                id: xy_move_container
-                orientation: 'vertical'
-                size_hint: (None,None)
-                height: dp(0.6875*app.height)
-                width: dp(0.35*app.width)
-                
-            BoxLayout:
-                orientation: 'vertical'
-                padding:[dp(0.025)*app.width, dp(0.0416666666667)*app.height]
-                spacing:0.0416666666667*app.height
+                id: virtual_bed_container
+                size_hint_y: 1
+                padding: [dp(0.0125) * app.width, dp(0.0208333333333) * app.height]
                 canvas:
                     Color:
-                        rgba: hex('#E5E5E5FF')
-                    Rectangle:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
                         size: self.size
                         pos: self.pos
-
-                BoxLayout:
-                    id: virtual_bed_container
-                    size_hint_y: 5
-                    padding:[dp(0.0125)*app.width, dp(0.0208333333333)*app.height]
-                    canvas:
-                        Color:
-                            rgba: 1,1,1,1
-                        RoundedRectangle:
-                            size: self.size
-                            pos: self.pos
+        
 """)
 
 
@@ -129,7 +147,9 @@ class Segment:
 
         self.convert_to_svg_coordinate_space()
 
-    def get_start(self):
+    def get_start(self, invert_xy=False):
+        if invert_xy:
+            return Point(self.start.y, self.start.x)
         return self.start
 
     def get_end(self):
@@ -162,10 +182,15 @@ class Segment:
         self.start.x, self.start.y = self.start.y, self.start.x
         self.end.x, self.end.y = self.end.y, self.end.x
 
+    def get_matplotlib_data(self):
+        points = [(self.end.x, self.end.y)]
+        codes = [Path.LINETO]
+        return points, codes
+
 
 class TraceScreenClass(Screen):
-    geometry_segments = []
-    previous_point = Point(-1250, -2500)
+    geometry_segments = [Segment(Point(-1300, -2500), Point(0, 0))]
+    previous_point = None
 
     def __init__(self, **kwargs):
         super(TraceScreenClass, self).__init__(**kwargs)
@@ -182,6 +207,15 @@ class TraceScreenClass(Screen):
             widget_virtual_bed.VirtualBed(machine=self.m, screen_manager=self.sm)
         )
 
+    def exit(self):
+        self.sm.current = 'lobby'
+        self.clear()
+
+    def clear(self):
+        self.geometry_segments = []
+        self.previous_point = None
+        self.svg_container.clear_widgets()
+
     def home(self):
         self.m.request_homing_procedure('trace', 'trace')
 
@@ -197,12 +231,16 @@ class TraceScreenClass(Screen):
         new_point = self.capture_point()
         if new_point:
             if self.previous_point and self.previous_point.__str__() != new_point.__str__():
+                if not self.previous_point:
+                    self.previous_point = new_point
                 self.geometry_segments.append(Segment(self.previous_point, new_point))
             self.previous_point = new_point
-        if self.geometry_continuous():
-            self.print_geometry()
-        else:
-            print("Break in geometry")
+        self.plot_geometry()
+
+    def close_contour(self):
+        if self.previous_point:
+            self.geometry_segments.append(Segment(self.previous_point, self.geometry_segments[0].get_start(invert_xy=True)))
+        self.plot_geometry()
 
     def geometry_continuous(self):
         previous_segment = None
@@ -218,7 +256,10 @@ class TraceScreenClass(Screen):
             print(segment)
 
     def build_svg_string(self):
-        dwg = svgwrite.Drawing(filename="geometry.svg", size=('2500mm', '1250mm'), viewBox=('0 0 2500 1250'))
+        if not self.geometry_segments:
+            return
+
+        dwg = svgwrite.Drawing(filename="geometry.svg", size=('2500mm', '1300mm'), viewBox='0 0 2500 1300')
 
         path_data = []
         start_point = self.geometry_segments[0].get_start()
@@ -228,20 +269,62 @@ class TraceScreenClass(Screen):
             path_data.append(segment.build_svg_string())
 
         path_string = " ".join(path_data)
-        path = dwg.path(d=path_string, fill='none', stroke='blue', stroke_width=5)
+        path = dwg.path(d=path_string, fill='yellow', stroke='blue', stroke_width=5)
         dwg.add(path)
 
         dwg.save()
-        self.display_svg()
+        self.plot_geometry()
         return dwg.tostring()
 
     def print_svg_string(self):
         print(self.build_svg_string())
 
-    def display_svg(self):
-        # Clear the svg_container before adding new content
+    def plot_geometry(self):
+        if not self.geometry_segments:
+            return
+
+        # Build path data for matplotlib
+        vertices = []
+        codes = []
+
+        start_point = self.geometry_segments[0].get_start()
+        x, y = start_point.x, start_point.y
+        vertices.append((x, y))
+        codes.append(Path.MOVETO)
+
+        for segment in self.geometry_segments:
+            segment_points, segment_codes = segment.get_matplotlib_data()
+            vertices.extend(segment_points)
+            codes.extend(segment_codes)
+
+        vertices = [(2500 - v[0], 1300 - v[1]) for v in vertices]  # Flip axes for matplotlib
+        path = Path(vertices, codes)
+
+        fig, ax = plt.subplots()
+        patch = patches.PathPatch(path, facecolor='yellow', edgecolor='blue', linewidth=3)
+
+        ax.add_patch(patch)
+        ax.set_xlim(0, 2500)
+        ax.set_ylim(0, 1300)
+        ax.set_aspect('equal')
+        # plt.gca().invert_yaxis()
+        plt.gca().invert_xaxis()
+
+        # Save the plot as a PNG file
+        fig.savefig('geometry.png', dpi=300, bbox_inches='tight', transparent=True)
+        plt.close(fig)
+
+        # Display the PNG in the Kivy widget
+        self.display_png()
+
+    def display_png(self):
+        # Remove any existing images
         self.svg_container.clear_widgets()
 
-        # Add the SVG file using the Svg class
-        with self.svg_container.canvas:
-            svg = Svg("geometry.svg")
+        # Create an Image widget to display the PNG
+        img = Image(source='geometry.png')
+
+        # Reload the image to ensure it updates
+        img.reload()
+
+        self.svg_container.add_widget(img)
