@@ -16,7 +16,8 @@ from asmcnc.skavaUI import popup_info
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivy.uix.image import Image
-from kivy.clock import Clock
+from kivy.uix.label import Label
+from kivy.uix.button import Button
 
 Builder.load_string("""
 #:import color_provider asmcnc.core_UI.utils.color_provider
@@ -97,6 +98,22 @@ Builder.load_string("""
                 size_hint_y: 0.5
                 font_size: sp(38)
                 on_press: root.stop()
+                
+            # Point display
+            BoxLayout:
+                orientation: 'vertical'
+                
+                Label:
+                    text: 'Recent points'
+                    font_size: sp(20)
+                    color: color_provider.get_rgba('black')
+                    size_hint_y: 0.3
+
+                BoxLayout:
+                    id: recent_points_container
+                    orientation: 'horizontal'
+                    size_hint_x: 1
+                    size_hint_y: 0.5
                 
         # SVG container
         BoxLayout:
@@ -238,6 +255,8 @@ class TraceScreenClass(Screen):
             widget_virtual_bed.VirtualBed(machine=self.m,  screen_manager=self.sm)
         )
 
+        self.clear()
+
     def exit(self):
         self.sm.current = 'lobby'
         self.clear()
@@ -246,6 +265,9 @@ class TraceScreenClass(Screen):
         self.geometry_segments = []
         self.previous_point = None
         self.svg_container.clear_widgets()
+        self.svg_container.add_widget(Label(text='Awaiting geometry...', font_size=38, color=(0, 0, 0, 1)))
+        self.ids.recent_points_container.clear_widgets()
+        self.ids.recent_points_container.add_widget(Label(text='Awaiting geometry...', font_size=38, color=(0, 0, 0, 1)))
 
     def home(self):
         self.m.request_homing_procedure('trace', 'trace')
@@ -270,11 +292,49 @@ class TraceScreenClass(Screen):
                 self.geometry_segments.append(Segment(self.previous_point, new_point))
             self.previous_point = new_point
         self.plot_geometry()
+        self.display_recent_points()
+
+    def display_recent_points(self):
+        if not self.geometry_segments and not self.previous_point:
+            return
+
+        # Generate a list of the 3 most recent points
+        if len(self.geometry_segments) > 3:
+            recent_segments = self.geometry_segments[-3:]
+        else:
+            recent_segments = self.geometry_segments[-2:]
+            if not self.geometry_segments:
+                dummy_segment = Segment(Point(0, 0), self.previous_point)
+            else:
+                dummy_segment = Segment(Point(0, 0), self.geometry_segments[0].get_start())
+            dummy_segment.convert_to_svg_coordinate_space()
+            recent_segments.insert(0, dummy_segment)
+
+        # Display the points as buttons
+        self.ids.recent_points_container.clear_widgets()
+        for i, segment in enumerate(recent_segments):
+            # Capture the segment coordinates in the closure
+            end_point = segment.get_end()
+            x, y = -end_point.y, -end_point.x
+            move_function = self.get_move_func(x, y)
+
+            # Convert coordinates to display format
+            m_coordinates = 2502 - end_point.x, 1298 - end_point.y
+            button_text = "{}, {}".format(m_coordinates[0], m_coordinates[1])
+            button = Button(text=button_text, font_size=20, on_press=move_function)
+            self.ids.recent_points_container.add_widget(button)
+
+    def get_move_func(self, x, y):
+        def move(*args):
+            self.m.s.write_command('G0 G53 X{} Y{} F8000'.format(x, y))
+
+        return move
 
     def close_contour(self):
         if self.previous_point:
             self.geometry_segments.append(Segment(self.previous_point, self.geometry_segments[0].get_start(invert_xy=True)))
         self.plot_geometry()
+        self.display_recent_points()
 
     def geometry_continuous(self):
         previous_segment = None
