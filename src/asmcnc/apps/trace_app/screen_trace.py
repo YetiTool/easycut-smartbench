@@ -298,15 +298,14 @@ class TraceScreenClass(Screen):
         if not self.geometry_segments and not self.previous_point:
             return
 
-        # Generate a list of the 3 most recent points
-        if len(self.geometry_segments) > 3:
-            recent_segments = self.geometry_segments[-3:]
-        else:
-            recent_segments = self.geometry_segments[-2:]
-            if not self.geometry_segments:
-                dummy_segment = Segment(Point(0, 0), self.previous_point)
-            else:
+        recent_segments = self.geometry_segments[-3:]
+
+        # If there are fewer than 3 segments, prepend a dummy segment
+        if len(recent_segments) < 3:
+            if self.geometry_segments:
                 dummy_segment = Segment(Point(0, 0), self.geometry_segments[0].get_start())
+            else:
+                dummy_segment = Segment(Point(0, 0), self.previous_point)
             dummy_segment.convert_to_svg_coordinate_space()
             recent_segments.insert(0, dummy_segment)
 
