@@ -300,7 +300,7 @@ class TraceScreenClass(Screen):
 
         recent_segments = self.geometry_segments[-3:]
 
-        # If there are fewer than 3 segments, prepend a dummy segment
+        # If there are fewer than 3 segments, prepend a dummy segment from the first point
         if len(recent_segments) < 3:
             if self.geometry_segments:
                 dummy_segment = Segment(Point(0, 0), self.geometry_segments[0].get_start())
