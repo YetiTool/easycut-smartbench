@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib.path import Path
 
-from src.asmcnc.apps.trace_app import widget_xy_move_trace
-from src.asmcnc.skavaUI import widget_virtual_bed
+from asmcnc.apps.trace_app import widget_xy_move_trace
+from asmcnc.skavaUI import widget_virtual_bed
 from asmcnc.skavaUI import popup_info
 
 from kivy.lang import Builder
@@ -96,6 +96,7 @@ Builder.load_string("""
                 text: 'Stop'
                 size_hint_x: 1
                 size_hint_y: 0.5
+                
                 font_size: sp(38)
                 on_press: root.stop()
                 
@@ -107,13 +108,15 @@ Builder.load_string("""
                     text: 'Recent points'
                     font_size: sp(20)
                     color: color_provider.get_rgba('black')
-                    size_hint_y: 0.3
+                    size_hint_y: None
+                    height: dp(0.08 * app.height)
 
                 BoxLayout:
                     id: recent_points_container
                     orientation: 'horizontal'
                     size_hint_x: 1
-                    size_hint_y: 0.5
+                    size_hint_y: None
+                    height: dp(0.08 * app.height)
                 
         # SVG container
         BoxLayout:
@@ -169,8 +172,8 @@ Builder.load_string("""
 
 class Point:
     def __init__(self, x, y):
-        self.x = int(x)
-        self.y = int(y)
+        self.x = round(x, 1)
+        self.y = round(y, 1)
 
     def __str__(self):
         return "({}, {})".format(self.x, self.y)
@@ -267,7 +270,7 @@ class TraceScreenClass(Screen):
         self.svg_container.clear_widgets()
         self.svg_container.add_widget(Label(text='Awaiting geometry...', font_size=38, color=(0, 0, 0, 1)))
         self.ids.recent_points_container.clear_widgets()
-        self.ids.recent_points_container.add_widget(Label(text='Awaiting geometry...', font_size=38, color=(0, 0, 0, 1)))
+        self.ids.recent_points_container.add_widget(Label(text='Awaiting geometry...', font_size=20, color=(0, 0, 0, 1)))
 
     def home(self):
         self.m.request_homing_procedure('trace', 'trace')
@@ -318,7 +321,7 @@ class TraceScreenClass(Screen):
             move_function = self.get_move_func(x, y)
 
             # Convert coordinates to display format
-            m_coordinates = 2502 - end_point.x, 1298 - end_point.y
+            m_coordinates = int(2502 - end_point.x), int(1298 - end_point.y)
             button_text = "{}, {}".format(m_coordinates[0], m_coordinates[1])
             button = Button(text=button_text, font_size=20, on_press=move_function)
             self.ids.recent_points_container.add_widget(button)
