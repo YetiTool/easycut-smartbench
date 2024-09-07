@@ -257,9 +257,9 @@ class TraceScreenClass(Screen):
         self.joystick_y_value = 0.0
         self.joystick_jog_feedrate = 0
         self.joystick_max_feed = 8000
-        self.movement_vector_max = 30
-        self.joystick_raw_deadzone = 500
-        jog_command_interval = 0.3
+        self.movement_vector_max = 20
+        self.joystick_raw_deadzone = 1000
+        jog_command_interval = 0.1
         # Jockstick smoothing
         self.joystick_x_values = []
         self.joystick_y_values = []
@@ -310,7 +310,7 @@ class TraceScreenClass(Screen):
         jog_y_dist = self.joystick_y_value * self.movement_vector_max
 
         if (self.m.s.m_state.lower() == 'idle' or self.m.s.m_state.lower() == 'jog') and self.sm.current == 'trace':
-            if abs(jog_x_dist) > 0.02 or abs(jog_y_dist) > 0.02:
+            if abs(jog_x_dist) > 0.05 or abs(jog_y_dist) > 0.05:
                 jog_command = "$J=G91 X{:.2f} Y{:.2f} F{}".format(jog_x_dist, jog_y_dist, self.joystick_jog_feedrate)
                 self.m.s.write_command(jog_command)
 
