@@ -277,6 +277,9 @@ class TraceScreenClass(Screen):
 
         self.clear()
 
+    def on_enter(self):
+        self.m.laser_on()
+
     def on_joy_axis(self, window, stick_id, axis_id, value):
         # Axis 1 is the X axis, axis 0 is the Y axis
         if axis_id == 1:
@@ -314,6 +317,7 @@ class TraceScreenClass(Screen):
             self.exit()
 
     def exit(self):
+        self.m.laser_off()
         self.sm.current = 'lobby'
         self.joystick_x_pos, self.joystick_y_pos = 0, 0
         self.clear()
