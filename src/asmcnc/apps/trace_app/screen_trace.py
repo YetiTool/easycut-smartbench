@@ -298,8 +298,8 @@ class TraceScreenClass(Screen):
         self.joystick_y_value = -self.joystick_y_value
 
         # Smooth joystick input
-        self.joystick_x_value = self.smooth_joystick_input(self.joystick_x_values, self.joystick_x_value)
-        self.joystick_y_value = self.smooth_joystick_input(self.joystick_y_values, self.joystick_y_value)
+        # self.joystick_x_value = self.smooth_joystick_input(self.joystick_x_values, self.joystick_x_value)
+        # self.joystick_y_value = self.smooth_joystick_input(self.joystick_y_values, self.joystick_y_value)
 
         # Calculate feed rate based on joystick throw
         self.joystick_jog_feedrate = int((abs(self.joystick_x_value) + abs(self.joystick_y_value)) * self.joystick_max_feed)
