@@ -7,6 +7,7 @@ Trace app concept screen
 import svgwrite
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+from kivy.clock import Clock
 from matplotlib.path import Path
 
 from asmcnc.apps.trace_app import widget_xy_move_trace
@@ -18,6 +19,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.button import Button
+from kivy.core.window import Window
 
 Builder.load_string("""
 #:import color_provider asmcnc.core_UI.utils.color_provider
@@ -249,19 +251,71 @@ class TraceScreenClass(Screen):
         self.l = kwargs["localization"]
         self.cs = self.m.cs
 
+        # Joystick variables
+        self.joystick_axis_max = 32768
+        self.joystick_x_value = 0.0
+        self.joystick_y_value = 0.0
+        self.joystick_jog_feedrate = 0
+        self.joystick_max_feed = 8000
+        self.movement_vector_max = 15
+        self.joystick_raw_deadzone = 100
+        jog_command_interval = 0.2
+
         # Widgets
         self.xy_move_widget = widget_xy_move_trace.XYMoveTrace(
             machine=self.m, localization=self.l, screen_manager=self.sm
         )
         self.xy_move_container.add_widget(self.xy_move_widget)
         self.virtual_bed_container.add_widget(
-            widget_virtual_bed.VirtualBed(machine=self.m,  screen_manager=self.sm)
+            widget_virtual_bed.VirtualBed(machine=self.m, screen_manager=self.sm)
         )
+
+        Window.bind(on_joy_axis=self.on_joy_axis)
+        Clock.schedule_interval(self.send_joystick_jog_command, jog_command_interval)
+
+        Window.bind(on_joy_button_down=self.on_joy_button_down)
 
         self.clear()
 
+    def on_joy_axis(self, window, stick_id, axis_id, value):
+        # Axis 1 is the X axis, axis 0 is the Y axis
+        if axis_id == 1:
+            self.joystick_x_value = (float(value) / self.joystick_axis_max) if abs(value) > self.joystick_raw_deadzone else 0
+        elif axis_id == 0:
+            self.joystick_y_value = (float(value) / self.joystick_axis_max) if abs(value) > self.joystick_raw_deadzone else 0
+        else:
+            return # Ignore other axes
+
+        # Invert axes
+        self.joystick_x_value = -self.joystick_x_value
+        self.joystick_y_value = -self.joystick_y_value
+
+        # Calculate feed rate based on joystick throw
+        self.joystick_jog_feedrate = int((abs(self.joystick_x_value) + abs(self.joystick_y_value)) * self.joystick_max_feed)
+        self.joystick_jog_feedrate = max(min(self.joystick_jog_feedrate, self.joystick_max_feed), 0)
+
+    def send_joystick_jog_command(self, *args):
+        jog_x_dist = self.joystick_x_value * self.movement_vector_max
+        jog_y_dist = self.joystick_y_value * self.movement_vector_max
+
+        if (self.m.s.m_state.lower() == 'idle' or self.m.s.m_state.lower() == 'jog') and self.sm.current == 'trace':
+            if abs(jog_x_dist) > 0.02 or abs(jog_y_dist) > 0.02:
+                jog_command = "$J=G91 X{:.2f} Y{:.2f} F{}".format(jog_x_dist, jog_y_dist, self.joystick_jog_feedrate)
+                self.m.s.write_command(jog_command)
+
+    def on_joy_button_down(self, window, stick_id, button_id):
+        if button_id == 0:
+            self.add_segment()
+        elif button_id == 1:
+            self.close_contour()
+        elif button_id == 2:
+            self.clear()
+        elif button_id == 3:
+            self.exit()
+
     def exit(self):
         self.sm.current = 'lobby'
+        self.joystick_x_pos, self.joystick_y_pos = 0, 0
         self.clear()
 
     def clear(self):
@@ -270,7 +324,8 @@ class TraceScreenClass(Screen):
         self.svg_container.clear_widgets()
         self.svg_container.add_widget(Label(text='Awaiting geometry...', font_size=38, color=(0, 0, 0, 1)))
         self.ids.recent_points_container.clear_widgets()
-        self.ids.recent_points_container.add_widget(Label(text='Awaiting geometry...', font_size=20, color=(0, 0, 0, 1)))
+        self.ids.recent_points_container.add_widget(
+            Label(text='Awaiting geometry...', font_size=20, color=(0, 0, 0, 1)))
 
     def home(self):
         self.m.request_homing_procedure('trace', 'trace')
@@ -334,7 +389,8 @@ class TraceScreenClass(Screen):
 
     def close_contour(self):
         if self.previous_point:
-            self.geometry_segments.append(Segment(self.previous_point, self.geometry_segments[0].get_start(invert_xy=True)))
+            self.geometry_segments.append(
+                Segment(self.previous_point, self.geometry_segments[0].get_start(invert_xy=True)))
         self.plot_geometry()
         self.display_recent_points()
 
