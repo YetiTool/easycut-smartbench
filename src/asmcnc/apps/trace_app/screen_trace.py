@@ -257,8 +257,8 @@ class TraceScreenClass(Screen):
         self.joystick_y_value = 0.0
         self.joystick_jog_feedrate = 0
         self.joystick_max_feed = 8000
-        self.movement_vector_max = 25
-        self.joystick_raw_deadzone = 250
+        self.movement_vector_max = 30
+        self.joystick_raw_deadzone = 500
         jog_command_interval = 0.3
 
         # Widgets
