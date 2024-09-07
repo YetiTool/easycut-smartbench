@@ -260,6 +260,10 @@ class TraceScreenClass(Screen):
         self.movement_vector_max = 30
         self.joystick_raw_deadzone = 500
         jog_command_interval = 0.3
+        # Jockstick smoothing
+        self.joystick_x_values = []
+        self.joystick_y_values = []
+        self.smoothing_window_size = 5
 
         # Widgets
         self.xy_move_widget = widget_xy_move_trace.XYMoveTrace(
@@ -293,6 +297,10 @@ class TraceScreenClass(Screen):
         self.joystick_x_value = -self.joystick_x_value
         self.joystick_y_value = -self.joystick_y_value
 
+        # Smooth joystick input
+        self.joystick_x_value = self.smooth_joystick_input(self.joystick_x_values, self.joystick_x_value)
+        self.joystick_y_value = self.smooth_joystick_input(self.joystick_y_values, self.joystick_y_value)
+
         # Calculate feed rate based on joystick throw
         self.joystick_jog_feedrate = int((abs(self.joystick_x_value) + abs(self.joystick_y_value)) * self.joystick_max_feed)
         self.joystick_jog_feedrate = max(min(self.joystick_jog_feedrate, self.joystick_max_feed), 0)
@@ -305,6 +313,12 @@ class TraceScreenClass(Screen):
             if abs(jog_x_dist) > 0.02 or abs(jog_y_dist) > 0.02:
                 jog_command = "$J=G91 X{:.2f} Y{:.2f} F{}".format(jog_x_dist, jog_y_dist, self.joystick_jog_feedrate)
                 self.m.s.write_command(jog_command)
+
+    def smooth_joystick_input(self, value_list, new_value):
+        value_list.append(new_value)
+        if len(value_list) > self.smoothing_window_size:
+            value_list.pop(0)
+        return sum(value_list) / len(value_list)
 
     def on_joy_button_down(self, window, stick_id, button_id):
         if button_id == 0:
