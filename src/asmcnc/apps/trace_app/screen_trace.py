@@ -366,8 +366,8 @@ class TraceScreenClass(Screen):
 
     def on_joy_button_down(self, window, stick_id, button_id):
         if button_id == 0:
-            self.joystick_max_feed = 1000
-            # self.add_segment()
+            self.joystick_max_feed = 1000  # Slow down the feedrate for more accurate point capture
+            self.movement_vector_max = 20.0 / 8  # Decrease the movement size
         # elif button_id == 1:
         #     # self.close_contour()
         # elif button_id == 2:
@@ -380,6 +380,7 @@ class TraceScreenClass(Screen):
     def on_joy_button_up(self, window, stick_id, button_id):
         if button_id == 0:
             self.joystick_max_feed = 8000
+            self.movement_vector_max = 20
 
 
     def exit(self):
