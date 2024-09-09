@@ -311,7 +311,7 @@ class TraceScreenClass(Screen):
 
         if (self.m.s.m_state.lower() == 'idle' or self.m.s.m_state.lower() == 'jog') and self.sm.current == 'trace' and not self.in_cooloff:
             if self.joystick_jog_feedrate > 0:
-                jog_command = "$J=G53 X{:.2f} Y{:.2f} F{}".format(jog_x_dist, jog_y_dist, self.joystick_jog_feedrate)
+                jog_command = "$J=G91 X{:.2f} Y{:.2f} F{}".format(jog_x_dist, jog_y_dist, self.joystick_jog_feedrate)
                 self.m.s.write_command(jog_command)
 
         self.update_joystick_cooloff()
