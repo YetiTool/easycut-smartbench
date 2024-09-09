@@ -277,7 +277,6 @@ class TraceScreenClass(Screen):
 
         Window.bind(on_joy_axis=self.on_joy_axis)
         Clock.schedule_interval(self.send_joystick_jog_command, self.jog_command_interval)
-        # Clock.schedule_interval(self.update_joystick_cooloff, self.jog_command_interval)
 
         Window.bind(on_joy_button_down=self.on_joy_button_down)
 
@@ -324,7 +323,7 @@ class TraceScreenClass(Screen):
         if self.joystick_cooloff_value > self.joystick_cooloff_max:
             self.joystick_x_value, self.joystick_y_value = 0, 0
             self.joystick_jog_feedrate = 0
-            if self.m.s.m_state.lower() == 'jog':
+            if self.m.s.m_state.lower() == 'jog' and self.sm.current == 'trace':
                 self.in_cooloff = True
                 self.m.quit_jog()
 
