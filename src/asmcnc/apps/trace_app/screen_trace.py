@@ -260,10 +260,9 @@ class TraceScreenClass(Screen):
         self.movement_vector_max = 20
         self.joystick_raw_deadzone = 1000
         jog_command_interval = 0.1
-        # Jockstick smoothing
+        # Joystick smoothing
         self.joystick_x_values = []
         self.joystick_y_values = []
-        self.smoothing_window_size = 5
 
         # Widgets
         self.xy_move_widget = widget_xy_move_trace.XYMoveTrace(
@@ -291,15 +290,11 @@ class TraceScreenClass(Screen):
         elif axis_id == 0:
             self.joystick_y_value = (float(value) / self.joystick_axis_max) if abs(value) > self.joystick_raw_deadzone else 0
         else:
-            return # Ignore other axes
+            return  # Ignore other axes
 
         # Invert axes
         self.joystick_x_value = -self.joystick_x_value
         self.joystick_y_value = -self.joystick_y_value
-
-        # Smooth joystick input
-        # self.joystick_x_value = self.smooth_joystick_input(self.joystick_x_values, self.joystick_x_value)
-        # self.joystick_y_value = self.smooth_joystick_input(self.joystick_y_values, self.joystick_y_value)
 
         # Calculate feed rate based on joystick throw
         self.joystick_jog_feedrate = int((abs(self.joystick_x_value) + abs(self.joystick_y_value)) * self.joystick_max_feed)
@@ -312,13 +307,8 @@ class TraceScreenClass(Screen):
         if (self.m.s.m_state.lower() == 'idle' or self.m.s.m_state.lower() == 'jog') and self.sm.current == 'trace':
             if abs(jog_x_dist) > 0.05 or abs(jog_y_dist) > 0.05:
                 jog_command = "$J=G91 X{:.2f} Y{:.2f} F{}".format(jog_x_dist, jog_y_dist, self.joystick_jog_feedrate)
-                self.m.s.write_command(jog_command)
-
-    def smooth_joystick_input(self, value_list, new_value):
-        value_list.append(new_value)
-        if len(value_list) > self.smoothing_window_size:
-            value_list.pop(0)
-        return sum(value_list) / len(value_list)
+                # self.m.s.write_command(jog_command)
+                print(jog_command)
 
     def on_joy_button_down(self, window, stick_id, button_id):
         if button_id == 0:
