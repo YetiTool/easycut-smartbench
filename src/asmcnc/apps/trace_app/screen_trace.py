@@ -306,8 +306,8 @@ class TraceScreenClass(Screen):
         self.joystick_jog_feedrate = max(min(self.joystick_jog_feedrate, self.joystick_max_feed), 0)
 
     def send_joystick_jog_command(self, *args):
-        jog_x_dist = self.m.x_min_jog_abs_limit if self.joystick_x_value < 0 else self.m.x_max_jog_abs_limit
-        jog_y_dist = self.m.y_min_jog_abs_limit if self.joystick_y_value < 0 else self.m.y_max_jog_abs_limit
+        jog_x_dist = self.joystick_x_value * self.movement_vector_max
+        jog_y_dist = self.joystick_y_value * self.movement_vector_max
 
         if (self.m.s.m_state.lower() == 'idle' or self.m.s.m_state.lower() == 'jog') and self.sm.current == 'trace' and not self.in_cooloff:
             if self.joystick_jog_feedrate > 0:
