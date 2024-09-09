@@ -366,15 +366,21 @@ class TraceScreenClass(Screen):
 
     def on_joy_button_down(self, window, stick_id, button_id):
         if button_id == 0:
-            self.add_segment()
-        elif button_id == 1:
-            self.close_contour()
-        elif button_id == 2:
-            self.clear()
-        elif button_id == 3:
-            self.exit()
-        elif button_id == 4:
-            self.run_through_points()
+            self.joystick_max_feed = 1000
+            # self.add_segment()
+        # elif button_id == 1:
+        #     # self.close_contour()
+        # elif button_id == 2:
+        #     # self.clear()
+        # elif button_id == 3:
+        #     self.exit()
+        # elif button_id == 4:
+        #     self.run_through_points()
+
+    def on_joy_button_up(self, window, stick_id, button_id):
+        if button_id == 0:
+            self.joystick_max_feed = 8000
+
 
     def exit(self):
         self.m.laser_off()
