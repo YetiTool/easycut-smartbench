@@ -261,7 +261,7 @@ class TraceScreenClass(Screen):
         self.joystick_raw_deadzone = 1000
         self.joystick_cooloff_time = 1
         self.joystick_cooloff_value = 0
-        self.jog_command_interval = 1
+        self.jog_command_interval = 0.3
         self.in_cooloff = False
 
         self.joystick_cooloff_max = self.joystick_cooloff_time / self.jog_command_interval
@@ -305,8 +305,6 @@ class TraceScreenClass(Screen):
         # Calculate feed rate based on joystick throw
         self.joystick_jog_feedrate = int((abs(self.joystick_x_value) + abs(self.joystick_y_value)) * self.joystick_max_feed)
         self.joystick_jog_feedrate = max(min(self.joystick_jog_feedrate, self.joystick_max_feed), 0)
-
-        self.send_joystick_jog_command()
 
     def send_joystick_jog_command(self, *args):
         jog_x_dist = self.joystick_x_value * self.movement_vector_max
