@@ -268,12 +268,15 @@ class TraceScreenClass(Screen):
         self.joystick_x_value = 0.0
         self.joystick_y_value = 0.0
         self.joystick_jog_feedrate = 0
+        self.slowness_factor = 8
         self.joystick_max_feed = 8000
-        self.movement_vector_max = 20
+        self.joystick_current_max_feed = self.joystick_max_feed
+        self.movement_vector_max = 5
+        self.movement_vector_current_max = self.movement_vector_max
         self.joystick_raw_deadzone = self.joystick_axis_max / 2 + 1000
         self.joystick_cooloff_time = 0.5
         self.joystick_cooloff_value = 0
-        self.jog_command_interval = 0.2
+        self.jog_command_interval = 0.1
         self.in_cooloff = False
 
         self.joystick_cooloff_max = self.joystick_cooloff_time / self.jog_command_interval
@@ -355,32 +358,24 @@ class TraceScreenClass(Screen):
             self.m.quit_jog()
             return
 
-        jog_x_dist = joystick_x * self.movement_vector_max
-        jog_y_dist = joystick_y * self.movement_vector_max
+        jog_x_dist = joystick_x * self.movement_vector_current_max
+        jog_y_dist = joystick_y * self.movement_vector_current_max
 
-        self.joystick_jog_feedrate = int((abs(joystick_x) + abs(joystick_y)) * self.joystick_max_feed)
-        self.joystick_jog_feedrate = max(min(self.joystick_jog_feedrate, self.joystick_max_feed), 0)
+        self.joystick_jog_feedrate = int((abs(joystick_x) + abs(joystick_y)) * self.joystick_current_max_feed)
+        self.joystick_jog_feedrate = max(min(self.joystick_jog_feedrate, self.joystick_current_max_feed), 0)
 
         jog_command = "$J=G91 X{:.2f} Y{:.2f} F{}".format(jog_x_dist, jog_y_dist, self.joystick_jog_feedrate)
         self.m.s.write_command(jog_command)
 
     def on_joy_button_down(self, window, stick_id, button_id):
         if button_id == 0:
-            self.joystick_max_feed = 1000  # Slow down the feedrate for more accurate point capture
-            self.movement_vector_max = 20.0 / 8  # Decrease the movement size
-        # elif button_id == 1:
-        #     # self.close_contour()
-        # elif button_id == 2:
-        #     # self.clear()
-        # elif button_id == 3:
-        #     self.exit()
-        # elif button_id == 4:
-        #     self.run_through_points()
+            self.joystick_current_max_feed = self.joystick_max_feed / self.slowness_factor
+            self.movement_vector_current_max = self.movement_vector_max / self.slowness_factor
 
     def on_joy_button_up(self, window, stick_id, button_id):
         if button_id == 0:
-            self.joystick_max_feed = 8000
-            self.movement_vector_max = 20
+            self.joystick_current_max_feed = self.joystick_max_feed
+            self.movement_vector_current_max = self.movement_vector_max
 
 
     def exit(self):
