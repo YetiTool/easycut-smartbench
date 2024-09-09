@@ -288,6 +288,7 @@ class TraceScreenClass(Screen):
 
     def on_joy_axis(self, window, stick_id, axis_id, value):
         self.reset_joystick_cooloff()
+        self.in_cooloff = False
 
         # Axis 1 is the X axis, axis 0 is the Y axis
         if axis_id == 1:
