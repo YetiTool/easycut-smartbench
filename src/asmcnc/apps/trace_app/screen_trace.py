@@ -259,7 +259,7 @@ class TraceScreenClass(Screen):
         self.joystick_max_feed = 8000
         self.movement_vector_max = 60
         self.joystick_raw_deadzone = 1000
-        self.joystick_cooloff_time = 1
+        self.joystick_cooloff_time = 0.5
         self.joystick_cooloff_value = 0
         self.jog_command_interval = 0.3
         self.in_cooloff = False
@@ -311,7 +311,7 @@ class TraceScreenClass(Screen):
         jog_y_dist = self.m.y_min_jog_abs_limit if self.joystick_y_value < 0 else self.m.y_max_jog_abs_limit
 
         if (self.m.s.m_state.lower() == 'idle' or self.m.s.m_state.lower() == 'jog') and self.sm.current == 'trace' and not self.in_cooloff:
-            if abs(jog_x_dist) > 0.05 or abs(jog_y_dist) > 0.05:
+            if self.joystick_jog_feedrate > 0:
                 jog_command = "$J=G91 X{:.2f} Y{:.2f} F{}".format(jog_x_dist, jog_y_dist, self.joystick_jog_feedrate)
                 self.m.s.write_command(jog_command)
 
