@@ -465,9 +465,7 @@ class TraceScreenClass(Screen):
         return move
 
     def run_through_points(self):
-        geometry_segments = self.geometry_segments
-        geometry_segments.append(Segment(self.previous_point, self.geometry_segments[0].get_start()))
-        for segment in geometry_segments:
+        for segment in self.geometry_segments:
             end_point = segment.get_end()
             x, y = -end_point.y, -end_point.x
             self.m.s.write_command('G0 G53 X{} Y{} F8000'.format(x, y))
