@@ -272,7 +272,7 @@ class TraceScreenClass(Screen):
         self.slow = False
         self.joystick_max_feed = 8000
         self.joystick_current_max_feed = self.joystick_max_feed
-        self.movement_vector_max = 3
+        self.movement_vector_max = 5
         self.movement_vector_current_max = self.movement_vector_max
         self.joystick_raw_deadzone = self.joystick_axis_max / 2 + 1000
         self.joystick_cooloff_time = 0.5
