@@ -259,9 +259,10 @@ class TraceScreenClass(Screen):
         self.joystick_max_feed = 8000
         self.movement_vector_max = 20
         self.joystick_raw_deadzone = 1000
-        self.joystick_cooloff_time = 0.5
+        self.joystick_cooloff_time = 1
         self.joystick_cooloff_value = 0
         self.jog_command_interval = 0.1
+        self.in_cooloff = False
 
         self.joystick_cooloff_max = self.joystick_cooloff_time / self.jog_command_interval
 
@@ -276,7 +277,7 @@ class TraceScreenClass(Screen):
 
         Window.bind(on_joy_axis=self.on_joy_axis)
         Clock.schedule_interval(self.send_joystick_jog_command, self.jog_command_interval)
-        Clock.schedule_interval(self.update_joystick_cooloff, self.jog_command_interval)
+        # Clock.schedule_interval(self.update_joystick_cooloff, self.jog_command_interval)
 
         Window.bind(on_joy_button_down=self.on_joy_button_down)
 
@@ -310,10 +311,12 @@ class TraceScreenClass(Screen):
         jog_x_dist = self.joystick_x_value * self.movement_vector_max
         jog_y_dist = self.joystick_y_value * self.movement_vector_max
 
-        if (self.m.s.m_state.lower() == 'idle' or self.m.s.m_state.lower() == 'jog') and self.sm.current == 'trace':
+        if (self.m.s.m_state.lower() == 'idle' or self.m.s.m_state.lower() == 'jog') and self.sm.current == 'trace' and not self.in_cooloff:
             if abs(jog_x_dist) > 0.05 or abs(jog_y_dist) > 0.05:
                 jog_command = "$J=G91 X{:.2f} Y{:.2f} F{}".format(jog_x_dist, jog_y_dist, self.joystick_jog_feedrate)
                 self.m.s.write_command(jog_command)
+
+        self.update_joystick_cooloff()
 
     def update_joystick_cooloff(self, *args):
         """ Increment the joystick cooloff value """
@@ -323,6 +326,7 @@ class TraceScreenClass(Screen):
             self.joystick_x_value, self.joystick_y_value = 0, 0
             self.joystick_jog_feedrate = 0
             if self.m.s.m_state.lower() == 'jog':
+                self.in_cooloff = True
                 self.m.quit_jog()
 
     def reset_joystick_cooloff(self):
