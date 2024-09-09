@@ -354,7 +354,7 @@ class TraceScreenClass(Screen):
         joystick_y = -(float(self.VALUES_Y[3]) / self.joystick_axis_max) if abs(self.VALUES_Y[3]) > self.joystick_raw_deadzone else 0
 
         # If the joystick is in the deadzone, don't send any commands
-        if joystick_x == 0 and joystick_y == 0:
+        if joystick_x == 0 and joystick_y == 0 and not self.m.s.m_state.lower() == 'idle':
             self.m.quit_jog()
             return
 
