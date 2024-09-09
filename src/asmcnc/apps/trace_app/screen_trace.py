@@ -361,7 +361,7 @@ class TraceScreenClass(Screen):
         jog_x_dist = joystick_x * self.movement_vector_current_max
         jog_y_dist = joystick_y * self.movement_vector_current_max
 
-        if not(jog_x_dist > 0) and not(jog_y_dist > 0):
+        if not(abs(jog_x_dist) > 0) and not(abs(jog_y_dist) > 0):
             if self.m.s.m_state.lower() == 'jog':
                 self.m.quit_jog()
             return
