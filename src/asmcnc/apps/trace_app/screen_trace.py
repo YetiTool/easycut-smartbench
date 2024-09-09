@@ -339,6 +339,8 @@ class TraceScreenClass(Screen):
             self.clear()
         elif button_id == 3:
             self.exit()
+        elif button_id == 4:
+            self.run_through_points()
 
     def exit(self):
         self.m.laser_off()
@@ -414,6 +416,12 @@ class TraceScreenClass(Screen):
             self.m.s.write_command('G0 G53 X{} Y{} F8000'.format(x, y))
 
         return move
+
+    def run_through_points(self):
+        for segment in self.geometry_segments:
+            end_point = segment.get_end()
+            x, y = -end_point.y, -end_point.x
+            self.m.s.write_command('G0 G53 X{} Y{} F8000'.format(x, y))
 
     def close_contour(self):
         if self.previous_point:
