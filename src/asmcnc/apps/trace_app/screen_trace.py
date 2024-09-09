@@ -259,10 +259,12 @@ class TraceScreenClass(Screen):
         self.joystick_max_feed = 8000
         self.movement_vector_max = 20
         self.joystick_raw_deadzone = 1000
-        jog_command_interval = 0.1
-        # Joystick smoothing
-        self.joystick_x_values = []
-        self.joystick_y_values = []
+        self.joystick_cooloff_time = 0.5
+        self.joystick_cooloff_value = 0
+        self.jog_command_interval = 0.1
+
+        self.joystick_cooloff_max = self.joystick_cooloff_time / self.jog_command_interval
+
 
         # Widgets
         self.xy_move_widget = widget_xy_move_trace.XYMoveTrace(
@@ -274,7 +276,8 @@ class TraceScreenClass(Screen):
         )
 
         Window.bind(on_joy_axis=self.on_joy_axis)
-        Clock.schedule_interval(self.send_joystick_jog_command, jog_command_interval)
+        Clock.schedule_interval(self.send_joystick_jog_command, self.jog_command_interval)
+        Clock.schedule_interval(self.update_joystick_cooloff, self.jog_command_interval)
 
         Window.bind(on_joy_button_down=self.on_joy_button_down)
 
@@ -300,6 +303,10 @@ class TraceScreenClass(Screen):
         self.joystick_jog_feedrate = int((abs(self.joystick_x_value) + abs(self.joystick_y_value)) * self.joystick_max_feed)
         self.joystick_jog_feedrate = max(min(self.joystick_jog_feedrate, self.joystick_max_feed), 0)
 
+        self.send_joystick_jog_command()
+
+        self.reset_joystick_cooloff()
+
     def send_joystick_jog_command(self, *args):
         jog_x_dist = self.joystick_x_value * self.movement_vector_max
         jog_y_dist = self.joystick_y_value * self.movement_vector_max
@@ -309,6 +316,19 @@ class TraceScreenClass(Screen):
                 jog_command = "$J=G91 X{:.2f} Y{:.2f} F{}".format(jog_x_dist, jog_y_dist, self.joystick_jog_feedrate)
                 # self.m.s.write_command(jog_command)
                 print(jog_command)
+
+    def update_joystick_cooloff(self, *args):
+        """ Increment the joystick cooloff value """
+        self.joystick_cooloff_value += 1
+
+        if self.joystick_cooloff_value > self.joystick_cooloff_max:
+            self.joystick_x_value, self.joystick_y_value = 0, 0
+            self.joystick_jog_feedrate = 0
+            if self.m.s.m_state.lower() == 'jog':
+                self.m.quit_jog()
+
+    def reset_joystick_cooloff(self):
+        self.joystick_cooloff_value = 0
 
     def on_joy_button_down(self, window, stick_id, button_id):
         if button_id == 0:
