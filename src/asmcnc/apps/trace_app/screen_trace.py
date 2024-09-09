@@ -269,6 +269,7 @@ class TraceScreenClass(Screen):
         self.joystick_y_value = 0.0
         self.joystick_jog_feedrate = 0
         self.slowness_factor = 4
+        self.slow = False
         self.joystick_max_feed = 8000
         self.joystick_current_max_feed = self.joystick_max_feed
         self.movement_vector_max = 5
@@ -374,13 +375,14 @@ class TraceScreenClass(Screen):
 
     def on_joy_button_down(self, window, stick_id, button_id):
         if button_id == 0:
-            self.joystick_current_max_feed = self.joystick_max_feed / self.slowness_factor
-            self.movement_vector_current_max = self.movement_vector_max / self.slowness_factor
+            if self.slow:
+                self.joystick_current_max_feed = self.joystick_max_feed / self.slowness_factor
+                self.movement_vector_current_max = self.movement_vector_max / self.slowness_factor
+            else:
+                self.joystick_current_max_feed = self.joystick_max_feed
+                self.movement_vector_current_max = self.movement_vector_max
 
-    def on_joy_button_up(self, window, stick_id, button_id):
-        if button_id == 0:
-            self.joystick_current_max_feed = self.joystick_max_feed
-            self.movement_vector_current_max = self.movement_vector_max
+            self.slow = not self.slow
 
 
     def exit(self):
