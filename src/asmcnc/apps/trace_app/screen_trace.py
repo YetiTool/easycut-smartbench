@@ -361,6 +361,11 @@ class TraceScreenClass(Screen):
         jog_x_dist = joystick_x * self.movement_vector_current_max
         jog_y_dist = joystick_y * self.movement_vector_current_max
 
+        if not(jog_x_dist > 0) and not(jog_y_dist > 0):
+            if self.m.s.m_state.lower() == 'jog':
+                self.m.quit_jog()
+            return
+
         self.joystick_jog_feedrate = int((abs(joystick_x) + abs(joystick_y)) * self.joystick_current_max_feed)
         self.joystick_jog_feedrate = max(min(self.joystick_jog_feedrate, self.joystick_current_max_feed), 0)
 
