@@ -347,7 +347,7 @@ class TraceScreenClass(Screen):
         # print(self.VALUES_X, self.VALUES_Y)
 
     def send_joystick_jog_command(self, *args):
-        if len(self.VALUES_X) < 4 or len(self.VALUES_Y) < 4:
+        if len(self.VALUES_X) < 4 or len(self.VALUES_Y) < 4 or self.sm.current != 'trace':
             return
 
         # Capture values quickly
@@ -374,7 +374,9 @@ class TraceScreenClass(Screen):
         self.m.s.write_command(jog_command)
 
     def on_joy_button_down(self, window, stick_id, button_id):
-        if button_id == 0:
+        if button_id == 0: # A button
+            self.add_segment()
+        elif button_id == 1: # B button
             if self.slow:
                 self.joystick_current_max_feed = self.joystick_max_feed / self.slowness_factor
                 self.movement_vector_current_max = self.movement_vector_max / self.slowness_factor
@@ -383,12 +385,14 @@ class TraceScreenClass(Screen):
                 self.movement_vector_current_max = self.movement_vector_max
 
             self.slow = not self.slow
-
+        elif button_id == 2:  # X button
+            self.close_contour()
+        elif button_id == 3:  # Y button
+            self.run_through_points()
 
     def exit(self):
         self.m.laser_off()
         self.sm.current = 'lobby'
-        self.joystick_x_pos, self.joystick_y_pos = 0, 0
         self.clear()
 
     def clear(self):
