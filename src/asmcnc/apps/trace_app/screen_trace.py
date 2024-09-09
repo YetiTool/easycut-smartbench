@@ -8,6 +8,7 @@ import svgwrite
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from kivy.clock import Clock
+from kivy.properties import ListProperty, ObjectProperty
 from matplotlib.path import Path
 
 from asmcnc.apps.trace_app import widget_xy_move_trace
@@ -168,7 +169,6 @@ Builder.load_string("""
                     Rectangle:
                         size: self.size
                         pos: self.pos
-        
 """)
 
 
@@ -244,6 +244,18 @@ class TraceScreenClass(Screen):
     geometry_segments = [Segment(Point(-1300, -2500), Point(0, 0))]
     previous_point = None
 
+    # fire / trigger axis
+    FIRE = (2, 5)
+    STOP_FIRE = -32767
+
+    # min value for user to actually trigger axis
+    OFFSET = 15000
+
+    # current values + event instance
+    VALUES_X = ListProperty([])
+    VALUES_Y = ListProperty([])
+    HOLD = ObjectProperty(None)
+
     def __init__(self, **kwargs):
         super(TraceScreenClass, self).__init__(**kwargs)
         self.m = kwargs["machine"]
@@ -252,13 +264,13 @@ class TraceScreenClass(Screen):
         self.cs = self.m.cs
 
         # Joystick variables
-        self.joystick_axis_max = 32768
+        self.joystick_axis_max = 32768.0
         self.joystick_x_value = 0.0
         self.joystick_y_value = 0.0
         self.joystick_jog_feedrate = 0
         self.joystick_max_feed = 8000
-        self.movement_vector_max = 60
-        self.joystick_raw_deadzone = 1000
+        self.movement_vector_max = 30
+        self.joystick_raw_deadzone = self.joystick_axis_max / 2 + 200
         self.joystick_cooloff_time = 0.5
         self.joystick_cooloff_value = 0
         self.jog_command_interval = 0.3
@@ -285,50 +297,72 @@ class TraceScreenClass(Screen):
     def on_enter(self):
         self.m.laser_on()
 
-    def on_joy_axis(self, window, stick_id, axis_id, value):
-        self.reset_joystick_cooloff()
-        self.in_cooloff = False
+    # def on_joy_axis(self, window, stick_id, axis_id, value):
+    #     # Assign values quickly
+    #
+    #     # Axis 1 is the X axis, axis 0 is the Y axis
+    #     if axis_id == 1:
+    #         self.joystick_x_value = -(float(value) / self.joystick_axis_max) if abs(value) > self.joystick_raw_deadzone else 0
+    #     elif axis_id == 0:
+    #         self.joystick_y_value = -(float(value) / self.joystick_axis_max) if abs(value) > self.joystick_raw_deadzone else 0
 
-        # Axis 1 is the X axis, axis 0 is the Y axis
-        if axis_id == 1:
-            self.joystick_x_value = (float(value) / self.joystick_axis_max) if abs(value) > self.joystick_raw_deadzone else 0
-        elif axis_id == 0:
-            self.joystick_y_value = (float(value) / self.joystick_axis_max) if abs(value) > self.joystick_raw_deadzone else 0
-        else:
-            return  # Ignore other axes
+    def on_joy_axis(self, win, stickid, axisid, value):
+        self.joy_motion('axis', stickid, axisid, value)
 
-        # Invert axes
-        self.joystick_x_value = -self.joystick_x_value
-        self.joystick_y_value = -self.joystick_y_value
+    def joy_motion(self, event, id, axis, value):
+        # HAT first, returns max values
+        if isinstance(value, tuple):
+            if not value[0] and not value[1]:
+                Clock.unschedule(self.HOLD)
+            else:
+                if axis == 1:
+                    self.VALUES_X = [event, id, axis, value[0]]
+                elif axis == 0:
+                    self.VALUES_Y = [event, id, axis, value[1]]
+                self.HOLD = Clock.schedule_interval(self.print_values, 0)
+            return
 
-        # Calculate feed rate based on joystick throw
-        self.joystick_jog_feedrate = int((abs(self.joystick_x_value) + abs(self.joystick_y_value)) * self.joystick_max_feed)
-        self.joystick_jog_feedrate = max(min(self.joystick_jog_feedrate, self.joystick_max_feed), 0)
+        # unschedule if at zero or at minimum (FIRE)
+        if axis in self.FIRE and value < self.STOP_FIRE:
+            Clock.unschedule(self.HOLD)
+            return
+        elif abs(value) < self.OFFSET or self.HOLD:
+            Clock.unschedule(self.HOLD)
+
+        # schedule if over OFFSET (to prevent accidental event with low value)
+        if (axis in self.FIRE and value > self.STOP_FIRE or
+                axis not in self.FIRE and abs(value) >= self.OFFSET):
+            if axis == 1:
+                self.VALUES_X = [event, id, axis, value]
+            elif axis == 0:
+                self.VALUES_Y = [event, id, axis, value]
+            self.HOLD = Clock.schedule_interval(self.print_values, 0)
+
+    def print_values(self, dt):
+        pass
+        # print(self.VALUES_X, self.VALUES_Y)
 
     def send_joystick_jog_command(self, *args):
-        jog_x_dist = self.joystick_x_value * self.movement_vector_max
-        jog_y_dist = self.joystick_y_value * self.movement_vector_max
+        if len(self.VALUES_X) < 4 or len(self.VALUES_Y) < 4:
+            return
 
-        if (self.m.s.m_state.lower() == 'idle' or self.m.s.m_state.lower() == 'jog') and self.sm.current == 'trace' and not self.in_cooloff:
-            if self.joystick_jog_feedrate > 0:
-                jog_command = "$J=G91 X{:.2f} Y{:.2f} F{}".format(jog_x_dist, jog_y_dist, self.joystick_jog_feedrate)
-                self.m.s.write_command(jog_command)
+        # Capture values quickly
+        joystick_x = -(float(self.VALUES_X[3]) / self.joystick_axis_max) if abs(self.VALUES_X[3]) > self.joystick_raw_deadzone else 0
+        joystick_y = -(float(self.VALUES_Y[3]) / self.joystick_axis_max) if abs(self.VALUES_Y[3]) > self.joystick_raw_deadzone else 0
 
-        self.update_joystick_cooloff()
+        # If the joystick is in the deadzone, don't send any commands
+        if joystick_x == 0 and joystick_y == 0:
+            self.m.quit_jog()
+            return
 
-    def update_joystick_cooloff(self, *args):
-        """ Increment the joystick cooloff value """
-        self.joystick_cooloff_value += 1
+        jog_x_dist = joystick_x * self.movement_vector_max
+        jog_y_dist = joystick_y * self.movement_vector_max
 
-        if self.joystick_cooloff_value > self.joystick_cooloff_max:
-            self.joystick_x_value, self.joystick_y_value = 0, 0
-            self.joystick_jog_feedrate = 0
-            if self.m.s.m_state.lower() == 'jog' and self.sm.current == 'trace':
-                self.in_cooloff = True
-                self.m.quit_jog()
+        self.joystick_jog_feedrate = int((abs(joystick_x) + abs(joystick_y)) * self.joystick_max_feed)
+        self.joystick_jog_feedrate = max(min(self.joystick_jog_feedrate, self.joystick_max_feed), 0)
 
-    def reset_joystick_cooloff(self):
-        self.joystick_cooloff_value = 0
+        jog_command = "$J=G91 X{:.2f} Y{:.2f} F{}".format(jog_x_dist, jog_y_dist, self.joystick_jog_feedrate)
+        self.m.s.write_command(jog_command)
 
     def on_joy_button_down(self, window, stick_id, button_id):
         if button_id == 0:
