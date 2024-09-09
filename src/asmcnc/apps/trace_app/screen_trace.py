@@ -265,7 +265,6 @@ class TraceScreenClass(Screen):
 
         self.joystick_cooloff_max = self.joystick_cooloff_time / self.jog_command_interval
 
-
         # Widgets
         self.xy_move_widget = widget_xy_move_trace.XYMoveTrace(
             machine=self.m, localization=self.l, screen_manager=self.sm
@@ -287,6 +286,8 @@ class TraceScreenClass(Screen):
         self.m.laser_on()
 
     def on_joy_axis(self, window, stick_id, axis_id, value):
+        self.reset_joystick_cooloff()
+
         # Axis 1 is the X axis, axis 0 is the Y axis
         if axis_id == 1:
             self.joystick_x_value = (float(value) / self.joystick_axis_max) if abs(value) > self.joystick_raw_deadzone else 0
@@ -305,8 +306,6 @@ class TraceScreenClass(Screen):
 
         self.send_joystick_jog_command()
 
-        self.reset_joystick_cooloff()
-
     def send_joystick_jog_command(self, *args):
         jog_x_dist = self.joystick_x_value * self.movement_vector_max
         jog_y_dist = self.joystick_y_value * self.movement_vector_max
@@ -314,8 +313,7 @@ class TraceScreenClass(Screen):
         if (self.m.s.m_state.lower() == 'idle' or self.m.s.m_state.lower() == 'jog') and self.sm.current == 'trace':
             if abs(jog_x_dist) > 0.05 or abs(jog_y_dist) > 0.05:
                 jog_command = "$J=G91 X{:.2f} Y{:.2f} F{}".format(jog_x_dist, jog_y_dist, self.joystick_jog_feedrate)
-                # self.m.s.write_command(jog_command)
-                print(jog_command)
+                self.m.s.write_command(jog_command)
 
     def update_joystick_cooloff(self, *args):
         """ Increment the joystick cooloff value """
