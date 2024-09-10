@@ -90,7 +90,7 @@ class RouterMachine(EventDispatcher):
     device_location_file_path = os.path.join(os.path.dirname(paths.ROOT_PATH), 'smartbench_location.txt') # this puts it above EC folder in filesystem
 
     ## LOCALIZATION
-    persistent_language_path = smartbench_values_dir + 'user_language.txt'
+    persistent_language_path = os.path.join(smartbench_values_dir, 'user_language.txt')
 
     ## PROBE SETTINGS
     z_lift_after_probing = 20.0
