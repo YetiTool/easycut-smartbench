@@ -29,9 +29,11 @@ class ServerConnection(object):
 		self.set = settings_manager
 
 		self.get_smartbench_name()
-		server_thread = threading.Thread(target=self.initialise_server_connection)
-		server_thread.daemon = True
-		server_thread.start()
+		self.server_thread = threading.Thread(target=self.initialise_server_connection)
+		self.server_thread.daemon = True
+		self.server_thread.start()
+
+		self.do_connection_loop_thread = None
 
 	def __del__(self):
 		Logger.debug("Server connection class has been deleted")
@@ -67,13 +69,9 @@ class ServerConnection(object):
 
 					self.is_socket_available = True
 
-					try: 
-						Logger.debug("Thread is alive? " + str(t.is_alive()))
-					except:
-						t = threading.Thread(target=self.do_connection_loop)
-						t.daemon = True
-						t.start()
-
+					self.do_connection_loop_thread = threading.Thread(target=self.do_connection_loop)
+					self.do_connection_loop_thread.daemon = True
+					self.do_connection_loop_thread.start()
 				except:
 					Logger.exception("Unable to set up socket")
 			
