@@ -3,8 +3,9 @@ import os
 import subprocess
 
 from core.logging.logging_system import Logger
+from core.utils import paths
 
-smartbench_values_dir = './sb_values/'
+smartbench_values_dir = paths.SB_VALUES_PATH
 set_up_options_file_path = smartbench_values_dir + 'set_up_options.txt'
 
 def set_check_config_flag():

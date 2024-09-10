@@ -73,7 +73,7 @@ class RouterMachine(EventDispatcher):
     # PERSISTENT MACHINE VALUES
 
     ## PERSISTENT VALUES SETUP
-    smartbench_values_dir = './sb_values/'
+    smartbench_values_dir = paths.SB_VALUES_PATH
 
     ### Individual files to hold persistent values
     set_up_options_file_path = smartbench_values_dir + 'set_up_options.txt'
@@ -932,7 +932,7 @@ class RouterMachine(EventDispatcher):
                     # 'G10 L2 P1 X' + str(self.m.s.g54_x) + ' Y' + str(self.m.s.g54_y) + ' Z' + str(self.m.s.g54_z) # tell GRBL what position it's in
             ]
 
-        f = open('/home/pi/easycut-smartbench/src/sb_values/saved_grbl_settings_params.txt', 'w')
+        f = open(os.path.join(paths.SB_VALUES_PATH, 'saved_grbl_settings_params.txt'), 'w')
         f.write(('\n').join(grbl_settings_and_params))
         f.close()
         Logger.info('Saved grbl settings to file')
