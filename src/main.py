@@ -6,14 +6,13 @@ Created on 16 Nov 2017
 YetiTool's UI for SmartBench
 www.yetitool.com
 '''
-from asmcnc import paths
+from core.utils import paths
 
 import os
 import os.path
 import sys
 
 from kivy.config import Config
-paths.create_paths()
 
 Config.set('kivy', 'keyboard_mode', 'systemanddock')
 
@@ -32,8 +31,8 @@ Config.set('kivy', 'KIVY_CLOCK', 'interrupt')
 Config.write()
 
 import logging
-from asmcnc.comms.user_settings_manager import UserSettingsManager
-from asmcnc.job.database.profile_database import ProfileDatabase
+from core.managers.user_settings_manager import UserSettingsManager
+from core.job.database.profile_database import ProfileDatabase
 # config
 # import os
 # os.environ['KIVY_GL_BACKEND'] = 'sdl2'
@@ -49,65 +48,65 @@ from kivy import Logger
 from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 
-from asmcnc.comms.grbl_settings_manager import GRBLSettingsManagerSingleton
-from asmcnc.core_UI import scaling_utils, console_utils
-from asmcnc.comms.model_manager import ProductCodes
-from asmcnc.core_UI.popup_manager import PopupManager
-from asmcnc.comms.model_manager import ModelManagerSingleton
+from core.managers.grbl_settings_manager import GRBLSettingsManagerSingleton
+from core.utils import console_utils
+from ui.utils import scaling_utils
+from core.managers.model_manager import ProductCodes
+from core.managers.popup_manager import PopupManager
+from core.managers.model_manager import ModelManagerSingleton
 
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, NoTransition
 from kivy.core.window import Window
 
 # COMMS IMPORTS
-from asmcnc.comms import router_machine
-from asmcnc.comms.smart_transfer import server_connection
-from asmcnc.comms import smartbench_flurry_database_connection
+from core.serial import router_machine
+from core.services import smartbench_flurry_database_connection, server_connection
 
 # NB: router_machine imports serial_connection
-from asmcnc.apps import app_manager
-from settings import settings_manager
+from apps import app_manager
+from core.managers import settings_manager
 
 # Languages and keyboard
-from asmcnc.comms.localization import Localization
-from asmcnc.keyboard import custom_keyboard
+from core.utils.localization import Localization
+from ui.keyboard import custom_keyboard
 
 # JOB DATA IMPORT
-from asmcnc.job import job_data
-from asmcnc.job.yetipilot.yetipilot import YetiPilot
+from core.job import job_data
+from core.job.yetipilot.yetipilot import YetiPilot
 
 # SKAVAUI IMPORTS (LEGACY)
-from asmcnc.skavaUI import screen_home
-from asmcnc.skavaUI import screen_local_filechooser
-from asmcnc.skavaUI import screen_usb_filechooser
-from asmcnc.skavaUI import screen_go
-from asmcnc.skavaUI import screen_jobstart_warning
-from asmcnc.skavaUI import screen_lobby
-from asmcnc.skavaUI import screen_file_loading
-from asmcnc.skavaUI import screen_check_job
-from asmcnc.skavaUI import screen_error
-from asmcnc.skavaUI import screen_serial_failure
-from asmcnc.skavaUI import screen_mstate_warning
-from asmcnc.skavaUI import screen_boundary_warning
-from asmcnc.skavaUI import screen_rebooting
-from asmcnc.skavaUI import screen_job_feedback
-from asmcnc.skavaUI import screen_job_incomplete
-from asmcnc.skavaUI import screen_door
-from asmcnc.skavaUI import screen_squaring_manual_vs_square
-from asmcnc.skavaUI import screen_homing_prepare
-from asmcnc.skavaUI import screen_homing_active
-from asmcnc.skavaUI import screen_squaring_active
-from asmcnc.skavaUI import screen_spindle_shutdown
-from asmcnc.skavaUI import screen_spindle_cooldown
-from asmcnc.skavaUI import screen_stop_or_resume_decision
-from asmcnc.skavaUI import screen_lift_z_on_pause_decision
-from asmcnc.skavaUI import screen_tool_selection
-from asmcnc.skavaUI import screen_job_recovery
-from asmcnc.skavaUI import screen_nudge
-from asmcnc.skavaUI import screen_recovery_decision
-from asmcnc.skavaUI import screen_homing_decision
-from asmcnc.skavaUI import screen_yeticut_lobby
-from asmcnc.skavaUI import screen_dust_shoe_alarm
+from ui.screens import screen_home
+from ui.screens import screen_local_filechooser
+from ui.screens import screen_usb_filechooser
+from ui.screens import screen_go
+from ui.screens import screen_jobstart_warning
+from ui.screens import screen_lobby
+from ui.screens import screen_file_loading
+from ui.screens import screen_check_job
+from ui.screens import screen_error
+from ui.screens import screen_serial_failure
+from ui.screens import screen_mstate_warning
+from ui.screens import screen_boundary_warning
+from ui.screens import screen_rebooting
+from ui.screens import screen_job_feedback
+from ui.screens import screen_job_incomplete
+from ui.screens import screen_door
+from ui.screens import screen_squaring_manual_vs_square
+from ui.screens import screen_homing_prepare
+from ui.screens import screen_homing_active
+from ui.screens import screen_squaring_active
+from ui.screens import screen_spindle_shutdown
+from ui.screens import screen_spindle_cooldown
+from ui.screens import screen_stop_or_resume_decision
+from ui.screens import screen_lift_z_on_pause_decision
+from ui.screens import screen_tool_selection
+from ui.screens import screen_job_recovery
+from ui.screens import screen_nudge
+from ui.screens import screen_recovery_decision
+from ui.screens import screen_homing_decision
+from ui.screens import screen_yeticut_lobby
+from ui.screens import screen_dust_shoe_alarm
 
 # developer testing
 Cmport = 'COM3'
@@ -153,8 +152,10 @@ def check_ansible_status():
     # if this comes out empty, run ansible and reboot
     if not ansible_from_easycut:
         # when the playbook fails, it stops the other commands from running as well
-        os.system("/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh && sudo systemctl restart ansible.service")
+        os.system(
+            "/home/pi/easycut-smartbench/ansible/templates/ansible-start.sh && sudo systemctl restart ansible.service")
         console_utils.reboot()
+
 
 ## Easycut config
 check_and_update_config()
@@ -166,6 +167,7 @@ Builder.load_file('scaled_kv.kv')
 Logger.setLevel(logging.INFO)
 
 os.system("git remote set-url origin http://easycut-smartbench.co.uk")
+
 
 class SkavaUI(App):
     test_no = 0
@@ -191,7 +193,6 @@ class SkavaUI(App):
 
     def get_scaled_tuple(self, tup, orientation="horizontal"):
         return scaling_utils.get_scaled_tuple(tup, orientation)
-
 
     def build(self):
         Logger.info("Starting App:")
@@ -262,12 +263,14 @@ class SkavaUI(App):
                                                      database=db, localization=self.l)
         serial_screen = screen_serial_failure.SerialFailureClass(name='serialScreen', screen_manager=sm, machine=m,
                                                                  win_port=Cmport, localization=self.l)
-        mstate_screen = screen_mstate_warning.WarningMState(name='mstate', screen_manager=sm, machine=m, localization=self.l)
+        mstate_screen = screen_mstate_warning.WarningMState(name='mstate', screen_manager=sm, machine=m,
+                                                            localization=self.l)
         boundary_warning_screen = screen_boundary_warning.BoundaryWarningScreen(name='boundary', screen_manager=sm,
                                                                                 machine=m, localization=self.l)
         rebooting_screen = screen_rebooting.RebootingScreen(name='rebooting', screen_manager=sm, localization=self.l)
         job_feedback_screen = screen_job_feedback.JobFeedbackScreen(name='job_feedback', screen_manager=sm, machine=m,
-                                                                    database=db, job=jd, localization=self.l, keyboard=kb)
+                                                                    database=db, job=jd, localization=self.l,
+                                                                    keyboard=kb)
         job_incomplete_screen = screen_job_incomplete.JobIncompleteScreen(name='job_incomplete', screen_manager=sm,
                                                                           machine=m, database=db, job=jd,
                                                                           localization=self.l, keyboard=kb)
@@ -303,7 +306,8 @@ class SkavaUI(App):
                                                                              machine=m, localization=self.l)
         yeticut_lobby_screen = screen_yeticut_lobby.YeticutLobbyScreen(name='yeticut_lobby', screen_manager=sm,
                                                                        machine=m, localization=self.l, app_manager=am)
-        dust_shoe_alarm_screen = screen_dust_shoe_alarm.DustShoeAlarmScreen(sm, m, jd, db, self.l, name='dust_shoe_alarm')
+        dust_shoe_alarm_screen = screen_dust_shoe_alarm.DustShoeAlarmScreen(sm, m, jd, db, self.l,
+                                                                            name='dust_shoe_alarm')
 
         # add the screens to screen manager
         sm.add_widget(lobby_screen)

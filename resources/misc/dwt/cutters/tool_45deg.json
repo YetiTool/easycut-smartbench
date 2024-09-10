@@ -1,0 +1,32 @@
+{
+  "tool_id": "Drywalltec  ø -  45° 2 flute V-groove  L19",
+  "manufacturer": "Drywalltec",
+  "type": "V-groove",
+  "dimensions": {
+    "diameter": null,
+    "angle": 45,
+    "units": null
+  },
+  "flutes": {
+    "count": 2,
+    "length": 19
+  },
+  "material": "drywall",
+  "parameters": {
+    "cutting_spindle_speed": 21000,
+    "cutting_feed_rate": 4000,
+    "plunge_feed_rate": 250,
+    "cutting_direction": "both",
+    "recommended_depth_per_pass": 12,
+    "max_depth_total": 12,
+    "step_over": null,
+    "yetipilot_target_power": 640
+  },
+  "toolpath_offsets": {
+    "inside": false,
+    "outside": false,
+    "on": true
+  },
+  "image": "tool_45deg.png",
+  "apps": ["dwt", "shapes"]
+}
