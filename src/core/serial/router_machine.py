@@ -76,18 +76,18 @@ class RouterMachine(EventDispatcher):
     smartbench_values_dir = paths.SB_VALUES_PATH
 
     ### Individual files to hold persistent values
-    set_up_options_file_path = smartbench_values_dir + 'set_up_options.txt'
-    z_touch_plate_thickness_file_path = smartbench_values_dir + 'z_touch_plate_thickness.txt'
-    calibration_settings_file_path = smartbench_values_dir + 'calibration_settings.txt'
-    z_head_maintenance_settings_file_path = smartbench_values_dir + 'z_head_maintenance_settings.txt'
-    z_head_laser_offset_file_path = smartbench_values_dir + 'z_head_laser_offset.txt'
-    spindle_brush_values_file_path = smartbench_values_dir + 'spindle_brush_values.txt'
-    spindle_cooldown_settings_file_path = smartbench_values_dir + 'spindle_cooldown_settings.txt'
-    spindle_cooldown_rpm_override_file_path = smartbench_values_dir + 'spindle_cooldown_rpm_override.txt'
-    stylus_settings_file_path = smartbench_values_dir + 'stylus_settings.txt'
-    spindle_health_check_file_path = smartbench_values_dir + 'spindle_health_check.txt'
-    device_label_file_path = '../../smartbench_name.txt' # this puts it above EC folder in filesystem
-    device_location_file_path = '../../smartbench_location.txt' # this puts it above EC folder in filesystem
+    set_up_options_file_path = os.path.join(smartbench_values_dir, 'set_up_options.txt')
+    z_touch_plate_thickness_file_path = os.path.join(smartbench_values_dir, 'z_touch_plate_thickness.txt')
+    calibration_settings_file_path = os.path.join(smartbench_values_dir, 'calibration_settings.txt')
+    z_head_maintenance_settings_file_path = os.path.join(smartbench_values_dir, 'z_head_maintenance_settings.txt')
+    z_head_laser_offset_file_path = os.path.join(smartbench_values_dir, 'z_head_laser_offset.txt')
+    spindle_brush_values_file_path = os.path.join(smartbench_values_dir, 'spindle_brush_values.txt')
+    spindle_cooldown_settings_file_path = os.path.join(smartbench_values_dir, 'spindle_cooldown_settings.txt')
+    spindle_cooldown_rpm_override_file_path = os.path.join(smartbench_values_dir, 'spindle_cooldown_rpm_override.txt')
+    stylus_settings_file_path = os.path.join(smartbench_values_dir, 'stylus_settings.txt')
+    spindle_health_check_file_path = os.path.join(smartbench_values_dir, 'spindle_health_check.txt')
+    device_label_file_path = os.path.join(os.path.dirname(paths.ROOT_PATH), 'smartbench_name.txt') # this puts it above EC folder in filesystem
+    device_location_file_path = os.path.join(os.path.dirname(paths.ROOT_PATH), 'smartbench_location.txt') # this puts it above EC folder in filesystem
 
     ## LOCALIZATION
     persistent_language_path = smartbench_values_dir + 'user_language.txt'
