@@ -249,7 +249,7 @@ class TraceScreenClass(Screen):
     STOP_FIRE = -32767
 
     # min value for user to actually trigger axis event
-    OFFSET = 50
+    OFFSET = 10
 
     # current values + event instance
     VALUES_X = ListProperty([])
@@ -272,15 +272,10 @@ class TraceScreenClass(Screen):
         self.slow = False
         self.joystick_max_feed = 8000
         self.joystick_current_max_feed = self.joystick_max_feed
-        self.movement_vector_max = 5
+        self.movement_vector_max = 8
         self.movement_vector_current_max = self.movement_vector_max
-        self.joystick_raw_deadzone = 800
-        self.joystick_cooloff_time = 0.5
-        self.joystick_cooloff_value = 0
+        self.joystick_raw_deadzone = 1000
         self.jog_command_interval = 0.05
-        self.in_cooloff = False
-
-        self.joystick_cooloff_max = self.joystick_cooloff_time / self.jog_command_interval
 
         # Widgets
         self.xy_move_widget = widget_xy_move_trace.XYMoveTrace(
