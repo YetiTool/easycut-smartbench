@@ -272,10 +272,10 @@ class TraceScreenClass(Screen):
         self.slow = False
         self.joystick_max_feed = 8000
         self.joystick_current_max_feed = self.joystick_max_feed
-        self.movement_vector_max = 8
+        self.movement_vector_max = 5
         self.movement_vector_current_max = self.movement_vector_max
         self.joystick_raw_deadzone = 1000
-        self.jog_command_interval = 0.05
+        self.jog_command_interval = 0.08
 
         # Widgets
         self.xy_move_widget = widget_xy_move_trace.XYMoveTrace(
@@ -295,15 +295,6 @@ class TraceScreenClass(Screen):
 
     def on_enter(self):
         self.m.laser_on()
-
-    # def on_joy_axis(self, window, stick_id, axis_id, value):
-    #     # Assign values quickly
-    #
-    #     # Axis 1 is the X axis, axis 0 is the Y axis
-    #     if axis_id == 1:
-    #         self.joystick_x_value = -(float(value) / self.joystick_axis_max) if abs(value) > self.joystick_raw_deadzone else 0
-    #     elif axis_id == 0:
-    #         self.joystick_y_value = -(float(value) / self.joystick_axis_max) if abs(value) > self.joystick_raw_deadzone else 0
 
     def on_joy_axis(self, win, stickid, axisid, value):
         self.joy_motion('axis', stickid, axisid, value)
