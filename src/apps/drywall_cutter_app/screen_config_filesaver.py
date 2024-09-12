@@ -326,10 +326,9 @@ class ConfigFileSaver(Screen):
         if not os.path.exists(configs_dir):
             os.mkdir(configs_dir)
 
-            if not os.path.exists(configs_dir + '.gitignore'):
-                file = open(configs_dir + '.gitignore', "w+")
-                file.write('*')
-                file.close()
+            if not os.path.exists(os.path.join(configs_dir, '.gitignore')):
+                with open(os.path.join(configs_dir, '.gitignore'), "w+") as file:
+                    file.write('*')
 
     def on_pre_enter(self):
         self.filechooser.selection = []
