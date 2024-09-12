@@ -21,6 +21,7 @@ from kivy.properties import (
 )
 from kivy.uix.screenmanager import Screen
 from core.managers.model_manager import ModelManagerSingleton
+from core.utils import paths
 
 Builder.load_string(
     """
@@ -223,8 +224,8 @@ Builder.load_string(
                 
 """
 )
-job_cache_dir = "./jobCache/"
-job_q_dir = "./jobQ/"
+job_cache_dir = paths.JOB_CACHE_PATH
+
 verbose = True
 
 

@@ -23,7 +23,7 @@ from kivy.properties import (
 )
 from kivy.uix.screenmanager import Screen
 
-from core.utils import usb_storage
+from core.utils import usb_storage, paths
 from core.managers.model_manager import ModelManagerSingleton
 from ui.popups import popup_info
 
@@ -31,6 +31,7 @@ Builder.load_string(
     """
 
 #:import hex kivy.utils.get_color_from_hex
+#:import paths core.utils.paths
 
 <LocalFileChooser>:
 
@@ -108,7 +109,7 @@ Builder.load_string(
 
                 FileChooser:
                     id: filechooser
-                    rootpath: './jobCache/'
+                    rootpath: paths.JOB_CACHE_PATH
                     show_hidden: False
                     filters: ['*.nc','*.NC','*.gcode','*.GCODE','*.GCode','*.Gcode','*.gCode']
                     on_selection: root.refresh_filechooser()
@@ -309,9 +310,9 @@ Builder.load_string(
                 
 """
 )
-job_cache_dir = "./jobCache/"
+job_cache_dir = paths.JOB_CACHE_PATH
 job_q_dir = "./jobQ/"
-ftp_file_dir = "../../router_ftp/"
+ftp_file_dir = "../../router_ftp/"  # TODO: Is this still accurate?
 
 
 def date_order_sort(files, filesystem):

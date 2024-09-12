@@ -23,7 +23,7 @@ except (ImportWarning, ImportError):
 def try_import_creds():
     global ftp_server, ftp_username, ftp_password, creds_imported
     try:
-        from asmcnc.production.database import credentials as creds
+        from internal.production.database import credentials as creds
         ftp_server = creds.ftp_server
         ftp_username = creds.ftp_username
         ftp_password = creds.ftp_password

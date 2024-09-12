@@ -43,6 +43,8 @@ FINAL_TEST_FILES_PATH = os.path.join(GCODE_PATH, "final_test_files")
 JOB_CACHE_PATH = os.path.join(GCODE_PATH, "job_cache")
 MOTOR_BASELINING_FILES_PATH = os.path.join(GCODE_PATH, "motor_baselining_files")
 
+TRANSFER_TMP_PATH = os.path.join(ROOT_PATH, "transfer_tmp")
+
 resource_add_path(RESOURCES_PATH)
 resource_add_path(FONTS_PATH)
 resource_add_path(IMAGES_PATH)

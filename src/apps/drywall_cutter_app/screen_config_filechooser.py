@@ -20,7 +20,7 @@ from kivy.lang import Builder
 from kivy.properties import ObjectProperty, StringProperty  
 from kivy.uix.screenmanager import Screen
 
-from core.utils import usb_storage
+from core.utils import usb_storage, paths
 from ui.popups import popup_info
 
 from apps.drywall_cutter_app.config.config_loader import DWTConfig
@@ -252,8 +252,7 @@ Builder.load_string("""
 
 """)
 
-configs_dir = './apps/drywall_cutter_app/config/configurations/'  # where job files are cached for selection (for last used history/easy access)
-
+configs_dir = os.path.join(paths.DWT_PATH, 'config', 'configurations')
 
 def date_order_sort(files, filesystem):
     return (sorted(f for f in files if filesystem.is_dir(f)) +

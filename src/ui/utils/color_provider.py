@@ -5,7 +5,7 @@ Note "Color(s)" spelling is used to keep the naming consistent with Kivy's Color
 Usage:
 -------
 Python :
-    from asmcnc.core_UI.utils import color_provider
+    from ui.utils import color_provider
     Label(color=color_provider.get_rgba("green"))
 
 Kivy Builder :

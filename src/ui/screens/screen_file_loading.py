@@ -146,8 +146,6 @@ Builder.load_string(
                     padding:[dp(0.0375)*app.width, dp(0.0625)*app.height]
 """
 )
-job_cache_dir = "./jobCache/"
-job_q_dir = "./jobQ/"
 
 
 class LoadingScreen(Screen):

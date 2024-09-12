@@ -39,6 +39,8 @@ def test_download_to_usb(mock_os,mock_Clock):
     # fake an active USB:
     sm_st.usb_stick.is_usb_mounted_flag = True
     copy_to_usb(1)
+
+    # TODO: Update the following paths to new structure
     calls = [call.system('mkdir -p /home/pi/easycut-smartbench/transfer_tmp/easycut-smartbench/src'),
              call.system('cp -r /home/pi/easycut-smartbench/src/sb_values /home/pi/easycut-smartbench/transfer_tmp/easycut-smartbench/src/'),
              call.system('rm /home/pi/easycut-smartbench/transfer_tmp/easycut-smartbench/src/sb_values/saved_grbl_settings_params.txt'),

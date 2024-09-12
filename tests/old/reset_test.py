@@ -1,7 +1,9 @@
-import os 
+import os
 
-smartbench_values_dir = './sb_values/'
-set_up_options_file_path = smartbench_values_dir + 'set_up_options.txt'
+from core.utils import paths
+
+smartbench_values_dir = paths.SB_VALUES_PATH
+set_up_options_file_path = os.path.join(smartbench_values_dir, 'set_up_options.txt')
 
 def set_user_to_view_privacy_notice():
 	user_has_seen_privacy_notice = (os.popen('grep "user_has_seen_privacy_notice" /home/pi/easycut-smartbench/src/config.txt').read())

@@ -169,7 +169,7 @@ class ScreenManagerSystemTools(object):
         message = self.l.get_str('Saving settings to USB. Please wait') + '...'
         self.sm.pm.show_info_popup(message, 600)
 
-        def copy_settings_to_usb(loop_counter):
+        def copy_settings_to_usb(loop_counter):  # TODO: This needs updating to new project structure
             Logger.debug('Loop: {}'.format(loop_counter))
             if self.usb_stick.is_usb_mounted_flag:
                 try:
