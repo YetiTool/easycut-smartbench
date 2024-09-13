@@ -35,7 +35,7 @@ class ScreenMaker(object):
 
     }
 
-    def __init__(self, sm, l, kb, sett, jd, m, yp, db, am, sc, systemtools_sm, start_seq):
+    def __init__(self, sm, l, kb, sett, jd, m, yp, db, am, systemtools_sm, start_seq):
         self.param_map['screen_manager'] = sm
         self.param_map['sm'] = sm
         self.param_map['localization'] = l
@@ -47,7 +47,6 @@ class ScreenMaker(object):
         self.param_map['yetipilot'] = yp
         self.param_map['database'] = db
         self.param_map['calibration_db'] = db
-        self.param_map['server_connection'] = sc
         self.param_map['app_manager'] = am
         self.param_map['systemtools'] = systemtools_sm
         self.param_map['start_sequence'] = start_seq

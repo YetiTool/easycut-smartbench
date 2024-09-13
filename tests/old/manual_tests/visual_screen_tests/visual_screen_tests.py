@@ -50,7 +50,7 @@ from core.utils import localization
 from ui.keyboard import custom_keyboard
 from core.serial import router_machine
 from core.managers import settings_manager
-from core.services import smartbench_flurry_database_connection, server_connection
+from core.services import smartbench_flurry_database_connection
 from apps import app_manager
 from core.job.yetipilot.yetipilot import YetiPilot
 from core.managers.popup_manager import PopupManager
@@ -880,9 +880,6 @@ class ScreenTest(App):
         config_flag = False
         initial_version = 'v2.7.0'
         am = app_manager.AppManagerClass(sm, m, sett, l, kb, jd, db, config_flag, initial_version, pm)
-
-        # Server connection object
-        sc = server_connection.ServerConnection(sett)
 
         # Popup manager
         pm = PopupManager(sm, m, l)

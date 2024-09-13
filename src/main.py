@@ -61,7 +61,7 @@ from kivy.core.window import Window
 
 # COMMS IMPORTS
 from core.serial import router_machine
-from core.services import smartbench_flurry_database_connection, server_connection
+from core.services import smartbench_flurry_database_connection
 
 # NB: router_machine imports serial_connection
 from apps import app_manager
@@ -236,10 +236,6 @@ class SkavaUI(App):
 
         # Serial comms needs to access YP
         m.s.yp = yp
-
-        # Server connection object
-        if ModelManagerSingleton().get_product_code() != ProductCodes.DRYWALLTEC:
-            sc = server_connection.ServerConnection(sett)
 
         # initialise the screens (legacy)
         lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager=sm, machine=m, app_manager=am,
