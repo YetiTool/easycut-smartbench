@@ -5,6 +5,7 @@ from kivy.clock import Clock
 from asmcnc.comms.yeti_grbl_protocol.c_defines import *
 from asmcnc.skavaUI import popup_info
 from asmcnc.production.z_head_mechanics_jig.popup_z_head_mechanics import *
+from asmcnc.skavaUI import widget_status_bar
 
 import matplotlib
 matplotlib.use('Agg')
@@ -27,10 +28,13 @@ Builder.load_string("""
     load_realtime:load_realtime
     current_realtime:current_realtime
 
+    status_container:status_container
+
     load_graph:load_graph
 
     BoxLayout:
         orientation: 'vertical'
+        size_hint_y: 0.92
 
         BoxLayout:
             orientation: 'horizontal'
@@ -188,6 +192,10 @@ Builder.load_string("""
             valign: 'middle'
             halign: 'center'
 
+    BoxLayout:
+        size_hint_y: 0.08
+        id: status_container
+
     FloatLayout:
         Image:
             id: load_graph
@@ -223,6 +231,9 @@ class ZHeadMechanics(Screen):
         self.l = kwargs['l']
 
         Clock.schedule_interval(self.update_realtime_load, 0.1)
+
+        # Status bar
+        self.status_container.add_widget(widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm))
 
     def prepare_for_test(self):
         self.test_waiting_to_start = True
