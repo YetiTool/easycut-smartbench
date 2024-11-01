@@ -404,6 +404,10 @@ class ConfigFileChooser(Screen):
             if self.filechooser.selection[0] != 'C':
                 if not DWTConfig.is_valid_configuration(self.filechooser.selection[0]):
                     DWTConfig.fix_config(self.filechooser.selection[0])
+                if float(DWTConfig.get_config_version(self.filechooser.selection[0])) > float(DWTConfig.get_latest_config_version()):
+                    self.sm.pm.show_info_popup("This file is not supported yet! Please update your machine to the lastest software!", 600)
+                    raise Exception("This file is not supported yet")  # trigger the except block which doesn't allow user to select this file
+
                 self.display_selected_file()
 
             else:
