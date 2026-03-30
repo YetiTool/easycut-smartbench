@@ -563,9 +563,10 @@ class LobbyScreen(Screen):
         if not sys.platform == "win32":
             self.m.set_led_colour('GREEN')
 
+        # TREND: Update popup disabled
         # Tell user to update if update is available
-        if self.trigger_update_popup:
-            popup_info.PopupInfo(self.sm, self.l, 450, self.update_message)
+        # if self.trigger_update_popup:
+        #     popup_info.PopupInfo(self.sm, self.l, 450, self.update_message)
 
         # Trigger welcome popup is machine is being used for the first time
         if self.m.trigger_setup: self.help_popup()
