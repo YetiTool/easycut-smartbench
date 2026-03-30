@@ -57,15 +57,8 @@ class DatabaseEventManager():
 
 
 	def start_connection_to_database_thread(self):
-
-		if pika:
-
-
-			initial_connection_thread = threading.Thread(target=self.set_up_pika_connection)
-			initial_connection_thread.daemon = True
-			initial_connection_thread.start()
-
-			self.send_events_to_database()
+		# Trend: remove pika connection
+		pass
 
 
 	def set_up_pika_connection(self):
