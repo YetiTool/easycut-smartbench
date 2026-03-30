@@ -100,13 +100,14 @@ class StartingSmartBenchScreen(Screen):
             self.sm.get_screen("home").default_datum_choice = "laser"
         else:
             self.sm.get_screen("home").default_datum_choice = "spindle"
+        # TREND: Disable update
         # SW Update available?
-        if (
-            self.set.sw_version != self.set.latest_sw_version
-            and not self.set.latest_sw_version.endswith("beta")
-            and not self.set.sw_branch == "master"
-        ):
-            self.sm.get_screen("lobby").trigger_update_popup = True
+        # if (
+        #     self.set.sw_version != self.set.latest_sw_version
+        #     and not self.set.latest_sw_version.endswith("beta")
+        #     and not self.set.sw_branch == "master"
+        # ):
+        #     self.sm.get_screen("lobby").trigger_update_popup = True
 
     def update_strings(self):
         self.starting_label.text = self.l.get_str("Starting SmartBench") + "..."
