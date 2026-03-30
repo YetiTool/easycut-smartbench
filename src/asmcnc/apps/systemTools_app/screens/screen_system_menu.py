@@ -26,11 +26,9 @@ Builder.load_string(
     button_reboot: button_reboot
     button_exit_software: button_exit_software
     button_usb_first_aid: button_usb_first_aid
-    button_beta_testing: button_beta_testing
     button_grbl_settings: button_grbl_settings
     button_factory: button_factory
     # button_update_testing: button_update_testing
-    button_developer: button_developer
     button_go_back: button_go_back
 
     canvas.before:
@@ -119,20 +117,6 @@ Builder.load_string(
             border: (0,0,0,0)
 
         Button:
-            id: button_beta_testing
-            text: 'Beta Testing'
-            on_press: root.beta_testing()
-            valign: "bottom"
-            halign: "center"
-            markup: True
-            font_size: root.default_font_size
-            text_size: self.size
-            background_normal: "./asmcnc/apps/systemTools_app/img/beta_testing.png"
-            background_down: "./asmcnc/apps/systemTools_app/img/beta_testing.png"
-            padding_y: 5.0/800.0*app.width
-            border: (0,0,0,0)
-
-        Button:
             id: button_grbl_settings
             text: 'GRBL Settings'
             on_press: root.grbl_settings()
@@ -176,21 +160,6 @@ Builder.load_string(
 
 
         Button:
-            id: button_developer
-            text: 'Developer'
-            on_press: root.developer()
-
-            valign: "bottom"
-            halign: "center"
-            markup: True
-            font_size: root.default_font_size
-            text_size: self.size
-            background_normal: "./asmcnc/apps/systemTools_app/img/developer.png"
-            background_down: "./asmcnc/apps/systemTools_app/img/developer.png"
-            padding_y: 5.0/800.0*app.width
-            border: (0,0,0,0)
-
-        Button:
             id: button_go_back
             text: 'Go Back'
             on_press: root.go_back()
@@ -222,10 +191,8 @@ class SystemMenuScreen(Screen):
             self.button_reboot,
             self.button_exit_software,
             self.button_usb_first_aid,
-            self.button_beta_testing,
             self.button_grbl_settings,
             self.button_factory,
-            self.button_developer,
             self.button_go_back,
         ]
         self.update_strings()
@@ -266,10 +233,8 @@ class SystemMenuScreen(Screen):
         self.button_reboot.text = self.l.get_str("Reboot")
         self.button_exit_software.text = self.l.get_str("Exit Software")
         self.button_usb_first_aid.text = self.l.get_str("USB First Aid")
-        self.button_beta_testing.text = self.l.get_str("Beta Testing")
         self.button_grbl_settings.text = self.l.get_str("GRBL Settings")
         self.button_factory.text = self.l.get_str("Factory")
-        self.button_developer.text = self.l.get_str("Developer")
         self.button_go_back.text = self.l.get_str("Go Back")
         for id_object in self.id_list:
             self.update_font_size(id_object)
