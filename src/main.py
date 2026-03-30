@@ -8,6 +8,10 @@ www.yetitool.com
 '''
 from kivy.clock import Clock
 from kivy.uix.image import Image
+from kivy.uix.label import Label
+from kivy.animation import Animation
+from kivy.graphics import Color, Rectangle
+from kivy.properties import NumericProperty
 
 from asmcnc import paths
 
@@ -172,6 +176,31 @@ Logger.setLevel(logging.INFO)
 
 os.system("git remote set-url origin http://easycut-smartbench.co.uk")
 
+
+class LoadingLabel(Label):
+    bg_alpha = NumericProperty(0.25)
+
+    def __init__(self, **kwargs):
+        super(LoadingLabel, self).__init__(**kwargs)
+        with self.canvas.before:
+            self._bg_color = Color(1, 0, 0, self.bg_alpha)
+            self._bg_rect = Rectangle(pos=self.pos, size=self.size)
+
+        self.bind(pos=self._update_bg_rect, size=self._update_bg_rect, bg_alpha=self._update_bg_alpha)
+
+        # 2s Gesamtzyklus: weich zwischen niedriger und hoher Rot-Opazitaet.
+        anim = Animation(bg_alpha=0.8, duration=1.0, t='in_out_sine') + \
+               Animation(bg_alpha=0.2, duration=1.0, t='in_out_sine')
+        anim.repeat = True
+        anim.start(self)
+
+    def _update_bg_rect(self, *args):
+        self._bg_rect.pos = self.pos
+        self._bg_rect.size = self.size
+
+    def _update_bg_alpha(self, *args):
+        self._bg_color.a = self.bg_alpha
+
 class SkavaUI(App):
     test_no = 0
 
@@ -204,15 +233,23 @@ class SkavaUI(App):
     def build(self):
         sm = ScreenManager(transition=NoTransition())
         logo_screen = Screen(name='logo')
-        logo_screen.add_widget(
+        logo_layout = BoxLayout(orientation='vertical', spacing=0)
+        logo_layout.add_widget(
             Image(
                 source=paths.SKAVA_UI_IMG_PATH + '/trend-logo.png',
-                allow_stretch=True,
-                keep_ratio=False,
-                size_hint=(1, 1),
-                pos_hint={'x': 0, 'y': 0}
+                allow_stretch=False,
+                keep_ratio=True,
+                size_hint=(1, 0.9)
             )
         )
+        logo_layout.add_widget(
+            LoadingLabel(
+                text='Loading...',
+                color=(1, 1, 1, 1),
+                size_hint=(1, 0.1)
+            )
+        )
+        logo_screen.add_widget(logo_layout)
         sm.add_widget(logo_screen)
         sm.current = 'logo'
         self._sm = sm
