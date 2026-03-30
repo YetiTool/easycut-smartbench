@@ -35,7 +35,6 @@ Builder.load_string("""
     pro_app_label: pro_app_label
     wifi_app_label: wifi_app_label
     calibrate_app_label: calibrate_app_label
-    update_app_label: update_app_label
     maintenance_app_label: maintenance_app_label
     system_tools_app_label: system_tools_app_label
     upgrade_app_label:upgrade_app_label
@@ -253,39 +252,6 @@ Builder.load_string("""
                 padding:[dp(0.125)*app.width, dp(0.0416666666667)*app.height, dp(0.125)*app.width, dp(0.104166666667)*app.height]
                 spacing:0.0416666666667*app.height
 
-                BoxLayout:
-                    orientation: 'vertical'
-                    size_hint_x: 1
-                    spacing:0.0416666666667*app.height
-    
-                    Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
-                        size_hint_y: 8
-                        disabled: False
-                        background_color: hex('#FFFFFF00')
-                        on_release: 
-                            self.background_color = hex('#FFFFFF00')
-                        on_press:
-                            root.update_app()
-                            self.background_color = hex('#FFFFFF00')
-                        BoxLayout:
-                            padding: 0
-                            size: self.parent.size
-                            pos: self.parent.pos
-                            Image:
-                                id: image_select
-                                source: "./asmcnc/skavaUI/img/lobby_update.png"
-                                center_x: self.parent.center_x
-                                center_y: self.parent.center_y
-                                size: self.parent.width, self.parent.height
-                                allow_stretch: True 
-                    Label:
-                        id: update_app_label
-                        size_hint_y: 1
-                        font_size: str(0.03125*app.width) + 'sp'
-                        text: 'Update'
-                
-                
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_x: 1
@@ -634,7 +600,6 @@ class LobbyScreen(Screen):
         self.pro_app_label.text = self.l.get_str('CAD / CAM')
         self.wifi_app_label.text = self.l.get_str('Wifi')
         self.calibrate_app_label.text = self.l.get_str('Calibrate')
-        self.update_app_label.text = self.l.get_str('Update')
         self.maintenance_app_label.text = self.l.get_str('Maintenance')
         self.system_tools_app_label.text = self.l.get_str('System Tools')
         self.upgrade_app_label.text = self.l.get_str('Upgrade')
