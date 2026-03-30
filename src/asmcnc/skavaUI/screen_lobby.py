@@ -37,7 +37,6 @@ Builder.load_string("""
     calibrate_app_label: calibrate_app_label
     maintenance_app_label: maintenance_app_label
     system_tools_app_label: system_tools_app_label
-    upgrade_app_label:upgrade_app_label
 
     carousel_pane_1:carousel_pane_1
     pro_app_container:pro_app_container
@@ -45,7 +44,6 @@ Builder.load_string("""
     drywall_app_container:drywall_app_container
     yeticut_apps_image:yeticut_apps_image
     yeticut_apps_label:yeticut_apps_label
-    upgrade_app_container:upgrade_app_container
 
     canvas.before:
         Color: 
@@ -284,46 +282,6 @@ Builder.load_string("""
                         font_size: str(0.03125*app.width) + 'sp'
                         text: 'Maintenance'
 
-            # Carousel pane 4
-            BoxLayout:
-                orientation: 'horizontal'
-                padding:[dp(0.125)*app.width, dp(0.0416666666667)*app.height, dp(0.125)*app.width, dp(0.104166666667)*app.height]
-                spacing:0.0416666666667*app.height
-
-                BoxLayout:
-                    id: upgrade_app_container
-                    orientation: 'vertical'
-                    size_hint_x: 1
-                    spacing:0.0416666666667*app.height
-
-                    Button:
-                        font_size: str(0.01875 * app.width) + 'sp'
-                        size_hint_y: 8
-                        disabled: False
-                        background_color: hex('#FFFFFF00')
-                        on_release: 
-                            self.background_color = hex('#FFFFFF00')
-                        on_press:
-                            root.upgrade_app()
-                            self.background_color = hex('#FFFFFF00')
-                        BoxLayout:
-                            padding: 0
-                            size: self.parent.size
-                            pos: self.parent.pos
-                            Image:
-                                id: image_select
-                                source: "./asmcnc/apps/upgrade_app/img/lobby_upgrade.png"
-                                center_x: self.parent.center_x
-                                center_y: self.parent.center_y
-                                size: self.parent.width, self.parent.height
-                                allow_stretch: True 
-                    Label:
-                        id: upgrade_app_label
-                        size_hint_y: 1
-                        font_size: str(0.03125*app.width) + 'sp'
-                        text: 'Upgrade'
-                        markup: True
-
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_x: 1
@@ -356,6 +314,7 @@ Builder.load_string("""
                         font_size: str(0.03125*app.width) + 'sp'
                         text: 'System Tools'
                         markup: True
+
 
         BoxLayout:
             size_hint_y: 6
@@ -520,10 +479,11 @@ class LobbyScreen(Screen):
         if self.check_apps_on_pre_enter:
             self.show_desired_apps()
             self.check_apps_on_pre_enter = False
+        # TREND: Remove upgrade app from lobby
         # Hide upgrade app if machine is not upgradeable, and only if it has not been hidden already
-        if not self.model_manager.is_machine_upgradeable() and not self.upgrade_app_hidden:
-            self.remove_container_from_parent(self.upgrade_app_container)
-            self.upgrade_app_hidden = True
+        # if not self.model_manager.is_machine_upgradeable() and not self.upgrade_app_hidden:
+        #     self.remove_container_from_parent(self.upgrade_app_container)
+        #     self.upgrade_app_hidden = True
 
     def on_enter(self):
         if not sys.platform == "win32":
@@ -602,7 +562,6 @@ class LobbyScreen(Screen):
         self.calibrate_app_label.text = self.l.get_str('Calibrate')
         self.maintenance_app_label.text = self.l.get_str('Maintenance')
         self.system_tools_app_label.text = self.l.get_str('System Tools')
-        self.upgrade_app_label.text = self.l.get_str('Upgrade')
 
         self.welcome_popup_description = (
                 self.format_command(
