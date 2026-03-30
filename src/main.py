@@ -6,11 +6,16 @@ Created on 16 Nov 2017
 YetiTool's UI for SmartBench
 www.yetitool.com
 '''
+from kivy.clock import Clock
+from kivy.uix.image import Image
+
 from asmcnc import paths
 
 import os
 import os.path
 import sys
+import threading
+import time
 
 from kivy.config import Config
 paths.create_paths()
@@ -56,7 +61,7 @@ from asmcnc.core_UI.popup_manager import PopupManager
 from asmcnc.comms.model_manager import ModelManagerSingleton
 
 from kivy.app import App
-from kivy.uix.screenmanager import ScreenManager, NoTransition
+from kivy.uix.screenmanager import ScreenManager, NoTransition, Screen
 from kivy.core.window import Window
 
 # COMMS IMPORTS
@@ -110,7 +115,7 @@ from asmcnc.skavaUI import screen_yeticut_lobby
 from asmcnc.skavaUI import screen_dust_shoe_alarm
 
 # developer testing
-Cmport = 'COM3'
+Cmport = 'COM6'
 
 # Current version active/working on
 initial_version = 'v2.9.2'
@@ -180,6 +185,10 @@ class SkavaUI(App):
 
     profile_db = ProfileDatabase()
 
+    def __init__(self, **kwargs):
+        super(SkavaUI, self).__init__(**kwargs)
+        self._sm = None
+
     def get_scaled_width(self, val):
         return scaling_utils.get_scaled_width(val)
 
@@ -192,12 +201,41 @@ class SkavaUI(App):
     def get_scaled_tuple(self, tup, orientation="horizontal"):
         return scaling_utils.get_scaled_tuple(tup, orientation)
 
-
     def build(self):
+        sm = ScreenManager(transition=NoTransition())
+        logo_screen = Screen(name='logo')
+        logo_screen.add_widget(
+            Image(
+                source=paths.SKAVA_UI_IMG_PATH + '/trend-logo.png',
+                allow_stretch=True,
+                keep_ratio=False,
+                size_hint=(1, 1),
+                pos_hint={'x': 0, 'y': 0}
+            )
+        )
+        sm.add_widget(logo_screen)
+        sm.current = 'logo'
+        self._sm = sm
+
+        if self.height == 768:
+            root = BoxLayout(orientation='vertical', size_hint=(None, None), size=(self.width, self.height + 32))
+            sm.size_hint = (None, None)
+            sm.size = (self.width, self.height)
+            root.add_widget(sm)
+            return root
+
+
+        return sm
+
+    def on_start(self):
+        Clock.schedule_once(self.build_lazy, 10)
+
+
+    def build_lazy(self, *args):
         Logger.info("Starting App:")
 
         # Establish screens
-        sm = ScreenManager(transition=NoTransition())
+        sm = self._sm
 
         # Keyboard object
         kb = custom_keyboard.Keyboard(localization=self.l)
@@ -380,13 +418,6 @@ class SkavaUI(App):
         # Clock.schedule_once(start_loop, 10)
 
         ## -----------------------------------------------------------------------------------
-        if self.height == 768:
-            root = BoxLayout(orientation='vertical', size_hint=(None, None), size=(self.width, self.height + 32))
-            sm.size_hint = (None, None)
-            sm.size = (self.width, self.height)
-            root.add_widget(sm)
-            return root
-
         return sm
 
 
