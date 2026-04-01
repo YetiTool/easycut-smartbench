@@ -4,3 +4,4 @@ version=0
 power_cycle_alert=True
 calibration_alert=False
 show_user_welcome_app=True
+ansible_from_easycut=True
