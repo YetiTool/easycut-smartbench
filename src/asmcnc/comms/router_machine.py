@@ -1686,7 +1686,7 @@ class RouterMachine(EventDispatcher):
         if pc is ProductCodes.DRYWALLTEC:
             return "DRYWALLTEC SmartCNC"
         elif pc == ProductCodes.PRECISION_PRO_X:
-            return "SmartBench V1.3 PrecisionPro X"
+            return "SmartBench V1.4 PrecisionPro X"
         elif pc is ProductCodes.PRECISION_PRO_PLUS:
             return "SmartBench V1.3 PrecisionPro Plus"
         elif pc is ProductCodes.PRECISION_PRO:

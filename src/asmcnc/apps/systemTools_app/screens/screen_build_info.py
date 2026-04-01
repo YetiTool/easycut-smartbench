@@ -619,9 +619,12 @@ class BuildInfoScreen(Screen):
 
         self.smartbench_name_input.bind(focus=self.on_focus)
         self.smartbench_location_input.bind(focus=self.on_focus_location)
-        self.sw_version_label.text = self.set.sw_version
+        # Trend: hardcoded version 3.0.0
+        # self.sw_version_label.text = self.set.sw_version
+        self.sw_version_label.text = "3.0.0"
         self.pl_version_label.text = self.set.platform_version
-        self.latest_sw_version = self.set.latest_sw_version
+        # self.latest_sw_version = self.set.latest_sw_version
+        self.latest_sw_version = "3.0.0"
         self.latest_platform_version = self.set.latest_platform_version
         self.hw_version_label.text = self.m.s.hw_version
         self.zh_version_label.text = str(self.m.get_product_code().value)
