@@ -144,6 +144,7 @@ Builder.load_string(
                                         text: 'Show all models'
                                         on_press: root.show_all_smartbench_models()
                                         size_hint: 0.5, 1
+                                        disabled: True
                                     
                             BoxLayout: 
                                 orientation: 'vertical'
@@ -304,7 +305,7 @@ Builder.load_string(
                                 font_size: str(0.01875 * app.width) + 'sp'
                                 id: console_update_button
                                 text: 'Full Console Update (wifi)'
-                                on_press: root.full_console_update()
+                                disabled: True
 
                             GridLayout: 
                                 size: self.parent.size
@@ -581,11 +582,11 @@ Builder.load_string(
 
 class FactorySettingsScreen(Screen):
     latest_machine_model_values = [
-        "SmartBench V1.3 PrecisionPro CNC Router",
-        "SmartBench V1.3 PrecisionPro",
-        "SmartBench V1.3 PrecisionPro Plus",
-        "SmartBench V1.3 PrecisionPro X",
-        "DRYWALLTEC SmartCNC",
+        # "SmartBench V1.3 PrecisionPro CNC Router",
+        # "SmartBench V1.3 PrecisionPro",
+        # "SmartBench V1.3 PrecisionPro Plus",
+        "SmartBench V1.4 PrecisionPro X",
+        # "DRYWALLTEC SmartCNC",
     ]
     old_machine_model_values = [
         "SmartBench V1.0 CNC Router",
@@ -608,9 +609,9 @@ class FactorySettingsScreen(Screen):
         self.kb = kwargs["keyboard"]
         self.usb_stick = kwargs["usb_stick"]
         self.model_manager = ModelManagerSingleton()
-        self.software_version_label.text = self.set.sw_version
+        self.software_version_label.text = "3.0.0"
         self.platform_version_label.text = self.set.platform_version
-        self.latest_software_version.text = self.set.latest_sw_version
+        self.latest_software_version.text = "3.0.0"
         self.latest_platform_version.text = self.set.latest_platform_version
         self.machine_serial.text = "$50 = " + str(self.m.serial_number())
         self.machine_touchplate_thickness.text = str(self.m.z_touch_plate_thickness)
@@ -619,6 +620,7 @@ class FactorySettingsScreen(Screen):
             serial_number_string = self.get_serial_number()
             self.serial_prefix.text = serial_number_string[0:3]
             self.serial_number_input.text = serial_number_string[3:7]
+            self.product_number_input.disabled = True
             self.product_number_input.text = str(self.m.serial_number()).split(".")[1]
             if self.serial_prefix.text == "":
                 self.serial_prefix.text = "YS6"
