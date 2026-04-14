@@ -630,7 +630,7 @@ class BuildInfoScreen(Screen):
         self.zh_version_label.text = str(self.m.get_product_code().value)
         try:
             self.machine_serial_number_label.text = (
-                "YS6" + str(self.m.serial_number())[0:4]
+                "TS7" + str(self.m.serial_number())[0:4]
             )
         except:
             self.machine_serial_number_label.text = "-"

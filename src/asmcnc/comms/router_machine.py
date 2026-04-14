@@ -1688,7 +1688,7 @@ class RouterMachine(EventDispatcher):
         elif pc == ProductCodes.PRECISION_PRO_X:
             return "SmartBench V1.4 PrecisionPro X"
         elif pc is ProductCodes.PRECISION_PRO_PLUS:
-            return "SmartBench V1.3 PrecisionPro Plus"
+            return "SmartBench V1.4 PrecisionPro Plus"
         elif pc is ProductCodes.PRECISION_PRO:
             if self.bench_is_short():
                 return "SmartBench Mini V1.3 PrecisionPro"

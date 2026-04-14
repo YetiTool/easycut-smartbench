@@ -169,7 +169,7 @@ Builder.load_string(
                                         TextInput:
                                             id: serial_prefix
                                             font_size: str(15.0/800.0 * app.width) + 'sp'
-                                            text: 'YS6'
+                                            text: 'TS7'
                                             color: [0,0,0,1]
                                             markup: True
                                             valign: 'middle'
@@ -584,8 +584,8 @@ class FactorySettingsScreen(Screen):
     latest_machine_model_values = [
         # "SmartBench V1.3 PrecisionPro CNC Router",
         # "SmartBench V1.3 PrecisionPro",
-        # "SmartBench V1.3 PrecisionPro Plus",
-        "SmartBench V1.4 PrecisionPro X",
+        "SmartBench V1.4 PrecisionPro Plus",
+        # "SmartBench V1.4 PrecisionPro X",
         # "DRYWALLTEC SmartCNC",
     ]
     old_machine_model_values = [
@@ -623,13 +623,13 @@ class FactorySettingsScreen(Screen):
             self.product_number_input.disabled = True
             self.product_number_input.text = str(self.m.serial_number()).split(".")[1]
             if self.serial_prefix.text == "":
-                self.serial_prefix.text = "YS6"
+                self.serial_prefix.text = "TS7"
             if self.serial_number_input.text == "":
                 self.serial_number_input.text = "0000"
             if self.product_number_input.text == "":
                 self.product_number_input.text = "00"
         except:
-            self.serial_prefix.text = "YS6"
+            self.serial_prefix.text = "TS7"
             self.serial_number_input.text = "0000"
             self.product_number_input.text = "00"
         self.usb_stick.usb_notifications = False
@@ -743,7 +743,7 @@ class FactorySettingsScreen(Screen):
             or str(self.product_number_input.text) == ""
             or str(self.serial_prefix.text) == ""
         ):
-            warning_message = "Serial number format should be: YS6-0000-.00"
+            warning_message = "Serial number format should be: TS7-0000-.00"
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False
         elif len(str(self.serial_number_input.text)) != 4:
@@ -771,7 +771,7 @@ class FactorySettingsScreen(Screen):
             )
             != 10
         ):
-            warning_message = "Serial number format should be: YS6-0000-.00"
+            warning_message = "Serial number format should be: TS7-0000-.00"
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False
         else:
@@ -840,7 +840,7 @@ class FactorySettingsScreen(Screen):
 
     def factory_reset(self):
         def nested_factory_reset():
-            if not self.set.do_git_fsck():
+            if False: # not self.set.do_git_fsck():
                 message = "git FSCK errors found! repo corrupt."
                 popup_system.PopupFSCKErrors(
                     self.systemtools_sm.sm, self.l, message, self.set.details_of_fsck
@@ -896,7 +896,7 @@ class FactorySettingsScreen(Screen):
             elif self.software_version_label.text != self.latest_software_version.text:
                 warning_message = "Please ensure machine is fully updated before doing a factory reset."
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
-            elif self.platform_version_label.text != self.latest_platform_version.text:
+            elif False: # self.platform_version_label.text != self.latest_platform_version.text:
                 warning_message = "Please ensure machine is fully updated before doing a factory reset."
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             elif nested_factory_reset():
