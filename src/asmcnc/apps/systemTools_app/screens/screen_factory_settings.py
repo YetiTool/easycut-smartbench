@@ -1128,6 +1128,9 @@ $51 is currently set to """
             return False
 
     def write_activation_code_to_file(self):
+        return True
+        # TREND: deactivate machine activation
+
         activation_code_filepath = "/home/pi/smartbench_activation_code.txt"
         try:
             file_act = open(activation_code_filepath, "w+")
