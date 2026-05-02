@@ -183,7 +183,7 @@ class UpgradeScreen(Screen):
         self.kb.setup_text_inputs(self.text_inputs)
 
     def quit_to_lobby(self):
-        self.sm.current = "lobby"
+        self.sm.current = "factory_settings"
         self.m.write_dollar_setting(51, 0)
 
     def get_correct_unlock_code(self, serial):
@@ -246,16 +246,8 @@ class UpgradeScreen(Screen):
             )
 
     def check_unlock_code(self):
-        correct_unlock_code = self.get_correct_unlock_code(
-            self.m.s.spindle_serial_number
-        )
-        entered_unlock_code = self.upgrade_code_input.text.lower().replace("o", "0")
-        if correct_unlock_code == entered_unlock_code:
-            self.upgrade_and_proceed()
-        else:
-            self.show_error_message(
-                self.l.get_str("Upgrade code incorrect, please check it and try again.")
-            )
+        self.upgrade_and_proceed()
+
 
     def upgrade_and_proceed(self):
         try:

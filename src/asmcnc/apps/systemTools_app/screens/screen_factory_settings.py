@@ -7,6 +7,7 @@ Menu screen for system tools app
 import os
 import sys
 
+from asmcnc.apps.upgrade_app import screen_upgrade_successful, screen_already_upgraded, screen_upgrade
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.factory import Factory
@@ -304,8 +305,8 @@ Builder.load_string(
                             Button:
                                 font_size: str(0.01875 * app.width) + 'sp'
                                 id: console_update_button
-                                text: 'Full Console Update (wifi)'
-                                disabled: True
+                                text: 'Upgrade to SC2'
+                                on_press: root.show_upgrade()
 
                             GridLayout: 
                                 size: self.parent.size
@@ -700,6 +701,29 @@ class FactorySettingsScreen(Screen):
     def on_touch(self):
         for text_input in self.text_inputs:
             text_input.focus = False
+
+    def show_upgrade(self):
+        if not self.m.theateam():
+            if not self.systemtools_sm.sm.has_screen('upgrade'):
+                upgrade_screen = screen_upgrade.UpgradeScreen(name='upgrade', screen_manager=self.systemtools_sm.sm,
+                                                              machine=self.m, localization=self.l, keyboard=self.kb)
+                self.systemtools_sm.sm.add_widget(upgrade_screen)
+
+            if not self.systemtools_sm.sm.has_screen('upgrade_successful'):
+                upgrade_successful_screen = screen_upgrade_successful.UpgradeSuccessfulScreen(
+                    name='upgrade_successful', screen_manager=self.systemtools_sm.sm, machine=self.m, localization=self.l)
+                self.systemtools_sm.sm.add_widget(upgrade_successful_screen)
+
+            self.systemtools_sm.sm.current = 'upgrade'
+        else:
+            if not self.systemtools_sm.sm.has_screen('already_upgraded'):
+                already_upgraded_screen = screen_already_upgraded.AlreadyUpgradedScreen(name='already_upgraded',
+                                                                                        screen_manager=self.systemtools_sm.sm,
+                                                                                        machine=self.m,
+                                                                                        localization=self.l)
+                self.systemtools_sm.sm.add_widget(already_upgraded_screen)
+
+            self.systemtools_sm.sm.current = 'already_upgraded'
 
     def set_toggle_buttons(self):
         if self.systemtools_sm.sm.get_screen("go").show_spindle_overload == False:
