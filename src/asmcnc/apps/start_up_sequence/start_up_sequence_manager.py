@@ -61,7 +61,8 @@ class StartUpSequence(object):
 				self.prep_welcome_app()
 
 			if self.show_release_notes():
-				self.prep_release_notes_screen()
+				pass
+				#  self.prep_release_notes_screen()
 
 			if self.show_user_data_consent():
 				self.prep_data_consent_app()
