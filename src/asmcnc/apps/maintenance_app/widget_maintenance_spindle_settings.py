@@ -350,7 +350,7 @@ class SpindleSettingsWidget(Widget):
     brand_list_sc2 = [
          " YETI SC2 digital 230V",
          " YETI SC2 digital 110V",
-    ] + brand_list_sc1
+    ] ## Removed SC1: + brand_list_sc1
 
     def __init__(self, **kwargs):
         super(SpindleSettingsWidget, self).__init__(**kwargs)
