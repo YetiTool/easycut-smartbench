@@ -260,4 +260,4 @@ class CoordinateSystem(object):
             return self.machine_position.get_x() + self.laser_offset_x
 
         def get_y(self):
-            return self.machine_position.get_y() + self.laser_offset_x
+            return self.machine_position.get_y() + self.laser_offset_y

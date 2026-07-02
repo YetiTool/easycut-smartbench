@@ -55,7 +55,7 @@ Builder.load_string("""
                         pos: self.parent.pos
                         Image:
                             id: go_to_datum_button_image
-                            source: "./asmcnc/apps/drywall_cutter_app/img/go_to_datum.png"
+                            source: "./asmcnc/apps/trace_app/img/go_to_datum.png"
                             center_x: self.parent.center_x
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
@@ -96,7 +96,7 @@ Builder.load_string("""
                         size: self.parent.size
                         pos: self.parent.pos
                         Image:
-                            source: "./asmcnc/apps/drywall_cutter_app/img/set_datum.png"
+                            source: "./asmcnc/apps/trace_app/img/set_datum.png"
                             center_x: self.parent.center_x
                             y: self.parent.y
                             size: self.parent.width, self.parent.height
@@ -206,7 +206,7 @@ Builder.load_string("""
     FloatLayout:
         Image:
             id: go_to_datum_button_overlay
-            source: "./asmcnc/apps/drywall_cutter_app/img/go_to_datum_pulse.png"
+            source: "./asmcnc/apps/trace_app/img/go_to_datum_pulse.png"
             pos: go_to_datum_button_image.pos
             size: go_to_datum_button_image.size
             allow_stretch: True
@@ -305,7 +305,7 @@ class XYMoveTrace(Widget):
 
     def go_to_datum(self):
         if self.m.is_machine_homed == False and sys.platform != 'win32':
-            popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'drywall_cutter', 'drywall_cutter')
+            popup_info.PopupHomingWarning(self.sm, self.m, self.l, 'trace', 'trace')
         else:
             self.m.go_xy_datum_with_laser()
 
