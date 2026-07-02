@@ -262,6 +262,7 @@ class TraceScreenClass(Screen):
         # Joystick state
         self.joystick_axis_x_raw = 0
         self.joystick_axis_y_raw = 0
+        self.joystick_active = False
         self.joystick_max_feed = 8000
         self.joystick_current_max_feed = self.joystick_max_feed
         self.joystick_movement_vector_max = 5
@@ -347,9 +348,15 @@ class TraceScreenClass(Screen):
         joystick_y = self._apply_deadzone(self.joystick_axis_y_raw)
 
         if joystick_x == 0 and joystick_y == 0:
-            if self.m.s.m_state.lower() != 'idle':
-                self.m.quit_jog()
+            # Only cancel a jog that the joystick itself started - otherwise this
+            # would also cancel jogs started by holding a direction button.
+            if self.joystick_active:
+                self.joystick_active = False
+                if self.m.s.m_state.lower() != 'idle':
+                    self.m.quit_jog()
             return
+
+        self.joystick_active = True
 
         jog_x_dist = -joystick_x * self.joystick_movement_vector_current_max
         jog_y_dist = -joystick_y * self.joystick_movement_vector_current_max

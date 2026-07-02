@@ -33,8 +33,10 @@ class GeometryPreview(Widget):
         self.points = list(points)
 
     def _bed_to_pixels(self, x, y, scale, origin_x, origin_y):
-        px = origin_x + x * scale
-        py = origin_y + (self.bed_height - y) * scale
+        # Screen-horizontal follows the bed's Y axis and screen-vertical follows
+        # the bed's X axis, to match the orientation used by the VirtualBed widget.
+        px = origin_x + y * scale
+        py = origin_y + (self.bed_width - x) * scale
         return px, py
 
     def redraw(self, *args):
@@ -43,9 +45,9 @@ class GeometryPreview(Widget):
         if self.width <= 0 or self.height <= 0 or self.bed_width <= 0 or self.bed_height <= 0:
             return
 
-        scale = min(self.width / self.bed_width, self.height / self.bed_height)
-        draw_width = self.bed_width * scale
-        draw_height = self.bed_height * scale
+        scale = min(self.width / self.bed_height, self.height / self.bed_width)
+        draw_width = self.bed_height * scale
+        draw_height = self.bed_width * scale
         origin_x = self.x + (self.width - draw_width) / 2.0
         origin_y = self.y + (self.height - draw_height) / 2.0
 
