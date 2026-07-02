@@ -304,7 +304,7 @@ class SkavaUI(App):
         yeticut_lobby_screen = screen_yeticut_lobby.YeticutLobbyScreen(name='yeticut_lobby', screen_manager=sm,
                                                                        machine=m, localization=self.l, app_manager=am)
         dust_shoe_alarm_screen = screen_dust_shoe_alarm.DustShoeAlarmScreen(sm, m, jd, db, self.l, name='dust_shoe_alarm')
-        trace_screen = screen_trace.TraceScreenClass(name='trace', machine=m, screen_manager=sm, localization=self.l)
+        trace_screen = screen_trace.TraceScreenClass(name='trace', machine=m, screen_manager=sm, localization=self.l, keyboard=kb)
 
         # add the screens to screen manager
         sm.add_widget(lobby_screen)

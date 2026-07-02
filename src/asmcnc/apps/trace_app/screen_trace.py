@@ -11,7 +11,7 @@ import time
 from kivy.clock import Clock
 from kivy.properties import StringProperty
 
-from asmcnc.apps.trace_app import widget_xy_move_trace, widget_geometry_preview
+from asmcnc.apps.trace_app import widget_xy_move_trace, widget_geometry_preview, popup_export_svg
 from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.skavaUI import widget_virtual_bed
 from asmcnc.skavaUI import popup_info
@@ -233,6 +233,7 @@ class Segment(object):
 
 class TraceScreenClass(Screen):
     JOB_CACHE_DIR = './jobCache/'
+    TRACE_CAPTURES_DIR = os.path.join(JOB_CACHE_DIR, 'trace_captures')
 
     # Joystick axis IDs (SDL2 mapping: axis 0 = left stick Y, axis 1 = left stick X)
     JOYSTICK_AXIS_X = 1
@@ -254,6 +255,7 @@ class TraceScreenClass(Screen):
         self.m = kwargs["machine"]
         self.sm = kwargs["screen_manager"]
         self.l = kwargs["localization"]
+        self.kb = kwargs["keyboard"]
         self.cs = self.m.cs
 
         self.points = []
@@ -478,17 +480,35 @@ class TraceScreenClass(Screen):
             '</svg>'
         ).format(width=width, height=height, path=path_string)
 
+    @staticmethod
+    def _sanitize_filename(name):
+        name = name.strip()
+        for char in '/\\:*?"<>|':
+            name = name.replace(char, '_')
+        return name
+
+    def _save_svg(self, svg_string, name):
+        if not os.path.exists(self.TRACE_CAPTURES_DIR):
+            os.makedirs(self.TRACE_CAPTURES_DIR)
+
+        name = self._sanitize_filename(name) or time.strftime('%Y-%m-%d %H-%M')
+        filename = name + '.svg'
+        filepath = os.path.join(self.TRACE_CAPTURES_DIR, filename)
+
+        with open(filepath, 'w') as f:
+            f.write(svg_string)
+
+        Logger.info("Trace app: exported SVG to {}".format(filepath))
+        popup_info.PopupMiniInfo(self.sm, self.l, self.l.get_str('Saved to') + '\ntrace_captures/' + filename)
+
     def export_svg(self):
         svg_string = self.build_svg_string()
         if not svg_string:
             popup_info.PopupError(self.sm, self.l, self.l.get_str('No geometry has been captured yet.'))
             return
 
-        filename = 'trace_{}.svg'.format(time.strftime('%Y%m%d_%H%M%S'))
-        filepath = os.path.join(self.JOB_CACHE_DIR, filename)
-
-        with open(filepath, 'w') as f:
-            f.write(svg_string)
-
-        Logger.info("Trace app: exported SVG to {}".format(filepath))
-        popup_info.PopupMiniInfo(self.sm, self.l, self.l.get_str('Saved to') + '\njobCache/' + filename)
+        default_name = time.strftime('%Y-%m-%d %H-%M')
+        popup_export_svg.PopupExportSvg(
+            self.sm, self.l, self.kb, default_name,
+            on_confirm=lambda name: self._save_svg(svg_string, name)
+        )
