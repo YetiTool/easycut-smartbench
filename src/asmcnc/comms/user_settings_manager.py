@@ -51,6 +51,12 @@ class UserSettingsManager(EventDispatcher):
                            'Only deactivate this if your interrupt bar switches are broken!',
             'title': 'Interrupt bars activated',
             'value': True
+        },
+        'led_white_during_job': {
+            'description': 'When activated, the status light shows white instead of green '
+                           'while a job is running. White can be easier to see in bright conditions.',
+            'title': 'White job-status light',
+            'value': False
         }
     }
 

@@ -2311,6 +2311,11 @@ class RouterMachine(EventDispatcher):
         # NEVER SEND MID-JOB. Chars defining RGB will fill up the serial buffer unless handled somehow
         if not self.s.is_job_streaming and not self.s.is_sequential_streaming:
 
+            # 'GREEN' is used throughout as the "happy/job running" status colour.
+            # Some operators find white easier to see, so let that be swapped in here.
+            if colour_name == 'GREEN' and self.is_machine_homed and self.user_settings_manager.get_value('led_white_during_job'):
+                colour_name = 'WHITE'
+
             self.led_colour_status = colour_name
 
             if colour_name == 'RED':        self.s.write_command("*LFF0000")

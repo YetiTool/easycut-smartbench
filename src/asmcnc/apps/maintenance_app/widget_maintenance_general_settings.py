@@ -12,6 +12,11 @@ Builder.load_string("""
 
     dust_shoe_switch:dust_shoe_switch
 
+    led_colour_title_label:led_colour_title_label
+    led_colour_info_label:led_colour_info_label
+
+    led_colour_switch:led_colour_switch
+
     BoxLayout:
         size: self.parent.size
         pos: self.parent.pos
@@ -50,6 +55,38 @@ Builder.load_string("""
                 Switch:
                     id: dust_shoe_switch
 
+        BoxLayout:
+            size_hint_y: 0.4
+            orientation: 'horizontal'
+
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint_x: 2
+
+                Label:
+                    id: led_colour_title_label
+                    color: color_provider.get_rgba("black")
+                    font_size: str(0.03*app.width) + 'sp'
+                    halign: "left"
+                    markup: True
+                    text_size: self.size
+
+                Label:
+                    id: led_colour_info_label
+                    color: color_provider.get_rgba("black")
+                    font_size: str(0.0225*app.width) + 'sp'
+                    halign: "left"
+                    valign: "top"
+                    markup: True
+                    size_hint_y: None
+                    text_size: self.size
+
+            BoxLayout:
+                padding: [dp(0.15)*app.width, 0, 0, 0]
+
+                Switch:
+                    id: led_colour_switch
+
         BoxLayout
 
 """
@@ -69,8 +106,16 @@ class GeneralSettingsWidget(Widget):
         self.dust_shoe_switch.bind(active=lambda i, value: self.usm.set_value('dust_shoe_detection', value))
         self.dust_shoe_switch.active = self.usm.get_value('dust_shoe_detection')
 
+        # led_white_during_job:
+        self.usm.bind(led_white_during_job=lambda i, value: setattr(self.led_colour_switch, 'active', value))
+        self.led_colour_switch.bind(active=lambda i, value: self.usm.set_value('led_white_during_job', value))
+        self.led_colour_switch.active = self.usm.get_value('led_white_during_job')
+
         self.update_strings()
 
     def update_strings(self):
         self.dust_shoe_title_label.text = self.l.get_bold(self.usm.get_title('dust_shoe_detection'))
         self.dust_shoe_info_label.text = self.l.get_str(self.usm.get_description('dust_shoe_detection'))
+
+        self.led_colour_title_label.text = self.l.get_bold(self.usm.get_title('led_white_during_job'))
+        self.led_colour_info_label.text = self.l.get_str(self.usm.get_description('led_white_during_job'))
