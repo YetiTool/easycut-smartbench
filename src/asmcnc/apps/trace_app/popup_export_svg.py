@@ -28,8 +28,16 @@ class PopupExportSvg(Widget):
 
         self.kb.setup_text_inputs([textinput])
 
+        def dismiss_keyboard():
+            # The keyboard auto-lowers when its text input loses focus.
+            textinput.focus = False
+
         def confirm(*args):
+            dismiss_keyboard()
             self.on_confirm(textinput.text)
+
+        def cancel(*args):
+            dismiss_keyboard()
 
         save_button = Button(text=save_string, markup=True)
         save_button.background_normal = ''
@@ -47,12 +55,16 @@ class PopupExportSvg(Widget):
         layout_plan.add_widget(textinput)
         layout_plan.add_widget(btn_layout)
 
+        # Anchored to the top of the screen (rather than Popup's default vertical
+        # centering) so the bottom-justified on-screen keyboard - which can cover
+        # roughly the bottom half of the screen - never overlaps it.
         popup = Popup(title=title_string,
                       title_color=[0, 0, 0, 1],
                       title_size='20sp',
                       content=layout_plan,
                       size_hint=(None, None),
-                      size=(500, 300),
+                      size=(500, 260),
+                      pos_hint={'center_x': 0.5, 'top': 0.97},
                       auto_dismiss=False)
 
         popup.separator_color = [25 / 255., 118 / 255., 210 / 255., 1.]
@@ -61,6 +73,7 @@ class PopupExportSvg(Widget):
 
         save_button.bind(on_press=confirm)
         save_button.bind(on_press=popup.dismiss)
+        cancel_button.bind(on_press=cancel)
         cancel_button.bind(on_press=popup.dismiss)
 
         popup.open()

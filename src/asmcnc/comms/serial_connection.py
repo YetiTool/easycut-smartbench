@@ -89,6 +89,12 @@ class SerialConnection(EventDispatcher):
     write_realtime_buffer = []
     write_protocol_buffer = []
 
+    # Increments on every 'ok'/'error' response from GRBL, independent of the
+    # job-streaming character-count buffer below. Lets callers that fire
+    # one-off queued commands (e.g. jog controllers) know when GRBL has
+    # actually finished with the last one, instead of guessing with a timer.
+    jog_ack_count = NumericProperty(0)
+
     last_protocol_send_time = 0
 
     monitor_text_buffer = ""
@@ -245,8 +251,15 @@ class SerialConnection(EventDispatcher):
             # If given port doesn't work, try others:
             if not SmartBench_port:
 
-                port_list = [port.device for port in serial.tools.list_ports.comports() if
-                             'n/a' not in port.description]
+                all_ports = list(serial.tools.list_ports.comports())
+
+                # CH340 is the USB-serial chip on Arduino Mega (and clones, e.g.
+                # MiniRig) - trying these first avoids wasting time probing
+                # unrelated ports (Bluetooth, etc.) with a full serial handshake.
+                port_list = [port.device for port in all_ports if 'ch340' in port.description.lower()]
+
+                if not port_list:
+                    port_list = [port.device for port in all_ports if 'n/a' not in port.description]
 
                 Logger.info("Windows port list: ")  # for debugging
                 Logger.info(str(port_list))
@@ -664,6 +677,8 @@ class SerialConnection(EventDispatcher):
 
     # if 'ok' or 'error' rec'd from GRBL
     def process_grbl_response(self, message):
+        self.jog_ack_count += 1
+
         # if we are in check mode, append message to add it to error_log later
         if self.suppress_error_screens:
             self.response_log.append(message)

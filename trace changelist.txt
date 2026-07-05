@@ -1,0 +1,21 @@
+Done:
+- Handle multiple shapes in 1 SVG
+- When toggling speed on the joystick, also toggle speed on the on-screen move widget so the speed mode is communicated to the user.
+- Improve the fluidity of the joystick movement such that the speed is constant not jerky like it currently is, perhaps use a persistent state handler or something to observe changes in joystick angle and only update speed based on that? Open to ideas
+- Tidy up the UI. Be consistent with the use of wording or symbols, match the aesthetics of the Pro App if possible, consider including the RHS button tray and green status bar. It would also be good to make clearer to the user which of the last 3 points is which somehow.
+- Fill each shape in a unique colour once contour is closed.
+- When naming a file, the keyboard appears above the popup and blocks some of it. Please raise the pop up above a bottom justified keyboard.
+- Dismiss keyboard on file save/cancel
+- Add UI support for also tracing curves (either constant radius or Bezier) - Don't implement logic yet, just add buttons etc to UI for future use.
+- The geometry in the SVG doesn't always appear to be in the 1.2 * 2.4m SmartBench bed? Sometimes flipped too?
+- Overlay geometry on the SmartBench preview also
+- Revert Capture point and save SVG buttons to text for consistency
+
+
+To do:
+- Move drawn point on virtual bed to laser position instead of spindle (zhead centre)
+- Make RHS button tray black similar to CAD / CAM app
+- Needs a lobby icon
+
+Further down the line (don't implement yet):
+- Add Bluetooth support for xbox controllers

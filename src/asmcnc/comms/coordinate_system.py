@@ -257,7 +257,10 @@ class CoordinateSystem(object):
             self.y = self.machine_position.get_y() + self.laser_offset_y
 
         def get_x(self):
-            return self.machine_position.get_x() + self.laser_offset_x
+            # Read the offset live (matching DrywallTecLaserPosition.get_x()) rather
+            # than the snapshot taken at construction time, since laser_offset_x_value
+            # may not have been loaded from calibration data yet at that point.
+            return self.machine_position.get_x() + self.m.laser_offset_x_value
 
         def get_y(self):
-            return self.machine_position.get_y() + self.laser_offset_y
+            return self.machine_position.get_y() + self.m.laser_offset_y_value
