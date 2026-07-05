@@ -337,7 +337,13 @@ class TraceScreenClass(Screen):
     # enough that a stale command can't linger, matching GRBL's own guidance for
     # continuous jogging (see https://github.com/gnea/grbl/wiki/Grbl-v1.1-Jogging
     # and https://www.billiam.org/2022/05/30/grbl-smooth-jogging).
-    JOYSTICK_JOG_DT = 0.05
+    #
+    # Tuned against this machine's GRBL settings: $120/$121 (accel) = 500mm/s^2,
+    # $110/$111 (max rate) = 8000/6000mm/min. At max jog feed (~133mm/s), time to
+    # reach full speed from a standstill is ~133/500 = 0.27s. The previous 0.05s
+    # value was under a fifth of that, so most segments ended while still
+    # accelerating and never reached a steady speed - that's the jerkiness.
+    JOYSTICK_JOG_DT = 0.15
 
     # Safety net: if GRBL never acks a jog (e.g. a dropped byte), don't get stuck
     # waiting forever - allow sending again after this long regardless.
