@@ -343,30 +343,33 @@ class TraceScreenClass(Screen):
     # against real round-trip behaviour. Fairly verbose; turn off once done.
     JOYSTICK_DEBUG_LOGGING = True
 
-    # Nominal execution time (seconds) per jog command. Each jog's distance is
-    # derived from the current feed so it takes roughly this long to run - short
-    # enough that a stale command can't linger, matching GRBL's own guidance for
+    # Nominal execution time (seconds) per jog command if it were run in
+    # isolation. Each jog's distance is derived from the current feed so it
+    # takes roughly this long to run - matching GRBL's own guidance for
     # continuous jogging (see https://github.com/gnea/grbl/wiki/Grbl-v1.1-Jogging
     # and https://www.billiam.org/2022/05/30/grbl-smooth-jogging).
-    #
-    # Tuned against this machine's GRBL settings: $120/$121 (accel) = 500mm/s^2,
-    # $110/$111 (max rate) = 8000/6000mm/min (jog feed is now capped to the
-    # tighter of the two - see _max_joystick_feed). At max jog feed (100mm/s),
-    # time to reach full speed from a standstill is 100/500 = 0.2s.
-    #
-    # This needs to be comfortably longer than that, not just equal to it: each
-    # segment also has to survive normal jitter in serial/ack round-trip time
-    # without running out and decelerating to zero before the next command
-    # arrives - that "ran dry, decelerated, had to re-accelerate" is the hiccup
-    # you'd see after an occasional slow ack, even though most segments chain
-    # together fine.
-    JOYSTICK_JOG_DT = 0.3
+    JOYSTICK_JOG_DT = 0.15
 
-    # Safety net: if GRBL never acks a jog (e.g. a dropped byte), don't get stuck
-    # waiting forever - allow sending again after this long regardless. Kept
-    # comfortably above the ~0.4s a segment can now legitimately take to
-    # execute (accel + cruise at JOYSTICK_JOG_DT), so it stays a true fallback
-    # rather than firing under normal operation.
+    # How many jog commands we allow to be queued (sent but not yet acked) at
+    # once. This is the key lever for hiccups vs responsiveness:
+    #   - 1 (strict wait-for-ack) means GRBL has zero lookahead - the instant
+    #     an ack takes even slightly longer than the segment's execution time,
+    #     the queue runs dry, the machine decelerates to a full stop, and the
+    #     next command has to start from a standstill. That's the "goes fine
+    #     for a while then hiccups a lot" pattern - the log showed ack times
+    #     jump from ~0.01s to a *sustained* ~0.25-0.28s for several seconds
+    #     with the exact same command being resent, i.e. GRBL had nothing
+    #     queued ahead and was pacing acks to its own execution time.
+    #   - A small window (2) keeps one segment always queued ahead, so GRBL
+    #     never runs out of motion to blend into, without flooding it with an
+    #     unbounded backlog (which is what made direction changes laggy
+    #     before). A direction change still flushes the whole window
+    #     immediately via quit_jog() rather than waiting it out.
+    JOYSTICK_MAX_COMMANDS_IN_FLIGHT = 2
+
+    # Safety net: if GRBL stops acking entirely (e.g. a dropped byte), don't
+    # get stuck waiting forever - allow sending again after this long
+    # regardless, measured from the last time we managed to send anything.
     JOYSTICK_JOG_ACK_TIMEOUT = 0.9
 
     JOG_COMMAND_INTERVAL = 0.08
@@ -387,14 +390,20 @@ class TraceScreenClass(Screen):
         self.points = []
         self.shapes = [Shape()]
 
-        # Joystick state
+        # Joystick state - entirely separate from the on-screen move widget's
+        # own jog state (widget_xy_move_trace.py). They use different jog
+        # mechanisms (continuous $J=G91 streaming here vs discrete
+        # jog_absolute_single_axis/jog_relative there) and are tuned/debugged
+        # independently, so neither should reach into the other.
         self.joystick_axis_x_raw = 0
         self.joystick_axis_y_raw = 0
         self.joystick_active = False
         self.joystick_max_feed = 8000
         self.joystick_slow_factor = 4
-        self._jog_command_pending = False
-        self._jog_command_sent_at = 0
+        self.joystick_slow_mode = False
+        self._jog_commands_in_flight = 0
+        self._jog_command_last_sent_at = 0
+        self._jog_command_sent_times = []  # FIFO of send timestamps, for per-ack latency logging
         self._last_commanded_vector = None
 
         # Widgets
@@ -453,8 +462,8 @@ class TraceScreenClass(Screen):
     def on_joy_button_down(self, window, stick_id, button_id):
         if button_id == 0:  # A button
             self.add_segment()
-        elif button_id == 1:  # B button - toggle slow jog mode, shared with the on-screen jog widget
-            self.xy_move_widget.set_slow_mode(not self.xy_move_widget.is_slow_mode())
+        elif button_id == 1:  # B button - toggle the joystick's own slow jog mode
+            self.joystick_slow_mode = not self.joystick_slow_mode
         elif button_id == 2:  # X button
             self.close_contour()
         elif button_id == 3:  # Y button
@@ -490,12 +499,19 @@ class TraceScreenClass(Screen):
                 feedrate != ref_feedrate)
 
     def on_jog_ack(self, instance, value):
-        # GRBL has responded (ok or error) to whatever we last sent it, so we're
-        # clear to send the next jog command reflecting the current stick position.
-        if self.JOYSTICK_DEBUG_LOGGING and self._jog_command_pending:
-            Logger.info("Trace app joystick: ack received after {:.3f}s".format(
-                time.time() - self._jog_command_sent_at))
-        self._jog_command_pending = False
+        # GRBL has responded (ok or error) to one of our outstanding commands,
+        # freeing up a slot in our small lookahead window. Acks arrive in the
+        # same order commands were sent, so the oldest sent-time is the one
+        # this ack corresponds to.
+        if self._jog_commands_in_flight > 0:
+            self._jog_commands_in_flight -= 1
+        latency = None
+        if self._jog_command_sent_times:
+            latency = time.time() - self._jog_command_sent_times.pop(0)
+        if self.JOYSTICK_DEBUG_LOGGING:
+            Logger.info("Trace app joystick: ack received after {}, {} still in flight".format(
+                "{:.3f}s".format(latency) if latency is not None else "?",
+                self._jog_commands_in_flight))
 
     def send_joystick_jog_command(self, *args):
         if self.sm.current != self.name:
@@ -509,7 +525,8 @@ class TraceScreenClass(Screen):
             # would also cancel jogs started by holding a direction button.
             if self.joystick_active:
                 self.joystick_active = False
-                self._jog_command_pending = False
+                self._jog_commands_in_flight = 0
+                self._jog_command_sent_times = []
                 self._last_commanded_vector = None
                 if self.m.s.m_state.lower() != 'idle':
                     self.m.quit_jog()
@@ -517,33 +534,35 @@ class TraceScreenClass(Screen):
 
         base_max_feed = self._max_joystick_feed()
         max_feed = base_max_feed / self.joystick_slow_factor \
-            if self.xy_move_widget.is_slow_mode() else base_max_feed
+            if self.joystick_slow_mode else base_max_feed
 
         feedrate = int((abs(joystick_x) + abs(joystick_y)) * max_feed)
         feedrate = max(min(feedrate, max_feed), 1)
 
         direction_changed = self._vector_changed(joystick_x, joystick_y, feedrate, self._last_commanded_vector)
 
-        if self._jog_command_pending:
-            if direction_changed:
-                # A genuine direction/speed change - don't wait for the stale
-                # command's ack (that's what made direction changes feel slow).
-                # quit_jog is a realtime command, bypassing GRBL's normal queue,
-                # so this takes effect immediately rather than waiting for the
-                # in-flight segment to finish on its own.
+        if direction_changed and self._jog_commands_in_flight > 0:
+            # A genuine direction/speed change - don't wait out the whole
+            # lookahead window. quit_jog is a realtime command, bypassing
+            # GRBL's normal queue, so this flushes it immediately.
+            if self.JOYSTICK_DEBUG_LOGGING:
+                Logger.info("Trace app joystick: direction changed, flushing {} in-flight command(s)".format(
+                    self._jog_commands_in_flight))
+            self.m.quit_jog()
+            self._jog_commands_in_flight = 0
+            self._jog_command_sent_times = []
+
+        if self._jog_commands_in_flight >= self.JOYSTICK_MAX_COMMANDS_IN_FLIGHT:
+            # Window is full and direction/speed hasn't changed - let GRBL work
+            # through what's already queued rather than piling on more.
+            if time.time() - self._jog_command_last_sent_at > self.JOYSTICK_JOG_ACK_TIMEOUT:
+                # Safety net: acks seem to have stopped arriving entirely.
                 if self.JOYSTICK_DEBUG_LOGGING:
-                    Logger.info("Trace app joystick: direction changed mid-segment, cancelling")
-                self.m.quit_jog()
-                self._jog_command_pending = False
-            elif time.time() - self._jog_command_sent_at < self.JOYSTICK_JOG_ACK_TIMEOUT:
-                # Same direction/speed as what's already running - let it keep
-                # going, GRBL will chain the next matching jog in seamlessly.
-                return
+                    Logger.info("Trace app joystick: ack timeout, resetting in-flight count")
+                self._jog_commands_in_flight = 0
+                self._jog_command_sent_times = []
             else:
-                # Safety net: GRBL never acked (e.g. a dropped byte).
-                if self.JOYSTICK_DEBUG_LOGGING:
-                    Logger.info("Trace app joystick: ack timeout, resending")
-                self._jog_command_pending = False
+                return
 
         self.joystick_active = True
         self._last_commanded_vector = (joystick_x, joystick_y, feedrate)
@@ -554,13 +573,14 @@ class TraceScreenClass(Screen):
         jog_x_dist = -joystick_x * distance
         jog_y_dist = -joystick_y * distance
 
-        self._jog_command_pending = True
-        self._jog_command_sent_at = time.time()
+        self._jog_commands_in_flight += 1
+        self._jog_command_last_sent_at = time.time()
+        self._jog_command_sent_times.append(self._jog_command_last_sent_at)
 
         jog_command = "$J=G91 X{:.2f} Y{:.2f} F{}".format(jog_x_dist, jog_y_dist, feedrate)
         if self.JOYSTICK_DEBUG_LOGGING:
-            Logger.info("Trace app joystick: sending {} (stick=({:.2f}, {:.2f}))".format(
-                jog_command, joystick_x, joystick_y))
+            Logger.info("Trace app joystick: sending {} (stick=({:.2f}, {:.2f}), {} in flight)".format(
+                jog_command, joystick_x, joystick_y, self._jog_commands_in_flight))
         self.m.s.write_command(jog_command)
 
     # --- Machine actions -----------------------------------------------------

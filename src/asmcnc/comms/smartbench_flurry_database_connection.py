@@ -23,6 +23,14 @@ class DatabaseEventManager():
 
 	VERBOSE = False
 
+	# The telemetry server (sm-receiver.yetitool.com) is offline for now, and
+	# set_up_pika_connection() retries in a background thread every 10s
+	# indefinitely - each attempt is a blocking network call that can stall
+	# the main thread's GIL, which was showing up as intermittent hiccups
+	# elsewhere in the app. Skip connecting entirely until the server's back;
+	# just flip this back to False (and nothing else needs to change).
+	DATABASE_CONNECTION_DISABLED = True
+
 	public_ip_address = ''
 
 	routine_updates_channel = None
@@ -57,6 +65,10 @@ class DatabaseEventManager():
 
 
 	def start_connection_to_database_thread(self):
+
+		if self.DATABASE_CONNECTION_DISABLED:
+			Logger.info("Database connection disabled (server offline) - not attempting to connect")
+			return
 
 		if pika:
 

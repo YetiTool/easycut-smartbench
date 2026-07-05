@@ -244,15 +244,6 @@ class XYMoveTrace(Widget):
             self.feedSpeedJogX = self.fast_x_speed
             self.feedSpeedJogY = self.fast_y_speed
 
-    def is_slow_mode(self):
-        return self.speed_toggle.state == 'normal'
-
-    def set_slow_mode(self, slow):
-        """Drive the speed toggle from code (e.g. a joystick button) and keep its
-        icon/feed speeds in sync, exactly as if the operator had pressed it."""
-        self.speed_toggle.state = 'normal' if slow else 'down'
-        self.set_jog_speeds()
-
     def buttonJogXY(self, case):
         x_feed_speed = self.feedSpeedJogX
         y_feed_speed = self.feedSpeedJogY
