@@ -332,6 +332,17 @@ class TraceScreenClass(Screen):
     JOYSTICK_AXIS_MAX = 32768.0
     JOYSTICK_RAW_DEADZONE = 1000
 
+    # Minimum change in normalised stick position (0-1) or feed before a
+    # direction/speed change is considered "real" rather than analog jitter.
+    # Only changes past this threshold trigger the immediate-cancel-and-resend
+    # path in send_joystick_jog_command - see the comment there.
+    JOYSTICK_VECTOR_TOLERANCE = 0.08
+
+    # Set True to log every jog command sent and every ack received, with
+    # timing, to asmcnc's logger - handy for tuning JOYSTICK_JOG_DT/timeout
+    # against real round-trip behaviour. Fairly verbose; turn off once done.
+    JOYSTICK_DEBUG_LOGGING = True
+
     # Nominal execution time (seconds) per jog command. Each jog's distance is
     # derived from the current feed so it takes roughly this long to run - short
     # enough that a stale command can't linger, matching GRBL's own guidance for
@@ -384,6 +395,7 @@ class TraceScreenClass(Screen):
         self.joystick_slow_factor = 4
         self._jog_command_pending = False
         self._jog_command_sent_at = 0
+        self._last_commanded_vector = None
 
         # Widgets
         self.xy_move_widget = widget_xy_move_trace.XYMoveTrace(
@@ -469,9 +481,20 @@ class TraceScreenClass(Screen):
             max_feed = min(max_feed, y_max_rate)
         return max_feed
 
+    def _vector_changed(self, x, y, feedrate, reference_vector):
+        if reference_vector is None:
+            return True
+        ref_x, ref_y, ref_feedrate = reference_vector
+        return (abs(x - ref_x) > self.JOYSTICK_VECTOR_TOLERANCE or
+                abs(y - ref_y) > self.JOYSTICK_VECTOR_TOLERANCE or
+                feedrate != ref_feedrate)
+
     def on_jog_ack(self, instance, value):
         # GRBL has responded (ok or error) to whatever we last sent it, so we're
         # clear to send the next jog command reflecting the current stick position.
+        if self.JOYSTICK_DEBUG_LOGGING and self._jog_command_pending:
+            Logger.info("Trace app joystick: ack received after {:.3f}s".format(
+                time.time() - self._jog_command_sent_at))
         self._jog_command_pending = False
 
     def send_joystick_jog_command(self, *args):
@@ -486,24 +509,11 @@ class TraceScreenClass(Screen):
             # would also cancel jogs started by holding a direction button.
             if self.joystick_active:
                 self.joystick_active = False
+                self._jog_command_pending = False
+                self._last_commanded_vector = None
                 if self.m.s.m_state.lower() != 'idle':
                     self.m.quit_jog()
             return
-
-        # Never have more than one jog command outstanding. GRBL processes
-        # commands strictly in order, so sending on a fixed timer regardless of
-        # whether GRBL has finished the last one builds up a backlog: a
-        # direction change then has to wait for that whole backlog to drain,
-        # and the feed that finally executes lags well behind the current stick
-        # position. Waiting for the previous command's ack (see on_jog_ack)
-        # keeps at most one command in flight, so this always reflects "now".
-        if self._jog_command_pending:
-            if time.time() - self._jog_command_sent_at < self.JOYSTICK_JOG_ACK_TIMEOUT:
-                return
-            # Safety net: GRBL never acked (e.g. a dropped byte) - don't get stuck.
-            self._jog_command_pending = False
-
-        self.joystick_active = True
 
         base_max_feed = self._max_joystick_feed()
         max_feed = base_max_feed / self.joystick_slow_factor \
@@ -512,9 +522,34 @@ class TraceScreenClass(Screen):
         feedrate = int((abs(joystick_x) + abs(joystick_y)) * max_feed)
         feedrate = max(min(feedrate, max_feed), 1)
 
+        direction_changed = self._vector_changed(joystick_x, joystick_y, feedrate, self._last_commanded_vector)
+
+        if self._jog_command_pending:
+            if direction_changed:
+                # A genuine direction/speed change - don't wait for the stale
+                # command's ack (that's what made direction changes feel slow).
+                # quit_jog is a realtime command, bypassing GRBL's normal queue,
+                # so this takes effect immediately rather than waiting for the
+                # in-flight segment to finish on its own.
+                if self.JOYSTICK_DEBUG_LOGGING:
+                    Logger.info("Trace app joystick: direction changed mid-segment, cancelling")
+                self.m.quit_jog()
+                self._jog_command_pending = False
+            elif time.time() - self._jog_command_sent_at < self.JOYSTICK_JOG_ACK_TIMEOUT:
+                # Same direction/speed as what's already running - let it keep
+                # going, GRBL will chain the next matching jog in seamlessly.
+                return
+            else:
+                # Safety net: GRBL never acked (e.g. a dropped byte).
+                if self.JOYSTICK_DEBUG_LOGGING:
+                    Logger.info("Trace app joystick: ack timeout, resending")
+                self._jog_command_pending = False
+
+        self.joystick_active = True
+        self._last_commanded_vector = (joystick_x, joystick_y, feedrate)
+
         # Distance = speed * time, so each jog command takes about
-        # JOYSTICK_JOG_DT to run - short enough that motion stays responsive to
-        # both direction and speed changes as soon as the next ack comes back.
+        # JOYSTICK_JOG_DT to run when direction/speed stays constant.
         distance = (feedrate / 60.0) * self.JOYSTICK_JOG_DT
         jog_x_dist = -joystick_x * distance
         jog_y_dist = -joystick_y * distance
@@ -523,6 +558,9 @@ class TraceScreenClass(Screen):
         self._jog_command_sent_at = time.time()
 
         jog_command = "$J=G91 X{:.2f} Y{:.2f} F{}".format(jog_x_dist, jog_y_dist, feedrate)
+        if self.JOYSTICK_DEBUG_LOGGING:
+            Logger.info("Trace app joystick: sending {} (stick=({:.2f}, {:.2f}))".format(
+                jog_command, joystick_x, joystick_y))
         self.m.s.write_command(jog_command)
 
     # --- Machine actions -----------------------------------------------------
