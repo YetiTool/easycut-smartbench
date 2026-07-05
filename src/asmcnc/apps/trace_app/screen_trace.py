@@ -339,15 +339,24 @@ class TraceScreenClass(Screen):
     # and https://www.billiam.org/2022/05/30/grbl-smooth-jogging).
     #
     # Tuned against this machine's GRBL settings: $120/$121 (accel) = 500mm/s^2,
-    # $110/$111 (max rate) = 8000/6000mm/min. At max jog feed (~133mm/s), time to
-    # reach full speed from a standstill is ~133/500 = 0.27s. The previous 0.05s
-    # value was under a fifth of that, so most segments ended while still
-    # accelerating and never reached a steady speed - that's the jerkiness.
-    JOYSTICK_JOG_DT = 0.15
+    # $110/$111 (max rate) = 8000/6000mm/min (jog feed is now capped to the
+    # tighter of the two - see _max_joystick_feed). At max jog feed (100mm/s),
+    # time to reach full speed from a standstill is 100/500 = 0.2s.
+    #
+    # This needs to be comfortably longer than that, not just equal to it: each
+    # segment also has to survive normal jitter in serial/ack round-trip time
+    # without running out and decelerating to zero before the next command
+    # arrives - that "ran dry, decelerated, had to re-accelerate" is the hiccup
+    # you'd see after an occasional slow ack, even though most segments chain
+    # together fine.
+    JOYSTICK_JOG_DT = 0.3
 
     # Safety net: if GRBL never acks a jog (e.g. a dropped byte), don't get stuck
-    # waiting forever - allow sending again after this long regardless.
-    JOYSTICK_JOG_ACK_TIMEOUT = 0.5
+    # waiting forever - allow sending again after this long regardless. Kept
+    # comfortably above the ~0.4s a segment can now legitimately take to
+    # execute (accel + cruise at JOYSTICK_JOG_DT), so it stays a true fallback
+    # rather than firing under normal operation.
+    JOYSTICK_JOG_ACK_TIMEOUT = 0.9
 
     JOG_COMMAND_INTERVAL = 0.08
 
@@ -444,6 +453,22 @@ class TraceScreenClass(Screen):
             return 0.0
         return float(raw_value) / self.JOYSTICK_AXIS_MAX
 
+    def _max_joystick_feed(self):
+        # Cap to whichever is tightest: our own desired ceiling, or either
+        # axis's real $110/$111 max rate. Without this, a direction with a real
+        # Y-component gets silently slowed down by GRBL to respect $111 (which
+        # on this machine is 6000mm/min, 25% below $110's 8000) - the app keeps
+        # commanding/timing for the faster rate while GRBL actually executes
+        # slower, which is what made Y-heavy jogging feel worse than X.
+        max_feed = self.joystick_max_feed
+        x_max_rate = self.m.s.setting_110
+        y_max_rate = self.m.s.setting_111
+        if x_max_rate > 0:
+            max_feed = min(max_feed, x_max_rate)
+        if y_max_rate > 0:
+            max_feed = min(max_feed, y_max_rate)
+        return max_feed
+
     def on_jog_ack(self, instance, value):
         # GRBL has responded (ok or error) to whatever we last sent it, so we're
         # clear to send the next jog command reflecting the current stick position.
@@ -480,8 +505,9 @@ class TraceScreenClass(Screen):
 
         self.joystick_active = True
 
-        max_feed = self.joystick_max_feed / self.joystick_slow_factor \
-            if self.xy_move_widget.is_slow_mode() else self.joystick_max_feed
+        base_max_feed = self._max_joystick_feed()
+        max_feed = base_max_feed / self.joystick_slow_factor \
+            if self.xy_move_widget.is_slow_mode() else base_max_feed
 
         feedrate = int((abs(joystick_x) + abs(joystick_y)) * max_feed)
         feedrate = max(min(feedrate, max_feed), 1)
