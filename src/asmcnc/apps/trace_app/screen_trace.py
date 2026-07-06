@@ -332,12 +332,6 @@ class TraceScreenClass(Screen):
     JOYSTICK_AXIS_MAX = 32768.0
     JOYSTICK_RAW_DEADZONE = 1000
 
-    # Minimum change in normalised stick position (0-1) or feed before a
-    # direction/speed change is considered "real" rather than analog jitter.
-    # Only changes past this threshold trigger the immediate-cancel-and-resend
-    # path in send_joystick_jog_command - see the comment there.
-    JOYSTICK_VECTOR_TOLERANCE = 0.08
-
     # Set True to log every jog command sent and every ack received, with
     # timing, to asmcnc's logger - handy for tuning JOYSTICK_JOG_DT/timeout
     # against real round-trip behaviour. Fairly verbose; turn off once done.
@@ -404,7 +398,6 @@ class TraceScreenClass(Screen):
         self._jog_commands_in_flight = 0
         self._jog_command_last_sent_at = 0
         self._jog_command_sent_times = []  # FIFO of send timestamps, for per-ack latency logging
-        self._last_commanded_vector = None
 
         # Widgets
         self.xy_move_widget = widget_xy_move_trace.XYMoveTrace(
@@ -490,14 +483,6 @@ class TraceScreenClass(Screen):
             max_feed = min(max_feed, y_max_rate)
         return max_feed
 
-    def _vector_changed(self, x, y, feedrate, reference_vector):
-        if reference_vector is None:
-            return True
-        ref_x, ref_y, ref_feedrate = reference_vector
-        return (abs(x - ref_x) > self.JOYSTICK_VECTOR_TOLERANCE or
-                abs(y - ref_y) > self.JOYSTICK_VECTOR_TOLERANCE or
-                feedrate != ref_feedrate)
-
     def on_jog_ack(self, instance, value):
         # GRBL has responded (ok or error) to one of our outstanding commands,
         # freeing up a slot in our small lookahead window. Acks arrive in the
@@ -527,7 +512,6 @@ class TraceScreenClass(Screen):
                 self.joystick_active = False
                 self._jog_commands_in_flight = 0
                 self._jog_command_sent_times = []
-                self._last_commanded_vector = None
                 if self.m.s.m_state.lower() != 'idle':
                     self.m.quit_jog()
             return
@@ -539,22 +523,18 @@ class TraceScreenClass(Screen):
         feedrate = int((abs(joystick_x) + abs(joystick_y)) * max_feed)
         feedrate = max(min(feedrate, max_feed), 1)
 
-        direction_changed = self._vector_changed(joystick_x, joystick_y, feedrate, self._last_commanded_vector)
-
-        if direction_changed and self._jog_commands_in_flight > 0:
-            # A genuine direction/speed change - don't wait out the whole
-            # lookahead window. quit_jog is a realtime command, bypassing
-            # GRBL's normal queue, so this flushes it immediately.
-            if self.JOYSTICK_DEBUG_LOGGING:
-                Logger.info("Trace app joystick: direction changed, flushing {} in-flight command(s)".format(
-                    self._jog_commands_in_flight))
-            self.m.quit_jog()
-            self._jog_commands_in_flight = 0
-            self._jog_command_sent_times = []
-
         if self._jog_commands_in_flight >= self.JOYSTICK_MAX_COMMANDS_IN_FLIGHT:
-            # Window is full and direction/speed hasn't changed - let GRBL work
-            # through what's already queued rather than piling on more.
+            # Window is full - let GRBL work through what's already queued
+            # rather than piling on more. We deliberately do NOT try to cancel
+            # and cut in early on a direction change here: quit_jog() is a
+            # realtime command, but our serial layer drains the whole regular
+            # command queue before the realtime queue on every pass, so a
+            # "cancel, then immediately send the new direction" pair can
+            # actually reach GRBL as [new command, new command, cancel] -
+            # wiping out the fresh command along with the stale one. Instead,
+            # just wait for the next free slot; because it always uses
+            # whatever the stick is doing *then*, a direction change is still
+            # picked up within one short segment, without the race.
             if time.time() - self._jog_command_last_sent_at > self.JOYSTICK_JOG_ACK_TIMEOUT:
                 # Safety net: acks seem to have stopped arriving entirely.
                 if self.JOYSTICK_DEBUG_LOGGING:
@@ -565,7 +545,6 @@ class TraceScreenClass(Screen):
                 return
 
         self.joystick_active = True
-        self._last_commanded_vector = (joystick_x, joystick_y, feedrate)
 
         # Distance = speed * time, so each jog command takes about
         # JOYSTICK_JOG_DT to run when direction/speed stays constant.
