@@ -34,7 +34,6 @@ Builder.load_string("""
 
         GridLayout:
             cols: 3
-            orientation: 'horizontal'
             spacing: 0
             size_hint_y: None
             height: self.width

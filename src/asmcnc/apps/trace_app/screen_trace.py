@@ -18,20 +18,58 @@ from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar
 from asmcnc.skavaUI import popup_info
 
+from kivy.factory import Factory
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivy.uix.label import Label
-from kivy.uix.button import Button
+
+from asmcnc.core_UI.utils import color_provider
 
 Builder.load_string("""
+#:import hex kivy.utils.get_color_from_hex
 #:import color_provider asmcnc.core_UI.utils.color_provider
 
+# Flat image button used in the right-hand tray - red flash on press to match
+# the equivalent tray on the Home/Go screens.
 <TraceIconButton@Button>:
     background_color: hex('#F4433600')
     background_normal: ''
     background_down: ''
     on_release: self.background_color = hex('#F4433600')
     on_press: self.background_color = hex('#F44336FF')
+
+# Rounded, colour-filled text button - the trace app's standard action button.
+# Recolour via bg_rgba; the pressed shade is derived from it automatically.
+# Sizes throughout this screen are tuned for Console XL (1280x768 usable) -
+# the trace app is only ever run on that console.
+<TraceActionButton@Button>:
+    bg_rgba: color_provider.get_rgba('primary')
+    background_color: 0, 0, 0, 0
+    background_normal: ''
+    background_down: ''
+    color: color_provider.get_rgba('white')
+    font_size: sp(22)
+    halign: 'center'
+    valign: 'middle'
+    text_size: self.size
+    canvas.before:
+        Color:
+            # bg_rgba can briefly be None while the rule is first applied
+            rgba: (0, 0, 0, 0) if not self.bg_rgba else ((self.bg_rgba[0] * 0.72, self.bg_rgba[1] * 0.72, self.bg_rgba[2] * 0.72, self.bg_rgba[3]) if self.state == 'down' else self.bg_rgba)
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(8)]
+
+# White rounded panel used to group each functional area on the grey screen.
+<TraceCard@BoxLayout>:
+    canvas.before:
+        Color:
+            rgba: color_provider.get_rgba('shapes_white')
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(8)]
 
 <TraceScreenClass>:
     xy_move_container: xy_move_container
@@ -42,7 +80,7 @@ Builder.load_string("""
 
     canvas.before:
         Color:
-            rgba: color_provider.get_rgba('shapes_white')
+            rgba: color_provider.get_rgba('grey')
         Rectangle:
             pos: self.pos
             size: self.size
@@ -53,155 +91,141 @@ Builder.load_string("""
         # Main content row
         BoxLayout:
             orientation: 'horizontal'
-            size_hint_y: 0.9
+            size_hint_y: 0.92
 
-            GridLayout:
-                cols: 2
-                size_hint_x: 0.9
-                row_default_height: dp(0.46 * app.height)
-                row_force_default: True
+            # Padded content area: actions/jog on the left, previews on the right
+            BoxLayout:
+                orientation: 'horizontal'
+                padding: [dp(8), dp(8)]
+                spacing: dp(8)
 
-                ### Top ###
-
-                # Buttons
+                # Left column - fixed width so the jog pad below stays square
                 BoxLayout:
-                    padding: [10, 10]
-                    spacing: 10
-                    size_hint_x: None
-                    size_hint_y: None
-                    height: dp(0.46 * app.height)
-                    width: self.height
                     orientation: 'vertical'
+                    size_hint_x: None
+                    width: dp(0.46 * app.height)
+                    spacing: dp(8)
 
-                    GridLayout:
-                        cols: 2
-
-                        TraceIconButton:
-                            text: 'Capture Point'
-                            font_size: sp(18)
-                            halign: 'center'
-                            color: color_provider.get_rgba('black')
-                            on_press: root.add_segment()
-
-                        TraceIconButton:
-                            text: 'Export SVG'
-                            font_size: sp(18)
-                            halign: 'center'
-                            color: color_provider.get_rgba('black')
-                            on_press: root.export_svg()
-
-                        TraceIconButton:
-                            text: 'Clear\\nGeometry'
-                            font_size: sp(18)
-                            halign: 'center'
-                            color: color_provider.get_rgba('black')
-                            on_press: root.clear()
-
-                        TraceIconButton:
-                            text: 'Close\\nContour'
-                            font_size: sp(18)
-                            halign: 'center'
-                            color: color_provider.get_rgba('black')
-                            on_press: root.close_contour()
-
-                        TraceIconButton:
-                            text: 'Trace Arc\\n(soon)'
-                            font_size: sp(16)
-                            halign: 'center'
-                            color: color_provider.get_rgba('dark_grey')
-                            on_press: root.stub_curve_tracing('arc')
-
-                        TraceIconButton:
-                            text: 'Trace Curve\\n(soon)'
-                            font_size: sp(16)
-                            halign: 'center'
-                            color: color_provider.get_rgba('dark_grey')
-                            on_press: root.stub_curve_tracing('bezier')
-
-                        TraceIconButton:
-                            text: 'Controller'
-                            font_size: sp(18)
-                            halign: 'center'
-                            color: color_provider.get_rgba('black')
-                            on_press: root.open_controller_pairing()
-
-                    # Point display
-                    BoxLayout:
+                    # Action buttons
+                    TraceCard:
                         orientation: 'vertical'
+                        padding: [dp(8), dp(8)]
+
+                        GridLayout:
+                            cols: 2
+                            spacing: dp(8)
+
+                            TraceActionButton:
+                                text: 'Capture Point'
+                                bg_rgba: color_provider.get_rgba('green')
+                                on_press: root.add_segment()
+
+                            TraceActionButton:
+                                text: 'Close Contour'
+                                bg_rgba: color_provider.get_rgba('primary')
+                                on_press: root.close_contour()
+
+                            TraceActionButton:
+                                text: 'Run Points'
+                                bg_rgba: color_provider.get_rgba('secondary')
+                                on_press: root.run_through_points()
+
+                            TraceActionButton:
+                                text: 'Clear Geometry'
+                                bg_rgba: color_provider.get_rgba('red')
+                                on_press: root.clear()
+
+                            TraceActionButton:
+                                text: 'Export SVG'
+                                bg_rgba: color_provider.get_rgba('blue')
+                                on_press: root.export_svg()
+
+                            TraceActionButton:
+                                text: 'Setup Controller'
+                                bg_rgba: color_provider.get_rgba('dark_grey')
+                                on_press: root.open_controller_pairing()
+
+                            TraceActionButton:
+                                text: 'Trace Arc (soon)'
+                                bg_rgba: color_provider.get_rgba('grey')
+                                color: color_provider.get_rgba('dark_grey')
+                                on_press: root.stub_curve_tracing('arc')
+
+                            TraceActionButton:
+                                text: 'Trace Curve (soon)'
+                                bg_rgba: color_provider.get_rgba('grey')
+                                color: color_provider.get_rgba('dark_grey')
+                                on_press: root.stub_curve_tracing('bezier')
+
+                    # XY jog pad
+                    TraceCard:
+                        id: xy_move_container
+                        orientation: 'vertical'
+                        size_hint_y: None
+                        height: dp(0.46 * app.height)
+                        padding: [dp(10), dp(10)]
+
+                # Right column - geometry preview above the live bed view
+                BoxLayout:
+                    orientation: 'vertical'
+                    spacing: dp(8)
+
+                    # Geometry preview card, with status header and recent points footer
+                    TraceCard:
+                        orientation: 'vertical'
+                        padding: [dp(12), dp(8)]
+                        spacing: dp(6)
 
                         Label:
-                            text: 'Recent points (capture order)'
-                            font_size: sp(18)
-                            color: color_provider.get_rgba('black')
+                            id: geometry_status_label
+                            text: root.status_text
+                            font_size: sp(26)
+                            color: color_provider.get_rgba('dark_grey')
                             size_hint_y: None
-                            height: dp(0.08 * app.height)
+                            height: dp(34)
+                            text_size: self.size
+                            halign: 'left'
+                            valign: 'middle'
 
                         BoxLayout:
-                            id: recent_points_container
+                            id: geometry_preview_container
+
+                        BoxLayout:
                             orientation: 'horizontal'
-                            size_hint_x: 1
                             size_hint_y: None
-                            height: dp(0.1 * app.height)
+                            height: dp(52)
+                            spacing: dp(8)
 
-                # Geometry preview
-                BoxLayout:
-                    orientation: 'vertical'
-                    size_hint_y: 1
-                    canvas.before:
-                        Color:
-                            rgba: color_provider.get_rgba('shapes_white')
-                        Rectangle:
-                            size: self.size
-                            pos: self.pos
+                            Label:
+                                text: 'Recent points\\n(tap to revisit)'
+                                font_size: sp(15)
+                                color: color_provider.get_rgba('dark_grey')
+                                size_hint_x: None
+                                width: dp(120)
+                                halign: 'left'
+                                valign: 'middle'
+                                text_size: self.size
 
-                    Label:
-                        id: geometry_status_label
-                        text: root.status_text
-                        font_size: sp(24)
-                        color: color_provider.get_rgba('black')
+                            BoxLayout:
+                                id: recent_points_container
+                                orientation: 'horizontal'
+                                spacing: dp(8)
+
+                    # Virtual bed widget
+                    TraceCard:
+                        orientation: 'vertical'
                         size_hint_y: None
-                        height: dp(0.06 * app.height)
+                        height: dp(0.46 * app.height)
 
-                    BoxLayout:
-                        id: geometry_preview_container
-                        size_hint_y: 1
-
-                ### Bottom ###
-
-                # XY move widget
-                BoxLayout:
-                    id: xy_move_container
-                    orientation: 'vertical'
-                    size_hint: (None, None)
-                    padding: [10, 10]
-                    height: dp(0.46 * app.height)
-                    width: self.height
-
-                # Virtual bed widget
-                BoxLayout:
-                    orientation: 'vertical'
-                    canvas:
-                        Color:
-                            rgba: color_provider.get_rgba('shapes_white')
-                        Rectangle:
-                            size: self.size
-                            pos: self.pos
-
-                    BoxLayout:
-                        id: virtual_bed_container
-                        size_hint_y: 1
-                        padding: [dp(0.0125) * app.width, dp(0.0208333333333) * app.height]
-                        canvas:
-                            Color:
-                                rgba: color_provider.get_rgba('shapes_white')
-                            Rectangle:
-                                size: self.size
-                                pos: self.pos
+                        BoxLayout:
+                            id: virtual_bed_container
+                            padding: [dp(0.0125) * app.width, dp(0.0208333333333) * app.height]
 
             # RHS button tray - global actions, consistent with the Home/Go screens
             BoxLayout:
                 orientation: 'vertical'
-                size_hint_x: 0.1
+                size_hint_x: None
+                width: dp(0.1 * app.width)
                 padding: [4, 4]
                 spacing: dp(0.02 * app.height)
                 canvas.before:
@@ -677,11 +701,13 @@ class TraceScreenClass(Screen):
     # --- Display ---------------------------------------------------------
 
     def refresh_recent_points_display(self):
-        self.ids.recent_points_container.clear_widgets()
+        container = self.ids.recent_points_container
+        container.clear_widgets()
 
         if not self.points:
-            self.ids.recent_points_container.add_widget(
-                Label(text='Awaiting geometry...', font_size=20, color=(0, 0, 0, 1)))
+            container.add_widget(
+                Label(text='None yet', font_size='18sp', halign='left', valign='middle',
+                      color=color_provider.get_rgba('dark_grey')))
             return
 
         recent_points = self.points[-3:]
@@ -692,11 +718,16 @@ class TraceScreenClass(Screen):
             display_x = self.m.grbl_x_max_travel - point.x
             display_y = self.m.grbl_y_max_travel - point.y
             is_latest = point_number == len(self.points)
-            order_label = 'Latest (#{})'.format(point_number) if is_latest else '#{}'.format(point_number)
-            button_text = "{}\n{:.0f}, {:.0f}".format(order_label, display_x, display_y)
-            button = Button(text=button_text, font_size=16, halign='center',
-                            on_press=self.get_move_func(point))
-            self.ids.recent_points_container.add_widget(button)
+            chip = Factory.TraceActionButton(
+                text="#{}  {:.0f}, {:.0f}".format(point_number, display_x, display_y),
+                font_size='20sp',
+                on_press=self.get_move_func(point))
+            if is_latest:
+                chip.bg_rgba = color_provider.get_rgba('secondary')
+            else:
+                chip.bg_rgba = color_provider.get_rgba('grey')
+                chip.color = color_provider.get_rgba('dark_grey')
+            container.add_widget(chip)
 
     def refresh_geometry_display(self):
         closed_shape_count = sum(1 for shape in self.shapes if shape.is_closed)
