@@ -13,6 +13,7 @@ from kivy.clock import Clock
 from kivy.properties import StringProperty
 
 from asmcnc.apps.trace_app import widget_xy_move_trace, widget_geometry_preview, popup_export_svg
+from asmcnc.bluetooth_controller import input_map, popup_pairing, sdl_joystick_hotplug
 from asmcnc.comms.logging_system.logging_system import Logger
 from asmcnc.skavaUI import widget_virtual_bed, widget_status_bar
 from asmcnc.skavaUI import popup_info
@@ -21,7 +22,6 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivy.uix.label import Label
 from kivy.uix.button import Button
-from kivy.core.window import Window
 
 Builder.load_string("""
 #:import color_provider asmcnc.core_UI.utils.color_provider
@@ -117,6 +117,13 @@ Builder.load_string("""
                             halign: 'center'
                             color: color_provider.get_rgba('dark_grey')
                             on_press: root.stub_curve_tracing('bezier')
+
+                        TraceIconButton:
+                            text: 'Controller'
+                            font_size: sp(18)
+                            halign: 'center'
+                            color: color_provider.get_rgba('black')
+                            on_press: root.open_controller_pairing()
 
                     # Point display
                     BoxLayout:
@@ -321,13 +328,6 @@ class TraceScreenClass(Screen):
     # Kept in sync with SHAPE_FILL_COLOURS in widget_geometry_preview.py.
     SHAPE_FILL_COLOURS = ['F5DE33', '4CB0FC', 'FC9933', '9C59B5', '66BA6B', 'F0619A', '40CCCC', 'A68C59']
 
-    if sys.platform.startswith("linux"):
-        JOYSTICK_AXIS_X = 1
-        JOYSTICK_AXIS_Y = 0
-    else:
-        JOYSTICK_AXIS_X = 4
-        JOYSTICK_AXIS_Y = 3
-
     # SDL2 reports raw int16 axis values (range +/-32768)
     JOYSTICK_AXIS_MAX = 32768.0
     JOYSTICK_RAW_DEADZONE = 1000
@@ -368,10 +368,15 @@ class TraceScreenClass(Screen):
 
     JOG_COMMAND_INTERVAL = 0.08
 
+    # How often (seconds) to check for newly connected joysticks while on this
+    # screen - cheap (a couple of ctypes calls when nothing changed).
+    JOYSTICK_HOTPLUG_POLL_INTERVAL = 5
+
     status_text = StringProperty('Awaiting geometry...')
 
     current_pulse_opacity = 1
     pulse_poll = None
+    joystick_hotplug_poll = None
 
     def __init__(self, **kwargs):
         super(TraceScreenClass, self).__init__(**kwargs)
@@ -389,12 +394,10 @@ class TraceScreenClass(Screen):
         # mechanisms (continuous $J=G91 streaming here vs discrete
         # jog_absolute_single_axis/jog_relative there) and are tuned/debugged
         # independently, so neither should reach into the other.
-        self.joystick_axis_x_raw = 0
-        self.joystick_axis_y_raw = 0
         self.joystick_active = False
         self.joystick_max_feed = 8000
-        self.joystick_slow_factor = 4
-        self.joystick_slow_mode = False
+        self.joystick_slow_jog_factor = 4
+        self.joystick_slow_jog_active = False
         self._jog_commands_in_flight = 0
         self._jog_command_last_sent_at = 0
         self._jog_command_sent_times = []  # FIFO of send timestamps, for per-ack latency logging
@@ -414,8 +417,25 @@ class TraceScreenClass(Screen):
             widget_status_bar.StatusBar(machine=self.m, screen_manager=self.sm)
         )
 
-        Window.bind(on_joy_axis=self.on_joy_axis)
-        Window.bind(on_joy_button_down=self.on_joy_button_down)
+        # User-reassignable controller bindings (see the pairing popup's
+        # "Configure controls"). Defaults reproduce the previous hardcoded
+        # mapping: face buttons A/B/X/Y and the platform-specific stick axes.
+        self.input_map = input_map.ControllerInputMap(
+            app_id='trace',
+            actions=[
+                ('capture_point', 'Capture point', 0, self.add_segment),
+                ('toggle_jog_speed', 'Toggle jog speed', 1, self.toggle_joystick_jog_speed),
+                ('close_contour', 'Close contour', 2, self.close_contour),
+                ('run_through_points', 'Run through points', 3, self.run_through_points),
+            ],
+            axes=[
+                ('jog_x', 'Jog left/right',
+                 {'axis': 1 if sys.platform.startswith('linux') else 4, 'sign': 1}),
+                ('jog_y', 'Jog up/down',
+                 {'axis': 0 if sys.platform.startswith('linux') else 3, 'sign': 1}),
+            ],
+        )
+
         self.m.s.bind(jog_ack_count=self.on_jog_ack)
         Clock.schedule_interval(self.send_joystick_jog_command, self.JOG_COMMAND_INTERVAL)
 
@@ -424,11 +444,22 @@ class TraceScreenClass(Screen):
     def on_enter(self):
         self.m.laser_on()
         self.pulse_poll = Clock.schedule_interval(self.update_pulse_opacity, 0.04)
+        # Pick up any controller that (re)connected over Bluetooth since the
+        # app booted, and keep checking while on this screen so a pad switched
+        # on mid-session starts working without any further interaction
+        # (Kivy 1.10.1 never opens joysticks that appear after startup).
+        sdl_joystick_hotplug.open_new_joysticks()
+        self.joystick_hotplug_poll = Clock.schedule_interval(
+            lambda dt: sdl_joystick_hotplug.open_new_joysticks(), self.JOYSTICK_HOTPLUG_POLL_INTERVAL)
+        self.input_map.activate()
 
     def on_leave(self, *args):
         self.m.laser_off()
         if self.pulse_poll:
             Clock.unschedule(self.pulse_poll)
+        if self.joystick_hotplug_poll:
+            Clock.unschedule(self.joystick_hotplug_poll)
+        self.input_map.deactivate()
 
     def update_pulse_opacity(self, dt):
         # Pulse overlay by smoothly alternating between 0 and 1 opacity
@@ -446,21 +477,10 @@ class TraceScreenClass(Screen):
 
     # --- Joystick handling -------------------------------------------------
 
-    def on_joy_axis(self, window, stick_id, axis_id, value):
-        if axis_id == self.JOYSTICK_AXIS_X:
-            self.joystick_axis_x_raw = value
-        elif axis_id == self.JOYSTICK_AXIS_Y:
-            self.joystick_axis_y_raw = value
-
-    def on_joy_button_down(self, window, stick_id, button_id):
-        if button_id == 0:  # A button
-            self.add_segment()
-        elif button_id == 1:  # B button - toggle the joystick's own slow jog mode
-            self.joystick_slow_mode = not self.joystick_slow_mode
-        elif button_id == 2:  # X button
-            self.close_contour()
-        elif button_id == 3:  # Y button
-            self.run_through_points()
+    def toggle_joystick_jog_speed(self):
+        # Switches the joystick's own jogging between full and slow speed
+        # (deliberately separate from the on-screen widget's speed toggle)
+        self.joystick_slow_jog_active = not self.joystick_slow_jog_active
 
     def _apply_deadzone(self, raw_value):
         if abs(raw_value) <= self.JOYSTICK_RAW_DEADZONE:
@@ -502,8 +522,8 @@ class TraceScreenClass(Screen):
         if self.sm.current != self.name:
             return
 
-        joystick_x = self._apply_deadzone(self.joystick_axis_x_raw)
-        joystick_y = self._apply_deadzone(self.joystick_axis_y_raw)
+        joystick_x = self._apply_deadzone(self.input_map.get_axis('jog_x'))
+        joystick_y = self._apply_deadzone(self.input_map.get_axis('jog_y'))
 
         if joystick_x == 0 and joystick_y == 0:
             # Only cancel a jog that the joystick itself started - otherwise this
@@ -517,8 +537,8 @@ class TraceScreenClass(Screen):
             return
 
         base_max_feed = self._max_joystick_feed()
-        max_feed = base_max_feed / self.joystick_slow_factor \
-            if self.joystick_slow_mode else base_max_feed
+        max_feed = base_max_feed / self.joystick_slow_jog_factor \
+            if self.joystick_slow_jog_active else base_max_feed
 
         feedrate = int((abs(joystick_x) + abs(joystick_y)) * max_feed)
         feedrate = max(min(feedrate, max_feed), 1)
@@ -625,6 +645,9 @@ class TraceScreenClass(Screen):
 
         self.refresh_geometry_display()
         self.refresh_recent_points_display()
+
+    def open_controller_pairing(self):
+        popup_pairing.PopupControllerPairing(self.sm, self.l, input_map=self.input_map)
 
     def stub_curve_tracing(self, curve_type):
         # UI-only placeholder: arc/Bezier capture isn't implemented yet, but the

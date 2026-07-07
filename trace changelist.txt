@@ -10,12 +10,13 @@ Done:
 - The geometry in the SVG doesn't always appear to be in the 1.2 * 2.4m SmartBench bed? Sometimes flipped too?
 - Overlay geometry on the SmartBench preview also
 - Revert Capture point and save SVG buttons to text for consistency
-
-
-To do:
+- Add Bluetooth support for xbox controllers (pairing popup on trace screen; reusable package in src/asmcnc/bluetooth_controller/)
+- Controller popup: USB / Bluetooth mode toggle, and user-assignable button/axis mappings ("Configure controls", persisted per app/platform/controller-GUID in sb_values/controller_mappings.json so each pad only needs configuring once)
 - Move drawn point on virtual bed to laser position instead of spindle (zhead centre)
 - Make RHS button tray black similar to CAD / CAM app
+
+To do:
+
 - Needs a lobby icon
 
 Further down the line (don't implement yet):
-- Add Bluetooth support for xbox controllers
