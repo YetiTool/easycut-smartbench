@@ -610,9 +610,9 @@ class FactorySettingsScreen(Screen):
         self.kb = kwargs["keyboard"]
         self.usb_stick = kwargs["usb_stick"]
         self.model_manager = ModelManagerSingleton()
-        self.software_version_label.text = "3.0.0"
+        self.software_version_label.text = "3.0.2"
         self.platform_version_label.text = self.set.platform_version
-        self.latest_software_version.text = "3.0.0"
+        self.latest_software_version.text = "3.0.2"
         self.latest_platform_version.text = self.set.latest_platform_version
         self.machine_serial.text = "$50 = " + str(self.m.serial_number())
         self.machine_touchplate_thickness.text = str(self.m.z_touch_plate_thickness)

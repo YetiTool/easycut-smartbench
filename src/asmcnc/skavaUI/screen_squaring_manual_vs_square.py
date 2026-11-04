@@ -171,6 +171,9 @@ class SquaringScreenDecisionManualVsSquare(Screen):
         self.update_strings()
 
     def on_pre_enter(self):
+        # TREND: disable squaring: proceed to homing screen:
+        self.already_square()
+
         if self.m.is_machine_completed_the_initial_squaring_decision:
             self.no_button.text = self.l.get_str("No, SmartBench is still square")
 
