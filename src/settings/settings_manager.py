@@ -485,34 +485,45 @@ class Settings(object):
 
     # disable ssh (will not start on boot)
     def disable_ssh(self):
-        self.stop_ssh()
-        os.system('sudo systemctl disable ssh')
+        # Trend: no SSH handling
+        pass
+        # self.stop_ssh()
+        # os.system('sudo systemctl disable ssh')
 
     # enable ssh (will start on boot, only for dev use)
     def enable_ssh(self):
-        self.start_ssh()
-        os.system('sudo systemctl enable ssh')
+        # Trend: no SSH handling
+        pass
+        #self.start_ssh()
+        #os.system('sudo systemctl enable ssh')
 
     # toggle ssh service running or not
     def toggle_ssh(self):
-        ssh_running = self.is_service_running('ssh')
+        # Trend: no SSH handling
+        pass
 
-        if ssh_running:
-            return self.stop_ssh()
+        #ssh_running = self.is_service_running('ssh')
 
-        return self.start_ssh()
+        #if ssh_running:
+        #    return self.stop_ssh()
+
+        #return self.start_ssh()
 
     # stop ssh (doesn't change status on boot)
     def stop_ssh(self):
-        os.system('sudo systemctl stop ssh')
+        # Trend: no SSH handling
+        pass
+        #os.system('sudo systemctl stop ssh')
 
-        return not self.is_service_running('ssh')
+        #return not self.is_service_running('ssh')
 
     # start ssh (doesn't change status on boot)
     def start_ssh(self):
-        os.system('sudo systemctl start ssh')
+        # Trend: no SSH handling
+        pass
+        #os.system('sudo systemctl start ssh')
 
-        return self.is_service_running('ssh')
+        #return self.is_service_running('ssh')
 
     def is_service_running(self, service):
         try:

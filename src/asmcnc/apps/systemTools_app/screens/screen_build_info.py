@@ -5,7 +5,10 @@ Build info screen for system tools app
 
 @author: Letty
 """
+import binascii
 import os, sys
+import subprocess
+
 from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.factory import Factory
@@ -67,9 +70,10 @@ Builder.load_string(
     language_button: language_button
     data_and_wifi_button : data_and_wifi_button
     advanced_button : advanced_button
-    show_more_info: show_more_info
+    #show_more_info: show_more_info
     console_serial_number: console_serial_number
     toggle_ssh_button:toggle_ssh_button
+    password_label:password_label
     
     on_touch_down: root.on_touch()
 
@@ -494,7 +498,8 @@ Builder.load_string(
                         border: [dp(7.5)]*4
                         center: self.parent.center
                         pos: self.parent.pos
-                        on_press: root.do_show_more_info()
+                        opacity: 0
+                        # on_press: root.do_show_more_info()
                         color: hex('#f9f9f9ff')
                         markup: True
 
@@ -506,9 +511,9 @@ Builder.load_string(
 
                         Label: 
                             font_size: str(0.01875 * app.width) + 'sp'
-                            id: show_more_info
+                            id: password_label
                             text: ''
-                            opacity: 0
+                            opacity: 1
                             color: hex('#333333ff')
 
             BoxLayout:
@@ -611,9 +616,8 @@ class BuildInfoScreen(Screen):
         self.kb = kwargs["keyboard"]
         self.smartbench_location_unformatted = self.l.get_str("SmartBench Location")
         self.smartbench_location_formatted = self.l.get_str("SmartBench Location")
-        self.ssh_credentials = "not_set"
-        # load ssh password
-        self.ssh_credentials = self.read_ssh()
+        # load sftp state
+        self.read_sftp_state()
         self.update_strings()
         self.language_button.values = self.l.approved_languages
 
@@ -650,15 +654,32 @@ class BuildInfoScreen(Screen):
         #     self.toggle_ssh_button.opacity = 0
 
     # read SSH password:
-    def read_ssh(self):
-        print("!!!!!!!!!!!CWD: " + os.getcwd())
+    def read_sftp_state(self):
+        # print("!!!!!!!!!!!CWD: " + os.getcwd())
         try:
-            with open("ssh.txt", "r") as f:
-                return f.read()
+            with open("sftp.txt", "r") as f:
+                state = f.read()
+                if (state) == "off":
+                    return False
+                elif (state) == "on":
+                    return True
         except IOError:
-            return "UNKNOWN"
+            # create file if it doesn't exist
+            self.set_sftp_state(False)
+            return False
 
-
+    def set_sftp_state(self, state):
+        # print("!!!!!!!!!!!CWD: " + os.getcwd())
+        try:
+            with open("sftp.txt", "w") as f:
+                if state:
+                    f.write("on")
+                    return True
+                else:
+                    f.write("off")
+                    return False
+        except IOError:
+            return False
 
     ## EXIT BUTTONS
     def go_back(self):
@@ -727,18 +748,37 @@ class BuildInfoScreen(Screen):
         self.reset_language = True
 
     def toggle_ssh(self):
-        toggled = self.set.toggle_ssh()
+        state = self.read_sftp_state()
+
+        if state:
+            #turn off:
+            # call script to deactivate port 22 here
+            self.password_label.text = ""
+            self.password_label.opacity = 1
+            # set state according to result:
+            self.set_sftp_state(False)
+
+        else:
+            # turn on
+            # run script here and show password
+            new_password = binascii.hexlify(os.urandom(8))
+            # Set password
+            # p = subprocess.Popen(["sudo", "chpasswd"],stdin=subprocess.PIPE)
+            # p.communicate(+ "staccess:" + new_password + "\n")
+            if (self.set_sftp_state(True)): # p.returncode == 0
+                self.password_label.text = self.l.get_str("Password" + ":\n" + new_password)
+                self.password_label.opacity = 1
+
         self.refresh_ssh_button()
-        if not toggled:
-            PopupSSHToggleFailed(localization=self.l)
+
 
     def refresh_ssh_button(self):
         enabled_text = (
             self.l.get_str("Enabled")
-            if self.set.is_service_running("ssh")
+            if self.read_sftp_state()
             else self.l.get_str("Disabled")
         )
-        self.toggle_ssh_button.text = self.l.get_str("SSH") + ": " + enabled_text
+        self.toggle_ssh_button.text = self.l.get_str("SFTP") + ": " + enabled_text
 
     def update_strings(self):
         self.language_button.text = self.l.lang
@@ -754,12 +794,14 @@ class BuildInfoScreen(Screen):
         self.zhead_header.text = self.l.get_str("Z head")
         self.hardware_header.text = self.l.get_str("Hardware")
         self.refresh_ssh_button()
-        self.show_more_info.text = (
-            self.l.get_str("SmartManager Password:")
-            + "\n"
-            + self.ssh_credentials
-            + "\n\n"
-        )
+        # self.show_more_info.text = (
+        #         self.l.get_str("Software")
+        #         + "\n"
+        #         + self.set.sw_branch
+        #         + "\n"
+        #         + self.set.sw_hash
+        #        + "\n\n"
+        # )
         self.update_font_sizes()
 
     def update_font_sizes(self):
