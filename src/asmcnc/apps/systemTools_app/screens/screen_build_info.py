@@ -611,6 +611,9 @@ class BuildInfoScreen(Screen):
         self.kb = kwargs["keyboard"]
         self.smartbench_location_unformatted = self.l.get_str("SmartBench Location")
         self.smartbench_location_formatted = self.l.get_str("SmartBench Location")
+        self.ssh_credentials = "not_set"
+        # load ssh password
+        self.ssh_credentials = self.read_ssh()
         self.update_strings()
         self.language_button.values = self.l.approved_languages
 
@@ -646,6 +649,17 @@ class BuildInfoScreen(Screen):
         # if self.m.model_manager.is_machine_drywall():
         #     self.toggle_ssh_button.opacity = 0
 
+    # read SSH password:
+    def read_ssh(self):
+        print("!!!!!!!!!!!CWD: " + os.getcwd())
+        try:
+            with open("ssh.txt", "r") as f:
+                return f.read()
+        except IOError:
+            return "UNKNOWN"
+
+
+
     ## EXIT BUTTONS
     def go_back(self):
         self.systemtools_sm.back_to_menu()
@@ -659,6 +673,7 @@ class BuildInfoScreen(Screen):
         if self.serial_number_header.text != self.l.get_str("Serial number"):
             self.update_strings()
         self.m.send_any_gcode_command("$I")
+
 
     def on_enter(self, *args):
         self.scrape_fw_version()
@@ -740,11 +755,9 @@ class BuildInfoScreen(Screen):
         self.hardware_header.text = self.l.get_str("Hardware")
         self.refresh_ssh_button()
         self.show_more_info.text = (
-            self.l.get_str("Software")
+            self.l.get_str("SmartManager Password:")
             + "\n"
-            + self.set.sw_branch
-            + "\n"
-            + self.set.sw_hash
+            + self.ssh_credentials
             + "\n\n"
         )
         self.update_font_sizes()
