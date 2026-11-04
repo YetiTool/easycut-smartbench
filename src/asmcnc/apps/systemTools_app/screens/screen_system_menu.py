@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from kivy.core.window import Window
 
+from asmcnc.apps.upgrade_app import screen_upgrade, screen_upgrade_successful, screen_already_upgraded
+
 """
 Created on 18 November 2020
 Menu screen for system tools app
@@ -28,7 +30,7 @@ Builder.load_string(
     button_usb_first_aid: button_usb_first_aid
     button_grbl_settings: button_grbl_settings
     button_factory: button_factory
-    # button_update_testing: button_update_testing
+    button_show_upgrade: button_show_upgrade
     button_go_back: button_go_back
 
     canvas.before:
@@ -144,19 +146,19 @@ Builder.load_string(
             padding_y: 5.0/800.0*app.width
             border: (0,0,0,0)
 
-        # Button:
-        #     id: button_update_testing
-        #     text: 'Update Testing'
-        #     on_press: root.update_testing()
-        #     valign: "bottom"
-        #     halign: "center"
-        #     markup: True
-        #     font_size: root.default_font_size
-        #     text_size: self.size
-        #     background_normal: "./asmcnc/apps/systemTools_app/img/update_developer.png"
-        #     background_down: "./asmcnc/apps/systemTools_app/img/update_developer.png"
-        #     padding_y: 5.0/800.0*app.width
-        #     border: (0,0,0,0)
+        Button:
+            id: button_show_upgrade
+            text: 'Load motor settings'
+            on_press: root.show_upgrade()
+            valign: "bottom"
+            halign: "center"
+            markup: True
+            font_size: root.default_font_size
+            text_size: self.size
+            background_normal: "./asmcnc/apps/systemTools_app/img/update_developer.png"
+            background_down: "./asmcnc/apps/systemTools_app/img/update_developer.png"
+            padding_y: 5.0/800.0*app.width
+            border: (0,0,0,0)
 
 
         Button:
@@ -185,6 +187,7 @@ class SystemMenuScreen(Screen):
         self.systemtools_sm = kwargs["system_tools"]
         self.l = kwargs["localization"]
         self.kb = kwargs["keyboard"]
+        self.m = kwargs["machine"]
         self.id_list = [
             self.button_system_info,
             self.button_support_menu,
@@ -196,6 +199,30 @@ class SystemMenuScreen(Screen):
             self.button_go_back,
         ]
         self.update_strings()
+
+    def show_upgrade(self):
+        if not self.m.theateam():
+            if not self.systemtools_sm.sm.has_screen('upgrade'):
+                upgrade_screen = screen_upgrade.UpgradeScreen(name='upgrade', screen_manager=self.systemtools_sm.sm,
+                                                              machine=self.m, localization=self.l, keyboard=self.kb)
+                self.systemtools_sm.sm.add_widget(upgrade_screen)
+
+            if not self.systemtools_sm.sm.has_screen('upgrade_successful'):
+                upgrade_successful_screen = screen_upgrade_successful.UpgradeSuccessfulScreen(
+                    name='upgrade_successful', screen_manager=self.systemtools_sm.sm, machine=self.m, localization=self.l)
+                self.systemtools_sm.sm.add_widget(upgrade_successful_screen)
+
+            self.systemtools_sm.sm.current = 'upgrade'
+        else:
+            if not self.systemtools_sm.sm.has_screen('already_upgraded'):
+                already_upgraded_screen = screen_already_upgraded.AlreadyUpgradedScreen(name='already_upgraded',
+                                                                                        screen_manager=self.systemtools_sm.sm,
+                                                                                        machine=self.m,
+                                                                                        localization=self.l)
+                self.systemtools_sm.sm.add_widget(already_upgraded_screen)
+
+            self.systemtools_sm.sm.current = 'already_upgraded'
+
 
     def go_back(self):
         self.systemtools_sm.exit_app()

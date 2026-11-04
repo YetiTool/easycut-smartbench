@@ -175,7 +175,7 @@ class ProPlusSafetyScreen(Screen):
         try:
             self.start_seq.next_in_sequence()
         except:
-            self.sm.current = "factory_settings"
+            self.sm.current = "system_menu"
 
     def prev_screen(self):
         try:

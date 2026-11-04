@@ -7,7 +7,6 @@ Menu screen for system tools app
 import os
 import sys
 
-from asmcnc.apps.upgrade_app import screen_upgrade_successful, screen_already_upgraded, screen_upgrade
 from asmcnc.comms.logging_system.logging_system import Logger
 from kivy.lang import Builder
 from kivy.factory import Factory
@@ -58,7 +57,7 @@ Builder.load_string(
     show_spindle_overload_toggle: show_spindle_overload_toggle
     setting_54_toggle:setting_54_toggle
     smartbench_model: smartbench_model
-    console_update_button: console_update_button
+    # console_update_button: console_update_button
     sc2_compatability_toggle:sc2_compatability_toggle
 
     on_touch_down: root.on_touch()
@@ -302,11 +301,11 @@ Builder.load_string(
                             padding: 0
                             spacing:0.0125*app.width
 
-                            Button:
-                                font_size: str(0.01875 * app.width) + 'sp'
-                                id: console_update_button
-                                text: 'Upgrade to SC2'
-                                on_press: root.show_upgrade()
+                            #Button:
+                            #    font_size: str(0.01875 * app.width) + 'sp'
+                            #    id: console_update_button
+                            #    text: 'Upgrade to SC2'
+                            #    on_press: root.show_upgrade()
 
                             GridLayout: 
                                 size: self.parent.size
@@ -702,29 +701,6 @@ class FactorySettingsScreen(Screen):
         for text_input in self.text_inputs:
             text_input.focus = False
 
-    def show_upgrade(self):
-        if not self.m.theateam():
-            if not self.systemtools_sm.sm.has_screen('upgrade'):
-                upgrade_screen = screen_upgrade.UpgradeScreen(name='upgrade', screen_manager=self.systemtools_sm.sm,
-                                                              machine=self.m, localization=self.l, keyboard=self.kb)
-                self.systemtools_sm.sm.add_widget(upgrade_screen)
-
-            if not self.systemtools_sm.sm.has_screen('upgrade_successful'):
-                upgrade_successful_screen = screen_upgrade_successful.UpgradeSuccessfulScreen(
-                    name='upgrade_successful', screen_manager=self.systemtools_sm.sm, machine=self.m, localization=self.l)
-                self.systemtools_sm.sm.add_widget(upgrade_successful_screen)
-
-            self.systemtools_sm.sm.current = 'upgrade'
-        else:
-            if not self.systemtools_sm.sm.has_screen('already_upgraded'):
-                already_upgraded_screen = screen_already_upgraded.AlreadyUpgradedScreen(name='already_upgraded',
-                                                                                        screen_manager=self.systemtools_sm.sm,
-                                                                                        machine=self.m,
-                                                                                        localization=self.l)
-                self.systemtools_sm.sm.add_widget(already_upgraded_screen)
-
-            self.systemtools_sm.sm.current = 'already_upgraded'
-
     def set_toggle_buttons(self):
         if self.systemtools_sm.sm.get_screen("go").show_spindle_overload == False:
             self.show_spindle_overload_toggle.state = "normal"
@@ -953,7 +929,7 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
                 return
         except:
             pass
-        self.console_update_button.text = "Doing update,\nplease wait..."
+        # self.console_update_button.text = "Doing update,\nplease wait..."
         self.remove_csv_files()
         self.remove_creds_file()
 
@@ -963,7 +939,7 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
                 popup_system.PopupFSCKErrors(
                     self.systemtools_sm.sm, self.l, message, self.set.details_of_fsck
                 )
-                self.console_update_button.text = "Full Console Update (wifi)"
+                # self.console_update_button.text = "Full Console Update (wifi)"
                 return False
             if self.set.get_sw_update_via_wifi():
                 self.set.fetch_platform_tags()
@@ -971,7 +947,7 @@ ALLOW THE CONSOLE TO SHUTDOWN COMPLETELY, AND WAIT 30 SECONDS BEFORE SWITCHING O
             else:
                 message = "Could not get software update, please check connection."
                 popup_info.PopupWarning(self.systemtools_sm.sm, self.l, message)
-                self.console_update_button.text = "Full Console Update (wifi)"
+                # self.console_update_button.text = "Full Console Update (wifi)"
 
         Clock.schedule_once(nested_full_console_update, 1)
 

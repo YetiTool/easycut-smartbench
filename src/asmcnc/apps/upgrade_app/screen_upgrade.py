@@ -183,7 +183,7 @@ class UpgradeScreen(Screen):
         self.kb.setup_text_inputs(self.text_inputs)
 
     def quit_to_lobby(self):
-        self.sm.current = "factory_settings"
+        self.sm.current = "system_menu"
         self.m.write_dollar_setting(51, 0)
 
     def get_correct_unlock_code(self, serial):
