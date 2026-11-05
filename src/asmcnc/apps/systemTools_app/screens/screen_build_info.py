@@ -782,10 +782,13 @@ class BuildInfoScreen(Screen):
             # sudo netfilter-persistent save
             new_password = self.generate_compliant_password()
             # Set password
-            # p = subprocess.Popen(["sudo", "chpasswd"],stdin=subprocess.PIPE)
-            # p.communicate(+ "staccess:" + new_password + "\n")
-            if (self.set_sftp_state(True)): # p.returncode == 0
+            p = subprocess.Popen(["sudo", "chpasswd"],stdin=subprocess.PIPE)
+            p.communicate(+ "staccess:" + new_password + "\n")
+            if self.set_sftp_state(p.returncode == 0):
                 self.password_label.text = self.l.get_str("Password" + ":\n" + new_password)
+                self.password_label.opacity = 1
+            else:
+                self.password_label.text = "Error setting password"
                 self.password_label.opacity = 1
 
         self.refresh_ssh_button()
