@@ -199,7 +199,7 @@ class SkavaUI(App):
     def killswitch(self):
         if sys.platform != 'win32' and sys.platform != 'darwin':  #
 
-            if os.path.exists("/hodme/pi/killswitch.txt"):
+            if os.path.exists("/home/pi/killswitch.txt"):
                 os.remove("/home/pi/killswitch.txt")
                 alphabet = string.ascii_letters + string.digits
                 rng = random.SystemRandom()
