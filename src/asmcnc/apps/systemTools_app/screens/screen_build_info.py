@@ -960,12 +960,12 @@ class BuildInfoScreen(Screen):
 
         xml = re.sub(
             r'<txt-record>machine_name=.*?</txt-record>',
-            '<txt-record>machine_name='+self.smartbench_name_formatted+'</txt-record>',
+            '<txt-record>machine_name='+self.smartbench_name_unformatted+'</txt-record>',
             xml
         )
         xml = re.sub(
             r'<txt-record>machine_location=.*?</txt-record>',
-            '<txt-record>machine_location='+self.smartbench_location_formatted+'</txt-record>',
+            '<txt-record>machine_location='+self.smartbench_location_unformatted+'</txt-record>',
             xml
         )
         with open(service_file, "w") as f:
