@@ -196,7 +196,7 @@ class SkavaUI(App):
     def get_scaled_tuple(self, tup, orientation="horizontal"):
         return scaling_utils.get_scaled_tuple(tup, orientation)
 
-    def my_run(*args):
+    def my_run(self, *args):
         result = subprocess.run(
             args, capture_output=True, text=True
         )
