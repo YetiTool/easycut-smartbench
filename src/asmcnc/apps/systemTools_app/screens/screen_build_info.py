@@ -783,7 +783,7 @@ class BuildInfoScreen(Screen):
             new_password = self.generate_compliant_password()
             # Set password
             p = subprocess.Popen(["sudo", "chpasswd"],stdin=subprocess.PIPE)
-            p.communicate(+ "staccess:" + new_password + "\n")
+            p.communicate("staccess:" + new_password + "\n")
             if self.set_sftp_state(p.returncode == 0):
                 self.password_label.text = self.l.get_str("Password" + ":\n" + new_password)
                 self.password_label.opacity = 1
