@@ -766,9 +766,9 @@ class BuildInfoScreen(Screen):
         if state:
             #turn off:
             # call script to deactivate port 22 here
-            os.system('sudo iptables -D INPUT -p tcp --dport 22 -j ACCEPT')
-            os.system('sudo ip6tables -D INPUT -p tcp --dport 22 -j ACCEPT')
-            os.system('sudo netfilter-persistent save')
+            print(os.system('sudo iptables -D INPUT -p tcp --dport 22 -j ACCEPT'))
+            print(os.system('sudo ip6tables -D INPUT -p tcp --dport 22 -j ACCEPT'))
+            print(os.system('sudo netfilter-persistent save'))
             self.password_label.text = ""
             self.password_label.opacity = 1
             # set state according to result:
@@ -777,9 +777,9 @@ class BuildInfoScreen(Screen):
         else:
             # turn on
             # run script here and show password
-            os.system('sudo iptables -I INPUT 3 -p tcp --dport 22 -j ACCEPT')
-            os.system('sudo ip6tables -I INPUT 4 -p tcp --dport 22 -j ACCEPT')
-            os.system('sudo netfilter-persistent save')
+            print(os.system('sudo iptables -I INPUT 3 -p tcp --dport 22 -j ACCEPT'))
+            print(os.system('sudo ip6tables -I INPUT 4 -p tcp --dport 22 -j ACCEPT'))
+            print(os.system('sudo netfilter-persistent save'))
             new_password = self.generate_compliant_password()
             # Set password
             p = subprocess.Popen(["sudo", "chpasswd"],stdin=subprocess.PIPE)

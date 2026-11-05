@@ -211,8 +211,9 @@ class SkavaUI(App):
                 if p.returncode != 0:
                     print("!!! Failed to change password. Return code: ", p.returncode)
                 #recreate ssh keys
-                os.system('sudo ssh-keygen -A')
-                os.system('sudo systemctl restart ssh')
+                print(os.system('sudo ssh-keygen -A'))
+                print(os.system('sudo systemctl restart ssh'))
+                print("CLICK!")
     def build(self):
 
         #Checking for final killswitch:
