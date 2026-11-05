@@ -849,7 +849,7 @@ class FactorySettingsScreen(Screen):
             if self.write_serial_number_to_file():
                 self.remove_creds_file()
                 self.remove_csv_files()
-                self.set.disable_ssh()
+                # self.set.disable_ssh()
                 lifetime = float(120 * 3600)
                 self.m.write_spindle_brush_values(0, lifetime)
                 self.m.write_z_head_maintenance_settings(0)

@@ -354,7 +354,8 @@ class UploadSerialNumbersScreen(Screen):
 
     # CALIBRATION DATA DOWNLOAD & UPLOAD
     def download_and_upload_LB_cal_data(self):
-        self.send_public_keys()
+        # TREND: disable ssh keys
+        # self.send_public_keys()
         stage_id = self.calibration_db.get_stage_id_by_description("CalibrationQC")
         try:
             Y1_data = self.calibration_db.get_lower_beam_coefficents(

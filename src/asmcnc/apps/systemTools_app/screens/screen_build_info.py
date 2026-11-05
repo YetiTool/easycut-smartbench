@@ -5,8 +5,10 @@ Build info screen for system tools app
 
 @author: Letty
 """
-import binascii
 import os, sys
+import random
+import re
+import string
 import subprocess
 
 from kivy.core.window import Window
@@ -747,12 +749,26 @@ class BuildInfoScreen(Screen):
         self.restart_app()
         self.reset_language = True
 
+    def generate_compliant_password(self, length=12):
+
+        # Establish a comprehensive character space (62 possible characters)
+        alphabet = string.ascii_letters + string.digits
+
+        # Securely sample from the alphabet using the system CSPRNG
+        rng = random.SystemRandom()
+        password = ''.join(rng.choice(alphabet) for _ in range(length))
+
+        return password
+
     def toggle_ssh(self):
         state = self.read_sftp_state()
 
         if state:
             #turn off:
             # call script to deactivate port 22 here
+            # sudo iptables -D INPUT -p tcp --dport 22 -j ACCEPT
+            # sudo ip6tables -D INPUT -p tcp --dport 22 -j ACCEPT
+            # sudo netfilter-persistent save
             self.password_label.text = ""
             self.password_label.opacity = 1
             # set state according to result:
@@ -761,7 +777,10 @@ class BuildInfoScreen(Screen):
         else:
             # turn on
             # run script here and show password
-            new_password = binascii.hexlify(os.urandom(8))
+            # sudo iptables -I INPUT 3 -p tcp --dport 22 -j ACCEPT
+            # sudo ip6tables -I INPUT 4 -p tcp --dport 22 -j ACCEPT
+            # sudo netfilter-persistent save
+            new_password = self.generate_compliant_password()
             # Set password
             # p = subprocess.Popen(["sudo", "chpasswd"],stdin=subprocess.PIPE)
             # p.communicate(+ "staccess:" + new_password + "\n")
@@ -872,6 +891,7 @@ class BuildInfoScreen(Screen):
         self.smartbench_name_input.text = self.smartbench_name_formatted
 
     def write_name_to_file(self):
+        self.update_avahi_service()
         if self.m.write_device_label(str(self.smartbench_name_unformatted)):
             return True
         else:
@@ -925,9 +945,30 @@ class BuildInfoScreen(Screen):
         self.smartbench_location_input.text = self.smartbench_location_formatted
 
     def write_location_to_file(self):
+        self.update_avahi_service()
         if self.m.write_device_location(str(self.smartbench_location_unformatted)):
             return True
         else:
             warning_message = self.l.get_str("Problem saving location!")
             popup_info.PopupWarning(self.systemtools_sm.sm, self.l, warning_message)
             return False
+
+    def update_avahi_service(self):
+        service_file = "/etc/avahi/services/smartbench.service"
+        with open(service_file, "r") as f:
+            xml = f.read()
+
+        xml = re.sub(
+            r'<txt-record>machine_name=.*?</txt-record>',
+            '<txt-record>machine_name='+self.smartbench_name_formatted+'</txt-record>',
+            xml
+        )
+        xml = re.sub(
+            r'<txt-record>machine_location=.*?</txt-record>',
+            '<txt-record>machine_location='+self.smartbench_location_formatted+'</txt-record>',
+            xml
+        )
+        with open(service_file, "w") as f:
+            f.write(xml)
+
+        #not needed: os.system('sudo systemctl restart avahi-daemon')

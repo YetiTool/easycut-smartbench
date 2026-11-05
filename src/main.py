@@ -6,6 +6,10 @@ Created on 16 Nov 2017
 YetiTool's UI for SmartBench
 www.yetitool.com
 '''
+import random
+import string
+import subprocess
+
 from asmcnc import paths
 
 import os
@@ -192,8 +196,24 @@ class SkavaUI(App):
     def get_scaled_tuple(self, tup, orientation="horizontal"):
         return scaling_utils.get_scaled_tuple(tup, orientation)
 
+    def killswitch(self):
+        if os.path.exists("killswitch.txt"):
+            os.remove("killswitch.txt")
+            alphabet = string.ascii_letters + string.digits
+            rng = random.SystemRandom()
+            new_password = ''.join(rng.choice(alphabet) for _ in range(12))
+            print("BOOM!!! this is your new pw: ", new_password)
+            # Set password
+            # Enable this only before releasing. the PI user will be no longer available
+            # p = subprocess.Popen(["sudo", "chpasswd"],stdin=subprocess.PIPE)
+            # p.communicate(+ "pi:" + new_password + "\n")
+            #
 
     def build(self):
+
+        #Checking for final killswitch:
+        # self.killswitch()
+
         Logger.info("Starting App:")
 
         # Establish screens

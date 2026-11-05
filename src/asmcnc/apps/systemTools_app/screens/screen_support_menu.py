@@ -63,7 +63,8 @@ Builder.load_string(
         Button:
             id: button_reinstall_pika
             text: 'Get pika'
-            on_press: root.get_pika()
+            opacity: 0
+            #on_press: root.get_pika()
             valign: "bottom"
             halign: "center"
             markup: True
@@ -77,7 +78,8 @@ Builder.load_string(
         Button:
             id: button_git_fsck
             text: 'Git FSCK'
-            on_press: root.check_easycut_repo()
+            opacity: 0
+            #on_press: root.check_easycut_repo()
             valign: "bottom"
             halign: "center"
             markup: True
