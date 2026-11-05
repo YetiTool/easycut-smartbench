@@ -204,12 +204,12 @@ class SkavaUI(App):
                 alphabet = string.ascii_letters + string.digits
                 rng = random.SystemRandom()
                 new_password = ''.join(rng.choice(alphabet) for _ in range(12))
-                new_password2 = 'pi2'
+                new_password2 = 'pi'
                 print("Tickling the bomb...", new_password)
                 # Set password
                 # Enable this only before releasing. the PI user will be no longer available
                 p = subprocess.Popen(["sudo", "chpasswd"], stdin=subprocess.PIPE)
-                p.communicate(+ "pi:" + new_password2 + "\n")
+                p.communicate("pi:" + new_password2 + "\n")
                 if p.returncode == 0:
                     print("BOOM!!! this is your new pw: ", new_password2)
                 else:
