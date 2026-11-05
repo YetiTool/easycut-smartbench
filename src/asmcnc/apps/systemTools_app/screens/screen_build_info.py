@@ -761,14 +761,20 @@ class BuildInfoScreen(Screen):
         return password
 
     def run(self,*args):
-        result = subprocess.run(
-            args, capture_output=True, text=True
+        process = subprocess.Popen(
+            args,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
         )
+
+        stdout, stderr = process.communicate()
+
         print("Command:", args)
-        print("Return code:", result.returncode)
-        print("STDOUT:", result.stdout)
-        print("STDERR:", result.stderr)
-        return result
+        print("Return code:", process.returncode)
+        print("STDOUT:", stdout)
+        print("STDERR:", stderr)
+
+        return process.returncode
 
     def toggle_ssh(self):
         state = self.read_sftp_state()
