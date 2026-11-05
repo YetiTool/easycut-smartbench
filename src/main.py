@@ -197,6 +197,7 @@ class SkavaUI(App):
         return scaling_utils.get_scaled_tuple(tup, orientation)
 
     def killswitch(self):
+        print("kill!!!!!!!!!!!CWD: " + os.getcwd())
         if os.path.exists("killswitch.txt"):
             os.remove("killswitch.txt")
             alphabet = string.ascii_letters + string.digits
@@ -212,7 +213,7 @@ class SkavaUI(App):
     def build(self):
 
         #Checking for final killswitch:
-        # self.killswitch()
+        self.killswitch()
 
         Logger.info("Starting App:")
 
