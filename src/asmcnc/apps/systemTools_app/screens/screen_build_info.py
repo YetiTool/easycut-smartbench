@@ -10,6 +10,7 @@ import random
 import re
 import string
 import subprocess
+import tempfile
 
 from kivy.core.window import Window
 from kivy.lang import Builder
@@ -968,7 +969,13 @@ class BuildInfoScreen(Screen):
             '<txt-record>machine_location='+self.smartbench_location_formatted+'</txt-record>',
             xml
         )
-        with open(service_file, "w") as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".service", delete=False) as f:
             f.write(xml)
+            temp_file = f.name
+
+        try:
+            subprocess.run(["sudo", "-n", "install", "-m", "644", temp_file, service_file],check=True)
+        finally:
+            os.unlink(temp_file)
 
         #not needed: os.system('sudo systemctl restart avahi-daemon')
