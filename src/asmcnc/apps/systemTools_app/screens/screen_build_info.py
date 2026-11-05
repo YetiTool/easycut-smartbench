@@ -760,7 +760,7 @@ class BuildInfoScreen(Screen):
 
         return password
 
-    def run(self,*args):
+    def run(self,args):
         process = subprocess.Popen(
             args,
             stdout=subprocess.PIPE,
