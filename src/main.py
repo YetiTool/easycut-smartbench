@@ -196,6 +196,16 @@ class SkavaUI(App):
     def get_scaled_tuple(self, tup, orientation="horizontal"):
         return scaling_utils.get_scaled_tuple(tup, orientation)
 
+    def my_run(*args):
+        result = subprocess.run(
+            args, capture_output=True, text=True
+        )
+        print("Command:", args)
+        print("Return code:", result.returncode)
+        print("STDOUT:", result.stdout)
+        print("STDERR:", result.stderr)
+        return result
+
     def killswitch(self):
         if sys.platform != 'win32' and sys.platform != 'darwin':  #
 
@@ -212,9 +222,9 @@ class SkavaUI(App):
                     print("!!! Failed to change password. Return code: ", p.returncode)
                 #recreate ssh keys
                 print("CLICK!")
-                print(os.system('sudo ssh-keygen -A'))
-                print(os.system('sudo systemctl reload ssh'))
-                print(os.system('sudo systemctl restart ssh'))
+                self.my_run('sudo ssh-keygen -A'.split())
+                self.my_run('sudo systemctl reload ssh'.split())
+                self.my_run('sudo systemctl restart ssh'.split())
                 print("BOOM!")
     def build(self):
 

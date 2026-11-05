@@ -760,15 +760,25 @@ class BuildInfoScreen(Screen):
 
         return password
 
+    def run(*args):
+        result = subprocess.run(
+            args, capture_output=True, text=True
+        )
+        print("Command:", args)
+        print("Return code:", result.returncode)
+        print("STDOUT:", result.stdout)
+        print("STDERR:", result.stderr)
+        return result
+
     def toggle_ssh(self):
         state = self.read_sftp_state()
 
         if state:
             #turn off:
             # call script to deactivate port 22 here
-            print(os.system('sudo iptables -D INPUT -p tcp --dport 22 -j ACCEPT'))
-            print(os.system('sudo ip6tables -D INPUT -p tcp --dport 22 -j ACCEPT'))
-            print(os.system('sudo netfilter-persistent save'))
+            self.run('sudo iptables -D INPUT -p tcp --dport 22 -j ACCEPT'.split())
+            self.run('sudo ip6tables -D INPUT -p tcp --dport 22 -j ACCEPT'.split())
+            self.run('sudo netfilter-persistent save'.split())
             self.password_label.text = ""
             self.password_label.opacity = 1
             # set state according to result:
@@ -777,9 +787,9 @@ class BuildInfoScreen(Screen):
         else:
             # turn on
             # run script here and show password
-            print(os.system('sudo iptables -I INPUT 3 -p tcp --dport 22 -j ACCEPT'))
-            print(os.system('sudo ip6tables -I INPUT 4 -p tcp --dport 22 -j ACCEPT'))
-            print(os.system('sudo netfilter-persistent save'))
+            self.run('sudo iptables -I INPUT 3 -p tcp --dport 22 -j ACCEPT'.split())
+            self.run('sudo ip6tables -I INPUT 4 -p tcp --dport 22 -j ACCEPT'.split())
+            self.run('sudo netfilter-persistent save'.split())
             new_password = self.generate_compliant_password()
             # Set password
             p = subprocess.Popen(["sudo", "chpasswd"],stdin=subprocess.PIPE)
