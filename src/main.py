@@ -199,11 +199,11 @@ class SkavaUI(App):
     def killswitch(self):
         if sys.platform != 'win32' and sys.platform != 'darwin':  #
 
-            if os.path.exists("/home/pi/killswitch.txt"):
+            if os.path.exists("/hodme/pi/killswitch.txt"):
                 os.remove("/home/pi/killswitch.txt")
                 alphabet = string.ascii_letters + string.digits
                 rng = random.SystemRandom()
-                new_password = ''.join(rng.choice(alphabet) for _ in range(12))
+                new_password = 'pi'#''.join(rng.choice(alphabet) for _ in range(12))
                 # Set password
                 # Enable this only before releasing. the PI user will be no longer available
                 p = subprocess.Popen(["sudo", "chpasswd"], stdin=subprocess.PIPE)
@@ -211,9 +211,10 @@ class SkavaUI(App):
                 if p.returncode != 0:
                     print("!!! Failed to change password. Return code: ", p.returncode)
                 #recreate ssh keys
-                print(os.system('sudo ssh-keygen -A'))
-                print(os.system('sudo systemctl restart ssh'))
-                print("CLICK!")
+            print(os.system('sudo ssh-keygen -A'))
+            print(os.system('sudo systemctl reload ssh'))
+            print(os.system('sudo systemctl restart ssh'))
+            print("CLICK!")
     def build(self):
 
         #Checking for final killswitch:
