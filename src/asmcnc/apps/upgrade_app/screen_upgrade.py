@@ -143,7 +143,7 @@ Builder.load_string("""
 
                         LabelBase:
                             id: support_label
-                            opacity: 0
+                            opacity: 1
                             size_hint_y: 1.5
                             font_size: dp(0.03*app.width)
                             color: 0,0,0,1
@@ -153,7 +153,7 @@ Builder.load_string("""
 
                         Image:
                             id: qr_image
-                            opacity: 0
+                            opacity: 1
                             size_hint_y: 2
                             source: "./asmcnc/apps/upgrade_app/img/qr_upgrade.png"
 
