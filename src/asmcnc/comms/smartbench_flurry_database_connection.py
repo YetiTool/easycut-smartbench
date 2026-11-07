@@ -62,38 +62,40 @@ class DatabaseEventManager():
 
 
 	def set_up_pika_connection(self):
+		# Trend:
+		pass
 
-		Logger.info("Try to set up pika connection")
+		# Logger.info("Try to set up pika connection")
 
-		while True:
-
-			if self.set.ip_address and self.set.wifi_available:
-
-				try:
-					self.connection = pika.BlockingConnection(pika.ConnectionParameters('sm-receiver.yetitool.com', 5672, '/',
-																						pika.credentials.PlainCredentials(
-																							'console',
-																							'2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb')
-																						))
-
-					Logger.info("Connection established")
-
-					self.routine_updates_channel = self.connection.channel()
-					self.routine_updates_channel.queue_declare(queue=self.queue)
-
-
-					try: 
-						if not self.routine_update_thread.is_alive(): self.send_routine_updates_to_database()
-					except: 
-						self.send_routine_updates_to_database()
-					break
-
-				except:
-					Logger.exception("Pika connection exception")
-					sleep(10)
-
-			else:
-				sleep(10)
+		# while True:
+		#
+		# 	if self.set.ip_address and self.set.wifi_available:
+		#
+		# 		try:
+		# 			self.connection = pika.BlockingConnection(pika.ConnectionParameters('sm-receiver.yetitool.com', 5672, '/',
+		# 																				pika.credentials.PlainCredentials(
+		# 																					'console',
+		# 																					'2RsZWRceL3BPSE6xZ6ay9xRFdKq3WvQb')
+		# 																				))
+		#
+		# 			Logger.info("Connection established")
+		#
+		# 			self.routine_updates_channel = self.connection.channel()
+		# 			self.routine_updates_channel.queue_declare(queue=self.queue)
+		#
+		#
+		# 			try:
+		# 				if not self.routine_update_thread.is_alive(): self.send_routine_updates_to_database()
+		# 			except:
+		# 				self.send_routine_updates_to_database()
+		# 			break
+		#
+		# 		except:
+		# 			Logger.exception("Pika connection exception")
+		# 			sleep(10)
+		#
+		# 	else:
+		# 		sleep(10)
 
 	def reinstate_channel_or_connection_if_missing(self):
 

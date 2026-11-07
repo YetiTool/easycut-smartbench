@@ -62,10 +62,11 @@ class StartUpSequence(object):
 
 			if self.show_release_notes():
 				pass
-				#  self.prep_release_notes_screen()
+				# TREND:  self.prep_release_notes_screen()
 
 			if self.show_user_data_consent():
-				self.prep_data_consent_app()
+				pass
+				# self.prep_data_consent_app()
 
 			if self.show_warranty_app():
 				self.prep_warranty_app()

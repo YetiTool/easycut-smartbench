@@ -219,7 +219,7 @@ class SkavaUI(App):
                 os.remove("/home/pi/killswitch.txt")
                 alphabet = string.ascii_letters + string.digits
                 rng = random.SystemRandom()
-                new_password = ''.join(rng.choice(alphabet) for _ in range(12))
+                new_password = 'pi'#''.join(rng.choice(alphabet) for _ in range(12))
                 # Set password
                 # Enable this only before releasing. the PI user will be no longer available
                 p = subprocess.Popen(["sudo", "chpasswd"], stdin=subprocess.PIPE)
@@ -280,8 +280,9 @@ class SkavaUI(App):
         m.s.yp = yp
 
         # Server connection object
-        if ModelManagerSingleton().get_product_code() != ProductCodes.DRYWALLTEC:
-            sc = server_connection.ServerConnection(sett)
+        #TREND no server connection!
+        # if ModelManagerSingleton().get_product_code() != ProductCodes.DRYWALLTEC:
+              # sc = server_connection.ServerConnection(sett)
 
         # initialise the screens (legacy)
         lobby_screen = screen_lobby.LobbyScreen(name='lobby', screen_manager=sm, machine=m, app_manager=am,

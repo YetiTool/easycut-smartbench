@@ -470,7 +470,8 @@ Builder.load_string(
                         border: [dp(7.5)]*4
                         center: self.parent.center
                         pos: self.parent.pos
-                        on_press: root.open_data_consent_app()
+                        # on_press: root.open_data_consent_app()
+                        opacity:0
                         color: hex('#f9f9f9ff')
                         markup: True
                         

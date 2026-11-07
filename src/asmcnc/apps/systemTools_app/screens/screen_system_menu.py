@@ -2,6 +2,7 @@
 from kivy.core.window import Window
 
 from asmcnc.apps.upgrade_app import screen_upgrade, screen_upgrade_successful, screen_already_upgraded
+from asmcnc.comms.model_manager import ProductCodes
 
 """
 Created on 18 November 2020
@@ -201,27 +202,28 @@ class SystemMenuScreen(Screen):
         self.update_strings()
 
     def show_upgrade(self):
-        if not self.m.theateam():
-            if not self.systemtools_sm.sm.has_screen('upgrade'):
-                upgrade_screen = screen_upgrade.UpgradeScreen(name='upgrade', screen_manager=self.systemtools_sm.sm,
-                                                              machine=self.m, localization=self.l, keyboard=self.kb)
-                self.systemtools_sm.sm.add_widget(upgrade_screen)
+        if self.m.get_product_code()==ProductCodes.PRECISION_PRO_PLUS:
+            if not self.m.theateam():
+                if not self.systemtools_sm.sm.has_screen('upgrade'):
+                    upgrade_screen = screen_upgrade.UpgradeScreen(name='upgrade', screen_manager=self.systemtools_sm.sm,
+                                                                  machine=self.m, localization=self.l, keyboard=self.kb)
+                    self.systemtools_sm.sm.add_widget(upgrade_screen)
 
-            if not self.systemtools_sm.sm.has_screen('upgrade_successful'):
-                upgrade_successful_screen = screen_upgrade_successful.UpgradeSuccessfulScreen(
-                    name='upgrade_successful', screen_manager=self.systemtools_sm.sm, machine=self.m, localization=self.l)
-                self.systemtools_sm.sm.add_widget(upgrade_successful_screen)
+                if not self.systemtools_sm.sm.has_screen('upgrade_successful'):
+                    upgrade_successful_screen = screen_upgrade_successful.UpgradeSuccessfulScreen(
+                        name='upgrade_successful', screen_manager=self.systemtools_sm.sm, machine=self.m, localization=self.l)
+                    self.systemtools_sm.sm.add_widget(upgrade_successful_screen)
 
-            self.systemtools_sm.sm.current = 'upgrade'
-        else:
-            if not self.systemtools_sm.sm.has_screen('already_upgraded'):
-                already_upgraded_screen = screen_already_upgraded.AlreadyUpgradedScreen(name='already_upgraded',
-                                                                                        screen_manager=self.systemtools_sm.sm,
-                                                                                        machine=self.m,
-                                                                                        localization=self.l)
-                self.systemtools_sm.sm.add_widget(already_upgraded_screen)
+                self.systemtools_sm.sm.current = 'upgrade'
+            else:
+                if not self.systemtools_sm.sm.has_screen('already_upgraded'):
+                    already_upgraded_screen = screen_already_upgraded.AlreadyUpgradedScreen(name='already_upgraded',
+                                                                                            screen_manager=self.systemtools_sm.sm,
+                                                                                            machine=self.m,
+                                                                                            localization=self.l)
+                    self.systemtools_sm.sm.add_widget(already_upgraded_screen)
 
-            self.systemtools_sm.sm.current = 'already_upgraded'
+                self.systemtools_sm.sm.current = 'already_upgraded'
 
 
     def go_back(self):

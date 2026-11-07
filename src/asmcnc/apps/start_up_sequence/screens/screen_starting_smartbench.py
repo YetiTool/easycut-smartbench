@@ -76,7 +76,7 @@ class StartingSmartBenchScreen(Screen):
                 # Allow kivy to have fully loaded before doing any calls which require scheduling
                 Clock.schedule_once(self.m.s.start_services, 4)
                 # Allow time for machine reset sequence
-                self.db.start_connection_to_database_thread()
+                # self.db.start_connection_to_database_thread()
                 Clock.schedule_once(self.next_screen, 6)
                 # Set settings that are relevant to the GUI, but which depend on getting machine settings first
                 Clock.schedule_once(self.set_machine_value_driven_user_settings, 6.2)
@@ -85,10 +85,10 @@ class StartingSmartBenchScreen(Screen):
                 # Allow kivy to have fully loaded before doing any calls which require scheduling
                 Clock.schedule_once(self.m.s.start_services, 1)
                 # Allow time for machine reset sequence
-                self.db.start_connection_to_database_thread()
+                # self.db.start_connection_to_database_thread()
                 Clock.schedule_once(self.next_screen, 2)
         elif sys.platform == "win32" or sys.platform == "darwin":
-            self.db.start_connection_to_database_thread()
+            # self.db.start_connection_to_database_thread()
             Clock.schedule_once(self.next_screen, 1)
 
     def next_screen(self, dt):

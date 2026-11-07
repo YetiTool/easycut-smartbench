@@ -17,8 +17,9 @@ Builder.load_string("""
     support_label:support_label
     spindle_label:spindle_label
     error_label:error_label
+    btn_continue:btn_continue
 
-    upgrade_code_input:upgrade_code_input
+    #upgrade_code_input:upgrade_code_input
 
     qr_image:qr_image
 
@@ -44,7 +45,7 @@ Builder.load_string("""
 
                 LabelBase:
                     id: title_label
-                    text: 'Upgrade SB V1.3 to PrecisionPro +'
+                    text: 'Load motor settings'
                     halign: 'center'
                     valign: 'middle'
                     font_size: dp(0.0375*app.width)
@@ -99,15 +100,26 @@ Builder.load_string("""
                     text_size: self.size
 
                 BoxLayout:
-                    padding:[dp(0.25)*app.width, 0, dp(0.25)*app.width, dp(0.0416666666667)*app.height]
+                    # padding:[dp(0.25)*app.width, 0, dp(0.25)*app.width, dp(0.0416666666667)*app.height]
 
-                    TextInput:
-                        id: upgrade_code_input
-                        font_size: dp(0.0375*app.width)
-                        multiline: False
-                        valign: 'middle'
-                        halign: 'center'
-                        on_text_validate: root.code_entered()
+                    Button:
+                        id: btn_continue
+                        # size_hint: (1,1)
+                        height: dp(0.8*app.height)
+                        width: dp(0.1225*app.width)
+                        background_color: [0,0,0,0]
+                        opacity: 1
+                        on_press: root.code_entered()
+                        BoxLayout:
+                            padding: 0
+                            size: self.parent.size
+                            pos: self.parent.pos
+                            Image:
+                                source: "./asmcnc/apps/shapeCutter_app/img/continue.png"
+                                center_x: self.parent.center_x
+                                y: self.parent.y
+                                size: self.parent.width, self.parent.height
+                                allow_stretch: True
 
             BoxLayout:
                 orientation: 'vertical'
@@ -131,6 +143,7 @@ Builder.load_string("""
 
                         LabelBase:
                             id: support_label
+                            opacity: 0
                             size_hint_y: 1.5
                             font_size: dp(0.03*app.width)
                             color: 0,0,0,1
@@ -140,6 +153,7 @@ Builder.load_string("""
 
                         Image:
                             id: qr_image
+                            opacity: 0
                             size_hint_y: 2
                             source: "./asmcnc/apps/upgrade_app/img/qr_upgrade.png"
 
@@ -167,7 +181,8 @@ class UpgradeScreen(Screen):
         self.l = kwargs["localization"]
         self.kb = kwargs["keyboard"]
         # Add the IDs of ALL the TextInputs on this screen
-        self.text_inputs = [self.upgrade_code_input]
+        #TREND: replace input field with button
+        self.text_inputs = [] # self.upgrade_code_input
 
     def on_touch(self):
         for text_input in self.text_inputs:
@@ -292,7 +307,7 @@ class UpgradeScreen(Screen):
         self.support_label.font_size = 0.04 * Window.width
         self.spindle_label.text = ""
         self.qr_image.opacity = 0
-        self.upgrade_code_input.disabled = True
+        # self.upgrade_code_input.disabled = True
         self.exit_button.disabled = True
         self.exit_button.opacity = 0
 
@@ -302,24 +317,18 @@ class UpgradeScreen(Screen):
         )
         self.support_label.font_size = 0.03 * Window.width
         self.qr_image.opacity = 1
-        self.upgrade_code_input.disabled = False
+        # self.upgrade_code_input.disabled = False
         self.exit_button.disabled = False
         self.exit_button.opacity = 1
 
     def update_strings(self):
-        self.title_label.text = self.l.get_str("Upgrade SB V1.3 to PrecisionPro +")
+        self.title_label.text = "Load motor settings"
         self.instruction_label.text = (
-            "1. "
-            + self.l.get_str(
-                "Plug in your SC2 Spindle motor (both power and data cable)"
-            )
-            + "\n"
-            + "2. "
-            + self.l.get_str("Type in your upgrade code below")
-            + "\n"
-            + "3. "
-            + self.l.get_str('Press "Enter" on the keyboard')
+            self.l.get_str("Plug in your SC2 Spindle motor (both power and data cable)")
+            # +"\n"
+            # + self.l.get_str("Continue") + "?"
         )
+
         self.support_label.text = self.l.get_str(
             "For more information about upgrades, please contact your place of purchase or visit www.yetitool.com"
         )
