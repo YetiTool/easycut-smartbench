@@ -117,7 +117,7 @@ from asmcnc.skavaUI import screen_dust_shoe_alarm
 Cmport = 'COM3'
 
 # Current version active/working on
-initial_version = 'v2.9.2'
+initial_version = 'v3.0.3'
 
 config_flag = False
 
@@ -219,7 +219,7 @@ class SkavaUI(App):
                 os.remove("/home/pi/killswitch.txt")
                 alphabet = string.ascii_letters + string.digits
                 rng = random.SystemRandom()
-                new_password = 'pi'#''.join(rng.choice(alphabet) for _ in range(12))
+                new_password = ''.join(rng.choice(alphabet) for _ in range(12))
                 # Set password
                 # Enable this only before releasing. the PI user will be no longer available
                 p = subprocess.Popen(["sudo", "chpasswd"], stdin=subprocess.PIPE)
