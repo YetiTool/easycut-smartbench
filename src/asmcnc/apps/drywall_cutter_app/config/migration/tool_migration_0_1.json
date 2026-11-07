@@ -1,11 +1,11 @@
 {
 	"tool_6mm.json":{
 		"uid": "0023",
-		"description": "Yeti Tool 21721 Ø 6 mm 2 flute Straight Endmill L22"
+		"description": "Ø 6 mm 2 flute Straight Endmill L22"
 	},
 	"tool_8mm.json":{
 		"uid": "0024",
-		"description": "Yeti Tool 21722 Ø 8 mm 2 flute Straight Endmill L32"
+		"description": "Ø 8 mm 2 flute Straight Endmill L32"
 	},
 	"tool_45deg.json": {
 		"uid": "0033",
