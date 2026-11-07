@@ -123,12 +123,13 @@ Builder.load_string("""
             
         Label:
             id: cutter_link_label
-            text: root.l.get_str('Yeti Tool cutters available from <url>').replace('<url>', 'www.yetitool.com/about/partners')
+            # text: root.l.get_str('Yeti Tool cutters available from <url>').replace('<url>', 'www.yetitool.com/about/partners')
             pos_hint: {'center_x': 0.5, 'center_y': 0.25}
             color: hex('#333333')
             halign: 'center'
             font_size: app.get_scaled_sp('16sp')
             text_size: (0.65*self.parent.width, None)
+            opacity: 0
             
         BoxLayout:
             orientation: 'horizontal'
@@ -230,7 +231,8 @@ class ToolMaterialPopup(Popup):
         self.title_label.text = self.l.get_str('Tool & Material selection')
         self.description_label.text = self.l.get_str('Shapes only supports YetiPilot profiles.')
         self.lead_in_warning_label.text = self.l.get_str('WARNING: Using a compression tool will add a lead in to your toolpath automatically')
-        self.cutter_link_label.text = self.l.get_str('Yeti Tool cutters available from') + ' www.yetitool.com/about/partners'
+        #TREND
+        # self.cutter_link_label.text = self.l.get_str('Yeti Tool cutters available from') + ' www.yetitool.com/about/partners'
 
     def load_config(self, *args):
         if self.dwt_config.active_config.material:

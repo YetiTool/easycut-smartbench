@@ -53,15 +53,15 @@
     "applicable_tools": [
       {
         "uid": "0007",
-        "description": "Yeti Tool 21737 Ø 3.175 mm 1 flute Upcut Endmill L22"
+        "description": "Ø 3.175 mm 1 flute Upcut Endmill L22"
       },
       {
         "uid": "0010",
-        "description": "Yeti Tool 21737 Ø 3.175 mm 1 flute Upcut Endmill L22 DLC coated"
+        "description": "Ø 3.175 mm 1 flute Upcut Endmill L22 DLC coated"
       },
       {
         "uid": "0012",
-        "description": "Yeti Tool 21751 Ø 3.175 mm 1 flute Upcut Endmill L12 DLC coated (aluminium)"
+        "description": "Ø 3.175 mm 1 flute Upcut Endmill L12 DLC coated (aluminium)"
       }
     ]
   },
@@ -90,11 +90,11 @@
     "applicable_tools": [
       {
         "uid": "0009",
-        "description": "Yeti Tool 21740 Ø 6 mm 1 flute Upcut Endmill L22"
+        "description": "Ø 6 mm 1 flute Upcut Endmill L22"
       },
       {
         "uid": "0011",
-        "description": "Yeti Tool 21740 Ø 6 mm 1 flute Upcut Endmill L22 DLC coated"
+        "description": "Ø 6 mm 1 flute Upcut Endmill L22 DLC coated"
       }
     ]
   },
@@ -152,7 +152,7 @@
     "applicable_tools": [
       {
         "uid": "0005",
-        "description": "Yeti Tool 21745 Ø 3.175 mm 1 flute Downcut Endmill L22"
+        "description": "Ø 3.175 mm 1 flute Downcut Endmill L22"
       }
     ]
   },
@@ -181,7 +181,7 @@
     "applicable_tools": [
       {
         "uid": "0006",
-        "description": "Yeti Tool 21748 Ø 6 mm 1 flute Downcut Endmill L22"
+        "description": "Ø 6 mm 1 flute Downcut Endmill L22"
       }
     ]
   },
@@ -239,7 +239,7 @@
     "applicable_tools": [
       {
         "uid": "0003",
-        "description": "Yeti Tool 21741 Ø 3.175 mm 1 flute Compression Endmill L4+18"
+        "description": "Ø 3.175 mm 1 flute Compression Endmill L4+18"
       }
     ]
   },
@@ -268,7 +268,7 @@
     "applicable_tools": [
       {
         "uid": "0015",
-        "description": "Yeti Tool 21733 Ø 3.175 mm 2 flute Compression Endmill L4+18"
+        "description": "Ø 3.175 mm 2 flute Compression Endmill L4+18"
       }
     ]
   },
@@ -297,7 +297,7 @@
     "applicable_tools": [
       {
         "uid": "0018",
-        "description": "Yeti Tool 21736 Ø 6 mm 2 flute Compression Endmill L4+18"
+        "description": "Ø 6 mm 2 flute Compression Endmill L4+18"
       }
     ]
   },
@@ -355,7 +355,7 @@
     "applicable_tools": [
       {
         "uid": "0023",
-        "description": "Yeti Tool 21721 Ø 6 mm 2 flute Straight Endmill L22"
+        "description": "Ø 6 mm 2 flute Straight Endmill L22"
       }
     ]
   },
@@ -384,7 +384,7 @@
     "applicable_tools": [
       {
         "uid": "0024",
-        "description": "Yeti Tool 21722 Ø 8 mm 2 flute Straight Endmill L32"
+        "description": "Ø 8 mm 2 flute Straight Endmill L32"
       }
     ]
   },
@@ -413,7 +413,7 @@
     "applicable_tools": [
       {
         "uid": "0019",
-        "description": "Yeti Tool 21728 Ø 3.175 mm 2 flute Downcut Endmill L22"
+        "description": "Ø 3.175 mm 2 flute Downcut Endmill L22"
       }
     ]
   },
@@ -442,7 +442,7 @@
     "applicable_tools": [
       {
         "uid": "0020",
-        "description": "Yeti Tool 21731 Ø 6 mm 2 flute Downcut Endmill L24"
+        "description": "Ø 6 mm 2 flute Downcut Endmill L24"
       }
     ]
   },
@@ -471,7 +471,7 @@
     "applicable_tools": [
       {
         "uid": "0021",
-        "description": "Yeti Tool 21732 Ø 8 mm 2 flute Downcut Endmill L42"
+        "description": "Ø 8 mm 2 flute Downcut Endmill L42"
       }
     ]
   },
@@ -500,7 +500,7 @@
     "applicable_tools": [
       {
         "uid": "0015",
-        "description": "Yeti Tool 21733 Ø 3.175 mm 2 flute Compression Endmill L4+18"
+        "description": "Ø 3.175 mm 2 flute Compression Endmill L4+18"
       }
     ]
   },
@@ -529,7 +529,7 @@
     "applicable_tools": [
       {
         "uid": "0018",
-        "description": "Yeti Tool 21736 Ø 6 mm 2 flute Compression Endmill L4+18"
+        "description": "Ø 6 mm 2 flute Compression Endmill L4+18"
       }
     ]
   },
@@ -558,7 +558,7 @@
     "applicable_tools": [
       {
         "uid": "0019",
-        "description": "Yeti Tool 21728 Ø 3.175 mm 2 flute Downcut Endmill L22"
+        "description": "Ø 3.175 mm 2 flute Downcut Endmill L22"
       }
     ]
   },
@@ -587,7 +587,7 @@
     "applicable_tools": [
       {
         "uid": "0020",
-        "description": "Yeti Tool 21731 Ø 6 mm 2 flute Downcut Endmill L24"
+        "description": "Ø 6 mm 2 flute Downcut Endmill L24"
       }
     ]
   },
@@ -616,7 +616,7 @@
     "applicable_tools": [
       {
         "uid": "0021",
-        "description": "Yeti Tool 21732 Ø 8 mm 2 flute Downcut Endmill L42"
+        "description": "Ø 8 mm 2 flute Downcut Endmill L42"
       }
     ]
   },
@@ -645,7 +645,7 @@
     "applicable_tools": [
       {
         "uid": "0015",
-        "description": "Yeti Tool 21733 Ø 3.175 mm 2 flute Compression Endmill L4+18"
+        "description": "Ø 3.175 mm 2 flute Compression Endmill L4+18"
       }
     ]
   },
@@ -674,7 +674,7 @@
     "applicable_tools": [
       {
         "uid": "0018",
-        "description": "Yeti Tool 21736 Ø 6 mm 2 flute Compression Endmill L4+18"
+        "description": "Ø 6 mm 2 flute Compression Endmill L4+18"
       }
     ]
   },
@@ -703,7 +703,7 @@
     "applicable_tools": [
       {
         "uid": "0004",
-        "description": "Yeti Tool 21744 Ø 6 mm 1 flute Compression Endmill L4+21"
+        "description": "Ø 6 mm 1 flute Compression Endmill L4+21"
       }
     ]
   },
@@ -761,7 +761,7 @@
     "applicable_tools": [
       {
         "uid": "0022",
-        "description": "Yeti Tool 21720 Ø 4 mm 2 flute Straight Endmill L22"
+        "description": "Ø 4 mm 2 flute Straight Endmill L22"
       }
     ]
   },
@@ -790,7 +790,7 @@
     "applicable_tools": [
       {
         "uid": "0023",
-        "description": "Yeti Tool 21721 Ø 6 mm 2 flute Straight Endmill L22"
+        "description": "Ø 6 mm 2 flute Straight Endmill L22"
       }
     ]
   },
@@ -819,7 +819,7 @@
     "applicable_tools": [
       {
         "uid": "0024",
-        "description": "Yeti Tool 21722 Ø 8 mm 2 flute Straight Endmill L32"
+        "description": "Ø 8 mm 2 flute Straight Endmill L32"
       }
     ]
   },
@@ -848,15 +848,15 @@
     "applicable_tools": [
       {
         "uid": "0007",
-        "description": "Yeti Tool 21737 Ø 3.175 mm 1 flute Upcut Endmill L22"
+        "description": "Ø 3.175 mm 1 flute Upcut Endmill L22"
       },
       {
         "uid": "0010",
-        "description": "Yeti Tool 21737 Ø 3.175 mm 1 flute Upcut Endmill L22 DLC coated"
+        "description": "Ø 3.175 mm 1 flute Upcut Endmill L22 DLC coated"
       },
       {
         "uid": "0012",
-        "description": "Yeti Tool 21751 Ø 3.175 mm 1 flute Upcut Endmill L12 DLC coated (aluminium)"
+        "description": "Ø 3.175 mm 1 flute Upcut Endmill L12 DLC coated (aluminium)"
       }
     ]
   },
@@ -885,11 +885,11 @@
     "applicable_tools": [
       {
         "uid": "0008",
-        "description": "Yeti Tool 21738 Ø 4 mm 1 flute Upcut Endmill L22"
+        "description": "Ø 4 mm 1 flute Upcut Endmill L22"
       },
       {
         "uid": "0013",
-        "description": "Yeti Tool 21752 Ø 4 mm 1 flute Upcut Endmill L15 DLC coated (aluminium)"
+        "description": "Ø 4 mm 1 flute Upcut Endmill L15 DLC coated (aluminium)"
       }
     ]
   },
@@ -918,7 +918,7 @@
     "applicable_tools": [
       {
         "uid": "0014",
-        "description": "Yeti Tool 21753 Ø 5 mm 1 flute Upcut Endmill L22 DLC coated (aluminium)"
+        "description": "Ø 5 mm 1 flute Upcut Endmill L22 DLC coated (aluminium)"
       },
       {
         "uid": "0030",
@@ -951,7 +951,7 @@
     "applicable_tools": [
       {
         "uid": "0003",
-        "description": "Yeti Tool 21741 Ø 3.175 mm 1 flute Compression Endmill L4+18"
+        "description": "Ø 3.175 mm 1 flute Compression Endmill L4+18"
       }
     ]
   },
@@ -980,7 +980,7 @@
     "applicable_tools": [
       {
         "uid": "0014",
-        "description": "Yeti Tool 21753 Ø 5 mm 1 flute Upcut Endmill L22 DLC coated (aluminium)"
+        "description": "Ø 5 mm 1 flute Upcut Endmill L22 DLC coated (aluminium)"
       },
       {
         "uid": "0030",
@@ -1071,15 +1071,15 @@
     "applicable_tools": [
       {
         "uid": "0007",
-        "description": "Yeti Tool 21737 Ø 3.175 mm 1 flute Upcut Endmill L22"
+        "description": "Ø 3.175 mm 1 flute Upcut Endmill L22"
       },
       {
         "uid": "0010",
-        "description": "Yeti Tool 21737 Ø 3.175 mm 1 flute Upcut Endmill L22 DLC coated"
+        "description": "Ø 3.175 mm 1 flute Upcut Endmill L22 DLC coated"
       },
       {
         "uid": "0012",
-        "description": "Yeti Tool 21751 Ø 3.175 mm 1 flute Upcut Endmill L12 DLC coated (aluminium)"
+        "description": "Ø 3.175 mm 1 flute Upcut Endmill L12 DLC coated (aluminium)"
       }
     ]
   },
@@ -1108,11 +1108,11 @@
     "applicable_tools": [
       {
         "uid": "0008",
-        "description": "Yeti Tool 21738 Ø 4 mm 1 flute Upcut Endmill L22"
+        "description": "Ø 4 mm 1 flute Upcut Endmill L22"
       },
       {
         "uid": "0013",
-        "description": "Yeti Tool 21752 Ø 4 mm 1 flute Upcut Endmill L15 DLC coated (aluminium)"
+        "description": "Ø 4 mm 1 flute Upcut Endmill L15 DLC coated (aluminium)"
       }
     ]
   },
@@ -1141,7 +1141,7 @@
     "applicable_tools": [
       {
         "uid": "0014",
-        "description": "Yeti Tool 21753 Ø 5 mm 1 flute Upcut Endmill L22 DLC coated (aluminium)"
+        "description": "Ø 5 mm 1 flute Upcut Endmill L22 DLC coated (aluminium)"
       },
       {
         "uid": "0030",
@@ -1174,11 +1174,11 @@
     "applicable_tools": [
       {
         "uid": "0009",
-        "description": "Yeti Tool 21740 Ø 6 mm 1 flute Upcut Endmill L22"
+        "description": "Ø 6 mm 1 flute Upcut Endmill L22"
       },
       {
         "uid": "0011",
-        "description": "Yeti Tool 21740 Ø 6 mm 1 flute Upcut Endmill L22 DLC coated"
+        "description": "Ø 6 mm 1 flute Upcut Endmill L22 DLC coated"
       }
     ]
   },
@@ -1207,15 +1207,15 @@
     "applicable_tools": [
       {
         "uid": "0007",
-        "description": "Yeti Tool 21737 Ø 3.175 mm 1 flute Upcut Endmill L22"
+        "description": "Ø 3.175 mm 1 flute Upcut Endmill L22"
       },
       {
         "uid": "0010",
-        "description": "Yeti Tool 21737 Ø 3.175 mm 1 flute Upcut Endmill L22 DLC coated"
+        "description": "Ø 3.175 mm 1 flute Upcut Endmill L22 DLC coated"
       },
       {
         "uid": "0012",
-        "description": "Yeti Tool 21751 Ø 3.175 mm 1 flute Upcut Endmill L12 DLC coated (aluminium)"
+        "description": "Ø 3.175 mm 1 flute Upcut Endmill L12 DLC coated (aluminium)"
       }
     ]
   },
@@ -1244,11 +1244,11 @@
     "applicable_tools": [
       {
         "uid": "0008",
-        "description": "Yeti Tool 21738 Ø 4 mm 1 flute Upcut Endmill L22"
+        "description": "Ø 4 mm 1 flute Upcut Endmill L22"
       },
       {
         "uid": "0013",
-        "description": "Yeti Tool 21752 Ø 4 mm 1 flute Upcut Endmill L15 DLC coated (aluminium)"
+        "description": "Ø 4 mm 1 flute Upcut Endmill L15 DLC coated (aluminium)"
       }
     ]
   },
@@ -1277,7 +1277,7 @@
     "applicable_tools": [
       {
         "uid": "0014",
-        "description": "Yeti Tool 21753 Ø 5 mm 1 flute Upcut Endmill L22 DLC coated (aluminium)"
+        "description": "Ø 5 mm 1 flute Upcut Endmill L22 DLC coated (aluminium)"
       },
       {
         "uid": "0030",
@@ -1310,11 +1310,11 @@
     "applicable_tools": [
       {
         "uid": "0009",
-        "description": "Yeti Tool 21740 Ø 6 mm 1 flute Upcut Endmill L22"
+        "description": "Ø 6 mm 1 flute Upcut Endmill L22"
       },
       {
         "uid": "0011",
-        "description": "Yeti Tool 21740 Ø 6 mm 1 flute Upcut Endmill L22 DLC coated"
+        "description": "Ø 6 mm 1 flute Upcut Endmill L22 DLC coated"
       }
     ]
   },
@@ -1343,15 +1343,15 @@
     "applicable_tools": [
       {
         "uid": "0007",
-        "description": "Yeti Tool 21737 Ø 3.175 mm 1 flute Upcut Endmill L22"
+        "description": "Ø 3.175 mm 1 flute Upcut Endmill L22"
       },
       {
         "uid": "0010",
-        "description": "Yeti Tool 21737 Ø 3.175 mm 1 flute Upcut Endmill L22 DLC coated"
+        "description": "Ø 3.175 mm 1 flute Upcut Endmill L22 DLC coated"
       },
       {
         "uid": "0012",
-        "description": "Yeti Tool 21751 Ø 3.175 mm 1 flute Upcut Endmill L12 DLC coated (aluminium)"
+        "description": "Ø 3.175 mm 1 flute Upcut Endmill L12 DLC coated (aluminium)"
       }
     ]
   },
@@ -1380,11 +1380,11 @@
     "applicable_tools": [
       {
         "uid": "0009",
-        "description": "Yeti Tool 21740 Ø 6 mm 1 flute Upcut Endmill L22"
+        "description": "Ø 6 mm 1 flute Upcut Endmill L22"
       },
       {
         "uid": "0011",
-        "description": "Yeti Tool 21740 Ø 6 mm 1 flute Upcut Endmill L22 DLC coated"
+        "description": "Ø 6 mm 1 flute Upcut Endmill L22 DLC coated"
       }
     ]
   },
@@ -1442,7 +1442,7 @@
     "applicable_tools": [
       {
         "uid": "0019",
-        "description": "Yeti Tool 21728 Ø 3.175 mm 2 flute Downcut Endmill L22"
+        "description": "Ø 3.175 mm 2 flute Downcut Endmill L22"
       }
     ]
   },
@@ -1471,7 +1471,7 @@
     "applicable_tools": [
       {
         "uid": "0020",
-        "description": "Yeti Tool 21731 Ø 6 mm 2 flute Downcut Endmill L24"
+        "description": "Ø 6 mm 2 flute Downcut Endmill L24"
       }
     ]
   },
@@ -1500,7 +1500,7 @@
     "applicable_tools": [
       {
         "uid": "0021",
-        "description": "Yeti Tool 21732 Ø 8 mm 2 flute Downcut Endmill L42"
+        "description": "Ø 8 mm 2 flute Downcut Endmill L42"
       }
     ]
   },
@@ -1529,7 +1529,7 @@
     "applicable_tools": [
       {
         "uid": "0015",
-        "description": "Yeti Tool 21733 Ø 3.175 mm 2 flute Compression Endmill L4+18"
+        "description": "Ø 3.175 mm 2 flute Compression Endmill L4+18"
       }
     ]
   },
@@ -1558,7 +1558,7 @@
     "applicable_tools": [
       {
         "uid": "0018",
-        "description": "Yeti Tool 21736 Ø 6 mm 2 flute Compression Endmill L4+18"
+        "description": "Ø 6 mm 2 flute Compression Endmill L4+18"
       }
     ]
   },
@@ -1587,7 +1587,7 @@
     "applicable_tools": [
       {
         "uid": "0023",
-        "description": "Yeti Tool 21721 Ø 6 mm 2 flute Straight Endmill L22"
+        "description": "Ø 6 mm 2 flute Straight Endmill L22"
       }
     ]
   },
@@ -1703,7 +1703,7 @@
     "applicable_tools": [
       {
         "uid": "0024",
-        "description": "Yeti Tool 21722 Ø 8 mm 2 flute Straight Endmill L32"
+        "description": "Ø 8 mm 2 flute Straight Endmill L32"
       }
     ]
   },
@@ -1732,7 +1732,7 @@
     "applicable_tools": [
       {
         "uid": "0022",
-        "description": "Yeti Tool 21720 Ø 4 mm 2 flute Straight Endmill L22"
+        "description": "Ø 4 mm 2 flute Straight Endmill L22"
       }
     ]
   },
@@ -1761,7 +1761,7 @@
     "applicable_tools": [
       {
         "uid": "0023",
-        "description": "Yeti Tool 21721 Ø 6 mm 2 flute Straight Endmill L22"
+        "description": "Ø 6 mm 2 flute Straight Endmill L22"
       }
     ]
   },
@@ -1790,7 +1790,7 @@
     "applicable_tools": [
       {
         "uid": "0024",
-        "description": "Yeti Tool 21722 Ø 8 mm 2 flute Straight Endmill L32"
+        "description": "Ø 8 mm 2 flute Straight Endmill L32"
       }
     ]
   },
